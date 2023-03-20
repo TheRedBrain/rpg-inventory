@@ -3,7 +3,7 @@ package com.github.theredbrain.rpgmod.block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.item.Item;
-import net.minecraft.tag.TagKey;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -12,8 +12,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class InteractiveAdventureFullToAirBlock extends AbstractInteractiveAdventureBlock {
     // fake walls
-    public InteractiveAdventureFullToAirBlock(@Nullable Item drop, @Nullable TagKey<Item> requiredTools, boolean requiresTools, int respawnModifier, Settings settings) {
-        super(drop, requiredTools, requiresTools, respawnModifier, settings);
+    public InteractiveAdventureFullToAirBlock(@Nullable TagKey<Item> requiredTools, boolean requiresTools, int respawnModifier, Settings settings) {
+        super(requiredTools, requiresTools, respawnModifier, settings);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class InteractiveAdventureFullToAirBlock extends AbstractInteractiveAdven
         interacting "harvests" them and changes blockstate
             maybe multiple stages before harvest is complete
             different tools progress different amounts of stages
-        might need interaction with a specific item/tool
+        might need interaction with a specific items/tool
         after being harvested some leaves/rubble/etc remains
         refills after some time
         use loottable?

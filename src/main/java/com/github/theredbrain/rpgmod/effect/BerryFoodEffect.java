@@ -1,13 +1,6 @@
 package com.github.theredbrain.rpgmod.effect;
 
-import com.github.clevernucleus.dataattributes.impl.AttributeManager;
-import com.google.common.collect.Multimap;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.AttributeContainer;
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffectCategory;
-import net.minecraft.entity.player.PlayerEntity;
 
 public class BerryFoodEffect extends FoodStatusEffect {
     public BerryFoodEffect() {

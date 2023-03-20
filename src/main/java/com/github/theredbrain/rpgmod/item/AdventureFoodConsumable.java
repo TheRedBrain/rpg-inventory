@@ -1,37 +1,34 @@
 package com.github.theredbrain.rpgmod.item;
 
-import com.github.theredbrain.rpgmod.block.AbstractInteractiveAdventureBlock;
 import com.github.theredbrain.rpgmod.effect.FoodStatusEffect;
-import com.github.theredbrain.rpgmod.entity.PlayerEntityMixinDuck;
-import net.minecraft.entity.effect.StatusEffectInstance;
+import com.github.theredbrain.rpgmod.entity.player.DuckPlayerEntityMixin;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
-
-import java.util.List;
+import org.jetbrains.annotations.Nullable;
 
 public class AdventureFoodConsumable extends Item {
 
-//    private final int maxEatenFoods = 3;
-    private final int duration;
-    private final FoodStatusEffect foodStatusEffect;
-    public AdventureFoodConsumable(FoodStatusEffect foodStatusEffect, int duration, Settings settings) {
+    private int useTime;
+
+    public AdventureFoodConsumable(Settings settings) {
         super(settings);
-        this.duration = duration;
-        this.foodStatusEffect = foodStatusEffect;
+        this.useTime = useTime;
     }
 
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        ItemStack itemStack = user.getStackInHand(hand);
-        if (((PlayerEntityMixinDuck) user).tryEatAdventureFood(this.foodStatusEffect, this.duration)) {
-            user.setCurrentHand(hand);
-            return TypedActionResult.consume(itemStack);
+        if (this.isFood()) {
+            ItemStack itemStack = user.getStackInHand(hand);
+            if (((DuckPlayerEntityMixin)user).canConsumeItem(itemStack)) {
+                user.setCurrentHand(hand);
+                return TypedActionResult.consume(itemStack);
+            }
+            return TypedActionResult.fail(itemStack);
         }
-        return TypedActionResult.fail(itemStack);
+        return TypedActionResult.pass(user.getStackInHand(hand));
     }
 //            world.setBlockState(pos, state.with(INTACT, false));
 //            return ActionResult.CONSUME;

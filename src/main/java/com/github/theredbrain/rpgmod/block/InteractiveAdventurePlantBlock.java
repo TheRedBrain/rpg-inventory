@@ -4,7 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.item.Item;
-import net.minecraft.tag.TagKey;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -16,8 +16,8 @@ public class InteractiveAdventurePlantBlock extends AbstractInteractiveAdventure
     private static final VoxelShape BIG_PLANT;
     private static final VoxelShape SMALL_PLANT;
     private final int plant_size;
-    public InteractiveAdventurePlantBlock(int plant_size, @Nullable Item drop, @Nullable TagKey<Item> requiredTools, boolean requiresTools, int respawnModifier, Settings settings) {
-        super(drop, requiredTools, requiresTools, respawnModifier, settings);
+    public InteractiveAdventurePlantBlock(int plant_size, @Nullable TagKey<Item> requiredTools, boolean requiresTools, int respawnModifier, Settings settings) {
+        super(requiredTools, requiresTools, respawnModifier, settings);
         this.plant_size = plant_size;
     }
 
@@ -38,7 +38,7 @@ public class InteractiveAdventurePlantBlock extends AbstractInteractiveAdventure
         interacting "harvests" them and changes blockstate
             maybe multiple stages before harvest is complete
             different tools progress different amounts of stages
-        might need interaction with a specific item/tool
+        might need interaction with a specific items/tool
         after being harvested some leaves/rubble/etc remains
         refills after some time
         use loottable?

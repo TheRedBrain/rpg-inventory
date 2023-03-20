@@ -5,11 +5,11 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.state.property.Property;
-import net.minecraft.tag.TagKey;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -22,8 +22,8 @@ public class InteractiveAdventureLogBlock extends AbstractInteractiveAdventureBl
     private static final VoxelShape EAST_WEST_SHAPE;
     private static final VoxelShape NORTH_SOUTH_SHAPE;
     private static final EnumProperty<Direction> FACING;
-    public InteractiveAdventureLogBlock(@Nullable Item drop, @Nullable TagKey<Item> requiredTools, boolean requiresTools, int respawnModifier, Settings settings) {
-        super(drop, requiredTools, requiresTools, respawnModifier, settings);
+    public InteractiveAdventureLogBlock(@Nullable TagKey<Item> requiredTools, boolean requiresTools, int respawnModifier, Settings settings) {
+        super(requiredTools, requiresTools, respawnModifier, settings);
         this.setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH));
     }
 
@@ -64,13 +64,9 @@ public class InteractiveAdventureLogBlock extends AbstractInteractiveAdventureBl
         interacting "harvests" them and changes blockstate
             maybe multiple stages before harvest is complete
             different tools progress different amounts of stages
-        might need interaction with a specific item/tool
+        might need interaction with a specific items/tool
         after being harvested some leaves/rubble/etc remains
         refills after some time
-        use loottable?
-            different possible items
-                multiple qualities for ressources
-            different amounts of items
         tree logs
         stone/ore veins
         plants/mushrooms

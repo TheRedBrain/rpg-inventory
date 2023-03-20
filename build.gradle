@@ -38,6 +38,16 @@ repositories {
 			includeGroup "maven.modrinth"
 		}
 	}
+	maven {
+		url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+	}
+	maven {
+		url 'https://jitpack.io'
+	}
+}
+
+loom {
+	accessWidenerPath = file("src/main/resources/rpgmod.accesswidener")
 }
 
 dependencies {
@@ -69,11 +79,23 @@ dependencies {
 	// Better Combat
 	modImplementation "maven.modrinth:better-combat:${project.better_combat}"
 
+	// Combat Roll
+//	modImplementation "maven.modrinth:combat-roll:${project.combat_roll_version}"
+
+	// Projectile Damage Attribute
+	modImplementation "maven.modrinth:projectile-damage-attribute:${project.projectile_damage_attribute_version}"
+
 	// Trinkets
-	modImplementation "dev.emi:trinkets:${trinkets_version}"
+	modImplementation "dev.emi:trinkets:${project.trinkets_version}"
+
+	// Gecko Lib
+	modImplementation "software.bernie.geckolib:geckolib-fabric-1.19.3:${project.gecko_lib_version}"
+
+	// Apoli
+	modImplementation "com.github.apace100:apoli:${project.apoli_version}"
 
 	// Data Attributes
-	modImplementation "maven.modrinth:data-attributes:${data_attributes}"
+//	modImplementation "maven.modrinth:data-attributes:${project.data_attributes}"
 }
 
 processResources {

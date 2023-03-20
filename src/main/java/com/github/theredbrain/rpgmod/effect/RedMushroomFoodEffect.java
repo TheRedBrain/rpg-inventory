@@ -1,6 +1,5 @@
 package com.github.theredbrain.rpgmod.effect;
 
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectCategory;
 
 public class RedMushroomFoodEffect extends FoodStatusEffect {
