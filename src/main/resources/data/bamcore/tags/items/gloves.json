@@ -1,0 +1,10 @@
+{
+  "values": [
+    "bamcore:leather_gloves_trinket",
+    "bamcore:chainmail_gloves_trinket",
+    "bamcore:iron_gloves_trinket",
+    "bamcore:diamond_gloves_trinket",
+    "bamcore:golden_gloves_trinket",
+    "bamcore:netherite_gloves_trinket"
+  ]
+}

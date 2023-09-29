@@ -1,0 +1,50 @@
+accessWidener v1 named
+
+#extendable class net/bettercombat/api/WeaponAttributes
+#accessible method net/minecraft/client/MinecraftClient doAttack ()Z
+accessible method net/minecraft/client/world/ClientWorld getPendingUpdateManager ()Lnet/minecraft/client/network/PendingUpdateManager;
+#accessible method net/minecraft/client/MinecraftClient handleBlockBreaking (Z)V
+accessible method net/minecraft/entity/player/PlayerEntity closeHandledScreen ()V
+#accessible method net/minecraft/client/gui/screen/ingame/HandledScreen drawItem (Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V
+accessible method net/minecraft/client/gui/screen/ingame/HandledScreen drawSlot (Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/screen/slot/Slot;)V
+extendable method net/minecraft/client/gui/screen/ingame/HandledScreen drawSlot (Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/screen/slot/Slot;)V
+
+accessible method net/minecraft/client/MinecraftClient doItemUse ()V
+#accessible method net/minecraft/client/gui/screen/ingame/HandledScreen isPointOverSlot (Lnet/minecraft/screen/slot/Slot;DD)Z
+#accessible method net/minecraft/client/world/ClientWorld getPendingUpdateManager ()Lnet/minecraft/client/network/PendingUpdateManager;
+#accessible method net/minecraft/server/network/ServerPlayerInteractionManager setGameMode (Lnet/minecraft/world/Gamemode;Lnet/minecraft/world/Gamemode;)V#etGameMode (Lnet/minecraft/world/Gamemode;Lnet/minecraft/world/Gamemode;)V
+#accessible method net/minecraft/server/network/ServerPlayerInteractionManager setGameMode(Lnet/minecraft/world/GameMode;Lnet/minecraft/world/GameMode;)V
+
+#accessible field net/minecraft/server/network/ServerPlayerEntity sculkShriekerWarningManager Lnet/minecraft/block/entity/SculkShriekerWarningManager;
+#accessible field net/minecraft/entity/Entity dimensions Lnet/minecraft/entity/EntityDimensions;
+#accessible field net/minecraft/entity/Entity standingEyeHeight F
+
+#accessible field net/minecraft/entity/LivingEntity activeStatusEffects Ljava/util/Map;
+#accessible field net/minecraft/entity/LivingEntity lastAttackedTime I
+#accessible field net/minecraft/entity/LivingEntity lastDamageSource Lnet/minecraft/entity/damage/DamageSource;
+accessible field net/minecraft/entity/LivingEntity syncedHandStacks Lnet/minecraft/util/collection/DefaultedList;
+mutable field net/minecraft/entity/LivingEntity syncedHandStacks Lnet/minecraft/util/collection/DefaultedList;
+accessible field net/minecraft/entity/LivingEntity syncedArmorStacks Lnet/minecraft/util/collection/DefaultedList;
+mutable field net/minecraft/entity/LivingEntity syncedArmorStacks Lnet/minecraft/util/collection/DefaultedList;
+#accessible field net/minecraft/client/gui/screen/ingame/HandledScreen touchDropOriginSlot Lnet/minecraft/screen/slot/Slot;
+#accessible field net/minecraft/client/gui/screen/ingame/HandledScreen touchIsRightClickDrag Z
+#accessible field net/minecraft/client/gui/screen/ingame/HandledScreen touchDragStack Lnet/minecraft/item/ItemStack;
+#accessible field net/minecraft/client/gui/screen/ingame/HandledScreen touchDropX I
+#accessible field net/minecraft/client/gui/screen/ingame/HandledScreen touchDropY I
+#accessible field net/minecraft/client/gui/screen/ingame/HandledScreen touchDropTime J
+#accessible field net/minecraft/client/gui/screen/ingame/HandledScreen touchDropReturningStack Lnet/minecraft/item/ItemStack;
+#accessible field net/minecraft/client/gui/screen/ingame/HandledScreen draggedStackRemainder I
+accessible field net/minecraft/item/ArmorItem MODIFIERS Ljava/util/EnumMap;
+mutable field net/minecraft/item/ArmorItem MODIFIERS Ljava/util/EnumMap;
+
+#accessible method net/minecraft/entity/LivingEntity setPositionInBed (Lnet/minecraft/util/math/BlockPos;)V
+#extendable method net/minecraft/entity/LivingEntity getMaxHealth ()F
+
+#accessible field net/minecraft/server/network/ServerPlayerEntity filterText Z
+#accessible field net/minecraft/server/network/ServerPlayerEntity seenCredits Z
+#accessible field net/minecraft/server/network/ServerPlayerEntity session Lnet/minecraft/network/encryption/PublicPlayerSession;
+#accessible field net/minecraft/entity/player/PlayerEntity hungerManager Lnet/minecraft/entity/player/Hungermanager;
+
+# Remove private keyword from subclass net.example.Example.SubClass
+#accessible class net/minecraft/server/command/LootCommand$FeedbackMessage
+#accessible class net/minecraft/command/EntitySelectorOptions$SelectorOption

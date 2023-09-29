@@ -2,4 +2,5 @@
 
 to be renamed
 
-implements various things used on a rpg server
+- changes the PlayerScreenHandler to a custom ScreenHandler
+- extends the PlayerInventory by a few slots

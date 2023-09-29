@@ -1,0 +1,6 @@
+{
+  "icon": "bamcore:item/empty_slot_spell",
+  "tooltip_predicates": [
+    "trinkets:none"
+  ]
+}
