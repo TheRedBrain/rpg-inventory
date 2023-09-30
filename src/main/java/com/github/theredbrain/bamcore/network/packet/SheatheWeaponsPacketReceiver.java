@@ -17,39 +17,22 @@ public class SheatheWeaponsPacketReceiver implements ServerPlayNetworking.PlayCh
         server.execute(() -> {
 
         String playerName = player.getName().getString();
-        String command = "";
-        if (player.hasStatusEffect(StatusEffectsRegistry.WEAPONS_SHEATHED_EFFECT)) {
-            command = "effect clear " + playerName + " bamcore:weapons_sheathed_effect";
-        } else if (canSheathe){
-            command = "effect give " + playerName + " bamcore:weapons_sheathed_effect infinite 0 true";
-        }
-        if (!command.equals("")) {
-            server.getCommandManager().executeWithPrefix(server.getCommandSource(), command);
-        }
-//            int handSlotId;
-//            int alternateHandSlotId;
-//
-//            PlayerInventory playerInventory = player.getInventory();
-//
-//            if (canSheathe) {
-//                handSlotId = 40;
-//                alternateHandSlotId = 42;
-//            } else {
-//                handSlotId = 41;
-//                alternateHandSlotId = 43;
-//            }
-//
-//            ItemStack itemStack = playerInventory.getStack(handSlotId);
-//            ItemStack alternateItemStack = playerInventory.getStack(alternateHandSlotId);
-//
-//            if (itemStack.isEmpty() && alternateItemStack.isEmpty()) {
-//                return;
-//            }
-//            playerInventory.setStack(handSlotId, alternateItemStack);
-//            playerInventory.setStack(alternateHandSlotId, itemStack);
-//            playerInventory.markDirty();
-//
-//            // TODO play sounds
+            // TODO check if player has enough stamina to swap weapons
+            if (true) {
+                String command = "";
+                if (player.hasStatusEffect(StatusEffectsRegistry.WEAPONS_SHEATHED_EFFECT)) {
+                    command = "effect clear " + playerName + " bamcore:weapons_sheathed_effect";
+                } else if (canSheathe) {
+                    command = "effect give " + playerName + " bamcore:weapons_sheathed_effect infinite 0 true";
+                }
+                if (!command.equals("")) {
+                    server.getCommandManager().executeWithPrefix(server.getCommandSource(), command);
+                }
+                // TODO player loses stamina
+            } else {
+                // TODO send message about not enough stamina
+            }
+        // TODO play sounds, maybe when getting and losing the effect
         });
     }
 }

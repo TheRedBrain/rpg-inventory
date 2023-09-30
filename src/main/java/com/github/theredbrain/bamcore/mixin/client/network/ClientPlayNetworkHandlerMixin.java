@@ -35,44 +35,6 @@ public abstract class ClientPlayNetworkHandlerMixin {
     @Final
     private MinecraftClient client;
 
-//    @Shadow
-//    private ClientWorld world;
-
-//    /**
-//     * @author TheRedBrain
-//     * @reason use custom MxtAbstractPlayerScreenHandler and MxtPlayerInventory
-//     */
-//    @Overwrite
-//    public void onUpdateSelectedSlot(UpdateSelectedSlotS2CPacket packet) {
-//        NetworkThreadUtils.forceMainThread(packet, (ClientPlayNetworkHandler) (Object) this, this.client);
-//        if (MxtPlayerInventory.isValidHotbarIndex(packet.getSlot())) {
-//            ((DuckPlayerEntityMixin)this.client.player).getMxtPlayerInventory().selectedSlot = packet.getSlot();
-//        }
-//    }
-
-//    private static ItemStack getActiveTotemOfUndying(PlayerEntity player) {
-//        for (Hand hand : Hand.values()) {
-//            ItemStack itemStack = player.getStackInHand(hand);
-//            if (!itemStack.isOf(Items.TOTEM_OF_UNDYING)) continue;
-//            return itemStack;
-//        }
-//        return new ItemStack(Items.TOTEM_OF_UNDYING);
-//    }
-
-//    @Override
-//    public void onOpenHorseScreen(OpenHorseScreenS2CPacket packet) {
-//        NetworkThreadUtils.forceMainThread(packet, this, this.client);
-//        Entity entity = this.world.getEntityById(packet.getHorseId());
-//        if (entity instanceof AbstractHorseEntity) {
-//            ClientPlayerEntity clientPlayerEntity = this.client.player;
-//            AbstractHorseEntity abstractHorseEntity = (AbstractHorseEntity)entity;
-//            SimpleInventory simpleInventory = new SimpleInventory(packet.getSlotCount());
-//            HorseScreenHandler horseScreenHandler = new HorseScreenHandler(packet.getSyncId(), clientPlayerEntity.getInventory(), simpleInventory, abstractHorseEntity);
-//            clientPlayerEntity.currentScreenHandler = horseScreenHandler;
-//            this.client.setScreen(new HorseScreen(horseScreenHandler, clientPlayerEntity.getInventory(), abstractHorseEntity));
-//        }
-//    }
-
     /**
      * @author TheRedBrain
      * @reason use AdventureInventoryScreenHandler if in adventure mode
@@ -132,46 +94,4 @@ public abstract class ClientPlayNetworkHandlerMixin {
             ((TrinketPlayerScreenHandler) ((DuckPlayerEntityMixin)clientPlayerEntity2).bamcore$getInventoryScreenHandler()).trinkets$updateTrinketSlots(false);
         }
     }
-
-//    @Override
-//    public void onEntityEquipmentUpdate(EntityEquipmentUpdateS2CPacket packet) {
-//        NetworkThreadUtils.forceMainThread(packet, this, this.client);
-//        Entity entity = this.world.getEntityById(packet.getId());
-//        if (entity != null) {
-//            packet.getEquipmentList().forEach(pair -> entity.equipStack((EquipmentSlot)((Object)((Object)pair.getFirst())), (ItemStack)pair.getSecond()));
-//        }
-//    }
-
-//    @Override
-//    public void onPlayerAbilities(PlayerAbilitiesS2CPacket packet) {
-//        NetworkThreadUtils.forceMainThread(packet, this, this.client);
-//        ClientPlayerEntity playerEntity = this.client.player;
-//        playerEntity.getAbilities().flying = packet.isFlying();
-//        playerEntity.getAbilities().creativeMode = packet.isCreativeMode();
-//        playerEntity.getAbilities().invulnerable = packet.isInvulnerable();
-//        playerEntity.getAbilities().allowFlying = packet.allowFlying();
-//        playerEntity.getAbilities().setFlySpeed(packet.getFlySpeed());
-//        playerEntity.getAbilities().setWalkSpeed(packet.getWalkSpeed());
-//    }
-
-//    public void mxtOnEntityEquipmentUpdate(MxtEntityEquipmentUpdateS2CPacket var1);
-//
-//    @Override
-//    public void mxtOnEntityEquipmentUpdate(MxtEntityEquipmentUpdateS2CPacket packet) {
-//        NetworkThreadUtils.forceMainThread(packet, this, this.client);
-//        Entity entity = this.world.getEntityById(packet.getId());
-//        if (entity != null) {
-//            packet.getEquipmentList().forEach(pair -> ((DuckEntityMixin) entity).mxtEquipStack((MxtEquipmentSlot)((Object)((Object)pair.getFirst())), (ItemStack)pair.getSecond()));
-//        }
-//    }
-//
-//    public void mxtOnHealthUpdate(MxtHealthUpdateS2CPacket packet) {
-//        NetworkThreadUtils.forceMainThread(packet, this, this.client);
-//        ((DuckClientPlayerEntityMixin) this.client.player).mxtUpdateHealth(packet.getHealth(), packet.getHealthRegenerationTime(), packet.getHealthEffectiveRegenerationTime(), packet.getHealthRegenerationCounter());
-//    }
-//
-//    public void mxtOnManaUpdate(MxtManaUpdateS2CPacket packet) {
-//        NetworkThreadUtils.forceMainThread(packet, this, this.client);
-//        ((DuckClientPlayerEntityMixin) this.client.player).mxtUpdateMana(packet.getMana(), packet.getManaRegenerationDelay(), packet.getManaRegenerationCounter());
-//    }
 }

@@ -29,15 +29,7 @@ public class EntityRegistry {
     public static final BlockEntityType<ChunkLoaderBlockBlockEntity> CHUNK_LOADER_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
             BetterAdventureModCore.identifier("chunk_loader_block"),
             FabricBlockEntityTypeBuilder.create(ChunkLoaderBlockBlockEntity::new, BlockRegistry.CHUNK_LOADER_BLOCK).build());
-//    public static final EntityType<CentaurMountEntity> CENTAUR_MOUNT = Registry.register(Registries.ENTITY_TYPE,
-//            RPGMod.identifier("centaur_mount"), FabricEntityTypeBuilder.create(SpawnGroup.MISC, CentaurMountEntity::new)
-//                    .dimensions(EntityDimensions.fixed(1/*1.3964844f*/, 1.6f)).build());
 
     public static void init() {
-        registerEntityAttributes();
-    }
-
-    private static void registerEntityAttributes() {
-//        FabricDefaultAttributeRegistry.register(CENTAUR_MOUNT, MountEntity.createMountAttributes());
     }
 }

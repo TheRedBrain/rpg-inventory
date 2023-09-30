@@ -16,23 +16,25 @@ repositories {
 	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
 	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
 	// for more information about repositories.
-	maven { url "https://maven.shedaniel.me/" }
+
+	// Cloth Config
 	maven {
-		name = "TerraformersMC"
-		url = "https://maven.terraformersmc.com/"}
-	maven {
-		name = "KosmX's maven"
-		url = "https://maven.kosmx.dev/"
+		url "https://maven.shedaniel.me/"
 	}
-	maven { url 'https://api.modrinth.com/maven' }
+
+	// Trinkets, Cloth Config
 	maven {
 		name = "TerraformersMC"
 		url = "https://maven.terraformersmc.com/"
 	}
+
+	// Trinkets
 	maven {
 		name = "Ladysnake Libs"
 		url = 'https://maven.ladysnake.org/releases'
 	}
+
+	// Spell Power, Spell Engine, Better Combat
 	maven {
 		name = "Modrinth"
 		url = "https://api.modrinth.com/maven"
@@ -40,22 +42,34 @@ repositories {
 			includeGroup "maven.modrinth"
 		}
 	}
+
+	// Player Animator
 	maven {
-		url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+		name "KosmX's maven"
+		url 'https://maven.kosmx.dev/'
 	}
 
-	// Apoli
+//	maven {
+//		url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+//	}
+
+	// Mixin Extras
 	maven {
 		url 'https://jitpack.io'
 	}
+
+//	maven {
+//		name = "AdrianTodt's Maven"
+//		url = "https://dl.bintray.com/adriantodt/maven"
+//	}
+//	maven {
+//		url "https://maven.jamieswhiteshirt.com/libs-release/"
+//	}
+
+	// Owo
 	maven {
-		name = "AdrianTodt's Maven"
-		url = "https://dl.bintray.com/adriantodt/maven"
+		url 'https://maven.wispforest.io'
 	}
-	maven {
-		url "https://maven.jamieswhiteshirt.com/libs-release/"
-	}
-	maven { url 'https://maven.wispforest.io' }
 }
 
 loom {
@@ -107,20 +121,15 @@ dependencies {
 	modImplementation "dev.emi:trinkets:${project.trinkets_version}"
 
 	// Gecko Lib
-	modImplementation "software.bernie.geckolib:geckolib-fabric-1.20.1:${project.gecko_lib_version}"
+//	modImplementation "software.bernie.geckolib:geckolib-fabric-1.20.1:${project.gecko_lib_version}"
 
-	// Origins
-//	modImplementation "com.github.apace100:origins-fabric:${project.origins_version}"
 
 	// Cardinal Components
 	modImplementation ("dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cca_version}")
 	modImplementation ("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cca_version}")
 
 //	// Apoli
-	modImplementation "com.github.apace100:apoli:${project.apoli_version}"
-
-	// Data Attributes
-//	modImplementation "maven.modrinth:data-attributes:${project.data_attributes}"
+//	modImplementation "com.github.apace100:apoli:${project.apoli_version}"
 
 	// Immersive Portals Core
 	modImplementation ("com.github.iPortalTeam.ImmersivePortalsMod:imm_ptl_core:${project.q_misc_util_version}"){
@@ -128,10 +137,11 @@ dependencies {
 		transitive(false)
 	}
 
-	// Mixin Extras (needed by Immersive Portals Core)
+	// Mixin Extras
 	api("com.github.LlamaLad7:MixinExtras:0.2.0-beta.4")
 	annotationProcessor("com.github.LlamaLad7:MixinExtras:0.2.0-beta.4")
 
+	// Tiny Config
 	implementation include("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}")
 
 	// Miscellaneous Utility Library
@@ -140,11 +150,12 @@ dependencies {
 		transitive(false)
 	}
 
-	// CreoLib
-//	modImplementation "maven.modrinth:creo-lib:${project.creolib_version}"
-
 	// Owo Lib
 	modImplementation "io.wispforest:owo-lib:${project.owo_version}"
+	include "io.wispforest:owo-sentinel:${project.owo_version}"
+
+	// include this if you don't want force your users to install owo
+	// sentinel will warn them and give the option to download it automatically
 	include "io.wispforest:owo-sentinel:${project.owo_version}"
 }
 

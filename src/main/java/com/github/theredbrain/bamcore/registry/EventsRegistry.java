@@ -24,6 +24,7 @@ public class EventsRegistry {
             ComponentsRegistry.LAST_LOGOUT_TIME.get(player).setValue(server.getOverworld().getTime());
         });
 
+        // TODO
         // player dies
 //            // clear inventory
 //            player.getInventory().clear();

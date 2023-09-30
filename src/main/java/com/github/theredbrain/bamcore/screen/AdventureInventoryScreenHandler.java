@@ -30,18 +30,12 @@ import java.util.*;
 
 public class AdventureInventoryScreenHandler extends ScreenHandler implements TrinketPlayerScreenHandler {
     public static final Identifier BLOCK_ATLAS_TEXTURE = new Identifier("textures/atlas/blocks.png");
-//    public static final Identifier EMPTY_BELT_SLOT_TEXTURE = RPGMod.identifier("item/empty_armor_slot_belt");
     public static final Identifier EMPTY_BOOTS_SLOT_TEXTURE = BetterAdventureModCore.identifier("item/empty_armor_slot_boots");
     public static final Identifier EMPTY_CHESTPLATE_SLOT_TEXTURE = BetterAdventureModCore.identifier("item/empty_armor_slot_chestplate");
-//    public static final Identifier EMPTY_GLOVES_SLOT_TEXTURE = RPGMod.identifier("item/empty_armor_slot_gloves");
     public static final Identifier EMPTY_HELMET_SLOT_TEXTURE = BetterAdventureModCore.identifier("item/empty_armor_slot_helmet");
     public static final Identifier EMPTY_LEGGINGS_SLOT_TEXTURE = BetterAdventureModCore.identifier("item/empty_armor_slot_leggings");
-//    public static final Identifier EMPTY_NECKLACE_SLOT_TEXTURE = RPGMod.identifier("item/empty_armor_slot_necklace");
-//    public static final Identifier EMPTY_RING_SLOT_TEXTURE = RPGMod.identifier("item/empty_armor_slot_ring_2");
     public static final Identifier EMPTY_OFFHAND_ARMOR_SLOT = BetterAdventureModCore.identifier("item/empty_armor_slot_shield");
-//    public static final Identifier EMPTY_SHOULDERS_SLOT_TEXTURE = RPGMod.identifier("item/empty_armor_slot_shoulders");
     public static final Identifier EMPTY_MAINHAND_ARMOR_SLOT = BetterAdventureModCore.identifier("item/empty_armor_slot_sword");
-//    public static final Identifier EMPTY_MOUNT_SLOT_TEXTURE = RPGMod.identifier("item/empty_armor_slot_mount");
     public final boolean onServer;
     private final PlayerEntity owner;
     private int spellSlotsX = 98;
@@ -207,68 +201,6 @@ public class AdventureInventoryScreenHandler extends ScreenHandler implements Tr
                 return Pair.of(BLOCK_ATLAS_TEXTURE, EMPTY_HELMET_SLOT_TEXTURE);
             }
         });
-//        // gloves slot
-//        this.addSlot(new Slot(inventory, 40, 77, 62) {
-//
-//            @Override
-//            public void setStack(ItemStack stack) {
-//                ItemStack itemStack = this.getStack();
-//                super.setStack(stack);
-//                owner.onEquipStack(ExtendedEquipmentSlot.GLOVES, itemStack, stack);
-//            }
-//
-//            @Override
-//            public int getMaxItemCount() {
-//                return 1;
-//            }
-//
-//            @Override
-//            public boolean canInsert(ItemStack stack) {
-//                return (ExtendedEquipmentSlot.GLOVES == MobEntity.getPreferredEquipmentSlot(stack) || stack.isIn(Tags.EXTRA_GLOVES_ITEMS))
-//                        && (owner.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).isAdventure()));
-//            }
-//
-//            @Override
-//            public boolean canTakeItems(PlayerEntity playerEntity) {
-//                return owner.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).isAdventure());
-//            }
-//
-//            @Override
-//            public Pair<Identifier, Identifier> getBackgroundSprite() {
-//                return Pair.of(BLOCK_ATLAS_TEXTURE, EMPTY_GLOVES_SLOT_TEXTURE);
-//            }
-//        });
-//        // shoulders slot
-//        this.addSlot(new Slot(inventory, 41, 8, 26) {
-//
-//            @Override
-//            public void setStack(ItemStack stack) {
-//                ItemStack itemStack = this.getStack();
-//                super.setStack(stack);
-//                owner.onEquipStack(ExtendedEquipmentSlot.SHOULDERS, itemStack, stack);
-//            }
-//
-//            @Override
-//            public int getMaxItemCount() {
-//                return 1;
-//            }
-//
-//            @Override
-//            public boolean canInsert(ItemStack stack) {
-//                return (ExtendedEquipmentSlot.SHOULDERS == MobEntity.getPreferredEquipmentSlot(stack) || stack.isIn(Tags.EXTRA_SHOULDERS_ITEMS))
-//                        && (owner.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).isAdventure()));
-//            }
-//
-//            @Override
-//            public boolean canTakeItems(PlayerEntity playerEntity) {
-//                return owner.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).isAdventure());
-//            }
-//
-//            @Override
-//            public Pair<Identifier, Identifier> getBackgroundSprite() {
-//                return Pair.of(BLOCK_ATLAS_TEXTURE, EMPTY_SHOULDERS_SLOT_TEXTURE);
-//            }
-//        });
         // mainhand slot
         this.addSlot(new Slot(inventory, 40, 8, 98) {
 
@@ -373,15 +305,8 @@ public class AdventureInventoryScreenHandler extends ScreenHandler implements Tr
     }
 
     public static boolean isInHotbar(int slot) {
-        return slot >= 0 && slot < 9;// || slot == 45;
+        return slot >= 0 && slot < 9;
     }
-
-//    @Override
-//    protected boolean insertItem(ItemStack stack, int startIndex, int endIndex, boolean fromLast) {
-//        boolean bl = super.insertItem(stack, startIndex, endIndex, fromLast);
-////        RPGMod.LOGGER.info("insertItem: " + bl);
-//        return bl;
-//    }
 
     @Override
     public void onClosed(PlayerEntity player) {
@@ -391,84 +316,9 @@ public class AdventureInventoryScreenHandler extends ScreenHandler implements Tr
             TrinketsClient.quickMoveGroup = null;
         }
         super.onClosed(player);
-//        if (owner instanceof ServerPlayerEntity) {
-//            RPGMod.LOGGER.info("-----onClosed-----");
-//            int activeSpellSlotAmount = (int) owner.getAttributeInstance(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT).getValue();
-//
-////            PlayerInventory playerInventory = owner.getInventory();
-////            this.inventory
-//            for (int i = 0; i < 8; i++) {
-//                if (activeSpellSlotAmount <= i) {
-//                    RPGMod.LOGGER.info("spell slot " + i + " is inactive");
-//
-//                    RPGMod.LOGGER.info("before drop attempt: spell slot " + i + " is empty: " + this.slots.get(spellSlotIds[i]).inventory.isEmpty());
-////                    owner.dropItem(this.slots.get(spellSlotIds[i]).inventory.removeStack(0), true);
-//                    this.inventory.offerOrDrop(this.slots.get(spellSlotIds[i]).inventory.removeStack(0));
-//                    RPGMod.LOGGER.info("after drop attempt: spell slot " + i + " is empty: " + this.slots.get(spellSlotIds[i]).inventory.isEmpty());
-//                } else {
-//                    RPGMod.LOGGER.info("spell slot " + i + " is active");
-//                }
-////                RPGMod.LOGGER.info("spell slot " + i + "'s size: " + this.slots.get(spellSlotIds[i]).inventory.size());
-//                for (int j = 0; j < this.slots.get(spellSlotIds[i]).inventory.size(); j++) {
-//                    RPGMod.LOGGER.info("spell slot " + i + "'s itemStack in slot " + j + ": " + this.slots.get(spellSlotIds[i]).inventory.getStack(j).toString());
-//                }
-//                RPGMod.LOGGER.info("spell slot id for slot " + i + ": " + spellSlotIds[i]);
-//            }
-////            String slotGroup = slot.inventory().getSlotType().getGroup();
-////            if ((Objects.equals(slotGroup, "spell_slot_1") && activeSpellSlotAmount < 1)
-////                    || (Objects.equals(slotGroup, "spell_slot_2") && activeSpellSlotAmount < 2)
-////                    || (Objects.equals(slotGroup, "spell_slot_3") && activeSpellSlotAmount < 3)
-////                    || (Objects.equals(slotGroup, "spell_slot_4") && activeSpellSlotAmount < 4)
-////                    || (Objects.equals(slotGroup, "spell_slot_5") && activeSpellSlotAmount < 5)
-////                    || (Objects.equals(slotGroup, "spell_slot_6") && activeSpellSlotAmount < 6)
-////                    || (Objects.equals(slotGroup, "spell_slot_7") && activeSpellSlotAmount < 7)
-////                    || (Objects.equals(slotGroup, "spell_slot_8") && activeSpellSlotAmount < 8)) {
-////                Slot currentSlot = slot.inventory().sta.getStack(slot.index());
-////                playerEntity.getInventory().offerOrDrop(slot.inventory().getStack(slot.index()));
-////            }
-//        }
-    }
-    /**
-     * Called when a slot's content has changed.
-     *
-     * <p>This is not called by default; subclasses that override this method
-     * should also use a custom {@link Inventory} whose {@link Inventory#markDirty markDirty} method is
-     * overridden to call this method as a backing inventory of the slot.
-     *
-     * <p>This can be used to update the output slot when input changes.
-     */
-    @Override
-    public void onContentChanged(Inventory inventory) {
-        super.onContentChanged(inventory);
-//        RPGMod.LOGGER.info("-----onContentChanged-----");
-////        if (owner instanceof ServerPlayerEntity) {
-//            int activeSpellSlotAmount = (int) owner.getAttributeInstance(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT).getValue();
-//
-////            PlayerInventory playerInventory = owner.getInventory();
-////            this.inventory
-//            for (int i = 0; i < 8; i++) {
-//                if (activeSpellSlotAmount <= i) {
-//                    RPGMod.LOGGER.info("spell slot " + i + " is inactive");
-//                    RPGMod.LOGGER.info("spell slot " + i + " is empty. " + this.slots.get(spellSlotIds[i]).inventory.isEmpty());
-//
-//                    this.inventory.offerOrDrop(this.slots.get(spellSlotIds[i]).inventory.removeStack(0));
-//                }
-//            }
-//            String slotGroup = slot.inventory().getSlotType().getGroup();
-//            if ((Objects.equals(slotGroup, "spell_slot_1") && activeSpellSlotAmount < 1)
-//                    || (Objects.equals(slotGroup, "spell_slot_2") && activeSpellSlotAmount < 2)
-//                    || (Objects.equals(slotGroup, "spell_slot_3") && activeSpellSlotAmount < 3)
-//                    || (Objects.equals(slotGroup, "spell_slot_4") && activeSpellSlotAmount < 4)
-//                    || (Objects.equals(slotGroup, "spell_slot_5") && activeSpellSlotAmount < 5)
-//                    || (Objects.equals(slotGroup, "spell_slot_6") && activeSpellSlotAmount < 6)
-//                    || (Objects.equals(slotGroup, "spell_slot_7") && activeSpellSlotAmount < 7)
-//                    || (Objects.equals(slotGroup, "spell_slot_8") && activeSpellSlotAmount < 8)) {
-//                Slot currentSlot = slot.inventory().sta.getStack(slot.index());
-//                playerEntity.getInventory().offerOrDrop(slot.inventory().getStack(slot.index()));
-//            }
-//        }
     }
 
+    // FIXME quickmove spellbooks doesn't respect active spell book slots
     @Override
     public ItemStack quickMove(PlayerEntity player, int index) {
         ItemStack itemStack = ItemStack.EMPTY;
@@ -559,8 +409,6 @@ public class AdventureInventoryScreenHandler extends ScreenHandler implements Tr
         return true;
     }
 
-    // test
-/*
     @Override
     public void trinkets$updateTrinketSlots(boolean slotsChanged) {
         TrinketsApi.getTrinketComponent(owner).ifPresent(trinkets -> {
@@ -583,23 +431,8 @@ public class AdventureInventoryScreenHandler extends ScreenHandler implements Tr
                 int order = group.getOrder();
                 int id = group.getSlotId();
                 if (id != -1) {
-//                    if (this.slots.size() > id) {
-//                        Slot slot = this.slots.get(id);
-//                        if (!(slot instanceof SurvivalTrinketSlot)) {
-//                            groupPos.put(group, new Point(slot.x, slot.y));
-//                            groupNums.put(group, -id);
-//                        }
-//                    }
-                    return;
+                    continue;
                 } else {
-//                    int x = 77;
-//                    int y;
-//                    if (groupNum >= 4) {
-//                        x = 4 - (groupNum / 4) * 18;
-//                        y = 8 + (groupNum % 4) * 18;
-//                    } else {
-//                        y = 62 - groupNum * 18;
-//                    }
                     int x;
                     int y;
                     if (order == 0) {
@@ -665,239 +498,9 @@ public class AdventureInventoryScreenHandler extends ScreenHandler implements Tr
                     } else if (order == 12) {
                         // gloves
                         x = 77;
-                        y = 62;
-
-                    } else if (order == 13) {
-                        // shoulders
-                        x = 8;
-                        y = 26;
-
-                    } else {
-                        return;
-                    }
-                    groupPos.put(group, new Point(x, y));
-                    groupNums.put(group, groupNum);
-                    groupNum++;
-                }
-            }
-            groupCount = Math.max(0, groupNum - 4);
-            trinketSlotStart = slots.size();
-            slotWidths.clear();
-            slotHeights.clear();
-            slotTypes.clear();
-
-            int activeSpellSlotAmount = (int) owner.getAttributeInstance(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT).getValue();
-            AdventureTrinketSlot[] newSlots = new AdventureTrinketSlot[this.trinketSlotAmount];
-
-            for (Map.Entry<String, Map<String, TrinketInventory>> entry : trinkets.getInventory().entrySet()) {
-                String groupId = entry.getKey();
-                SlotGroup group = groups.get(groupId);
-                int groupOffset = 1;
-
-                if (group.getSlotId() != -1) {
-                    groupOffset++;
-                }
-                int width = 0;
-                Point pos = trinkets$getGroupPos(group);
-                if (pos == null) {
-                    continue;
-                }
-                for (Map.Entry<String, TrinketInventory> slot : entry.getValue().entrySet().stream().sorted((a, b) ->
-                        Integer.compare(a.getValue().getSlotType().getOrder(), b.getValue().getSlotType().getOrder())).toList()) {
-                    TrinketInventory stacks = slot.getValue();
-                    if (stacks.size() == 0) {
-                        continue;
-                    }
-                    int slotOffset = 1;
-//                    int x = (int) ((groupOffset / 2) * 18 * Math.pow(-1, groupOffset));
-                    int x = groupPos.get(group).x();
-                    slotHeights.computeIfAbsent(group, (k) -> new ArrayList<>()).add(new Point(x, stacks.size()));
-                    slotTypes.computeIfAbsent(group, (k) -> new ArrayList<>()).add(stacks.getSlotType());
-                    for (int i = 0; i < stacks.size(); i++) {
-
-                        int order = group.getOrder();
-//                        int y = (int) (pos.y() + (slotOffset / 2) * 18 * Math.pow(-1, slotOffset));
-                        this.addSlot(new AdventureTrinketSlot(stacks, i, groupPos.get(group).x(), groupPos.get(group).y(), group, stacks.getSlotType(), 0, owner) {
-                            @Override
-                            public boolean isEnabled() {
-                                return !((Objects.equals(groupId, "spell_slot_1") && activeSpellSlotAmount < 1)
-                                        || (Objects.equals(groupId, "spell_slot_2") && activeSpellSlotAmount < 2)
-                                        || (Objects.equals(groupId, "spell_slot_3") && activeSpellSlotAmount < 3)
-                                        || (Objects.equals(groupId, "spell_slot_4") && activeSpellSlotAmount < 4)
-                                        || (Objects.equals(groupId, "spell_slot_5") && activeSpellSlotAmount < 5)
-                                        || (Objects.equals(groupId, "spell_slot_6") && activeSpellSlotAmount < 6)
-                                        || (Objects.equals(groupId, "spell_slot_7") && activeSpellSlotAmount < 7)
-                                        || (Objects.equals(groupId, "spell_slot_8") && activeSpellSlotAmount < 8));
-                            }
-                        });
-                        slotOffset++;
-//                        newSlots[order] = new AdventureTrinketSlot(stacks, i, groupPos.get(group).x(), groupPos.get(group).y(), group, stacks.getSlotType(), 0, owner) {
-//                            @Override
-//                            public boolean isEnabled() {
-//                                return !((Objects.equals(groupId, "spell_slot_1") && activeSpellSlotAmount < 1)
-//                                        || (Objects.equals(groupId, "spell_slot_2") && activeSpellSlotAmount < 2)
-//                                        || (Objects.equals(groupId, "spell_slot_3") && activeSpellSlotAmount < 3)
-//                                        || (Objects.equals(groupId, "spell_slot_4") && activeSpellSlotAmount < 4)
-//                                        || (Objects.equals(groupId, "spell_slot_5") && activeSpellSlotAmount < 5)
-//                                        || (Objects.equals(groupId, "spell_slot_6") && activeSpellSlotAmount < 6)
-//                                        || (Objects.equals(groupId, "spell_slot_7") && activeSpellSlotAmount < 7)
-//                                        || (Objects.equals(groupId, "spell_slot_8") && activeSpellSlotAmount < 8));
-//                            }
-//                        };
-                    }
-                    groupOffset++;
-                    width++;
-                }
-                slotWidths.put(group, width);
-            }
-
-//            for (int i = 0; i < this.trinketSlotAmount; i++) {
-//                if (newSlots[i] != null) {
-//                    RPGMod.LOGGER.info("newSlots[" + i + "] != null");
-//                    this.addSlot(newSlots[i]);
-//                } else {
-//                    RPGMod.LOGGER.info("newSlots[" + i + "] == null");
-//                }
-//            }
-
-            trinketSlotEnd = slots.size();
-        });
-    }
-/**/
-
-/**/
-    // Real one
-    @Override
-    public void trinkets$updateTrinketSlots(boolean slotsChanged) {
-        TrinketsApi.getTrinketComponent(owner).ifPresent(trinkets -> {
-//            RPGMod.LOGGER.info("slotsChanged: " + slotsChanged);
-            if (slotsChanged) trinkets.update();
-            Map<String, SlotGroup> groups = trinkets.getGroups();
-//            RPGMod.LOGGER.info("trinkets.getGroups: " + trinkets.getGroups());
-            groupPos.clear();
-            while (trinketSlotStart < trinketSlotEnd) {
-                slots.remove(trinketSlotStart);
-                ((ScreenHandlerAccessor) (this)).getTrackedStacks().remove(trinketSlotStart);
-                ((ScreenHandlerAccessor) (this)).getPreviousTrackedStacks().remove(trinketSlotStart);
-                trinketSlotEnd--;
-            }
-
-//            RPGMod.LOGGER.info("first time: trinkets.getInventory().entrySet(): " + trinkets.getInventory().entrySet());
-            int groupNum = 1; // Start at 1 because offhand exists
-
-//            RPGMod.LOGGER.info("groups.values(): " + groups.values());
-
-
-            //------------------------------------
-            for (SlotGroup group : groups.values().stream().sorted(Comparator.comparing(SlotGroup::getOrder)).toList()) {
-                if (!hasSlots(trinkets, group)) {
-                    continue;
-                }
-                int order = group.getOrder();
-                int id = group.getSlotId();
-                if (id != -1) {
-//                    if (this.slots.size() > id) {
-//                        Slot slot = this.slots.get(id);
-//                        if (!(slot instanceof SurvivalTrinketSlot)) {
-//                            groupPos.put(group, new Point(slot.x, slot.y));
-//                            groupNums.put(group, -id);
-//                        }
-//                    }
-                    continue;
-                } else {
-//                    int x = 77;
-//                    int y;
-//                    if (groupNum >= 4) {
-//                        x = 4 - (groupNum / 4) * 18;
-//                        y = 8 + (groupNum % 4) * 18;
-//                    } else {
-//                        y = 62 - groupNum * 18;
-//                    }
-//                    groupPos.put(group, new Point(x, y));
-//                    groupNums.put(group, groupNum);
-//                    groupNum++;
-                    int x;
-                    int y;
-                    if (order == 0) {
-//                        RPGMod.LOGGER.info("necklaces slot");
-                        // necklaces
-                        x = 52;
-                        y = -10;//8; // -18 to negate an offset on the OwoScreen I can't find the cause of
-
-                    } else if (order == 1) {
-//                        RPGMod.LOGGER.info("belts slot");
-                        // belts
-                        x = 8;
-                        y = 44;//62; // -18 to negate an offset on the OwoScreen I can't find the cause of
-
-                    } else if (order == 2) {
-//                        RPGMod.LOGGER.info("rings 1 slot");
-                        // rings 1
-                        x = 77;
-                        y = 8;//26; // -18 to negate an offset on the OwoScreen I can't find the cause of
-
-                    } else if (order == 3) {
-//                        RPGMod.LOGGER.info("rings 2 slot");
-                        // rings 2
-                        x = 77;
-                        y = 26;//44; // -18 to negate an offset on the OwoScreen I can't find the cause of
-
-                    } else if (order == 4) {
-//                        RPGMod.LOGGER.info("spell slot 1 slot");
-                        // spell slot 1
-                        x = this.spellSlotsX;
-                        y = this.spellSlotsY;
-
-                    } else if (order == 5) {
-//                        RPGMod.LOGGER.info("spell slot 2 slot");
-                        // spell slot 2
-                        x = this.spellSlotsX + 18;
-                        y = this.spellSlotsY;
-
-                    } else if (order == 6) {
-//                        RPGMod.LOGGER.info("spell slot 3 slot");
-                        // spell slot 3
-                        x = this.spellSlotsX + 36;
-                        y = this.spellSlotsY;
-
-                    } else if (order == 7) {
-//                        RPGMod.LOGGER.info("spell slot 4 slot");
-                        // spell slot 4
-                        x = this.spellSlotsX + 54;
-                        y = this.spellSlotsY;
-
-                    } else if (order == 8) {
-//                        RPGMod.LOGGER.info("spell slot 5 slot");
-                        // spell slot 5
-                        x = this.spellSlotsX;
-                        y = this.spellSlotsY + 18;
-
-                    } else if (order == 9) {
-//                        RPGMod.LOGGER.info("spell slot 6 slot");
-                        // spell slot 6
-                        x = this.spellSlotsX + 18;
-                        y = this.spellSlotsY + 18;
-
-                    } else if (order == 10) {
-//                        RPGMod.LOGGER.info("spell slot 7 slot");
-                        // spell slot 7
-                        x = this.spellSlotsX + 36;
-                        y = this.spellSlotsY + 18;
-
-                    } else if (order == 11) {
-//                        RPGMod.LOGGER.info("spell slot 8 slot");
-                        // spell slot 8
-                        x = this.spellSlotsX + 54;
-                        y = this.spellSlotsY + 18;
-
-                    } else if (order == 12) {
-//                        RPGMod.LOGGER.info("gloves slot");
-                        // gloves
-                        x = 77;
                         y = 44;//62; // -18 to negate an offset on the OwoScreen I can't find the cause of
 
                     } else if (order == 13) {
-//                        RPGMod.LOGGER.info("shoulders slot");
                         // shoulders
                         x = 8;
                         y = 8;//26; // -18 to negate an offset on the OwoScreen I can't find the cause of
@@ -910,116 +513,7 @@ public class AdventureInventoryScreenHandler extends ScreenHandler implements Tr
                     groupNum++;
                 }
             }
-            //------------------------------------
 
-
-//            for (SlotGroup group : groups.values().stream().sorted(Comparator.comparing(SlotGroup::getOrder)).toList()) {
-//                if (!hasSlots(trinkets, group)) {
-//                    RPGMod.LOGGER.info("!hasSlots(trinkets, group) -> continue");
-//                    continue;
-//                }
-//                int order = group.getOrder();
-//                int id = group.getSlotId();
-//                if (id != -1) {
-//                    return;
-//                } else {
-//                    int x;
-//                    int y;
-//                    if (order == 0) {
-////                        RPGMod.LOGGER.info("necklaces slot");
-//                        // necklaces
-//                        x = 52;
-//                        y = -10;//8; // -18 to negate an offset on the OwoScreen I can't find the cause of
-//
-//                    } else if (order == 1) {
-////                        RPGMod.LOGGER.info("belts slot");
-//                        // belts
-//                        x = 8;
-//                        y = 44;//62; // -18 to negate an offset on the OwoScreen I can't find the cause of
-//
-//                    } else if (order == 2) {
-////                        RPGMod.LOGGER.info("rings 1 slot");
-//                        // rings 1
-//                        x = 77;
-//                        y = 8;//26; // -18 to negate an offset on the OwoScreen I can't find the cause of
-//
-//                    } else if (order == 3) {
-////                        RPGMod.LOGGER.info("rings 2 slot");
-//                        // rings 2
-//                        x = 77;
-//                        y = 26;//44; // -18 to negate an offset on the OwoScreen I can't find the cause of
-//
-//                    } else if (order == 4) {
-////                        RPGMod.LOGGER.info("spell slot 1 slot");
-//                        // spell slot 1
-//                        x = this.spellSlotsX;
-//                        y = this.spellSlotsY;
-//
-//                    } else if (order == 5) {
-////                        RPGMod.LOGGER.info("spell slot 2 slot");
-//                        // spell slot 2
-//                        x = this.spellSlotsX + 18;
-//                        y = this.spellSlotsY;
-//
-//                    } else if (order == 6) {
-////                        RPGMod.LOGGER.info("spell slot 3 slot");
-//                        // spell slot 3
-//                        x = this.spellSlotsX + 36;
-//                        y = this.spellSlotsY;
-//
-//                    } else if (order == 7) {
-////                        RPGMod.LOGGER.info("spell slot 4 slot");
-//                        // spell slot 4
-//                        x = this.spellSlotsX + 54;
-//                        y = this.spellSlotsY;
-//
-//                    } else if (order == 8) {
-////                        RPGMod.LOGGER.info("spell slot 5 slot");
-//                        // spell slot 5
-//                        x = this.spellSlotsX;
-//                        y = this.spellSlotsY + 18;
-//
-//                    } else if (order == 9) {
-////                        RPGMod.LOGGER.info("spell slot 6 slot");
-//                        // spell slot 6
-//                        x = this.spellSlotsX + 18;
-//                        y = this.spellSlotsY + 18;
-//
-//                    } else if (order == 10) {
-////                        RPGMod.LOGGER.info("spell slot 7 slot");
-//                        // spell slot 7
-//                        x = this.spellSlotsX + 36;
-//                        y = this.spellSlotsY + 18;
-//
-//                    } else if (order == 11) {
-////                        RPGMod.LOGGER.info("spell slot 8 slot");
-//                        // spell slot 8
-//                        x = this.spellSlotsX + 54;
-//                        y = this.spellSlotsY + 18;
-//
-//                    } else if (order == 12) {
-////                        RPGMod.LOGGER.info("gloves slot");
-//                        // gloves
-//                        x = 77;
-//                        y = 62;
-//
-//                    } else if (order == 13) {
-//                        RPGMod.LOGGER.info("shoulders slot");
-//                        // shoulders
-//                        x = 8;
-//                        y = 26;
-//
-//                    } else {
-//                        return;
-//                    }
-//                    groupPos.put(group, new Point(x, y));
-//                    groupNums.put(group, groupNum);
-//                    groupNum++;
-//                }
-//            }
-
-
-//            RPGMod.LOGGER.info("second time: trinkets.getInventory().entrySet(): " + trinkets.getInventory().entrySet());
             groupCount = Math.max(0, groupNum - 4); // TODO maybe -6
             trinketSlotStart = slots.size();
             slotWidths.clear();
@@ -1028,65 +522,24 @@ public class AdventureInventoryScreenHandler extends ScreenHandler implements Tr
 
             int activeSpellSlotAmount = (int) owner.getAttributeInstance(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT).getValue();
             AdventureTrinketSlot[] newSlots = new AdventureTrinketSlot[this.trinketSlotAmount];
-//            RPGMod.LOGGER.info("newSlots's length: " + newSlots.length);
-//            RPGMod.LOGGER.info("third time: trinkets.getInventory().entrySet(): " + trinkets.getInventory().entrySet());
-//            RPGMod.LOGGER.info("add slots to screenHandler");
 
-            //------------------------------------
-//            for (Map.Entry<String, Map<String, TrinketInventory>> entry : trinkets.getInventory().entrySet()) {
-//                String groupId = entry.getKey();
-//                SlotGroup group = groups.get(groupId);
+            for (Map.Entry<String, Map<String, TrinketInventory>> entry : trinkets.getInventory().entrySet()) {
+                String groupId = entry.getKey();
+                SlotGroup group = groups.get(groupId);
 //                int groupOffset = 1;
 //
 //                if (group.getSlotId() != -1) {
 //                    groupOffset++;
 //                }
-//                int width = 0;
-//                Point pos = trinkets$getGroupPos(group);
-//                if (pos == null) {
-//                    continue;
-//                }
-//                for (Map.Entry<String, TrinketInventory> slot : entry.getValue().entrySet().stream().sorted((a, b) ->
-//                        Integer.compare(a.getValue().getSlotType().getOrder(), b.getValue().getSlotType().getOrder())).toList()) {
-//                    TrinketInventory stacks = slot.getValue();
-//                    if (stacks.size() == 0) {
-//                        continue;
-//                    }
-//                    int slotOffset = 1;
-//                    int x = (int) ((groupOffset / 2) * 18 * Math.pow(-1, groupOffset));
-//                    slotHeights.computeIfAbsent(group, (k) -> new ArrayList<>()).add(new Point(x, stacks.size()));
-//                    slotTypes.computeIfAbsent(group, (k) -> new ArrayList<>()).add(stacks.getSlotType());
-//                    for (int i = 0; i < stacks.size(); i++) {
-//                        int y = (int) (pos.y() + (slotOffset / 2) * 18 * Math.pow(-1, slotOffset));
-//                        this.addSlot(new SurvivalTrinketSlot(stacks, i, x + pos.x(), y, group, stacks.getSlotType(), i, groupOffset == 1 && i == 0));
-//                        slotOffset++;
-//                    }
-//                    groupOffset++;
-//                    width++;
-//                }
-//                slotWidths.put(group, width);
-//            }
-            //------------------------------------
-
-            for (Map.Entry<String, Map<String, TrinketInventory>> entry : trinkets.getInventory().entrySet()) {
-                String groupId = entry.getKey();
-                SlotGroup group = groups.get(groupId);
-                int groupOffset = 1;
-
-                if (group.getSlotId() != -1) {
-                    groupOffset++;
-                }
                 int width = 0;
                 Point pos = trinkets$getGroupPos(group);
                 if (pos == null) {
-//                    RPGMod.LOGGER.info("pos == null -> continue");
                     continue;
                 }
                 for (Map.Entry<String, TrinketInventory> slot : entry.getValue().entrySet().stream().sorted((a, b) ->
                         Integer.compare(a.getValue().getSlotType().getOrder(), b.getValue().getSlotType().getOrder())).toList()) {
                     TrinketInventory stacks = slot.getValue();
                     if (stacks.size() == 0) {
-//                        RPGMod.LOGGER.info("stacks.size() == 0 -> continue");
                         continue;
                     }
                     int x = groupPos.get(group).x();
@@ -1095,11 +548,6 @@ public class AdventureInventoryScreenHandler extends ScreenHandler implements Tr
 
                     for (int i = 0; i < stacks.size(); i++) {
                         int order = group.getOrder();
-//                        RPGMod.LOGGER.info(group.getName() + "'s order is: " + order);
-//                        if (order >= this.trinketSlotAmount) {
-//                            RPGMod.LOGGER.info("order >= this.trinketSlotAmount -> continue");
-//                            continue;
-//                        }
                         newSlots[order] = new AdventureTrinketSlot(stacks, i, groupPos.get(group).x(), groupPos.get(group).y(), group, stacks.getSlotType(), 0, owner) {
                             @Override
                             public boolean isEnabled() {
@@ -1115,30 +563,23 @@ public class AdventureInventoryScreenHandler extends ScreenHandler implements Tr
                         };
                     }
 
-                    groupOffset++;
+//                    groupOffset++;
                     width++;
                 }
                 slotWidths.put(group, width);
             }
 
             // add slots to screenHandler
-
             for (int i = 0; i < this.trinketSlotAmount; i++) {
                 if (newSlots[i] != null) {
-//                    RPGMod.LOGGER.info("newSlots[" + i + "] != null");
                     this.addSlot(newSlots[i]);
-                } else {
-//                    RPGMod.LOGGER.info("newSlots[" + i + "] == null");
                 }
             }
 
-
-//            RPGMod.LOGGER.info("added slots to screenHandler");
-//            RPGMod.LOGGER.info("slots.size(): " + slots.size());
             trinketSlotEnd = slots.size();
         });
     }
-/**/
+
     private boolean hasSlots(TrinketComponent comp, SlotGroup group) {
         for (TrinketInventory inv : comp.getInventory().get(group.getName()).values()) {
             if (inv.size() > 0) {

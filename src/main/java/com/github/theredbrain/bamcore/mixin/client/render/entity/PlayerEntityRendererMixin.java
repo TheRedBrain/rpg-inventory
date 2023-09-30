@@ -1,7 +1,7 @@
 package com.github.theredbrain.bamcore.mixin.client.render.entity;
 
-import com.github.theredbrain.bamcore.client.render.renderer.AlternativeMainHandFeatureRenderer;
-import com.github.theredbrain.bamcore.client.render.renderer.AlternativeOffHandFeatureRenderer;
+import com.github.theredbrain.bamcore.client.render.renderer.SheathedMainHandItemFeatureRenderer;
+import com.github.theredbrain.bamcore.client.render.renderer.SheathedOffHandItemFeatureRenderer;
 import com.github.theredbrain.bamcore.registry.Tags;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -34,8 +34,8 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
 
     @Inject(method = "<init>", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILSOFT)
     private void initMixin(EntityRendererFactory.Context ctx, boolean slim, CallbackInfo info) {
-        this.addFeature(new AlternativeMainHandFeatureRenderer(this, ctx.getHeldItemRenderer()));
-        this.addFeature(new AlternativeOffHandFeatureRenderer(this, ctx.getHeldItemRenderer()));
+        this.addFeature(new SheathedMainHandItemFeatureRenderer(this, ctx.getHeldItemRenderer()));
+        this.addFeature(new SheathedOffHandItemFeatureRenderer(this, ctx.getHeldItemRenderer()));
     }
 
     /**

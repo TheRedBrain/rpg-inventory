@@ -2,8 +2,8 @@ package com.github.theredbrain.bamcore.mixin.entity.player;
 
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerInventoryMixin;
-import com.github.theredbrain.bamcore.item.CustomArmorItem;
-import com.github.theredbrain.bamcore.item.CustomDyeableArmorItem;
+import com.github.theredbrain.bamcore.api.item.CustomArmorItem;
+import com.github.theredbrain.bamcore.api.item.CustomDyeableArmorItem;
 import com.github.theredbrain.bamcore.util.ItemUtils;
 import com.github.theredbrain.bamcore.registry.ItemRegistry;
 import com.github.theredbrain.bamcore.registry.StatusEffectsRegistry;
@@ -29,10 +29,10 @@ import java.util.List;
 @Mixin(PlayerInventory.class)
 public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 
-    @Shadow
-    @Final
-    @Mutable
-    public static int[] ARMOR_SLOTS;
+//    @Shadow
+//    @Final
+//    @Mutable
+//    public static int[] ARMOR_SLOTS;
 
     @Shadow
     @Final
@@ -61,7 +61,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         throw new AssertionError();
     }
 
-    @Shadow public abstract boolean insertStack(ItemStack stack);
+//    @Shadow public abstract boolean insertStack(ItemStack stack);
 
     @Shadow public int selectedSlot;
 
@@ -78,8 +78,6 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
      */
     @Inject(method = "<init>", at = @At("TAIL"))
     public void PlayerInventory(PlayerEntity player, CallbackInfo ci) {
-//        ARMOR_SLOTS = new int[]{0, 1, 2, 3, 4, 5};
-//        this.armor = DefaultedList.ofSize(6, ItemStack.EMPTY);
         this.mainHand = DefaultedList.ofSize(1, ItemStack.EMPTY);
         this.alternativeMainHand = DefaultedList.ofSize(1, ItemStack.EMPTY);
         this.alternativeOffHand = DefaultedList.ofSize(1, ItemStack.EMPTY);
@@ -107,8 +105,10 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
     @Override
     public ItemStack bamcore$getOffHandStack() {
         ItemStack stack = this.offHand.get(0);
-        boolean bl = !player.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT) && !player.isCreative() && !player.hasStatusEffect(StatusEffectsRegistry.WEAPONS_SHEATHED_EFFECT) && (stack.isEmpty() || !ItemUtils.isUsable(stack));
-        return bl ? this.emptyOffHand.get(0) : stack;
+        boolean bl = !player.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT)
+                && !player.isCreative()
+                && (player.hasStatusEffect(StatusEffectsRegistry.WEAPONS_SHEATHED_EFFECT) || !ItemUtils.isUsable(stack));
+        return bl ? this.emptyMainHand.get(0) : stack;
     }
 
     /**

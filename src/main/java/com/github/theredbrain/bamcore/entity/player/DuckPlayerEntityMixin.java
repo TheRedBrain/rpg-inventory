@@ -27,9 +27,6 @@ public interface DuckPlayerEntityMixin {
     float bamcore$getStamina();
     void bamcore$setStamina(float mana);
 
-//    boolean bamcore$isUsingHotbarItem();
-//    void bamcore$setUsingHotbarItem(boolean isUsingHotbarItem);
-
     ScreenHandler bamcore$getInventoryScreenHandler();
 
     boolean bamcore$isAdventure();

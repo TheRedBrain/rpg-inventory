@@ -10,7 +10,6 @@ import net.minecraft.screen.ScreenHandlerType;
 public class ScreenHandlerTypesRegistry {
 
     public static final ScreenHandlerType<TeleporterBlockScreenHandler> TELEPORTER_BLOCK_SCREEN_HANDLER = new ExtendedScreenHandlerType<>(TeleporterBlockScreenHandler::new);
-//    public static final ScreenHandlerType<SoulforgeScreenHandler> SOULFORGE_SCREEN_HANDLER = new ScreenHandlerType<SoulforgeScreenHandler>((syncId, inventory) -> new SoulforgeScreenHandler(syncId, inventory), FeatureFlags.VANILLA_FEATURES);
 
     public static void registerAll() {
         Registry.register(Registries.SCREEN_HANDLER, BetterAdventureModCore.identifier("teleporter"), TELEPORTER_BLOCK_SCREEN_HANDLER);

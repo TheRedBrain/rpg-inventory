@@ -22,28 +22,9 @@ public class BetterAdventureModCoreClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         KeyBindings.registerKeyBindings();
-        registerTransparency();
-        registerSpellModels();
         registerBlockEntityRenderer();
-        registerEntityRenderer();
         BetterAdventureModCoreClientPacket.init();
         registerScreens();
-    }
-
-    private void registerTransparency() {
-        BlockRenderLayerMap.INSTANCE.putBlock(BlockRegistry.INTERACTIVE_BERRY_BUSH_BLOCK, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(BlockRegistry.INTERACTIVE_RED_MUSHROOM_BLOCK, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(BlockRegistry.INTERACTIVE_BROWN_MUSHROOM_BLOCK, RenderLayer.getCutout());
-    }
-
-    private void registerSpellModels() {
-        CustomModels.registerModelIds(List.of(
-                BetterAdventureModCore.identifier("projectile/test_spell_projectile")
-        ));
-    }
-
-    private void registerEntityRenderer() {
-//        EntityRendererRegistry.register(EntityRegistry.CENTAUR_MOUNT, CentaurMountEntityRenderer::new);
     }
 
     private void registerBlockEntityRenderer() {

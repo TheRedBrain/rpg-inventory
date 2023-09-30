@@ -3,7 +3,7 @@ package com.github.theredbrain.bamcore.mixin.entity.player;
 import com.github.theredbrain.bamcore.block.entity.AreaFillerBlockBlockEntity;
 import com.github.theredbrain.bamcore.block.entity.ChunkLoaderBlockBlockEntity;
 import com.github.theredbrain.bamcore.block.entity.StructurePlacerBlockBlockEntity;
-import com.github.theredbrain.bamcore.effect.FoodStatusEffect;
+import com.github.theredbrain.bamcore.api.effect.FoodStatusEffect;
 import com.github.theredbrain.bamcore.entity.ExtendedEquipmentSlot;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerInventoryMixin;
@@ -30,7 +30,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
-import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -57,75 +56,10 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     @Shadow
     public ScreenHandler currentScreenHandler;
 
-//    @Shadow
-//    protected HungerManager hungerManager;
-//
-//    @Shadow
-//    public int experiencePickUpDelay;
-//
-//    @Shadow
-//    private int sleepTimer;
-//    @Shadow
-//    @Final
-//    private DefaultedList<ItemStack> syncedArmorStacks = DefaultedList.ofSize(4, ItemStack.EMPTY);
-
-//    @Shadow
-//    private ItemStack selectedItem;
-//
-//    @Shadow
-//    @Final
-//    private ItemCooldownManager itemCooldownManager;
-//    @Shadow public abstract boolean isCreative();
-//
-//    @Shadow // 293
-//    protected boolean updateWaterSubmersionState() {
-//        throw new AssertionError();
-//    }
-//
-//    @Shadow // 298
-//    private void updateTurtleHelmet() {
-//        throw new AssertionError();
-//    }
-//
-//    @Shadow // 309
-//    private void updateCapeAngles() {
-//        throw new AssertionError();
-//    }
-//
-//    @Shadow // 340
-//    protected void updatePose() {
-//        throw new AssertionError();
-//    }
-
-//    @Shadow // 416
-//    public void closeHandledScreen() {
-//        throw new AssertionError();
-//    }
-
-//    @Shadow // 1241
-//    public void wakeUp(boolean skipSleepTimer, boolean updateSleepingPlayers) {
-//        throw new AssertionError();
-//    }
-//
-//    @Shadow // 1323
-//    public void incrementStat(Identifier stat) {
-//        throw new AssertionError();
-//    }
-//
-//    @Shadow // 1882
-//    public void resetLastAttackedTicks() {
-//        throw new AssertionError();
-//    }
-
     @Shadow public abstract PlayerInventory getInventory();
-
-    @Shadow public abstract boolean isCreative();
 
     private static final TrackedData<Float> MANA = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Float> STAMINA = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.FLOAT);
-
-//    @Unique
-//    private boolean isUsingHotbarItem = false;
 
     @Unique
     private int oldActiveSpellSlotAmount = 0;
@@ -145,14 +79,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
      */
     @Inject(method = "<init>", at = @At("TAIL"))
     public void PlayerEntity(World world, BlockPos pos, float yaw, GameProfile gameProfile, CallbackInfo ci) {
-//        this.inAdventureBuildingMode = false;
         this.adventureInventoryScreenHandler = new AdventureInventoryScreenHandler(this.inventory, !world.isClient, (PlayerEntity) (Object) this);
         this.currentScreenHandler = this.adventureInventoryScreenHandler;
-//        this.syncedHandStacks = DefaultedList.ofSize(4, ItemStack.EMPTY);
-//        this.syncedArmorStacks = DefaultedList.ofSize(6, ItemStack.EMPTY); // TODO necessary?
-//        this.alternativeMainHandUsed = false;
-//        this.alternativeOffHandUsed = false;
-//        this.permanentMount = false;
         // inject into a constructor
     }
 
@@ -232,21 +160,12 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         }
     }
 
-//    @Inject(method = "damageArmor", at = @At("TAIL"))
-//    public void bam$damageArmor(DamageSource source, float amount, CallbackInfo ci) {
-//        this.inventory.damageExtraArmor(source, amount, PlayerInventory.ARMOR_SLOTS);
-//    }
-
     @Inject(method = "getEquippedStack", at = @At("RETURN"), cancellable = true)
     public void bamcore$getEquippedStack(EquipmentSlot slot, CallbackInfoReturnable<ItemStack> cir) {
         if (slot == EquipmentSlot.OFFHAND) {
             cir.setReturnValue(((DuckPlayerInventoryMixin)this.inventory).bamcore$getOffHandStack());
             cir.cancel();
         }
-//        if (slot == ExtendedEquipmentSlot.PLAYER_SKIN_ARMOR) {
-//            cir.setReturnValue(((DuckPlayerInventoryMixin)this.inventory).bam$getPlayerSkinItem());
-//            cir.cancel();
-//        }
     }
 
     /**
@@ -257,72 +176,15 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     public void equipStack(EquipmentSlot slot, ItemStack stack) {
         this.processEquippedStack(stack);
         if (slot == EquipmentSlot.MAINHAND) {
-//            if (this.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT)) {
-//                if (this.alternativeMainHandUsed) {
-            this.onEquipStack(slot, ((DuckPlayerInventoryMixin)this.inventory).bamcore$setMainHand(stack), stack);//set(this.inventory.selectedSlot, stack), stack);
-//                } else {
-//                    this.onEquipStack(slot, ((DuckPlayerInventoryMixin)this.inventory).bam$setAlternativeMainHand(stack), stack);
-//                }
-//            } else {
-//                this.onEquipStack(slot, this.inventory.main.set(this.inventory.selectedSlot, stack), stack);
-//            }
+            this.onEquipStack(slot, ((DuckPlayerInventoryMixin)this.inventory).bamcore$setMainHand(stack), stack);
         } else if (slot == EquipmentSlot.OFFHAND) {
-//            if (this.alternativeOffHandUsed) {
-//                this.onEquipStack(slot, ((DuckPlayerInventoryMixin)this.inventory).bam$setAlternativeOffHand(stack), stack);
-//            } else {
             this.onEquipStack(slot, this.inventory.offHand.set(0, stack), stack);
-//            }
         } else if (slot == ExtendedEquipmentSlot.ALT_MAINHAND) {
-//            if (this.alternativeOffHandUsed) {
-//                this.onEquipStack(slot, ((DuckPlayerInventoryMixin)this.inventory).bam$setAlternativeOffHand(stack), stack);
-//            } else {
             this.onEquipStack(slot, ((DuckPlayerInventoryMixin)this.inventory).bamcore$setAlternativeMainHand(stack), stack);
-//            }
         } else if (slot == ExtendedEquipmentSlot.ALT_OFFHAND) {
-//            if (this.alternativeOffHandUsed) {
-//                this.onEquipStack(slot, ((DuckPlayerInventoryMixin)this.inventory).bam$setAlternativeOffHand(stack), stack);
-//            } else {
             this.onEquipStack(slot, ((DuckPlayerInventoryMixin)this.inventory).bamcore$setAlternativeOffHand(stack), stack);
-//            }
         } else if (slot.getType() == EquipmentSlot.Type.ARMOR) {
             this.onEquipStack(slot, this.inventory.armor.set(slot.getEntitySlotId(), stack), stack);
-        }/* else if (slot.getType() == ExtendedEquipmentSlotType.ACCESSORY) {
-            this.onEquipStack(slot, ((DuckPlayerInventoryMixin)this.inventory).bam$setAccessorySlot(slot.getEntitySlotId(), stack), stack);
-        }*/
-    }
-//
-//    @Inject(method = "getArmorItems", at = @At("RETURN"), cancellable = true)
-//    public void getArmorItems(CallbackInfoReturnable<Iterable<ItemStack>> cir) {
-//        DefaultedList<ItemStack> allArmourItems = (DefaultedList<ItemStack>) cir.getReturnValue();
-//        allArmourItems.addAll(((DuckPlayerInventoryMixin)this.inventory).getExtraArmour());
-//        cir.setReturnValue(allArmourItems);
-//    }
-
-    @Override
-    public ItemStack getStackInHand(Hand hand) {
-//        if (bamcore$isUsingHotbarItem()) {
-//            return this.getInventory().getStack(this.getInventory().selectedSlot);
-//        } else {
-            if (hand == Hand.MAIN_HAND) {
-                return this.getEquippedStack(EquipmentSlot.MAINHAND);
-            }
-            if (hand == Hand.OFF_HAND) {
-                return this.getEquippedStack(EquipmentSlot.OFFHAND);
-            }
-//        }
-        throw new IllegalArgumentException("Invalid hand " + hand);
-    }
-
-    @Override
-    public void setStackInHand(Hand hand, ItemStack stack) {
-        /*if (bamcore$isUsingHotbarItem()) {
-            this.getInventory().setStack(this.getInventory().selectedSlot, stack);
-        } else */if (hand == Hand.MAIN_HAND) {
-            this.equipStack(EquipmentSlot.MAINHAND, stack);
-        } else if (hand == Hand.OFF_HAND) {
-            this.equipStack(EquipmentSlot.OFFHAND, stack);
-        } else {
-            throw new IllegalArgumentException("Invalid hand " + hand);
         }
     }
 
@@ -423,16 +285,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         this.dataTracker.set(STAMINA, MathHelper.clamp(mana, 0, this.bamcore$getMaxStamina()));
     }
 
-//    @Override
-//    public boolean bamcore$isUsingHotbarItem() {
-//        return isUsingHotbarItem;
-//    }
-//
-//    @Override
-//    public void bamcore$setUsingHotbarItem(boolean isUsingHotbarItem) {
-//        this.isUsingHotbarItem = isUsingHotbarItem;
-//    }
-
     public ScreenHandler bamcore$getInventoryScreenHandler() {
         return adventureInventoryScreenHandler;
     }
@@ -468,14 +320,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
             int[] spellSlotIds = ((AdventureInventoryScreenHandler) this.bamcore$getInventoryScreenHandler()).getSpellSlotIds();
             // eject items from inactive slots
             for (int j = activeSpellSlotAmount; j < 8; j++) {
-//            if (!this.handler.slots.get(50 + j).getStack().isEmpty()) {
-//                int amount = this.handler.slots.get(50 + j).getStack().getCount();
-//                this.handler.
-                PlayerInventory playerInventory = this/*.handler.player()*/.getInventory();
+                PlayerInventory playerInventory = this.getInventory();
                 int slotId = spellSlotIds[j];
                 AdventureTrinketSlot ats = (AdventureTrinketSlot) this.bamcore$getInventoryScreenHandler().slots.get(slotId);
-//                SlotType type = ats.getType();
-//                SlotReference ref = new SlotReference((TrinketInventory) ats.inventory, ats.getIndex());
 
                 if (!ats.inventory.getStack(ats.getIndex()).isEmpty()) {
                     playerInventory.offerOrDrop(ats.inventory.removeStack(ats.getIndex()));
@@ -492,14 +339,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
             if (!this.isAdventureHotbarCleanedUp) {
                 // eject items from inactive slots
                 for (int i = 0; i < 9; i++) {
-//            if (!this.handler.slots.get(50 + j).getStack().isEmpty()) {
-//                int amount = this.handler.slots.get(50 + j).getStack().getCount();
-//                this.handler.
-                    PlayerInventory playerInventory = this/*.handler.player()*/.getInventory();
-//            int slotId = spellSlotIds[i];
+                    PlayerInventory playerInventory = this.getInventory();
                     Slot slot = this.bamcore$getInventoryScreenHandler().slots.get(i);
-//                SlotType type = ats.getType();
-//                SlotReference ref = new SlotReference((TrinketInventory) ats.inventory, ats.getIndex());
 
                     if (!slot.inventory.getStack(slot.getIndex()).isIn(Tags.ADVENTURE_HOTBAR_ITEMS)) {
                         playerInventory.offerOrDrop(slot.inventory.removeStack(slot.getIndex()));

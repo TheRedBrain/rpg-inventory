@@ -32,15 +32,10 @@ public class EquipmentSlotMixin {
         EquipmentSlot last = values.get(values.size() - 1);
 
         // add new value
-//        values.add( init("GLOVES", last.ordinal() + 1, EquipmentSlot.Type.ARMOR, 4, 6, "gloves") );
-//        values.add( init("SHOULDERS", last.ordinal() + 2, EquipmentSlot.Type.ARMOR, 5, 7, "shoulders") );
         values.add( init("ALT_MAINHAND", last.ordinal() + 1, EquipmentSlot.Type.HAND, 2, 6, "alt_mainhand") );
         values.add( init("ALT_OFFHAND", last.ordinal() + 2, EquipmentSlot.Type.HAND, 3, 7, "alt_offhand") );
         values.add( init("EMPTY_MAINHAND", last.ordinal() + 3, ExtendedEquipmentSlotType.PERMANENT, 0, 8, "empty_offhand") );
         values.add( init("EMPTY_OFFHAND", last.ordinal() + 4, ExtendedEquipmentSlotType.PERMANENT, 1, 9, "empty_offhand") );
-//        values.add( init("PLAYER_SKIN_ARMOR", last.ordinal() + 11, EquipmentSlot.Type.ARMOR, 2, 16, "player_skin_armor") );
-//        values.add( init("MOUNT", last.ordinal() + 7, EquipmentSlot.Type.HAND, 4, 12, "mount") );
-//        values.add( init("PET", last.ordinal() + 8, EquipmentSlot.Type.HAND, 5, 13, "pet") );
 
         field_6176 = values.toArray(new EquipmentSlot[0]);
     }

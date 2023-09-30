@@ -9,7 +9,7 @@
     "TheRedBrain"
   ],
   "contact": {
-    "sources": "https://github.com/TheRedBrain/rpg_mod"
+    "sources": "https://github.com/TheRedBrain/better_adventure_mod_core"
   },
 
   "license": "MIT",
@@ -37,10 +37,13 @@
     "minecraft": "1.20.1",
     "java": ">=17",
     "bettercombat": ">=1.7.2+1.19.4-fabric",
-    "geckolib": ">=4.1.3",
     "trinkets": ">=3.6.0",
     "spell_engine": ">=0.9.26+1.20.1-fabric",
-    "spell_power": ">=0.9.13+1.20.1-fabric"
+    "imm_ptl_core": "3.1.0",
+    "q_misc_util": "3.1.0",
+    "cardinal-components-base": "5.2.1",
+    "cardinal-components-entity": "5.2.1",
+    "owo": "0.11.1+1.20"
   },
 
   "custom": {
