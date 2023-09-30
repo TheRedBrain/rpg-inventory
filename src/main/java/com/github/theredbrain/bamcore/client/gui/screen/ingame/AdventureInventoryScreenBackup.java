@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.client.gui.screen.ingame;
 
-import com.github.theredbrain.bamcore.BetterAdventureModCore;
+import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.bamcore.screen.AdventureInventoryScreenHandler;
 import com.google.common.collect.Ordering;
@@ -44,7 +44,7 @@ import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
 public class AdventureInventoryScreenBackup extends HandledScreen<AdventureInventoryScreenHandler> implements TrinketScreen {
-    public static final Identifier ADVENTURE_INVENTORY_BACKGROUND_TEXTURE = BetterAdventureModCore.identifier("textures/gui/container/adventure_inventory_old.png");
+    public static final Identifier ADVENTURE_INVENTORY_BACKGROUND_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/adventure_inventory_old.png");
     private float mouseX;
     private float mouseY;
 

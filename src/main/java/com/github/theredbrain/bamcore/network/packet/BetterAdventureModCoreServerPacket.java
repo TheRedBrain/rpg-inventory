@@ -1,24 +1,24 @@
 package com.github.theredbrain.bamcore.network.packet;
 
-import com.github.theredbrain.bamcore.BetterAdventureModCore;
+import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.util.Identifier;
 
 public class BetterAdventureModCoreServerPacket {
 
-    public static final Identifier SWAP_HAND_ITEMS_PACKET = BetterAdventureModCore.identifier("swap_hand_items");
-    public static final Identifier SWAPPED_HAND_ITEMS_PACKET = BetterAdventureModCore.identifier("swapped_hand_items");
-    public static final Identifier SHEATHE_WEAPONS_PACKET = BetterAdventureModCore.identifier("sheathe_weapons");
+    public static final Identifier SWAP_HAND_ITEMS_PACKET = BetterAdventureModeCore.identifier("swap_hand_items");
+    public static final Identifier SWAPPED_HAND_ITEMS_PACKET = BetterAdventureModeCore.identifier("swapped_hand_items");
+    public static final Identifier SHEATHE_WEAPONS_PACKET = BetterAdventureModeCore.identifier("sheathe_weapons");
 //    public static final Identifier SHEATHED_WEAPONS_PACKET = RPGMod.identifier("sheathed_weapons"); // TODO if weapon sheathing is not visible in multiplayer
-    public static final Identifier UPDATE_TELEPORTER_BLOCK = BetterAdventureModCore.identifier("update_teleporter_block");
-    public static final Identifier UPDATE_AREA_FILLER_BLOCK = BetterAdventureModCore.identifier("update_area_filler_block");
-    public static final Identifier UPDATE_STRUCTURE_PLACER_BLOCK = BetterAdventureModCore.identifier("update_structure_placer_block");
-    public static final Identifier UPDATE_REDSTONE_TRIGGER_BLOCK = BetterAdventureModCore.identifier("update_redstone_trigger_block");
-    public static final Identifier UPDATE_RELAY_TRIGGER_BLOCK = BetterAdventureModCore.identifier("update_relay_trigger_block");
-    public static final Identifier UPDATE_DELAY_TRIGGER_BLOCK = BetterAdventureModCore.identifier("update_delay_trigger_block");
-    public static final Identifier UPDATE_CHUNK_LOADER_BLOCK = BetterAdventureModCore.identifier("update_chunk_loader_block");
-    public static final Identifier TELEPORT_FROM_TELEPORTER_BLOCK = BetterAdventureModCore.identifier("teleport_from_teleporter_block");
-    public static final Identifier REGENERATE_DIMENSION_FROM_TELEPORTER_BLOCK = BetterAdventureModCore.identifier("regenerate_dimension_from_teleporter_block");
+    public static final Identifier UPDATE_TELEPORTER_BLOCK = BetterAdventureModeCore.identifier("update_teleporter_block");
+    public static final Identifier UPDATE_AREA_FILLER_BLOCK = BetterAdventureModeCore.identifier("update_area_filler_block");
+    public static final Identifier UPDATE_STRUCTURE_PLACER_BLOCK = BetterAdventureModeCore.identifier("update_structure_placer_block");
+    public static final Identifier UPDATE_REDSTONE_TRIGGER_BLOCK = BetterAdventureModeCore.identifier("update_redstone_trigger_block");
+    public static final Identifier UPDATE_RELAY_TRIGGER_BLOCK = BetterAdventureModeCore.identifier("update_relay_trigger_block");
+    public static final Identifier UPDATE_DELAY_TRIGGER_BLOCK = BetterAdventureModeCore.identifier("update_delay_trigger_block");
+    public static final Identifier UPDATE_CHUNK_LOADER_BLOCK = BetterAdventureModeCore.identifier("update_chunk_loader_block");
+    public static final Identifier TELEPORT_FROM_TELEPORTER_BLOCK = BetterAdventureModeCore.identifier("teleport_from_teleporter_block");
+    public static final Identifier REGENERATE_DIMENSION_FROM_TELEPORTER_BLOCK = BetterAdventureModeCore.identifier("regenerate_dimension_from_teleporter_block");
 
     public static void init() {
         SwapHandItemsPacketReceiver swapHandItemsPacketReceiver = new SwapHandItemsPacketReceiver();

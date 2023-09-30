@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.mixin.spell_engine.internals;
 
-import com.github.theredbrain.bamcore.BetterAdventureModCore;
+import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.bamcore.spell_engine.DuckSpellCostMixin;
 import com.github.theredbrain.bamcore.spell_engine.DuckSpellImpactActionDamageMixin;
@@ -122,14 +122,14 @@ public abstract class SpellHelperMixin {
                         }
 
                         double directDamageAmount = ((DuckSpellImpactActionDamageMixin) damageData).getDirectDamage();
-                        BetterAdventureModCore.LOGGER.info("Direct Damage Amount: " + directDamageAmount);
+                        BetterAdventureModeCore.LOGGER.info("Direct Damage Amount: " + directDamageAmount);
                         if (directDamageAmount > 0.0) {
                             amount = directDamageAmount;
                         }
 
                         particleMultiplier = power.criticalDamage() + (double)vulnerability.criticalDamageBonus();
                         caster.onAttacking((Entity)target);
-                        BetterAdventureModCore.LOGGER.info("Damage Amount: " + amount);
+                        BetterAdventureModeCore.LOGGER.info("Damage Amount: " + amount);
                         ((Entity)target).damage(SpellDamageSource.create(school, caster), (float)amount);
                         if (target instanceof LivingEntity) {
                             LivingEntity livingEntity = (LivingEntity)target;

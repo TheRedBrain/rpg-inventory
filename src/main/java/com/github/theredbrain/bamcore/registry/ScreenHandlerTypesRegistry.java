@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.registry;
 
-import com.github.theredbrain.bamcore.BetterAdventureModCore;
+import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.screen.TeleporterBlockScreenHandler;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.registry.Registries;
@@ -12,6 +12,6 @@ public class ScreenHandlerTypesRegistry {
     public static final ScreenHandlerType<TeleporterBlockScreenHandler> TELEPORTER_BLOCK_SCREEN_HANDLER = new ExtendedScreenHandlerType<>(TeleporterBlockScreenHandler::new);
 
     public static void registerAll() {
-        Registry.register(Registries.SCREEN_HANDLER, BetterAdventureModCore.identifier("teleporter"), TELEPORTER_BLOCK_SCREEN_HANDLER);
+        Registry.register(Registries.SCREEN_HANDLER, BetterAdventureModeCore.identifier("teleporter"), TELEPORTER_BLOCK_SCREEN_HANDLER);
     }
 }

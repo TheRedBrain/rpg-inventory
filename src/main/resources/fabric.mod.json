@@ -3,7 +3,7 @@
   "id": "bamcore",
   "version": "0.0.1",
 
-  "name": "Better Adventure Mod - Core",
+  "name": "Better Adventure Mode - Core",
   "description": "This is an example description! Tell everyone what your mod is about!",
   "authors": [
     "TheRedBrain"
@@ -18,10 +18,10 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.github.theredbrain.bamcore.BetterAdventureModCore"
+      "com.github.theredbrain.bamcore.BetterAdventureModeCore"
     ],
     "client": [
-      "com.github.theredbrain.bamcore.BetterAdventureModCoreClient"
+      "com.github.theredbrain.bamcore.BetterAdventureModeCoreClient"
     ],
     "cardinal-components": [
       "com.github.theredbrain.bamcore.registry.ComponentsRegistry"

@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.client.gui.screen.ingame;
 
-import com.github.theredbrain.bamcore.BetterAdventureModCore;
+import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.bamcore.registry.EntityAttributesRegistry;
 import com.github.theredbrain.bamcore.screen.AdventureInventoryScreenHandler;
@@ -50,9 +50,9 @@ import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
 public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, AdventureInventoryScreenHandler>/* implements TrinketScreen*/ {
-    public static final Identifier INVENTORY_SLOT_TEXTURE = BetterAdventureModCore.identifier("textures/gui/container/inventory_slot_texture.png");
-    public static final Identifier CHARACTER_BACKGROUND_TEXTURE = BetterAdventureModCore.identifier("textures/gui/container/character_background_texture.png");
-    public static final Identifier CUSTOM_WIDGETS_TEXTURE = BetterAdventureModCore.identifier("textures/gui/custom_widgets.png");
+    public static final Identifier INVENTORY_SLOT_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/inventory_slot_texture.png");
+    public static final Identifier CHARACTER_BACKGROUND_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/character_background_texture.png");
+    public static final Identifier CUSTOM_WIDGETS_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/custom_widgets.png");
     private float mouseX;
     private float mouseY;
     private boolean showAttributeScreen = false;

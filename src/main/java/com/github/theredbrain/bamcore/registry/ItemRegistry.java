@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.registry;
 
-import com.github.theredbrain.bamcore.BetterAdventureModCore;
+import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.item.*;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.item.*;
@@ -20,7 +20,7 @@ public class ItemRegistry {
                 content.add(item);
             });
         }
-        return Registry.register(Registries.ITEM, BetterAdventureModCore.identifier(name), item);
+        return Registry.register(Registries.ITEM, BetterAdventureModeCore.identifier(name), item);
     }
 
     public static void init() {

@@ -1,10 +1,7 @@
 package com.github.theredbrain.bamcore.registry;
 
-import com.github.theredbrain.bamcore.BetterAdventureModCore;
+import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.effect.*;
-import com.github.theredbrain.bamcore.util.AttributeModifierUUIDs;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -30,12 +27,12 @@ public class StatusEffectsRegistry {
         RemoveOnHit.configure(WEAPONS_SHEATHED_EFFECT, true);
 
         // utility effects
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModCore.identifier("adventure_building_effect"), ADVENTURE_BUILDING_EFFECT);
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModCore.identifier("civilisation_effect"), CIVILISATION_EFFECT);
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModCore.identifier("portal_resistance_effect"), PORTAL_RESISTANCE_EFFECT);
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModCore.identifier("permanent_mount_effect"), PERMANENT_MOUNT_EFFECT);
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModCore.identifier("no_attack_items_effect"), NO_ATTACK_ITEMS_EFFECT);
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModCore.identifier("need_empty_offhand_effect"), NEED_EMPTY_OFFHAND_EFFECT);
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModCore.identifier("weapons_sheathed_effect"), WEAPONS_SHEATHED_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("adventure_building_effect"), ADVENTURE_BUILDING_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("civilisation_effect"), CIVILISATION_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("portal_resistance_effect"), PORTAL_RESISTANCE_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("permanent_mount_effect"), PERMANENT_MOUNT_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("no_attack_items_effect"), NO_ATTACK_ITEMS_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("need_empty_offhand_effect"), NEED_EMPTY_OFFHAND_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("weapons_sheathed_effect"), WEAPONS_SHEATHED_EFFECT);
     }
 }

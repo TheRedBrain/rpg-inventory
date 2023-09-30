@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.registry;
 
-import com.github.theredbrain.bamcore.BetterAdventureModCore;
+import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.network.event.PlayerFirstJoinCallback;
 import com.github.theredbrain.bamcore.network.event.PlayerJoinCallback;
 import com.github.theredbrain.bamcore.network.event.PlayerLeaveCallback;
@@ -10,8 +10,8 @@ public class EventsRegistry {
         PlayerFirstJoinCallback.EVENT.register((player, server) -> {
 //            RPGMod.LOGGER.info("dungeon_dimension " + RPGMod.MOD_ID + ":" + player.getUuid().toString() + "_dungeons");
 //            RPGMod.LOGGER.info("housing_dimension " + RPGMod.MOD_ID + ":" + player.getUuid().toString() + "_housing");
-            ComponentsRegistry.PLAYER_SPECIFIC_DIMENSION_IDS.get(player).setPair("dungeon_dimension", BetterAdventureModCore.MOD_ID + ":" + player.getUuid().toString() + "_dungeons", false);
-            ComponentsRegistry.PLAYER_SPECIFIC_DIMENSION_IDS.get(player).setPair("housing_dimension", BetterAdventureModCore.MOD_ID + ":" + player.getUuid().toString() + "_housing", false);
+            ComponentsRegistry.PLAYER_SPECIFIC_DIMENSION_IDS.get(player).setPair("dungeon_dimension", BetterAdventureModeCore.MOD_ID + ":" + player.getUuid().toString() + "_dungeons", false);
+            ComponentsRegistry.PLAYER_SPECIFIC_DIMENSION_IDS.get(player).setPair("housing_dimension", BetterAdventureModeCore.MOD_ID + ":" + player.getUuid().toString() + "_housing", false);
 //            DimensionsManager.addDynamicPlayerDimension(player, server);
         });
         PlayerJoinCallback.EVENT.register((player, server) -> {

@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.screen;
 
-import com.github.theredbrain.bamcore.BetterAdventureModCore;
+import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.entity.ExtendedEquipmentSlot;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.bamcore.registry.EntityAttributesRegistry;
@@ -18,7 +18,6 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
@@ -30,12 +29,12 @@ import java.util.*;
 
 public class AdventureInventoryScreenHandler extends ScreenHandler implements TrinketPlayerScreenHandler {
     public static final Identifier BLOCK_ATLAS_TEXTURE = new Identifier("textures/atlas/blocks.png");
-    public static final Identifier EMPTY_BOOTS_SLOT_TEXTURE = BetterAdventureModCore.identifier("item/empty_armor_slot_boots");
-    public static final Identifier EMPTY_CHESTPLATE_SLOT_TEXTURE = BetterAdventureModCore.identifier("item/empty_armor_slot_chestplate");
-    public static final Identifier EMPTY_HELMET_SLOT_TEXTURE = BetterAdventureModCore.identifier("item/empty_armor_slot_helmet");
-    public static final Identifier EMPTY_LEGGINGS_SLOT_TEXTURE = BetterAdventureModCore.identifier("item/empty_armor_slot_leggings");
-    public static final Identifier EMPTY_OFFHAND_ARMOR_SLOT = BetterAdventureModCore.identifier("item/empty_armor_slot_shield");
-    public static final Identifier EMPTY_MAINHAND_ARMOR_SLOT = BetterAdventureModCore.identifier("item/empty_armor_slot_sword");
+    public static final Identifier EMPTY_BOOTS_SLOT_TEXTURE = BetterAdventureModeCore.identifier("item/empty_armor_slot_boots");
+    public static final Identifier EMPTY_CHESTPLATE_SLOT_TEXTURE = BetterAdventureModeCore.identifier("item/empty_armor_slot_chestplate");
+    public static final Identifier EMPTY_HELMET_SLOT_TEXTURE = BetterAdventureModeCore.identifier("item/empty_armor_slot_helmet");
+    public static final Identifier EMPTY_LEGGINGS_SLOT_TEXTURE = BetterAdventureModeCore.identifier("item/empty_armor_slot_leggings");
+    public static final Identifier EMPTY_OFFHAND_ARMOR_SLOT = BetterAdventureModeCore.identifier("item/empty_armor_slot_shield");
+    public static final Identifier EMPTY_MAINHAND_ARMOR_SLOT = BetterAdventureModeCore.identifier("item/empty_armor_slot_sword");
     public final boolean onServer;
     private final PlayerEntity owner;
     private int spellSlotsX = 98;

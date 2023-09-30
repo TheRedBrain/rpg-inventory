@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.mixin.client.gui.hud;
 
-import com.github.theredbrain.bamcore.BetterAdventureModCore;
+import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerInventoryMixin;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
@@ -39,7 +39,7 @@ public abstract class InGameHudMixin {
 
     @Shadow @Final private static Identifier ICONS;
 
-    private static final Identifier CUSTOM_WIDGETS_TEXTURE = BetterAdventureModCore.identifier("textures/gui/custom_widgets.png");
+    private static final Identifier CUSTOM_WIDGETS_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/custom_widgets.png");
 
     @Inject(method = "renderHotbar", at = @At("HEAD"), cancellable = true)
     private void renderHotbar(float tickDelta, DrawContext context, CallbackInfo ci) {

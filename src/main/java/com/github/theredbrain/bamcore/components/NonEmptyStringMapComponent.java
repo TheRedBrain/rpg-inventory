@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.components;
 
-import com.github.theredbrain.bamcore.BetterAdventureModCore;
+import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import dev.onyxstudios.cca.api.v3.entity.PlayerComponent;
 import net.minecraft.nbt.NbtCompound;
 import org.apache.commons.lang3.tuple.MutablePair;
@@ -23,7 +23,7 @@ public class NonEmptyStringMapComponent implements IStringMapComponent, PlayerCo
         if (!value.equals("")) {
             values.get(key).setLeft(value);
         } else {
-            BetterAdventureModCore.LOGGER.warn("Tried to put empty string with key '" + key + "' into NonEmptyStringMap");
+            BetterAdventureModeCore.LOGGER.warn("Tried to put empty string with key '" + key + "' into NonEmptyStringMap");
         }
     }
 
@@ -32,7 +32,7 @@ public class NonEmptyStringMapComponent implements IStringMapComponent, PlayerCo
         if (!value.equals("")) {
             values.put(key, new MutablePair<>(value, status));
         } else {
-            BetterAdventureModCore.LOGGER.warn("Tried to put empty string with key '" + key + "' into NonEmptyStringMap");
+            BetterAdventureModeCore.LOGGER.warn("Tried to put empty string with key '" + key + "' into NonEmptyStringMap");
         }
     }
 

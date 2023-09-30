@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.client.gui.screen.ingame;
 
-import com.github.theredbrain.bamcore.BetterAdventureModCore;
+import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.block.entity.TeleporterBlockBlockEntity;
 import com.github.theredbrain.bamcore.network.packet.BetterAdventureModCoreServerPacket;
 import com.github.theredbrain.bamcore.registry.ComponentsRegistry;
@@ -39,9 +39,9 @@ import java.util.Optional;
 public class TeleporterBlockScreen extends BaseOwoHandledScreen<FlowLayout, TeleporterBlockScreenHandler> {
 //public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHandler> {
     private static final Text EDIT_TELEPORTER_TITLE = Text.translatable("gui.edit_teleporter_title");
-    public static final Identifier ADVENTURE_TELEPORTER_SCREEN_BACKGROUND_TEXTURE = BetterAdventureModCore.identifier("textures/gui/container/adventure_teleporter_screen.png");
-    public static final Identifier CREATIVE_TELEPORTER_SCREEN_BACKGROUND_TEXTURE = BetterAdventureModCore.identifier("textures/gui/container/creative_teleporter_screen.png");
-    public static final Identifier TELEPORTER_SCREEN_UTILITY_TEXTURE = BetterAdventureModCore.identifier("textures/gui/container/teleporter_screen_util.png");
+    public static final Identifier ADVENTURE_TELEPORTER_SCREEN_BACKGROUND_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/adventure_teleporter_screen.png");
+    public static final Identifier CREATIVE_TELEPORTER_SCREEN_BACKGROUND_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/creative_teleporter_screen.png");
+    public static final Identifier TELEPORTER_SCREEN_UTILITY_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/teleporter_screen_util.png");
     private TeleporterBlockScreenHandler handler;
     private TeleporterBlockBlockEntity teleporterBlock;
     private boolean showCreativeTab;

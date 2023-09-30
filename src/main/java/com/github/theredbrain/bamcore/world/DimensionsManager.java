@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.world;
 
-import com.github.theredbrain.bamcore.BetterAdventureModCore;
+import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.MinecraftServer;
@@ -44,7 +44,7 @@ public class DimensionsManager {
         // may throw exception here
 
 
-        Identifier dimId = BetterAdventureModCore.identifier(player.getUuid().toString() + "_dungeons");
+        Identifier dimId = BetterAdventureModeCore.identifier(player.getUuid().toString() + "_dungeons");
         RegistryKey<World> registryKey = RegistryKey.of(RegistryKeys.WORLD, dimId);
         ServerWorld serverWorld = server.getWorld(registryKey);
 
