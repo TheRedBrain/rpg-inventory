@@ -16,6 +16,10 @@ import com.github.theredbrain.bamcore.screen.slot.AdventureTrinketSlot;
 import com.google.common.collect.Iterables;
 import com.mojang.authlib.GameProfile;
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.block.BedBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.RespawnAnchorBlock;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -25,15 +29,22 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.EnderChestInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.stat.Stats;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.*;
@@ -44,6 +55,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlayerEntityMixin {
@@ -66,6 +78,12 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     @Shadow public abstract GameProfile getGameProfile();
 
     @Shadow protected EnderChestInventory enderChestInventory;
+    @Shadow @Final private PlayerAbilities abilities;
+
+    @Shadow public abstract void incrementStat(Identifier stat);
+
+    @Shadow public abstract void increaseStat(Identifier stat, int amount);
+
     private static final TrackedData<Float> MANA = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Float> STAMINA = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.FLOAT);
 
@@ -187,11 +205,13 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         }
     }
 
-    // taking damage interrupts eating food, drinking potions, etc
-    @Inject(method = "damageArmor", at = @At("RETURN"))
-    protected void damageArmor(DamageSource source, float amount, CallbackInfo ci) {
-        this.inventory.damageArmor(source, amount, PlayerInventory.ARMOR_SLOTS);
-    }
+//    protected void takeShieldHit(LivingEntity attacker) {
+//        super.takeShieldHit(attacker);
+//        if (attacker.disablesShield()) {
+//            this.disableShield(true);
+//        }
+//
+//    }
 
     @Inject(method = "getEquippedStack", at = @At("RETURN"), cancellable = true)
     public void bamcore$getEquippedStack(EquipmentSlot slot, CallbackInfoReturnable<ItemStack> cir) {
@@ -218,6 +238,136 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
             this.onEquipStack(slot, ((DuckPlayerInventoryMixin)this.inventory).bamcore$setAlternativeOffHand(stack), stack);
         } else if (slot.getType() == EquipmentSlot.Type.ARMOR) {
             this.onEquipStack(slot, this.inventory.armor.set(slot.getEntitySlotId(), stack), stack);
+        }
+    }
+
+//    /**
+//     * Finds the precise respawn position from a {@link BlockPos} in a world.
+//     * Also applies respawning effects on the spawn point blocks
+//     * such as decreasing respawn anchor charges.
+//     *
+//     * <p>If {@code forced} is {@code false}, this method will only apply to
+//     * respawn anchors and beds. If it's {@code true}, a respawn point can be anywhere
+//     * as long as the player can spawn inside the necessary blocks.
+//     *
+//     * @param alive if {@code true}, the player is alive, otherwise respawning after a death
+//     * @param forced {@code true} if the spawn point is forced, {@code false} otherwise
+//     * @param pos the spawn point as a {@link BlockPos}
+//     * @param world the world where the spawn point is located
+//     */
+//    public static Optional<Vec3d> findRespawnPosition(ServerWorld world, BlockPos pos, float angle, boolean forced, boolean alive) {
+//        BlockState blockState = world.getBlockState(pos);
+//        Block block = blockState.getBlock();
+//        if (block instanceof RespawnAnchorBlock && (forced || (Integer)blockState.get(RespawnAnchorBlock.CHARGES) > 0) && RespawnAnchorBlock.isNether(world)) {
+//            Optional<Vec3d> optional = RespawnAnchorBlock.findRespawnPosition(EntityType.PLAYER, world, pos);
+//            if (!forced && !alive && optional.isPresent()) {
+//                world.setBlockState(pos, (BlockState)blockState.with(RespawnAnchorBlock.CHARGES, (Integer)blockState.get(RespawnAnchorBlock.CHARGES) - 1), Block.NOTIFY_ALL);
+//            }
+//
+//            return optional;
+//        } else if (block instanceof BedBlock && BedBlock.isBedWorking(world)) {
+//            return BedBlock.findWakeUpPosition(EntityType.PLAYER, world, pos, (Direction)blockState.get(BedBlock.FACING), angle);
+//        } else if (!forced) {
+//            return Optional.empty();
+//        } else {
+//            boolean bl = block.canMobSpawnInside(blockState);
+//            BlockState blockState2 = world.getBlockState(pos.up());
+//            boolean bl2 = blockState2.getBlock().canMobSpawnInside(blockState2);
+//            return bl && bl2 ? Optional.of(new Vec3d((double)pos.getX() + 0.5, (double)pos.getY() + 0.1, (double)pos.getZ() + 0.5)) : Optional.empty();
+//        }
+//    }
+
+    /**
+     * @author TheRedBrain
+     * @reason
+     */
+    @Overwrite
+    public void jump() {
+        super.jump();
+        this.incrementStat(Stats.JUMP);
+        if (this.isSprinting()) {
+//            this.addExhaustion(0.2F);
+            ((DuckPlayerEntityMixin)this).bamcore$addStamina(-2);
+        } else {
+//            this.addExhaustion(0.05F);
+            ((DuckPlayerEntityMixin)this).bamcore$addStamina(-1);
+        }
+
+    }
+
+    /**
+     * @author TheRedBrain
+     * @reason
+     */
+    @Overwrite
+    public void updateSwimming() {
+        if (this.abilities.flying) {
+            this.setSwimming(false);
+        } else {
+            if (this.isSwimming()) {
+                this.setSwimming(/*this.isSprinting()*/!this.hasStatusEffect(StatusEffectsRegistry.OVERBURDENED_EFFECT) && this.isTouchingWater() && !this.hasVehicle());
+            } else {
+                this.setSwimming(/*this.isSprinting()*/!this.hasStatusEffect(StatusEffectsRegistry.OVERBURDENED_EFFECT) && this.isSubmergedInWater() && !this.hasVehicle() && this.getWorld().getFluidState(this.getBlockPos()).isIn(FluidTags.WATER));
+            }
+        }
+
+    }
+
+    public void increaseTravelMotionStats(double dx, double dy, double dz) {
+        if (!this.hasVehicle()) {
+            int i;
+            if (this.isSwimming()) {
+                i = Math.round((float)Math.sqrt(dx * dx + dy * dy + dz * dz) * 100.0F);
+                if (i > 0) {
+                    this.increaseStat(Stats.SWIM_ONE_CM, i);
+//                    this.addExhaustion(0.01F * (float)i * 0.01F);
+                    ((DuckPlayerEntityMixin)this).bamcore$addStamina(-2);
+                }
+            } else if (this.isSubmergedIn(FluidTags.WATER)) {
+                i = Math.round((float)Math.sqrt(dx * dx + dy * dy + dz * dz) * 100.0F);
+                if (i > 0) {
+                    this.increaseStat(Stats.WALK_UNDER_WATER_ONE_CM, i);
+//                    this.addExhaustion(0.01F * (float)i * 0.01F);
+                    ((DuckPlayerEntityMixin)this).bamcore$addStamina(-4);
+                }
+            } else if (this.isTouchingWater()) {
+                i = Math.round((float)Math.sqrt(dx * dx + dz * dz) * 100.0F);
+                if (i > 0) {
+                    this.increaseStat(Stats.WALK_ON_WATER_ONE_CM, i);
+//                    this.addExhaustion(0.01F * (float)i * 0.01F);
+                    ((DuckPlayerEntityMixin)this).bamcore$addStamina(-1);
+                }
+            } else if (this.isClimbing()) {
+                if (dy > 0.0) {
+                    this.increaseStat(Stats.CLIMB_ONE_CM, (int)Math.round(dy * 100.0));
+                    ((DuckPlayerEntityMixin)this).bamcore$addStamina(this.hasStatusEffect(StatusEffectsRegistry.OVERBURDENED_EFFECT) ? -4 : -1);
+                }
+            } else if (this.isOnGround()) {
+                i = Math.round((float)Math.sqrt(dx * dx + dz * dz) * 100.0F);
+                if (i > 0) {
+                    if (this.isSprinting()) {
+                        this.increaseStat(Stats.SPRINT_ONE_CM, i);
+//                        this.addExhaustion(0.1F * (float)i * 0.01F);
+                        ((DuckPlayerEntityMixin)this).bamcore$addStamina(-2);
+                    } else if (this.isInSneakingPose()) {
+                        this.increaseStat(Stats.CROUCH_ONE_CM, i);
+//                        this.addExhaustion(0.0F * (float)i * 0.01F);
+                        ((DuckPlayerEntityMixin)this).bamcore$addStamina(-2);
+                    } else {
+                        this.increaseStat(Stats.WALK_ONE_CM, i);
+//                        this.addExhaustion(0.0F * (float)i * 0.01F);
+                    }
+                }
+            } else if (this.isFallFlying()) {
+                i = Math.round((float)Math.sqrt(dx * dx + dy * dy + dz * dz) * 100.0F);
+                this.increaseStat(Stats.AVIATE_ONE_CM, i);
+            } else {
+                i = Math.round((float)Math.sqrt(dx * dx + dz * dz) * 100.0F);
+                if (i > 25) {
+                    this.increaseStat(Stats.FLY_ONE_CM, i);
+                }
+            }
+
         }
     }
 

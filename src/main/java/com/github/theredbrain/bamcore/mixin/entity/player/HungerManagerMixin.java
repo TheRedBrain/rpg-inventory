@@ -73,7 +73,7 @@ public class HungerManagerMixin {
                 float passiveRegeneration = ((DuckPlayerEntityMixin)player).bamcore$getStaminaRegeneration();
                 double isMovingStaminaMultiplier = isSprinting ? 0 : isMoving ? 0.5 : 1;
                 double isBlockingStaminaMultiplier = isBlocking ? 0.5 : 1;
-                double equipmentWeightStaminaMultiplier = this.encumbrance <= 0.5 ? 1 : this.encumbrance <= 1 ? 0.8 : 0.5;
+                double equipmentWeightStaminaMultiplier = this.encumbrance <= 0.5 ? 1 : this.encumbrance <= 1 ? 0.75 : 0.5;
                 double civilisationEffectStaminaMultiplier = isInCivilization ? 5 : 1;
                 // regenerate stamina
                 ((DuckPlayerEntityMixin)player).bamcore$addStamina((float) (passiveRegeneration * isMovingStaminaMultiplier * isBlockingStaminaMultiplier * equipmentWeightStaminaMultiplier * civilisationEffectStaminaMultiplier));
@@ -172,7 +172,7 @@ public class HungerManagerMixin {
     }
 
     public boolean isOverBurdened() {
-        return this.encumbrance > 100;
+        return this.encumbrance > 1;
     }
 
     public double getEncumbrance() {
