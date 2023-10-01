@@ -105,9 +105,9 @@
 	"attribute.name.generic.mana_regeneration": "Mana Regen",
 	"attribute.name.generic.max_poise": "Max Poise",
 
-	"gamerule.clearEnderChestOnDeath": "",
-	"gamerule.destroyDroppedItemsOnDeath": "Should dropped items be destroyed on death",
+	"gamerule.clearEnderChestOnDeath": "Clear ender chest on death",
+	"gamerule.destroyDroppedItemsOnDeath": "Destroy dropped items on death",
 	"gamerule.destroyDroppedItemsOnDeath.description": "This only matters, if the gamerule 'keepInventory' is set to false.",
-	"gamerule.resetAdvancementsOnDeath": "Should advancements be reset on death",
-	"gamerule.resetRecipesOnDeath": "Should unlocked recipes be locked on death"
+	"gamerule.resetAdvancementsOnDeath": "Reset advancements on death",
+	"gamerule.resetRecipesOnDeath": "Reset recipes on death"
 }

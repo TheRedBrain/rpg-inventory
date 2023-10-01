@@ -65,11 +65,17 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
      * @reason inject gamerule destroyDroppedItemsOnDeath into Trinkets drop logic
      */
     @Overwrite
-    protected void dropInventory() {
+    public void dropInventory() {
         LivingEntity entity = (LivingEntity) (Object) this;
 
         boolean keepInv = entity.getWorld().getGameRules().getBoolean(GameRules.KEEP_INVENTORY);
-        boolean destroyDroppedItems = entity.getWorld().getGameRules().getBoolean(GameRulesRegistry.DESTROY_DROPPED_ITEMS_ON_DEATH);
+
+        boolean destroyDroppedItems;
+        if (entity.getServer() != null && entity instanceof PlayerEntity) {
+            destroyDroppedItems = entity.getServer().getGameRules().getBoolean(GameRulesRegistry.DESTROY_DROPPED_ITEMS_ON_DEATH);
+        } else {
+            destroyDroppedItems = false;
+        }
         TrinketsApi.getTrinketComponent(entity).ifPresent(trinkets -> trinkets.forEach((ref, stack) -> {
             if (stack.isEmpty()) {
                 return;

@@ -1,15 +1,15 @@
 {
   "schemaVersion": 1,
   "id": "bamcore",
-  "version": "0.0.1",
+  "version": "0.0.2",
 
   "name": "Better Adventure Mode - Core",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "description": "This mod adds mechanics which allow for a more RPG styled gameplay.",
   "authors": [
     "TheRedBrain"
   ],
   "contact": {
-    "sources": "https://github.com/TheRedBrain/better_adventure_mod_core"
+    "sources": "https://github.com/TheRedBrain/better_adventure_mode_core"
   },
 
   "license": "MIT",
