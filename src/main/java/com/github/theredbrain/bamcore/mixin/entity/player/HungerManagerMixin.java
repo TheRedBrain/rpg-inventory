@@ -2,6 +2,7 @@ package com.github.theredbrain.bamcore.mixin.entity.player;
 
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.bamcore.registry.StatusEffectsRegistry;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
@@ -46,6 +47,12 @@ public class HungerManagerMixin {
         this.healthTickTimer--;
         this.staminaTickTimer--;
         this.manaTickTimer--;
+
+        if (isOverBurdened() && !player.hasStatusEffect(StatusEffectsRegistry.OVERBURDENED_EFFECT)) {
+            player.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.OVERBURDENED_EFFECT, -1, 0, false, false, true));
+        } else if (!isOverBurdened() && player.hasStatusEffect(StatusEffectsRegistry.OVERBURDENED_EFFECT)) {
+            player.removeStatusEffect(StatusEffectsRegistry.OVERBURDENED_EFFECT);
+        }
 
         if (this.healthTickTimer <= 0) {
             if (player.getHealth() < player.getMaxHealth()) {
@@ -164,7 +171,7 @@ public class HungerManagerMixin {
         this.staminaTickTimer = staminaTickTimer;
     }
 
-    public boolean isOverEncumbered() {
+    public boolean isOverBurdened() {
         return this.encumbrance > 100;
     }
 

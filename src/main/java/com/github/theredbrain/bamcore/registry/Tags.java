@@ -16,4 +16,5 @@ public class Tags {
     public static final TagKey<Item> EXTRA_LEGGINGS_ITEMS = TagKey.of(RegistryKeys.ITEM, BetterAdventureModeCore.identifier("extra_leggings_items"));
     public static final TagKey<Item> EXTRA_BOOTS_ITEMS = TagKey.of(RegistryKeys.ITEM, BetterAdventureModeCore.identifier("extra_boots_items"));
     public static final TagKey<Item> EMPTY_HAND_WEAPONS = TagKey.of(RegistryKeys.ITEM, BetterAdventureModeCore.identifier("empty_hand_weapons"));
+    public static final TagKey<Item> SPELLS = TagKey.of(RegistryKeys.ITEM, BetterAdventureModeCore.identifier("spells"));
 }

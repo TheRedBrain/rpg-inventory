@@ -44,7 +44,7 @@ public class AdventureTrinketSlot extends Slot implements TrinketSlot, OwoSlotEx
     public boolean canTakeItems(PlayerEntity player) {
         ItemStack stack = this.getStack();
         return TrinketsApi.getTrinket(stack.getItem()).canUnequip(stack, new SlotReference(trinketInventory, slotOffset), player)
-                && owner.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure());
+                && (owner.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure()));
     }
 
     @Override
