@@ -96,5 +96,18 @@
 	"bamcore.slot.belts.belts": "Belt",
 	"bamcore.slot.necklaces.necklace": "Necklace",
 	"bamcore.slot.rings.ring": "First Ring",
-	"bamcore.slot.secondary_rings.ring": "Second Ring"
+	"bamcore.slot.secondary_rings.ring": "Second Ring",
+
+	"attribute.name.generic.health_regeneration": "Health Regen",
+	"attribute.name.generic.max_stamina": "Max Stamina",
+	"attribute.name.generic.stamina_regeneration": "Stamina Regen",
+	"attribute.name.generic.max_mana": "Max Mana",
+	"attribute.name.generic.mana_regeneration": "Mana Regen",
+	"attribute.name.generic.max_poise": "Max Poise",
+
+	"gamerule.clearEnderChestOnDeath": "",
+	"gamerule.destroyDroppedItemsOnDeath": "Should dropped items be destroyed on death",
+	"gamerule.destroyDroppedItemsOnDeath.description": "This only matters, if the gamerule 'keepInventory' is set to false.",
+	"gamerule.resetAdvancementsOnDeath": "Should advancements be reset on death",
+	"gamerule.resetRecipesOnDeath": "Should unlocked recipes be locked on death"
 }

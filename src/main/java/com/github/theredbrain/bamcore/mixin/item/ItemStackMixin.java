@@ -1,5 +1,6 @@
 package com.github.theredbrain.bamcore.mixin.item;
 
+import com.github.theredbrain.bamcore.api.item.ArmorTrinketItem;
 import com.github.theredbrain.bamcore.api.item.CustomArmorItem;
 import com.github.theredbrain.bamcore.api.item.CustomDyeableArmorItem;
 import com.google.common.collect.HashMultimap;

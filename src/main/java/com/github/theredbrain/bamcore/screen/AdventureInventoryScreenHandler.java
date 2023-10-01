@@ -3,7 +3,7 @@ package com.github.theredbrain.bamcore.screen;
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.entity.ExtendedEquipmentSlot;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
-import com.github.theredbrain.bamcore.registry.EntityAttributesRegistry;
+import com.github.theredbrain.bamcore.api.util.BetterAdventureModeEntityAttributes;
 import com.github.theredbrain.bamcore.registry.StatusEffectsRegistry;
 import com.github.theredbrain.bamcore.registry.Tags;
 import com.github.theredbrain.bamcore.screen.slot.AdventureTrinketSlot;
@@ -434,12 +434,9 @@ public class AdventureInventoryScreenHandler extends ScreenHandler implements Tr
                 } else {
                     int x;
                     int y;
-                    if (order == 0) {
-                        // necklaces
-                        x = 52;
-                        y = -10;//8; // -18 to negate an offset on the OwoScreen I can't find the cause of
-
-                    } else if (order == 1) {
+                    // begins at 1 because order=0 is the default
+                    // this way most unwanted cases are avoided
+                    if (order == 1) {
                         // belts
                         x = 8;
                         y = 44;//62; // -18 to negate an offset on the OwoScreen I can't find the cause of
@@ -504,6 +501,11 @@ public class AdventureInventoryScreenHandler extends ScreenHandler implements Tr
                         x = 8;
                         y = 8;//26; // -18 to negate an offset on the OwoScreen I can't find the cause of
 
+                    } else if (order == 14) {
+                        // necklaces
+                        x = 52;
+                        y = -10;//8; // -18 to negate an offset on the OwoScreen I can't find the cause of
+
                     } else {
                         continue;
                     }
@@ -519,7 +521,7 @@ public class AdventureInventoryScreenHandler extends ScreenHandler implements Tr
             slotHeights.clear();
             slotTypes.clear();
 
-            int activeSpellSlotAmount = (int) owner.getAttributeInstance(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT).getValue();
+            int activeSpellSlotAmount = (int) owner.getAttributeInstance(BetterAdventureModeEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT).getValue();
             AdventureTrinketSlot[] newSlots = new AdventureTrinketSlot[this.trinketSlotAmount];
 
             for (Map.Entry<String, Map<String, TrinketInventory>> entry : trinkets.getInventory().entrySet()) {
@@ -546,8 +548,8 @@ public class AdventureInventoryScreenHandler extends ScreenHandler implements Tr
                     slotTypes.computeIfAbsent(group, (k) -> new ArrayList<>()).add(stacks.getSlotType());
 
                     for (int i = 0; i < stacks.size(); i++) {
-                        int order = group.getOrder();
-                        newSlots[order] = new AdventureTrinketSlot(stacks, i, groupPos.get(group).x(), groupPos.get(group).y(), group, stacks.getSlotType(), 0, owner) {
+                        int index = group.getOrder() - 1; // -1 to account for all groups with order=0 being ignored
+                        newSlots[index] = new AdventureTrinketSlot(stacks, i, groupPos.get(group).x(), groupPos.get(group).y(), group, stacks.getSlotType(), 0, owner) {
                             @Override
                             public boolean isEnabled() {
                                 return !((Objects.equals(groupId, "spell_slot_1") && activeSpellSlotAmount < 1)

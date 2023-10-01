@@ -1,6 +1,7 @@
 package com.github.theredbrain.bamcore.mixin.client.gui.hud;
 
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerInventoryMixin;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
@@ -10,12 +11,20 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.option.AttackIndicator;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Util;
+import net.minecraft.util.math.MathHelper;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -40,9 +49,10 @@ public abstract class InGameHudMixin {
     @Shadow @Final private static Identifier ICONS;
 
     private static final Identifier CUSTOM_WIDGETS_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/custom_widgets.png");
+    private static final Identifier CUSTOM_ICONS = BetterAdventureModeCore.identifier("textures/gui/custom_icons.png");
 
     @Inject(method = "renderHotbar", at = @At("HEAD"), cancellable = true)
-    private void renderHotbar(float tickDelta, DrawContext context, CallbackInfo ci) {
+    private void bamcore$renderHotbar(float tickDelta, DrawContext context, CallbackInfo ci) {
         PlayerEntity playerEntity = this.getCameraPlayer();
         if (playerEntity != null) {
             ItemStack itemStackMainHand = ((DuckPlayerInventoryMixin)playerEntity.getInventory()).bamcore$getMainHand();
@@ -112,5 +122,58 @@ public abstract class InGameHudMixin {
             RenderSystem.disableBlend();
         }
         ci.cancel();
+    }
+
+    @Inject(method = "renderExperienceBar", at = @At("HEAD"), cancellable = true)
+    public void bamcore$renderExperienceBar(DrawContext context, int x, CallbackInfo ci) {
+        PlayerEntity playerEntity = this.getCameraPlayer();
+        if (playerEntity != null && ((DuckPlayerEntityMixin)playerEntity).bamcore$isAdventure()) {
+            ci.cancel();
+        }
+    }
+
+    /**
+     * @author TheRedBrain
+     * @reason
+     */
+    @Inject(method = "renderStatusBars", at = @At("HEAD"), cancellable = true)
+    private void bamcore$renderStatusBars(DrawContext context, CallbackInfo ci) {
+        PlayerEntity playerEntity = this.getCameraPlayer();
+        if (playerEntity != null && ((DuckPlayerEntityMixin)playerEntity).bamcore$isAdventure()) {
+            int health = MathHelper.ceil(playerEntity.getHealth());
+            int maxHealth = MathHelper.ceil(playerEntity.getMaxHealth());
+            int stamina = MathHelper.ceil(((DuckPlayerEntityMixin)playerEntity).bamcore$getStamina());
+            int maxStamina = MathHelper.ceil(((DuckPlayerEntityMixin)playerEntity).bamcore$getMaxStamina());
+            int mana = MathHelper.ceil(((DuckPlayerEntityMixin)playerEntity).bamcore$getMana());
+            int maxMana = MathHelper.ceil(((DuckPlayerEntityMixin)playerEntity).bamcore$getMaxMana());
+
+            int attributeBarX = this.scaledWidth / 2 - 91;
+            int attributeBarY = this.scaledHeight - 32 + 3;
+            int normalizedHealthRatio = (int)((double) health / Math.max(maxHealth, 1) * 182);
+            int normalizedStaminaRatio = (int)((double) stamina / Math.max(maxStamina, 1) * 182);
+            int normalizedManaRatio = (int)((double) mana / Math.max(maxMana, 1) * 182);
+
+            this.client.getProfiler().push("health_bar");
+            context.drawTexture(CUSTOM_ICONS, attributeBarX, attributeBarY, 0, 0, 182, 5);
+            if (normalizedHealthRatio > 0) {
+                context.drawTexture(CUSTOM_ICONS, attributeBarX, attributeBarY, 0, 15, normalizedHealthRatio, 5);
+            }
+
+            this.client.getProfiler().swap("stamina_bar");
+            context.drawTexture(CUSTOM_ICONS, attributeBarX, attributeBarY - 7, 0, 0, 182, 5);
+            if (normalizedStaminaRatio > 0) {
+                context.drawTexture(CUSTOM_ICONS, attributeBarX, attributeBarY - 7, 0, 5, normalizedStaminaRatio, 5);
+            }
+
+            if (maxMana > 0) {
+                this.client.getProfiler().swap("mana_bar");
+                context.drawTexture(CUSTOM_ICONS, attributeBarX, attributeBarY - 14, 0, 0, 182, 5);
+                if (normalizedManaRatio > 0) {
+                    context.drawTexture(CUSTOM_ICONS, attributeBarX, attributeBarY - 14, 0, 10, normalizedManaRatio, 5);
+                }
+            }
+            this.client.getProfiler().pop();
+            ci.cancel();
+        }
     }
 }

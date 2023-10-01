@@ -7,7 +7,8 @@ import com.github.theredbrain.bamcore.api.effect.FoodStatusEffect;
 import com.github.theredbrain.bamcore.entity.ExtendedEquipmentSlot;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerInventoryMixin;
-import com.github.theredbrain.bamcore.registry.EntityAttributesRegistry;
+import com.github.theredbrain.bamcore.api.util.BetterAdventureModeEntityAttributes;
+import com.github.theredbrain.bamcore.registry.GameRulesRegistry;
 import com.github.theredbrain.bamcore.registry.StatusEffectsRegistry;
 import com.github.theredbrain.bamcore.registry.Tags;
 import com.github.theredbrain.bamcore.screen.AdventureInventoryScreenHandler;
@@ -26,12 +27,14 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.EnderChestInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
@@ -58,6 +61,11 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
     @Shadow public abstract PlayerInventory getInventory();
 
+    @Shadow protected abstract void vanishCursedItems();
+
+    @Shadow public abstract GameProfile getGameProfile();
+
+    @Shadow protected EnderChestInventory enderChestInventory;
     private static final TrackedData<Float> MANA = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Float> STAMINA = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.FLOAT);
 
@@ -87,15 +95,14 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     @Inject(method = "createPlayerAttributes", at = @At("RETURN"), cancellable = true)
     private static void bamcore$createPlayerAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
         cir.setReturnValue(cir.getReturnValue()
-                .add(EntityAttributesRegistry.MAX_EQUIPMENT_WEIGHT, 10.0F) // TODO balance
-                .add(EntityAttributesRegistry.EQUIPMENT_WEIGHT, 0.0F)
-                .add(EntityAttributesRegistry.HEALTH_REGENERATION, 0.0F) // TODO balance
-                .add(EntityAttributesRegistry.MANA_REGENERATION, 0.0F) // TODO balance
-                .add(EntityAttributesRegistry.STAMINA_REGENERATION, 1.0F) // TODO balance
-                .add(EntityAttributesRegistry.MAX_MANA, 0.0F) // TODO balance
-                .add(EntityAttributesRegistry.MAX_STAMINA, 10.0F) // TODO balance
-                .add(EntityAttributesRegistry.MAX_POISE, 10.0F) // TODO balance
-                .add(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT, 2.0F) // TODO balance
+                .add(BetterAdventureModeEntityAttributes.MAX_EQUIPMENT_WEIGHT, 10.0F) // TODO balance
+                .add(BetterAdventureModeEntityAttributes.EQUIPMENT_WEIGHT, 0.0F)
+                .add(BetterAdventureModeEntityAttributes.HEALTH_REGENERATION, 0.0F) // TODO balance
+                .add(BetterAdventureModeEntityAttributes.MANA_REGENERATION, 0.0F) // TODO balance
+                .add(BetterAdventureModeEntityAttributes.STAMINA_REGENERATION, 1.0F) // TODO balance
+                .add(BetterAdventureModeEntityAttributes.MAX_MANA, 0.0F) // TODO balance
+                .add(BetterAdventureModeEntityAttributes.MAX_STAMINA, 10.0F) // TODO balance
+                .add(BetterAdventureModeEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT, 2.0F) // TODO balance
         );
     }
 
@@ -132,6 +139,26 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         }
     }
 
+    /**
+     * @author TheRedBrain
+     * @reason
+     */
+    @Overwrite
+    public void dropInventory() {
+        super.dropInventory();
+        if (!this.getWorld().getGameRules().getBoolean(GameRules.KEEP_INVENTORY)) {
+            this.vanishCursedItems();
+            if (this.getWorld().getGameRules().getBoolean(GameRulesRegistry.DESTROY_DROPPED_ITEMS_ON_DEATH)) {
+                this.inventory.clear();
+            } else {
+                this.inventory.dropAll();
+            }
+            if (this.getWorld().getGameRules().getBoolean(GameRulesRegistry.CLEAR_ENDER_CHEST_ON_DEATH)) {
+                this.enderChestInventory.clear();
+            }
+        }
+
+    }
 
     @Inject(method = "shouldDismount", at = @At("RETURN"), cancellable = true)
     protected void bamcore$shouldDismount(CallbackInfoReturnable<Boolean> cir) {
@@ -158,6 +185,12 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         if (bl) {
             this.stopUsingItem();
         }
+    }
+
+    // taking damage interrupts eating food, drinking potions, etc
+    @Inject(method = "damageArmor", at = @At("RETURN"))
+    protected void damageArmor(DamageSource source, float amount, CallbackInfo ci) {
+        this.inventory.damageArmor(source, amount, PlayerInventory.ARMOR_SLOTS);
     }
 
     @Inject(method = "getEquippedStack", at = @At("RETURN"), cancellable = true)
@@ -220,27 +253,27 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
     @Override
     public float bamcore$getMaxEquipmentWeight() {
-        return (float) this.getAttributeValue(EntityAttributesRegistry.MAX_EQUIPMENT_WEIGHT);
+        return (float) this.getAttributeValue(BetterAdventureModeEntityAttributes.MAX_EQUIPMENT_WEIGHT);
     }
 
     @Override
     public float bamcore$getEquipmentWeight() {
-        return (float) this.getAttributeValue(EntityAttributesRegistry.EQUIPMENT_WEIGHT);
+        return (float) this.getAttributeValue(BetterAdventureModeEntityAttributes.EQUIPMENT_WEIGHT);
     }
 
     @Override
     public float bamcore$getHealthRegeneration() {
-        return (float) this.getAttributeValue(EntityAttributesRegistry.HEALTH_REGENERATION);
+        return (float) this.getAttributeValue(BetterAdventureModeEntityAttributes.HEALTH_REGENERATION);
     }
 
     @Override
     public float bamcore$getManaRegeneration() {
-        return (float) this.getAttributeValue(EntityAttributesRegistry.MANA_REGENERATION);
+        return (float) this.getAttributeValue(BetterAdventureModeEntityAttributes.MANA_REGENERATION);
     }
 
     @Override
     public float bamcore$getMaxMana() {
-        return (float) this.getAttributeValue(EntityAttributesRegistry.MAX_MANA);
+        return (float) this.getAttributeValue(BetterAdventureModeEntityAttributes.MAX_MANA);
     }
 
     @Override
@@ -261,12 +294,12 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
     @Override
     public float bamcore$getStaminaRegeneration() {
-        return (float) this.getAttributeValue(EntityAttributesRegistry.STAMINA_REGENERATION);
+        return (float) this.getAttributeValue(BetterAdventureModeEntityAttributes.STAMINA_REGENERATION);
     }
 
     @Override
     public float bamcore$getMaxStamina() {
-        return (float) this.getAttributeValue(EntityAttributesRegistry.MAX_STAMINA);
+        return (float) this.getAttributeValue(BetterAdventureModeEntityAttributes.MAX_STAMINA);
     }
 
     @Override
@@ -314,7 +347,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     }
 
     private void ejectItemsFromInactiveSpellSlots() {
-        int activeSpellSlotAmount = (int) this.getAttributeInstance(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT).getValue();
+        int activeSpellSlotAmount = (int) this.getAttributeInstance(BetterAdventureModeEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT).getValue();
 
         if (this.oldActiveSpellSlotAmount != activeSpellSlotAmount) {
             int[] spellSlotIds = ((AdventureInventoryScreenHandler) this.bamcore$getInventoryScreenHandler()).getSpellSlotIds();

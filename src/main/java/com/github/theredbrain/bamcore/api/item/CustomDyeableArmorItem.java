@@ -1,7 +1,7 @@
 package com.github.theredbrain.bamcore.api.item;
 
 import com.github.theredbrain.bamcore.item.CustomArmour;
-import com.github.theredbrain.bamcore.registry.EntityAttributesRegistry;
+import com.github.theredbrain.bamcore.api.util.BetterAdventureModeEntityAttributes;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.entity.EquipmentSlot;
@@ -31,8 +31,8 @@ public class CustomDyeableArmorItem extends DyeableArmorItem implements CustomAr
         UUID uUID = MODIFIERS.get((Object)type);
         builder.put(EntityAttributes.GENERIC_ARMOR, new EntityAttributeModifier(uUID, "Armor modifier", (double)this.getProtection(), EntityAttributeModifier.Operation.ADDITION));
         builder.put(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, new EntityAttributeModifier(uUID, "Armor toughness", (double)this.getToughness(), EntityAttributeModifier.Operation.ADDITION));
-        builder.put(EntityAttributesRegistry.EQUIPMENT_WEIGHT, new EntityAttributeModifier(uUID, "Equipment weight", (double)this.weight, EntityAttributeModifier.Operation.ADDITION));
-        builder.put(EntityAttributesRegistry.MAX_POISE, new EntityAttributeModifier(uUID, "Poise", (double)this.poise, EntityAttributeModifier.Operation.ADDITION));
+        builder.put(BetterAdventureModeEntityAttributes.EQUIPMENT_WEIGHT, new EntityAttributeModifier(uUID, "Equipment weight", (double)this.weight, EntityAttributeModifier.Operation.ADDITION));
+        builder.put(BetterAdventureModeEntityAttributes.MAX_POISE, new EntityAttributeModifier(uUID, "Poise", (double)this.poise, EntityAttributeModifier.Operation.ADDITION));
 //        if (material == ArmorMaterials.NETHERITE) {
 //            builder.put(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, new EntityAttributeModifier(uUID, "Armor knockback resistance", (double)this.knockbackResistance, EntityAttributeModifier.Operation.ADDITION));
 //        }

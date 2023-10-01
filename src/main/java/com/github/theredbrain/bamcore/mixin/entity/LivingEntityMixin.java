@@ -1,25 +1,34 @@
 package com.github.theredbrain.bamcore.mixin.entity;
 
+import com.github.theredbrain.bamcore.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
+import com.github.theredbrain.bamcore.registry.GameRulesRegistry;
 import com.google.common.collect.*;
 import dev.emi.trinkets.TrinketPlayerScreenHandler;
 import dev.emi.trinkets.TrinketsNetwork;
 import dev.emi.trinkets.api.*;
+import dev.emi.trinkets.api.event.TrinketDropCallback;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -28,16 +37,89 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.*;
 
-@Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin extends Entity {
+@Mixin(value = LivingEntity.class, priority = 950)
+public abstract class LivingEntityMixin extends Entity implements DuckLivingEntityMixin {
     @Unique
     private final Map<String, ItemStack> lastEquippedAdventureTrinkets = new HashMap<>();
+
+//    @Unique
+//    private static final TrackedData<Float> POISE = DataTracker.registerData(LivingEntity.class, TrackedDataHandlerRegistry.FLOAT); // TODO poise
 
     @Shadow
     public DefaultedList<ItemStack> syncedHandStacks = DefaultedList.ofSize(4, ItemStack.EMPTY);
 
+    @Shadow public abstract double getAttributeValue(EntityAttribute attribute);
+
     public LivingEntityMixin(EntityType<?> type, World world) {
         super(type, world);
+    }
+
+    /*@Inject(method = "initDataTracker", at = @At("RETURN"), cancellable = true) // TODO poise
+    protected void bamcore$initDataTracker(CallbackInfo ci) {
+        this.dataTracker.startTracking(POISE, 1.0F);
+
+    }*/
+
+    /**
+     * @author TheRedBrain
+     * @reason inject gamerule destroyDroppedItemsOnDeath into Trinkets drop logic
+     */
+    @Overwrite
+    protected void dropInventory() {
+        LivingEntity entity = (LivingEntity) (Object) this;
+
+        boolean keepInv = entity.getWorld().getGameRules().getBoolean(GameRules.KEEP_INVENTORY);
+        boolean destroyDroppedItems = entity.getWorld().getGameRules().getBoolean(GameRulesRegistry.DESTROY_DROPPED_ITEMS_ON_DEATH);
+        TrinketsApi.getTrinketComponent(entity).ifPresent(trinkets -> trinkets.forEach((ref, stack) -> {
+            if (stack.isEmpty()) {
+                return;
+            }
+
+            TrinketEnums.DropRule dropRule = TrinketsApi.getTrinket(stack.getItem()).getDropRule(stack, ref, entity);
+
+            dropRule = TrinketDropCallback.EVENT.invoker().drop(dropRule, stack, ref, entity);
+
+            TrinketInventory inventory = ref.inventory();
+
+            if (dropRule == TrinketEnums.DropRule.DEFAULT) {
+                dropRule = inventory.getSlotType().getDropRule();
+            }
+
+            if (dropRule == TrinketEnums.DropRule.DEFAULT) {
+                if (keepInv && entity.getType() == EntityType.PLAYER) {
+                    dropRule = TrinketEnums.DropRule.KEEP;
+                } else {
+                    if (EnchantmentHelper.hasVanishingCurse(stack) || destroyDroppedItems) {
+                        dropRule = TrinketEnums.DropRule.DESTROY;
+                    } else {
+                        dropRule = TrinketEnums.DropRule.DROP;
+                    }
+                }
+            }
+
+            switch (dropRule) {
+                case DROP:
+                    dropFromEntity(stack);
+                    // Fallthrough
+                case DESTROY:
+                    inventory.setStack(ref.index(), ItemStack.EMPTY);
+                    break;
+                default:
+                    break;
+            }
+        }));
+    }
+
+    private void dropFromEntity(ItemStack stack) {
+        ItemEntity entity = dropStack(stack);
+        // Mimic player drop behavior for only players
+        if (entity != null && ((Entity) this) instanceof PlayerEntity) {
+            entity.setPos(entity.getX(), this.getEyeY() - 0.3, entity.getZ());
+            entity.setPickupDelay(40);
+            float magnitude = this.random.nextFloat() * 0.5f;
+            float angle = this.random.nextFloat() * ((float)Math.PI * 2);
+            entity.setVelocity(-MathHelper.sin(angle) * magnitude, 0.2f, MathHelper.cos(angle) * magnitude);
+        }
     }
 
     @Inject(at = @At("TAIL"), method = "tick")
@@ -152,4 +234,25 @@ public abstract class LivingEntityMixin extends Entity {
     private ItemStack getOldAdventureStack(SlotType type, int index) {
         return lastEquippedAdventureTrinkets.getOrDefault(type.getGroup() + "/" + type.getName() + "/" + index, ItemStack.EMPTY);
     }
+
+    /*@Override // TODO poise
+    public float bamcore$getMaxPoise() {
+        return (float) this.getAttributeValue(EntityAttributesRegistry.MAX_POISE);
+    }
+
+    @Override
+    public void bamcore$addPoise(float amount) {
+        float f = this.bamcore$getPoise();
+        this.bamcore$setPoise(f + amount);
+    }
+
+    @Override
+    public float bamcore$getPoise() {
+        return this.dataTracker.get(POISE);
+    }
+
+    @Override
+    public void bamcore$setPoise(float poise) {
+        this.dataTracker.set(POISE, MathHelper.clamp(poise, 0, this.bamcore$getMaxPoise()));
+    }*/
 }

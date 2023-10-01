@@ -1,5 +1,6 @@
 package com.github.theredbrain.bamcore.mixin.entity.player;
 
+import com.github.theredbrain.bamcore.api.item.ArmorTrinketItem;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.bamcore.api.item.CustomArmorItem;
@@ -8,6 +9,8 @@ import com.github.theredbrain.bamcore.util.ItemUtils;
 import com.github.theredbrain.bamcore.registry.ItemRegistry;
 import com.github.theredbrain.bamcore.registry.StatusEffectsRegistry;
 import com.google.common.collect.ImmutableList;
+import dev.emi.trinkets.api.Trinket;
+import dev.emi.trinkets.api.TrinketsApi;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
@@ -312,13 +315,14 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 
     /**
      * @author TheRedBrain
-     * @reason convenience, might redo later
+     * @reason overhaul armor
      */
     @Overwrite
     public void damageArmor(DamageSource damageSource, float amount, int[] slots) {
         if (amount <= 0.0f) {
             return;
         }
+        // divide by 6 because gloves and shoulders exist
         if ((amount /= 6.0f) < 1.0f) {
             amount = 1.0f;
         }
@@ -328,6 +332,15 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
             if ((itemStack.getItem() instanceof CustomArmorItem && !(((CustomArmorItem)itemStack.getItem()).isProtecting(itemStack))) || (itemStack.getItem() instanceof CustomDyeableArmorItem && !(((CustomDyeableArmorItem)itemStack.getItem()).isProtecting(itemStack))))  continue;
             itemStack.damage((int)amount, this.player, player -> player.sendEquipmentBreakStatus(EquipmentSlot.fromTypeIndex(EquipmentSlot.Type.ARMOR, i)));
         }
+
+        float finalAmount = amount;
+        TrinketsApi.getTrinketComponent(player).ifPresent(trinkets ->
+                trinkets.forEach((slotReference, itemStack) ->
+                        {
+                            if (itemStack.getItem() instanceof ArmorTrinketItem && (((ArmorTrinketItem) itemStack.getItem()).isProtecting(itemStack))) {
+                                itemStack.damage((int) finalAmount, this.player, player -> TrinketsApi.onTrinketBroken(itemStack, slotReference, player));
+                            }
+                        }));
     }
 
     public ItemStack bamcore$getMainHand() {

@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "bettercombat.PlayerAttackHelperMixin",
+    "entity.DamageUtilMixin",
     "entity.EquipmentSlotMixin",
     "entity.EquipmentSlotTypeMixin",
     "entity.LivingEntityMixin",
@@ -36,7 +37,6 @@
     "client.network.AbstractClientPlayerEntityMixin",
     "client.network.ClientPlayerEntityMixin",
     "client.network.ClientPlayNetworkHandlerMixin",
-    ,
     "client.render.entity.PlayerEntityRendererMixin"
   ],
   "injectors": {

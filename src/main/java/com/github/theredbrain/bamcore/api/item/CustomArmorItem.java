@@ -1,7 +1,7 @@
 package com.github.theredbrain.bamcore.api.item;
 
 import com.github.theredbrain.bamcore.item.CustomArmour;
-import com.github.theredbrain.bamcore.registry.EntityAttributesRegistry;
+import com.github.theredbrain.bamcore.api.util.BetterAdventureModeEntityAttributes;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.entity.EquipmentSlot;
@@ -21,23 +21,23 @@ public class CustomArmorItem extends ArmorItem implements CustomArmour {
     @Nullable
     private String translationKeyBroken;
     private final Multimap<EntityAttribute, EntityAttributeModifier> customAttributeModifiers;
-    private final int poise;
-    private final int weight;
+//    private final int poise; // TODO poise
+    private final double weight;
 
     /**
      * custom armor which can be equipped in two additional slots (shoulders and hands)
      * it also can not break, but is no longer functional when its durability is 1
      */
-    public CustomArmorItem(int poise, int weight, ArmorMaterial material, Type type, Item.Settings settings) {
+    public CustomArmorItem(/*int poise, TODO poise*/double weight, ArmorMaterial material, Type type, Item.Settings settings) {
         super(material, type, settings);
-        this.poise = poise;
+//        this.poise = poise; // TODO poise
         this.weight = weight;
         ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
         UUID uUID = MODIFIERS.get((Object)type);
         builder.put(EntityAttributes.GENERIC_ARMOR, new EntityAttributeModifier(uUID, "Armor modifier", (double)this.getProtection(), EntityAttributeModifier.Operation.ADDITION));
         builder.put(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, new EntityAttributeModifier(uUID, "Armor toughness", (double)this.getToughness(), EntityAttributeModifier.Operation.ADDITION));
-        builder.put(EntityAttributesRegistry.EQUIPMENT_WEIGHT, new EntityAttributeModifier(uUID, "Equipment weight", (double)this.weight, EntityAttributeModifier.Operation.ADDITION));
-        builder.put(EntityAttributesRegistry.MAX_POISE, new EntityAttributeModifier(uUID, "Poise", (double)this.poise, EntityAttributeModifier.Operation.ADDITION));
+        builder.put(BetterAdventureModeEntityAttributes.EQUIPMENT_WEIGHT, new EntityAttributeModifier(uUID, "Equipment weight", (double)this.weight, EntityAttributeModifier.Operation.ADDITION));
+//        builder.put(EntityAttributesRegistry.MAX_POISE, new EntityAttributeModifier(uUID, "Poise", (double)this.poise, EntityAttributeModifier.Operation.ADDITION)); // TODO poise
 //        if (material == ArmorMaterials.NETHERITE) {
 //            builder.put(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, new EntityAttributeModifier(uUID, "Armor knockback resistance", (double)this.knockbackResistance, EntityAttributeModifier.Operation.ADDITION));
 //        }
@@ -45,7 +45,7 @@ public class CustomArmorItem extends ArmorItem implements CustomArmour {
     }
 
     /**
-     * {@return whether this item is providing its attribute modifiers and if it's rendered}
+     * {@return whether this item should provide its attribute modifiers and if should be rendered}
      */
     @Override
     public boolean isProtecting(ItemStack stack) {

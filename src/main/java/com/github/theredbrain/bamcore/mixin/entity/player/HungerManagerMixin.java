@@ -27,6 +27,7 @@ public class HungerManagerMixin {
     @Unique
     private double encumbrance = 0.0;
 
+    // TODO config update: all attribute modifiers are (server) config driven -> much easier balancing
     /**
      *
      * @author TheRedBrain
@@ -165,5 +166,9 @@ public class HungerManagerMixin {
 
     public boolean isOverEncumbered() {
         return this.encumbrance > 100;
+    }
+
+    public double getEncumbrance() {
+        return encumbrance;
     }
 }

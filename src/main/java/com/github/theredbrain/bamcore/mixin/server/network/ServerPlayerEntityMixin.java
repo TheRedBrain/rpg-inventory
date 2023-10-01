@@ -1,17 +1,20 @@
 package com.github.theredbrain.bamcore.mixin.server.network;
 
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
+import com.github.theredbrain.bamcore.network.event.PlayerDeathCallback;
 import com.github.theredbrain.bamcore.network.packet.BetterAdventureModCoreServerPacket;
 import com.mojang.authlib.GameProfile;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.OpenScreenS2CPacket;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.network.ServerPlayerInteractionManager;
@@ -164,16 +167,16 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Du
     }
 
     @Inject(method = "tick", at = @At("TAIL"))
-    public void bam$tick(CallbackInfo ci) {
+    public void bamcore$tick(CallbackInfo ci) {
         if (!this.getWorld().isClient) {
             this.currentScreenHandler = this.bamcore$getInventoryScreenHandler();
             if (!ItemStack.areItemsEqual(mainHandSlotStack, this.getInventory().getStack(40)) || !ItemStack.areItemsEqual(alternateMainHandSlotStack, this.getInventory().getStack(42))) {
-                sendChangedHandSlotsPacket(true);
+                bamcore$sendChangedHandSlotsPacket(true);
             }
             mainHandSlotStack = this.getInventory().getStack(40);
             alternateMainHandSlotStack = this.getInventory().getStack(42);
             if (!ItemStack.areItemsEqual(offHandSlotStack, this.getInventory().getStack(41)) || !ItemStack.areItemsEqual(alternateOffHandSlotStack, this.getInventory().getStack(43))) {
-                sendChangedHandSlotsPacket(false);
+                bamcore$sendChangedHandSlotsPacket(false);
             }
             offHandSlotStack = this.getInventory().getStack(41);
             alternateOffHandSlotStack = this.getInventory().getStack(43);
@@ -182,6 +185,13 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Du
 //                this.setWasUsingHotbarItem(this.isUsingHotbarItem());
 //            }
         }
+    }
+
+    @Inject(method = "onDeath", at = @At("TAIL"))
+    public void bamcore$onDeath(DamageSource damageSource, CallbackInfo ci) {
+        ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
+        MinecraftServer server = this.getServer();
+        PlayerDeathCallback.EVENT.invoker().kill(player, server, damageSource);
     }
 
     /**
@@ -226,7 +236,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Du
         return this.interactionManager.getGameMode() == GameMode.ADVENTURE;
     }
 
-    private void sendChangedHandSlotsPacket(boolean mainHand) {
+    private void bamcore$sendChangedHandSlotsPacket(boolean mainHand) {
         Collection<ServerPlayerEntity> players = PlayerLookup.tracking((ServerWorld) this.getWorld(), this.getBlockPos());
 //        Collection<ServerPlayerEntity> players = PlayerLookup.tracking(this);
 //        players.remove(((ServerPlayerEntity) (Object) this));
