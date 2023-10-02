@@ -1,6 +1,7 @@
 package com.github.theredbrain.bamcore;
 
-import com.github.theredbrain.bamcore.api.util.BetterAdventureModeEntityAttributes;
+import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreEntityAttributes;
+import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreStatusEffects;
 import com.github.theredbrain.bamcore.network.packet.BetterAdventureModCoreServerPacket;
 import com.github.theredbrain.bamcore.registry.*;
 import com.github.theredbrain.bamcore.world.DimensionsManager;
@@ -19,12 +20,12 @@ public class BetterAdventureModeCore implements ModInitializer {
 		BlockRegistry.init();
 		DimensionsManager.init();
 		EntityRegistry.init();
-		BetterAdventureModeEntityAttributes.registerAttributes();
+		BetterAdventureModeCoreEntityAttributes.registerAttributes();
 		EventsRegistry.initializeEvents();
 		ItemRegistry.init();
 		BetterAdventureModCoreServerPacket.init();
 		ScreenHandlerTypesRegistry.registerAll();
-		StatusEffectsRegistry.registerEffects();
+		BetterAdventureModeCoreStatusEffects.registerEffects();
 		GameRulesRegistry.init();
 	}
 

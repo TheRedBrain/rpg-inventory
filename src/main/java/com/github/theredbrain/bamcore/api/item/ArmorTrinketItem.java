@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.api.item;
 
-import com.github.theredbrain.bamcore.api.util.BetterAdventureModeEntityAttributes;
+import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreEntityAttributes;
 import com.github.theredbrain.bamcore.util.AttributeModifierUUIDs;
 import com.google.common.collect.Multimap;
 import dev.emi.trinkets.api.SlotReference;
@@ -73,7 +73,7 @@ public class ArmorTrinketItem extends TrinketItem {
                     map.put(EntityAttributes.GENERIC_ARMOR_TOUGHNESS,
                             new EntityAttributeModifier(UUID.fromString(AttributeModifierUUIDs.GLOVE_SLOT),
                                     "Armor Toughness", this.armorToughness, EntityAttributeModifier.Operation.ADDITION));
-                    map.put(BetterAdventureModeEntityAttributes.EQUIPMENT_WEIGHT,
+                    map.put(BetterAdventureModeCoreEntityAttributes.EQUIPMENT_WEIGHT,
                             new EntityAttributeModifier(UUID.fromString(AttributeModifierUUIDs.GLOVE_SLOT),
                                     "Equipment Weight", this.weight, EntityAttributeModifier.Operation.ADDITION));
                 }
@@ -86,7 +86,7 @@ public class ArmorTrinketItem extends TrinketItem {
                     map.put(EntityAttributes.GENERIC_ARMOR_TOUGHNESS,
                             new EntityAttributeModifier(UUID.fromString(AttributeModifierUUIDs.SHOULDERS_SLOT),
                                     "Armor Toughness", this.armorToughness, EntityAttributeModifier.Operation.ADDITION));
-                    map.put(BetterAdventureModeEntityAttributes.EQUIPMENT_WEIGHT,
+                    map.put(BetterAdventureModeCoreEntityAttributes.EQUIPMENT_WEIGHT,
                             new EntityAttributeModifier(UUID.fromString(AttributeModifierUUIDs.SHOULDERS_SLOT),
                                     "Equipment Weight", this.weight, EntityAttributeModifier.Operation.ADDITION));
                 }

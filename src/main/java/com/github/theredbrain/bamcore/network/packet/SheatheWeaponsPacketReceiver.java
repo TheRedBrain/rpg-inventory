@@ -1,7 +1,7 @@
 package com.github.theredbrain.bamcore.network.packet;
 
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
-import com.github.theredbrain.bamcore.registry.StatusEffectsRegistry;
+import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreStatusEffects;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.PacketByteBuf;
@@ -24,7 +24,7 @@ public class SheatheWeaponsPacketReceiver implements ServerPlayNetworking.PlayCh
                 player.sendMessageToClient(Text.translatable("hud.message.staminaTooLow"), true);
             } else {
                 String command = "";
-                if (player.hasStatusEffect(StatusEffectsRegistry.WEAPONS_SHEATHED_EFFECT)) {
+                if (player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.WEAPONS_SHEATHED_EFFECT)) {
                     command = "effect clear " + playerName + " bamcore:weapons_sheathed_effect";
                 } else if (canSheathe) {
                     command = "effect give " + playerName + " bamcore:weapons_sheathed_effect infinite 0 true";

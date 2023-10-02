@@ -1,7 +1,7 @@
 package com.github.theredbrain.bamcore.screen.slot;
 
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
-import com.github.theredbrain.bamcore.registry.StatusEffectsRegistry;
+import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreStatusEffects;
 import dev.emi.trinkets.TrinketSlot;
 import dev.emi.trinkets.TrinketsClient;
 import dev.emi.trinkets.api.*;
@@ -37,14 +37,14 @@ public class AdventureTrinketSlot extends Slot implements TrinketSlot, OwoSlotEx
     @Override
     public boolean canInsert(ItemStack stack) {
         return TrinketSlot.canInsert(stack, new SlotReference(trinketInventory, slotOffset), trinketInventory.getComponent().getEntity())
-                && (owner.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure()));
+                && (owner.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure()));
     }
 
     @Override
     public boolean canTakeItems(PlayerEntity player) {
         ItemStack stack = this.getStack();
         return TrinketsApi.getTrinket(stack.getItem()).canUnequip(stack, new SlotReference(trinketInventory, slotOffset), player)
-                && (owner.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure()));
+                && (owner.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure()));
     }
 
     @Override

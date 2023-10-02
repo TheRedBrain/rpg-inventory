@@ -7,9 +7,8 @@ import com.github.theredbrain.bamcore.api.item.CustomArmorItem;
 import com.github.theredbrain.bamcore.api.item.CustomDyeableArmorItem;
 import com.github.theredbrain.bamcore.util.ItemUtils;
 import com.github.theredbrain.bamcore.registry.ItemRegistry;
-import com.github.theredbrain.bamcore.registry.StatusEffectsRegistry;
+import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreStatusEffects;
 import com.google.common.collect.ImmutableList;
-import dev.emi.trinkets.api.Trinket;
 import dev.emi.trinkets.api.TrinketsApi;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.damage.DamageSource;
@@ -91,9 +90,9 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 
     @Inject(method = "getMainHandStack", at = @At("HEAD"), cancellable = true)
     public void bamcore$getMainHandStack(CallbackInfoReturnable<ItemStack> cir) {
-        if (!player.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT) && !player.isCreative()) {
+        if (!player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.ADVENTURE_BUILDING_EFFECT) && !player.isCreative()) {
             ItemStack stack = ItemStack.EMPTY;
-            if (!player.hasStatusEffect(StatusEffectsRegistry.WEAPONS_SHEATHED_EFFECT)) {
+            if (!player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.WEAPONS_SHEATHED_EFFECT)) {
                 ItemStack stack2 = this.mainHand.get(0);
                 if (ItemUtils.isUsable(stack2)) stack = stack2;
             } else if (PlayerInventory.isValidHotbarIndex(this.selectedSlot)) {
@@ -108,9 +107,9 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
     @Override
     public ItemStack bamcore$getOffHandStack() {
         ItemStack stack = this.offHand.get(0);
-        boolean bl = !player.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT)
+        boolean bl = !player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.ADVENTURE_BUILDING_EFFECT)
                 && !player.isCreative()
-                && (player.hasStatusEffect(StatusEffectsRegistry.WEAPONS_SHEATHED_EFFECT) || !ItemUtils.isUsable(stack));
+                && (player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.WEAPONS_SHEATHED_EFFECT) || !ItemUtils.isUsable(stack));
         return bl ? this.emptyMainHand.get(0) : stack;
     }
 
@@ -157,7 +156,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
      */
     @Overwrite
     public int getEmptySlot() {
-        for (int i = ((DuckPlayerEntityMixin)this.player).bamcore$isAdventure() && !this.player.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT) ? 9 : 0; i < this.main.size(); ++i) {
+        for (int i = ((DuckPlayerEntityMixin)this.player).bamcore$isAdventure() && !this.player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.ADVENTURE_BUILDING_EFFECT) ? 9 : 0; i < this.main.size(); ++i) {
             if (!this.main.get(i).isEmpty()) continue;
             return i;
         }
@@ -175,7 +174,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
             return this.selectedSlot;
         }
 
-        for (int i = ((DuckPlayerEntityMixin)this.player).bamcore$isAdventure() && !this.player.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT) ? 9 : 0; i < this.main.size(); ++i) {
+        for (int i = ((DuckPlayerEntityMixin)this.player).bamcore$isAdventure() && !this.player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.ADVENTURE_BUILDING_EFFECT) ? 9 : 0; i < this.main.size(); ++i) {
             if (!this.canStackAddMore(this.main.get(i), stack)) continue;
             return i;
         }

@@ -2,7 +2,7 @@ package com.github.theredbrain.bamcore.block.entity;
 
 import com.github.theredbrain.bamcore.registry.BlockRegistry;
 import com.github.theredbrain.bamcore.registry.EntityRegistry;
-import com.github.theredbrain.bamcore.registry.StatusEffectsRegistry;
+import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreStatusEffects;
 import com.github.theredbrain.bamcore.screen.TeleporterBlockScreenHandler;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
@@ -222,9 +222,9 @@ public class TeleporterBlockBlockEntity extends BlockEntity implements ExtendedS
             Box activationArea = new Box(activationAreaStart, activationAreaEnd);
             List<PlayerEntity> list = world.getNonSpectatingEntities(PlayerEntity.class, activationArea);
             for (PlayerEntity playerEntity : list) {
-                if (!playerEntity.hasStatusEffect(StatusEffectsRegistry.PORTAL_RESISTANCE_EFFECT)) {
+                if (!playerEntity.hasStatusEffect(BetterAdventureModeCoreStatusEffects.PORTAL_RESISTANCE_EFFECT)) {
                     // prevents continuous opening of a screen
-                    playerEntity.setStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.PORTAL_RESISTANCE_EFFECT, -1), playerEntity);
+                    playerEntity.setStatusEffect(new StatusEffectInstance(BetterAdventureModeCoreStatusEffects.PORTAL_RESISTANCE_EFFECT, -1), playerEntity);
                     playerEntity.openHandledScreen(state.createScreenHandlerFactory(world, pos));
                 }
             }

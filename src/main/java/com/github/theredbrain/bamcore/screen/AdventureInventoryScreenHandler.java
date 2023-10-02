@@ -3,8 +3,8 @@ package com.github.theredbrain.bamcore.screen;
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.entity.ExtendedEquipmentSlot;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
-import com.github.theredbrain.bamcore.api.util.BetterAdventureModeEntityAttributes;
-import com.github.theredbrain.bamcore.registry.StatusEffectsRegistry;
+import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreEntityAttributes;
+import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreStatusEffects;
 import com.github.theredbrain.bamcore.registry.Tags;
 import com.github.theredbrain.bamcore.screen.slot.AdventureTrinketSlot;
 import com.google.common.collect.ImmutableList;
@@ -66,7 +66,7 @@ public class AdventureInventoryScreenHandler extends ScreenHandler implements Tr
 
                 @Override
                 public boolean canInsert(ItemStack stack) {
-                    return stack.isIn(Tags.ADVENTURE_HOTBAR_ITEMS) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure()) || owner.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT);
+                    return stack.isIn(Tags.ADVENTURE_HOTBAR_ITEMS) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure()) || owner.hasStatusEffect(BetterAdventureModeCoreStatusEffects.ADVENTURE_BUILDING_EFFECT);
                 }
             });
         }
@@ -94,12 +94,12 @@ public class AdventureInventoryScreenHandler extends ScreenHandler implements Tr
             @Override
             public boolean canInsert(ItemStack stack) {
                 return (EquipmentSlot.FEET == MobEntity.getPreferredEquipmentSlot(stack) || stack.isIn(Tags.EXTRA_BOOTS_ITEMS))
-                        && (owner.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure()));
+                        && (owner.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure()));
             }
 
             @Override
             public boolean canTakeItems(PlayerEntity playerEntity) {
-                return owner.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure());
+                return owner.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure());
             }
 
             @Override
@@ -125,12 +125,12 @@ public class AdventureInventoryScreenHandler extends ScreenHandler implements Tr
             @Override
             public boolean canInsert(ItemStack stack) {
                 return (EquipmentSlot.LEGS == MobEntity.getPreferredEquipmentSlot(stack) || stack.isIn(Tags.EXTRA_LEGGINGS_ITEMS))
-                        && (owner.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure()));
+                        && (owner.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure()));
             }
 
             @Override
             public boolean canTakeItems(PlayerEntity playerEntity) {
-                return owner.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure());
+                return owner.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure());
             }
 
             @Override
@@ -156,12 +156,12 @@ public class AdventureInventoryScreenHandler extends ScreenHandler implements Tr
             @Override
             public boolean canInsert(ItemStack stack) {
                 return (EquipmentSlot.CHEST == MobEntity.getPreferredEquipmentSlot(stack) || stack.isIn(Tags.EXTRA_CHESTPLATE_ITEMS))
-                        && (owner.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure()));
+                        && (owner.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure()));
             }
 
             @Override
             public boolean canTakeItems(PlayerEntity playerEntity) {
-                return owner.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure());
+                return owner.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure());
             }
 
             @Override
@@ -187,12 +187,12 @@ public class AdventureInventoryScreenHandler extends ScreenHandler implements Tr
             @Override
             public boolean canInsert(ItemStack stack) {
                 return (EquipmentSlot.HEAD == MobEntity.getPreferredEquipmentSlot(stack) || stack.isIn(Tags.EXTRA_HELMET_ITEMS))
-                        && (owner.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure()));
+                        && (owner.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure()));
             }
 
             @Override
             public boolean canTakeItems(PlayerEntity playerEntity) {
-                return owner.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure());
+                return owner.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure());
             }
 
             @Override
@@ -212,12 +212,12 @@ public class AdventureInventoryScreenHandler extends ScreenHandler implements Tr
 
             @Override
             public boolean canInsert(ItemStack stack) {
-                return stack.isIn(Tags.MAIN_HAND_ITEMS) && (owner.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure()));
+                return stack.isIn(Tags.MAIN_HAND_ITEMS) && (owner.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure()));
             }
 
             @Override
             public boolean canTakeItems(PlayerEntity playerEntity) {
-                return owner.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure());
+                return owner.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure());
             }
 
             @Override
@@ -237,12 +237,12 @@ public class AdventureInventoryScreenHandler extends ScreenHandler implements Tr
 
             @Override
             public boolean canInsert(ItemStack stack) {
-                return stack.isIn(Tags.OFF_HAND_ITEMS) && (owner.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure()));
+                return stack.isIn(Tags.OFF_HAND_ITEMS) && (owner.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure()));
             }
 
             @Override
             public boolean canTakeItems(PlayerEntity playerEntity) {
-                return owner.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure());
+                return owner.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure());
             }
 
             @Override
@@ -262,12 +262,12 @@ public class AdventureInventoryScreenHandler extends ScreenHandler implements Tr
 
             @Override
             public boolean canInsert(ItemStack stack) {
-                return stack.isIn(Tags.MAIN_HAND_ITEMS) && (owner.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure()));
+                return stack.isIn(Tags.MAIN_HAND_ITEMS) && (owner.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure()));
             }
 
             @Override
             public boolean canTakeItems(PlayerEntity playerEntity) {
-                return owner.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure());
+                return owner.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure());
             }
 
             @Override
@@ -287,12 +287,12 @@ public class AdventureInventoryScreenHandler extends ScreenHandler implements Tr
 
             @Override
             public boolean canInsert(ItemStack stack) {
-                return stack.isIn(Tags.OFF_HAND_ITEMS) && (owner.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure()));
+                return stack.isIn(Tags.OFF_HAND_ITEMS) && (owner.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure()));
             }
 
             @Override
             public boolean canTakeItems(PlayerEntity playerEntity) {
-                return owner.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure());
+                return owner.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure());
             }
 
             @Override
@@ -521,7 +521,7 @@ public class AdventureInventoryScreenHandler extends ScreenHandler implements Tr
             slotHeights.clear();
             slotTypes.clear();
 
-            int activeSpellSlotAmount = (int) owner.getAttributeInstance(BetterAdventureModeEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT).getValue();
+            int activeSpellSlotAmount = (int) owner.getAttributeInstance(BetterAdventureModeCoreEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT).getValue();
             AdventureTrinketSlot[] newSlots = new AdventureTrinketSlot[this.trinketSlotAmount];
 
             for (Map.Entry<String, Map<String, TrinketInventory>> entry : trinkets.getInventory().entrySet()) {

@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.client.render.renderer;
 
-import com.github.theredbrain.bamcore.registry.StatusEffectsRegistry;
+import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreStatusEffects;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.ModelPart;
@@ -34,7 +34,7 @@ public class SheathedOffHandItemFeatureRenderer extends HeldItemFeatureRenderer<
         PlayerEntity player = (PlayerEntity) abstractClientPlayerEntity;
         ItemStack offHandStack = abstractClientPlayerEntity.getInventory().getStack(41);
 
-        if (!offHandStack.isEmpty() && player.hasStatusEffect(StatusEffectsRegistry.WEAPONS_SHEATHED_EFFECT)) {
+        if (!offHandStack.isEmpty() && player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.WEAPONS_SHEATHED_EFFECT)) {
             matrixStack.push();
             ModelPart modelPart = this.getContextModel().body;
             modelPart.rotate(matrixStack);
