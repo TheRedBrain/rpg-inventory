@@ -36,7 +36,6 @@ public abstract class AbstractInteractiveAdventureBlock extends Block {
 
     public AbstractInteractiveAdventureBlock(@Nullable TagKey<Item> requiredTools, boolean requiresTools, int respawnModifier, Settings settings) {
         super(settings);
-        this.setDefaultState(this.getStateManager().getDefaultState().with(INTACT, true));
         this.requiredTools = requiredTools;
         if (this.requiredTools == null && requiresTools) {
             this.requiresTools = false;
@@ -44,6 +43,7 @@ public abstract class AbstractInteractiveAdventureBlock extends Block {
             this.requiresTools = requiresTools;
         }
         this.respawnModifier = Math.max(respawnModifier, 1);
+        this.setDefaultState(this.getStateManager().getDefaultState().with(INTACT, true));
     }
 
     @Override

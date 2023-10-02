@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "bettercombat.PlayerAttackHelperMixin",
+    "block.RespawnAnchorBlockMixin",
     "entity.DamageUtilMixin",
     "entity.EquipmentSlotMixin",
     "entity.EquipmentSlotTypeMixin",
