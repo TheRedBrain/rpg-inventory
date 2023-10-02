@@ -1,5 +1,6 @@
 package com.github.theredbrain.bamcore.network.packet;
 
+import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.player.PlayerInventory;
@@ -8,6 +9,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 
 public class SwapHandItemsPacketReceiver implements ServerPlayNetworking.PlayChannelHandler {
     @Override
@@ -20,6 +22,7 @@ public class SwapHandItemsPacketReceiver implements ServerPlayNetworking.PlayCha
             int alternateHandSlotId;
 
             PlayerInventory playerInventory = player.getInventory();
+            boolean hasEnoughStamina = ((DuckPlayerEntityMixin)player).bamcore$getStamina() > 0;
 
             if (mainHand) {
                 handSlotId = 40;
@@ -33,6 +36,10 @@ public class SwapHandItemsPacketReceiver implements ServerPlayNetworking.PlayCha
             ItemStack alternateItemStack = playerInventory.getStack(alternateHandSlotId);
 
             if (itemStack.isEmpty() && alternateItemStack.isEmpty()) {
+                return;
+            }
+            if (((DuckPlayerEntityMixin) player).bamcore$getStamina() <= 0) {
+                player.sendMessageToClient(Text.translatable("hud.message.staminaTooLow"), true);
                 return;
             }
             playerInventory.setStack(handSlotId, alternateItemStack);

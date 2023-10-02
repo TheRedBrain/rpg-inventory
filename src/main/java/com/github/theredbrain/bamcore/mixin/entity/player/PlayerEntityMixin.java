@@ -348,11 +348,11 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
                     if (this.isSprinting()) {
                         this.increaseStat(Stats.SPRINT_ONE_CM, i);
 //                        this.addExhaustion(0.1F * (float)i * 0.01F);
-                        ((DuckPlayerEntityMixin)this).bamcore$addStamina(-2);
+                        ((DuckPlayerEntityMixin)this).bamcore$addStamina(-1);
                     } else if (this.isInSneakingPose()) {
                         this.increaseStat(Stats.CROUCH_ONE_CM, i);
 //                        this.addExhaustion(0.0F * (float)i * 0.01F);
-                        ((DuckPlayerEntityMixin)this).bamcore$addStamina(-2);
+//                        ((DuckPlayerEntityMixin)this).bamcore$addStamina(-2);
                     } else {
                         this.increaseStat(Stats.WALK_ONE_CM, i);
 //                        this.addExhaustion(0.0F * (float)i * 0.01F);

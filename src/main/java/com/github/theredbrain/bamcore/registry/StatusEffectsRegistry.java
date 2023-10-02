@@ -19,7 +19,7 @@ public class StatusEffectsRegistry {
     public static final StatusEffect CIVILISATION_EFFECT = new CivilisationStatusEffect();
     public static final StatusEffect NEED_EMPTY_OFFHAND_EFFECT = new NeedEmptyOffhandStatusEffect();
     public static final StatusEffect NO_ATTACK_ITEMS_EFFECT = new NoAttackItemsStatusEffect();
-    public static final StatusEffect OVERBURDENED_EFFECT = new OverburdenedStatusEffect().addAttributeModifier(EntityAttributes.GENERIC_MOVEMENT_SPEED, AttributeModifierUUIDs.OVERBURDENED_EFFECT, 0.5, EntityAttributeModifier.Operation.MULTIPLY_BASE);
+    public static final StatusEffect OVERBURDENED_EFFECT = new OverburdenedStatusEffect().addAttributeModifier(EntityAttributes.GENERIC_MOVEMENT_SPEED, AttributeModifierUUIDs.OVERBURDENED_EFFECT, -0.25, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
     public static final StatusEffect PERMANENT_MOUNT_EFFECT = new PermanentMountStatusEffect();
     public static final StatusEffect PORTAL_RESISTANCE_EFFECT = new PortalResistanceStatusEffect();
     public static final StatusEffect WEAPONS_SHEATHED_EFFECT = new WeaponsSheathedStatusEffect();
