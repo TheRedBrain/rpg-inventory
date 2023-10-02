@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.mixin.entity.player;
 
-import com.github.theredbrain.bamcore.block.AbstractSetSpawnBlock;
+import com.github.theredbrain.bamcore.api.block.AbstractSetSpawnBlock;
 import com.github.theredbrain.bamcore.block.entity.AreaFillerBlockBlockEntity;
 import com.github.theredbrain.bamcore.block.entity.ChunkLoaderBlockBlockEntity;
 import com.github.theredbrain.bamcore.block.entity.StructurePlacerBlockBlockEntity;
@@ -526,11 +526,11 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     public void bamcore$openChunkLoaderBlockScreen(ChunkLoaderBlockBlockEntity chunkLoaderBlock) {
     }
 
-    @Override
-    public Iterable<ItemStack> getItemsEquipped() {
-        Iterable<ItemStack> alternateHandItems = Arrays.asList(this.getInventory().getStack(42), this.getInventory().getStack(43));
-        return Iterables.concat(this.getHandItems(), this.getArmorItems(), alternateHandItems);
-    }
+//    @Override // TODO check if something breaks with this disabled
+//    public Iterable<ItemStack> getItemsEquipped() {
+//        Iterable<ItemStack> alternateHandItems = Arrays.asList(this.getInventory().getStack(42), this.getInventory().getStack(43));
+//        return Iterables.concat(this.getHandItems(), this.getArmorItems(), alternateHandItems);
+//    }
 
     private void ejectItemsFromInactiveSpellSlots() {
         int activeSpellSlotAmount = (int) this.getAttributeInstance(BetterAdventureModeCoreEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT).getValue();
