@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.mixin.entity.player;
 
-import com.github.theredbrain.bamcore.api.item.ArmorTrinketItem;
+import com.github.theredbrain.bamcore.api.item.ShouldersArmorTrinketItem;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.bamcore.api.item.CustomArmorItem;
@@ -335,8 +335,8 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         float finalAmount = amount;
         TrinketsApi.getTrinketComponent(player).ifPresent(trinkets ->
                 trinkets.forEach((slotReference, itemStack) ->
-                        {
-                            if (itemStack.getItem() instanceof ArmorTrinketItem && (((ArmorTrinketItem) itemStack.getItem()).isProtecting(itemStack))) {
+                        { // TODO !!!!!!!!
+                            if (itemStack.getItem() instanceof ShouldersArmorTrinketItem && (((ShouldersArmorTrinketItem) itemStack.getItem()).isProtecting(itemStack))) {
                                 itemStack.damage((int) finalAmount, this.player, player -> TrinketsApi.onTrinketBroken(itemStack, slotReference, player));
                             }
                         }));

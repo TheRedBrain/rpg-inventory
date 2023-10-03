@@ -1,6 +1,6 @@
 {
   "icon": "bamcore:item/empty_armor_slot_shoulders",
   "tooltip_predicates": [
-    "bamcore:bamcore_predicate"
+    "trinkets:relevant"
   ]
 }

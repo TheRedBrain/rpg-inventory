@@ -7,6 +7,8 @@ import dev.emi.trinkets.api.TrinketsApi;
 import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.item.ItemStack;
 
+import java.util.Objects;
+
 public class ItemUtils {
 
     public static boolean isUsable(ItemStack stack) {
@@ -14,15 +16,25 @@ public class ItemUtils {
     }
 
     static {
-        TrinketsApi.registerTrinketPredicate(BetterAdventureModeCore.identifier("bamcore_predicate"), (stack, ref, entity) -> {
+        TrinketsApi.registerTrinketPredicate(BetterAdventureModeCore.identifier("rings_predicate"), (stack, ref, entity) -> {
             // TODO
-//            String group = ref.inventory().getSlotType().getGroup();
+            String group = ref.inventory().getSlotType().getGroup();
 //            stack.isIn(Tags.SPELLS)
-            var map = TrinketsApi.getTrinket(stack.getItem()).getModifiers(stack, ref, entity, SlotAttributes.getUuid(ref));
-            if (!map.isEmpty()) {
+//            var map = TrinketsApi.getTrinket(stack.getItem()).getModifiers(stack, ref, entity, SlotAttributes.getUuid(ref));
+            if (Objects.equals(group, "rings_1")) {
                 return TriState.TRUE;
             }
-            return TriState.DEFAULT;
+            return TriState.FALSE;
+        });
+        TrinketsApi.registerTrinketPredicate(BetterAdventureModeCore.identifier("spells_predicate"), (stack, ref, entity) -> {
+            // TODO
+            String group = ref.inventory().getSlotType().getGroup();
+//            stack.isIn(Tags.SPELLS)
+//            var map = TrinketsApi.getTrinket(stack.getItem()).getModifiers(stack, ref, entity, SlotAttributes.getUuid(ref));
+            if (Objects.equals(group, "spell_slot_1")) {
+                return TriState.TRUE;
+            }
+            return TriState.FALSE;
         });
     }
 }

@@ -111,5 +111,20 @@
 	"gamerule.resetAdvancementsOnDeath": "Reset advancements on death",
 	"gamerule.resetRecipesOnDeath": "Reset recipes on death",
 
-	"hud.message.staminaTooLow": "Your stamina is too low"
+	"hud.message.staminaTooLow": "Your stamina is too low",
+
+	"trinkets.slot.belts.belt": "Belt",
+	"trinkets.slot.gloves.gloves": "Glove",
+	"trinkets.slot.necklaces.necklace": "Necklace",
+	"trinkets.slot.rings_1.ring": "Ring",
+	"trinkets.slot.rings_2.ring": "Ring",
+	"trinkets.slot.shoulders.shoulders": "Shoulders",
+	"trinkets.slot.spell_slot_1.spell": "Spell Slot",
+	"trinkets.slot.spell_slot_2.spell": "Spell Slot",
+	"trinkets.slot.spell_slot_3.spell": "Spell Slot",
+	"trinkets.slot.spell_slot_4.spell": "Spell Slot",
+	"trinkets.slot.spell_slot_5.spell": "Spell Slot",
+	"trinkets.slot.spell_slot_6.spell": "Spell Slot",
+	"trinkets.slot.spell_slot_7.spell": "Spell Slot",
+	"trinkets.slot.spell_slot_8.spell": "Spell Slot"
 }

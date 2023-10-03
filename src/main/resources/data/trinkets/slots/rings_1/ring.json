@@ -1,6 +1,6 @@
 {
   "icon": "bamcore:item/empty_armor_slot_ring",
   "tooltip_predicates": [
-    "bamcore:bamcore_predicate"
+    "bamcore:rings_predicate"
   ]
 }
