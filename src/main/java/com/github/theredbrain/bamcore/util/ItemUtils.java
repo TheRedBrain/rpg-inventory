@@ -2,12 +2,12 @@ package com.github.theredbrain.bamcore.util;
 
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.registry.Tags;
-import dev.emi.trinkets.api.SlotAttributes;
 import dev.emi.trinkets.api.TrinketsApi;
 import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.item.ItemStack;
 
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ItemUtils {
 
@@ -32,6 +32,17 @@ public class ItemUtils {
 //            stack.isIn(Tags.SPELLS)
 //            var map = TrinketsApi.getTrinket(stack.getItem()).getModifiers(stack, ref, entity, SlotAttributes.getUuid(ref));
             if (Objects.equals(group, "spell_slot_1")) {
+                return TriState.TRUE;
+            }
+            return TriState.FALSE;
+        });
+        TrinketsApi.registerTrinketPredicate(BetterAdventureModeCore.identifier("mana_regeneration_items"), (stack, ref, entity) -> {
+            AtomicBoolean bl = new AtomicBoolean(false);
+            TrinketsApi.getTrinketComponent(entity).ifPresent(comp -> {
+
+                bl.set(comp.isEquipped(stack.getItem()));
+            });
+            if (stack.isIn(Tags.MANA_REGENERATING_ITEMS) && bl.get()) {
                 return TriState.TRUE;
             }
             return TriState.FALSE;

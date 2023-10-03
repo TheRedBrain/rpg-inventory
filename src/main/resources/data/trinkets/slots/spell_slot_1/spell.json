@@ -1,6 +1,6 @@
 {
   "icon": "bamcore:item/empty_slot_spell",
   "tooltip_predicates": [
-    "bamcore:spells_predicate"
+    "trinkets:none"
   ]
 }

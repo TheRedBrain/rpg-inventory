@@ -110,6 +110,8 @@
 	"gamerule.destroyDroppedItemsOnDeath.description": "This only matters, if the gamerule 'keepInventory' is set to false.",
 	"gamerule.resetAdvancementsOnDeath": "Reset advancements on death",
 	"gamerule.resetRecipesOnDeath": "Reset recipes on death",
+	"gamerule.canSetSpawnOnBeds": "Can set spawn on beds",
+	"gamerule.canSetSpawnOnRespawnAnchor": "Can set spawn on respawn anchor",
 
 	"hud.message.staminaTooLow": "Your stamina is too low",
 
