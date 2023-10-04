@@ -1,5 +1,6 @@
 package com.github.theredbrain.bamcore.mixin.entity.player;
 
+import com.github.theredbrain.bamcore.api.item.GlovesArmorTrinketItem;
 import com.github.theredbrain.bamcore.api.item.ShouldersArmorTrinketItem;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerInventoryMixin;
@@ -334,12 +335,14 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 
         float finalAmount = amount;
         TrinketsApi.getTrinketComponent(player).ifPresent(trinkets ->
-                trinkets.forEach((slotReference, itemStack) ->
-                        { // TODO !!!!!!!!
-                            if (itemStack.getItem() instanceof ShouldersArmorTrinketItem && (((ShouldersArmorTrinketItem) itemStack.getItem()).isProtecting(itemStack))) {
-                                itemStack.damage((int) finalAmount, this.player, player -> TrinketsApi.onTrinketBroken(itemStack, slotReference, player));
-                            }
-                        }));
+                trinkets.forEach((slotReference, itemStack) -> {
+                    if (itemStack.getItem() instanceof GlovesArmorTrinketItem && (((GlovesArmorTrinketItem) itemStack.getItem()).isProtecting(itemStack))) {
+                        itemStack.damage((int) finalAmount, this.player, player -> TrinketsApi.onTrinketBroken(itemStack, slotReference, player));
+                    }
+                    if (itemStack.getItem() instanceof ShouldersArmorTrinketItem && (((ShouldersArmorTrinketItem) itemStack.getItem()).isProtecting(itemStack))) {
+                        itemStack.damage((int) finalAmount, this.player, player -> TrinketsApi.onTrinketBroken(itemStack, slotReference, player));
+                    }
+                }));
     }
 
     public ItemStack bamcore$getMainHand() {

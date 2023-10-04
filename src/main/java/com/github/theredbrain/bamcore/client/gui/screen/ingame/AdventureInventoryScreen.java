@@ -1,6 +1,7 @@
 package com.github.theredbrain.bamcore.client.gui.screen.ingame;
 
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.api.effect.FoodStatusEffect;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreEntityAttributes;
 import com.github.theredbrain.bamcore.screen.AdventureInventoryScreenHandler;
@@ -30,10 +31,12 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffectUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.MutableText;
@@ -43,33 +46,29 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Environment(EnvType.CLIENT)
 public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, AdventureInventoryScreenHandler>/* implements TrinketScreen*/ {
     public static final Identifier INVENTORY_SLOT_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/inventory_slot_texture.png");
+    public static final Identifier STATUS_EFFECT_BACKGROUND_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/status_effects_background.png");
     public static final Identifier CHARACTER_BACKGROUND_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/character_background_texture.png");
     public static final Identifier CUSTOM_WIDGETS_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/custom_widgets.png");
+    public static final Identifier CUSTOM_STATUS_EFFECT_WIDGETS_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/custom_status_effect_widgets.png");
     private float mouseX;
     private float mouseY;
     private boolean showAttributeScreen = false;
+    private boolean showStatusEffectsScreen = false;
     private int oldActiveSpellSlotAmount = 0;
+    private int oldEffectsListSize;
+    private List<StatusEffectInstance> foodEffectsList = new ArrayList<>(Collections.emptyList());
+    private List<StatusEffectInstance> negativeEffectsList = new ArrayList<>(Collections.emptyList());
+    private List<StatusEffectInstance> positiveEffectsList = new ArrayList<>(Collections.emptyList());
+    private List<StatusEffectInstance> neutralEffectsList = new ArrayList<>(Collections.emptyList());
 
     public AdventureInventoryScreen(PlayerEntity player) { //AdventureInventoryScreenHandler handler, PlayerInventory inventory, Text title) {
         super((AdventureInventoryScreenHandler) ((DuckPlayerEntityMixin)player).bamcore$getInventoryScreenHandler(), player.getInventory(), Text.translatable("gui.adventureInventory"));
     }
-
-//    @Override
-//    public void handledScreenTick() {
-//        if (this.client.interactionManager.hasCreativeInventory()) {
-//            this.client.setScreen(new CreativeInventoryScreen(this.client.player, this.client.player.networkHandler.getEnabledFeatures(), this.client.options.getOperatorItemsTab().getValue()));
-//            return;
-//        }
-//        this.recipeBook.update();
-//    }
 
     public void handledScreenTick() {
         if (this.client.interactionManager.hasCreativeInventory()) {
@@ -78,6 +77,7 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, A
         this.updateAttributeScreen();
 
         this.buildSpellSlots();
+        this.updateEffectsScreen();
 //        for (Component child : spellSlotComponents) {
 //            component(GridLayout.class, "spell_slots_container").removeChild(child);
 //        }
@@ -116,14 +116,19 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, A
 
     private void updateAttributeScreen() {
         if (this.showAttributeScreen) {
-            this.component(LabelComponent.class, "attributes_max_health_value").text(Text.literal(String.valueOf(this.handler.player().getAttributeValue(EntityAttributes.GENERIC_MAX_HEALTH))));
+            this.component(LabelComponent.class, "attributes_max_health_value").text(Text.literal(String.valueOf((int)this.handler.player().getAttributeValue(EntityAttributes.GENERIC_MAX_HEALTH))));
             this.component(LabelComponent.class, "attributes_health_regeneration_value").text(Text.literal(String.valueOf(this.handler.player().getAttributeValue(BetterAdventureModeCoreEntityAttributes.HEALTH_REGENERATION))));
-            this.component(LabelComponent.class, "attributes_armor_value").text(Text.literal(String.valueOf(this.handler.player().getAttributeValue(EntityAttributes.GENERIC_ARMOR))));
+            this.component(LabelComponent.class, "attributes_armor_value").text(Text.literal(String.valueOf((int)this.handler.player().getAttributeValue(EntityAttributes.GENERIC_ARMOR))));
             this.component(LabelComponent.class, "attributes_armor_toughness_value").text(Text.literal(String.valueOf(this.handler.player().getAttributeValue(EntityAttributes.GENERIC_ARMOR_TOUGHNESS))));
-            this.component(LabelComponent.class, "attributes_max_stamina_value").text(Text.literal(String.valueOf(this.handler.player().getAttributeValue(BetterAdventureModeCoreEntityAttributes.MAX_STAMINA))));
+            this.component(LabelComponent.class, "attributes_max_stamina_value").text(Text.literal(String.valueOf((int)this.handler.player().getAttributeValue(BetterAdventureModeCoreEntityAttributes.MAX_STAMINA))));
             this.component(LabelComponent.class, "attributes_stamina_regeneration_value").text(Text.literal(String.valueOf(this.handler.player().getAttributeValue(BetterAdventureModeCoreEntityAttributes.STAMINA_REGENERATION))));
-            this.component(LabelComponent.class, "attributes_max_mana_value").text(Text.literal(String.valueOf(((DuckPlayerEntityMixin)this.handler.player()).bamcore$getMaxMana())));
+            this.component(LabelComponent.class, "attributes_max_mana_value").text(Text.literal(String.valueOf((int)((DuckPlayerEntityMixin)this.handler.player()).bamcore$getMaxMana())));
             this.component(LabelComponent.class, "attributes_mana_regeneration_value").text(Text.literal(String.valueOf(((DuckPlayerEntityMixin)this.handler.player()).bamcore$getManaRegeneration())));
+            this.component(LabelComponent.class, "attributes_encumbrance_value").text(
+                    Text.literal(String.valueOf((int)((DuckPlayerEntityMixin)this.handler.player()).bamcore$getEquipmentWeight()))
+                    .append(Text.literal("/"))
+                    .append(Text.literal(String.valueOf((int)((DuckPlayerEntityMixin)this.handler.player()).bamcore$getMaxEquipmentWeight())))
+            );
 //            this.component(LabelComponent.class, "attributes_max_poise_value").text(Text.literal(String.valueOf(this.handler.player().getAttributeValue(EntityAttributesRegistry.MAX_POISE)))); // TODO poise
         }
     }
@@ -137,7 +142,8 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, A
                 .id("root");
         rootComponent.child(Containers.horizontalFlow(Sizing.content(), Sizing.content())
                 .children(List.of(
-                        Containers.verticalFlow(Sizing.fixed(120), Sizing.fixed(228)),
+                        Containers.verticalFlow(Sizing.fixed(130), Sizing.fixed(228))
+                                .id("additional_inventory_screen_left"),
                         Containers.verticalFlow(Sizing.content(), Sizing.content())
                                 .children(List.of(
                                         Containers.horizontalFlow(Sizing.content(), Sizing.content())
@@ -266,7 +272,7 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, A
                                 .padding(Insets.of(7, 7, 7, 7))
                                 .surface(Surface.PANEL)
                                 .id("main_inventory"),
-                        Containers.verticalFlow(Sizing.fixed(120), Sizing.fixed(228))
+                        Containers.verticalFlow(Sizing.fixed(130), Sizing.fixed(228))
                                 .id("additional_inventory_screen_right")
                 ))
         );
@@ -297,7 +303,7 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, A
                                         .child(
                                                 Components.label(Text.translatable("gui.adventureInventory.attributes"))
                                                         .color(Color.ofArgb(Colors.BLACK))
-                                                        .margins(Insets.of(0, 4, 0, 0))
+                                                        .margins(Insets.of(0, 0, 0, 0))
                                         ),
                                 Containers.verticalScroll(Sizing.fill(100), Sizing.fixed(201),
                                         Containers.verticalFlow(Sizing.content(), Sizing.content())
@@ -306,7 +312,7 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, A
                                                                 .children(List.of(
                                                                         Components.label(Text.translatable("attribute.name.generic.max_health").append(Text.literal(": ")))
                                                                                 .color(Color.ofArgb(Colors.BLACK)),
-                                                                        Components.label(Text.literal(String.valueOf(this.handler.player().getAttributeValue(EntityAttributes.GENERIC_MAX_HEALTH))))
+                                                                        Components.label(Text.literal(String.valueOf((int)this.handler.player().getAttributeValue(EntityAttributes.GENERIC_MAX_HEALTH))))
                                                                                 .color(Color.ofArgb(Colors.BLACK)).id("attributes_max_health_value")
                                                                 ))
                                                                 .margins(Insets.of(0, 2, 0, 0)),
@@ -322,7 +328,7 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, A
                                                                 .children(List.of(
                                                                         Components.label(Text.translatable("attribute.name.generic.armor").append(Text.literal(": ")))
                                                                                 .color(Color.ofArgb(Colors.BLACK)),
-                                                                        Components.label(Text.literal(String.valueOf(this.handler.player().getAttributeValue(EntityAttributes.GENERIC_ARMOR))))
+                                                                        Components.label(Text.literal(String.valueOf((int)this.handler.player().getAttributeValue(EntityAttributes.GENERIC_ARMOR))))
                                                                                 .color(Color.ofArgb(Colors.BLACK)).id("attributes_armor_value")
                                                                 ))
                                                                 .margins(Insets.of(0, 2, 0, 0)),
@@ -338,7 +344,7 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, A
                                                                 .children(List.of(
                                                                         Components.label(Text.translatable("attribute.name.generic.max_stamina").append(Text.literal(": ")))
                                                                                 .color(Color.ofArgb(Colors.BLACK)),
-                                                                        Components.label(Text.literal(String.valueOf(this.handler.player().getAttributeValue(BetterAdventureModeCoreEntityAttributes.MAX_STAMINA))))
+                                                                        Components.label(Text.literal(String.valueOf((int)this.handler.player().getAttributeValue(BetterAdventureModeCoreEntityAttributes.MAX_STAMINA))))
                                                                                 .color(Color.ofArgb(Colors.BLACK)).id("attributes_max_stamina_value")
                                                                 ))
                                                                 .margins(Insets.of(0, 2, 0, 0)),
@@ -354,7 +360,7 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, A
                                                                 .children(List.of(
                                                                         Components.label(Text.translatable("attribute.name.generic.max_mana").append(Text.literal(": ")))
                                                                                 .color(Color.ofArgb(Colors.BLACK)),
-                                                                        Components.label(Text.literal(String.valueOf(((DuckPlayerEntityMixin)this.handler.player()).bamcore$getMaxMana())))
+                                                                        Components.label(Text.literal(String.valueOf((int)((DuckPlayerEntityMixin)this.handler.player()).bamcore$getMaxMana())))
                                                                                 .color(Color.ofArgb(Colors.BLACK)).id("attributes_max_mana_value")
                                                                 ))
                                                                 .margins(Insets.of(0, 2, 0, 0)),
@@ -364,6 +370,17 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, A
                                                                                 .color(Color.ofArgb(Colors.BLACK)),
                                                                         Components.label(Text.literal(String.valueOf(((DuckPlayerEntityMixin)this.handler.player()).bamcore$getManaRegeneration())))
                                                                                 .color(Color.ofArgb(Colors.BLACK)).id("attributes_mana_regeneration_value")
+                                                                ))
+                                                                .margins(Insets.of(0, 2, 0, 0)),
+                                                        Containers.horizontalFlow(Sizing.content(), Sizing.content())
+                                                                .children(List.of(
+                                                                        Components.label(Text.translatable("gui.adventureInventory.attributes.encumbrance").append(Text.literal(": ")))
+                                                                                .color(Color.ofArgb(Colors.BLACK)),
+                                                                        Components.label(Text.literal(String.valueOf((int)((DuckPlayerEntityMixin)this.handler.player()).bamcore$getEquipmentWeight()))
+                                                                                        .append(Text.literal("/"))
+                                                                                        .append(Text.literal(String.valueOf((int)((DuckPlayerEntityMixin)this.handler.player()).bamcore$getMaxEquipmentWeight())))
+                                                                                )
+                                                                                .color(Color.ofArgb(Colors.BLACK)).id("attributes_encumbrance_value")
                                                                 ))
                                                                 .margins(Insets.of(0, 2, 0, 0))/*,
                                                         Containers.horizontalFlow(Sizing.content(), Sizing.content()) // TODO poise
@@ -380,7 +397,44 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, A
                                         .scrollbar(ScrollContainer.Scrollbar.vanillaFlat())
                         ))
                         .padding(Insets.of(7, 7, 7, 7))
-                        .surface(Surface.PANEL));
+                        .surface(Surface.PANEL)
+                        .id("attributes"));
+    }
+
+    private void buildStatusEffectsScreen() {
+        this.component(FlowLayout.class, "additional_inventory_screen_left").clearChildren();
+        this.component(FlowLayout.class, "additional_inventory_screen_left")
+                .child(Containers.verticalFlow(Sizing.fill(100), Sizing.fill(100))
+                        .children(List.of(
+                                Containers.verticalFlow(Sizing.fill(100), Sizing.content())
+                                        .child(
+                                                Components.label(Text.translatable("gui.adventureInventory.status_effects"))
+                                                        .color(Color.ofArgb(Colors.BLACK))
+                                                        .margins(Insets.of(0, 4, 0, 0))
+                                        ),
+                                Containers.verticalScroll(Sizing.fill(100), Sizing.fixed(201),
+                                        Containers.verticalFlow(Sizing.content(), Sizing.content())
+                                                .children(List.of(
+                                                        Containers.verticalFlow(Sizing.content(), Sizing.content())
+                                                                .margins(Insets.of(0, 0, 0, 0))
+                                                                .id("food_effects_panel"),
+                                                        Containers.verticalFlow(Sizing.content(), Sizing.content())
+                                                                .margins(Insets.of(0, 0, 0, 0))
+                                                                .id("negative_effects_panel"),
+                                                        Containers.verticalFlow(Sizing.content(), Sizing.content())
+                                                                .margins(Insets.of(0, 0, 0, 0))
+                                                                .id("positive_effects_panel"),
+                                                        Containers.verticalFlow(Sizing.content(), Sizing.content())
+                                                                .margins(Insets.of(0, 0, 0, 0))
+                                                                .id("neutral_effects_panel")
+                                                ))
+                                                .padding(Insets.of(2, 0, 2, 2))
+                                        )
+                                        .scrollbar(ScrollContainer.Scrollbar.vanillaFlat())
+                        ))
+                        .padding(Insets.of(7, 7, 7, 7))
+                        .surface(Surface.PANEL)
+                        .id("status_effects"));
     }
 
     private void buildSpellSlots() {
@@ -413,55 +467,167 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, A
         }
     }
 
+    private void buildEffectContainers(String effectCategory) {
+        List<StatusEffectInstance> effectsList = Objects.equals(effectCategory, "food") ? this.foodEffectsList : Objects.equals(effectCategory, "negative") ? this.negativeEffectsList : Objects.equals(effectCategory, "positive") ? this.positiveEffectsList : this.neutralEffectsList;
+        this.component(FlowLayout.class, effectCategory + "_effects_panel").clearChildren();
+        this.component(FlowLayout.class, effectCategory + "_effects_panel")
+                .child(Containers.verticalFlow(Sizing.fill(100), Sizing.content())
+                        .children(List.of(
+                                Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
+                                        .child(
+                                                Components.label(Text.translatable("gui.adventureInventory.status_effects." + effectCategory + "_effects"))
+                                                        .color(Color.ofArgb(Colors.BLACK))
+                                                        .margins(Insets.of(4, 0, 0, 0))
+                                        ),
+                                Containers.verticalFlow(Sizing.fill(100), Sizing.content()).id(effectCategory + "_effects_container")
+                        ))
+                );
+        int listSize = effectsList.size();
+        int rowAmount = 1;
+        if (listSize > 3) {
+            rowAmount = (listSize - (listSize % 3)) / 3;
+        }
+        int j = 0;
+        this.component(FlowLayout.class, effectCategory + "_effects_container")
+                .child(Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
+                        .horizontalAlignment(HorizontalAlignment.CENTER)
+                        .verticalAlignment(VerticalAlignment.CENTER)
+                        .id(effectCategory + "_effects_panel_row_" + j));
+        for (int i = 0; i < listSize; i++) {
+            StatusEffect statusEffect = effectsList.get(i).getEffectType();
+            this.component(FlowLayout.class, effectCategory + "_effects_panel_row_" + j)
+                    .child(Containers.horizontalFlow(Sizing.fixed(32), Sizing.fixed(32))
+                            .child(Components.texture(statusEffectTexture(statusEffect), 0, 0, 18, 18, 18,18))
+                            .surface(Surface.tiled(STATUS_EFFECT_BACKGROUND_TEXTURE, 32, 32))
+                            .horizontalAlignment(HorizontalAlignment.CENTER)
+                            .verticalAlignment(VerticalAlignment.CENTER)
+                            .margins(Insets.of(2, 2, 2, 2))
+                            .tooltip(List.of(this.getStatusEffectDescription(effectsList.get(i)), StatusEffectUtil.getDurationText(effectsList.get(i), 1.0f)))
+                            .id(effectCategory + "_effect_container_" + i)
+                    );
+            if (i % 3 == 2) {
+                j++;
+                this.component(FlowLayout.class, effectCategory + "_effects_container")
+                        .child(Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
+                                .horizontalAlignment(HorizontalAlignment.CENTER)
+                                .verticalAlignment(VerticalAlignment.CENTER)
+                                .id(effectCategory + "_effects_panel_row_" + j));
+            }
+        }
+    }
+
+    private void updateEffectsScreen() {
+        List<StatusEffectInstance> effectsList = Ordering.natural().sortedCopy(this.client.player.getStatusEffects());
+        List<StatusEffectInstance> visibleEffectsList = new ArrayList<>(Collections.emptyList());
+        for (StatusEffectInstance statusEffectInstance : effectsList) {
+            if (statusEffectInstance.shouldShowIcon()) {
+                visibleEffectsList.add(statusEffectInstance);
+            }
+        }
+        int visibleEffectsListSize = visibleEffectsList.size();
+        if (visibleEffectsListSize == 0) {
+            this.component(FlowLayout.class, "additional_inventory_screen_left").clearChildren();
+            return;
+        }
+        boolean bl = false;
+
+        // determine if the UI should be updated
+        if (visibleEffectsListSize != this.oldEffectsListSize) {
+            bl = true;
+            this.oldEffectsListSize = visibleEffectsListSize;
+        }
+
+        if (bl) {
+            this.foodEffectsList.clear();
+            this.negativeEffectsList.clear();
+            this.positiveEffectsList.clear();
+            this.neutralEffectsList.clear();
+
+            for (StatusEffectInstance statusEffectInstance : effectsList) {
+                if (statusEffectInstance.getEffectType() instanceof FoodStatusEffect) {
+                    this.foodEffectsList.add(statusEffectInstance);
+                } else if (statusEffectInstance.getEffectType().getCategory() == StatusEffectCategory.HARMFUL) {
+                    this.negativeEffectsList.add(statusEffectInstance);
+                } else if (statusEffectInstance.getEffectType().getCategory() == StatusEffectCategory.BENEFICIAL) {
+                    this.positiveEffectsList.add(statusEffectInstance);
+                } else if (statusEffectInstance.getEffectType().getCategory() == StatusEffectCategory.NEUTRAL) {
+                    this.neutralEffectsList.add(statusEffectInstance);
+                }
+            }
+            this.buildStatusEffectsScreen();
+
+            if (!this.foodEffectsList.isEmpty()) {
+                buildEffectContainers("food");
+            }
+            if (!this.negativeEffectsList.isEmpty()) {
+                buildEffectContainers("negative");
+            }
+            if (!this.positiveEffectsList.isEmpty()) {
+                buildEffectContainers("positive");
+            }
+            if (!this.neutralEffectsList.isEmpty()) {
+                buildEffectContainers("neutral");
+            }
+        } else {
+            if (!this.foodEffectsList.isEmpty()) {
+                updateEffectContainers("food");
+            }
+            if (!this.negativeEffectsList.isEmpty()) {
+                updateEffectContainers("negative");
+            }
+            if (!this.positiveEffectsList.isEmpty()) {
+                updateEffectContainers("positive");
+            }
+            if (!this.neutralEffectsList.isEmpty()) {
+                updateEffectContainers("neutral");
+            }
+        }
+    }
+
+    private void updateEffectContainers(String effectCategory) {
+        List<StatusEffectInstance> effectsList = Objects.equals(effectCategory, "food") ? this.foodEffectsList : Objects.equals(effectCategory, "negative") ? this.negativeEffectsList : Objects.equals(effectCategory, "positive") ? this.positiveEffectsList : this.neutralEffectsList;
+        if (!effectsList.isEmpty()) {
+            for (int i = 0; i < effectsList.size(); i++) {
+                this.component(FlowLayout.class, effectCategory + "_effect_container_" + i).tooltip(List.of(this.getStatusEffectDescription(effectsList.get(i)), StatusEffectUtil.getDurationText(effectsList.get(i), 1.0f)));
+            }
+        }
+    }
+
+    private Identifier statusEffectTexture(StatusEffect statusEffect) {
+        Identifier statusEffectId = Registries.STATUS_EFFECT.getId(statusEffect);
+        if (statusEffectId != null) {
+            return new Identifier(statusEffectId.getNamespace(), "textures/mob_effect/" + statusEffectId.getPath() + ".png");
+        } else {
+            return new Identifier("textures/mob_effect/luck.png");
+        }
+    }
+
     @Override
     protected void init() {
-//        TrinketScreenManager.init(this);
         if (this.client.interactionManager.hasCreativeInventory()) {
             // TODO call custom CreativeInventoryScreen
             this.client.setScreen(new CreativeInventoryScreen(this.client.player, this.client.player.networkHandler.getEnabledFeatures(), this.client.options.getOperatorItemsTab().getValue()));
             return;
         }
-//        this.backgroundWidth = 176;
-//        this.backgroundHeight = 202;
         super.init();
-//        this.x = (this.width - this.backgroundWidth) / 2;
-//        this.y = (this.height - this.backgroundHeight) / 2;
-//        this.setInitialFocus(this);
     }
-
-//    @Override
-//    protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
-//
-//    }
 
     @Override
     protected void drawForeground(DrawContext context, int mouseX, int mouseY) {
-//        this.textRenderer.draw(context, this.title, (float)this.titleX, (float)this.titleY, 0x404040);
-//        TrinketScreenManager.drawActiveGroup(context);
     }
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-//        TrinketScreenManager.update(mouseX, mouseY);
-//        this.renderBackground(context);
-//        this.drawBackground(context, delta, mouseX, mouseY);
-        this.drawStatusEffects(context, mouseX, mouseY);
         super.render(context, mouseX, mouseY, delta);
-//        this.drawMouseoverTooltip(context, mouseX, mouseY);
         this.mouseX = mouseX;
         this.mouseY = mouseY;
     }
 
     @Override
     protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
-//        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
-//        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-//        RenderSystem.setShaderTexture(0, ADVENTURE_INVENTORY_BACKGROUND_TEXTURE);
         int i = this.x;
         int j = this.y;
-//        context.drawTexture(ADVENTURE_INVENTORY_BACKGROUND_TEXTURE, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight);
         drawEntity(i + 51, j + 93, 30, (float)(i + 51) - this.mouseX, (float)(j + 93 - 50) - this.mouseY, this.client.player);
-//        TrinketScreenManager.drawExtraGroups(context);
     }
 
     public static void drawEntity(int x, int y, int size, float mouseX, float mouseY, LivingEntity entity) {
@@ -525,113 +691,6 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, A
         RenderSystem.enableDepthTest();
     }
 
-//    @Override
-//    protected boolean isPointWithinBounds(int x, int y, int width, int height, double pointX, double pointY) {
-//        return super.isPointWithinBounds(x, y, width, height, pointX, pointY);
-//    }
-//
-//    @Override
-//    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-//        return super.mouseClicked(mouseX, mouseY, button);
-//    }
-//
-//    @Override
-//    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-//        return super.mouseReleased(mouseX, mouseY, button);
-//    }
-//
-    @Override
-    protected boolean isClickOutsideBounds(double mouseX, double mouseY, int left, int top, int button) {
-        return mouseX < (double)left || mouseY < (double)top || mouseX >= (double)(left + this.backgroundWidth) || mouseY >= (double)(top + this.backgroundHeight);
-//        return this.recipeBook.isClickOutsideBounds(mouseX, mouseY, this.x, this.y, this.backgroundWidth, this.backgroundHeight, button) && bl;
-    }
-//
-//    @Override
-//    protected void onMouseClick(Slot slot, int slotId, int button, SlotActionType actionType) {
-//        super.onMouseClick(slot, slotId, button, actionType);
-//        this.recipeBook.slotClicked(slot);
-//    }
-
-    public boolean hideStatusEffectHud() {
-        int i = this.x + this.backgroundWidth + 2;
-        int j = this.width - i;
-        return j >= 32;
-    }
-
-    private void drawStatusEffects(DrawContext context, int mouseX, int mouseY) {
-        int i = this.x + this.backgroundWidth + 2;
-        int j = this.width - i;
-        Collection<StatusEffectInstance> collection = this.client.player.getStatusEffects();
-        if (collection.isEmpty() || j < 32) {
-            return;
-        }
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        boolean bl = j >= 120;
-        int k = 33;
-        if (collection.size() > 5) {
-            k = 132 / (collection.size() - 1);
-        }
-        List<StatusEffectInstance> iterable = Ordering.natural().sortedCopy(collection);
-        this.drawStatusEffectBackgrounds(context, i, k, iterable, bl);
-        this.drawStatusEffectSprites(context, i, k, iterable, bl);
-        if (bl) {
-            this.drawStatusEffectDescriptions(context, i, k, iterable);
-        } else if (mouseX >= i && mouseX <= i + 33) {
-            int l = this.y;
-            StatusEffectInstance statusEffectInstance = null;
-            for (StatusEffectInstance statusEffectInstance2 : iterable) {
-                if (mouseY >= l && mouseY <= l + k) {
-                    statusEffectInstance = statusEffectInstance2;
-                }
-                l += k;
-            }
-            if (statusEffectInstance != null) {
-                List<Text> list = List.of(this.getStatusEffectDescription(statusEffectInstance), StatusEffectUtil.getDurationText(statusEffectInstance, 1.0f));
-                context.drawTooltip(this.textRenderer, list, Optional.empty(), mouseX, mouseY);
-            }
-        }
-    }
-
-    private void drawStatusEffectBackgrounds(DrawContext context, int x, int height, Iterable<StatusEffectInstance> statusEffects, boolean wide) {
-        int i = this.y;
-
-        for(Iterator var7 = statusEffects.iterator(); var7.hasNext(); i += height) {
-            StatusEffectInstance statusEffectInstance = (StatusEffectInstance)var7.next();
-            if (wide) {
-                context.drawTexture(BACKGROUND_TEXTURE, x, i, 0, 166, 120, 32);
-            } else {
-                context.drawTexture(BACKGROUND_TEXTURE, x, i, 0, 198, 32, 32);
-            }
-        }
-
-    }
-
-    private void drawStatusEffectSprites(DrawContext context, int x, int height, Iterable<StatusEffectInstance> statusEffects, boolean wide) {
-        StatusEffectSpriteManager statusEffectSpriteManager = this.client.getStatusEffectSpriteManager();
-        int i = this.y;
-
-        for(Iterator var8 = statusEffects.iterator(); var8.hasNext(); i += height) {
-            StatusEffectInstance statusEffectInstance = (StatusEffectInstance)var8.next();
-            StatusEffect statusEffect = statusEffectInstance.getEffectType();
-            Sprite sprite = statusEffectSpriteManager.getSprite(statusEffect);
-            context.drawSprite(x + (wide ? 6 : 7), i + 7, 0, 18, 18, sprite);
-        }
-
-    }
-
-    private void drawStatusEffectDescriptions(DrawContext context, int x, int height, Iterable<StatusEffectInstance> statusEffects) {
-        int i = this.y;
-
-        for(Iterator var6 = statusEffects.iterator(); var6.hasNext(); i += height) {
-            StatusEffectInstance statusEffectInstance = (StatusEffectInstance)var6.next();
-            Text text = this.getStatusEffectDescription(statusEffectInstance);
-            context.drawTextWithShadow(this.textRenderer, text, x + 10 + 18, i + 6, 16777215);
-            Text text2 = StatusEffectUtil.getDurationText(statusEffectInstance, 1.0F);
-            context.drawTextWithShadow(this.textRenderer, text2, x + 10 + 18, i + 6 + 10, 8355711);
-        }
-
-    }
-
     private Text getStatusEffectDescription(StatusEffectInstance statusEffect) {
         MutableText mutableText = statusEffect.getEffectType().getName().copy();
         if (statusEffect.getAmplifier() >= 1 && statusEffect.getAmplifier() <= 9) {
@@ -642,33 +701,4 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, A
 
         return mutableText;
     }
-
-//    @Override
-//    public TrinketPlayerScreenHandler trinkets$getHandler() {
-//        return (TrinketPlayerScreenHandler) this.handler;
-//    }
-//
-//    @Override
-//    public Rect2i trinkets$getGroupRect(SlotGroup group) {
-//        Point pos = ((TrinketPlayerScreenHandler) handler).trinkets$getGroupPos(group);
-//        if (pos != null) {
-//            return new Rect2i(pos.x() - 1, pos.y() - 1, 17, 17);
-//        }
-//        return new Rect2i(0, 0, 0, 0);
-//    }
-//
-//    @Override
-//    public Slot trinkets$getFocusedSlot() {
-//        return this.focusedSlot;
-//    }
-//
-//    @Override
-//    public int trinkets$getX() {
-//        return this.x;
-//    }
-//
-//    @Override
-//    public int trinkets$getY() {
-//        return this.y;
-//    }
 }
