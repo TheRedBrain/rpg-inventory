@@ -27,7 +27,7 @@ public class SheatheWeaponsPacketReceiver implements ServerPlayNetworking.PlayCh
                 if (player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.WEAPONS_SHEATHED_EFFECT)) {
                     command = "effect clear " + playerName + " bamcore:weapons_sheathed_effect";
                 } else if (canSheathe) {
-                    command = "effect give " + playerName + " bamcore:weapons_sheathed_effect infinite 0 true";
+                    command = "effect give " + playerName + " bamcore:weapons_sheathed_effect infinite 0 false";
                 }
                 if (!command.equals("")) {
                     server.getCommandManager().executeWithPrefix(server.getCommandSource(), command);

@@ -114,6 +114,10 @@
 	"attribute.name.generic.equipment_weight": "Weight",
 	"attribute.name.generic.max_equipment_weight": "Spell Slot",
 
+	"effect.bamcore.civilisation_effect": "Civilisation",
+	"effect.bamcore.mana_regeneration_effect": "Mana Regeneration",
+	"effect.bamcore.overburdened_effect": "Overburdened",
+
 	"gamerule.clearEnderChestOnDeath": "Clear ender chest on death",
 	"gamerule.destroyDroppedItemsOnDeath": "Destroy dropped items on death",
 	"gamerule.destroyDroppedItemsOnDeath.description": "This only matters, if the gamerule 'keepInventory' is set to false.",

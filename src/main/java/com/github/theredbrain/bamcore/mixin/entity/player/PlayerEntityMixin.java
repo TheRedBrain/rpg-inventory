@@ -142,12 +142,12 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         ItemStack itemStackMainHand = this.getEquippedStack(EquipmentSlot.MAINHAND);
         ItemStack itemStackOffHand = this.getEquippedStack(EquipmentSlot.OFFHAND);
         if (!itemStackMainHand.isIn(Tags.ATTACK_ITEMS) && this.bamcore$isAdventure()) {
-            this.addStatusEffect(new StatusEffectInstance(BetterAdventureModeCoreStatusEffects.NO_ATTACK_ITEMS_EFFECT, -1, 0, false, false, true));
+            this.addStatusEffect(new StatusEffectInstance(BetterAdventureModeCoreStatusEffects.NO_ATTACK_ITEMS_EFFECT, -1, 0, false, false, false));
         } else {
             this.removeStatusEffect(BetterAdventureModeCoreStatusEffects.NO_ATTACK_ITEMS_EFFECT);
         }
         if (itemStackMainHand.isIn(Tags.TWO_HANDED_ITEMS) && !itemStackOffHand.isIn(Tags.EMPTY_HAND_WEAPONS) && this.bamcore$isAdventure()) {
-            this.addStatusEffect(new StatusEffectInstance(BetterAdventureModeCoreStatusEffects.NEED_EMPTY_OFFHAND_EFFECT, -1, 0, false, false, true));
+            this.addStatusEffect(new StatusEffectInstance(BetterAdventureModeCoreStatusEffects.NEED_EMPTY_OFFHAND_EFFECT, -1, 0, false, false, false));
         } else {
             this.removeStatusEffect(BetterAdventureModeCoreStatusEffects.NEED_EMPTY_OFFHAND_EFFECT);
         }
