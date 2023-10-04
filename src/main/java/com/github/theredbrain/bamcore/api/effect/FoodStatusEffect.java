@@ -5,7 +5,5 @@ import net.minecraft.entity.effect.StatusEffectCategory;
 
 public class FoodStatusEffect extends StatusEffect {
 
-    protected FoodStatusEffect(StatusEffectCategory statusEffectCategory, int color) {
-        super(statusEffectCategory, color);
-    }
+    public FoodStatusEffect() {super(StatusEffectCategory.BENEFICIAL, 3381504);}
 }

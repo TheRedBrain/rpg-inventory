@@ -25,10 +25,11 @@ import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.texture.StatusEffectSpriteManager;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.EntityAttribute;
+import net.minecraft.entity.attribute.EntityAttributeInstance;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
@@ -502,7 +503,7 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, A
                             .horizontalAlignment(HorizontalAlignment.CENTER)
                             .verticalAlignment(VerticalAlignment.CENTER)
                             .margins(Insets.of(2, 2, 2, 2))
-                            .tooltip(List.of(this.getStatusEffectDescription(effectsList.get(i)), StatusEffectUtil.getDurationText(effectsList.get(i), 1.0f)))
+                            .tooltip(List.of(this.getStatusEffectTitle(effectsList.get(i)), StatusEffectUtil.getDurationText(effectsList.get(i), 1.0f)))
                             .id(effectCategory + "_effect_container_" + i)
                     );
             if (i % 3 == 2) {
@@ -543,7 +544,7 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, A
             this.positiveEffectsList.clear();
             this.neutralEffectsList.clear();
 
-            for (StatusEffectInstance statusEffectInstance : effectsList) {
+            for (StatusEffectInstance statusEffectInstance : visibleEffectsList) {
                 if (statusEffectInstance.getEffectType() instanceof FoodStatusEffect) {
                     this.foodEffectsList.add(statusEffectInstance);
                 } else if (statusEffectInstance.getEffectType().getCategory() == StatusEffectCategory.HARMFUL) {
@@ -588,7 +589,7 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, A
         List<StatusEffectInstance> effectsList = Objects.equals(effectCategory, "food") ? this.foodEffectsList : Objects.equals(effectCategory, "negative") ? this.negativeEffectsList : Objects.equals(effectCategory, "positive") ? this.positiveEffectsList : this.neutralEffectsList;
         if (!effectsList.isEmpty()) {
             for (int i = 0; i < effectsList.size(); i++) {
-                this.component(FlowLayout.class, effectCategory + "_effect_container_" + i).tooltip(List.of(this.getStatusEffectDescription(effectsList.get(i)), StatusEffectUtil.getDurationText(effectsList.get(i), 1.0f)));
+                this.component(FlowLayout.class, effectCategory + "_effect_container_" + i).tooltip(getStatusEffectTooltip(effectsList.get(i)));
             }
         }
     }
@@ -691,14 +692,36 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, A
         RenderSystem.enableDepthTest();
     }
 
-    private Text getStatusEffectDescription(StatusEffectInstance statusEffect) {
+    private List<Text> getStatusEffectTooltip(StatusEffectInstance statusEffect) {
+        List<Text> list = new ArrayList<>(List.of(this.getStatusEffectTitle(statusEffect)));
+        list.addAll(this.getStatusEffectDescription(statusEffect));
+        list.add(StatusEffectUtil.getDurationText(statusEffect, 1.0f));
+        return list;
+    }
+
+    private Text getStatusEffectTitle(StatusEffectInstance statusEffect) {
         MutableText mutableText = statusEffect.getEffectType().getName().copy();
         if (statusEffect.getAmplifier() >= 1 && statusEffect.getAmplifier() <= 9) {
             MutableText var10000 = mutableText.append(ScreenTexts.SPACE);
             int var10001 = statusEffect.getAmplifier();
             var10000.append(Text.translatable("enchantment.level." + (var10001 + 1)));
         }
-
         return mutableText;
+    }
+
+    private List<Text> getStatusEffectDescription(StatusEffectInstance statusEffect) {
+        if (statusEffect.getEffectType() instanceof FoodStatusEffect) {
+            List<Text> list = new ArrayList<>(List.of());
+            for (Map.Entry<EntityAttribute, EntityAttributeModifier> entry : statusEffect.getEffectType().getAttributeModifiers().entrySet()) {
+                EntityAttributeInstance entityAttributeInstance = this.client.player.getAttributes().getCustomInstance(entry.getKey());
+                if (entityAttributeInstance == null) continue;
+                // TODO look at equipment tooltip
+//                EntityAttributeModifier entityAttributeModifier = entry.getValue();
+//                entityAttributeInstance.removeModifier(entityAttributeModifier);
+            }
+            list.add(Text.translatable(statusEffect.getEffectType().getTranslationKey() + ".description"));
+            return list;
+        }
+        return List.of(Text.translatable(statusEffect.getEffectType().getTranslationKey() + ".description"));
     }
 }

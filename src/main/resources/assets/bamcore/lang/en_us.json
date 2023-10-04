@@ -115,8 +115,11 @@
 	"attribute.name.generic.max_equipment_weight": "Spell Slot",
 
 	"effect.bamcore.civilisation_effect": "Civilisation",
+	"effect.bamcore.civilisation_effect.description": "You feel safe here.",
 	"effect.bamcore.mana_regeneration_effect": "Mana Regeneration",
+	"effect.bamcore.mana_regeneration_effect.description": "Your mana can regenerate.",
 	"effect.bamcore.overburdened_effect": "Overburdened",
+	"effect.bamcore.overburdened_effect.description": "Your equipment is to heavy for you.",
 
 	"gamerule.clearEnderChestOnDeath": "Clear ender chest on death",
 	"gamerule.destroyDroppedItemsOnDeath": "Destroy dropped items on death",
