@@ -104,28 +104,12 @@ dependencies {
 	// Trinkets
 	modImplementation "dev.emi:trinkets:${project.trinkets_version}"
 
-	// Cardinal Components
-	modImplementation ("dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cca_version}")
-	modImplementation ("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cca_version}")
-
-	// Immersive Portals Core
-	modImplementation ("com.github.iPortalTeam.ImmersivePortalsMod:imm_ptl_core:${project.q_misc_util_version}"){
-		exclude(group: "net.fabricmc.fabric-api")
-		transitive(false)
-	}
-
 	// Mixin Extras
 	api("com.github.LlamaLad7:MixinExtras:0.2.0-beta.4")
 	annotationProcessor("com.github.LlamaLad7:MixinExtras:0.2.0-beta.4")
 
 	// Tiny Config
 	implementation include("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}")
-
-	// Miscellaneous Utility Library
-	modImplementation include("com.github.iPortalTeam.ImmersivePortalsMod:q_misc_util:${project.q_misc_util_version}"){
-		exclude(group: "net.fabricmc.fabric-api")
-		transitive(false)
-	}
 
 	// Owo Lib
 	modImplementation "io.wispforest:owo-lib:${project.owo_version}"

@@ -13,6 +13,8 @@ public class GameRulesRegistry {
             GameRuleRegistry.register("resetAdvancementsOnDeath", GameRules.Category.PLAYER, GameRuleFactory.createBooleanRule(false));
     public static final GameRules.Key<GameRules.BooleanRule> RESET_RECIPES_ON_DEATH =
             GameRuleRegistry.register("resetRecipesOnDeath", GameRules.Category.PLAYER, GameRuleFactory.createBooleanRule(false));
+    public static final GameRules.Key<GameRules.BooleanRule> TELEPORT_TO_SPAWN_ON_LOGIN =
+            GameRuleRegistry.register("teleportToSpawnOnLogin", GameRules.Category.PLAYER, GameRuleFactory.createBooleanRule(false));
     public static final GameRules.Key<GameRules.BooleanRule> CAN_SET_SPAWN_ON_BEDS =
             GameRuleRegistry.register("canSetSpawnOnBeds", GameRules.Category.PLAYER, GameRuleFactory.createBooleanRule(true));
     public static final GameRules.Key<GameRules.BooleanRule> CAN_SET_SPAWN_ON_RESPAWN_ANCHOR =

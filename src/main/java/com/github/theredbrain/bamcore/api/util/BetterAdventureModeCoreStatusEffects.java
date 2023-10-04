@@ -22,7 +22,8 @@ public class BetterAdventureModeCoreStatusEffects {
     public static final StatusEffect NO_ATTACK_ITEMS_EFFECT = new NoAttackItemsStatusEffect();
     public static final StatusEffect OVERBURDENED_EFFECT = new OverburdenedStatusEffect().addAttributeModifier(EntityAttributes.GENERIC_MOVEMENT_SPEED, AttributeModifierUUIDs.OVERBURDENED_EFFECT, -0.25, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
     public static final StatusEffect PERMANENT_MOUNT_EFFECT = new PermanentMountStatusEffect();
-    public static final StatusEffect PORTAL_RESISTANCE_EFFECT = new PortalResistanceStatusEffect();
+    // TODO move to bamdimensions
+//    public static final StatusEffect PORTAL_RESISTANCE_EFFECT = new PortalResistanceStatusEffect();
     public static final StatusEffect WEAPONS_SHEATHED_EFFECT = new WeaponsSheathedStatusEffect();
 
     public static void registerEffects() {
@@ -40,7 +41,8 @@ public class BetterAdventureModeCoreStatusEffects {
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("no_attack_items_effect"), NO_ATTACK_ITEMS_EFFECT);
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("overburdened_effect"), OVERBURDENED_EFFECT);
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("permanent_mount_effect"), PERMANENT_MOUNT_EFFECT);
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("portal_resistance_effect"), PORTAL_RESISTANCE_EFFECT);
+        // TODO move to bamdimensions
+//        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("portal_resistance_effect"), PORTAL_RESISTANCE_EFFECT);
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("weapons_sheathed_effect"), WEAPONS_SHEATHED_EFFECT);
     }
 }

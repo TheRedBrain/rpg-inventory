@@ -4,7 +4,6 @@ import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreEntityAttr
 import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreStatusEffects;
 import com.github.theredbrain.bamcore.network.packet.BetterAdventureModCoreServerPacket;
 import com.github.theredbrain.bamcore.registry.*;
-import com.github.theredbrain.bamcore.world.DimensionsManager;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
@@ -18,7 +17,8 @@ public class BetterAdventureModeCore implements ModInitializer {
 	public void onInitialize() {
 		LOGGER.info("We are going on an adventure!");
 		BlockRegistry.init();
-		DimensionsManager.init();
+		// TODO move to bamdimensions
+//		DimensionsManager.init();
 		EntityRegistry.init();
 		BetterAdventureModeCoreEntityAttributes.registerAttributes();
 		EventsRegistry.initializeEvents();

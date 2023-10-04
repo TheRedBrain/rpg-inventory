@@ -30,8 +30,9 @@ public class BetterAdventureModCoreServerPacket {
 //        IsUsingHotbarItemServerPacketReceiver isUsingHotbarItemServerPacketReceiver = new IsUsingHotbarItemServerPacketReceiver();
 //        ServerPlayNetworking.registerGlobalReceiver(RPGModServerPacket.IS_USING_HOTBAR_ITEM_SERVER_PACKET, isUsingHotbarItemServerPacketReceiver);
 
-        UpdateTeleporterBlockPacketReceiver updateTeleporterBlockPacketReceiver = new UpdateTeleporterBlockPacketReceiver();
-        ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModCoreServerPacket.UPDATE_TELEPORTER_BLOCK, updateTeleporterBlockPacketReceiver);
+        // TODO move to bamdimensions
+//        UpdateTeleporterBlockPacketReceiver updateTeleporterBlockPacketReceiver = new UpdateTeleporterBlockPacketReceiver();
+//        ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModCoreServerPacket.UPDATE_TELEPORTER_BLOCK, updateTeleporterBlockPacketReceiver);
 
         UpdateAreaFillerBlockPacketReceiver updateAreaFillerBlockPacketReceiver = new UpdateAreaFillerBlockPacketReceiver();
         ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModCoreServerPacket.UPDATE_AREA_FILLER_BLOCK, updateAreaFillerBlockPacketReceiver);
@@ -51,10 +52,12 @@ public class BetterAdventureModCoreServerPacket {
         UpdateChunkLoaderBlockPacketReceiver updateChunkLoaderBlockPacketReceiver = new UpdateChunkLoaderBlockPacketReceiver();
         ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModCoreServerPacket.UPDATE_CHUNK_LOADER_BLOCK, updateChunkLoaderBlockPacketReceiver);
 
-        TeleportFromTeleporterBlockPacketReceiver teleportFromTeleporterBlockPacketReceiver = new TeleportFromTeleporterBlockPacketReceiver();
-        ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModCoreServerPacket.TELEPORT_FROM_TELEPORTER_BLOCK, teleportFromTeleporterBlockPacketReceiver);
+        // TODO move to bamdimensions
+//        TeleportFromTeleporterBlockPacketReceiver teleportFromTeleporterBlockPacketReceiver = new TeleportFromTeleporterBlockPacketReceiver();
+//        ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModCoreServerPacket.TELEPORT_FROM_TELEPORTER_BLOCK, teleportFromTeleporterBlockPacketReceiver);
 
-        RegenerateDimensionFromTeleporterBlockPacketReceiver regenerateDimensionFromTeleporterBlockPacketReceiver = new RegenerateDimensionFromTeleporterBlockPacketReceiver();
-        ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModCoreServerPacket.REGENERATE_DIMENSION_FROM_TELEPORTER_BLOCK, regenerateDimensionFromTeleporterBlockPacketReceiver);
+        // TODO move to bamdimensions
+//        RegenerateDimensionFromTeleporterBlockPacketReceiver regenerateDimensionFromTeleporterBlockPacketReceiver = new RegenerateDimensionFromTeleporterBlockPacketReceiver();
+//        ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModCoreServerPacket.REGENERATE_DIMENSION_FROM_TELEPORTER_BLOCK, regenerateDimensionFromTeleporterBlockPacketReceiver);
     }
 }

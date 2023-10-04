@@ -8,9 +8,10 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 
 public class EntityRegistry {
-    public static final BlockEntityType<TeleporterBlockBlockEntity> TELEPORTER_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
-            BetterAdventureModeCore.identifier("teleporter_block"),
-            FabricBlockEntityTypeBuilder.create(TeleporterBlockBlockEntity::new, BlockRegistry.TELEPORTER_BLOCK).build());
+    // TODO move to bamdimensions
+//    public static final BlockEntityType<TeleporterBlockBlockEntity> TELEPORTER_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
+//            BetterAdventureModeCore.identifier("teleporter_block"),
+//            FabricBlockEntityTypeBuilder.create(TeleporterBlockBlockEntity::new, BlockRegistry.TELEPORTER_BLOCK).build());
     public static final BlockEntityType<StructurePlacerBlockBlockEntity> STRUCTURE_PLACER_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
             BetterAdventureModeCore.identifier("structure_placer_block"),
             FabricBlockEntityTypeBuilder.create(StructurePlacerBlockBlockEntity::new, BlockRegistry.STRUCTURE_PLACER_BLOCK).build());

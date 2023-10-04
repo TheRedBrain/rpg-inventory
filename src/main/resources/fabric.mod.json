@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "bamcore",
-  "version": "0.0.1.7",
+  "version": "0.0.1.8",
 
   "name": "Better Adventure Mode - Core",
   "description": "This mod adds mechanics which allow for a more RPG styled gameplay.",
@@ -22,9 +22,6 @@
     ],
     "client": [
       "com.github.theredbrain.bamcore.BetterAdventureModeCoreClient"
-    ],
-    "cardinal-components": [
-      "com.github.theredbrain.bamcore.registry.ComponentsRegistry"
     ]
   },
   "mixins": [
@@ -39,17 +36,6 @@
     "bettercombat": ">=1.7.2+1.19.4-fabric",
     "trinkets": ">=3.6.0",
     "spell_engine": ">=0.9.26+1.20.1-fabric",
-    "imm_ptl_core": "3.1.0",
-    "q_misc_util": "3.1.0",
-    "cardinal-components-base": "5.2.1",
-    "cardinal-components-entity": "5.2.1",
-    "owo": "0.11.1+1.20"
-  },
-
-  "custom": {
-    "cardinal-components": [
-      "bamcore:last_logout_time",
-      "bamcore:player_specific_dimension_ids"
-    ]
+    "owo": ">=0.11.1+1.20"
   }
 }
