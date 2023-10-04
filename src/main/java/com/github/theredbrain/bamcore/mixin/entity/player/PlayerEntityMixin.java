@@ -462,8 +462,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     }
 
     @Override
-    public void bamcore$setStamina(float mana) {
-        this.dataTracker.set(STAMINA, MathHelper.clamp(mana, 0, this.bamcore$getMaxStamina()));
+    public void bamcore$setStamina(float stamina) {
+        this.dataTracker.set(STAMINA, MathHelper.clamp(stamina, -100/*TODO balance min stamina*/, this.bamcore$getMaxStamina()));
     }
 
     public ScreenHandler bamcore$getInventoryScreenHandler() {

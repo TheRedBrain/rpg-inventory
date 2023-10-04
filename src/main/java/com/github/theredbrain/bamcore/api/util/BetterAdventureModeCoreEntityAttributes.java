@@ -13,7 +13,7 @@ public class BetterAdventureModeCoreEntityAttributes {
     public static final EntityAttribute MANA_REGENERATION = new ClampedEntityAttribute("attribute.name.generic.mana_regeneration", 0.0, -1024.0, 1024.0).setTracked(true);
     public static final EntityAttribute STAMINA_REGENERATION = new ClampedEntityAttribute("attribute.name.generic.stamina_regeneration", 0.0, -1024.0, 1024.0).setTracked(true);
     public static final EntityAttribute MAX_MANA = new ClampedEntityAttribute("attribute.name.generic.max_mana", 0.0, 0.0, 1024.0).setTracked(true);
-    public static final EntityAttribute MAX_STAMINA = new ClampedEntityAttribute("attribute.name.generic.max_stamina", 0.0, -1024.0, 1024.0).setTracked(true);
+    public static final EntityAttribute MAX_STAMINA = new ClampedEntityAttribute("attribute.name.generic.max_stamina", 0.0, 0.0, 1024.0).setTracked(true);
     public static final EntityAttribute MAX_MAGIC_SHIELD = new ClampedEntityAttribute("attribute.name.generic.max_magic_shield", 0.0, 0.0, 1024.0).setTracked(true);
     public static final EntityAttribute MAX_POISE = new ClampedEntityAttribute("attribute.name.generic.max_poise", 0.0, 0.0, 1024.0).setTracked(true);
     public static final EntityAttribute ACTIVE_SPELL_SLOT_AMOUNT = new ClampedEntityAttribute("attribute.name.generic.active_spell_slot_amount", 0.0, 0.0, 8.0).setTracked(true);

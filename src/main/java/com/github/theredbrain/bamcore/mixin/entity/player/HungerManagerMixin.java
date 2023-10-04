@@ -20,6 +20,9 @@ public class HungerManagerMixin {
     @Unique
     private int manaTickTimer = 0;
     @Unique
+    private int staminaRegenerationDelayTimer = 0;
+    private boolean delayStaminaRegeneration = false;
+    @Unique
     private double prevPosX = 0.0;
     @Unique
     private double prevPosY = 0.0;
@@ -69,8 +72,20 @@ public class HungerManagerMixin {
             this.healthTickTimer = 0;
         }
 
+        int staminaRegenerationDelayThreshold = 60;
+        if (((DuckPlayerEntityMixin)player).bamcore$getStamina() <= 0 && this.delayStaminaRegeneration) {
+            this.staminaRegenerationDelayTimer = 0;
+            this.delayStaminaRegeneration = false;
+        }
+        if (((DuckPlayerEntityMixin)player).bamcore$getStamina() > 0 && !this.delayStaminaRegeneration) {
+            this.delayStaminaRegeneration = true;
+        }
+        if (this.staminaRegenerationDelayTimer <= staminaRegenerationDelayThreshold) {
+            this.staminaRegenerationDelayTimer++;
+        }
+
         int staminaTickThreshold = 20;
-        if (this.staminaTickTimer >= staminaTickThreshold) {
+        if (this.staminaTickTimer >= staminaTickThreshold && staminaRegenerationDelayTimer >= staminaRegenerationDelayThreshold) {
             if (((DuckPlayerEntityMixin)player).bamcore$getStamina() < ((DuckPlayerEntityMixin)player).bamcore$getMaxStamina()) {
                 float passiveRegeneration = ((DuckPlayerEntityMixin)player).bamcore$getStaminaRegeneration();
                 double isMovingStaminaRegenerationMultiplier = isSprinting ? 0 : isMoving ? 0.5 : 1;
@@ -92,10 +107,10 @@ public class HungerManagerMixin {
             if (((DuckPlayerEntityMixin)player).bamcore$getMana() < ((DuckPlayerEntityMixin)player).bamcore$getMaxMana()) {
                 float passiveRegeneration = ((DuckPlayerEntityMixin)player).bamcore$getManaRegeneration();
                 double civilisationEffectManaRegenerationMultiplier = isInCivilization ? 10 : 1;
-                double manaCatalystEffectManaRegenerationMultiplier = player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.MANA_REGENERATION_EFFECT) ? (player.getStatusEffect(BetterAdventureModeCoreStatusEffects.MANA_REGENERATION_EFFECT).getAmplifier() > 0 ? 1 : 0.5) : 1;
+                double manaRegenerationEffectMultiplier = player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.MANA_REGENERATION_EFFECT) ? (player.getStatusEffect(BetterAdventureModeCoreStatusEffects.MANA_REGENERATION_EFFECT).getAmplifier() > 0 ? 1 : 0.5) : 0.5;
                 // regenerate mana
                 if (player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT) || player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.MANA_REGENERATION_EFFECT)) {
-                    ((DuckPlayerEntityMixin) player).bamcore$addMana((float) (passiveRegeneration + civilisationEffectManaRegenerationMultiplier));
+                    ((DuckPlayerEntityMixin) player).bamcore$addMana((float) (passiveRegeneration * civilisationEffectManaRegenerationMultiplier * manaRegenerationEffectMultiplier));
                 }
             } else if (((DuckPlayerEntityMixin)player).bamcore$getMana() > ((DuckPlayerEntityMixin)player).bamcore$getMaxMana()) {
                 // cap mana to max mana
@@ -122,6 +137,12 @@ public class HungerManagerMixin {
         if (nbt.contains("manaTickTimer", NbtElement.NUMBER_TYPE)) {
             this.manaTickTimer = nbt.getInt("manaTickTimer");
         }
+        if (nbt.contains("staminaRegenerationDelayTimer", NbtElement.NUMBER_TYPE)) {
+            this.staminaRegenerationDelayTimer = nbt.getInt("staminaRegenerationDelayTimer");
+        }
+        if (nbt.contains("delayStaminaRegeneration", NbtElement.BYTE_TYPE)) {
+            this.delayStaminaRegeneration = nbt.getBoolean("delayStaminaRegeneration");
+        }
         if (nbt.contains("prevPosX", NbtElement.NUMBER_TYPE)) {
             this.prevPosX = nbt.getDouble("prevPosX");
         }
@@ -146,6 +167,8 @@ public class HungerManagerMixin {
         nbt.putInt("healthTickTimer", this.healthTickTimer);
         nbt.putInt("staminaTickTimer", this.staminaTickTimer);
         nbt.putInt("manaTickTimer", this.manaTickTimer);
+        nbt.putInt("staminaRegenerationDelayTimer", this.staminaRegenerationDelayTimer);
+        nbt.putBoolean("delayStaminaRegeneration", this.delayStaminaRegeneration);
         nbt.putDouble("prevPosX", this.prevPosX);
         nbt.putDouble("prevPosY", this.prevPosY);
         nbt.putDouble("prevPosZ", this.prevPosZ);
@@ -174,6 +197,14 @@ public class HungerManagerMixin {
 
     public void setStaminaTickTimer(int staminaTickTimer) {
         this.staminaTickTimer = staminaTickTimer;
+    }
+
+    public int getStaminaRegenerationDelayTimer() {
+        return staminaRegenerationDelayTimer;
+    }
+
+    public void setStaminaRegenerationDelayTimer(int staminaRegenerationDelayTimer) {
+        this.staminaRegenerationDelayTimer = staminaRegenerationDelayTimer;
     }
 
     public boolean isOverBurdened() {
