@@ -18,7 +18,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.stat.Stats;
-import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -61,11 +60,6 @@ public abstract class SpellHelperMixin {
 
     @Shadow
     private static void directImpact(World world, LivingEntity caster, Entity target, Spell spell, SpellHelper.ImpactContext context) {
-        throw new AssertionError();
-    }
-
-    @Shadow
-    private static float cooldownToSet(LivingEntity caster, Spell spell, float progress) {
         throw new AssertionError();
     }
 
@@ -124,14 +118,12 @@ public abstract class SpellHelperMixin {
                         }
 
                         double directDamageAmount = ((DuckSpellImpactActionDamageMixin) damageData).getDirectDamage();
-                        BetterAdventureModeCore.LOGGER.info("Direct Damage Amount: " + directDamageAmount);
                         if (directDamageAmount > 0.0) {
                             amount = directDamageAmount;
                         }
 
                         particleMultiplier = power.criticalDamage() + (double)vulnerability.criticalDamageBonus();
                         caster.onAttacking((Entity)target);
-                        BetterAdventureModeCore.LOGGER.info("Damage Amount: " + amount);
                         ((Entity)target).damage(SpellDamageSource.create(school, caster), (float)amount);
                         if (target instanceof LivingEntity) {
                             LivingEntity livingEntity = (LivingEntity)target;
@@ -273,7 +265,8 @@ public abstract class SpellHelperMixin {
                                 released = (Boolean)handler.apply(new CustomSpellHandler.Data(player, targets, itemStack, action, progress, context));
                             }
                         } else {
-                            Optional target;
+                            Optional optionalTarget;
+                            Entity targetEntity = null;
                             switch (targeting.type) {
                                 case AREA:
                                     Vec3d center = player.getPos().add(0.0, (double)(player.getHeight() / 2.0F), 0.0);
@@ -284,31 +277,25 @@ public abstract class SpellHelperMixin {
                                     beamImpact(world, player, targets, spell, context);
                                     break;
                                 case CURSOR:
-                                    target = targets.stream().findFirst();
-                                    if (target.isPresent()) {
-                                        directImpact(world, player, (Entity)target.get(), spell, context);
+                                    optionalTarget = targets.stream().findFirst();
+                                    if (optionalTarget.isPresent()) {
+                                        directImpact(world, player, (Entity)optionalTarget.get(), spell, context);
                                     } else {
                                         released = false;
                                     }
                                     break;
                                 case PROJECTILE:
-//                                    Entity targetEntity = null;
-//                                    Optional<Entity> entityFound = targets.stream().findFirst();
-                                    target = targets.stream().findFirst();
-                                    if (target.isPresent()) {
-//                                        targetEntity = (Entity) entityFound.get();
-                                        SpellHelper.shootProjectile(world, player, (Entity)target.get(), spellInfo, context);
-                                    } else {
-                                        released = false;
+                                    optionalTarget = targets.stream().findFirst();
+                                    if (optionalTarget.isPresent()) {
+                                        targetEntity = (Entity) optionalTarget.get();
                                     }
 
+                                    SpellHelper.shootProjectile(world, player, targetEntity, spellInfo, context);
                                     break;
                                 case METEOR:
-//                                    entityFound = targets.stream().findFirst();
-                                    target = targets.stream().findFirst();
-                                    if (target.isPresent()) {
-//                                        targetEntity = (Entity)entityFound.get();
-                                        SpellHelper.fallProjectile(world, player, (Entity)target.get(), spellInfo, context);
+                                    optionalTarget = targets.stream().findFirst();
+                                    if (optionalTarget.isPresent()) {
+                                        SpellHelper.fallProjectile(world, player, (Entity)optionalTarget.get(), spellInfo, context);
                                     } else {
                                         released = false;
                                     }
@@ -337,6 +324,12 @@ public abstract class SpellHelperMixin {
                         float manaCost = ((DuckSpellCostMixin) spell.cost).getManaCost();
                         if (manaCost > 0.0F) {
                             ((DuckPlayerEntityMixin)player).bamcore$addMana(-manaCost);
+                        }
+
+                        // stamina cost
+                        float staminaCost = ((DuckSpellCostMixin) spell.cost).getStaminaCost();
+                        if (staminaCost > 0.0F) {
+                            ((DuckPlayerEntityMixin)player).bamcore$addStamina(-staminaCost);
                         }
 
                         // consume spell casting item (used for spell scrolls)

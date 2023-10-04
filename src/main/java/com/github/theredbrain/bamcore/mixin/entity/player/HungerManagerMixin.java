@@ -21,6 +21,7 @@ public class HungerManagerMixin {
     private int manaTickTimer = 0;
     @Unique
     private int staminaRegenerationDelayTimer = 0;
+    @Unique
     private boolean delayStaminaRegeneration = false;
     @Unique
     private double prevPosX = 0.0;

@@ -9,6 +9,7 @@ public class SpellCostMixin implements DuckSpellCostMixin {
     private boolean consumeSelf = false;
     private float manaCost = 0.0F;
     private float healthCost = 0.0F;
+    private float staminaCost = 0.0F;
 
     public float getManaCost() {
         return manaCost;
@@ -24,6 +25,14 @@ public class SpellCostMixin implements DuckSpellCostMixin {
 
     public void setHealthCost(float healthCost) {
         this.healthCost = healthCost;
+    }
+
+    public float getStaminaCost() {
+        return staminaCost;
+    }
+
+    public void setStaminaCost(float staminaCost) {
+        this.staminaCost = staminaCost;
     }
 
     public boolean isConsumeSelf() {
