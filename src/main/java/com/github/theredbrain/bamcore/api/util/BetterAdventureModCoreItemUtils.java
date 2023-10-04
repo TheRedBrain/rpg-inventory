@@ -11,7 +11,8 @@ public class BetterAdventureModCoreItemUtils {
         return stack.getDamage() < stack.getMaxDamage() - 1 || stack.isIn(Tags.EMPTY_HAND_WEAPONS);
     }
 
-    public static void setProxyPool(SpellContainer spellContainer, String proxyPool) {
+    public static SpellContainer setProxyPool(SpellContainer spellContainer, String proxyPool) {
         ((DuckSpellContainerMixin)spellContainer).setProxyPool(proxyPool);
+        return spellContainer;
     }
 }
