@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.mixin.item;
 
-import com.github.theredbrain.bamcore.util.ItemUtils;
+import com.github.theredbrain.bamcore.api.util.BetterAdventureModCoreItemUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -20,7 +20,7 @@ public class SwordItemMixin {
      */
     @Overwrite
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        if (ItemUtils.isUsable(stack)) {
+        if (BetterAdventureModCoreItemUtils.isUsable(stack)) {
             stack.damage(1, attacker, e -> e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
             return true;
         }
@@ -33,7 +33,7 @@ public class SwordItemMixin {
      */
     @Overwrite
     public boolean postMine(ItemStack stack, World world, BlockState state, BlockPos pos, LivingEntity miner) {
-        if (ItemUtils.isUsable(stack) && !world.isClient && state.getHardness(world, pos) != 0.0f) {
+        if (BetterAdventureModCoreItemUtils.isUsable(stack) && !world.isClient && state.getHardness(world, pos) != 0.0f) {
             stack.damage(1, miner, e -> e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
             return true;
         }

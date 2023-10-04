@@ -27,6 +27,7 @@ public class BetterAdventureModeCore implements ModInitializer {
 		ScreenHandlerTypesRegistry.registerAll();
 		BetterAdventureModeCoreStatusEffects.registerEffects();
 		GameRulesRegistry.init();
+		PredicateRegistry.init();
 	}
 
 	public static Identifier identifier(String path) {

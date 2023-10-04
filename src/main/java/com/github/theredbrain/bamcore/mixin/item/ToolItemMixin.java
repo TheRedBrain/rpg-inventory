@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.mixin.item;
 
-import com.github.theredbrain.bamcore.util.ItemUtils;
+import com.github.theredbrain.bamcore.api.util.BetterAdventureModCoreItemUtils;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ToolItem;
@@ -40,6 +40,6 @@ public abstract class ToolItemMixin extends Item {
      */
     @Override
     public String getTranslationKey(ItemStack stack) {
-        return ItemUtils.isUsable(stack) ? this.getTranslationKey() : this.getOrCreateTranslationKeyBroken();
+        return BetterAdventureModCoreItemUtils.isUsable(stack) ? this.getTranslationKey() : this.getOrCreateTranslationKeyBroken();
     }
 }

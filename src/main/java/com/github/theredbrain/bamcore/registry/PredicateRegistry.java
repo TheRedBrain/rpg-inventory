@@ -1,19 +1,13 @@
-package com.github.theredbrain.bamcore.util;
+package com.github.theredbrain.bamcore.registry;
 
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
-import com.github.theredbrain.bamcore.registry.Tags;
 import dev.emi.trinkets.api.TrinketsApi;
 import net.fabricmc.fabric.api.util.TriState;
-import net.minecraft.item.ItemStack;
 
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class ItemUtils {
-
-    public static boolean isUsable(ItemStack stack) {
-        return stack.getDamage() < stack.getMaxDamage() - 1 || stack.isIn(Tags.EMPTY_HAND_WEAPONS);
-    }
+public class PredicateRegistry {
 
     static {
         TrinketsApi.registerTrinketPredicate(BetterAdventureModeCore.identifier("rings_predicate"), (stack, ref, entity) -> {
@@ -48,4 +42,5 @@ public class ItemUtils {
             return TriState.FALSE;
         });
     }
+    public static void init() {}
 }

@@ -6,7 +6,7 @@ import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.bamcore.api.item.CustomArmorItem;
 import com.github.theredbrain.bamcore.api.item.CustomDyeableArmorItem;
-import com.github.theredbrain.bamcore.util.ItemUtils;
+import com.github.theredbrain.bamcore.api.util.BetterAdventureModCoreItemUtils;
 import com.github.theredbrain.bamcore.registry.ItemRegistry;
 import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreStatusEffects;
 import com.google.common.collect.ImmutableList;
@@ -95,7 +95,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
             ItemStack stack = ItemStack.EMPTY;
             if (!player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.WEAPONS_SHEATHED_EFFECT)) {
                 ItemStack stack2 = this.mainHand.get(0);
-                if (ItemUtils.isUsable(stack2)) stack = stack2;
+                if (BetterAdventureModCoreItemUtils.isUsable(stack2)) stack = stack2;
             } else if (PlayerInventory.isValidHotbarIndex(this.selectedSlot)) {
                 stack = this.main.get(this.selectedSlot);
             }
@@ -110,7 +110,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         ItemStack stack = this.offHand.get(0);
         boolean bl = !player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.ADVENTURE_BUILDING_EFFECT)
                 && !player.isCreative()
-                && (player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.WEAPONS_SHEATHED_EFFECT) || !ItemUtils.isUsable(stack));
+                && (player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.WEAPONS_SHEATHED_EFFECT) || !BetterAdventureModCoreItemUtils.isUsable(stack));
         return bl ? this.emptyMainHand.get(0) : stack;
     }
 

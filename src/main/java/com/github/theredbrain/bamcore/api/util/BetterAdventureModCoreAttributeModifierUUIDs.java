@@ -1,8 +1,8 @@
-package com.github.theredbrain.bamcore.util;
+package com.github.theredbrain.bamcore.api.util;
 
 import net.minecraft.util.math.MathHelper;
 
-public class AttributeModifierUUIDs {
+public class BetterAdventureModCoreAttributeModifierUUIDs {
 
     public static final String OVERBURDENED_EFFECT = MathHelper.randomUuid().toString();
 

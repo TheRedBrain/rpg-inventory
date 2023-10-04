@@ -1,17 +1,14 @@
 package com.github.theredbrain.bamcore;
 
 import com.github.theredbrain.bamcore.network.packet.BetterAdventureModCoreClientPacket;
-import com.github.theredbrain.bamcore.registry.ScreenHandlerTypesRegistry;
-import com.github.theredbrain.bamcore.util.KeyBindings;
+import com.github.theredbrain.bamcore.registry.KeyBindingsRegistry;
 import net.fabricmc.api.ClientModInitializer;
-import net.minecraft.client.gui.screen.ingame.HandledScreens;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 
 public class BetterAdventureModeCoreClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        KeyBindings.registerKeyBindings();
+        KeyBindingsRegistry.registerKeyBindings();
         registerBlockEntityRenderer();
         BetterAdventureModCoreClientPacket.init();
         registerScreens();

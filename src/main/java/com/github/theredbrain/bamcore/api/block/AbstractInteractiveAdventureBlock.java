@@ -1,9 +1,8 @@
 package com.github.theredbrain.bamcore.api.block;
 
-import com.github.theredbrain.bamcore.util.ItemUtils;
+import com.github.theredbrain.bamcore.api.util.BetterAdventureModCoreItemUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -21,8 +20,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -55,7 +52,7 @@ public abstract class AbstractInteractiveAdventureBlock extends Block {
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         ItemStack tool = player.getStackInHand(Hand.MAIN_HAND);
         if (!world.isClient()) {
-            if (state.isOf(this) && (!this.requiresTools || (tool.isIn(this.requiredTools) && tool.getItem() instanceof ToolItem && (ItemUtils.isUsable(tool) && hand == Hand.MAIN_HAND) || (tool.isIn(this.requiredTools) && !(tool.getItem() instanceof ToolItem) && hand == Hand.MAIN_HAND)))) {
+            if (state.isOf(this) && (!this.requiresTools || (tool.isIn(this.requiredTools) && tool.getItem() instanceof ToolItem && (BetterAdventureModCoreItemUtils.isUsable(tool) && hand == Hand.MAIN_HAND) || (tool.isIn(this.requiredTools) && !(tool.getItem() instanceof ToolItem) && hand == Hand.MAIN_HAND)))) {
 
                 if (state.get(AbstractInteractiveAdventureBlock.INTACT)) {
                     // TODO drop lootTable on interaction

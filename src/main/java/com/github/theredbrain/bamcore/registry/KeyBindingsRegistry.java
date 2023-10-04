@@ -1,4 +1,4 @@
-package com.github.theredbrain.bamcore.util;
+package com.github.theredbrain.bamcore.registry;
 
 import com.github.theredbrain.bamcore.network.packet.BetterAdventureModCoreServerPacket;
 import io.netty.buffer.Unpooled;
@@ -11,7 +11,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import org.lwjgl.glfw.GLFW;
 
-public class KeyBindings {
+public class KeyBindingsRegistry {
 
     public static KeyBinding sheatheWeapons;
     public static KeyBinding swapMainHand;
@@ -21,26 +21,26 @@ public class KeyBindings {
     public static boolean swapOffHandBoolean;
 
     public static void registerKeyBindings() {
-        KeyBindings.sheatheWeapons = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+        KeyBindingsRegistry.sheatheWeapons = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.bamcore.sheatheWeapons",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_F,
                 "category.bamcore.category"
         ));
-        KeyBindings.swapMainHand = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+        KeyBindingsRegistry.swapMainHand = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.bamcore.swapMainHand",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_E,
                 "category.bamcore.category"
         ));
-        KeyBindings.swapOffHand = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+        KeyBindingsRegistry.swapOffHand = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.bamcore.swapOffHand",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_Q,
                 "category.bamcore.category"
         ));
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (KeyBindings.swapMainHand.wasPressed()) {
+            if (KeyBindingsRegistry.swapMainHand.wasPressed()) {
                 if (!swapMainHandBoolean) {
                     syncSlotSwapHand(client, true);
                 }
@@ -48,7 +48,7 @@ public class KeyBindings {
             } else if (swapMainHandBoolean) {
                 swapMainHandBoolean = false;
             }
-            if (KeyBindings.swapOffHand.wasPressed()) {
+            if (KeyBindingsRegistry.swapOffHand.wasPressed()) {
                 if (!swapOffHandBoolean) {
                     syncSlotSwapHand(client, false);
                 }
@@ -56,7 +56,7 @@ public class KeyBindings {
             } else if (swapOffHandBoolean) {
                 swapOffHandBoolean = false;
             }
-            if (KeyBindings.sheatheWeapons.wasPressed()) {
+            if (KeyBindingsRegistry.sheatheWeapons.wasPressed()) {
                 if (!sheatheWeaponsBoolean) {
                     sheatheWeapons(client, true);
                 }

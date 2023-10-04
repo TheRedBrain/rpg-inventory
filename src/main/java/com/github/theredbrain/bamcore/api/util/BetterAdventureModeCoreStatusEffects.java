@@ -2,7 +2,6 @@ package com.github.theredbrain.bamcore.api.util;
 
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.effect.*;
-import com.github.theredbrain.bamcore.util.AttributeModifierUUIDs;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffect;
@@ -20,7 +19,7 @@ public class BetterAdventureModeCoreStatusEffects {
     public static final StatusEffect MANA_REGENERATION_EFFECT = new ManaRegenerationStatusEffect();
     public static final StatusEffect NEED_EMPTY_OFFHAND_EFFECT = new NeedEmptyOffhandStatusEffect();
     public static final StatusEffect NO_ATTACK_ITEMS_EFFECT = new NoAttackItemsStatusEffect();
-    public static final StatusEffect OVERBURDENED_EFFECT = new OverburdenedStatusEffect().addAttributeModifier(EntityAttributes.GENERIC_MOVEMENT_SPEED, AttributeModifierUUIDs.OVERBURDENED_EFFECT, -0.25, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
+    public static final StatusEffect OVERBURDENED_EFFECT = new OverburdenedStatusEffect().addAttributeModifier(EntityAttributes.GENERIC_MOVEMENT_SPEED, BetterAdventureModCoreAttributeModifierUUIDs.OVERBURDENED_EFFECT, -0.25, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
     public static final StatusEffect PERMANENT_MOUNT_EFFECT = new PermanentMountStatusEffect();
     // TODO move to bamdimensions
 //    public static final StatusEffect PORTAL_RESISTANCE_EFFECT = new PortalResistanceStatusEffect();
