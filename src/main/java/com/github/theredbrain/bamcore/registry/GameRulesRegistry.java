@@ -5,6 +5,10 @@ import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.minecraft.world.GameRules;
 
 public class GameRulesRegistry {
+    public static final GameRules.Key<GameRules.BooleanRule> CAN_SET_SPAWN_ON_BEDS =
+            GameRuleRegistry.register("canSetSpawnOnBeds", GameRules.Category.PLAYER, GameRuleFactory.createBooleanRule(true));
+    public static final GameRules.Key<GameRules.BooleanRule> CAN_SET_SPAWN_ON_RESPAWN_ANCHOR =
+            GameRuleRegistry.register("canSetSpawnOnRespawnAnchor", GameRules.Category.PLAYER, GameRuleFactory.createBooleanRule(true));
     public static final GameRules.Key<GameRules.BooleanRule> CLEAR_ENDER_CHEST_ON_DEATH =
             GameRuleRegistry.register("clearEnderChestOnDeath", GameRules.Category.PLAYER, GameRuleFactory.createBooleanRule(false));
     public static final GameRules.Key<GameRules.BooleanRule> DESTROY_DROPPED_ITEMS_ON_DEATH =
@@ -15,9 +19,7 @@ public class GameRulesRegistry {
             GameRuleRegistry.register("resetRecipesOnDeath", GameRules.Category.PLAYER, GameRuleFactory.createBooleanRule(false));
     public static final GameRules.Key<GameRules.BooleanRule> TELEPORT_TO_SPAWN_ON_LOGIN =
             GameRuleRegistry.register("teleportToSpawnOnLogin", GameRules.Category.PLAYER, GameRuleFactory.createBooleanRule(false));
-    public static final GameRules.Key<GameRules.BooleanRule> CAN_SET_SPAWN_ON_BEDS =
-            GameRuleRegistry.register("canSetSpawnOnBeds", GameRules.Category.PLAYER, GameRuleFactory.createBooleanRule(true));
-    public static final GameRules.Key<GameRules.BooleanRule> CAN_SET_SPAWN_ON_RESPAWN_ANCHOR =
-            GameRuleRegistry.register("canSetSpawnOnRespawnAnchor", GameRules.Category.PLAYER, GameRuleFactory.createBooleanRule(true));
+    public static final GameRules.Key<GameRules.BooleanRule> USE_CUSTOM_INVENTORY_SCREEN =
+            GameRuleRegistry.register("useCustomInventoryScreen", GameRules.Category.PLAYER, GameRuleFactory.createBooleanRule(false));
     public static void init() {}
 }

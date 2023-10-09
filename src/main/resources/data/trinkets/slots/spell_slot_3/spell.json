@@ -1,5 +1,8 @@
 {
   "icon": "bamcore:item/empty_slot_spell",
+  "quick_move_predicates": [
+    "bamcore:can_change_equipment"
+  ],
   "tooltip_predicates": [
     "trinkets:none"
   ]

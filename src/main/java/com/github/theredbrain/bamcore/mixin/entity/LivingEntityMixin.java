@@ -39,16 +39,16 @@ import java.util.*;
 
 @Mixin(value = LivingEntity.class, priority = 950)
 public abstract class LivingEntityMixin extends Entity implements DuckLivingEntityMixin {
-    @Unique
-    private final Map<String, ItemStack> lastEquippedAdventureTrinkets = new HashMap<>();
+//    @Unique
+//    private final Map<String, ItemStack> lastEquippedAdventureTrinkets = new HashMap<>();
 
 //    @Unique
 //    private static final TrackedData<Float> POISE = DataTracker.registerData(LivingEntity.class, TrackedDataHandlerRegistry.FLOAT); // TODO poise
 
-    @Shadow
-    public DefaultedList<ItemStack> syncedHandStacks = DefaultedList.ofSize(4, ItemStack.EMPTY);
-
-    @Shadow public abstract double getAttributeValue(EntityAttribute attribute);
+//    @Shadow
+//    public DefaultedList<ItemStack> syncedHandStacks = DefaultedList.ofSize(4, ItemStack.EMPTY);
+//
+//    @Shadow public abstract double getAttributeValue(EntityAttribute attribute);
 
     public LivingEntityMixin(EntityType<?> type, World world) {
         super(type, world);
@@ -127,119 +127,119 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
             entity.setVelocity(-MathHelper.sin(angle) * magnitude, 0.2f, MathHelper.cos(angle) * magnitude);
         }
     }
-
-    @Inject(at = @At("TAIL"), method = "tick")
-    private void tick(CallbackInfo info) {
-        LivingEntity entity = (LivingEntity) (Object) this;
-        TrinketsApi.getTrinketComponent(entity).ifPresent(trinkets -> {
-            Map<String, ItemStack> newlyEquippedTrinkets = new HashMap<>();
-            Map<String, ItemStack> contentUpdates = new HashMap<>();
-            trinkets.forEach((ref, stack) -> {
-                TrinketInventory inventory = ref.inventory();
-                SlotType slotType = inventory.getSlotType();
-                int index = ref.index();
-                ItemStack oldStack = getOldAdventureStack(slotType, index);
-                ItemStack newStack = inventory.getStack(index);
-                ItemStack copy = newStack.copy();
-                String newRef = slotType.getGroup() + "/" + slotType.getName() + "/" + index;
-                newlyEquippedTrinkets.put(newRef, copy);
-
-                if (!ItemStack.areEqual(newStack, oldStack)) {
-
-                    if (!((LivingEntity) (Object) this).getWorld().isClient) {
-                        contentUpdates.put(newRef, copy);
-                        UUID uuid = SlotAttributes.getUuid(ref);
-
-                        if (!oldStack.isEmpty()) {
-                            Trinket trinket = TrinketsApi.getTrinket(oldStack.getItem());
-                            Multimap<EntityAttribute, EntityAttributeModifier> map = trinket.getModifiers(oldStack, ref, entity, uuid);
-                            Multimap<String, EntityAttributeModifier> slotMap = HashMultimap.create();
-                            Set<SlotAttributes.SlotEntityAttribute> toRemove = Sets.newHashSet();
-                            for (EntityAttribute attr : map.keySet()) {
-                                if (attr instanceof SlotAttributes.SlotEntityAttribute slotAttr) {
-                                    slotMap.putAll(slotAttr.slot, map.get(attr));
-                                    toRemove.add(slotAttr);
-                                }
-                            }
-                            for (SlotAttributes.SlotEntityAttribute attr : toRemove) {
-                                map.removeAll(attr);
-                            }
-                            ((LivingEntity) (Object) this).getAttributes().removeModifiers(map);
-                            trinkets.removeModifiers(slotMap);
-                        }
-
-                        if (!newStack.isEmpty()) {
-                            Trinket trinket = TrinketsApi.getTrinket(newStack.getItem());
-                            Multimap<EntityAttribute, EntityAttributeModifier> map = trinket.getModifiers(newStack, ref, entity, uuid);
-                            Multimap<String, EntityAttributeModifier> slotMap = HashMultimap.create();
-                            Set<SlotAttributes.SlotEntityAttribute> toRemove = Sets.newHashSet();
-                            for (EntityAttribute attr : map.keySet()) {
-                                if (attr instanceof SlotAttributes.SlotEntityAttribute slotAttr) {
-                                    slotMap.putAll(slotAttr.slot, map.get(attr));
-                                    toRemove.add(slotAttr);
-                                }
-                            }
-                            for (SlotAttributes.SlotEntityAttribute attr : toRemove) {
-                                map.removeAll(attr);
-                            }
-                            ((LivingEntity) (Object) this).getAttributes().addTemporaryModifiers(map);
-                            trinkets.addTemporaryModifiers(slotMap);
-                        }
-                    }
-
-                    if (!ItemStack.areItemsEqual(newStack, oldStack)) {
-                        TrinketsApi.getTrinket(oldStack.getItem()).onUnequip(oldStack, ref, entity);
-                        TrinketsApi.getTrinket(newStack.getItem()).onEquip(newStack, ref, entity);
-                    }
-                }
-            });
-
-            if (!((LivingEntity) (Object) this).getWorld().isClient) {
-                Set<TrinketInventory> inventoriesToSend = trinkets.getTrackingUpdates();
-
-                if (!contentUpdates.isEmpty() || !inventoriesToSend.isEmpty()) {
-                    PacketByteBuf buf = PacketByteBufs.create();
-                    buf.writeInt(entity.getId());
-                    NbtCompound tag = new NbtCompound();
-
-                    for (TrinketInventory trinketInventory : inventoriesToSend) {
-                        tag.put(trinketInventory.getSlotType().getGroup() + "/" + trinketInventory.getSlotType().getName(), trinketInventory.getSyncTag());
-                    }
-
-                    buf.writeNbt(tag);
-                    tag = new NbtCompound();
-
-                    for (Map.Entry<String, ItemStack> entry : contentUpdates.entrySet()) {
-                        tag.put(entry.getKey(), entry.getValue().writeNbt(new NbtCompound()));
-                    }
-
-                    buf.writeNbt(tag);
-
-                    for (ServerPlayerEntity player : PlayerLookup.tracking(entity)) {
-                        ServerPlayNetworking.send(player, TrinketsNetwork.SYNC_INVENTORY, buf);
-                    }
-
-                    if (entity instanceof ServerPlayerEntity serverPlayer) {
-                        ServerPlayNetworking.send(serverPlayer, TrinketsNetwork.SYNC_INVENTORY, buf);
-
-                        if (!inventoriesToSend.isEmpty()) {
-                            ((TrinketPlayerScreenHandler) ((DuckPlayerEntityMixin)serverPlayer).bamcore$getInventoryScreenHandler()).trinkets$updateTrinketSlots(true);
-                        }
-                    }
-
-                    inventoriesToSend.clear();
-                }
-            }
-
-            lastEquippedAdventureTrinkets.clear();
-            lastEquippedAdventureTrinkets.putAll(newlyEquippedTrinkets);
-        });
-    }
-
-    @Unique
-    private ItemStack getOldAdventureStack(SlotType type, int index) {
-        return lastEquippedAdventureTrinkets.getOrDefault(type.getGroup() + "/" + type.getName() + "/" + index, ItemStack.EMPTY);
-    }
+//
+//    @Inject(at = @At("TAIL"), method = "tick")
+//    private void tick(CallbackInfo info) {
+//        LivingEntity entity = (LivingEntity) (Object) this;
+//        TrinketsApi.getTrinketComponent(entity).ifPresent(trinkets -> {
+//            Map<String, ItemStack> newlyEquippedTrinkets = new HashMap<>();
+//            Map<String, ItemStack> contentUpdates = new HashMap<>();
+//            trinkets.forEach((ref, stack) -> {
+//                TrinketInventory inventory = ref.inventory();
+//                SlotType slotType = inventory.getSlotType();
+//                int index = ref.index();
+//                ItemStack oldStack = getOldAdventureStack(slotType, index);
+//                ItemStack newStack = inventory.getStack(index);
+//                ItemStack copy = newStack.copy();
+//                String newRef = slotType.getGroup() + "/" + slotType.getName() + "/" + index;
+//                newlyEquippedTrinkets.put(newRef, copy);
+//
+//                if (!ItemStack.areEqual(newStack, oldStack)) {
+//
+//                    if (!((LivingEntity) (Object) this).getWorld().isClient) {
+//                        contentUpdates.put(newRef, copy);
+//                        UUID uuid = SlotAttributes.getUuid(ref);
+//
+//                        if (!oldStack.isEmpty()) {
+//                            Trinket trinket = TrinketsApi.getTrinket(oldStack.getItem());
+//                            Multimap<EntityAttribute, EntityAttributeModifier> map = trinket.getModifiers(oldStack, ref, entity, uuid);
+//                            Multimap<String, EntityAttributeModifier> slotMap = HashMultimap.create();
+//                            Set<SlotAttributes.SlotEntityAttribute> toRemove = Sets.newHashSet();
+//                            for (EntityAttribute attr : map.keySet()) {
+//                                if (attr instanceof SlotAttributes.SlotEntityAttribute slotAttr) {
+//                                    slotMap.putAll(slotAttr.slot, map.get(attr));
+//                                    toRemove.add(slotAttr);
+//                                }
+//                            }
+//                            for (SlotAttributes.SlotEntityAttribute attr : toRemove) {
+//                                map.removeAll(attr);
+//                            }
+//                            ((LivingEntity) (Object) this).getAttributes().removeModifiers(map);
+//                            trinkets.removeModifiers(slotMap);
+//                        }
+//
+//                        if (!newStack.isEmpty()) {
+//                            Trinket trinket = TrinketsApi.getTrinket(newStack.getItem());
+//                            Multimap<EntityAttribute, EntityAttributeModifier> map = trinket.getModifiers(newStack, ref, entity, uuid);
+//                            Multimap<String, EntityAttributeModifier> slotMap = HashMultimap.create();
+//                            Set<SlotAttributes.SlotEntityAttribute> toRemove = Sets.newHashSet();
+//                            for (EntityAttribute attr : map.keySet()) {
+//                                if (attr instanceof SlotAttributes.SlotEntityAttribute slotAttr) {
+//                                    slotMap.putAll(slotAttr.slot, map.get(attr));
+//                                    toRemove.add(slotAttr);
+//                                }
+//                            }
+//                            for (SlotAttributes.SlotEntityAttribute attr : toRemove) {
+//                                map.removeAll(attr);
+//                            }
+//                            ((LivingEntity) (Object) this).getAttributes().addTemporaryModifiers(map);
+//                            trinkets.addTemporaryModifiers(slotMap);
+//                        }
+//                    }
+//
+//                    if (!ItemStack.areItemsEqual(newStack, oldStack)) {
+//                        TrinketsApi.getTrinket(oldStack.getItem()).onUnequip(oldStack, ref, entity);
+//                        TrinketsApi.getTrinket(newStack.getItem()).onEquip(newStack, ref, entity);
+//                    }
+//                }
+//            });
+//
+//            if (!((LivingEntity) (Object) this).getWorld().isClient) {
+//                Set<TrinketInventory> inventoriesToSend = trinkets.getTrackingUpdates();
+//
+//                if (!contentUpdates.isEmpty() || !inventoriesToSend.isEmpty()) {
+//                    PacketByteBuf buf = PacketByteBufs.create();
+//                    buf.writeInt(entity.getId());
+//                    NbtCompound tag = new NbtCompound();
+//
+//                    for (TrinketInventory trinketInventory : inventoriesToSend) {
+//                        tag.put(trinketInventory.getSlotType().getGroup() + "/" + trinketInventory.getSlotType().getName(), trinketInventory.getSyncTag());
+//                    }
+//
+//                    buf.writeNbt(tag);
+//                    tag = new NbtCompound();
+//
+//                    for (Map.Entry<String, ItemStack> entry : contentUpdates.entrySet()) {
+//                        tag.put(entry.getKey(), entry.getValue().writeNbt(new NbtCompound()));
+//                    }
+//
+//                    buf.writeNbt(tag);
+//
+//                    for (ServerPlayerEntity player : PlayerLookup.tracking(entity)) {
+//                        ServerPlayNetworking.send(player, TrinketsNetwork.SYNC_INVENTORY, buf);
+//                    }
+//
+//                    if (entity instanceof ServerPlayerEntity serverPlayer) {
+//                        ServerPlayNetworking.send(serverPlayer, TrinketsNetwork.SYNC_INVENTORY, buf);
+//
+//                        if (!inventoriesToSend.isEmpty()) {
+//                            ((TrinketPlayerScreenHandler) ((DuckPlayerEntityMixin)serverPlayer).bamcore$getAdventureInventoryScreenHandler()).trinkets$updateTrinketSlots(true);
+//                        }
+//                    }
+//
+//                    inventoriesToSend.clear();
+//                }
+//            }
+//
+//            lastEquippedAdventureTrinkets.clear();
+//            lastEquippedAdventureTrinkets.putAll(newlyEquippedTrinkets);
+//        });
+//    }
+//
+//    @Unique
+//    private ItemStack getOldAdventureStack(SlotType type, int index) {
+//        return lastEquippedAdventureTrinkets.getOrDefault(type.getGroup() + "/" + type.getName() + "/" + index, ItemStack.EMPTY);
+//    }
 
     /*@Override // TODO poise
     public float bamcore$getMaxPoise() {

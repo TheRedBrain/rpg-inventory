@@ -4,8 +4,13 @@
     "player"
   ],
   "slots": [
+    "alternative_main_hand/alternative_main_hand",
+    "alternative_off_hand/alternative_off_hand",
     "belts/belt",
+    "empty_main_hand/empty_main_hand",
+    "empty_off_hand/empty_off_hand",
     "gloves/gloves",
+    "main_hand/main_hand",
     "necklaces/necklace",
     "rings_1/ring",
     "rings_2/ring",

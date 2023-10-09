@@ -27,7 +27,7 @@ public interface DuckPlayerEntityMixin {
     float bamcore$getStamina();
     void bamcore$setStamina(float mana);
 
-    ScreenHandler bamcore$getInventoryScreenHandler();
+//    ScreenHandler bamcore$getAdventureInventoryScreenHandler();
 
     boolean bamcore$isAdventure();
 
@@ -37,4 +37,7 @@ public interface DuckPlayerEntityMixin {
     void bamcore$openRelayTriggerBlockScreen(RelayTriggerBlockBlockEntity relayTriggerBlock);
     void bamcore$openDelayTriggerBlockScreen(DelayTriggerBlockBlockEntity delayTriggerBlock);
     void bamcore$openChunkLoaderBlockScreen(ChunkLoaderBlockBlockEntity chunkLoaderBlock);
+
+//    void setShouldUpdateTrinketSlots(boolean shouldUpdateTrinketSlots);
+//    boolean shouldUpdateTrinketSlots();
 }

@@ -7,10 +7,7 @@
     "bettercombat.PlayerAttackHelperMixin",
     "block.RespawnAnchorBlockMixin",
     "entity.DamageUtilMixin",
-    "entity.EquipmentSlotMixin",
-    "entity.EquipmentSlotTypeMixin",
     "entity.LivingEntityMixin",
-    "entity.mob.MobEntityMixin",
     "entity.player.HungerManagerMixin",
     "entity.player.PlayerEntityMixin",
     "entity.player.PlayerInventoryMixin",
@@ -18,6 +15,7 @@
     "item.MiningToolItemMixin",
     "item.SwordItemMixin",
     "item.ToolItemMixin",
+    "screen.PlayerScreenHandlerMixin",
     "server.PlayerManagerMixin",
     "server.network.EntityTrackerEntryMixin",
     "server.network.ServerPlayerEntityMixin",
@@ -28,16 +26,13 @@
     "spell_engine.api.spell.SpellImpactActionHealMixin",
     "spell_engine.internals.SpellContainerHelperMixin",
     "spell_engine.internals.SpellHelperMixin",
-    "trinkets.TrinketsClientMixin",
-    "trinkets.api.LivingEntityTrinketComponentMixin",
-    "trinkets.data.EntitySlotLoaderMixin"
+    "trinkets.SurvivalTrinketSlotMixin"
   ],
   "client": [
-    "client.MinecraftClientMixin",
     "client.gui.hud.InGameHudMixin",
+    "client.gui.screen.ingame.InventoryScreenMixin",
     "client.network.AbstractClientPlayerEntityMixin",
     "client.network.ClientPlayerEntityMixin",
-    "client.network.ClientPlayNetworkHandlerMixin",
     "client.render.entity.PlayerEntityRendererMixin"
   ],
   "injectors": {

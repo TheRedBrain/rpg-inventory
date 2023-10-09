@@ -1,8 +1,11 @@
 package com.github.theredbrain.bamcore.registry;
 
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreStatusEffects;
+import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import dev.emi.trinkets.api.TrinketsApi;
 import net.fabricmc.fabric.api.util.TriState;
+import net.minecraft.entity.player.PlayerEntity;
 
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -36,7 +39,17 @@ public class PredicateRegistry {
 
                 bl.set(comp.isEquipped(stack.getItem()));
             });
-            if (stack.isIn(Tags.MANA_REGENERATING_ITEMS) && bl.get()) {
+            if (stack.isIn(Tags.MANA_REGENERATING_TRINKETS) && bl.get()) {
+                return TriState.TRUE;
+            }
+            return TriState.FALSE;
+        });
+        TrinketsApi.registerTrinketPredicate(BetterAdventureModeCore.identifier("can_change_equipment"), (stack, ref, entity) -> {
+            boolean bl = false;
+            if (entity instanceof PlayerEntity playerEntity && !((DuckPlayerEntityMixin) playerEntity).bamcore$isAdventure()) {
+                bl = true;
+            }
+            if (entity.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT) || bl) {
                 return TriState.TRUE;
             }
             return TriState.FALSE;

@@ -18,6 +18,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ShieldItem;
 import net.minecraft.item.SwordItem;
+import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.math.RotationAxis;
 
 @Environment(EnvType.CLIENT)
@@ -32,15 +33,16 @@ public class SheathedOffHandItemFeatureRenderer extends HeldItemFeatureRenderer<
     @Override
     public void render(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, AbstractClientPlayerEntity abstractClientPlayerEntity, float f, float g, float h, float j, float k, float l) {
         PlayerEntity player = (PlayerEntity) abstractClientPlayerEntity;
-        ItemStack offHandStack = abstractClientPlayerEntity.getInventory().getStack(41);
+        PlayerScreenHandler screenHandler = player.playerScreenHandler;
+        ItemStack offHandStack = screenHandler.getSlot(45).getStack();
 
-        if (!offHandStack.isEmpty() && player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.WEAPONS_SHEATHED_EFFECT)) {
+        if (!offHandStack.isEmpty() && (player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.WEAPONS_SHEATHED_EFFECT) || player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.TWO_HANDED_EFFECT))) {
             matrixStack.push();
             ModelPart modelPart = this.getContextModel().body;
             modelPart.rotate(matrixStack);
-            Item alternativeOffHandItem = offHandStack.getItem();
+            Item offHandItem = offHandStack.getItem();
 
-            if (alternativeOffHandItem instanceof SwordItem) {
+            if (offHandItem instanceof SwordItem) {
                 matrixStack.translate(0.2D, 0.0D, 0.15D);
                 if (abstractClientPlayerEntity.hasStackEquipped(EquipmentSlot.CHEST)) {
     //                    matrixStack.translate(0.05F, 0.0F, 0.0F);
@@ -54,7 +56,7 @@ public class SheathedOffHandItemFeatureRenderer extends HeldItemFeatureRenderer<
 //                }
 //                matrixStack.scale(1.0F, -1.0F, -1.0F);
                 heldItemRenderer.renderItem(abstractClientPlayerEntity, offHandStack, ModelTransformationMode.THIRD_PERSON_RIGHT_HAND, false, matrixStack, vertexConsumerProvider, i);
-            } else if (alternativeOffHandItem instanceof ShieldItem) {
+            } else if (offHandItem instanceof ShieldItem) {
                 matrixStack.translate(0.2D, 0.4D, 0.0D);
                 if (abstractClientPlayerEntity.hasStackEquipped(EquipmentSlot.CHEST)) {
                     //                    matrixStack.translate(0.05F, 0.0F, 0.0F);

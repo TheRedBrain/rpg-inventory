@@ -4,9 +4,13 @@ import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.api.effect.FoodStatusEffect;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreEntityAttributes;
-import com.github.theredbrain.bamcore.screen.AdventureInventoryScreenHandler;
+import com.github.theredbrain.bamcore.entity.player.DuckPlayerInventoryMixin;
 import com.google.common.collect.Ordering;
 import com.mojang.blaze3d.systems.RenderSystem;
+import dev.emi.trinkets.SurvivalTrinketSlot;
+import dev.emi.trinkets.TrinketPlayerScreenHandler;
+import dev.emi.trinkets.TrinketsClient;
+import dev.emi.trinkets.api.*;
 import io.wispforest.owo.ui.base.BaseOwoHandledScreen;
 import io.wispforest.owo.ui.component.Components;
 import io.wispforest.owo.ui.component.LabelComponent;
@@ -15,6 +19,7 @@ import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.container.GridLayout;
 import io.wispforest.owo.ui.container.ScrollContainer;
 import io.wispforest.owo.ui.core.*;
+import io.wispforest.owo.util.pond.OwoSlotExtension;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -27,9 +32,6 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.attribute.EntityAttributeInstance;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
@@ -38,19 +40,21 @@ import net.minecraft.entity.effect.StatusEffectUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
+import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Colors;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 
 import java.util.*;
 
 @Environment(EnvType.CLIENT)
-public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, AdventureInventoryScreenHandler>/* implements TrinketScreen*/ {
+public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, PlayerScreenHandler/*AdventureInventoryScreenHandler*/>/* implements TrinketScreen*/ {
     public static final Identifier INVENTORY_SLOT_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/inventory_slot_texture.png");
     public static final Identifier STATUS_EFFECT_BACKGROUND_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/status_effects_background.png");
     public static final Identifier CHARACTER_BACKGROUND_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/character_background_texture.png");
@@ -62,27 +66,68 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, A
     private boolean showStatusEffectsScreen = false;
     private int oldActiveSpellSlotAmount = 0;
     private int oldEffectsListSize;
+    private int controlId;
     private List<StatusEffectInstance> foodEffectsList = new ArrayList<>(Collections.emptyList());
     private List<StatusEffectInstance> negativeEffectsList = new ArrayList<>(Collections.emptyList());
     private List<StatusEffectInstance> positiveEffectsList = new ArrayList<>(Collections.emptyList());
     private List<StatusEffectInstance> neutralEffectsList = new ArrayList<>(Collections.emptyList());
 
-    public AdventureInventoryScreen(PlayerEntity player) { //AdventureInventoryScreenHandler handler, PlayerInventory inventory, Text title) {
-        super((AdventureInventoryScreenHandler) ((DuckPlayerEntityMixin)player).bamcore$getInventoryScreenHandler(), player.getInventory(), Text.translatable("gui.adventureInventory"));
+    private List<Pair<SlotReference, ItemStack>> oldEquippedTrinkets = new ArrayList<>(Collections.emptyList());
+
+    private Map<String, Integer> trinketSlotIds = new HashMap<>(Map.of());
+    private Map<String, Integer> spellSlotIds = new HashMap<>(Map.of());
+
+    public AdventureInventoryScreen(PlayerEntity player) {
+        super(player.playerScreenHandler, player.getInventory(), Text.translatable("gui.adventureInventory"));
+        this.populateTrinketSlotIds(player);
     }
 
     public void handledScreenTick() {
-        if (this.client.interactionManager.hasCreativeInventory()) {
-            this.client.setScreen(new CreativeInventoryScreen(this.client.player, this.client.player.networkHandler.getEnabledFeatures(), (Boolean)this.client.options.getOperatorItemsTab().getValue()));
-        }
-        this.updateAttributeScreen();
+        PlayerEntity player = this.handler.player();
+        this.updateAttributeScreen(player);
 
-        this.buildSpellSlots();
-        this.updateEffectsScreen();
-//        for (Component child : spellSlotComponents) {
-//            component(GridLayout.class, "spell_slots_container").removeChild(child);
+        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
+        if (trinkets.isPresent()) {
+//            Set<TrinketInventory> inventoriesToSend = trinkets.get().getTrackingUpdates();
+
+//            BetterAdventureModeCore.LOGGER.info("inventoriesToSend.size(): " + inventoriesToSend.size());
+//            if (!trinkets.get().getTrackingUpdates().isEmpty()) {
+//                this.shouldUpdateTrinkets = true;
+//            }
+//            List<Pair<SlotReference, ItemStack>> allEquipped = trinkets.get().getAllEquipped();
+//            if (!(allEquipped.size() == this.oldEquippedTrinkets.size() && allEquipped.containsAll(this.oldEquippedTrinkets) && this.oldEquippedTrinkets.containsAll(allEquipped))) {
+//                BetterAdventureModeCore.LOGGER.info("!allEquipped.equals(this.oldEquippedTrinkets)");
+////                BetterAdventureModeCore.LOGGER.info("allEquipped");
+////                BetterAdventureModeCore.LOGGER.info(allEquipped.toString());
+////                BetterAdventureModeCore.LOGGER.info("this.oldEquippedTrinkets");
+////                BetterAdventureModeCore.LOGGER.info(this.oldEquippedTrinkets.toString());
+//                this.oldEquippedTrinkets.clear();
+//                this.oldEquippedTrinkets.addAll(allEquipped);
+//                this.shouldUpdateTrinkets = true;
+//            }
+        }
+
+        if (((OwoSlotExtension) this.handler.slots.get(this.controlId)).owo$getDisabledOverride() == false) {
+            BetterAdventureModeCore.LOGGER.info("shouldUpdateTrinketSlots");
+//            ((OwoSlotExtension) this.handler.slots.get(this.controlId)).owo$setDisabledOverride(true);
+            this.populateTrinketSlotIds(player);
+            this.buildTrinketSlots();
+            this.buildSpellSlots(player, true);
+        }
+
+//        if (this.handler.slots.get(this.controlId).isEnabled() == true) {
+//            BetterAdventureModeCore.LOGGER.info("shouldUpdateTrinketSlots");
+//            ((OwoSlotExtension) this.handler.slots.get(this.controlId)).owo$setDisabledOverride(true);
 //        }
-//        TrinketScreenManager.tick();
+//        if (((DuckPlayerEntityMixin) player).shouldUpdateTrinketSlots()) {
+//            BetterAdventureModeCore.LOGGER.info("shouldUpdateTrinketSlots");
+//            this.populateTrinketSlotIds(player);
+//            this.buildTrinketSlots();
+//            ((DuckPlayerEntityMixin) player).setShouldUpdateTrinketSlots(false);
+//        }
+
+        this.buildSpellSlots(player, false);
+        this.updateEffectsScreen(player);
     }
 
     @Override
@@ -103,7 +148,7 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, A
                 );
         if (this.showAttributeScreen) {
             this.component(FlowLayout.class, "additional_inventory_screen_right").clearChildren();
-            this.buildAttributesScreen();
+            this.buildAttributesScreen(this.handler.player());
 //            this.component(FlowLayout.class, "additional_inventory_screen_right").child(Containers.horizontalFlow(Sizing.fill(100), Sizing.fill(100)).surface(Surface.PANEL));
         } else {
             this.component(FlowLayout.class, "additional_inventory_screen_right").clearChildren();
@@ -115,22 +160,22 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, A
 //                        : Text.translatable("gui.adventureInventory.toggleAttributeScreenButton.off.tooltip"));
     }
 
-    private void updateAttributeScreen() {
+    private void updateAttributeScreen(PlayerEntity player) {
         if (this.showAttributeScreen) {
-            this.component(LabelComponent.class, "attributes_max_health_value").text(Text.literal(String.valueOf((int)this.handler.player().getAttributeValue(EntityAttributes.GENERIC_MAX_HEALTH))));
-            this.component(LabelComponent.class, "attributes_health_regeneration_value").text(Text.literal(String.valueOf(this.handler.player().getAttributeValue(BetterAdventureModeCoreEntityAttributes.HEALTH_REGENERATION))));
-            this.component(LabelComponent.class, "attributes_armor_value").text(Text.literal(String.valueOf((int)this.handler.player().getAttributeValue(EntityAttributes.GENERIC_ARMOR))));
-            this.component(LabelComponent.class, "attributes_armor_toughness_value").text(Text.literal(String.valueOf(this.handler.player().getAttributeValue(EntityAttributes.GENERIC_ARMOR_TOUGHNESS))));
-            this.component(LabelComponent.class, "attributes_max_stamina_value").text(Text.literal(String.valueOf((int)this.handler.player().getAttributeValue(BetterAdventureModeCoreEntityAttributes.MAX_STAMINA))));
-            this.component(LabelComponent.class, "attributes_stamina_regeneration_value").text(Text.literal(String.valueOf(this.handler.player().getAttributeValue(BetterAdventureModeCoreEntityAttributes.STAMINA_REGENERATION))));
-            this.component(LabelComponent.class, "attributes_max_mana_value").text(Text.literal(String.valueOf((int)((DuckPlayerEntityMixin)this.handler.player()).bamcore$getMaxMana())));
-            this.component(LabelComponent.class, "attributes_mana_regeneration_value").text(Text.literal(String.valueOf(((DuckPlayerEntityMixin)this.handler.player()).bamcore$getManaRegeneration())));
+            this.component(LabelComponent.class, "attributes_max_health_value").text(Text.literal(String.valueOf((int)player.getAttributeValue(EntityAttributes.GENERIC_MAX_HEALTH))));
+            this.component(LabelComponent.class, "attributes_health_regeneration_value").text(Text.literal(String.valueOf(player.getAttributeValue(BetterAdventureModeCoreEntityAttributes.HEALTH_REGENERATION))));
+            this.component(LabelComponent.class, "attributes_armor_value").text(Text.literal(String.valueOf((int)player.getAttributeValue(EntityAttributes.GENERIC_ARMOR))));
+            this.component(LabelComponent.class, "attributes_armor_toughness_value").text(Text.literal(String.valueOf(player.getAttributeValue(EntityAttributes.GENERIC_ARMOR_TOUGHNESS))));
+            this.component(LabelComponent.class, "attributes_max_stamina_value").text(Text.literal(String.valueOf((int)player.getAttributeValue(BetterAdventureModeCoreEntityAttributes.MAX_STAMINA))));
+            this.component(LabelComponent.class, "attributes_stamina_regeneration_value").text(Text.literal(String.valueOf(player.getAttributeValue(BetterAdventureModeCoreEntityAttributes.STAMINA_REGENERATION))));
+            this.component(LabelComponent.class, "attributes_max_mana_value").text(Text.literal(String.valueOf((int)((DuckPlayerEntityMixin)player).bamcore$getMaxMana())));
+            this.component(LabelComponent.class, "attributes_mana_regeneration_value").text(Text.literal(String.valueOf(((DuckPlayerEntityMixin)player).bamcore$getManaRegeneration())));
             this.component(LabelComponent.class, "attributes_encumbrance_value").text(
-                    Text.literal(String.valueOf((int)((DuckPlayerEntityMixin)this.handler.player()).bamcore$getEquipmentWeight()))
+                    Text.literal(String.valueOf((int)((DuckPlayerEntityMixin)player).bamcore$getEquipmentWeight()))
                     .append(Text.literal("/"))
-                    .append(Text.literal(String.valueOf((int)((DuckPlayerEntityMixin)this.handler.player()).bamcore$getMaxEquipmentWeight())))
+                    .append(Text.literal(String.valueOf((int)((DuckPlayerEntityMixin)player).bamcore$getMaxEquipmentWeight())))
             );
-//            this.component(LabelComponent.class, "attributes_max_poise_value").text(Text.literal(String.valueOf(this.handler.player().getAttributeValue(EntityAttributesRegistry.MAX_POISE)))); // TODO poise
+//            this.component(LabelComponent.class, "attributes_max_poise_value").text(Text.literal(String.valueOf(player.getAttributeValue(EntityAttributesRegistry.MAX_POISE)))); // TODO poise
         }
     }
 
@@ -158,14 +203,14 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, A
                                                                                                 .margins(Insets.of(0, 4, 0, 0))
                                                                                 )),
                                                                         Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
-                                                                                .children(List.of(
+                                                                                .children(List.of( // TODO replace grid with verticalFlow
                                                                                         Containers.grid(Sizing.content(), Sizing.content(), 1, 1)
-                                                                                                .child(slotAsComponent(39) // helmet
+                                                                                                .child(slotAsComponent(46) // custom helmet
                                                                                                         .margins(Insets.of(1, 1, 1, 1)), 0, 0)
                                                                                                 .surface(Surface.tiled(INVENTORY_SLOT_TEXTURE, 18, 18)),
                                                                                         Containers.grid(Sizing.content(), Sizing.content(), 1, 1)
-                                                                                                .child(slotAsComponent(46) // necklace
-                                                                                                        .margins(Insets.of(1, 1, 1, 1)), 0, 0)
+                                                                                                .child(Containers.verticalFlow(Sizing.content(), Sizing.content())
+                                                                                                        .id("necklaces_slot_container"), 0, 0)
                                                                                                 .margins(Insets.of(0, 0, 1, 0))
                                                                                                 .surface(Surface.tiled(INVENTORY_SLOT_TEXTURE, 18, 18))
                                                                                 ))
@@ -175,13 +220,13 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, A
                                                                                 .children(List.of(
                                                                                         Containers.verticalFlow(Sizing.content(), Sizing.content())
                                                                                                 .children(List.of(
-                                                                                                        slotAsComponent(41) // shoulders
+                                                                                                        Containers.verticalFlow(Sizing.content(), Sizing.content())
+                                                                                                                .id("shoulders_slot_container"),
+                                                                                                        slotAsComponent(47) // custom chestplate
                                                                                                                 .margins(Insets.of(1, 1, 1, 1)),
-                                                                                                        slotAsComponent(38) // chestplate
-                                                                                                                .margins(Insets.of(1, 1, 1, 1)),
-                                                                                                        slotAsComponent(53) // belt
-                                                                                                                .margins(Insets.of(1, 1, 1, 1)),
-                                                                                                        slotAsComponent(37) // leggings
+                                                                                                        Containers.verticalFlow(Sizing.content(), Sizing.content())
+                                                                                                                .id("belts_slot_container"),
+                                                                                                        slotAsComponent(48) // custom leggings
                                                                                                                 .margins(Insets.of(1, 1, 1, 1))
                                                                                                 ))
                                                                                                 .surface(Surface.tiled(INVENTORY_SLOT_TEXTURE, 18, 18)),
@@ -189,13 +234,13 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, A
                                                                                                 .surface(Surface.tiled(CHARACTER_BACKGROUND_TEXTURE, 51, 72)),
                                                                                         Containers.verticalFlow(Sizing.content(), Sizing.content())
                                                                                                 .children(List.of(
-                                                                                                        slotAsComponent(48) // first ring
-                                                                                                                .margins(Insets.of(1, 1, 1, 1)),
-                                                                                                        slotAsComponent(49) // second ring
-                                                                                                                .margins(Insets.of(1, 1, 1, 1)),
-                                                                                                        slotAsComponent(44) // gloves
-                                                                                                                .margins(Insets.of(1, 1, 1, 1)),
-                                                                                                        slotAsComponent(36) // boots
+                                                                                                        Containers.verticalFlow(Sizing.content(), Sizing.content())
+                                                                                                                .id("rings_1_slot_container"),
+                                                                                                        Containers.verticalFlow(Sizing.content(), Sizing.content())
+                                                                                                                .id("rings_2_slot_container"),
+                                                                                                        Containers.verticalFlow(Sizing.content(), Sizing.content())
+                                                                                                                .id("gloves_slot_container"),
+                                                                                                        slotAsComponent(49) // custom boots
                                                                                                                 .margins(Insets.of(1, 1, 1, 1))
                                                                                                 ))
                                                                                                 .surface(Surface.tiled(INVENTORY_SLOT_TEXTURE, 18, 18))
@@ -204,22 +249,22 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, A
                                                                         Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
                                                                                 .children(List.of(
                                                                                         Containers.horizontalFlow(Sizing.content(), Sizing.content())
-                                                                                                .children(List.of(
+                                                                                                .children(List.of( // TODO replace grid with verticalFlow
                                                                                                         Containers.grid(Sizing.content(), Sizing.content(), 1, 2)
-                                                                                                                .child(slotAsComponent(40)
-                                                                                                                        .margins(Insets.of(1, 1, 1, 1)), 0, 0)
-                                                                                                                .child(slotAsComponent(41)
-                                                                                                                        .margins(Insets.of(1, 1, 1, 1)), 0, 1)
+                                                                                                                .child(Containers.verticalFlow(Sizing.content(), Sizing.content())
+                                                                                                                        .id("main_hand_slot_container"), 0, 0)
+                                                                                                                .child(slotAsComponent(45) // offhand
+                                                                                                                         .margins(Insets.of(1, 1, 1, 1)), 0, 1)
                                                                                                                 .surface(Surface.tiled(INVENTORY_SLOT_TEXTURE, 18, 18))
                                                                                                 )),
                                                                                         Containers.verticalFlow(Sizing.fixed(15), Sizing.fixed(18)),
                                                                                         Containers.horizontalFlow(Sizing.content(), Sizing.content())
-                                                                                                .children(List.of(
+                                                                                                .children(List.of( // TODO replace grid with verticalFlow
                                                                                                         Containers.grid(Sizing.content(), Sizing.content(), 1, 2)
-                                                                                                                .child(slotAsComponent(42)
-                                                                                                                        .margins(Insets.of(1, 1, 1, 1)), 0, 0)
-                                                                                                                .child(slotAsComponent(43)
-                                                                                                                        .margins(Insets.of(1, 1, 1, 1)), 0, 1)
+                                                                                                                .child(Containers.verticalFlow(Sizing.content(), Sizing.content())
+                                                                                                                        .id("alternative_main_hand_slot_container"), 0, 0)
+                                                                                                                .child(Containers.verticalFlow(Sizing.content(), Sizing.content())
+                                                                                                                        .id("alternative_off_hand_slot_container"), 0, 1)
                                                                                                                 .surface(Surface.tiled(INVENTORY_SLOT_TEXTURE, 18, 18))
                                                                                                 ))
                                                                                 ))
@@ -289,14 +334,99 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, A
         }
         for (int i = 0; i < 9; ++i) {
             component(GridLayout.class, "hotbar_slots_container").child(
-                            slotAsComponent(i)
+                            slotAsComponent(i + 36)
                                     .margins(Insets.of(1, 1, 1, 1)),
                             0,
                             i);
         }
+
+        // disable vanilla crafting slots
+        ((OwoSlotExtension)handler.slots.get(0)).owo$setDisabledOverride(true);
+        ((OwoSlotExtension)handler.slots.get(1)).owo$setDisabledOverride(true);
+        ((OwoSlotExtension)handler.slots.get(2)).owo$setDisabledOverride(true);
+        ((OwoSlotExtension)handler.slots.get(3)).owo$setDisabledOverride(true);
+        ((OwoSlotExtension)handler.slots.get(4)).owo$setDisabledOverride(true);
+
+        // disable vanilla armor slots
+        ((OwoSlotExtension)handler.slots.get(5)).owo$setDisabledOverride(true);
+        ((OwoSlotExtension)handler.slots.get(6)).owo$setDisabledOverride(true);
+        ((OwoSlotExtension)handler.slots.get(7)).owo$setDisabledOverride(true);
+        ((OwoSlotExtension)handler.slots.get(8)).owo$setDisabledOverride(true);
+
+        this.buildTrinketSlots();
     }
 
-    private void buildAttributesScreen() {
+    private void populateTrinketSlotIds(PlayerEntity player) {
+
+        this.trinketSlotIds.clear();
+        this.spellSlotIds.clear();
+        int trinketSlotStart = ((TrinketPlayerScreenHandler) this.handler).trinkets$getTrinketSlotStart();
+        int trinketSlotEnd = ((TrinketPlayerScreenHandler) this.handler).trinkets$getTrinketSlotEnd();
+        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
+        if (trinkets.isPresent()) {
+            for (int i = trinketSlotStart; i < trinketSlotEnd; i++) {
+                Slot s = this.handler.slots.get(i);
+                if (!(s instanceof SurvivalTrinketSlot ts)) {
+                    continue;
+                }
+                SlotType type = ts.getType();
+                if (Objects.equals(type.getGroup(), "alternative_main_hand") && Objects.equals(type.getName(), "alternative_main_hand")) {
+                    this.trinketSlotIds.put("alternative_main_hand", i);
+                } else if (Objects.equals(type.getGroup(), "alternative_off_hand") && Objects.equals(type.getName(), "alternative_off_hand")) {
+                    this.trinketSlotIds.put("alternative_off_hand", i);
+                } else if (Objects.equals(type.getGroup(), "belts") && Objects.equals(type.getName(), "belt")) {
+                    this.trinketSlotIds.put("belts", i);
+                } else if (Objects.equals(type.getGroup(), "gloves") && Objects.equals(type.getName(), "gloves")) {
+                    this.trinketSlotIds.put("gloves", i);
+                } else if (Objects.equals(type.getGroup(), "main_hand") && Objects.equals(type.getName(), "main_hand")) {
+                    this.trinketSlotIds.put("main_hand", i);
+                } else if (Objects.equals(type.getGroup(), "necklaces") && Objects.equals(type.getName(), "necklace")) {
+                    this.trinketSlotIds.put("necklaces", i);
+                } else if (Objects.equals(type.getGroup(), "rings_1") && Objects.equals(type.getName(), "ring")) {
+                    this.trinketSlotIds.put("rings_1", i);
+                } else if (Objects.equals(type.getGroup(), "rings_2") && Objects.equals(type.getName(), "ring")) {
+                    this.trinketSlotIds.put("rings_2", i);
+                } else if (Objects.equals(type.getGroup(), "shoulders") && Objects.equals(type.getName(), "shoulders")) {
+                    this.trinketSlotIds.put("shoulders", i);
+                } else if (Objects.equals(type.getGroup(), "spell_slot_1") && Objects.equals(type.getName(), "spell")) {
+                    this.spellSlotIds.put("spell_slot_1", i);
+                } else if (Objects.equals(type.getGroup(), "spell_slot_2") && Objects.equals(type.getName(), "spell")) {
+                    this.spellSlotIds.put("spell_slot_2", i);
+                } else if (Objects.equals(type.getGroup(), "spell_slot_3") && Objects.equals(type.getName(), "spell")) {
+                    this.spellSlotIds.put("spell_slot_3", i);
+                } else if (Objects.equals(type.getGroup(), "spell_slot_4") && Objects.equals(type.getName(), "spell")) {
+                    this.spellSlotIds.put("spell_slot_4", i);
+                } else if (Objects.equals(type.getGroup(), "spell_slot_5") && Objects.equals(type.getName(), "spell")) {
+                    this.spellSlotIds.put("spell_slot_5", i);
+                } else if (Objects.equals(type.getGroup(), "spell_slot_6") && Objects.equals(type.getName(), "spell")) {
+                    this.spellSlotIds.put("spell_slot_6", i);
+                } else if (Objects.equals(type.getGroup(), "spell_slot_7") && Objects.equals(type.getName(), "spell")) {
+                    this.spellSlotIds.put("spell_slot_7", i);
+                } else if (Objects.equals(type.getGroup(), "spell_slot_8") && Objects.equals(type.getName(), "spell")) {
+                    this.spellSlotIds.put("spell_slot_8", i);
+                } else if (Objects.equals(type.getGroup(), "empty_off_hand") && Objects.equals(type.getName(), "empty_off_hand")) {
+                    this.controlId = i;
+                    ((OwoSlotExtension) this.handler.slots.get(i)).owo$setDisabledOverride(true);
+                } else {
+                    // disable other trinket slots
+                    ((OwoSlotExtension) this.handler.slots.get(i)).owo$setDisabledOverride(true);
+                }
+            }
+        }
+    }
+
+    private void buildTrinketSlots() {
+
+        for (String key : this.trinketSlotIds.keySet()) {
+            this.component(FlowLayout.class, key + "_slot_container").clearChildren();
+            this.component(FlowLayout.class, key + "_slot_container").child(
+                    slotAsComponent(this.trinketSlotIds.get(key))
+                    .margins(Insets.of(1, 1, 1, 1))
+            );
+        }
+    }
+
+    private void buildAttributesScreen(PlayerEntity player) {
         this.component(FlowLayout.class, "additional_inventory_screen_right")
                 .child(Containers.verticalFlow(Sizing.fill(100), Sizing.fill(100))
                         .children(List.of(
@@ -313,7 +443,7 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, A
                                                                 .children(List.of(
                                                                         Components.label(Text.translatable("attribute.name.generic.max_health").append(Text.literal(": ")))
                                                                                 .color(Color.ofArgb(Colors.BLACK)),
-                                                                        Components.label(Text.literal(String.valueOf((int)this.handler.player().getAttributeValue(EntityAttributes.GENERIC_MAX_HEALTH))))
+                                                                        Components.label(Text.literal(String.valueOf((int)player.getAttributeValue(EntityAttributes.GENERIC_MAX_HEALTH))))
                                                                                 .color(Color.ofArgb(Colors.BLACK)).id("attributes_max_health_value")
                                                                 ))
                                                                 .margins(Insets.of(0, 2, 0, 0)),
@@ -321,7 +451,7 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, A
                                                                 .children(List.of(
                                                                         Components.label(Text.translatable("attribute.name.generic.health_regeneration").append(Text.literal(": ")))
                                                                                 .color(Color.ofArgb(Colors.BLACK)),
-                                                                        Components.label(Text.literal(String.valueOf(this.handler.player().getAttributeValue(BetterAdventureModeCoreEntityAttributes.HEALTH_REGENERATION))))
+                                                                        Components.label(Text.literal(String.valueOf(player.getAttributeValue(BetterAdventureModeCoreEntityAttributes.HEALTH_REGENERATION))))
                                                                                 .color(Color.ofArgb(Colors.BLACK)).id("attributes_health_regeneration_value")
                                                                 ))
                                                                 .margins(Insets.of(0, 2, 0, 0)),
@@ -329,7 +459,7 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, A
                                                                 .children(List.of(
                                                                         Components.label(Text.translatable("attribute.name.generic.armor").append(Text.literal(": ")))
                                                                                 .color(Color.ofArgb(Colors.BLACK)),
-                                                                        Components.label(Text.literal(String.valueOf((int)this.handler.player().getAttributeValue(EntityAttributes.GENERIC_ARMOR))))
+                                                                        Components.label(Text.literal(String.valueOf((int)player.getAttributeValue(EntityAttributes.GENERIC_ARMOR))))
                                                                                 .color(Color.ofArgb(Colors.BLACK)).id("attributes_armor_value")
                                                                 ))
                                                                 .margins(Insets.of(0, 2, 0, 0)),
@@ -337,7 +467,7 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, A
                                                                 .children(List.of(
                                                                         Components.label(Text.translatable("attribute.name.generic.armor_toughness").append(Text.literal(": ")))
                                                                                 .color(Color.ofArgb(Colors.BLACK)),
-                                                                        Components.label(Text.literal(String.valueOf(this.handler.player().getAttributeValue(EntityAttributes.GENERIC_ARMOR_TOUGHNESS))))
+                                                                        Components.label(Text.literal(String.valueOf(player.getAttributeValue(EntityAttributes.GENERIC_ARMOR_TOUGHNESS))))
                                                                                 .color(Color.ofArgb(Colors.BLACK)).id("attributes_armor_toughness_value")
                                                                 ))
                                                                 .margins(Insets.of(0, 2, 0, 0)),
@@ -345,7 +475,7 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, A
                                                                 .children(List.of(
                                                                         Components.label(Text.translatable("attribute.name.generic.max_stamina").append(Text.literal(": ")))
                                                                                 .color(Color.ofArgb(Colors.BLACK)),
-                                                                        Components.label(Text.literal(String.valueOf((int)this.handler.player().getAttributeValue(BetterAdventureModeCoreEntityAttributes.MAX_STAMINA))))
+                                                                        Components.label(Text.literal(String.valueOf((int)player.getAttributeValue(BetterAdventureModeCoreEntityAttributes.MAX_STAMINA))))
                                                                                 .color(Color.ofArgb(Colors.BLACK)).id("attributes_max_stamina_value")
                                                                 ))
                                                                 .margins(Insets.of(0, 2, 0, 0)),
@@ -353,7 +483,7 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, A
                                                                 .children(List.of(
                                                                         Components.label(Text.translatable("attribute.name.generic.stamina_regeneration").append(Text.literal(": ")))
                                                                                 .color(Color.ofArgb(Colors.BLACK)),
-                                                                        Components.label(Text.literal(String.valueOf(this.handler.player().getAttributeValue(BetterAdventureModeCoreEntityAttributes.STAMINA_REGENERATION))))
+                                                                        Components.label(Text.literal(String.valueOf(player.getAttributeValue(BetterAdventureModeCoreEntityAttributes.STAMINA_REGENERATION))))
                                                                                 .color(Color.ofArgb(Colors.BLACK)).id("attributes_stamina_regeneration_value")
                                                                 ))
                                                                 .margins(Insets.of(0, 2, 0, 0)),
@@ -361,7 +491,7 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, A
                                                                 .children(List.of(
                                                                         Components.label(Text.translatable("attribute.name.generic.max_mana").append(Text.literal(": ")))
                                                                                 .color(Color.ofArgb(Colors.BLACK)),
-                                                                        Components.label(Text.literal(String.valueOf((int)((DuckPlayerEntityMixin)this.handler.player()).bamcore$getMaxMana())))
+                                                                        Components.label(Text.literal(String.valueOf((int)((DuckPlayerEntityMixin)player).bamcore$getMaxMana())))
                                                                                 .color(Color.ofArgb(Colors.BLACK)).id("attributes_max_mana_value")
                                                                 ))
                                                                 .margins(Insets.of(0, 2, 0, 0)),
@@ -369,7 +499,7 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, A
                                                                 .children(List.of(
                                                                         Components.label(Text.translatable("attribute.name.generic.mana_regeneration").append(Text.literal(": ")))
                                                                                 .color(Color.ofArgb(Colors.BLACK)),
-                                                                        Components.label(Text.literal(String.valueOf(((DuckPlayerEntityMixin)this.handler.player()).bamcore$getManaRegeneration())))
+                                                                        Components.label(Text.literal(String.valueOf(((DuckPlayerEntityMixin)player).bamcore$getManaRegeneration())))
                                                                                 .color(Color.ofArgb(Colors.BLACK)).id("attributes_mana_regeneration_value")
                                                                 ))
                                                                 .margins(Insets.of(0, 2, 0, 0)),
@@ -377,9 +507,9 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, A
                                                                 .children(List.of(
                                                                         Components.label(Text.translatable("gui.adventureInventory.attributes.encumbrance").append(Text.literal(": ")))
                                                                                 .color(Color.ofArgb(Colors.BLACK)),
-                                                                        Components.label(Text.literal(String.valueOf((int)((DuckPlayerEntityMixin)this.handler.player()).bamcore$getEquipmentWeight()))
+                                                                        Components.label(Text.literal(String.valueOf((int)((DuckPlayerEntityMixin)player).bamcore$getEquipmentWeight()))
                                                                                         .append(Text.literal("/"))
-                                                                                        .append(Text.literal(String.valueOf((int)((DuckPlayerEntityMixin)this.handler.player()).bamcore$getMaxEquipmentWeight())))
+                                                                                        .append(Text.literal(String.valueOf((int)((DuckPlayerEntityMixin)player).bamcore$getMaxEquipmentWeight())))
                                                                                 )
                                                                                 .color(Color.ofArgb(Colors.BLACK)).id("attributes_encumbrance_value")
                                                                 ))
@@ -388,7 +518,7 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, A
                                                                 .children(List.of(
                                                                         Components.label(Text.translatable("attribute.name.generic.max_poise").append(Text.literal(": ")))
                                                                                 .color(Color.ofArgb(Colors.BLACK)),
-                                                                        Components.label(Text.literal(String.valueOf(this.handler.player().getAttributeValue(EntityAttributesRegistry.MAX_POISE))))
+                                                                        Components.label(Text.literal(String.valueOf(player.getAttributeValue(EntityAttributesRegistry.MAX_POISE))))
                                                                                 .color(Color.ofArgb(Colors.BLACK)).id("attributes_max_poise_value")
                                                                 ))
                                                                 .margins(Insets.of(0, 2, 0, 0))*/
@@ -438,33 +568,42 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, A
                         .id("status_effects"));
     }
 
-    private void buildSpellSlots() {
-        int activeSpellSlotAmount = (int) this.handler.player().getAttributeInstance(BetterAdventureModeCoreEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT).getValue(); // TODO entity attribute spell slot amount, maybe limit to this.spellSlotIds.size()
-        if (this.oldActiveSpellSlotAmount != activeSpellSlotAmount) {
+    private void buildSpellSlots(PlayerEntity player, boolean rebuildOverride) {
+//        this.populateSpellSlotIds();
+
+        int activeSpellSlotAmount = (int) player.getAttributeInstance(BetterAdventureModeCoreEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT).getValue();
+        if (this.oldActiveSpellSlotAmount != activeSpellSlotAmount || rebuildOverride) {
 
             component(FlowLayout.class, "spell_slots_container").clearChildren();
 
-            component(FlowLayout.class, "spell_slots_container").child(Containers.grid(Sizing.fill(100), Sizing.fixed(36), 2, 4).id("spell_slots_container_grid"));
+            component(FlowLayout.class, "spell_slots_container")
+                    .child(Containers.grid(Sizing.fill(100), Sizing.fixed(36), 2, 4)
+                            .id("spell_slots_container_grid"));
 
-            int[] spellSlotIds = this.handler.getSpellSlotIds();
             // build active slots
             for (int i = 0; i < activeSpellSlotAmount; i++) {
+                // enable active slots
+                ((OwoSlotExtension)this.handler.getSlot(this.spellSlotIds.get("spell_slot_" + (i + 1)))).owo$setDisabledOverride(false);
+
                 this.component(GridLayout.class, "spell_slots_container_grid")
                         .child(Containers.horizontalFlow(Sizing.fixed(18), Sizing.fixed(18))
                                         .child(
-                                                slotAsComponent(spellSlotIds[i])
+                                                slotAsComponent(this.spellSlotIds.get("spell_slot_" + (i + 1)))
                                                         .margins(Insets.of(1, 1, 1, 1))
                                         )
                                         .surface(Surface.tiled(INVENTORY_SLOT_TEXTURE, 18, 18))
-                                        .id("spell_slot_" + i),
+                                        .id("spell_slot_" + (i + 1)),
                                 i < 4 ? 0 : 1,
                                 i < 4 ? i : i - 4
                         );
             }
 
-            this.oldActiveSpellSlotAmount = activeSpellSlotAmount;
+            // disable inactive slots
+            for (int i = activeSpellSlotAmount; i < 8; i++) {
+                ((OwoSlotExtension)this.handler.getSlot(this.spellSlotIds.get("spell_slot_" + (i + 1)))).owo$setDisabledOverride(true);
+            }
 
-            this.handler.trinkets$updateTrinketSlots(true);
+            this.oldActiveSpellSlotAmount = activeSpellSlotAmount;
         }
     }
 
@@ -517,8 +656,8 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, A
         }
     }
 
-    private void updateEffectsScreen() {
-        List<StatusEffectInstance> effectsList = Ordering.natural().sortedCopy(this.client.player.getStatusEffects());
+    private void updateEffectsScreen(PlayerEntity player) {
+        List<StatusEffectInstance> effectsList = Ordering.natural().sortedCopy(player.getStatusEffects());
         List<StatusEffectInstance> visibleEffectsList = new ArrayList<>(Collections.emptyList());
         for (StatusEffectInstance statusEffectInstance : effectsList) {
             if (statusEffectInstance.shouldShowIcon()) {
@@ -710,18 +849,19 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, A
     }
 
     private List<Text> getStatusEffectDescription(StatusEffectInstance statusEffect) {
-        if (statusEffect.getEffectType() instanceof FoodStatusEffect) {
-            List<Text> list = new ArrayList<>(List.of());
-            for (Map.Entry<EntityAttribute, EntityAttributeModifier> entry : statusEffect.getEffectType().getAttributeModifiers().entrySet()) {
-                EntityAttributeInstance entityAttributeInstance = this.client.player.getAttributes().getCustomInstance(entry.getKey());
-                if (entityAttributeInstance == null) continue;
-                // TODO look at equipment tooltip
-//                EntityAttributeModifier entityAttributeModifier = entry.getValue();
-//                entityAttributeInstance.removeModifier(entityAttributeModifier);
-            }
-            list.add(Text.translatable(statusEffect.getEffectType().getTranslationKey() + ".description"));
-            return list;
-        }
+//        if (statusEffect.getEffectType() instanceof FoodStatusEffect) {
+//            List<Text> list = new ArrayList<>(List.of());
+////            List<Text> list = Lists.newArrayList();
+//            for (Map.Entry<EntityAttribute, EntityAttributeModifier> entry : statusEffect.getEffectType().getAttributeModifiers().entrySet()) {
+//                EntityAttributeInstance entityAttributeInstance = this.client.player.getAttributes().getCustomInstance(entry.getKey());
+//                if (entityAttributeInstance == null) continue;
+//                // TODO look at equipment tooltip
+////                EntityAttributeModifier entityAttributeModifier = entry.getValue();
+////                entityAttributeInstance.removeModifier(entityAttributeModifier);
+//            }
+//            list.add(Text.translatable(statusEffect.getEffectType().getTranslationKey() + ".description"));
+//            return list;
+//        }
         return List.of(Text.translatable(statusEffect.getEffectType().getTranslationKey() + ".description"));
     }
 }

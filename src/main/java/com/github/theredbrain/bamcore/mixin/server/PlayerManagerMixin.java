@@ -6,12 +6,10 @@ import com.github.theredbrain.bamcore.network.event.PlayerJoinCallback;
 import dev.emi.trinkets.TrinketPlayerScreenHandler;
 import dev.emi.trinkets.data.EntitySlotLoader;
 import net.minecraft.network.ClientConnection;
-import net.minecraft.network.packet.s2c.play.*;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.stat.Stats;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -179,11 +177,11 @@ public class PlayerManagerMixin {
 //        player.onSpawn();
 //    }
 
-    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayerEntity;onSpawn()V"), method = "onPlayerConnect")
-    private void bam$updateTrinketsInAdventureInventory(ClientConnection connection, ServerPlayerEntity player, CallbackInfo cb) {
-        EntitySlotLoader.SERVER.sync(player);
-        ((TrinketPlayerScreenHandler) ((DuckPlayerEntityMixin) player).bamcore$getInventoryScreenHandler()).trinkets$updateTrinketSlots(false);
-    }
+//    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayerEntity;onSpawn()V"), method = "onPlayerConnect")
+//    private void bam$updateTrinketsInAdventureInventory(ClientConnection connection, ServerPlayerEntity player, CallbackInfo cb) {
+//        EntitySlotLoader.SERVER.sync(player);
+//        ((TrinketPlayerScreenHandler) ((DuckPlayerEntityMixin) player).bamcore$getAdventureInventoryScreenHandler()).trinkets$updateTrinketSlots(false);
+//    }
 
     // TODO temporary until PlayerEvents is updated
     @Inject(at = @At(value = "TAIL"), method = "onPlayerConnect")
@@ -194,14 +192,8 @@ public class PlayerManagerMixin {
         }
     }
 
-    /**
-     * @author TheRedBrain
-     * @reason use adventure screenHandler
-     */
-    @Overwrite
-    public void sendPlayerStatus(ServerPlayerEntity player) {
-        ((DuckPlayerEntityMixin)player).bamcore$getInventoryScreenHandler().syncState();
-        player.markHealthDirty();
-        player.networkHandler.sendPacket(new UpdateSelectedSlotS2CPacket(player.getInventory().selectedSlot));
-    }
+//    @Inject(method = "sendPlayerStatus", at = @At("HEAD"))
+//    public void bamcore$sendPlayerStatus(ServerPlayerEntity player, CallbackInfo ci) {
+//        ((DuckPlayerEntityMixin)player).bamcore$getAdventureInventoryScreenHandler().syncState();
+//    }
 }
