@@ -1,5 +1,6 @@
 package com.github.theredbrain.bamcore.mixin.screen;
 
+import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreEntityAttributes;
 import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreStatusEffects;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
@@ -61,6 +62,7 @@ public abstract class BetterAdventureMode_PlayerScreenHandlerMixin extends Scree
     private PlayerInventory inventory;
     private int spellSlotsX = 98;
     private int spellSlotsY = 62;
+//    private int activeSpellSlotAmount = 0;
 //    private final int[] spellSlotIds = {48, 49, 50, 51, 52, 53, 54, 55};
     private final int trinketSlotAmount = 14;
     @Shadow
@@ -159,6 +161,7 @@ public abstract class BetterAdventureMode_PlayerScreenHandlerMixin extends Scree
                 return Pair.of(BLOCK_ATLAS_TEXTURE, EMPTY_OFFHAND_ARMOR_SLOT);
             }
         });
+//        this.activeSpellSlotAmount = (int) owner.getAttributeInstance(BetterAdventureModeCoreEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT).getValue();
         this.inventory = inventory;
         trinkets$updateTrinketSlots(true);
     }
@@ -168,6 +171,7 @@ public abstract class BetterAdventureMode_PlayerScreenHandlerMixin extends Scree
 //        if (this.owner.getServer() == null) {
 //            return;
 //        }
+//        BetterAdventureModeCore.LOGGER.info("screenHandler activeSpellSlotAmount: " + activeSpellSlotAmount);
         TrinketsApi.getTrinketComponent(owner).ifPresent(trinkets -> {
             if (slotsChanged) trinkets.update();
             Map<String, SlotGroup> groups = trinkets.getGroups();
@@ -190,13 +194,14 @@ public abstract class BetterAdventureMode_PlayerScreenHandlerMixin extends Scree
                     int order = group.getOrder();
                     int id = group.getSlotId();
                     if (id != -1) {
-                        if (this.slots.size() > id) {
-                            Slot slot = this.slots.get(id);
-                            if (!(slot instanceof SurvivalTrinketSlot)) {
-                                groupPos.put(group, new Point(slot.x, slot.y));
-                                groupNums.put(group, -id);
-                            }
-                        }
+//                        if (this.slots.size() > id) {
+//                            Slot slot = this.slots.get(id);
+//                            if (!(slot instanceof SurvivalTrinketSlot)) {
+//                                groupPos.put(group, new Point(slot.x, slot.y));
+//                                groupNums.put(group, -id);
+//                            }
+//                        }
+                        continue;
                     } else {
                         int x;
                         int y;
@@ -289,12 +294,13 @@ public abstract class BetterAdventureMode_PlayerScreenHandlerMixin extends Scree
 
                         } else {
 //                            if (groupNum >= 4) {
-                                x = 4 - (groupNum / 4) * 18;
-                                y = 8 + (groupNum % 4) * 18;
+//                                x = 4 - (groupNum / 4) * 18;
+//                                y = 8 + (groupNum % 4) * 18;
 //                            } else {
 //                                x = 77;
 //                                y = 62 - groupNum * 18;
 //                            }
+                            continue;
                         }
                         groupPos.put(group, new Point(x, y));
                         groupNums.put(group, groupNum);
@@ -338,6 +344,8 @@ public abstract class BetterAdventureMode_PlayerScreenHandlerMixin extends Scree
             slotWidths.clear();
             slotHeights.clear();
             slotTypes.clear();
+
+//            this.activeSpellSlotAmount = (int) owner.getAttributeInstance(BetterAdventureModeCoreEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT).getValue();
 
             // ----------------------------------------
 
@@ -398,7 +406,6 @@ public abstract class BetterAdventureMode_PlayerScreenHandlerMixin extends Scree
 //                    }
 //                }
 //            } else {
-                int activeSpellSlotAmount = (int) owner.getAttributeInstance(BetterAdventureModeCoreEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT).getValue();
                 for (Map.Entry<String, Map<String, TrinketInventory>> entry : trinkets.getInventory().entrySet()) {
                     String groupId = entry.getKey();
                     SlotGroup group = groups.get(groupId);
@@ -428,7 +435,7 @@ public abstract class BetterAdventureMode_PlayerScreenHandlerMixin extends Scree
                             this.addSlot(new SurvivalTrinketSlot(stacks, i, x + pos.x(), y, group, stacks.getSlotType(), i, groupOffset == 1 && i == 0) {
                                 @Override
                                 public boolean isEnabled() {
-                                    return !((Objects.equals(groupId, "spell_slot_1") && activeSpellSlotAmount < 1)
+                                    return super.isEnabled() && !(/*(Objects.equals(groupId, "spell_slot_1") && activeSpellSlotAmount < 1)
                                             || (Objects.equals(groupId, "spell_slot_2") && activeSpellSlotAmount < 2)
                                             || (Objects.equals(groupId, "spell_slot_3") && activeSpellSlotAmount < 3)
                                             || (Objects.equals(groupId, "spell_slot_4") && activeSpellSlotAmount < 4)
@@ -436,7 +443,7 @@ public abstract class BetterAdventureMode_PlayerScreenHandlerMixin extends Scree
                                             || (Objects.equals(groupId, "spell_slot_6") && activeSpellSlotAmount < 6)
                                             || (Objects.equals(groupId, "spell_slot_7") && activeSpellSlotAmount < 7)
                                             || (Objects.equals(groupId, "spell_slot_8") && activeSpellSlotAmount < 8)
-                                            || (order == 0));
+                                            || */(order == 0));
                                 }
                             });
                             slotOffset++;

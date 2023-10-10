@@ -525,6 +525,8 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
     private void buildSpellSlots(PlayerEntity player) {
 
         int activeSpellSlotAmount = (int) player.getAttributeInstance(BetterAdventureModeCoreEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT).getValue();
+//        BetterAdventureModeCore.LOGGER.info("screen activeSpellSlotAmount: " + activeSpellSlotAmount);
+//        BetterAdventureModeCore.LOGGER.info("this.oldActiveSpellSlotAmount: " + this.oldActiveSpellSlotAmount);
         if (this.oldActiveSpellSlotAmount != activeSpellSlotAmount) {
 
             component(FlowLayout.class, "spell_slots_container").clearChildren();
@@ -535,6 +537,9 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
 
             // build active slots
             for (int i = 0; i < activeSpellSlotAmount; i++) {
+                // enable active slots
+                ((OwoSlotExtension)this.handler.getSlot(this.spellSlotIds.get("spell_slot_" + (i + 1)))).owo$setDisabledOverride(false);
+//                BetterAdventureModeCore.LOGGER.info("enabled spell slot: spell_slot_" + (i + 1));
 
                 this.component(GridLayout.class, "spell_slots_container_grid")
                         .child(Containers.horizontalFlow(Sizing.fixed(18), Sizing.fixed(18))
@@ -547,6 +552,12 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
                                 i < 4 ? 0 : 1,
                                 i < 4 ? i : i - 4
                         );
+            }
+
+            // disable inactive slots
+            for (int i = activeSpellSlotAmount; i < 8; i++) {
+                ((OwoSlotExtension)this.handler.getSlot(this.spellSlotIds.get("spell_slot_" + (i + 1)))).owo$setDisabledOverride(true);
+//                BetterAdventureModeCore.LOGGER.info("disabled spell slot: spell_slot_" + (i + 1));
             }
 
             this.oldActiveSpellSlotAmount = activeSpellSlotAmount;
@@ -765,6 +776,8 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
     @Override
     public void drawSlot(DrawContext context, Slot slot) {
         super.drawSlot(context, slot);
+
+        // draw slot overlay
         ItemStack stack = slot.getStack();
         if (!stack.isEmpty() && stack.isDamageable() && stack.getDamage() >= stack.getMaxDamage() - 1) {
             drawDisabledItemSlotHighlight(context, slot.x, slot.y, 0);
