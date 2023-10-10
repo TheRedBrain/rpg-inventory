@@ -1,5 +1,6 @@
 package com.github.theredbrain.bamcore.mixin.entity.player;
 
+import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.api.block.AbstractSetSpawnBlock;
 import com.github.theredbrain.bamcore.block.entity.AreaFillerBlockBlockEntity;
 import com.github.theredbrain.bamcore.block.entity.ChunkLoaderBlockBlockEntity;
@@ -151,17 +152,23 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         ItemStack itemStackMainHand = this.getEquippedStack(EquipmentSlot.MAINHAND);
         ItemStack itemStackOffHand = this.getEquippedStack(EquipmentSlot.OFFHAND);
         if (!itemStackMainHand.isIn(Tags.ATTACK_ITEMS) && this.bamcore$isAdventure()) {
-            this.addStatusEffect(new StatusEffectInstance(BetterAdventureModeCoreStatusEffects.NO_ATTACK_ITEMS_EFFECT, -1, 0, false, false, false));
+            if (!this.hasStatusEffect(BetterAdventureModeCoreStatusEffects.NO_ATTACK_ITEMS_EFFECT)) {
+                this.addStatusEffect(new StatusEffectInstance(BetterAdventureModeCoreStatusEffects.NO_ATTACK_ITEMS_EFFECT, -1, 0, false, false, false));
+            }
         } else {
             this.removeStatusEffect(BetterAdventureModeCoreStatusEffects.NO_ATTACK_ITEMS_EFFECT);
         }
         if (itemStackMainHand.isIn(Tags.TWO_HANDED_ITEMS) && !this.hasStatusEffect(BetterAdventureModeCoreStatusEffects.TWO_HANDED_EFFECT) && this.bamcore$isAdventure()) {
-            this.addStatusEffect(new StatusEffectInstance(BetterAdventureModeCoreStatusEffects.NEED_EMPTY_OFFHAND_EFFECT, -1, 0, false, false, false));
+            if (!this.hasStatusEffect(BetterAdventureModeCoreStatusEffects.NEED_EMPTY_OFFHAND_EFFECT)) {
+                this.addStatusEffect(new StatusEffectInstance(BetterAdventureModeCoreStatusEffects.NEED_EMPTY_OFFHAND_EFFECT, -1, 0, false, false, false));
+            }
         } else {
             this.removeStatusEffect(BetterAdventureModeCoreStatusEffects.NEED_EMPTY_OFFHAND_EFFECT);
         }
         if (mana_regenerating_trinket_equipped) {
-            this.addStatusEffect(new StatusEffectInstance(BetterAdventureModeCoreStatusEffects.MANA_REGENERATION_EFFECT, -1, 0, false, false, false));
+            if (!this.hasStatusEffect(BetterAdventureModeCoreStatusEffects.MANA_REGENERATION_EFFECT)) {
+                this.addStatusEffect(new StatusEffectInstance(BetterAdventureModeCoreStatusEffects.MANA_REGENERATION_EFFECT, -1, 0, false, false, true));
+            }
         } else {
             this.removeStatusEffect(BetterAdventureModeCoreStatusEffects.MANA_REGENERATION_EFFECT);
         }

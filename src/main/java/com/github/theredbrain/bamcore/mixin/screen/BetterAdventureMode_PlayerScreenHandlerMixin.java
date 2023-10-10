@@ -4,6 +4,7 @@ import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreEntityAttr
 import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreStatusEffects;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.bamcore.registry.GameRulesRegistry;
+import com.github.theredbrain.bamcore.registry.Tags;
 import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
 import dev.emi.trinkets.Point;
@@ -69,6 +70,12 @@ public abstract class BetterAdventureMode_PlayerScreenHandlerMixin extends Scree
     @Final
     static Identifier[] EMPTY_ARMOR_SLOT_TEXTURES;
     @Shadow
+    @Final
+    public static Identifier BLOCK_ATLAS_TEXTURE;
+    @Shadow
+    @Final
+    public static Identifier EMPTY_OFFHAND_ARMOR_SLOT;
+    @Shadow
     static void onEquipStack(PlayerEntity player, EquipmentSlot slot, ItemStack newStack, ItemStack currentStack) {
         throw new AssertionError();
     }
@@ -83,7 +90,7 @@ public abstract class BetterAdventureMode_PlayerScreenHandlerMixin extends Scree
     @Inject(method = "<init>", at = @At("TAIL"))
     public void PlayerScreenHandler(PlayerInventory inventory, boolean onServer, PlayerEntity owner, CallbackInfo ci) {
 
-        // this adds a copy of the 4 equipment slots whose behaviour is controlled by status effects and item tags
+        // this adds a copy of the 4 equipment slots and the offhand slot whose behaviour is controlled by status effects and item tags
         int i;
         for (i = 0; i < 4; ++i) {
             final EquipmentSlot equipmentSlot = EQUIPMENT_SLOT_ORDER[i];
@@ -120,6 +127,38 @@ public abstract class BetterAdventureMode_PlayerScreenHandlerMixin extends Scree
                 }
             });
         }
+        this.addSlot(new Slot(inventory, 40, 77, 62){
+
+            @Override
+            public void setStack(ItemStack stack) {
+                onEquipStack(owner, EquipmentSlot.OFFHAND, stack, this.getStack());
+                super.setStack(stack);
+            }
+
+            @Override
+            public int getMaxItemCount() {
+                return 1;
+            }
+
+            @Override
+            public boolean canInsert(ItemStack stack) {
+                return stack.isIn(Tags.OFF_HAND_ITEMS) && (owner.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure()));
+            }
+
+            @Override
+            public boolean canTakeItems(PlayerEntity playerEntity) {
+                ItemStack itemStack = this.getStack();
+                if (!itemStack.isEmpty() && !playerEntity.isCreative() && EnchantmentHelper.hasBindingCurse(itemStack)) {
+                    return false;
+                }
+                return super.canTakeItems(playerEntity) && (owner.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure()));
+            }
+
+            @Override
+            public Pair<Identifier, Identifier> getBackgroundSprite() {
+                return Pair.of(BLOCK_ATLAS_TEXTURE, EMPTY_OFFHAND_ARMOR_SLOT);
+            }
+        });
         this.inventory = inventory;
         trinkets$updateTrinketSlots(true);
     }

@@ -128,7 +128,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         ItemStack emptyOffHandStack = ItemStack.EMPTY;
         boolean bl = !player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.ADVENTURE_BUILDING_EFFECT)
                 && !player.isCreative()
-                && (player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.WEAPONS_SHEATHED_EFFECT) || !BetterAdventureModCoreItemUtils.isUsable(offHandStack));
+                && (player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.WEAPONS_SHEATHED_EFFECT) || !BetterAdventureModCoreItemUtils.isUsable(offHandStack) || player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.TWO_HANDED_EFFECT));
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
             if (trinkets.get().getInventory().get("empty_main_hand") != null) {

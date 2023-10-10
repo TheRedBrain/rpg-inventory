@@ -1,6 +1,6 @@
 {
   "icon": "minecraft:item/empty_armor_slot_shield",
   "tooltip_predicates": [
-    "trinkets:relevant"
+    "trinkets:none"
   ]
 }

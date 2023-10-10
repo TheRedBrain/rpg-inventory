@@ -64,7 +64,7 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
     private boolean showAttributeScreen = false;
     private boolean showStatusEffectsScreen = false;
     private int oldActiveSpellSlotAmount = 0;
-    private int oldEffectsListSize;
+    private int oldEffectsListSize = 0;
     private List<StatusEffectInstance> foodEffectsList = new ArrayList<>(Collections.emptyList());
     private List<StatusEffectInstance> negativeEffectsList = new ArrayList<>(Collections.emptyList());
     private List<StatusEffectInstance> positiveEffectsList = new ArrayList<>(Collections.emptyList());
@@ -210,7 +210,7 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
                                                                                                         Containers.grid(Sizing.content(), Sizing.content(), 1, 2)
                                                                                                                 .child(Containers.verticalFlow(Sizing.content(), Sizing.content())
                                                                                                                         .id("main_hand_slot_container"), 0, 0)
-                                                                                                                .child(slotAsComponent(45) // offhand
+                                                                                                                .child(slotAsComponent(50) // custom offhand
                                                                                                                          .margins(Insets.of(1, 1, 1, 1)), 0, 1)
                                                                                                                 .surface(Surface.tiled(INVENTORY_SLOT_TEXTURE, 18, 18))
                                                                                                 )),
@@ -309,6 +309,9 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
         ((OwoSlotExtension)handler.slots.get(6)).owo$setDisabledOverride(true);
         ((OwoSlotExtension)handler.slots.get(7)).owo$setDisabledOverride(true);
         ((OwoSlotExtension)handler.slots.get(8)).owo$setDisabledOverride(true);
+
+        // disable vanilla offhand slot
+        ((OwoSlotExtension)handler.slots.get(45)).owo$setDisabledOverride(true);
 
         this.buildTrinketSlots();
     }
@@ -610,6 +613,7 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
         int visibleEffectsListSize = visibleEffectsList.size();
         if (visibleEffectsListSize == 0) {
             this.component(FlowLayout.class, "additional_inventory_screen_left").clearChildren();
+            this.oldEffectsListSize = 0;
             return;
         }
         boolean bl = false;
@@ -665,6 +669,7 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
                 updateEffectContainers("neutral");
             }
         }
+        visibleEffectsList.clear();
     }
 
     private void updateEffectContainers(String effectCategory) {

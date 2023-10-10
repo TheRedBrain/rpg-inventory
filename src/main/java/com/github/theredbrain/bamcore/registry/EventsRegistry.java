@@ -2,6 +2,10 @@ package com.github.theredbrain.bamcore.registry;
 
 import com.github.theredbrain.bamcore.network.event.PlayerDeathCallback;
 import com.github.theredbrain.bamcore.network.event.PlayerJoinCallback;
+import dev.emi.trinkets.api.TrinketComponent;
+import dev.emi.trinkets.api.TrinketsApi;
+
+import java.util.Optional;
 
 public class EventsRegistry {
     public static void initializeEvents() {
@@ -21,6 +25,19 @@ public class EventsRegistry {
 //            }
             if (server.getGameRules().getBoolean(GameRulesRegistry.TELEPORT_TO_SPAWN_ON_LOGIN)) {
                 server.getPlayerManager().respawnPlayer(player, true);
+            }
+            Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
+            if (trinkets.isPresent()) {
+                if (trinkets.get().getInventory().get("empty_main_hand") != null) {
+                    if (trinkets.get().getInventory().get("empty_main_hand").get("empty_main_hand") != null) {
+                        trinkets.get().getInventory().get("empty_main_hand").get("empty_main_hand").setStack(0, ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON.getDefaultStack());
+                    }
+                }
+                if (trinkets.get().getInventory().get("empty_off_hand") != null) {
+                    if (trinkets.get().getInventory().get("empty_off_hand").get("empty_off_hand") != null) {
+                        trinkets.get().getInventory().get("empty_off_hand").get("empty_off_hand").setStack(0, ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON.getDefaultStack());
+                    }
+                }
             }
         });
 //        PlayerLeaveCallback.EVENT.register((player, server) -> {

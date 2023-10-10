@@ -33,8 +33,7 @@ public class SheathedOffHandItemFeatureRenderer extends HeldItemFeatureRenderer<
     @Override
     public void render(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, AbstractClientPlayerEntity abstractClientPlayerEntity, float f, float g, float h, float j, float k, float l) {
         PlayerEntity player = (PlayerEntity) abstractClientPlayerEntity;
-        PlayerScreenHandler screenHandler = player.playerScreenHandler;
-        ItemStack offHandStack = screenHandler.getSlot(45).getStack();
+        ItemStack offHandStack = player.getInventory().offHand.get(0);
 
         if (!offHandStack.isEmpty() && (player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.WEAPONS_SHEATHED_EFFECT) || player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.TWO_HANDED_EFFECT))) {
             matrixStack.push();

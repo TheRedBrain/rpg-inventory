@@ -2,6 +2,8 @@ package com.github.theredbrain.bamcore.registry;
 
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.item.*;
+import dev.emi.trinkets.api.TrinketItem;
+import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
@@ -12,6 +14,7 @@ import org.jetbrains.annotations.Nullable;
 public class ItemRegistry {
 
     public static final Item DEFAULT_EMPTY_HAND_WEAPON = registerItem("default_empty_hand_weapon", new EmptyHandWeapon(0, -3.5F, new Item.Settings().maxCount(1)), null);
+    public static final Item TEST_BELT = registerItem("test_belt", new TrinketItem(new FabricItemSettings().maxCount(1)), ItemGroups.COMBAT);
 
     private static Item registerItem(String name, Item item, @Nullable RegistryKey<ItemGroup> itemGroup) {
 
