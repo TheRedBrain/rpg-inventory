@@ -15,7 +15,7 @@
     "item.MiningToolItemMixin",
     "item.SwordItemMixin",
     "item.ToolItemMixin",
-    "screen.PlayerScreenHandlerMixin",
+    "screen.BetterAdventureMode_PlayerScreenHandlerMixin",
     "server.PlayerManagerMixin",
     "server.network.EntityTrackerEntryMixin",
     "server.network.ServerPlayerEntityMixin",

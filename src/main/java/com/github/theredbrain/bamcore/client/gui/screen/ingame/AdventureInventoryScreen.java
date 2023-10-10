@@ -7,9 +7,7 @@ import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreEntityAttr
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerInventoryMixin;
 import com.google.common.collect.Ordering;
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.emi.trinkets.SurvivalTrinketSlot;
-import dev.emi.trinkets.TrinketPlayerScreenHandler;
-import dev.emi.trinkets.TrinketsClient;
+import dev.emi.trinkets.*;
 import dev.emi.trinkets.api.*;
 import io.wispforest.owo.ui.base.BaseOwoHandledScreen;
 import io.wispforest.owo.ui.component.Components;
@@ -31,6 +29,7 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.util.math.Rect2i;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffect;
@@ -66,7 +65,6 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
     private boolean showStatusEffectsScreen = false;
     private int oldActiveSpellSlotAmount = 0;
     private int oldEffectsListSize;
-    private int controlId;
     private List<StatusEffectInstance> foodEffectsList = new ArrayList<>(Collections.emptyList());
     private List<StatusEffectInstance> negativeEffectsList = new ArrayList<>(Collections.emptyList());
     private List<StatusEffectInstance> positiveEffectsList = new ArrayList<>(Collections.emptyList());
@@ -85,48 +83,7 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
     public void handledScreenTick() {
         PlayerEntity player = this.handler.player();
         this.updateAttributeScreen(player);
-
-        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
-        if (trinkets.isPresent()) {
-//            Set<TrinketInventory> inventoriesToSend = trinkets.get().getTrackingUpdates();
-
-//            BetterAdventureModeCore.LOGGER.info("inventoriesToSend.size(): " + inventoriesToSend.size());
-//            if (!trinkets.get().getTrackingUpdates().isEmpty()) {
-//                this.shouldUpdateTrinkets = true;
-//            }
-//            List<Pair<SlotReference, ItemStack>> allEquipped = trinkets.get().getAllEquipped();
-//            if (!(allEquipped.size() == this.oldEquippedTrinkets.size() && allEquipped.containsAll(this.oldEquippedTrinkets) && this.oldEquippedTrinkets.containsAll(allEquipped))) {
-//                BetterAdventureModeCore.LOGGER.info("!allEquipped.equals(this.oldEquippedTrinkets)");
-////                BetterAdventureModeCore.LOGGER.info("allEquipped");
-////                BetterAdventureModeCore.LOGGER.info(allEquipped.toString());
-////                BetterAdventureModeCore.LOGGER.info("this.oldEquippedTrinkets");
-////                BetterAdventureModeCore.LOGGER.info(this.oldEquippedTrinkets.toString());
-//                this.oldEquippedTrinkets.clear();
-//                this.oldEquippedTrinkets.addAll(allEquipped);
-//                this.shouldUpdateTrinkets = true;
-//            }
-        }
-
-        if (((OwoSlotExtension) this.handler.slots.get(this.controlId)).owo$getDisabledOverride() == false) {
-            BetterAdventureModeCore.LOGGER.info("shouldUpdateTrinketSlots");
-//            ((OwoSlotExtension) this.handler.slots.get(this.controlId)).owo$setDisabledOverride(true);
-            this.populateTrinketSlotIds(player);
-            this.buildTrinketSlots();
-            this.buildSpellSlots(player, true);
-        }
-
-//        if (this.handler.slots.get(this.controlId).isEnabled() == true) {
-//            BetterAdventureModeCore.LOGGER.info("shouldUpdateTrinketSlots");
-//            ((OwoSlotExtension) this.handler.slots.get(this.controlId)).owo$setDisabledOverride(true);
-//        }
-//        if (((DuckPlayerEntityMixin) player).shouldUpdateTrinketSlots()) {
-//            BetterAdventureModeCore.LOGGER.info("shouldUpdateTrinketSlots");
-//            this.populateTrinketSlotIds(player);
-//            this.buildTrinketSlots();
-//            ((DuckPlayerEntityMixin) player).setShouldUpdateTrinketSlots(false);
-//        }
-
-        this.buildSpellSlots(player, false);
+        this.buildSpellSlots(player);
         this.updateEffectsScreen(player);
     }
 
@@ -404,12 +361,6 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
                     this.spellSlotIds.put("spell_slot_7", i);
                 } else if (Objects.equals(type.getGroup(), "spell_slot_8") && Objects.equals(type.getName(), "spell")) {
                     this.spellSlotIds.put("spell_slot_8", i);
-                } else if (Objects.equals(type.getGroup(), "empty_off_hand") && Objects.equals(type.getName(), "empty_off_hand")) {
-                    this.controlId = i;
-                    ((OwoSlotExtension) this.handler.slots.get(i)).owo$setDisabledOverride(true);
-                } else {
-                    // disable other trinket slots
-                    ((OwoSlotExtension) this.handler.slots.get(i)).owo$setDisabledOverride(true);
                 }
             }
         }
@@ -568,11 +519,10 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
                         .id("status_effects"));
     }
 
-    private void buildSpellSlots(PlayerEntity player, boolean rebuildOverride) {
-//        this.populateSpellSlotIds();
+    private void buildSpellSlots(PlayerEntity player) {
 
         int activeSpellSlotAmount = (int) player.getAttributeInstance(BetterAdventureModeCoreEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT).getValue();
-        if (this.oldActiveSpellSlotAmount != activeSpellSlotAmount || rebuildOverride) {
+        if (this.oldActiveSpellSlotAmount != activeSpellSlotAmount) {
 
             component(FlowLayout.class, "spell_slots_container").clearChildren();
 
@@ -582,8 +532,6 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
 
             // build active slots
             for (int i = 0; i < activeSpellSlotAmount; i++) {
-                // enable active slots
-                ((OwoSlotExtension)this.handler.getSlot(this.spellSlotIds.get("spell_slot_" + (i + 1)))).owo$setDisabledOverride(false);
 
                 this.component(GridLayout.class, "spell_slots_container_grid")
                         .child(Containers.horizontalFlow(Sizing.fixed(18), Sizing.fixed(18))
@@ -596,11 +544,6 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
                                 i < 4 ? 0 : 1,
                                 i < 4 ? i : i - 4
                         );
-            }
-
-            // disable inactive slots
-            for (int i = activeSpellSlotAmount; i < 8; i++) {
-                ((OwoSlotExtension)this.handler.getSlot(this.spellSlotIds.get("spell_slot_" + (i + 1)))).owo$setDisabledOverride(true);
             }
 
             this.oldActiveSpellSlotAmount = activeSpellSlotAmount;
