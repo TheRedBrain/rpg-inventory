@@ -1,11 +1,13 @@
 package com.github.theredbrain.bamcore.registry;
 
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
-import com.github.theredbrain.bamcore.api.item.ModifySpellSlotAmountRingItem;
+import com.github.theredbrain.bamcore.api.item.ModifyEntityAttributeRingItem;
+import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreEntityAttributes;
 import com.github.theredbrain.bamcore.item.*;
 import dev.emi.trinkets.api.TrinketItem;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -16,7 +18,7 @@ public class ItemRegistry {
 
     public static final Item DEFAULT_EMPTY_HAND_WEAPON = registerItem("default_empty_hand_weapon", new EmptyHandWeapon(0, -3.5F, new Item.Settings().maxCount(1)), null);
     public static final Item TEST_BELT = registerItem("test_belt", new TrinketItem(new FabricItemSettings().maxCount(1)), ItemGroups.COMBAT);
-    public static final Item THREE_SPELL_SLOT_RING = registerItem("three_spell_slot_ring", new ModifySpellSlotAmountRingItem(3, new FabricItemSettings().maxCount(1)), ItemGroups.COMBAT);
+    public static final Item THREE_SPELL_SLOT_RING = registerItem("three_spell_slot_ring", new ModifyEntityAttributeRingItem(BetterAdventureModeCoreEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT, "active_spell_slot_amount", 3, EntityAttributeModifier.Operation.ADDITION, new FabricItemSettings().maxCount(1)), ItemGroups.COMBAT);
 
 
     private static Item registerItem(String name, Item item, @Nullable RegistryKey<ItemGroup> itemGroup) {

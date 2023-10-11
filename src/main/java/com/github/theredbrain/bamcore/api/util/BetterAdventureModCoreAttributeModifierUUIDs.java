@@ -22,4 +22,5 @@ public class BetterAdventureModCoreAttributeModifierUUIDs {
     public static final String NECKLACE_SLOT = MathHelper.randomUuid().toString();
     public static final String SHOULDERS_SLOT = MathHelper.randomUuid().toString();
     //endregion
+    public static final String WEAPON_EQUIPMENT_WEIGHT = MathHelper.randomUuid().toString();
 }

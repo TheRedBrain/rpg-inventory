@@ -1,7 +1,6 @@
 package com.github.theredbrain.bamcore.api.item;
 
 import com.github.theredbrain.bamcore.api.util.BetterAdventureModCoreAttributeModifierUUIDs;
-import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreEntityAttributes;
 import com.google.common.collect.Multimap;
 import dev.emi.trinkets.api.SlotReference;
 import dev.emi.trinkets.api.TrinketItem;
@@ -12,11 +11,17 @@ import net.minecraft.item.ItemStack;
 
 import java.util.UUID;
 
-public class ModifySpellSlotAmountRingItem extends TrinketItem {
-    private final double spellSlotAmount;
-    public ModifySpellSlotAmountRingItem(int spellSlotAmount, Settings settings) {
+public class ModifyEntityAttributeRingItem extends TrinketItem {
+    private final EntityAttribute attribute;
+    private final String modifierName;
+    private final double amount;
+    private final EntityAttributeModifier.Operation operation;
+    public ModifyEntityAttributeRingItem(EntityAttribute attribute, String modifierName, double amount, EntityAttributeModifier.Operation operation, Settings settings) {
         super(settings);
-        this.spellSlotAmount = spellSlotAmount;
+        this.attribute = attribute;
+        this.modifierName = modifierName;
+        this.amount = amount;
+        this.operation = operation;
     }
 
     @Override
@@ -28,14 +33,14 @@ public class ModifySpellSlotAmountRingItem extends TrinketItem {
         Multimap<EntityAttribute, EntityAttributeModifier> map = super.getModifiers(stack, slot, entity, uuid);
         switch (slot.inventory().getSlotType().getGroup()) {
             case "rings_1":
-                map.put(BetterAdventureModeCoreEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT,
+                map.put(this.attribute,
                         new EntityAttributeModifier(UUID.fromString(BetterAdventureModCoreAttributeModifierUUIDs.RING_SLOT_1),
-                                "active_spell_slot_amount", this.spellSlotAmount, EntityAttributeModifier.Operation.ADDITION));
+                                this.modifierName, this.amount, this.operation));
                 break;
             case "rings_2":
-                map.put(BetterAdventureModeCoreEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT,
+                map.put(this.attribute,
                         new EntityAttributeModifier(UUID.fromString(BetterAdventureModCoreAttributeModifierUUIDs.RING_SLOT_2),
-                                "active_spell_slot_amount", this.spellSlotAmount, EntityAttributeModifier.Operation.ADDITION));
+                                this.modifierName, this.amount, this.operation));
                 break;
         }
         return map;
