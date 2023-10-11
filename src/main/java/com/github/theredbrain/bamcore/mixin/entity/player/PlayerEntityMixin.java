@@ -6,6 +6,8 @@ import com.github.theredbrain.bamcore.block.entity.AreaFillerBlockBlockEntity;
 import com.github.theredbrain.bamcore.block.entity.ChunkLoaderBlockBlockEntity;
 import com.github.theredbrain.bamcore.block.entity.StructurePlacerBlockBlockEntity;
 import com.github.theredbrain.bamcore.api.effect.FoodStatusEffect;
+import com.github.theredbrain.bamcore.entity.DamageUtility;
+import com.github.theredbrain.bamcore.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreEntityAttributes;
@@ -20,6 +22,7 @@ import net.minecraft.block.BedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.RespawnAnchorBlock;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -32,8 +35,10 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.inventory.EnderChestInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
@@ -42,8 +47,10 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
+import net.minecraft.world.event.GameEvent;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -55,7 +62,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 @Mixin(PlayerEntity.class)
-public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlayerEntityMixin {
+public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlayerEntityMixin, DuckLivingEntityMixin {
 
     @Shadow
     @Final
@@ -80,6 +87,10 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     @Shadow public abstract void incrementStat(Identifier stat);
 
     @Shadow public abstract void increaseStat(Identifier stat, int amount);
+
+    @Shadow public abstract void disableShield(boolean sprinting);
+
+    @Shadow protected abstract void dropShoulderEntities();
 
     private static final TrackedData<Float> MANA = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Float> STAMINA = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.FLOAT);
@@ -252,6 +263,54 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         }
     }
 
+//    /**
+//     * @author TheRedBrain
+//     * @reason
+//     */
+//    @Overwrite
+//    public boolean damage(DamageSource source, float amount) {
+//        if (this.isInvulnerableTo(source)) {
+//            return false;
+//        }
+//        if (this.abilities.invulnerable && !source.isIn(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
+//            return false;
+//        }
+//        this.despawnCounter = 0;
+//        if (this.isDead()) {
+//            return false;
+//        }
+//        if (!this.getWorld().isClient) {
+//            this.dropShoulderEntities();
+//        }
+//        if (source.isScaledWithDifficulty()) {
+//            if (this.getWorld().getDifficulty() == Difficulty.PEACEFUL) {
+//                amount = 0.0f;
+//            }
+//            if (this.getWorld().getDifficulty() == Difficulty.EASY) {
+//                amount = Math.min(amount / 2.0f + 1.0f, amount);
+//            }
+//            if (this.getWorld().getDifficulty() == Difficulty.HARD) {
+//                amount = amount * 3.0f / 2.0f;
+//            }
+//        }
+//        if (amount == 0.0f) {
+//            return false;
+//        }
+//
+//        if (source.isIn(Tags.STAGGERS) && false/*TODO implement way to declare stagger immunity; if immune or hasStatusEffect(STAGGERED)*/) {
+//            ((DuckLivingEntityMixin)this).bamcore$addPoise(amount);
+//            if (((DuckLivingEntityMixin)this).bamcore$getPoise() >= this.getMaxHealth() * 0.5/*TODO implement way to declare stagger multiplier*/) {
+//                this.addStatusEffect(new StatusEffectInstance(BetterAdventureModeCoreStatusEffects.STAGGERED, 20/*TODO implement way to declare stagger duration*/, 0, false, false, true));
+//            }
+//        }
+//
+//        boolean bl = super.damage(source, amount);
+//        if (bl) {
+//            this.stopUsingItem();
+//        }
+//        return bl;
+//    }
+
 //    protected void takeShieldHit(LivingEntity attacker) {
 //        super.takeShieldHit(attacker);
 //        if (attacker.disablesShield()) {
@@ -259,6 +318,68 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 //        }
 //
 //    }
+
+//    @Override
+//    public boolean blockedByShield(DamageSource source) {
+//        Vec3d vec3d;
+//        PersistentProjectileEntity persistentProjectileEntity;
+//        Entity entity = source.getSource();
+//        boolean bl = false;
+//        if (entity instanceof PersistentProjectileEntity && (persistentProjectileEntity = (PersistentProjectileEntity)entity).getPierceLevel() > 0) {
+//            bl = true;
+//        }
+//        if (!source.isIn(DamageTypeTags.BYPASSES_SHIELD) && this.isBlocking() && !bl && (vec3d = source.getPosition()) != null) {
+//            Vec3d vec3d2 = this.getRotationVec(1.0f);
+//            Vec3d vec3d3 = vec3d.relativize(this.getPos()).normalize();
+//            vec3d3 = new Vec3d(vec3d3.x, 0.0, vec3d3.z);
+//            if (vec3d3.dotProduct(vec3d2) < 0.0) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
+
+    /**
+     * @author TheRedBrain
+     * @reason
+     */
+    @Overwrite
+    public void applyDamage(DamageSource source, float amount) {
+        if (this.isInvulnerableTo(source)) {
+            return;
+        }
+//        BetterAdventureModeCore.LOGGER.info("try apply stagger");
+        // apply stagger
+        if (source.isIn(Tags.STAGGERS) && !(this.getStaggerLimitMultiplier() == -1 || this.hasStatusEffect(BetterAdventureModeCoreStatusEffects.STAGGERED))) {
+            float appliedStagger = (float) (amount * DamageUtility.getStaggerDamageMultiplierForDamageType(source));
+//            BetterAdventureModeCore.LOGGER.info("appliedStagger: " + appliedStagger);
+            this.bamcore$addPoise(appliedStagger);
+            if (this.bamcore$getPoise() >= this.getMaxHealth() * this.getStaggerLimitMultiplier()) {
+//                BetterAdventureModeCore.LOGGER.info("appliedStagger: " + appliedStagger);
+                this.addStatusEffect(new StatusEffectInstance(BetterAdventureModeCoreStatusEffects.STAGGERED, this.getStaggerDuration(), 0, false, false, true));
+            }
+        }
+
+        amount = this.applyArmorToDamage(source, amount);
+        float f = amount = this.modifyAppliedDamage(source, amount);
+        amount = Math.max(amount - this.getAbsorptionAmount(), 0.0f);
+        this.setAbsorptionAmount(this.getAbsorptionAmount() - (f - amount));
+        float g = f - amount;
+        if (g > 0.0f && g < 3.4028235E37f) {
+            this.increaseStat(Stats.DAMAGE_ABSORBED, Math.round(g * 10.0f));
+        }
+        if (amount == 0.0f) {
+            return;
+        }
+        // exhaustion is not used
+//        this.addExhaustion(source.getExhaustion());
+        this.getDamageTracker().onDamage(source, amount);
+        this.setHealth(this.getHealth() - amount);
+        if (amount < 3.4028235E37f) {
+            this.increaseStat(Stats.DAMAGE_TAKEN, Math.round(amount * 10.0f));
+        }
+        this.emitGameEvent(GameEvent.ENTITY_DAMAGE);
+    }
 
     @Inject(method = "getEquippedStack", at = @At("RETURN"), cancellable = true)
     public void bamcore$getEquippedStack(EquipmentSlot slot, CallbackInfoReturnable<ItemStack> cir) {
@@ -559,6 +680,15 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         } else {
             this.isAdventureHotbarCleanedUp = false;
         }
+    }
+    @Override
+    public int getStaggerDuration() {
+        return 24;
+    }
+
+    @Override
+    public double getStaggerLimitMultiplier() {
+        return 0.4;
     }
 
 }

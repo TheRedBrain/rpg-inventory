@@ -1,5 +1,7 @@
 package com.github.theredbrain.bamcore.mixin.trinkets;
 
+import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreEntityAttributes;
 import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreStatusEffects;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import dev.emi.trinkets.SurvivalTrinketSlot;
@@ -25,15 +27,18 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.Objects;
+
 @Mixin(SurvivalTrinketSlot.class)
-public abstract class SurvivalTrinketSlotMixin extends Slot implements OwoSlotExtension, SlotAccessor {
+public abstract class SurvivalTrinketSlotMixin extends Slot/* implements OwoSlotExtension, SlotAccessor*/ {
 
     @Shadow @Final private TrinketInventory trinketInventory;
-    @Unique
-    private boolean owo$disabledOverride = false;
-
-    @Unique
-    private @Nullable PositionedRectangle owo$scissorArea = null;
+    @Shadow @Final private SlotGroup group;
+//    @Unique
+//    private boolean owo$disabledOverride = false;
+//
+//    @Unique
+//    private @Nullable PositionedRectangle owo$scissorArea = null;
 
     public SurvivalTrinketSlotMixin(Inventory inventory, int index, int x, int y) {
         super(inventory, index, x, y);
@@ -106,26 +111,35 @@ public abstract class SurvivalTrinketSlotMixin extends Slot implements OwoSlotEx
      */
     @Inject(method = "isEnabled", at = @At("RETURN"), cancellable = true)
     public void isEnabled(CallbackInfoReturnable<Boolean> cir) {
-        cir.setReturnValue(cir.getReturnValue() && !this.owo$disabledOverride);
+        cir.setReturnValue(cir.getReturnValue()/* && !this.owo$disabledOverride*/
+                && !((Objects.equals(this.group.getName(), "spell_slot_1") && trinketInventory.getComponent().getEntity().getAttributeValue(BetterAdventureModeCoreEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT) < 1)
+                || (Objects.equals(this.group.getName(), "spell_slot_2") && trinketInventory.getComponent().getEntity().getAttributeValue(BetterAdventureModeCoreEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT) < 2)
+                || (Objects.equals(this.group.getName(), "spell_slot_3") && trinketInventory.getComponent().getEntity().getAttributeValue(BetterAdventureModeCoreEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT) < 3)
+                || (Objects.equals(this.group.getName(), "spell_slot_4") && trinketInventory.getComponent().getEntity().getAttributeValue(BetterAdventureModeCoreEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT) < 4)
+                || (Objects.equals(this.group.getName(), "spell_slot_5") && trinketInventory.getComponent().getEntity().getAttributeValue(BetterAdventureModeCoreEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT) < 5)
+                || (Objects.equals(this.group.getName(), "spell_slot_6") && trinketInventory.getComponent().getEntity().getAttributeValue(BetterAdventureModeCoreEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT) < 6)
+                || (Objects.equals(this.group.getName(), "spell_slot_7") && trinketInventory.getComponent().getEntity().getAttributeValue(BetterAdventureModeCoreEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT) < 7)
+                || (Objects.equals(this.group.getName(), "spell_slot_8") && trinketInventory.getComponent().getEntity().getAttributeValue(BetterAdventureModeCoreEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT) < 8)
+                || (this.group.getOrder() == 0)));
     }
 
-    @Override
-    public void owo$setDisabledOverride(boolean disabled) {
-        this.owo$disabledOverride = disabled;
-    }
-
-    @Override
-    public boolean owo$getDisabledOverride() {
-        return this.owo$disabledOverride;
-    }
-
-    @Override
-    public void owo$setScissorArea(@Nullable PositionedRectangle scissor) {
-        this.owo$scissorArea = scissor;
-    }
-
-    @Override
-    public @Nullable PositionedRectangle owo$getScissorArea() {
-        return this.owo$scissorArea;
-    }
+//    @Override
+//    public void owo$setDisabledOverride(boolean disabled) {
+//        this.owo$disabledOverride = disabled;
+//    }
+//
+//    @Override
+//    public boolean owo$getDisabledOverride() {
+//        return this.owo$disabledOverride;
+//    }
+//
+//    @Override
+//    public void owo$setScissorArea(@Nullable PositionedRectangle scissor) {
+//        this.owo$scissorArea = scissor;
+//    }
+//
+//    @Override
+//    public @Nullable PositionedRectangle owo$getScissorArea() {
+//        return this.owo$scissorArea;
+//    }
 }

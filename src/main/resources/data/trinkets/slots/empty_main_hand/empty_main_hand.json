@@ -1,5 +1,6 @@
 {
   "icon": "bamcore:item/empty_armor_slot_sword",
+  "drop_rule": "keep",
   "tooltip_predicates": [
     "trinkets:none"
   ]

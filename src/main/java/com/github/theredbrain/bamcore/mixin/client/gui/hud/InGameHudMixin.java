@@ -1,8 +1,11 @@
 package com.github.theredbrain.bamcore.mixin.client.gui.hud;
 
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreStatusEffects;
+import com.github.theredbrain.bamcore.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerInventoryMixin;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -11,6 +14,9 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.option.AttackIndicator;
+import net.minecraft.client.option.GameOptions;
+import net.minecraft.client.render.Camera;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffects;
@@ -22,6 +28,8 @@ import net.minecraft.util.Arm;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RotationAxis;
+import net.minecraft.world.GameMode;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -146,17 +154,20 @@ public abstract class InGameHudMixin {
             int maxStamina = MathHelper.ceil(((DuckPlayerEntityMixin)playerEntity).bamcore$getMaxStamina());
             int mana = MathHelper.ceil(((DuckPlayerEntityMixin)playerEntity).bamcore$getMana());
             int maxMana = MathHelper.ceil(((DuckPlayerEntityMixin)playerEntity).bamcore$getMaxMana());
+            int poise = MathHelper.ceil(((DuckLivingEntityMixin) playerEntity).bamcore$getPoise());
+            double poiseLimitMultiplier = ((DuckLivingEntityMixin) playerEntity).getStaggerLimitMultiplier();
 
             int attributeBarX = this.scaledWidth / 2 - 91;
             int attributeBarY = this.scaledHeight - 32 + 3;
-            int normalizedHealthRatio = (int)((double) health / Math.max(maxHealth, 1) * 182);
-            int normalizedStaminaRatio = (int)((double) stamina / Math.max(maxStamina, 1) * 182);
-            int normalizedManaRatio = (int)((double) mana / Math.max(maxMana, 1) * 182);
+            int normalizedHealthRatio = (int) (((double) health / Math.max(maxHealth, 1)) * 182);
+            int normalizedStaminaRatio = (int)(((double) stamina / Math.max(maxStamina, 1)) * 182);
+            int normalizedManaRatio = (int)(((double) mana / Math.max(maxMana, 1)) * 182);
+            int normalizedPoiseRatio = (int)(((double) poise/* * 10*/ / Math.max(MathHelper.ceil(maxHealth * poiseLimitMultiplier/* * 10*/), 1)) * 62);
 
             this.client.getProfiler().push("health_bar");
             context.drawTexture(CUSTOM_ICONS, attributeBarX, attributeBarY, 0, 0, 182, 5);
             if (normalizedHealthRatio > 0) {
-                context.drawTexture(CUSTOM_ICONS, attributeBarX, attributeBarY, 0, 15, normalizedHealthRatio, 5);
+                context.drawTexture(CUSTOM_ICONS, attributeBarX, attributeBarY, 0, 20, normalizedHealthRatio, 5);
             }
 
             this.client.getProfiler().swap("stamina_bar");
@@ -170,6 +181,14 @@ public abstract class InGameHudMixin {
                 context.drawTexture(CUSTOM_ICONS, attributeBarX, attributeBarY - 14, 0, 0, 182, 5);
                 if (normalizedManaRatio > 0) {
                     context.drawTexture(CUSTOM_ICONS, attributeBarX, attributeBarY - 14, 0, 10, normalizedManaRatio, 5);
+                }
+            }
+
+            if (poise > 0/* && !playerEntity.hasStatusEffect(BetterAdventureModeCoreStatusEffects.STAGGERED)*/) {
+                this.client.getProfiler().swap("stagger_bar");
+                context.drawTexture(CUSTOM_ICONS, attributeBarX + 60, this.scaledHeight / 2 - 7 + 25, 0, 25, 62, 5);
+                if (normalizedPoiseRatio > 0) {
+                    context.drawTexture(CUSTOM_ICONS, attributeBarX + 60, this.scaledHeight / 2 - 7 + 25, 0, 40, normalizedPoiseRatio, 5);
                 }
             }
             this.client.getProfiler().pop();
