@@ -16,6 +16,7 @@ import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreStatusEffe
 import com.github.theredbrain.bamcore.registry.Tags;
 import com.mojang.authlib.GameProfile;
 import com.mojang.datafixers.util.Pair;
+import dev.emi.trinkets.TrinketPlayerScreenHandler;
 import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketsApi;
 import net.minecraft.block.BedBlock;
@@ -92,6 +93,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
     @Shadow protected abstract void dropShoulderEntities();
 
+    @Shadow public abstract boolean isCreative();
+
     private static final TrackedData<Float> MANA = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Float> STAMINA = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.FLOAT);
 
@@ -143,8 +146,15 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
     @Inject(method = "tick", at = @At("TAIL"))
     public void bamcore$tick(CallbackInfo ci) {
-//        if (!this.getWorld().isClient && this.currentScreenHandler == this.playerScreenHandler) {
-//            this.currentScreenHandler = this.adventureInventoryScreenHandler;
+
+//        // this is a workaround to allow different trinket slot positions based on the game mode
+//        // the screenHandler can not check for the game mode of a player but if the player has a status effect
+//        if (this.isCreative() && !this.hasStatusEffect(BetterAdventureModeCoreStatusEffects.IS_CREATIVE)) {
+//            this.addStatusEffect(new StatusEffectInstance(BetterAdventureModeCoreStatusEffects.IS_CREATIVE, -1, 0, false, false, false));
+//            ((TrinketPlayerScreenHandler)this.playerScreenHandler).trinkets$updateTrinketSlots(true);
+//        } else if (!this.isCreative() && this.hasStatusEffect(BetterAdventureModeCoreStatusEffects.IS_CREATIVE)) {
+//            this.removeStatusEffect(BetterAdventureModeCoreStatusEffects.IS_CREATIVE);
+//            ((TrinketPlayerScreenHandler)this.playerScreenHandler).trinkets$updateTrinketSlots(true);
 //        }
         if (!this.getWorld().isClient) {
             this.ejectItemsFromInactiveSpellSlots();

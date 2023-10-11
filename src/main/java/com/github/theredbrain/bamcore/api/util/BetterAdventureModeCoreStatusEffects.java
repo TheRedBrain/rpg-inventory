@@ -28,6 +28,7 @@ public class BetterAdventureModeCoreStatusEffects {
     public static final StatusEffect WEAPONS_SHEATHED_EFFECT = new WeaponsSheathedStatusEffect();
     public static final StatusEffect TWO_HANDED_EFFECT = new WeaponsSheathedStatusEffect();
     public static final StatusEffect STAGGERED = new StaggeredStatusEffect();
+    public static final StatusEffect IS_CREATIVE = new IsCreativeStatusEffect();
 
     public static void registerEffects() {
         ActionImpairing.configure(NO_ATTACK_ITEMS_EFFECT, new EntityActionsAllowed(true, true, new EntityActionsAllowed.PlayersAllowed(false, true, true), new EntityActionsAllowed.MobsAllowed(true), EntityActionsAllowed.SemanticType.NONE));
@@ -52,5 +53,6 @@ public class BetterAdventureModeCoreStatusEffects {
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("weapons_sheathed_effect"), WEAPONS_SHEATHED_EFFECT);
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("two_handed_effect"), TWO_HANDED_EFFECT);
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("staggered"), STAGGERED);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("is_creative"), IS_CREATIVE);
     }
 }

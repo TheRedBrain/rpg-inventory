@@ -721,7 +721,7 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
 
     @Override
     protected void drawForeground(DrawContext context, int mouseX, int mouseY) {
-        TrinketScreenManager.drawActiveGroup(context);
+//        TrinketScreenManager.drawActiveGroup(context);
     }
 
     @Override
@@ -737,7 +737,7 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
         int i = this.x;
         int j = this.y;
         drawEntity(i + 51, j + 93, 30, (float)(i + 51) - this.mouseX, (float)(j + 93 - 50) - this.mouseY, this.client.player);
-        TrinketScreenManager.drawExtraGroups(context);
+//        TrinketScreenManager.drawExtraGroups(context);
     }
 
     public static void drawEntity(int x, int y, int size, float mouseX, float mouseY, LivingEntity entity) {
@@ -840,29 +840,38 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
         return ((TrinketPlayerScreenHandler)this.handler);
     }
 
+//    @Override
+//    public Rect2i trinkets$getGroupRect(SlotGroup group) {
+//        int order = group.getOrder();
+//        return switch (order) {
+//            case 1 -> new Rect2i(59, 80, 17, 17); // alternative main hand
+//            case 2 -> new Rect2i(77, 80, 17, 17); // alternative off hand
+//            case 3 -> new Rect2i(8, 44, 17, 17); // belts
+//            case 4 -> new Rect2i(77, 44, 17, 17); // gloves
+//            case 5 -> new Rect2i(8, 80, 17, 17); // main hand
+//            case 6 -> new Rect2i(52, -10, 17, 17); // necklaces
+//            case 7 -> new Rect2i(77, 8, 17, 17); // rings 1
+//            case 8 -> new Rect2i(77, 26, 17, 17); // rings 2
+//            case 9 -> new Rect2i(8, 8, 17, 17); // shoulders
+//            case 10 -> new Rect2i(98, 62, 17, 17); // spell slot 1
+//            case 11 -> new Rect2i(98 + 18, 62, 17, 17); // spell slot 2
+//            case 12 -> new Rect2i(98 + 36, 62, 17, 17); // spell slot 3
+//            case 13 -> new Rect2i(98 + 54, 62, 17, 17); // spell slot 4
+//            case 14 -> new Rect2i(98, 62 + 18, 17, 17); // spell slot 5
+//            case 15 -> new Rect2i(98 + 18, 62 + 18, 17, 17); // spell slot 6
+//            case 16 -> new Rect2i(98 + 36, 62 + 18, 17, 17); // spell slot 7
+//            case 17 -> new Rect2i(98 + 54, 62 + 18, 17, 17); // spell slot 8
+//            default -> new Rect2i(0, 0, 0, 0);
+//        };
+//    }
+
     @Override
     public Rect2i trinkets$getGroupRect(SlotGroup group) {
-        int order = group.getOrder();
-        return switch (order) {
-            case 1 -> new Rect2i(59, 80, 17, 17); // alternative main hand
-            case 2 -> new Rect2i(77, 80, 17, 17); // alternative off hand
-            case 3 -> new Rect2i(8, 44, 17, 17); // belts
-            case 4 -> new Rect2i(77, 44, 17, 17); // gloves
-            case 5 -> new Rect2i(8, 80, 17, 17); // main hand
-            case 6 -> new Rect2i(52, -10, 17, 17); // necklaces
-            case 7 -> new Rect2i(77, 8, 17, 17); // rings 1
-            case 8 -> new Rect2i(77, 26, 17, 17); // rings 2
-            case 9 -> new Rect2i(8, 8, 17, 17); // shoulders
-            case 10 -> new Rect2i(98, 62, 17, 17); // spell slot 1
-            case 11 -> new Rect2i(98 + 18, 62, 17, 17); // spell slot 2
-            case 12 -> new Rect2i(98 + 36, 62, 17, 17); // spell slot 3
-            case 13 -> new Rect2i(98 + 54, 62, 17, 17); // spell slot 4
-            case 14 -> new Rect2i(98, 62 + 18, 17, 17); // spell slot 5
-            case 15 -> new Rect2i(98 + 18, 62 + 18, 17, 17); // spell slot 6
-            case 16 -> new Rect2i(98 + 36, 62 + 18, 17, 17); // spell slot 7
-            case 17 -> new Rect2i(98 + 54, 62 + 18, 17, 17); // spell slot 8
-            default -> new Rect2i(0, 0, 0, 0);
-        };
+        Point pos = ((TrinketPlayerScreenHandler) handler).trinkets$getGroupPos(group);
+        if (pos != null) {
+            return new Rect2i(pos.x() - 1, pos.y() - 1, 17, 17);
+        }
+        return new Rect2i(0, 0, 0, 0);
     }
 
     @Override
