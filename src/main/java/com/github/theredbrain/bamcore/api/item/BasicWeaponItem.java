@@ -27,6 +27,8 @@ import java.util.UUID;
 public class BasicWeaponItem extends Item implements ICustomWeapon {
 
     private final RegistryKey<DamageType> damageTypeRegistryKey;
+    @Nullable
+    private final RegistryKey<DamageType> twoHandedDamageTypeRegistryKey;
     private final float attackDamage;
     private final float attackSpeed;
     private final int staminaCost;
@@ -39,9 +41,10 @@ public class BasicWeaponItem extends Item implements ICustomWeapon {
     //  not one value for attackDamage and damageTypeRegistryKey but a map
     //  relevant methods in Entity etc will check for this
     //  not good for compatibility
-    public BasicWeaponItem(RegistryKey<DamageType> damageTypeRegistryKey, float attackDamage, float attackSpeed, int staminaCost, float weight, Settings settings) {
+    public BasicWeaponItem(RegistryKey<DamageType> damageTypeRegistryKey, @Nullable RegistryKey<DamageType> twoHandedDamageTypeRegistryKey, float attackDamage, float attackSpeed, int staminaCost, float weight, Settings settings) {
         super(settings);
         this.damageTypeRegistryKey = damageTypeRegistryKey;
+        this.twoHandedDamageTypeRegistryKey = twoHandedDamageTypeRegistryKey;
         this.attackDamage = attackDamage;
         this.attackSpeed = attackSpeed;
         this.staminaCost = staminaCost;
@@ -106,7 +109,10 @@ public class BasicWeaponItem extends Item implements ICustomWeapon {
     }
 
     @Override
-    public RegistryKey<DamageType> getDamageTypeRegistryKey() {
+    public RegistryKey<DamageType> getDamageTypeRegistryKey(boolean twoHanded) {
+        if (twoHanded && this.twoHandedDamageTypeRegistryKey != null) {
+            return this.twoHandedDamageTypeRegistryKey;
+        }
         return damageTypeRegistryKey;
     }
 }

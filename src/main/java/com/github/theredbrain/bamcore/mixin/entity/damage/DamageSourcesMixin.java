@@ -1,6 +1,7 @@
 package com.github.theredbrain.bamcore.mixin.entity.damage;
 
 import com.github.theredbrain.bamcore.api.item.ICustomWeapon;
+import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreStatusEffects;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageSources;
@@ -27,7 +28,7 @@ public abstract class DamageSourcesMixin {
     public DamageSource playerAttack(PlayerEntity attacker) {
         ItemStack mainHandStack = attacker.getMainHandStack();
         if (mainHandStack.getItem() instanceof ICustomWeapon) {
-            return this.create(((ICustomWeapon)mainHandStack.getItem()).getDamageTypeRegistryKey(), attacker);
+            return this.create(((ICustomWeapon)mainHandStack.getItem()).getDamageTypeRegistryKey(attacker.hasStatusEffect(BetterAdventureModeCoreStatusEffects.TWO_HANDED_EFFECT)), attacker);
         }
         return this.create(DamageTypes.PLAYER_ATTACK, attacker);
     }

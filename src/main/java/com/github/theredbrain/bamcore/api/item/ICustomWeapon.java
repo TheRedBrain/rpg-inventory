@@ -7,5 +7,5 @@ public interface ICustomWeapon {
 
     int getStaminaCost();
 
-    RegistryKey<DamageType> getDamageTypeRegistryKey();
+    RegistryKey<DamageType> getDamageTypeRegistryKey(boolean twoHanded);
 }

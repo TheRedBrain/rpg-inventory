@@ -14,9 +14,11 @@ import org.lwjgl.glfw.GLFW;
 public class KeyBindingsRegistry {
 
     public static KeyBinding sheatheWeapons;
+    public static KeyBinding twoHandMainWeapon;
     public static KeyBinding swapMainHand;
     public static KeyBinding swapOffHand;
     public static boolean sheatheWeaponsBoolean;
+    public static boolean twoHandMainWeaponBoolean;
     public static boolean swapMainHandBoolean;
     public static boolean swapOffHandBoolean;
 
@@ -25,6 +27,12 @@ public class KeyBindingsRegistry {
                 "key.bamcore.sheatheWeapons",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_F,
+                "category.bamcore.category"
+        ));
+        KeyBindingsRegistry.twoHandMainWeapon = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.bamcore.twoHandMainWeapon",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_G,
                 "category.bamcore.category"
         ));
         KeyBindingsRegistry.swapMainHand = KeyBindingHelper.registerKeyBinding(new KeyBinding(
@@ -58,18 +66,29 @@ public class KeyBindingsRegistry {
             }
             if (KeyBindingsRegistry.sheatheWeapons.wasPressed()) {
                 if (!sheatheWeaponsBoolean) {
-                    sheatheWeapons(client, true);
+                    sheatheWeapons(client);
                 }
                 sheatheWeaponsBoolean = true;
             } else if (sheatheWeaponsBoolean) {
                 sheatheWeaponsBoolean = false;
             }
+            if (KeyBindingsRegistry.twoHandMainWeapon.wasPressed()) {
+                if (!twoHandMainWeaponBoolean) {
+                    twoHandMainWeapon(client);
+                }
+                twoHandMainWeaponBoolean = true;
+            } else if (twoHandMainWeaponBoolean) {
+                twoHandMainWeaponBoolean = false;
+            }
         });
     }
-    public static void sheatheWeapons(MinecraftClient client, boolean canSheathe) {
+    public static void sheatheWeapons(MinecraftClient client) {
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-        buf.writeBoolean(canSheathe);
         client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModCoreServerPacket.SHEATHE_WEAPONS_PACKET, buf));
+    }
+    public static void twoHandMainWeapon(MinecraftClient client) {
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+        client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModCoreServerPacket.TWO_HAND_MAIN_WEAPON_PACKET, buf));
     }
 
     public static void syncSlotSwapHand(MinecraftClient client, boolean mainHand) {
