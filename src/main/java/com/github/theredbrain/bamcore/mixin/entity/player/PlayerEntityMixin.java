@@ -1,8 +1,7 @@
 package com.github.theredbrain.bamcore.mixin.entity.player;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.api.block.AbstractSetSpawnBlock;
-import com.github.theredbrain.bamcore.api.item.BasicWeaponItem;
+import com.github.theredbrain.bamcore.api.item.BetterAdventureMode_BasicShieldItem;
 import com.github.theredbrain.bamcore.api.item.ICustomWeapon;
 import com.github.theredbrain.bamcore.block.entity.AreaFillerBlockBlockEntity;
 import com.github.theredbrain.bamcore.block.entity.ChunkLoaderBlockBlockEntity;
@@ -18,46 +17,31 @@ import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreStatusEffe
 import com.github.theredbrain.bamcore.registry.Tags;
 import com.mojang.authlib.GameProfile;
 import com.mojang.datafixers.util.Pair;
-import dev.emi.trinkets.TrinketPlayerScreenHandler;
 import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketsApi;
-import net.bettercombat.api.AttackHand;
-import net.bettercombat.logic.PlayerAttackHelper;
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.RespawnAnchorBlock;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.boss.dragon.EnderDragonPart;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.inventory.EnderChestInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.SwordItem;
-import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
-import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
 import net.minecraft.world.Difficulty;
@@ -67,7 +51,6 @@ import net.minecraft.world.event.GameEvent;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -123,14 +106,17 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     private static final TrackedData<Float> MANA = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Float> STAMINA = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.FLOAT);
 
-    @Unique
-    private int oldActiveSpellSlotAmount = 0;
-
-    @Unique
-    private boolean shouldUpdateTrinketSlots = false;
+//    @Unique
+//    private int oldActiveSpellSlotAmount = 0;
+//
+//    @Unique
+//    private boolean shouldUpdateTrinketSlots = false;
 
     @Unique
     private boolean isAdventureHotbarCleanedUp = false;
+
+    @Unique
+    private int blockingTime = 0;
 
 //    @Unique
 //    private AdventureInventoryScreenHandler adventureInventoryScreenHandler;
@@ -166,7 +152,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     @Inject(method = "initDataTracker", at = @At("TAIL"))
     public void bamcore$initDataTracker(CallbackInfo ci) {
         this.dataTracker.startTracking(MANA, 0.0F);
-        this.dataTracker.startTracking(STAMINA, 0.0F);
+        this.dataTracker.startTracking(STAMINA, 10.0F);
     }
 
     @Inject(method = "tick", at = @At("TAIL"))
@@ -181,6 +167,11 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 //            this.removeStatusEffect(BetterAdventureModeCoreStatusEffects.IS_CREATIVE);
 //            ((TrinketPlayerScreenHandler)this.playerScreenHandler).trinkets$updateTrinketSlots(true);
 //        }
+        if (this.isBlocking()) {
+            this.blockingTime++;
+        } else if (this.blockingTime > 0) {
+            this.blockingTime = 0;
+        }
         if (!this.getWorld().isClient) {
             this.ejectItemsFromInactiveSpellSlots();
             this.ejectNonHotbarItemsFromHotbar();
@@ -219,6 +210,12 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
             this.removeStatusEffect(BetterAdventureModeCoreStatusEffects.MANA_REGENERATION_EFFECT);
         }
     }
+
+//    // overrides the vanilla mechanic of avoiding all damage by blocking
+//    @Override
+//    public boolean blockedByShield(DamageSource source) {
+//        return false;
+//    }
 
     /**
      * @author TheRedBrain
@@ -289,14 +286,138 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         }
     }
 
-    // taking damage interrupts eating food, drinking potions, etc
-    @Inject(method = "damage", at = @At("RETURN"))
-    public void bamcore$damage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-        boolean bl = cir.getReturnValue();
-        if (bl) {
-            this.stopUsingItem();
+    /**
+     * @author TheRedBrain
+     * @reason
+     */
+    @Overwrite
+    public boolean damage(DamageSource source, float amount) {
+        if (this.isInvulnerableTo(source)) {
+            return false;
         }
+        if (this.abilities.invulnerable && !source.isIn(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
+            return false;
+        }
+        this.despawnCounter = 0;
+        if (this.isDead()) {
+            return false;
+        }
+        if (!this.getWorld().isClient) {
+            this.dropShoulderEntities();
+        }
+        if (source.isScaledWithDifficulty()) {
+            if (this.getWorld().getDifficulty() == Difficulty.PEACEFUL) {
+                amount = 0.0f;
+            }
+            if (this.getWorld().getDifficulty() == Difficulty.EASY) {
+                amount = Math.min(amount / 2.0f + 1.0f, amount);
+            }
+            if (this.getWorld().getDifficulty() == Difficulty.HARD) {
+                amount = amount * 3.0f / 2.0f;
+            }
+        }
+
+        // shield overhaul
+        ItemStack shieldItemStack = this.getOffHandStack();
+        if (this.isBlocking() && this.bamcore$getStamina() > 0 && shieldItemStack.getItem() instanceof BetterAdventureMode_BasicShieldItem) {
+            if (this.blockingTime <= 20 && this.bamcore$getStamina() >= 20 && source.getAttacker() != null && source.getAttacker() instanceof LivingEntity && ((BetterAdventureMode_BasicShieldItem) shieldItemStack.getItem()).canParry()) {
+                // try to parry the attack
+                float blockedDamage = this.calculateBlockedDamage(amount, shieldItemStack, true);
+                this.bamcore$addStamina(-4);
+
+                if (this.bamcore$getStamina() >= 0) {
+
+                    boolean isStaggered = false;
+                    // apply stagger based on left over damage
+                    if (source.isIn(Tags.STAGGERS) && !(this.getStaggerLimitMultiplier() == -1 || this.hasStatusEffect(BetterAdventureModeCoreStatusEffects.STAGGERED))) {
+                        float appliedStagger = (float) (Math.max((amount - blockedDamage), 0) * DamageUtility.getStaggerDamageMultiplierForDamageType(source));
+                        this.bamcore$addPoise(appliedStagger);
+                        if (this.bamcore$getPoise() >= this.getMaxHealth() * this.getStaggerLimitMultiplier()) {
+                            this.addStatusEffect(new StatusEffectInstance(BetterAdventureModeCoreStatusEffects.STAGGERED, this.getStaggerDuration(), 0, false, false, true));
+                            isStaggered = true;
+                        }
+                    }
+
+                    // parry was successful
+                    if (!isStaggered) {
+                        amount -= blockedDamage;
+
+                        // only one attack can be parried ?
+                        this.blockingTime = this.blockingTime + 20;
+
+                        // attacker is staggered
+                        int attackerStaggerDuration = ((DuckLivingEntityMixin) source.getAttacker()).getStaggerDuration();
+                        if (attackerStaggerDuration != -1) {
+                            ((LivingEntity) source.getAttacker()).addStatusEffect(new StatusEffectInstance(BetterAdventureModeCoreStatusEffects.STAGGERED, attackerStaggerDuration, 0, false, true, true));
+                        }
+
+                        this.getWorld().sendEntityStatus(this, EntityStatuses.BLOCK_WITH_SHIELD);
+                    } else {
+                        this.getWorld().sendEntityStatus(this, EntityStatuses.BREAK_SHIELD);
+                    }
+                }
+            } else {
+                // try to block the attack
+                float blockedDamage = this.calculateBlockedDamage(amount, shieldItemStack, false);
+                this.bamcore$addStamina(-2);
+
+                if (this.bamcore$getStamina() >= 0) {
+
+                    boolean isStaggered = false;
+                    // apply stagger based on left over damage
+                    if (source.isIn(Tags.STAGGERS) && !(this.getStaggerLimitMultiplier() == -1 || this.hasStatusEffect(BetterAdventureModeCoreStatusEffects.STAGGERED))) {
+                        float appliedStagger = (float) (Math.max((amount - blockedDamage), 0) * DamageUtility.getStaggerDamageMultiplierForDamageType(source));
+                        this.bamcore$addPoise(appliedStagger);
+                        if (this.bamcore$getPoise() >= this.getMaxHealth() * this.getStaggerLimitMultiplier()) {
+                            this.addStatusEffect(new StatusEffectInstance(BetterAdventureModeCoreStatusEffects.STAGGERED, this.getStaggerDuration(), 0, false, false, true));
+                            isStaggered = true;
+                        }
+                    }
+
+                    // block was successful
+                    if (!isStaggered) {
+                        amount -= blockedDamage;
+
+                        //
+//                        Entity attacker = ;
+                        if (source.getAttacker() != null || source.getAttacker() instanceof LivingEntity) {
+                            LivingEntity attacker = (LivingEntity) source.getAttacker();
+                            attacker.takeKnockback(((BetterAdventureMode_BasicShieldItem)shieldItemStack.getItem()).getBlockForce(), attacker.getX() - this.getX(), attacker.getZ() - this.getZ());
+                        }
+
+                        this.getWorld().sendEntityStatus(this, EntityStatuses.BLOCK_WITH_SHIELD);
+                    } else {
+                        this.getWorld().sendEntityStatus(this, EntityStatuses.BREAK_SHIELD);
+                    }
+                }
+            }
+        }
+        if (amount == 0.0f) {
+            return false;
+        }
+        return super.damage(source, amount);
     }
+
+    // TODO come up with a better formula
+    private float calculateBlockedDamage(float damageAmount, ItemStack blockingItem, boolean isParry) {
+        float blockedDamage;
+        float blockArmor = (float) (((BetterAdventureMode_BasicShieldItem) blockingItem.getItem()).getBlockArmor() * (isParry ? ((BetterAdventureMode_BasicShieldItem) blockingItem.getItem()).getParryBonus() : 1));
+        if (damageAmount <= blockArmor) {
+            blockedDamage = damageAmount;
+        } else {
+            blockedDamage = blockArmor;
+        }
+        return blockedDamage;
+    }
+
+    // taking damage interrupts eating food, drinking potions, etc
+//    @Inject(method = "damage", at = @At("RETURN"))
+//    public void bamcore$damage_return(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+//        boolean bl = cir.getReturnValue();
+//        if (bl) {
+//            this.stopUsingItem();
+//        }
+//    }
 
 //    protected void takeShieldHit(LivingEntity attacker) {
 //        super.takeShieldHit(attacker);
@@ -306,8 +427,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 //
 //    }
 
-//    @Override
-//    public boolean blockedByShield(DamageSource source) {
+    @Override
+    public boolean blockedByShield(DamageSource source) {
 //        Vec3d vec3d;
 //        PersistentProjectileEntity persistentProjectileEntity;
 //        Entity entity = source.getSource();
@@ -323,8 +444,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 //                return true;
 //            }
 //        }
-//        return false;
-//    }
+        return false;
+    }
 
     /**
      * @author TheRedBrain

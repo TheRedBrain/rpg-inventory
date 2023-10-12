@@ -12,6 +12,9 @@
     "minecraft:diamond_sword",
     "minecraft:golden_sword",
     "minecraft:netherite_sword",
-    "minecraft:shield"
+    "minecraft:shield",
+    "bamcore:test_buckler",
+    "bamcore:test_normal_shield",
+    "bamcore:test_tower_shield"
   ]
 }

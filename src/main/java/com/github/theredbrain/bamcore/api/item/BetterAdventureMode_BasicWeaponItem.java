@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public class BasicWeaponItem extends Item implements ICustomWeapon {
+public class BetterAdventureMode_BasicWeaponItem extends Item implements ICustomWeapon {
 
     private final RegistryKey<DamageType> damageTypeRegistryKey;
     @Nullable
@@ -41,7 +41,7 @@ public class BasicWeaponItem extends Item implements ICustomWeapon {
     //  not one value for attackDamage and damageTypeRegistryKey but a map
     //  relevant methods in Entity etc will check for this
     //  not good for compatibility
-    public BasicWeaponItem(RegistryKey<DamageType> damageTypeRegistryKey, @Nullable RegistryKey<DamageType> twoHandedDamageTypeRegistryKey, float attackDamage, float attackSpeed, int staminaCost, float weight, Settings settings) {
+    public BetterAdventureMode_BasicWeaponItem(RegistryKey<DamageType> damageTypeRegistryKey, @Nullable RegistryKey<DamageType> twoHandedDamageTypeRegistryKey, float attackDamage, float attackSpeed, int staminaCost, float weight, Settings settings) {
         super(settings);
         this.damageTypeRegistryKey = damageTypeRegistryKey;
         this.twoHandedDamageTypeRegistryKey = twoHandedDamageTypeRegistryKey;
@@ -51,6 +51,15 @@ public class BasicWeaponItem extends Item implements ICustomWeapon {
         this.weight = weight;
         this.attributeModifiers = buildModifiers();
     }
+
+    /**
+     * {@return whether this items can lose durability}
+     */
+    @Override
+    public boolean isDamageable() {
+        return this.getMaxDamage() > 1;
+    }
+
     /**
      * Gets or creates the translation key of this item when it is not protecting.
      */
@@ -99,7 +108,7 @@ public class BasicWeaponItem extends Item implements ICustomWeapon {
         ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
         builder.put(EntityAttributes.GENERIC_ATTACK_DAMAGE, new EntityAttributeModifier(ATTACK_DAMAGE_MODIFIER_ID, "Weapon modifier", (double)this.attackDamage, EntityAttributeModifier.Operation.ADDITION));
         builder.put(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_ID, "Weapon modifier", (double)this.attackSpeed, EntityAttributeModifier.Operation.ADDITION));
-        builder.put(BetterAdventureModeCoreEntityAttributes.EQUIPMENT_WEIGHT, new EntityAttributeModifier(UUID.fromString(BetterAdventureModCoreAttributeModifierUUIDs.WEAPON_EQUIPMENT_WEIGHT), "Weapon modifier", (double)this.weight, EntityAttributeModifier.Operation.ADDITION));
+        builder.put(BetterAdventureModeCoreEntityAttributes.EQUIPMENT_WEIGHT, new EntityAttributeModifier(UUID.fromString(BetterAdventureModCoreAttributeModifierUUIDs.MAIN_HAND_EQUIPMENT_WEIGHT), "Weapon modifier", (double)this.weight, EntityAttributeModifier.Operation.ADDITION));
         return builder.build();
     }
 
