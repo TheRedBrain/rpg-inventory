@@ -2,6 +2,8 @@ package com.github.theredbrain.bamcore.mixin.entity.player;
 
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.api.block.AbstractSetSpawnBlock;
+import com.github.theredbrain.bamcore.api.item.BasicWeaponItem;
+import com.github.theredbrain.bamcore.api.item.ICustomWeapon;
 import com.github.theredbrain.bamcore.block.entity.AreaFillerBlockBlockEntity;
 import com.github.theredbrain.bamcore.block.entity.ChunkLoaderBlockBlockEntity;
 import com.github.theredbrain.bamcore.block.entity.StructurePlacerBlockBlockEntity;
@@ -19,33 +21,43 @@ import com.mojang.datafixers.util.Pair;
 import dev.emi.trinkets.TrinketPlayerScreenHandler;
 import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketsApi;
+import net.bettercombat.api.AttackHand;
+import net.bettercombat.logic.PlayerAttackHelper;
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.RespawnAnchorBlock;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
+import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.boss.dragon.EnderDragonPart;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.inventory.EnderChestInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.SwordItem;
+import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
+import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
 import net.minecraft.world.Difficulty;
@@ -55,6 +67,7 @@ import net.minecraft.world.event.GameEvent;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -62,7 +75,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-@Mixin(PlayerEntity.class)
+@Mixin(value = PlayerEntity.class, priority = 1050)
 public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlayerEntityMixin, DuckLivingEntityMixin {
 
     @Shadow
@@ -94,6 +107,18 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     @Shadow protected abstract void dropShoulderEntities();
 
     @Shadow public abstract boolean isCreative();
+
+    @Shadow public abstract float getAttackCooldownProgress(float baseTime);
+
+    @Shadow public abstract void resetLastAttackedTicks();
+
+    @Shadow public abstract void spawnSweepAttackParticles();
+
+    @Shadow public abstract void addCritParticles(Entity target);
+
+    @Shadow public abstract void addEnchantedHitParticles(Entity target);
+
+    @Shadow public abstract void addExhaustion(float exhaustion);
 
     private static final TrackedData<Float> MANA = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Float> STAMINA = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.FLOAT);
@@ -273,54 +298,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         }
     }
 
-//    /**
-//     * @author TheRedBrain
-//     * @reason
-//     */
-//    @Overwrite
-//    public boolean damage(DamageSource source, float amount) {
-//        if (this.isInvulnerableTo(source)) {
-//            return false;
-//        }
-//        if (this.abilities.invulnerable && !source.isIn(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
-//            return false;
-//        }
-//        this.despawnCounter = 0;
-//        if (this.isDead()) {
-//            return false;
-//        }
-//        if (!this.getWorld().isClient) {
-//            this.dropShoulderEntities();
-//        }
-//        if (source.isScaledWithDifficulty()) {
-//            if (this.getWorld().getDifficulty() == Difficulty.PEACEFUL) {
-//                amount = 0.0f;
-//            }
-//            if (this.getWorld().getDifficulty() == Difficulty.EASY) {
-//                amount = Math.min(amount / 2.0f + 1.0f, amount);
-//            }
-//            if (this.getWorld().getDifficulty() == Difficulty.HARD) {
-//                amount = amount * 3.0f / 2.0f;
-//            }
-//        }
-//        if (amount == 0.0f) {
-//            return false;
-//        }
-//
-//        if (source.isIn(Tags.STAGGERS) && false/*TODO implement way to declare stagger immunity; if immune or hasStatusEffect(STAGGERED)*/) {
-//            ((DuckLivingEntityMixin)this).bamcore$addPoise(amount);
-//            if (((DuckLivingEntityMixin)this).bamcore$getPoise() >= this.getMaxHealth() * 0.5/*TODO implement way to declare stagger multiplier*/) {
-//                this.addStatusEffect(new StatusEffectInstance(BetterAdventureModeCoreStatusEffects.STAGGERED, 20/*TODO implement way to declare stagger duration*/, 0, false, false, true));
-//            }
-//        }
-//
-//        boolean bl = super.damage(source, amount);
-//        if (bl) {
-//            this.stopUsingItem();
-//        }
-//        return bl;
-//    }
-
 //    protected void takeShieldHit(LivingEntity attacker) {
 //        super.takeShieldHit(attacker);
 //        if (attacker.disablesShield()) {
@@ -389,6 +366,20 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
             this.increaseStat(Stats.DAMAGE_TAKEN, Math.round(amount * 10.0f));
         }
         this.emitGameEvent(GameEvent.ENTITY_DAMAGE);
+    }
+
+    @Inject(
+            method = {"attack"},
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/entity/player/PlayerEntity;addExhaustion(F)V"
+            )
+    )
+    public void addExhaustion_Redirect(Entity target, CallbackInfo ci) {
+        ItemStack mainHandStack = this.getMainHandStack();
+        if (mainHandStack.getItem() instanceof ICustomWeapon) {
+            this.bamcore$addStamina(((ICustomWeapon)mainHandStack.getItem()).getStaminaCost());
+        }
     }
 
     @Inject(method = "getEquippedStack", at = @At("RETURN"), cancellable = true)

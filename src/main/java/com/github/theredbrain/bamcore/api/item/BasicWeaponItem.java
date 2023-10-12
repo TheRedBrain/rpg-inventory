@@ -15,6 +15,7 @@ import net.minecraft.entity.damage.DamageType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
@@ -23,9 +24,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public class BasicWeaponItem extends Item {
+public class BasicWeaponItem extends Item implements ICustomWeapon {
 
-    private final DamageType damageType;
+    private final RegistryKey<DamageType> damageTypeRegistryKey;
     private final float attackDamage;
     private final float attackSpeed;
     private final int staminaCost;
@@ -34,11 +35,13 @@ public class BasicWeaponItem extends Item {
     @Nullable
     private String translationKeyBroken;
 
-    // TODO not one value for attackDamage and damageType but a map
+    // TODO idea:
+    //  not one value for attackDamage and damageTypeRegistryKey but a map
     //  relevant methods in Entity etc will check for this
-    public BasicWeaponItem(DamageType damageType, float attackDamage, float attackSpeed, int staminaCost, float weight, Settings settings) {
+    //  not good for compatibility
+    public BasicWeaponItem(RegistryKey<DamageType> damageTypeRegistryKey, float attackDamage, float attackSpeed, int staminaCost, float weight, Settings settings) {
         super(settings);
-        this.damageType = damageType;
+        this.damageTypeRegistryKey = damageTypeRegistryKey;
         this.attackDamage = attackDamage;
         this.attackSpeed = attackSpeed;
         this.staminaCost = staminaCost;
@@ -97,11 +100,13 @@ public class BasicWeaponItem extends Item {
         return builder.build();
     }
 
+    @Override
     public int getStaminaCost() {
         return staminaCost;
     }
 
-    public DamageType getDamageType() {
-        return damageType;
+    @Override
+    public RegistryKey<DamageType> getDamageTypeRegistryKey() {
+        return damageTypeRegistryKey;
     }
 }
