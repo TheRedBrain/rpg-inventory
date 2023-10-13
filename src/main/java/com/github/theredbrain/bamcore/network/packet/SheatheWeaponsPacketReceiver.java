@@ -23,7 +23,10 @@ public class SheatheWeaponsPacketReceiver implements ServerPlayNetworking.PlayCh
                 if (player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.WEAPONS_SHEATHED_EFFECT)) {
                     player.removeStatusEffect(BetterAdventureModeCoreStatusEffects.WEAPONS_SHEATHED_EFFECT);
                 } else {
-                    player.addStatusEffect(new StatusEffectInstance(BetterAdventureModeCoreStatusEffects.WEAPONS_SHEATHED_EFFECT, -1, 0, false, false, false));
+                    player.addStatusEffect(new StatusEffectInstance(BetterAdventureModeCoreStatusEffects.WEAPONS_SHEATHED_EFFECT, -1, 0, false, false, true));
+                    if (player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.TWO_HANDED_EFFECT)) {
+                        player.removeStatusEffect(BetterAdventureModeCoreStatusEffects.TWO_HANDED_EFFECT);
+                    }
                 }
             }
             // TODO play sounds, maybe when getting and losing the effect

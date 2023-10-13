@@ -1,5 +1,7 @@
 package com.github.theredbrain.bamcore.mixin.bettercombat;
 
+import com.github.theredbrain.bamcore.api.item.BetterAdventureMode_BasicShieldItem;
+import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreStatusEffects;
 import net.bettercombat.api.WeaponAttributes.Condition;
 import com.github.theredbrain.bamcore.registry.Tags;
 import net.bettercombat.api.WeaponAttributes;
@@ -131,7 +133,7 @@ public class PlayerAttackHelperMixin {
                     return true;
                 case OFF_HAND_SHIELD:
                     offhandStack = player.getOffHandStack();
-                    if (offhandStack == null && !(offhandStack.getItem() instanceof ShieldItem)) {
+                    if (offhandStack == null && !((offhandStack.getItem() instanceof ShieldItem) || (offhandStack.getItem() instanceof BetterAdventureMode_BasicShieldItem))) {
                         return false;
                     }
 
@@ -141,9 +143,11 @@ public class PlayerAttackHelperMixin {
                 case OFF_HAND_ONLY:
                     return isOffHandAttack;
                 case MOUNTED:
-                    return player.getVehicle() != null;
+                    // repurposed for two-handed attacks
+                    return player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.TWO_HANDED_EFFECT);
                 case NOT_MOUNTED:
-                    return player.getVehicle() == null;
+                    // repurposed for non-two-handed attacks
+                    return !player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.TWO_HANDED_EFFECT);
                 default:
                     return true;
             }

@@ -19,11 +19,13 @@ public class TwoHandMainWeaponPacketReceiver implements ServerPlayNetworking.Pla
 
             if (((DuckPlayerEntityMixin) player).bamcore$getStamina() <= 0) {
                 player.sendMessageToClient(Text.translatable("hud.message.staminaTooLow"), true);
+            } else if (player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.WEAPONS_SHEATHED_EFFECT)) {
+                player.sendMessageToClient(Text.translatable("hud.message.weaponsAreSheathed"), true);
             } else {
                 if (player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.TWO_HANDED_EFFECT)) {
                     player.removeStatusEffect(BetterAdventureModeCoreStatusEffects.TWO_HANDED_EFFECT);
                 } else {
-                    player.addStatusEffect(new StatusEffectInstance(BetterAdventureModeCoreStatusEffects.TWO_HANDED_EFFECT, -1, 0, false, false, false));
+                    player.addStatusEffect(new StatusEffectInstance(BetterAdventureModeCoreStatusEffects.TWO_HANDED_EFFECT, -1, 0, false, false, true));
                 }
             }
             // TODO play sounds, maybe when getting and losing the effect

@@ -1,5 +1,6 @@
 package com.github.theredbrain.bamcore.client.render.renderer;
 
+import com.github.theredbrain.bamcore.api.item.BetterAdventureMode_BasicWeaponItem;
 import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreStatusEffects;
 import dev.emi.trinkets.SurvivalTrinketSlot;
 import dev.emi.trinkets.TrinketPlayerScreenHandler;
@@ -75,9 +76,9 @@ public class SheathedMainHandItemFeatureRenderer extends HeldItemFeatureRenderer
                 matrixStack.push();
                 ModelPart modelPart = this.getContextModel().body;
                 modelPart.rotate(matrixStack);
-                Item alternativeMainHandItem = mainHandStack.getItem();
+                Item mainHandStackItem = mainHandStack.getItem();
 
-                if (alternativeMainHandItem instanceof SwordItem) {
+                if (mainHandStackItem instanceof SwordItem || mainHandStackItem instanceof BetterAdventureMode_BasicWeaponItem) {
                     matrixStack.translate(-0.3D, 0.05D, 0.16D);
                     if (abstractClientPlayerEntity.hasStackEquipped(EquipmentSlot.CHEST)) {
 //                    matrixStack.translate(0.05F, 0.0F, 0.0F);
@@ -89,7 +90,7 @@ public class SheathedMainHandItemFeatureRenderer extends HeldItemFeatureRenderer
 ////                matrixStack.translate(0.0D, 0.0D, 0.16D);
 //                matrixStack.scale(1.0F, -1.0F, -1.0F);
                     heldItemRenderer.renderItem(abstractClientPlayerEntity, mainHandStack, ModelTransformationMode.THIRD_PERSON_RIGHT_HAND, false, matrixStack, vertexConsumerProvider, i);
-//            } else if (alternativeMainHandItem instanceof TridentItem) {
+//            } else if (mainHandStackItem instanceof TridentItem) {
 //                matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(52.0F));
 //                matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(40.0F));
 //                matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(-25.0F));
@@ -99,7 +100,7 @@ public class SheathedMainHandItemFeatureRenderer extends HeldItemFeatureRenderer
 //                }
 //                matrixStack.scale(1.0F, -1.0F, -1.0F);
 //                heldItemRenderer.renderItem(abstractClientPlayerEntity, mainHandStack, ModelTransformationMode.THIRD_PERSON_RIGHT_HAND, false, matrixStack, vertexConsumerProvider, i);
-                } else if (alternativeMainHandItem instanceof CrossbowItem) {
+                } else if (mainHandStackItem instanceof CrossbowItem) {
                     matrixStack.translate(-0.3D, 0.1D, 0.16D);
 //                matrixStack.translate(-0.3D, 0.0D, 0.16D);
                     if (abstractClientPlayerEntity.hasStackEquipped(EquipmentSlot.CHEST)) {
