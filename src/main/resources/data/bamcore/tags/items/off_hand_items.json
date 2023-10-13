@@ -15,6 +15,7 @@
     "minecraft:shield",
     "bamcore:test_buckler",
     "bamcore:test_normal_shield",
-    "bamcore:test_tower_shield"
+    "bamcore:test_tower_shield",
+    "bamcore:test_sword"
   ]
 }

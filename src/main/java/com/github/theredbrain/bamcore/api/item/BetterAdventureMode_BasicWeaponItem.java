@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public class BetterAdventureMode_BasicWeaponItem extends Item implements ICustomWeapon {
+public class BetterAdventureMode_BasicWeaponItem extends Item {
 
     private final RegistryKey<DamageType> damageTypeRegistryKey;
     @Nullable
@@ -37,10 +37,6 @@ public class BetterAdventureMode_BasicWeaponItem extends Item implements ICustom
     @Nullable
     private String translationKeyBroken;
 
-    // TODO idea:
-    //  not one value for attackDamage and damageTypeRegistryKey but a map
-    //  relevant methods in Entity etc will check for this
-    //  not good for compatibility
     public BetterAdventureMode_BasicWeaponItem(RegistryKey<DamageType> damageTypeRegistryKey, @Nullable RegistryKey<DamageType> twoHandedDamageTypeRegistryKey, float attackDamage, float attackSpeed, int staminaCost, float weight, Settings settings) {
         super(settings);
         this.damageTypeRegistryKey = damageTypeRegistryKey;
@@ -112,12 +108,10 @@ public class BetterAdventureMode_BasicWeaponItem extends Item implements ICustom
         return builder.build();
     }
 
-    @Override
     public int getStaminaCost() {
         return staminaCost;
     }
 
-    @Override
     public RegistryKey<DamageType> getDamageTypeRegistryKey(boolean twoHanded) {
         if (twoHanded && this.twoHandedDamageTypeRegistryKey != null) {
             return this.twoHandedDamageTypeRegistryKey;

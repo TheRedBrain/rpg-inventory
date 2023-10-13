@@ -12,6 +12,7 @@
     "minecraft:iron_sword",
     "minecraft:diamond_sword",
     "minecraft:golden_sword",
-    "minecraft:netherite_sword"
+    "minecraft:netherite_sword",
+    "bamcore:test_sword"
   ]
 }

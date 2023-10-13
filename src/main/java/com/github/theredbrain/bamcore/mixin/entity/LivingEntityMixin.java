@@ -1,6 +1,5 @@
 package com.github.theredbrain.bamcore.mixin.entity;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreStatusEffects;
 import com.github.theredbrain.bamcore.entity.DamageUtility;
 import com.github.theredbrain.bamcore.entity.DuckLivingEntityMixin;
@@ -11,7 +10,6 @@ import dev.emi.trinkets.api.event.TrinketDropCallback;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
-import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTracker;
 import net.minecraft.entity.data.DataTracker;
@@ -333,6 +331,7 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
         if (this.isInvulnerableTo(source)) {
             return;
         }
+
 //        BetterAdventureModeCore.LOGGER.info("try apply stagger");
         // apply stagger
         if (source.isIn(Tags.STAGGERS) && !(this.getStaggerLimitMultiplier() == -1 || this.hasStatusEffect(BetterAdventureModeCoreStatusEffects.STAGGERED))) {

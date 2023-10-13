@@ -2,7 +2,7 @@ package com.github.theredbrain.bamcore.mixin.entity.player;
 
 import com.github.theredbrain.bamcore.api.block.AbstractSetSpawnBlock;
 import com.github.theredbrain.bamcore.api.item.BetterAdventureMode_BasicShieldItem;
-import com.github.theredbrain.bamcore.api.item.ICustomWeapon;
+import com.github.theredbrain.bamcore.api.item.BetterAdventureMode_BasicWeaponItem;
 import com.github.theredbrain.bamcore.block.entity.AreaFillerBlockBlockEntity;
 import com.github.theredbrain.bamcore.block.entity.ChunkLoaderBlockBlockEntity;
 import com.github.theredbrain.bamcore.block.entity.StructurePlacerBlockBlockEntity;
@@ -42,6 +42,7 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.stat.Stats;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
 import net.minecraft.world.Difficulty;
@@ -69,14 +70,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     @Final
     public PlayerScreenHandler playerScreenHandler;
 
-    @Shadow
-    public ScreenHandler currentScreenHandler;
-
     @Shadow public abstract PlayerInventory getInventory();
 
     @Shadow protected abstract void vanishCursedItems();
-
-    @Shadow public abstract GameProfile getGameProfile();
 
     @Shadow protected EnderChestInventory enderChestInventory;
     @Shadow @Final private PlayerAbilities abilities;
@@ -85,32 +81,12 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
     @Shadow public abstract void increaseStat(Identifier stat, int amount);
 
-    @Shadow public abstract void disableShield(boolean sprinting);
-
     @Shadow protected abstract void dropShoulderEntities();
 
-    @Shadow public abstract boolean isCreative();
-
-    @Shadow public abstract float getAttackCooldownProgress(float baseTime);
-
-    @Shadow public abstract void resetLastAttackedTicks();
-
-    @Shadow public abstract void spawnSweepAttackParticles();
-
-    @Shadow public abstract void addCritParticles(Entity target);
-
-    @Shadow public abstract void addEnchantedHitParticles(Entity target);
-
-    @Shadow public abstract void addExhaustion(float exhaustion);
+    @Shadow public abstract void sendMessage(Text message, boolean overlay);
 
     private static final TrackedData<Float> MANA = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Float> STAMINA = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.FLOAT);
-
-//    @Unique
-//    private int oldActiveSpellSlotAmount = 0;
-//
-//    @Unique
-//    private boolean shouldUpdateTrinketSlots = false;
 
     @Unique
     private boolean isAdventureHotbarCleanedUp = false;
@@ -118,22 +94,17 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     @Unique
     private int blockingTime = 0;
 
-//    @Unique
-//    private AdventureInventoryScreenHandler adventureInventoryScreenHandler;
-
     protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
     }
 
-    /**
-     * @author TheRedBrain
-     */
-    @Inject(method = "<init>", at = @At("TAIL"))
-    public void PlayerEntity(World world, BlockPos pos, float yaw, GameProfile gameProfile, CallbackInfo ci) {
-//        this.adventureInventoryScreenHandler = new AdventureInventoryScreenHandler(this.inventory, !world.isClient, (PlayerEntity) (Object) this);
-//        this.currentScreenHandler = this.adventureInventoryScreenHandler;
-        // inject into a constructor
-    }
+//    /**
+//     * @author TheRedBrain
+//     */
+//    @Inject(method = "<init>", at = @At("TAIL"))
+//    public void PlayerEntity(World world, BlockPos pos, float yaw, GameProfile gameProfile, CallbackInfo ci) {
+//        // inject into a constructor
+//    }
 
     @Inject(method = "createPlayerAttributes", at = @At("RETURN"), cancellable = true)
     private static void bamcore$createPlayerAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
@@ -144,7 +115,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
                 .add(BetterAdventureModeCoreEntityAttributes.MANA_REGENERATION, 0.0F) // TODO balance
                 .add(BetterAdventureModeCoreEntityAttributes.STAMINA_REGENERATION, 1.0F) // TODO balance
                 .add(BetterAdventureModeCoreEntityAttributes.MAX_MANA, 0.0F) // TODO balance
-                .add(BetterAdventureModeCoreEntityAttributes.MAX_STAMINA, 10.0F) // TODO balance
+                .add(BetterAdventureModeCoreEntityAttributes.MAX_STAMINA, 20.0F) // TODO balance
                 .add(BetterAdventureModeCoreEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT, 2.0F) // TODO balance
         );
     }
@@ -152,7 +123,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     @Inject(method = "initDataTracker", at = @At("TAIL"))
     public void bamcore$initDataTracker(CallbackInfo ci) {
         this.dataTracker.startTracking(MANA, 0.0F);
-        this.dataTracker.startTracking(STAMINA, 10.0F);
+        this.dataTracker.startTracking(STAMINA, 20.0F);
     }
 
     @Inject(method = "tick", at = @At("TAIL"))
@@ -211,12 +182,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         }
     }
 
-//    // overrides the vanilla mechanic of avoiding all damage by blocking
-//    @Override
-//    public boolean blockedByShield(DamageSource source) {
-//        return false;
-//    }
-
     /**
      * @author TheRedBrain
      * @reason
@@ -243,18 +208,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 //    protected void bamcore$shouldDismount(CallbackInfoReturnable<Boolean> cir) {
 //        cir.setReturnValue(cir.getReturnValue() && !(((PlayerEntity) (Object) this).hasStatusEffect(BetterAdventureModeCoreStatusEffects.PERMANENT_MOUNT_EFFECT)));
 ////        cir.cancel();
-//    }
-
-//    @Inject(method = "closeHandledScreen", at = @At("TAIL"), cancellable = true)
-//    protected void bamcore$closeHandledScreen(CallbackInfo ci) {
-//        this.currentScreenHandler = this.adventureInventoryScreenHandler;
-//        ci.cancel();
-//    }
-//
-//    @Inject(method = "shouldCloseHandledScreenOnRespawn", at = @At("RETURN"), cancellable = true)
-//    public void bamcore$shouldCloseHandledScreenOnRespawn(CallbackInfoReturnable<Boolean> cir) {
-//        cir.setReturnValue(this.currentScreenHandler != this.adventureInventoryScreenHandler);
-//        cir.cancel();
 //    }
 
     /**
@@ -379,7 +332,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
                         amount -= blockedDamage;
 
                         //
-//                        Entity attacker = ;
                         if (source.getAttacker() != null || source.getAttacker() instanceof LivingEntity) {
                             LivingEntity attacker = (LivingEntity) source.getAttacker();
                             attacker.takeKnockback(((BetterAdventureMode_BasicShieldItem)shieldItemStack.getItem()).getBlockForce(), attacker.getX() - this.getX(), attacker.getZ() - this.getZ());
@@ -395,7 +347,13 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         if (amount == 0.0f) {
             return false;
         }
-        return super.damage(source, amount);
+        boolean bl = super.damage(source, amount);
+
+        // taking damage interrupts eating food, drinking potions, etc
+        if (bl) {
+            this.stopUsingItem();
+        }
+        return bl;
     }
 
     // TODO come up with a better formula
@@ -409,15 +367,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         }
         return blockedDamage;
     }
-
-    // taking damage interrupts eating food, drinking potions, etc
-//    @Inject(method = "damage", at = @At("RETURN"))
-//    public void bamcore$damage_return(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-//        boolean bl = cir.getReturnValue();
-//        if (bl) {
-//            this.stopUsingItem();
-//        }
-//    }
 
 //    protected void takeShieldHit(LivingEntity attacker) {
 //        super.takeShieldHit(attacker);
@@ -489,17 +438,15 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         this.emitGameEvent(GameEvent.ENTITY_DAMAGE);
     }
 
-    @Inject(
-            method = {"attack"},
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/entity/player/PlayerEntity;addExhaustion(F)V"
-            )
-    )
-    public void addExhaustion_Redirect(Entity target, CallbackInfo ci) {
+    @Inject(method = {"attack"}, at = @At("HEAD"), cancellable = true)
+    public void bamcore$attack(Entity target, CallbackInfo ci) {
+        if (this.bamcore$getStamina() <= 0) {
+            this.sendMessage(Text.translatable("hud.message.staminaTooLow"), true);
+            ci.cancel();
+        }
         ItemStack mainHandStack = this.getMainHandStack();
-        if (mainHandStack.getItem() instanceof ICustomWeapon) {
-            this.bamcore$addStamina(((ICustomWeapon)mainHandStack.getItem()).getStaminaCost());
+        if (mainHandStack.getItem() instanceof BetterAdventureMode_BasicWeaponItem) {
+            this.bamcore$addStamina(-((BetterAdventureMode_BasicWeaponItem)mainHandStack.getItem()).getStaminaCost());
         }
     }
 
@@ -748,20 +695,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     @Override
     public void bamcore$openChunkLoaderBlockScreen(ChunkLoaderBlockBlockEntity chunkLoaderBlock) {
     }
-//    @Override
-//    public void setShouldUpdateTrinketSlots(boolean shouldUpdateTrinketSlots) {
-//        this.shouldUpdateTrinketSlots = shouldUpdateTrinketSlots;
-//    }
-//    @Override
-//    public boolean shouldUpdateTrinketSlots() {
-//        return this.shouldUpdateTrinketSlots;
-//    }
-
-//    @Override // TODO check if something breaks with this disabled
-//    public Iterable<ItemStack> getItemsEquipped() {
-//        Iterable<ItemStack> alternateHandItems = Arrays.asList(this.getInventory().getStack(42), this.getInventory().getStack(43));
-//        return Iterables.concat(this.getHandItems(), this.getArmorItems(), alternateHandItems);
-//    }
 
     private void ejectItemsFromInactiveSpellSlots() {
         // TODO IMPORTANT REACTIVATE
