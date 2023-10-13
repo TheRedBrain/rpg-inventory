@@ -145,5 +145,13 @@
 	"trinkets.slot.spell_slot_5.spell": "Spell Slot",
 	"trinkets.slot.spell_slot_6.spell": "Spell Slot",
 	"trinkets.slot.spell_slot_7.spell": "Spell Slot",
-	"trinkets.slot.spell_slot_8.spell": "Spell Slot"
+	"trinkets.slot.spell_slot_8.spell": "Spell Slot",
+
+	"death.attack.player_bashing": "%s was smashed into the ground by %s",
+	"death.attack.player_bashing.item": "%s was smashed into the ground by %s using %s",
+	"death.attack.player_piercing": "%s was stabbed to death by %s",
+	"death.attack.player_piercing.item": "%s was stabbed to death by %s using %s",
+	"death.attack.player_slashing": "%s was cut into pieces by %s",
+	"death.attack.player_slashing.item": "%s was cut into pieces by %s using %s",
+	"death.attack.player_unarmed": "%s was beaten to death by %s using their bare hands!"
 }

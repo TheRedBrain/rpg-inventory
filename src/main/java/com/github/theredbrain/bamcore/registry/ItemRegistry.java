@@ -5,6 +5,7 @@ import com.github.theredbrain.bamcore.api.item.BetterAdventureMode_BasicShieldIt
 import com.github.theredbrain.bamcore.api.item.BetterAdventureMode_BasicWeaponItem;
 import com.github.theredbrain.bamcore.api.item.ModifyEntityAttributeRingItem;
 import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreEntityAttributes;
+import com.github.theredbrain.bamcore.api.util.BetterAdventureModeDamageTypes;
 import com.github.theredbrain.bamcore.item.*;
 import dev.emi.trinkets.api.TrinketItem;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
@@ -25,7 +26,7 @@ public class ItemRegistry {
     public static final Item TEST_BUCKLER = registerItem("test_buckler", new BetterAdventureMode_BasicShieldItem(2, 0.2, true, 3.0, 2, new FabricItemSettings().maxDamage(336)), ItemGroups.COMBAT);
     public static final Item TEST_NORMAL_SHIELD = registerItem("test_normal_shield", new BetterAdventureMode_BasicShieldItem(3, 0.5, true, 1.5, 3, new FabricItemSettings().maxDamage(336)), ItemGroups.COMBAT);
     public static final Item TEST_TOWER_SHIELD = registerItem("test_tower_shield", new BetterAdventureMode_BasicShieldItem(5, 1.0, false, 1.0, 5, new FabricItemSettings().maxDamage(336)), ItemGroups.COMBAT);
-    public static final Item TEST_SWORD = registerItem("test_sword", new BetterAdventureMode_BasicWeaponItem(DamageTypes.PLAYER_ATTACK, DamageTypes.PLAYER_ATTACK, 4, -3.0F, 3, 2, new FabricItemSettings().maxDamage(336)), ItemGroups.COMBAT);
+    public static final Item TEST_SWORD = registerItem("test_sword", new BetterAdventureMode_BasicWeaponItem(BetterAdventureModeDamageTypes.PLAYER_SLASHING_DAMAGE_TYPE, BetterAdventureModeDamageTypes.PLAYER_PIERCING_DAMAGE_TYPE, 4, -3.0F, 3, 2, new FabricItemSettings().maxDamage(336)), ItemGroups.COMBAT);
 
 
     private static Item registerItem(String name, Item item, @Nullable RegistryKey<ItemGroup> itemGroup) {

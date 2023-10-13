@@ -214,18 +214,18 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
         boolean bl = false;
 
         // TODO rework shields
-        float g = 0.0f;
-        if (amount > 0.0f && this.blockedByShield(source)) {
-            Entity entity;
-            this.damageShield(amount);
-            g = amount;
-            amount = 0.0f;
-            if (!source.isIn(DamageTypeTags.IS_PROJECTILE) && (entity = source.getSource()) instanceof LivingEntity) {
-                LivingEntity livingEntity = (LivingEntity)entity;
-                this.takeShieldHit(livingEntity);
-            }
-            bl = true;
-        }
+//        float g = 0.0f;
+//        if (amount > 0.0f && this.blockedByShield(source)) {
+//            Entity entity;
+//            this.damageShield(amount);
+//            g = amount;
+//            amount = 0.0f;
+//            if (!source.isIn(DamageTypeTags.IS_PROJECTILE) && (entity = source.getSource()) instanceof LivingEntity) {
+//                LivingEntity livingEntity = (LivingEntity)entity;
+//                this.takeShieldHit(livingEntity);
+//            }
+//            bl = true;
+//        }
 
 
         if (source.isIn(DamageTypeTags.IS_FREEZING) && this.getType().isIn(EntityTypeTags.FREEZE_HURTS_EXTRA_TYPES)) {
@@ -311,9 +311,9 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
         }
         if (((LivingEntity) (Object) this) instanceof ServerPlayerEntity) {
             Criteria.ENTITY_HURT_PLAYER.trigger(((ServerPlayerEntity) (Object) this), source, f, amount, bl);
-            if (g > 0.0f && g < 3.4028235E37f) {
-                ((ServerPlayerEntity) (Object) this).increaseStat(Stats.DAMAGE_BLOCKED_BY_SHIELD, Math.round(g * 10.0f));
-            }
+//            if (g > 0.0f && g < 3.4028235E37f) {
+//                ((ServerPlayerEntity) (Object) this).increaseStat(Stats.DAMAGE_BLOCKED_BY_SHIELD, Math.round(g * 10.0f));
+//            }
         }
         if (entity2 instanceof ServerPlayerEntity) {
             Criteria.PLAYER_HURT_ENTITY.trigger((ServerPlayerEntity)entity2, this, source, f, amount, bl);

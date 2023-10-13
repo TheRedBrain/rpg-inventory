@@ -4,12 +4,10 @@ import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.api.effect.FoodStatusEffect;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreEntityAttributes;
-import com.github.theredbrain.bamcore.entity.player.DuckPlayerInventoryMixin;
 import com.google.common.collect.Ordering;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.emi.trinkets.*;
 import dev.emi.trinkets.api.*;
-import dev.emi.trinkets.mixin.accessor.ScreenHandlerAccessor;
 import io.wispforest.owo.ui.base.BaseOwoHandledScreen;
 import io.wispforest.owo.ui.component.Components;
 import io.wispforest.owo.ui.component.LabelComponent;
@@ -23,7 +21,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.client.gui.widget.PageTurnWidget;
 import net.minecraft.client.render.DiffuseLighting;
@@ -37,18 +34,14 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffectUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.screen.PlayerScreenHandler;
-import net.minecraft.screen.ScreenTexts;
 import net.minecraft.screen.slot.Slot;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Colors;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 import org.jetbrains.annotations.NotNull;
@@ -87,7 +80,7 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
     public void handledScreenTick() {
         PlayerEntity player = this.handler.player();
         this.updateAttributeScreen(player);
-        this.buildSpellSlots(player);
+        this.buildSpellSlotBackgrounds(player);
         this.updateEffectsScreen(player);
         TrinketScreenManager.tick();
     }
@@ -527,11 +520,9 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
                         .id("status_effects"));
     }
 
-    private void buildSpellSlots(PlayerEntity player) {
+    private void buildSpellSlotBackgrounds(PlayerEntity player) {
 
         int activeSpellSlotAmount = (int) player.getAttributeInstance(BetterAdventureModeCoreEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT).getValue();
-//        BetterAdventureModeCore.LOGGER.info("screen activeSpellSlotAmount: " + activeSpellSlotAmount);
-//        BetterAdventureModeCore.LOGGER.info("this.oldActiveSpellSlotAmount: " + this.oldActiveSpellSlotAmount);
         if (this.oldActiveSpellSlotAmount != activeSpellSlotAmount) {
 
             component(FlowLayout.class, "spell_slots_container").clearChildren();
@@ -540,30 +531,17 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
                     .child(Containers.grid(Sizing.fill(100), Sizing.fixed(36), 2, 4)
                             .id("spell_slots_container_grid"));
 
-            // build active slots
+            // build active spell slot backgrounds
             for (int i = 0; i < activeSpellSlotAmount; i++) {
-                // enable active slots
-//                ((OwoSlotExtension)this.handler.getSlot(this.spellSlotIds.get("spell_slot_" + (i + 1)))).owo$setDisabledOverride(false);
-//                BetterAdventureModeCore.LOGGER.info("enabled spell slot: spell_slot_" + (i + 1));
 
                 this.component(GridLayout.class, "spell_slots_container_grid")
                         .child(Containers.horizontalFlow(Sizing.fixed(18), Sizing.fixed(18))
-//                                        .child(
-//                                                slotAsComponent(this.spellSlotIds.get("spell_slot_" + (i + 1)))
-//                                                        .margins(Insets.of(1, 1, 1, 1))
-//                                        )
                                         .surface(Surface.tiled(INVENTORY_SLOT_TEXTURE, 18, 18))
                                         .id("spell_slot_" + (i + 1)),
                                 i < 4 ? 0 : 1,
                                 i < 4 ? i : i - 4
                         );
             }
-
-            // disable inactive slots
-//            for (int i = activeSpellSlotAmount; i < 8; i++) {
-//                ((OwoSlotExtension)this.handler.getSlot(this.spellSlotIds.get("spell_slot_" + (i + 1)))).owo$setDisabledOverride(true);
-////                BetterAdventureModeCore.LOGGER.info("disabled spell slot: spell_slot_" + (i + 1));
-//            }
 
             this.oldActiveSpellSlotAmount = activeSpellSlotAmount;
         }
@@ -604,7 +582,7 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
                             .horizontalAlignment(HorizontalAlignment.CENTER)
                             .verticalAlignment(VerticalAlignment.CENTER)
                             .margins(Insets.of(2, 2, 2, 2))
-                            .tooltip(effectsList.get(i).getEffectType().getName().copy())
+//                            .tooltip(effectsList.get(i).getEffectType().getName().copy())
 //                            .tooltip(TooltipComponent.of(getStatusEffectDescription(effectsList.get(i))))
                             .id(effectCategory + "_effect_container_" + i)
                     );
@@ -672,7 +650,7 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
             if (!this.neutralEffectsList.isEmpty()) {
                 buildEffectContainers("neutral");
             }
-        } else {
+        }/* else {
             if (!this.foodEffectsList.isEmpty()) {
                 updateEffectContainers("food");
             }
@@ -685,7 +663,7 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
             if (!this.neutralEffectsList.isEmpty()) {
                 updateEffectContainers("neutral");
             }
-        }
+        }*/
         visibleEffectsList.clear();
     }
 

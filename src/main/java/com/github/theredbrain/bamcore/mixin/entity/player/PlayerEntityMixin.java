@@ -19,6 +19,8 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.datafixers.util.Pair;
 import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketsApi;
+import net.bettercombat.api.AttackHand;
+import net.bettercombat.logic.PlayerAttackHelper;
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -40,6 +42,7 @@ import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.stat.Stats;
 import net.minecraft.text.Text;
@@ -52,6 +55,8 @@ import net.minecraft.world.event.GameEvent;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -335,6 +340,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
                         if (source.getAttacker() != null || source.getAttacker() instanceof LivingEntity) {
                             LivingEntity attacker = (LivingEntity) source.getAttacker();
                             attacker.takeKnockback(((BetterAdventureMode_BasicShieldItem)shieldItemStack.getItem()).getBlockForce(), attacker.getX() - this.getX(), attacker.getZ() - this.getZ());
+                        }
+                        if (blockedDamage > 0.0f && blockedDamage < 3.4028235E37f) {
+                            ((ServerPlayerEntity) (Object) this).increaseStat(Stats.DAMAGE_BLOCKED_BY_SHIELD, Math.round(blockedDamage * 10.0f));
                         }
 
                         this.getWorld().sendEntityStatus(this, EntityStatuses.BLOCK_WITH_SHIELD);
