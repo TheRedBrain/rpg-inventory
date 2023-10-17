@@ -19,6 +19,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.datafixers.util.Pair;
 import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketsApi;
+import net.bettercombat.BetterCombat;
 import net.bettercombat.api.AttackHand;
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.minecraft.block.BedBlock;
@@ -46,6 +47,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.stat.Stats;
 import net.minecraft.text.Text;
+import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
 import net.minecraft.world.Difficulty;
@@ -53,10 +55,7 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import org.spongepowered.asm.mixin.*;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -277,7 +276,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
         // shield overhaul
         ItemStack shieldItemStack = this.getOffHandStack();
-        if (this.isBlocking() && this.bamcore$getStamina() > 0 && shieldItemStack.getItem() instanceof BetterAdventureMode_BasicShieldItem) {
+        if (this.isBlocking() && this.blockedByShield(source) && this.bamcore$getStamina() > 0 && shieldItemStack.getItem() instanceof BetterAdventureMode_BasicShieldItem) {
             if (this.blockingTime <= 20 && this.bamcore$getStamina() >= 20 && source.getAttacker() != null && source.getAttacker() instanceof LivingEntity && ((BetterAdventureMode_BasicShieldItem) shieldItemStack.getItem()).canParry()) {
                 // try to parry the attack
                 float blockedDamage = this.calculateBlockedDamage(amount, shieldItemStack, true);
@@ -376,34 +375,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         return blockedDamage;
     }
 
-//    protected void takeShieldHit(LivingEntity attacker) {
-//        super.takeShieldHit(attacker);
-//        if (attacker.disablesShield()) {
-//            this.disableShield(true);
-//        }
-//
-//    }
-
-    @Override
-    public boolean blockedByShield(DamageSource source) {
-//        Vec3d vec3d;
-//        PersistentProjectileEntity persistentProjectileEntity;
-//        Entity entity = source.getSource();
-//        boolean bl = false;
-//        if (entity instanceof PersistentProjectileEntity && (persistentProjectileEntity = (PersistentProjectileEntity)entity).getPierceLevel() > 0) {
-//            bl = true;
-//        }
-//        if (!source.isIn(DamageTypeTags.BYPASSES_SHIELD) && this.isBlocking() && !bl && (vec3d = source.getPosition()) != null) {
-//            Vec3d vec3d2 = this.getRotationVec(1.0f);
-//            Vec3d vec3d3 = vec3d.relativize(this.getPos()).normalize();
-//            vec3d3 = new Vec3d(vec3d3.x, 0.0, vec3d3.z);
-//            if (vec3d3.dotProduct(vec3d2) < 0.0) {
-//                return true;
-//            }
-//        }
-        return false;
-    }
-
     /**
      * @author TheRedBrain
      * @reason
@@ -456,6 +427,18 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         if (mainHandStack.getItem() instanceof BetterAdventureMode_BasicWeaponItem) {
             this.bamcore$addStamina(-((BetterAdventureMode_BasicWeaponItem)mainHandStack.getItem()).getStaminaCost());
         }
+    }
+
+    // effectively disables the vanilla jump crit mechanic
+    @Redirect(
+            method = {"attack"},
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/entity/player/PlayerEntity;hasVehicle()Z"
+            )
+    )
+    public boolean bamcore$redirect_isSprinting(PlayerEntity instance) {
+        return true;
     }
 
     @Inject(method = "getEquippedStack", at = @At("RETURN"), cancellable = true)

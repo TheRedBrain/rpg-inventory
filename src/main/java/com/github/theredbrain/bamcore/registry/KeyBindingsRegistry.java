@@ -17,10 +17,12 @@ public class KeyBindingsRegistry {
     public static KeyBinding twoHandMainWeapon;
     public static KeyBinding swapMainHand;
     public static KeyBinding swapOffHand;
+    public static KeyBinding toggleNecklaceAbility;
     public static boolean sheatheWeaponsBoolean;
     public static boolean twoHandMainWeaponBoolean;
     public static boolean swapMainHandBoolean;
     public static boolean swapOffHandBoolean;
+    public static boolean toggleNecklaceAbilityBoolean;
 
     public static void registerKeyBindings() {
         KeyBindingsRegistry.sheatheWeapons = KeyBindingHelper.registerKeyBinding(new KeyBinding(
@@ -45,6 +47,12 @@ public class KeyBindingsRegistry {
                 "key.bamcore.swapOffHand",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_Q,
+                "category.bamcore.category"
+        ));
+        KeyBindingsRegistry.toggleNecklaceAbility = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.bamcore.toggleNecklaceAbility",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_Z,
                 "category.bamcore.category"
         ));
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
@@ -80,6 +88,14 @@ public class KeyBindingsRegistry {
             } else if (twoHandMainWeaponBoolean) {
                 twoHandMainWeaponBoolean = false;
             }
+            if (KeyBindingsRegistry.toggleNecklaceAbility.wasPressed()) {
+                if (!toggleNecklaceAbilityBoolean) {
+                    toggleNecklaceAbility(client);
+                }
+                toggleNecklaceAbilityBoolean = true;
+            } else if (toggleNecklaceAbilityBoolean) {
+                toggleNecklaceAbilityBoolean = false;
+            }
         });
     }
     public static void sheatheWeapons(MinecraftClient client) {
@@ -90,10 +106,13 @@ public class KeyBindingsRegistry {
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModCoreServerPacket.TWO_HAND_MAIN_WEAPON_PACKET, buf));
     }
-
     public static void syncSlotSwapHand(MinecraftClient client, boolean mainHand) {
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         buf.writeBoolean(mainHand);
         client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModCoreServerPacket.SWAP_HAND_ITEMS_PACKET, buf));
+    }
+    public static void toggleNecklaceAbility(MinecraftClient client) {
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+        client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModCoreServerPacket.TOGGLE_NECKLACE_ABILITY_PACKET, buf));
     }
 }

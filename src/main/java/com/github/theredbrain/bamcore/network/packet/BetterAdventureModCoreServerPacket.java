@@ -10,6 +10,7 @@ public class BetterAdventureModCoreServerPacket {
     public static final Identifier SWAPPED_HAND_ITEMS_PACKET = BetterAdventureModeCore.identifier("swapped_hand_items");
     public static final Identifier SHEATHE_WEAPONS_PACKET = BetterAdventureModeCore.identifier("sheathe_weapons");
     public static final Identifier TWO_HAND_MAIN_WEAPON_PACKET = BetterAdventureModeCore.identifier("two_hand_main_weapon");
+    public static final Identifier TOGGLE_NECKLACE_ABILITY_PACKET = BetterAdventureModeCore.identifier("toggle_necklace_ability_weapon");
 //    public static final Identifier SHEATHED_WEAPONS_PACKET = RPGMod.identifier("sheathed_weapons"); // TODO if weapon sheathing is not visible in multiplayer
     public static final Identifier UPDATE_TELEPORTER_BLOCK = BetterAdventureModeCore.identifier("update_teleporter_block");
     public static final Identifier UPDATE_AREA_FILLER_BLOCK = BetterAdventureModeCore.identifier("update_area_filler_block");
@@ -30,6 +31,9 @@ public class BetterAdventureModCoreServerPacket {
 
         TwoHandMainWeaponPacketReceiver twoHandMainWeaponPacketReceiver = new TwoHandMainWeaponPacketReceiver();
         ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModCoreServerPacket.TWO_HAND_MAIN_WEAPON_PACKET, twoHandMainWeaponPacketReceiver);
+
+        ToggleNecklaceAbilityPacketReceiver toggleNecklaceAbilityPacketReceiver = new ToggleNecklaceAbilityPacketReceiver();
+        ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModCoreServerPacket.TOGGLE_NECKLACE_ABILITY_PACKET, toggleNecklaceAbilityPacketReceiver);
 
 //        IsUsingHotbarItemServerPacketReceiver isUsingHotbarItemServerPacketReceiver = new IsUsingHotbarItemServerPacketReceiver();
 //        ServerPlayNetworking.registerGlobalReceiver(RPGModServerPacket.IS_USING_HOTBAR_ITEM_SERVER_PACKET, isUsingHotbarItemServerPacketReceiver);

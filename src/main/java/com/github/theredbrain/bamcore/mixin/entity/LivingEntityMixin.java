@@ -105,6 +105,8 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
 
     @Shadow public abstract float getHealth();
 
+    @Shadow public abstract EntityGroup getGroup();
+
     @Unique
     private static final TrackedData<Float> POISE = DataTracker.registerData(LivingEntity.class, TrackedDataHandlerRegistry.FLOAT);
 
@@ -378,6 +380,26 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
             this.staggerReductionTimer = 0;
         }*/
     }
+
+//    /**
+//     * @author TheRedBrain
+//     * @reason
+//     */
+//    @Overwrite
+//    public boolean canHaveStatusEffect(StatusEffectInstance effect) {
+//        StatusEffect statusEffect = effect.getEffectType();
+//        if (this.hasStatusEffect(BetterAdventureModeCoreStatusEffects.WET) && statusEffect == BetterAdventureModeCoreStatusEffects.BURNING) {
+//            return false;
+//        }
+//        if (this.hasStatusEffect(BetterAdventureModeCoreStatusEffects.WET) && statusEffect == BetterAdventureModeCoreStatusEffects.BURNING) {
+//            return false;
+//        }
+//        if (this.hasStatusEffect(BetterAdventureModeCoreStatusEffects.WET) && statusEffect == BetterAdventureModeCoreStatusEffects.BURNING) {
+//            return false;
+//        }
+//
+//        return this.getGroup() != EntityGroup.UNDEAD || statusEffect != StatusEffects.REGENERATION && statusEffect != StatusEffects.POISON;
+//    }
 
     @Override
     public void bamcore$addPoise(float amount) {

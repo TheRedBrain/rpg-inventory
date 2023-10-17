@@ -2,6 +2,7 @@ package com.github.theredbrain.bamcore.network.packet;
 
 import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreStatusEffects;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
+import com.github.theredbrain.bamcore.registry.Tags;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -21,6 +22,8 @@ public class TwoHandMainWeaponPacketReceiver implements ServerPlayNetworking.Pla
                 player.sendMessageToClient(Text.translatable("hud.message.staminaTooLow"), true);
             } else if (player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.WEAPONS_SHEATHED_EFFECT)) {
                 player.sendMessageToClient(Text.translatable("hud.message.weaponsAreSheathed"), true);
+            } else if (player.getMainHandStack().isIn(Tags.NON_TWO_HANDED_ITEMS)) {
+                player.sendMessageToClient(Text.translatable("hud.message.nonTwoHandedWeaponEquipped"), true);
             } else {
                 if (player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.TWO_HANDED_EFFECT)) {
                     player.removeStatusEffect(BetterAdventureModeCoreStatusEffects.TWO_HANDED_EFFECT);

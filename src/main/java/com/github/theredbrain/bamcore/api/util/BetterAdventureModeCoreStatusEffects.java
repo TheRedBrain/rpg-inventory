@@ -5,30 +5,33 @@ import com.github.theredbrain.bamcore.effect.*;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectCategory;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import net.minecraft.util.Colors;
 import net.spell_engine.api.effect.ActionImpairing;
 import net.spell_engine.api.effect.EntityActionsAllowed;
-import net.spell_engine.api.effect.RemoveOnHit;
 import net.spell_engine.api.effect.Synchronized;
 
 public class BetterAdventureModeCoreStatusEffects {
 
-    public static final StatusEffect ADVENTURE_BUILDING_EFFECT = new AdventureBuildingStatusEffect();
-    public static final StatusEffect CIVILISATION_EFFECT = new CivilisationStatusEffect();
-    public static final StatusEffect MANA_REGENERATION_EFFECT = new ManaRegenerationStatusEffect();
-    public static final StatusEffect NEED_EMPTY_OFFHAND_EFFECT = new NeedEmptyOffhandStatusEffect();
-    public static final StatusEffect NO_ATTACK_ITEMS_EFFECT = new NoAttackItemsStatusEffect();
-    public static final StatusEffect OVERBURDENED_EFFECT = new OverburdenedStatusEffect().addAttributeModifier(EntityAttributes.GENERIC_MOVEMENT_SPEED, BetterAdventureModCoreAttributeModifierUUIDs.OVERBURDENED_EFFECT, -0.25, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
-    public static final StatusEffect PERMANENT_MOUNT_EFFECT = new PermanentMountStatusEffect();
+    public static final StatusEffect ADVENTURE_BUILDING_EFFECT = new NeutralStatusEffect();
+    public static final StatusEffect CIVILISATION_EFFECT = new NeutralStatusEffect();
+    public static final StatusEffect MANA_REGENERATION_EFFECT = new BeneficialStatusEffect();
+    public static final StatusEffect NEED_EMPTY_OFFHAND_EFFECT = new NeutralStatusEffect();
+    public static final StatusEffect NO_ATTACK_ITEMS_EFFECT = new NeutralStatusEffect();
+    public static final StatusEffect OVERBURDENED_EFFECT = new HarmfulStatusEffect().addAttributeModifier(EntityAttributes.GENERIC_MOVEMENT_SPEED, BetterAdventureModCoreAttributeModifierUUIDs.OVERBURDENED_EFFECT, -0.25, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
+    public static final StatusEffect PERMANENT_MOUNT_EFFECT = new NeutralStatusEffect();
     // TODO move to bamdimensions
 //    public static final StatusEffect PORTAL_RESISTANCE_EFFECT = new PortalResistanceStatusEffect();
-    public static final StatusEffect WEAPONS_SHEATHED_EFFECT = new WeaponsSheathedStatusEffect();
-    public static final StatusEffect TWO_HANDED_EFFECT = new WeaponsSheathedStatusEffect();
-    public static final StatusEffect STAGGERED = new StaggeredStatusEffect();
-    public static final StatusEffect IS_CREATIVE = new IsCreativeStatusEffect();
+    public static final StatusEffect WEAPONS_SHEATHED_EFFECT = new NeutralStatusEffect();
+    public static final StatusEffect TWO_HANDED_EFFECT = new NeutralStatusEffect();
+    public static final StatusEffect STAGGERED = new HarmfulStatusEffect();
+    public static final StatusEffect BURNING = new HarmfulStatusEffect();
+    public static final StatusEffect CHILLED = new HarmfulStatusEffect();
+    public static final StatusEffect FROZEN = new HarmfulStatusEffect();
+    public static final StatusEffect WET = new HarmfulStatusEffect();
+    public static final StatusEffect HEALTH_REGENERATION_AURA_EFFECT = new AuraStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 100, 0, false, false, true));
 
     public static void registerEffects() {
         ActionImpairing.configure(NO_ATTACK_ITEMS_EFFECT, new EntityActionsAllowed(true, true, new EntityActionsAllowed.PlayersAllowed(false, true, true), new EntityActionsAllowed.MobsAllowed(true), EntityActionsAllowed.SemanticType.NONE));
@@ -38,6 +41,11 @@ public class BetterAdventureModeCoreStatusEffects {
         Synchronized.configure(WEAPONS_SHEATHED_EFFECT, true);
         Synchronized.configure(TWO_HANDED_EFFECT, true);
         Synchronized.configure(STAGGERED, true);
+        Synchronized.configure(BURNING, true);
+        Synchronized.configure(CHILLED, true);
+        Synchronized.configure(FROZEN, true);
+        Synchronized.configure(WET, true);
+        Synchronized.configure(HEALTH_REGENERATION_AURA_EFFECT, true);
 //        RemoveOnHit.configure(WEAPONS_SHEATHED_EFFECT, true);
 
         // utility effects
@@ -52,7 +60,14 @@ public class BetterAdventureModeCoreStatusEffects {
 //        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("portal_resistance_effect"), PORTAL_RESISTANCE_EFFECT);
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("weapons_sheathed_effect"), WEAPONS_SHEATHED_EFFECT);
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("two_handed_effect"), TWO_HANDED_EFFECT);
+
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("staggered"), STAGGERED);
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("is_creative"), IS_CREATIVE);
+
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("burning"), BURNING);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("chilled"), CHILLED);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("frozen"), FROZEN);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("wet"), WET);
+
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("health_regeneration_aura_effect"), HEALTH_REGENERATION_AURA_EFFECT);
     }
 }
