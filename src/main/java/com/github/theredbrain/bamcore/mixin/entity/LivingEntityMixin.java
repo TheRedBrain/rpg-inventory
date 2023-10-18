@@ -323,7 +323,7 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
      * @reason
      */
     @Overwrite
-    protected float modifyAppliedDamage(DamageSource source, float amount) {
+    public float modifyAppliedDamage(DamageSource source, float amount) {
         int i;
         int j;
         float f;
