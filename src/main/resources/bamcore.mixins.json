@@ -6,6 +6,7 @@
   "mixins": [
     "bettercombat.PlayerAttackHelperMixin",
     "block.RespawnAnchorBlockMixin",
+    "enchantment.EnchantmentHelperMixin",
     "entity.DamageUtilMixin",
     "entity.LivingEntityMixin",
     "entity.damage.DamageSourcesMixin",

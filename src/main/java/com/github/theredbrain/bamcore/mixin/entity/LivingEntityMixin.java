@@ -36,6 +36,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Optional;
+import java.util.function.Predicate;
+
 @Mixin(value = LivingEntity.class, priority = 950)
 public abstract class LivingEntityMixin extends Entity implements DuckLivingEntityMixin {
 
@@ -83,17 +86,9 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
 
     @Shadow public abstract void setAttacker(@Nullable LivingEntity attacker);
 
-    @Shadow public abstract void damageShield(float amount);
-
-    @Shadow protected abstract void takeShieldHit(LivingEntity attacker);
-
-    @Shadow public abstract boolean blockedByShield(DamageSource source);
-
     @Shadow public abstract boolean addStatusEffect(StatusEffectInstance effect);
 
     @Shadow protected abstract float applyArmorToDamage(DamageSource source, float amount);
-
-    @Shadow protected abstract float modifyAppliedDamage(DamageSource source, float amount);
 
     @Shadow public abstract float getAbsorptionAmount();
 
@@ -105,7 +100,7 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
 
     @Shadow public abstract float getHealth();
 
-    @Shadow public abstract EntityGroup getGroup();
+    @Shadow public abstract @Nullable StatusEffectInstance getStatusEffect(StatusEffect effect);
 
     @Unique
     private static final TrackedData<Float> POISE = DataTracker.registerData(LivingEntity.class, TrackedDataHandlerRegistry.FLOAT);
@@ -328,6 +323,48 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
      * @reason
      */
     @Overwrite
+    protected float modifyAppliedDamage(DamageSource source, float amount) {
+        int i;
+        int j;
+        float f;
+        float g;
+        float h;
+        if (source.isIn(DamageTypeTags.BYPASSES_EFFECTS)) {
+            return amount;
+        }
+        if (this.hasStatusEffect(StatusEffects.RESISTANCE) && !source.isIn(DamageTypeTags.BYPASSES_RESISTANCE) && (h = (g = amount) - (amount = Math.max((f = amount * (float)(j = 25 - (i = (this.getStatusEffect(StatusEffects.RESISTANCE).getAmplifier() + 1) * 5))) / 25.0f, 0.0f))) > 0.0f && h < 3.4028235E37f) {
+            if (((LivingEntity) (Object) this) instanceof ServerPlayerEntity) {
+                ((ServerPlayerEntity) (Object) this).increaseStat(Stats.DAMAGE_RESISTED, Math.round(h * 10.0f));
+            } else if (source.getAttacker() instanceof ServerPlayerEntity) {
+                ((ServerPlayerEntity)source.getAttacker()).increaseStat(Stats.DAMAGE_DEALT_RESISTED, Math.round(h * 10.0f));
+            }
+        }
+        if (amount <= 0.0f) {
+            return 0.0f;
+        }
+        if (source.isIn(DamageTypeTags.BYPASSES_ENCHANTMENTS)) {
+            return amount;
+        }
+        boolean feather_falling_trinket_equipped = false;
+        if (source.isIn(DamageTypeTags.IS_FALL)) {
+            Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent((LivingEntity) (Object) this);
+            if (trinkets.isPresent()) {
+                Predicate<ItemStack> predicate = stack -> stack.isIn(Tags.FEATHER_FALLING_TRINKETS);
+                feather_falling_trinket_equipped = trinkets.get().isEquipped(predicate);
+            }
+        }
+        i = EnchantmentHelper.getProtectionAmount(this.getArmorItems(), source) + (feather_falling_trinket_equipped ? 12 : 0);
+        if (i > 0) {
+            amount = DamageUtil.getInflictedDamage(amount, i);
+        }
+        return amount;
+    }
+
+    /**
+     * @author TheRedBrain
+     * @reason
+     */
+    @Overwrite
     public void applyDamage(DamageSource source, float amount) {
         Entity entity;
         if (this.isInvulnerableTo(source)) {
@@ -369,37 +406,9 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
     @Inject(method = "tick", at = @At("TAIL"))
     public void bamcore$tick(CallbackInfo ci) {
         if (this.bamcore$getPoise() > 0) {
-//            this.staggerReductionTimer++;
-//            if (this.staggerReductionTimer >= 20) {
             this.bamcore$addPoise((float) -(this.getMaxHealth() * this.getStaggerLimitMultiplier() * 0.01));
-//                this.staggerReductionTimer = 0;
-//            }
-//            BetterAdventureModeCore.LOGGER.info("current stagger: " + this.bamcore$getPoise());
         }
-        /* else if (this.staggerReductionTimer > 0) {
-            this.staggerReductionTimer = 0;
-        }*/
     }
-
-//    /**
-//     * @author TheRedBrain
-//     * @reason
-//     */
-//    @Overwrite
-//    public boolean canHaveStatusEffect(StatusEffectInstance effect) {
-//        StatusEffect statusEffect = effect.getEffectType();
-//        if (this.hasStatusEffect(BetterAdventureModeCoreStatusEffects.WET) && statusEffect == BetterAdventureModeCoreStatusEffects.BURNING) {
-//            return false;
-//        }
-//        if (this.hasStatusEffect(BetterAdventureModeCoreStatusEffects.WET) && statusEffect == BetterAdventureModeCoreStatusEffects.BURNING) {
-//            return false;
-//        }
-//        if (this.hasStatusEffect(BetterAdventureModeCoreStatusEffects.WET) && statusEffect == BetterAdventureModeCoreStatusEffects.BURNING) {
-//            return false;
-//        }
-//
-//        return this.getGroup() != EntityGroup.UNDEAD || statusEffect != StatusEffects.REGENERATION && statusEffect != StatusEffects.POISON;
-//    }
 
     @Override
     public void bamcore$addPoise(float amount) {

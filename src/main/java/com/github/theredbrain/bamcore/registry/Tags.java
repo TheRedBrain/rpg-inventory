@@ -20,6 +20,10 @@ public class Tags {
     public static final TagKey<Item> EXTRA_BOOTS_ITEMS = TagKey.of(RegistryKeys.ITEM, BetterAdventureModeCore.identifier("extra_boots_items"));
     public static final TagKey<Item> EMPTY_HAND_WEAPONS = TagKey.of(RegistryKeys.ITEM, BetterAdventureModeCore.identifier("empty_hand_weapons"));
     public static final TagKey<Item> MANA_REGENERATING_TRINKETS = TagKey.of(RegistryKeys.ITEM, BetterAdventureModeCore.identifier("mana_regenerating_trinkets"));
+    public static final TagKey<Item> DEPTH_STRIDER_TRINKETS = TagKey.of(RegistryKeys.ITEM, BetterAdventureModeCore.identifier("depth_strider_trinkets"));
+    public static final TagKey<Item> LOOTING_TRINKETS = TagKey.of(RegistryKeys.ITEM, BetterAdventureModeCore.identifier("looting_trinkets"));
+    public static final TagKey<Item> UNBREAKING_TRINKETS = TagKey.of(RegistryKeys.ITEM, BetterAdventureModeCore.identifier("unbreaking_trinkets"));
+    public static final TagKey<Item> FEATHER_FALLING_TRINKETS = TagKey.of(RegistryKeys.ITEM, BetterAdventureModeCore.identifier("feather_falling_trinkets"));
     public static final TagKey<Item> TELEPORT_HOME_NECKLACES = TagKey.of(RegistryKeys.ITEM, BetterAdventureModeCore.identifier("teleport_home_necklaces"));
     //endregion ItemTags
     //region DamageTypeTags
