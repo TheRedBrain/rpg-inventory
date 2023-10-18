@@ -21,7 +21,6 @@ public class Tags {
     public static final TagKey<Item> EMPTY_HAND_WEAPONS = TagKey.of(RegistryKeys.ITEM, BetterAdventureModeCore.identifier("empty_hand_weapons"));
     public static final TagKey<Item> MANA_REGENERATING_TRINKETS = TagKey.of(RegistryKeys.ITEM, BetterAdventureModeCore.identifier("mana_regenerating_trinkets"));
     public static final TagKey<Item> TELEPORT_HOME_NECKLACES = TagKey.of(RegistryKeys.ITEM, BetterAdventureModeCore.identifier("teleport_home_necklaces"));
-    public static final TagKey<Item> HEALTH_REGENERATION_AURA_NECKLACES = TagKey.of(RegistryKeys.ITEM, BetterAdventureModeCore.identifier("health_regeneration_aura_necklaces"));
     //endregion ItemTags
     //region DamageTypeTags
     public static final TagKey<DamageType> STAGGERS = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureModeCore.identifier("staggers"));

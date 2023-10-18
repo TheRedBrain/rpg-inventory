@@ -1,6 +1,7 @@
 package com.github.theredbrain.bamcore.api.util;
 
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.api.effect.AuraStatusEffect;
 import com.github.theredbrain.bamcore.effect.*;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -31,7 +32,9 @@ public class BetterAdventureModeCoreStatusEffects {
     public static final StatusEffect CHILLED = new HarmfulStatusEffect();
     public static final StatusEffect FROZEN = new HarmfulStatusEffect();
     public static final StatusEffect WET = new HarmfulStatusEffect();
-    public static final StatusEffect HEALTH_REGENERATION_AURA_EFFECT = new AuraStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 100, 0, false, false, true));
+    public static final StatusEffect TEST_AURA_EFFECT = new AuraStatusEffect(StatusEffects.GLOWING)
+            .addAttributeModifier(BetterAdventureModeCoreEntityAttributes.MAX_MANA, BetterAdventureModCoreAttributeModifierUUIDs.AURA_EFFECT, -0.25F, EntityAttributeModifier.Operation.MULTIPLY_TOTAL)
+            ;
 
     public static void registerEffects() {
         ActionImpairing.configure(NO_ATTACK_ITEMS_EFFECT, new EntityActionsAllowed(true, true, new EntityActionsAllowed.PlayersAllowed(false, true, true), new EntityActionsAllowed.MobsAllowed(true), EntityActionsAllowed.SemanticType.NONE));
@@ -45,7 +48,7 @@ public class BetterAdventureModeCoreStatusEffects {
         Synchronized.configure(CHILLED, true);
         Synchronized.configure(FROZEN, true);
         Synchronized.configure(WET, true);
-        Synchronized.configure(HEALTH_REGENERATION_AURA_EFFECT, true);
+        Synchronized.configure(TEST_AURA_EFFECT, true);
 //        RemoveOnHit.configure(WEAPONS_SHEATHED_EFFECT, true);
 
         // utility effects
@@ -68,6 +71,6 @@ public class BetterAdventureModeCoreStatusEffects {
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("frozen"), FROZEN);
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("wet"), WET);
 
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("health_regeneration_aura_effect"), HEALTH_REGENERATION_AURA_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("test_aura_effect"), TEST_AURA_EFFECT);
     }
 }

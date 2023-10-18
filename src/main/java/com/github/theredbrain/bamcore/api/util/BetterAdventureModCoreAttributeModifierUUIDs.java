@@ -5,6 +5,7 @@ import net.minecraft.util.math.MathHelper;
 public class BetterAdventureModCoreAttributeModifierUUIDs {
 
     public static final String OVERBURDENED_EFFECT = MathHelper.randomUuid().toString();
+    public static final String AURA_EFFECT = MathHelper.randomUuid().toString();
 
     //region trinket effects
     public static final String SPELL_SLOT_1 = MathHelper.randomUuid().toString();

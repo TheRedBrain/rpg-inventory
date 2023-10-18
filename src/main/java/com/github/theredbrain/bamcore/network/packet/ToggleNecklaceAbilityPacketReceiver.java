@@ -1,6 +1,7 @@
 package com.github.theredbrain.bamcore.network.packet;
 
-import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreStatusEffects;
+import com.github.theredbrain.bamcore.api.effect.AuraStatusEffect;
+import com.github.theredbrain.bamcore.api.item.AuraGrantingNecklaceTrinketItem;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.bamcore.registry.Tags;
 import dev.emi.trinkets.api.TrinketComponent;
@@ -16,7 +17,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 
 import java.util.Optional;
-import java.util.function.Predicate;
 
 public class ToggleNecklaceAbilityPacketReceiver implements ServerPlayNetworking.PlayChannelHandler {
     @Override
@@ -37,14 +37,19 @@ public class ToggleNecklaceAbilityPacketReceiver implements ServerPlayNetworking
 
             if (necklaceItemStack == ItemStack.EMPTY) {
                 player.sendMessageToClient(Text.translatable("hud.message.noNecklaceEquipped"), true);
-            } else if (necklaceItemStack.isIn(Tags.TELEPORT_HOME_NECKLACES)) {
-                server.getPlayerManager().respawnPlayer(player, true);
-            } else if (necklaceItemStack.isIn(Tags.HEALTH_REGENERATION_AURA_NECKLACES)) {
-                if (player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.HEALTH_REGENERATION_AURA_EFFECT)) {
-                    player.removeStatusEffect(BetterAdventureModeCoreStatusEffects.HEALTH_REGENERATION_AURA_EFFECT);
-                } else {
-                    player.addStatusEffect(new StatusEffectInstance(BetterAdventureModeCoreStatusEffects.HEALTH_REGENERATION_AURA_EFFECT, -1, 0, false, false, true));
+            } else if (((DuckPlayerEntityMixin) player).bamcore$getMana() > 0) {
+                if (necklaceItemStack.isIn(Tags.TELEPORT_HOME_NECKLACES)) {
+                    server.getPlayerManager().respawnPlayer(player, true);
+                } else if (necklaceItemStack.getItem() instanceof AuraGrantingNecklaceTrinketItem) {
+                    AuraStatusEffect auraStatusEffect = ((AuraGrantingNecklaceTrinketItem) necklaceItemStack.getItem()).getAuraStatusEffect();
+                    if (player.hasStatusEffect(auraStatusEffect)) {
+                        player.removeStatusEffect(auraStatusEffect);
+                    } else {
+                        player.addStatusEffect(new StatusEffectInstance(auraStatusEffect, -1, 0, false, false, true));
+                    }
                 }
+            } else {
+                player.sendMessageToClient(Text.translatable("hud.message.notEnoughMana"), true);
             }
         });
     }
