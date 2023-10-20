@@ -35,6 +35,11 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
         return this.hasVehicle() || this.bamcore$getStamina() > 0 || this.getAbilities().allowFlying;
     }
 
+//    @Override
+//    public void bamcore$openCraftingBenchBlockScreen(CraftingBenchBlockEntity craftingBenchBlock) {
+//        this.client.setScreen(new CraftingBenchBlockScreen(craftingBenchBlock));
+//    }
+
     @Override
     public void bamcore$openStructurePlacerBlockScreen(StructurePlacerBlockBlockEntity structurePlacerBlock) {
         this.client.setScreen(new StructurePlacerBlockScreen(structurePlacerBlock));

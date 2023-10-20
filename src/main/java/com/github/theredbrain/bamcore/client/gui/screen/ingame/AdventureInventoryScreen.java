@@ -160,7 +160,7 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
                                                                         Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
                                                                                 .children(List.of( // TODO replace grid with verticalFlow
                                                                                         Containers.grid(Sizing.content(), Sizing.content(), 1, 1)
-                                                                                                .child(slotAsComponent(46) // custom helmet
+                                                                                                .child(slotAsComponent(5) // helmet
                                                                                                         .margins(Insets.of(1, 1, 1, 1)), 0, 0)
                                                                                                 .surface(Surface.tiled(INVENTORY_SLOT_TEXTURE, 18, 18)),
                                                                                         Containers.grid(Sizing.content(), Sizing.content(), 1, 1)
@@ -177,11 +177,11 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
                                                                                                 .children(List.of(
                                                                                                         Containers.verticalFlow(Sizing.fixed(18), Sizing.fixed(18))
                                                                                                                 .id("shoulders_slot_container"),
-                                                                                                        slotAsComponent(47) // custom chestplate
+                                                                                                        slotAsComponent(6) // chestplate
                                                                                                                 .margins(Insets.of(1, 1, 1, 1)),
                                                                                                         Containers.verticalFlow(Sizing.fixed(18), Sizing.fixed(18))
                                                                                                                 .id("belts_slot_container"),
-                                                                                                        slotAsComponent(48) // custom leggings
+                                                                                                        slotAsComponent(7) // leggings
                                                                                                                 .margins(Insets.of(1, 1, 1, 1))
                                                                                                 ))
                                                                                                 .surface(Surface.tiled(INVENTORY_SLOT_TEXTURE, 18, 18)),
@@ -195,7 +195,7 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
                                                                                                                 .id("rings_2_slot_container"),
                                                                                                         Containers.verticalFlow(Sizing.fixed(18), Sizing.fixed(18))
                                                                                                                 .id("gloves_slot_container"),
-                                                                                                        slotAsComponent(49) // custom boots
+                                                                                                        slotAsComponent(8) // boots
                                                                                                                 .margins(Insets.of(1, 1, 1, 1))
                                                                                                 ))
                                                                                                 .surface(Surface.tiled(INVENTORY_SLOT_TEXTURE, 18, 18))
@@ -208,7 +208,7 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
                                                                                                         Containers.grid(Sizing.content(), Sizing.content(), 1, 2)
                                                                                                                 .child(Containers.verticalFlow(Sizing.fixed(18), Sizing.fixed(18))
                                                                                                                         .id("main_hand_slot_container"), 0, 0)
-                                                                                                                .child(slotAsComponent(50) // custom offhand
+                                                                                                                .child(slotAsComponent(45) // offhand
                                                                                                                          .margins(Insets.of(1, 1, 1, 1)), 0, 1)
                                                                                                                 .surface(Surface.tiled(INVENTORY_SLOT_TEXTURE, 18, 18))
                                                                                                 )),
@@ -302,14 +302,14 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
         ((OwoSlotExtension)handler.slots.get(3)).owo$setDisabledOverride(true);
         ((OwoSlotExtension)handler.slots.get(4)).owo$setDisabledOverride(true);
 
-        // disable vanilla armor slots
-        ((OwoSlotExtension)handler.slots.get(5)).owo$setDisabledOverride(true);
-        ((OwoSlotExtension)handler.slots.get(6)).owo$setDisabledOverride(true);
-        ((OwoSlotExtension)handler.slots.get(7)).owo$setDisabledOverride(true);
-        ((OwoSlotExtension)handler.slots.get(8)).owo$setDisabledOverride(true);
-
-        // disable vanilla offhand slot
-        ((OwoSlotExtension)handler.slots.get(45)).owo$setDisabledOverride(true);
+//        // disable vanilla armor slots
+//        ((OwoSlotExtension)handler.slots.get(5)).owo$setDisabledOverride(true);
+//        ((OwoSlotExtension)handler.slots.get(6)).owo$setDisabledOverride(true);
+//        ((OwoSlotExtension)handler.slots.get(7)).owo$setDisabledOverride(true);
+//        ((OwoSlotExtension)handler.slots.get(8)).owo$setDisabledOverride(true);
+//
+//        // disable vanilla offhand slot
+//        ((OwoSlotExtension)handler.slots.get(45)).owo$setDisabledOverride(true);
 
 //        this.buildTrinketSlots();
     }

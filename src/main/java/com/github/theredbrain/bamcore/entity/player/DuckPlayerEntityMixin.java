@@ -31,6 +31,7 @@ public interface DuckPlayerEntityMixin {
 
     boolean bamcore$isAdventure();
 
+//    void bamcore$openCraftingBenchBlockScreen(CraftingBenchBlockEntity craftingBenchBlockEntity);
     void bamcore$openStructurePlacerBlockScreen(StructurePlacerBlockBlockEntity structurePlacerBlock);
     void bamcore$openAreaFillerBlockScreen(AreaFillerBlockBlockEntity areaFillerBlock);
     void bamcore$openRedstoneTriggerBlockScreen(RedstoneTriggerBlockBlockEntity redstoneTriggerBlock);

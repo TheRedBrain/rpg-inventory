@@ -5,6 +5,7 @@ import com.github.theredbrain.bamcore.api.item.BetterAdventureMode_BasicShieldIt
 import com.github.theredbrain.bamcore.api.item.BetterAdventureMode_BasicWeaponItem;
 import com.github.theredbrain.bamcore.block.entity.AreaFillerBlockBlockEntity;
 import com.github.theredbrain.bamcore.block.entity.ChunkLoaderBlockBlockEntity;
+import com.github.theredbrain.bamcore.block.entity.CraftingBenchBlockEntity;
 import com.github.theredbrain.bamcore.block.entity.StructurePlacerBlockBlockEntity;
 import com.github.theredbrain.bamcore.api.effect.FoodStatusEffect;
 import com.github.theredbrain.bamcore.entity.DamageUtility;
@@ -674,6 +675,10 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
      */
     @Override
     public abstract boolean bamcore$isAdventure();
+
+//    @Override
+//    public void bamcore$openCraftingBenchBlockScreen(CraftingBenchBlockEntity craftingBenchBlockEntity) {
+//    }
 
     @Override
     public void bamcore$openStructurePlacerBlockScreen(StructurePlacerBlockBlockEntity structurePlacerBlock) {

@@ -38,7 +38,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.*;
 
-@Mixin(value = PlayerScreenHandler.class, priority = 1050) // is applied before Trinkets
+@Mixin(value = PlayerScreenHandler.class, priority = 1050) // overrides Trinkets
 public abstract class BetterAdventureMode_PlayerScreenHandlerMixin extends ScreenHandler implements TrinketPlayerScreenHandler {
     @Shadow @Final
     private PlayerEntity owner;
@@ -114,79 +114,79 @@ public abstract class BetterAdventureMode_PlayerScreenHandlerMixin extends Scree
     @Inject(method = "<init>", at = @At("TAIL"))
     public void PlayerScreenHandler(PlayerInventory inventory, boolean onServer, PlayerEntity owner, CallbackInfo ci) {
 
-        // TODO config to allow vanilla screen
-        // this adds a copy of the 4 equipment slots and the offhand slot whose behaviour is controlled by status effects and item tags
-        int i;
-        for (i = 0; i < 4; ++i) {
-            final EquipmentSlot equipmentSlot = EQUIPMENT_SLOT_ORDER[i];
-            this.addSlot(new Slot(inventory, 39 - i, 8, 8 + i * 18){
-
-                @Override
-                public void setStack(ItemStack stack) {
-                    onEquipStack(owner, equipmentSlot, stack, this.getStack());
-                    super.setStack(stack);
-                }
-
-                @Override
-                public int getMaxItemCount() {
-                    return 1;
-                }
-
-                @Override
-                public boolean canInsert(ItemStack stack) {
-                    return equipmentSlot == MobEntity.getPreferredEquipmentSlot(stack) && (owner.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure()));
-                }
-
-                @Override
-                public boolean canTakeItems(PlayerEntity playerEntity) {
-                    ItemStack itemStack = this.getStack();
-                    if (!itemStack.isEmpty() && !playerEntity.isCreative() && EnchantmentHelper.hasBindingCurse(itemStack)) {
-                        return false;
-                    }
-                    return super.canTakeItems(playerEntity) && (owner.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure()));
-                }
-
-                @Override
-                public Pair<Identifier, Identifier> getBackgroundSprite() {
-                    return Pair.of(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, EMPTY_ARMOR_SLOT_TEXTURES[equipmentSlot.getEntitySlotId()]);
-                }
-            });
-        }
-        this.addSlot(new Slot(inventory, 40, 77, 62){
-
-            @Override
-            public void setStack(ItemStack stack) {
-                onEquipStack(owner, EquipmentSlot.OFFHAND, stack, this.getStack());
-                super.setStack(stack);
-            }
-
-            @Override
-            public int getMaxItemCount() {
-                return 1;
-            }
-
-            @Override
-            public boolean canInsert(ItemStack stack) {
-                return stack.isIn(Tags.OFF_HAND_ITEMS) && (owner.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure()));
-            }
-
-            @Override
-            public boolean canTakeItems(PlayerEntity playerEntity) {
-                ItemStack itemStack = this.getStack();
-                if (!itemStack.isEmpty() && !playerEntity.isCreative() && EnchantmentHelper.hasBindingCurse(itemStack)) {
-                    return false;
-                }
-                return super.canTakeItems(playerEntity) && (owner.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure()));
-            }
-
-            @Override
-            public Pair<Identifier, Identifier> getBackgroundSprite() {
-                return Pair.of(BLOCK_ATLAS_TEXTURE, EMPTY_OFFHAND_ARMOR_SLOT);
-            }
-        });
-//        this.activeSpellSlotAmount = (int) owner.getAttributeInstance(BetterAdventureModeCoreEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT).getValue();
-//        this.inventory = inventory;
-//        trinkets$updateTrinketSlots(true);
+//        // TODO config to allow vanilla screen
+//        // this replaces the 4 equipment slots and the offhand slot to allow their behaviour to be controlled by status effects and item tags
+//        int i;
+//        for (i = 0; i < 4; ++i) {
+//            final EquipmentSlot equipmentSlot = EQUIPMENT_SLOT_ORDER[i];
+//            this.slots.set(5 + i, new Slot(inventory, 39 - i, 8, 8 + i * 18) {
+//
+//                @Override
+//                public void setStack(ItemStack stack) {
+//                    onEquipStack(owner, equipmentSlot, stack, this.getStack());
+//                    super.setStack(stack);
+//                }
+//
+//                @Override
+//                public int getMaxItemCount() {
+//                    return 1;
+//                }
+//
+//                @Override
+//                public boolean canInsert(ItemStack stack) {
+//                    return equipmentSlot == MobEntity.getPreferredEquipmentSlot(stack);
+////                    return equipmentSlot == MobEntity.getPreferredEquipmentSlot(stack) && (owner.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure()));
+//                }
+//
+//                @Override
+//                public boolean canTakeItems(PlayerEntity playerEntity) {
+//                    ItemStack itemStack = this.getStack();
+//                    if (!itemStack.isEmpty() && !playerEntity.isCreative() && EnchantmentHelper.hasBindingCurse(itemStack)) {
+//                        return false;
+//                    }
+//                    return super.canTakeItems(playerEntity);
+////                    return super.canTakeItems(playerEntity) && (owner.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure()));
+//                }
+//
+//                @Override
+//                public Pair<Identifier, Identifier> getBackgroundSprite() {
+////                    return Pair.of(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, EMPTY_ARMOR_SLOT_TEXTURES[equipmentSlot.getEntitySlotId()]);
+//                    return Pair.of(BLOCK_ATLAS_TEXTURE, EMPTY_OFFHAND_ARMOR_SLOT);
+//                }
+//            });
+//        }
+//        this.slots.set(45, new Slot(inventory, 40, 77, 62){
+//
+//            @Override
+//            public void setStack(ItemStack stack) {
+//                onEquipStack(owner, EquipmentSlot.OFFHAND, stack, this.getStack());
+//                super.setStack(stack);
+//            }
+//
+////            @Override
+////            public int getMaxItemCount() {
+////                return 1;
+////            }
+////
+////            @Override
+////            public boolean canInsert(ItemStack stack) {
+////                return stack.isIn(Tags.OFF_HAND_ITEMS) && (owner.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure()));
+////            }
+////
+////            @Override
+////            public boolean canTakeItems(PlayerEntity playerEntity) {
+////                ItemStack itemStack = this.getStack();
+////                if (!itemStack.isEmpty() && !playerEntity.isCreative() && EnchantmentHelper.hasBindingCurse(itemStack)) {
+////                    return false;
+////                }
+////                return super.canTakeItems(playerEntity) && (owner.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT) || !(((DuckPlayerEntityMixin)owner).bamcore$isAdventure()));
+////            }
+//
+//            @Override
+//            public Pair<Identifier, Identifier> getBackgroundSprite() {
+//                return Pair.of(BLOCK_ATLAS_TEXTURE, EMPTY_OFFHAND_ARMOR_SLOT);
+//            }
+//        });
         this.inventory = inventory;
         trinkets$updateTrinketSlots(true);
     }
