@@ -1,30 +1,18 @@
 package com.github.theredbrain.bamcore.mixin.screen;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
-import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreEntityAttributes;
-import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreStatusEffects;
-import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
-import com.github.theredbrain.bamcore.registry.GameRulesRegistry;
-import com.github.theredbrain.bamcore.registry.Tags;
 import com.google.common.collect.ImmutableList;
-import com.mojang.datafixers.util.Pair;
 import dev.emi.trinkets.Point;
 import dev.emi.trinkets.SurvivalTrinketSlot;
 import dev.emi.trinkets.TrinketPlayerScreenHandler;
 import dev.emi.trinkets.TrinketsClient;
 import dev.emi.trinkets.api.*;
 import dev.emi.trinkets.mixin.accessor.ScreenHandlerAccessor;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -87,22 +75,22 @@ public abstract class BetterAdventureMode_PlayerScreenHandlerMixin extends Scree
 ////    private int activeSpellSlotAmount = 0;
 ////    private final int[] spellSlotIds = {48, 49, 50, 51, 52, 53, 54, 55};
 //    private final int trinketSlotAmount = 14;
-    @Shadow
-    @Final
-    private static EquipmentSlot[] EQUIPMENT_SLOT_ORDER;
-    @Shadow
-    @Final
-    static Identifier[] EMPTY_ARMOR_SLOT_TEXTURES;
-    @Shadow
-    @Final
-    public static Identifier BLOCK_ATLAS_TEXTURE;
-    @Shadow
-    @Final
-    public static Identifier EMPTY_OFFHAND_ARMOR_SLOT;
-    @Shadow
-    static void onEquipStack(PlayerEntity player, EquipmentSlot slot, ItemStack newStack, ItemStack currentStack) {
-        throw new AssertionError();
-    }
+//    @Shadow
+//    @Final
+//    private static EquipmentSlot[] EQUIPMENT_SLOT_ORDER;
+//    @Shadow
+//    @Final
+//    static Identifier[] EMPTY_ARMOR_SLOT_TEXTURES;
+//    @Shadow
+//    @Final
+//    public static Identifier BLOCK_ATLAS_TEXTURE;
+//    @Shadow
+//    @Final
+//    public static Identifier EMPTY_OFFHAND_ARMOR_SLOT;
+//    @Shadow
+//    static void onEquipStack(PlayerEntity player, EquipmentSlot slot, ItemStack newStack, ItemStack currentStack) {
+//        throw new AssertionError();
+//    }
 
     public BetterAdventureMode_PlayerScreenHandlerMixin() {
         super(null, 0);
@@ -150,8 +138,8 @@ public abstract class BetterAdventureMode_PlayerScreenHandlerMixin extends Scree
 //
 //                @Override
 //                public Pair<Identifier, Identifier> getBackgroundSprite() {
-////                    return Pair.of(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, EMPTY_ARMOR_SLOT_TEXTURES[equipmentSlot.getEntitySlotId()]);
-//                    return Pair.of(BLOCK_ATLAS_TEXTURE, EMPTY_OFFHAND_ARMOR_SLOT);
+//                    return Pair.of(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, EMPTY_ARMOR_SLOT_TEXTURES[equipmentSlot.getEntitySlotId()]);
+////                    return Pair.of(BLOCK_ATLAS_TEXTURE, EMPTY_OFFHAND_ARMOR_SLOT);
 //                }
 //            });
 //        }

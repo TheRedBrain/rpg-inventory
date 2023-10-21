@@ -4,6 +4,8 @@ import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.api.effect.FoodStatusEffect;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreEntityAttributes;
+import com.github.theredbrain.bamcore.registry.Tags;
+import com.github.theredbrain.bamcore.screen.slot.BetterAdventureModeSlotExtension;
 import com.google.common.collect.Ordering;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.emi.trinkets.*;
@@ -293,14 +295,33 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
                                     .margins(Insets.of(1, 1, 1, 1)),
                             0,
                             i);
+            ((BetterAdventureModeSlotExtension)handler.slots.get(i + 36)).bamcore$setInsertOnlyItemsOfTag(Tags.ADVENTURE_HOTBAR_ITEMS);
+            ((BetterAdventureModeSlotExtension)handler.slots.get(i + 36)).bamcore$setInsertItemOverride(false);
         }
 
+        ((BetterAdventureModeSlotExtension)handler.slots.get(5)).bamcore$setInsertItemOverride(false);
+        ((BetterAdventureModeSlotExtension)handler.slots.get(6)).bamcore$setInsertItemOverride(false);
+        ((BetterAdventureModeSlotExtension)handler.slots.get(7)).bamcore$setInsertItemOverride(false);
+        ((BetterAdventureModeSlotExtension)handler.slots.get(8)).bamcore$setInsertItemOverride(false);
+        ((BetterAdventureModeSlotExtension)handler.slots.get(45)).bamcore$setInsertItemOverride(false);
+
+        ((BetterAdventureModeSlotExtension)handler.slots.get(5)).bamcore$setTakeItemOverride(false);
+        ((BetterAdventureModeSlotExtension)handler.slots.get(6)).bamcore$setTakeItemOverride(false);
+        ((BetterAdventureModeSlotExtension)handler.slots.get(7)).bamcore$setTakeItemOverride(false);
+        ((BetterAdventureModeSlotExtension)handler.slots.get(8)).bamcore$setTakeItemOverride(false);
+        ((BetterAdventureModeSlotExtension)handler.slots.get(45)).bamcore$setTakeItemOverride(false);
+
         // disable vanilla crafting slots
-        ((OwoSlotExtension)handler.slots.get(0)).owo$setDisabledOverride(true);
-        ((OwoSlotExtension)handler.slots.get(1)).owo$setDisabledOverride(true);
-        ((OwoSlotExtension)handler.slots.get(2)).owo$setDisabledOverride(true);
-        ((OwoSlotExtension)handler.slots.get(3)).owo$setDisabledOverride(true);
-        ((OwoSlotExtension)handler.slots.get(4)).owo$setDisabledOverride(true);
+//        ((OwoSlotExtension)handler.slots.get(0)).owo$setDisabledOverride(true);
+//        ((OwoSlotExtension)handler.slots.get(1)).owo$setDisabledOverride(true);
+//        ((OwoSlotExtension)handler.slots.get(2)).owo$setDisabledOverride(true);
+//        ((OwoSlotExtension)handler.slots.get(3)).owo$setDisabledOverride(true);
+//        ((OwoSlotExtension)handler.slots.get(4)).owo$setDisabledOverride(true);
+        disableSlot(handler.slots.get(0));
+        disableSlot(handler.slots.get(1));
+        disableSlot(handler.slots.get(2));
+        disableSlot(handler.slots.get(3));
+        disableSlot(handler.slots.get(4));
 
 //        // disable vanilla armor slots
 //        ((OwoSlotExtension)handler.slots.get(5)).owo$setDisabledOverride(true);
