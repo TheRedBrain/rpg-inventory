@@ -9,6 +9,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
@@ -17,14 +18,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public class ShouldersArmorTrinketItem extends TrinketItem {
+public class ArmorTrinketItem extends TrinketItem {
 
     @Nullable
     private String translationKeyBroken;
     private final double armor;
     private final double armorToughness;
     private final double weight;
-    public ShouldersArmorTrinketItem(double armor, double armorToughness, double weight, Settings settings) {
+    public ArmorTrinketItem(double armor, double armorToughness, double weight, Settings settings) {
         super(settings);
         this.armor = armor;
         this.armorToughness = armorToughness;
@@ -58,24 +59,22 @@ public class ShouldersArmorTrinketItem extends TrinketItem {
      */
     @Override
     public String getTranslationKey(ItemStack stack) {
-        return ((ShouldersArmorTrinketItem)stack.getItem()).isProtecting(stack) ? this.getTranslationKey() : this.getOrCreateTranslationKeyBroken();
+        return ((ArmorTrinketItem)stack.getItem()).isProtecting(stack) ? this.getTranslationKey() : this.getOrCreateTranslationKeyBroken();
     }
 
     @Override
     public Multimap<EntityAttribute, EntityAttributeModifier> getModifiers(ItemStack stack, SlotReference slot, LivingEntity entity, UUID uuid) {
         Multimap<EntityAttribute, EntityAttributeModifier> map = super.getModifiers(stack, slot, entity, uuid);
-        if (slot.inventory().getSlotType().getGroup().equals("shoulders")) {
-            if (this.isProtecting(stack)) {
-                map.put(EntityAttributes.GENERIC_ARMOR,
-                        new EntityAttributeModifier(UUID.fromString(BetterAdventureModCoreAttributeModifierUUIDs.SHOULDERS_SLOT),
-                                "Armor", this.armor, EntityAttributeModifier.Operation.ADDITION));
-                map.put(EntityAttributes.GENERIC_ARMOR_TOUGHNESS,
-                        new EntityAttributeModifier(UUID.fromString(BetterAdventureModCoreAttributeModifierUUIDs.SHOULDERS_SLOT),
-                                "Armor Toughness", this.armorToughness, EntityAttributeModifier.Operation.ADDITION));
-                map.put(BetterAdventureModeCoreEntityAttributes.EQUIPMENT_WEIGHT,
-                        new EntityAttributeModifier(UUID.fromString(BetterAdventureModCoreAttributeModifierUUIDs.SHOULDERS_SLOT),
-                                "Equipment Weight", this.weight, EntityAttributeModifier.Operation.ADDITION));
-            }
+        String group = slot.inventory().getSlotType().getGroup();
+        UUID slotUuid = group.equals("boots") ? ArmorItem.MODIFIERS.get(ArmorItem.Type.BOOTS) : group.equals("leggings") ? ArmorItem.MODIFIERS.get(ArmorItem.Type.LEGGINGS) : group.equals("gloves") ? UUID.fromString(BetterAdventureModCoreAttributeModifierUUIDs.GLOVE_SLOT) : group.equals("chest_plates") ? ArmorItem.MODIFIERS.get(ArmorItem.Type.CHESTPLATE) : group.equals("shoulders") ? UUID.fromString(BetterAdventureModCoreAttributeModifierUUIDs.SHOULDERS_SLOT) : group.equals("helmets") ? ArmorItem.MODIFIERS.get(ArmorItem.Type.HELMET) : null;
+
+        if (slotUuid != null && this.isProtecting(stack)) {
+            map.put(EntityAttributes.GENERIC_ARMOR,
+                    new EntityAttributeModifier(slotUuid, "Armor", this.armor, EntityAttributeModifier.Operation.ADDITION));
+            map.put(EntityAttributes.GENERIC_ARMOR_TOUGHNESS,
+                    new EntityAttributeModifier(slotUuid, "Armor Toughness", this.armorToughness, EntityAttributeModifier.Operation.ADDITION));
+            map.put(BetterAdventureModeCoreEntityAttributes.EQUIPMENT_WEIGHT,
+                    new EntityAttributeModifier(slotUuid, "Equipment Weight", this.weight, EntityAttributeModifier.Operation.ADDITION));
         }
         return map;
     }

@@ -64,7 +64,7 @@ public abstract class InGameHudMixin {
         PlayerEntity playerEntity = this.getCameraPlayer();
         if (playerEntity != null) {
             ItemStack itemStackMainHand = ((DuckPlayerInventoryMixin)playerEntity.getInventory()).bamcore$getMainHand();
-            ItemStack itemStackOffHand = playerEntity.getInventory().offHand.get(0);
+            ItemStack itemStackOffHand = ((DuckPlayerInventoryMixin)playerEntity.getInventory()).bamcore$getOffHand();
             ItemStack itemStackAlternativeMainHand = ((DuckPlayerInventoryMixin)playerEntity.getInventory()).bamcore$getAlternativeMainHand();
             ItemStack itemStackAlternativeOffHand = ((DuckPlayerInventoryMixin)playerEntity.getInventory()).bamcore$getAlternativeOffHand();
             Arm arm = playerEntity.getMainArm().getOpposite();

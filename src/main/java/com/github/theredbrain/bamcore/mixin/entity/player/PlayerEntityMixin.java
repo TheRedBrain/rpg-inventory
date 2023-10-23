@@ -442,11 +442,55 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         return true;
     }
 
-    @Inject(method = "getEquippedStack", at = @At("RETURN"), cancellable = true)
-    public void bamcore$getEquippedStack(EquipmentSlot slot, CallbackInfoReturnable<ItemStack> cir) {
+    /**
+     * @author TheRedBrain
+     * @reason TODO
+     */
+    @Overwrite
+    public ItemStack getEquippedStack(EquipmentSlot slot) {
+        if (slot == EquipmentSlot.MAINHAND) {
+            return this.inventory.getMainHandStack();
+        }
         if (slot == EquipmentSlot.OFFHAND) {
-            cir.setReturnValue(((DuckPlayerInventoryMixin)this.inventory).bamcore$getOffHandStack());
-            cir.cancel();
+            return ((DuckPlayerInventoryMixin)this.inventory).bamcore$getOffHandStack();
+        }
+        if (slot.getType() == EquipmentSlot.Type.ARMOR) {
+            ItemStack stack = ItemStack.EMPTY;
+                if (slot.getEntitySlotId() == 0) {
+                    return ((DuckPlayerInventoryMixin)this.inventory).bamcore$getFeetStack();
+                } else if (slot.getEntitySlotId() == 1) {
+                    return ((DuckPlayerInventoryMixin)this.inventory).bamcore$getLegStack();
+                } else if (slot.getEntitySlotId() == 2) {
+                    return ((DuckPlayerInventoryMixin)this.inventory).bamcore$getChestStack();
+                } else if (slot.getEntitySlotId() == 3) {
+                    return ((DuckPlayerInventoryMixin)this.inventory).bamcore$getHeadStack();
+                }
+            return stack;
+        }
+        return ItemStack.EMPTY;
+    }
+
+    /**
+     * @author TheRedBrain
+     * @reason TODO
+     */
+    @Overwrite
+    public void equipStack(EquipmentSlot slot, ItemStack stack) {
+        this.processEquippedStack(stack);
+        if (slot == EquipmentSlot.MAINHAND) {
+            this.onEquipStack(slot, ((DuckPlayerInventoryMixin)this.inventory).bamcore$setMainHand(stack), stack);
+        } else if (slot == EquipmentSlot.OFFHAND) {
+            this.onEquipStack(slot, ((DuckPlayerInventoryMixin)this.inventory).bamcore$setOffHand(stack), stack);
+        } else if (slot.getType() == EquipmentSlot.Type.ARMOR) {
+            if (slot.getEntitySlotId() == 0) {
+                this.onEquipStack(slot, ((DuckPlayerInventoryMixin)this.inventory).bamcore$setFeetStack(stack), stack);
+            } else if (slot.getEntitySlotId() == 1) {
+                this.onEquipStack(slot, ((DuckPlayerInventoryMixin)this.inventory).bamcore$setLegStack(stack), stack);
+            } else if (slot.getEntitySlotId() == 2) {
+                this.onEquipStack(slot, ((DuckPlayerInventoryMixin)this.inventory).bamcore$setChestStack(stack), stack);
+            } else if (slot.getEntitySlotId() == 3) {
+                this.onEquipStack(slot, ((DuckPlayerInventoryMixin)this.inventory).bamcore$setHeadStack(stack), stack);
+            }
         }
     }
 
@@ -455,15 +499,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
      * @reason
      */
     @Overwrite
-    public void equipStack(EquipmentSlot slot, ItemStack stack) {
-        this.processEquippedStack(stack);
-        if (slot == EquipmentSlot.MAINHAND) {
-            this.onEquipStack(slot, ((DuckPlayerInventoryMixin)this.inventory).bamcore$setMainHand(stack), stack);
-        } else if (slot == EquipmentSlot.OFFHAND) {
-            this.onEquipStack(slot, this.inventory.offHand.set(0, stack), stack);
-        } else if (slot.getType() == EquipmentSlot.Type.ARMOR) {
-            this.onEquipStack(slot, this.inventory.armor.set(slot.getEntitySlotId(), stack), stack);
-        }
+    public Iterable<ItemStack> getArmorItems() {
+        return ((DuckPlayerInventoryMixin)this.inventory).getArmorTrinkets();
     }
 
     /**
@@ -666,10 +703,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         this.dataTracker.set(STAMINA, MathHelper.clamp(stamina, -100/*TODO balance min stamina*/, this.bamcore$getMaxStamina()));
     }
 
-//    public ScreenHandler bamcore$getAdventureInventoryScreenHandler() {
-//        return adventureInventoryScreenHandler;
-//    }
-
     /**
      * Returns whether this player is in adventure mode.
      */
@@ -720,7 +753,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
                 // eject items from inactive slots
                 for (int i = 0; i < 9; i++) {
                     PlayerInventory playerInventory = this.getInventory();
-                    Slot slot = this.playerScreenHandler.slots.get(i);
+                    Slot slot = this.playerScreenHandler.slots.get(i + 36);
 
                     if (!slot.inventory.getStack(slot.getIndex()).isIn(Tags.ADVENTURE_HOTBAR_ITEMS)) {
                         playerInventory.offerOrDrop(slot.inventory.removeStack(slot.getIndex()));

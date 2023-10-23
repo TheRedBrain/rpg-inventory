@@ -61,7 +61,6 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
     private float mouseX;
     private float mouseY;
     private boolean showAttributeScreen = false;
-    private boolean showStatusEffectsScreen = false;
     private int oldActiveSpellSlotAmount = 0;
     private int oldEffectsListSize = 0;
     private List<StatusEffectInstance> foodEffectsList = new ArrayList<>(Collections.emptyList());
@@ -69,14 +68,8 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
     private List<StatusEffectInstance> positiveEffectsList = new ArrayList<>(Collections.emptyList());
     private List<StatusEffectInstance> neutralEffectsList = new ArrayList<>(Collections.emptyList());
 
-    private List<Pair<SlotReference, ItemStack>> oldEquippedTrinkets = new ArrayList<>(Collections.emptyList());
-
-    private Map<String, Integer> trinketSlotIds = new HashMap<>(Map.of());
-    private Map<String, Integer> spellSlotIds = new HashMap<>(Map.of());
-
     public AdventureInventoryScreen(PlayerEntity player) {
         super(player.playerScreenHandler, player.getInventory(), Text.translatable("gui.adventureInventory"));
-        this.populateTrinketSlotIds(player);
     }
 
     public void handledScreenTick() {
@@ -160,16 +153,14 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
                                                                                                 .margins(Insets.of(0, 4, 0, 0))
                                                                                 )),
                                                                         Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
-                                                                                .children(List.of( // TODO replace grid with verticalFlow
-                                                                                        Containers.grid(Sizing.content(), Sizing.content(), 1, 1)
-                                                                                                .child(slotAsComponent(5) // helmet
-                                                                                                        .margins(Insets.of(1, 1, 1, 1)), 0, 0)
-                                                                                                .surface(Surface.tiled(INVENTORY_SLOT_TEXTURE, 18, 18)),
-                                                                                        Containers.grid(Sizing.content(), Sizing.content(), 1, 1)
-                                                                                                .child(Containers.verticalFlow(Sizing.fixed(18), Sizing.fixed(18))
-                                                                                                        .id("necklaces_slot_container"), 0, 0)
+                                                                                .children(List.of(
+                                                                                        Containers.verticalFlow(Sizing.fixed(18), Sizing.fixed(18))
+                                                                                                .surface(Surface.tiled(INVENTORY_SLOT_TEXTURE, 18, 18))
+                                                                                                .id("helmet_slot_container"),
+                                                                                        Containers.verticalFlow(Sizing.fixed(18), Sizing.fixed(18))
                                                                                                 .margins(Insets.of(0, 0, 1, 0))
                                                                                                 .surface(Surface.tiled(INVENTORY_SLOT_TEXTURE, 18, 18))
+                                                                                                .id("necklaces_slot_container")
                                                                                 ))
                                                                                 .padding(Insets.of(0, 0, 25, 25))
                                                                                 .id("equipment_slots_top_row"),
@@ -179,12 +170,12 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
                                                                                                 .children(List.of(
                                                                                                         Containers.verticalFlow(Sizing.fixed(18), Sizing.fixed(18))
                                                                                                                 .id("shoulders_slot_container"),
-                                                                                                        slotAsComponent(6) // chestplate
-                                                                                                                .margins(Insets.of(1, 1, 1, 1)),
+                                                                                                        Containers.verticalFlow(Sizing.fixed(18), Sizing.fixed(18))
+                                                                                                                .id("chest_plate_slot_container"),
                                                                                                         Containers.verticalFlow(Sizing.fixed(18), Sizing.fixed(18))
                                                                                                                 .id("belts_slot_container"),
-                                                                                                        slotAsComponent(7) // leggings
-                                                                                                                .margins(Insets.of(1, 1, 1, 1))
+                                                                                                        Containers.verticalFlow(Sizing.fixed(18), Sizing.fixed(18))
+                                                                                                                .id("leggings_slot_container")
                                                                                                 ))
                                                                                                 .surface(Surface.tiled(INVENTORY_SLOT_TEXTURE, 18, 18)),
                                                                                         Containers.verticalFlow(Sizing.fixed(51), Sizing.fixed(72))
@@ -197,8 +188,8 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
                                                                                                                 .id("rings_2_slot_container"),
                                                                                                         Containers.verticalFlow(Sizing.fixed(18), Sizing.fixed(18))
                                                                                                                 .id("gloves_slot_container"),
-                                                                                                        slotAsComponent(8) // boots
-                                                                                                                .margins(Insets.of(1, 1, 1, 1))
+                                                                                                        Containers.verticalFlow(Sizing.fixed(18), Sizing.fixed(18))
+                                                                                                                .id("boots_slot_container")
                                                                                                 ))
                                                                                                 .surface(Surface.tiled(INVENTORY_SLOT_TEXTURE, 18, 18))
                                                                                 ))
@@ -206,24 +197,22 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
                                                                         Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
                                                                                 .children(List.of(
                                                                                         Containers.horizontalFlow(Sizing.content(), Sizing.content())
-                                                                                                .children(List.of( // TODO replace grid with verticalFlow
-                                                                                                        Containers.grid(Sizing.content(), Sizing.content(), 1, 2)
-                                                                                                                .child(Containers.verticalFlow(Sizing.fixed(18), Sizing.fixed(18))
-                                                                                                                        .id("main_hand_slot_container"), 0, 0)
-                                                                                                                .child(slotAsComponent(45) // offhand
-                                                                                                                         .margins(Insets.of(1, 1, 1, 1)), 0, 1)
-                                                                                                                .surface(Surface.tiled(INVENTORY_SLOT_TEXTURE, 18, 18))
-                                                                                                )),
+                                                                                                .children(List.of(
+                                                                                                        Containers.verticalFlow(Sizing.fixed(18), Sizing.fixed(18))
+                                                                                                                .id("main_hand_slot_container"),
+                                                                                                        Containers.verticalFlow(Sizing.fixed(18), Sizing.fixed(18))
+                                                                                                                .id("off_hand_slot_container")
+                                                                                                ))
+                                                                                                .surface(Surface.tiled(INVENTORY_SLOT_TEXTURE, 18, 18)),
                                                                                         Containers.verticalFlow(Sizing.fixed(15), Sizing.fixed(18)),
                                                                                         Containers.horizontalFlow(Sizing.content(), Sizing.content())
-                                                                                                .children(List.of( // TODO replace grid with verticalFlow
-                                                                                                        Containers.grid(Sizing.content(), Sizing.content(), 1, 2)
-                                                                                                                .child(Containers.verticalFlow(Sizing.fixed(18), Sizing.fixed(18))
-                                                                                                                        .id("alternative_main_hand_slot_container"), 0, 0)
-                                                                                                                .child(Containers.verticalFlow(Sizing.fixed(18), Sizing.fixed(18))
-                                                                                                                        .id("alternative_off_hand_slot_container"), 0, 1)
-                                                                                                                .surface(Surface.tiled(INVENTORY_SLOT_TEXTURE, 18, 18))
+                                                                                                .children(List.of(
+                                                                                                        Containers.verticalFlow(Sizing.fixed(18), Sizing.fixed(18))
+                                                                                                                .id("alternative_main_hand_slot_container"),
+                                                                                                        Containers.verticalFlow(Sizing.fixed(18), Sizing.fixed(18))
+                                                                                                                .id("alternative_off_hand_slot_container")
                                                                                                 ))
+                                                                                                .surface(Surface.tiled(INVENTORY_SLOT_TEXTURE, 18, 18))
                                                                                 ))
                                                                                 .verticalAlignment(VerticalAlignment.CENTER)
                                                                                 .horizontalAlignment(HorizontalAlignment.CENTER)
@@ -295,108 +284,23 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
                                     .margins(Insets.of(1, 1, 1, 1)),
                             0,
                             i);
-            ((BetterAdventureModeSlotExtension)handler.slots.get(i + 36)).bamcore$setInsertOnlyItemsOfTag(Tags.ADVENTURE_HOTBAR_ITEMS);
-            ((BetterAdventureModeSlotExtension)handler.slots.get(i + 36)).bamcore$setInsertItemOverride(false);
         }
 
-        ((BetterAdventureModeSlotExtension)handler.slots.get(5)).bamcore$setInsertItemOverride(false);
-        ((BetterAdventureModeSlotExtension)handler.slots.get(6)).bamcore$setInsertItemOverride(false);
-        ((BetterAdventureModeSlotExtension)handler.slots.get(7)).bamcore$setInsertItemOverride(false);
-        ((BetterAdventureModeSlotExtension)handler.slots.get(8)).bamcore$setInsertItemOverride(false);
-        ((BetterAdventureModeSlotExtension)handler.slots.get(45)).bamcore$setInsertItemOverride(false);
-
-        ((BetterAdventureModeSlotExtension)handler.slots.get(5)).bamcore$setTakeItemOverride(false);
-        ((BetterAdventureModeSlotExtension)handler.slots.get(6)).bamcore$setTakeItemOverride(false);
-        ((BetterAdventureModeSlotExtension)handler.slots.get(7)).bamcore$setTakeItemOverride(false);
-        ((BetterAdventureModeSlotExtension)handler.slots.get(8)).bamcore$setTakeItemOverride(false);
-        ((BetterAdventureModeSlotExtension)handler.slots.get(45)).bamcore$setTakeItemOverride(false);
-
         // disable vanilla crafting slots
-//        ((OwoSlotExtension)handler.slots.get(0)).owo$setDisabledOverride(true);
-//        ((OwoSlotExtension)handler.slots.get(1)).owo$setDisabledOverride(true);
-//        ((OwoSlotExtension)handler.slots.get(2)).owo$setDisabledOverride(true);
-//        ((OwoSlotExtension)handler.slots.get(3)).owo$setDisabledOverride(true);
-//        ((OwoSlotExtension)handler.slots.get(4)).owo$setDisabledOverride(true);
         disableSlot(handler.slots.get(0));
         disableSlot(handler.slots.get(1));
         disableSlot(handler.slots.get(2));
         disableSlot(handler.slots.get(3));
         disableSlot(handler.slots.get(4));
 
-//        // disable vanilla armor slots
-//        ((OwoSlotExtension)handler.slots.get(5)).owo$setDisabledOverride(true);
-//        ((OwoSlotExtension)handler.slots.get(6)).owo$setDisabledOverride(true);
-//        ((OwoSlotExtension)handler.slots.get(7)).owo$setDisabledOverride(true);
-//        ((OwoSlotExtension)handler.slots.get(8)).owo$setDisabledOverride(true);
-//
-//        // disable vanilla offhand slot
-//        ((OwoSlotExtension)handler.slots.get(45)).owo$setDisabledOverride(true);
+        // disable vanilla armor slots
+        disableSlot(handler.slots.get(5));
+        disableSlot(handler.slots.get(6));
+        disableSlot(handler.slots.get(7));
+        disableSlot(handler.slots.get(8));
 
-//        this.buildTrinketSlots();
-    }
-
-    private void populateTrinketSlotIds(PlayerEntity player) {
-
-        this.trinketSlotIds.clear();
-        this.spellSlotIds.clear();
-        int trinketSlotStart = ((TrinketPlayerScreenHandler) this.handler).trinkets$getTrinketSlotStart();
-        int trinketSlotEnd = ((TrinketPlayerScreenHandler) this.handler).trinkets$getTrinketSlotEnd();
-        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
-        if (trinkets.isPresent()) {
-            for (int i = trinketSlotStart; i < trinketSlotEnd; i++) {
-                Slot s = this.handler.slots.get(i);
-                if (!(s instanceof SurvivalTrinketSlot ts)) {
-                    continue;
-                }
-                SlotType type = ts.getType();
-                if (Objects.equals(type.getGroup(), "alternative_main_hand") && Objects.equals(type.getName(), "alternative_main_hand")) {
-                    this.trinketSlotIds.put("alternative_main_hand", i);
-                } else if (Objects.equals(type.getGroup(), "alternative_off_hand") && Objects.equals(type.getName(), "alternative_off_hand")) {
-                    this.trinketSlotIds.put("alternative_off_hand", i);
-                } else if (Objects.equals(type.getGroup(), "belts") && Objects.equals(type.getName(), "belt")) {
-                    this.trinketSlotIds.put("belts", i);
-                } else if (Objects.equals(type.getGroup(), "gloves") && Objects.equals(type.getName(), "gloves")) {
-                    this.trinketSlotIds.put("gloves", i);
-                } else if (Objects.equals(type.getGroup(), "main_hand") && Objects.equals(type.getName(), "main_hand")) {
-                    this.trinketSlotIds.put("main_hand", i);
-                } else if (Objects.equals(type.getGroup(), "necklaces") && Objects.equals(type.getName(), "necklace")) {
-                    this.trinketSlotIds.put("necklaces", i);
-                } else if (Objects.equals(type.getGroup(), "rings_1") && Objects.equals(type.getName(), "ring")) {
-                    this.trinketSlotIds.put("rings_1", i);
-                } else if (Objects.equals(type.getGroup(), "rings_2") && Objects.equals(type.getName(), "ring")) {
-                    this.trinketSlotIds.put("rings_2", i);
-                } else if (Objects.equals(type.getGroup(), "shoulders") && Objects.equals(type.getName(), "shoulders")) {
-                    this.trinketSlotIds.put("shoulders", i);
-                } else if (Objects.equals(type.getGroup(), "spell_slot_1") && Objects.equals(type.getName(), "spell")) {
-                    this.spellSlotIds.put("spell_slot_1", i);
-                } else if (Objects.equals(type.getGroup(), "spell_slot_2") && Objects.equals(type.getName(), "spell")) {
-                    this.spellSlotIds.put("spell_slot_2", i);
-                } else if (Objects.equals(type.getGroup(), "spell_slot_3") && Objects.equals(type.getName(), "spell")) {
-                    this.spellSlotIds.put("spell_slot_3", i);
-                } else if (Objects.equals(type.getGroup(), "spell_slot_4") && Objects.equals(type.getName(), "spell")) {
-                    this.spellSlotIds.put("spell_slot_4", i);
-                } else if (Objects.equals(type.getGroup(), "spell_slot_5") && Objects.equals(type.getName(), "spell")) {
-                    this.spellSlotIds.put("spell_slot_5", i);
-                } else if (Objects.equals(type.getGroup(), "spell_slot_6") && Objects.equals(type.getName(), "spell")) {
-                    this.spellSlotIds.put("spell_slot_6", i);
-                } else if (Objects.equals(type.getGroup(), "spell_slot_7") && Objects.equals(type.getName(), "spell")) {
-                    this.spellSlotIds.put("spell_slot_7", i);
-                } else if (Objects.equals(type.getGroup(), "spell_slot_8") && Objects.equals(type.getName(), "spell")) {
-                    this.spellSlotIds.put("spell_slot_8", i);
-                }
-            }
-        }
-    }
-
-    private void buildTrinketSlots() {
-
-        for (String key : this.trinketSlotIds.keySet()) {
-            this.component(FlowLayout.class, key + "_slot_container").clearChildren();
-            this.component(FlowLayout.class, key + "_slot_container").child(
-                    slotAsComponent(this.trinketSlotIds.get(key))
-                    .margins(Insets.of(1, 1, 1, 1))
-            );
-        }
+        // disable vanilla offhand slot
+        disableSlot(handler.slots.get(45));
     }
 
     private void buildAttributesScreen(PlayerEntity player) {
@@ -839,31 +743,6 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
         return ((TrinketPlayerScreenHandler)this.handler);
     }
 
-//    @Override
-//    public Rect2i trinkets$getGroupRect(SlotGroup group) {
-//        int order = group.getOrder();
-//        return switch (order) {
-//            case 1 -> new Rect2i(59, 80, 17, 17); // alternative main hand
-//            case 2 -> new Rect2i(77, 80, 17, 17); // alternative off hand
-//            case 3 -> new Rect2i(8, 44, 17, 17); // belts
-//            case 4 -> new Rect2i(77, 44, 17, 17); // gloves
-//            case 5 -> new Rect2i(8, 80, 17, 17); // main hand
-//            case 6 -> new Rect2i(52, -10, 17, 17); // necklaces
-//            case 7 -> new Rect2i(77, 8, 17, 17); // rings 1
-//            case 8 -> new Rect2i(77, 26, 17, 17); // rings 2
-//            case 9 -> new Rect2i(8, 8, 17, 17); // shoulders
-//            case 10 -> new Rect2i(98, 62, 17, 17); // spell slot 1
-//            case 11 -> new Rect2i(98 + 18, 62, 17, 17); // spell slot 2
-//            case 12 -> new Rect2i(98 + 36, 62, 17, 17); // spell slot 3
-//            case 13 -> new Rect2i(98 + 54, 62, 17, 17); // spell slot 4
-//            case 14 -> new Rect2i(98, 62 + 18, 17, 17); // spell slot 5
-//            case 15 -> new Rect2i(98 + 18, 62 + 18, 17, 17); // spell slot 6
-//            case 16 -> new Rect2i(98 + 36, 62 + 18, 17, 17); // spell slot 7
-//            case 17 -> new Rect2i(98 + 54, 62 + 18, 17, 17); // spell slot 8
-//            default -> new Rect2i(0, 0, 0, 0);
-//        };
-//    }
-
     @Override
     public Rect2i trinkets$getGroupRect(SlotGroup group) {
         Point pos = ((TrinketPlayerScreenHandler) handler).trinkets$getGroupPos(group);
@@ -887,205 +766,4 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
     public int trinkets$getY() {
         return this.y;
     }
-
-    @Override
-    public void trinkets$updateTrinketSlots() {
-        // TODO update trinket slot backgrounds
-//        TrinketsApi.getTrinketComponent(this.handler.player()).ifPresent(trinkets -> {
-////                    trinkets.update();
-//                    Map<String, SlotGroup> groups = trinkets.getGroups();
-//
-//                    // clears previous groups
-////            ((TrinketPlayerScreenHandler)this.handler).groupPos.clear();
-////            while (trinketSlotStart < trinketSlotEnd) {
-////                slots.remove(trinketSlotStart);
-////                ((ScreenHandlerAccessor) (this)).getTrackedStacks().remove(trinketSlotStart);
-////                ((ScreenHandlerAccessor) (this)).getPreviousTrackedStacks().remove(trinketSlotStart);
-////                trinketSlotEnd--;
-////            }
-//
-//            for (Map.Entry<String, Map<String, TrinketInventory>> entry : trinkets.getInventory().entrySet()) {
-//                String groupId = entry.getKey();
-//                SlotGroup group = groups.get(groupId);
-//                int groupOffset = 1;
-//
-//                if (group.getSlotId() != -1) {
-//                    groupOffset++;
-//                }
-//                int width = 0;
-////                Point pos = trinkets$getGroupPos(group);
-//                Rect2i rect2i = trinkets$getGroupRect(group);
-//                if (rect2i == null) {
-//                    continue;
-//                }
-//                for (Map.Entry<String, TrinketInventory> slot : entry.getValue().entrySet().stream().sorted((a, b) ->
-//                        Integer.compare(a.getValue().getSlotType().getOrder(), b.getValue().getSlotType().getOrder())).toList()) {
-//                    TrinketInventory stacks = slot.getValue();
-//                    if (stacks.size() == 0) {
-//                        continue;
-//                    }
-//                    int slotOffset = 1;
-////                    int x = (int) ((groupOffset / 2) * 18 * Math.pow(-1, groupOffset));
-////                    slotHeights.computeIfAbsent(group, (k) -> new ArrayList<>()).add(new Point(x, stacks.size()));
-////                    slotTypes.computeIfAbsent(group, (k) -> new ArrayList<>()).add(stacks.getSlotType());
-//                    for (int i = 0; i < stacks.size(); i++) {
-////                        int y = (int) (rect2i..y() + (slotOffset / 2) * 18 * Math.pow(-1, slotOffset));
-//                        this.handler.slots.add(new SurvivalTrinketSlot(stacks, i, x + rect2i.getX(), y + rect2i.getY(), group, stacks.getSlotType(), i, groupOffset == 1 && i == 0));
-////                        slotOffset++;
-//                    }
-////                    groupOffset++;
-////                    width++;
-//                }
-////                slotWidths.put(group, width);
-//            }
-//        });
-    }
-//            int groupNum = 1; // Start at 1 because offhand exists
-
-            // ----------------------------------------
-//            if (true) {
-//                for (SlotGroup group : groups.values().stream().sorted(Comparator.comparing(SlotGroup::getOrder)).toList()) {
-//                    if (!hasSlots(trinkets, group)) {
-//                        continue;
-//                    }
-//                    int order = group.getOrder();
-//                    int id = group.getSlotId();
-//                    if (id != -1) {
-////                        if (this.slots.size() > id) {
-////                            Slot slot = this.slots.get(id);
-////                            if (!(slot instanceof SurvivalTrinketSlot)) {
-////                                groupPos.put(group, new Point(slot.x, slot.y));
-////                                groupNums.put(group, -id);
-////                            }
-////                        }
-//                        continue;
-//                    } else {
-//                        int x;
-//                        int y;
-//                        // begins at 1 because order=0 is the default
-//                        // this way most unwanted cases are avoided
-//                        if (order == 1) {
-//                            // alternative main hand
-//                            x = 59;
-//                            y = 80;//98; // -18 to negate an offset on the OwoScreen I can't find the cause of
-//
-//                        } else if (order == 2) {
-//                            // alternative off hand
-//                            x = 77;
-//                            y = 80;//98; // -18 to negate an offset on the OwoScreen I can't find the cause of
-//
-//                        } else if (order == 3) {
-//                            // belts
-//                            x = 8;
-//                            y = 44;//62; // -18 to negate an offset on the OwoScreen I can't find the cause of
-//
-//                        } else if (order == 4) {
-//                            // gloves
-//                            x = 77;
-//                            y = 44;//62; // -18 to negate an offset on the OwoScreen I can't find the cause of
-//
-//                        } else if (order == 5) {
-//                            // main hand
-//                            x = 8;
-//                            y = 80;//98; // -18 to negate an offset on the OwoScreen I can't find the cause of
-//
-//                        } else if (order == 6) {
-//                            // necklaces
-//                            x = 52;
-//                            y = -10;//8; // -18 to negate an offset on the OwoScreen I can't find the cause of
-//
-//                        } else if (order == 7) {
-//                            // rings 1
-//                            x = 77;
-//                            y = 8;//26; // -18 to negate an offset on the OwoScreen I can't find the cause of
-//
-//                        } else if (order == 8) {
-//                            // rings 2
-//                            x = 77;
-//                            y = 26;//44; // -18 to negate an offset on the OwoScreen I can't find the cause of
-//
-//                        } else if (order == 9) {
-//                            // shoulders
-//                            x = 8;
-//                            y = 8;//26; // -18 to negate an offset on the OwoScreen I can't find the cause of
-//
-//                        } else if (order == 10) {
-//                            // spell slot 1
-//                            x = this.spellSlotsX;
-//                            y = this.spellSlotsY;
-//
-//                        } else if (order == 11) {
-//                            // spell slot 2
-//                            x = this.spellSlotsX + 18;
-//                            y = this.spellSlotsY;
-//
-//                        } else if (order == 12) {
-//                            // spell slot 3
-//                            x = this.spellSlotsX + 36;
-//                            y = this.spellSlotsY;
-//
-//                        } else if (order == 13) {
-//                            // spell slot 4
-//                            x = this.spellSlotsX + 54;
-//                            y = this.spellSlotsY;
-//
-//                        } else if (order == 14) {
-//                            // spell slot 5
-//                            x = this.spellSlotsX;
-//                            y = this.spellSlotsY + 18;
-//
-//                        } else if (order == 15) {
-//                            // spell slot 6
-//                            x = this.spellSlotsX + 18;
-//                            y = this.spellSlotsY + 18;
-//
-//                        } else if (order == 16) {
-//                            // spell slot 7
-//                            x = this.spellSlotsX + 36;
-//                            y = this.spellSlotsY + 18;
-//
-//                        } else if (order == 17) {
-//                            // spell slot 8
-//                            x = this.spellSlotsX + 54;
-//                            y = this.spellSlotsY + 18;
-//
-//                        } else {
-////                            if (groupNum >= 4) {
-////                                x = 4 - (groupNum / 4) * 18;
-////                                y = 8 + (groupNum % 4) * 18;
-////                            } else {
-////                                x = 77;
-////                                y = 62 - groupNum * 18;
-////                            }
-//                            continue;
-//                        }
-//                        groupPos.put(group, new Point(x, y));
-//                        groupNums.put(group, groupNum);
-//                        groupNum++;
-//                    }
-//                }
-//            }
-//    }
-
-//    @Override
-//    public void trinkets$updateTrinketSlots() {
-//        TrinketScreen.super.trinkets$updateTrinketSlots();
-//    }
-
-//    private List<Text> getStatusEffectDescription(StatusEffectInstance statusEffect) {
-////        if (statusEffect.getEffectType() instanceof FoodStatusEffect) {
-////            List<Text> list = new ArrayList<>(List.of());
-//////            List<Text> list = Lists.newArrayList();
-////            for (Map.Entry<EntityAttribute, EntityAttributeModifier> entry : statusEffect.getEffectType().getAttributeModifiers().entrySet()) {
-////                EntityAttributeInstance entityAttributeInstance = this.client.player.getAttributes().getCustomInstance(entry.getKey());
-////                if (entityAttributeInstance == null) continue;
-////                // TODO look at equipment tooltip
-//////                EntityAttributeModifier entityAttributeModifier = entry.getValue();
-//////                entityAttributeInstance.removeModifier(entityAttributeModifier);
-////            }
-////            list.add(Text.translatable(statusEffect.getEffectType().getTranslationKey() + ".description"));
-////            return list;
-////        }
-//        return List.of(Text.translatable(statusEffect.getEffectType().getTranslationKey() + ".description"));
-//    }
 }

@@ -192,10 +192,10 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Du
             }
             mainHandSlotStack = ((DuckPlayerInventoryMixin)this.getInventory()).bamcore$getMainHand();
             alternateMainHandSlotStack = ((DuckPlayerInventoryMixin)this.getInventory()).bamcore$getAlternativeMainHand();
-            if (!ItemStack.areItemsEqual(offHandSlotStack, ((DuckPlayerInventoryMixin)this.getInventory()).bamcore$getOffHandStack()) || !ItemStack.areItemsEqual(alternateOffHandSlotStack, ((DuckPlayerInventoryMixin)this.getInventory()).bamcore$getAlternativeOffHand())) {
+            if (!ItemStack.areItemsEqual(offHandSlotStack, ((DuckPlayerInventoryMixin)this.getInventory()).bamcore$getOffHand()) || !ItemStack.areItemsEqual(alternateOffHandSlotStack, ((DuckPlayerInventoryMixin)this.getInventory()).bamcore$getAlternativeOffHand())) {
                 bamcore$sendChangedHandSlotsPacket(false);
             }
-            offHandSlotStack = ((DuckPlayerInventoryMixin)this.getInventory()).bamcore$getOffHandStack();
+            offHandSlotStack = ((DuckPlayerInventoryMixin)this.getInventory()).bamcore$getOffHand();
             alternateOffHandSlotStack = ((DuckPlayerInventoryMixin)this.getInventory()).bamcore$getAlternativeOffHand();
 //            if (this.isUsingHotbarItem() != this.wasUsingHotbarItem()) {
 //                sendIsUsingHotbarItemClientPacket(this.isUsingHotbarItem());

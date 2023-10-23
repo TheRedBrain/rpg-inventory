@@ -1,16 +1,13 @@
 package com.github.theredbrain.bamcore.mixin.entity.player;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.api.item.GlovesArmorTrinketItem;
-import com.github.theredbrain.bamcore.api.item.ShouldersArmorTrinketItem;
+import com.github.theredbrain.bamcore.api.item.ArmorTrinketItem;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.bamcore.api.item.CustomArmorItem;
 import com.github.theredbrain.bamcore.api.item.CustomDyeableArmorItem;
 import com.github.theredbrain.bamcore.api.util.BetterAdventureModCoreItemUtils;
-import com.github.theredbrain.bamcore.registry.ItemRegistry;
 import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreStatusEffects;
-import com.google.common.collect.ImmutableList;
 import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketsApi;
 import net.minecraft.entity.EquipmentSlot;
@@ -19,14 +16,11 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtList;
 import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.util.collection.DefaultedList;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
@@ -34,11 +28,6 @@ import java.util.Optional;
 
 @Mixin(PlayerInventory.class)
 public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
-
-//    @Shadow
-//    @Final
-//    @Mutable
-//    public static int[] ARMOR_SLOTS;
 
     @Shadow
     @Final
@@ -48,16 +37,6 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
     @Final
     @Mutable
     public DefaultedList<ItemStack> armor;
-
-    @Shadow
-    @Final
-    public DefaultedList<ItemStack> offHand;
-
-//    @Shadow
-//    @Final
-//    @Mutable
-//    private List<DefaultedList<ItemStack>> combinedInventory;
-
     @Shadow
     @Final
     public PlayerEntity player;
@@ -67,114 +46,35 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         throw new AssertionError();
     }
 
-//    @Shadow public abstract boolean insertStack(ItemStack stack);
-
     @Shadow public int selectedSlot;
 
     @Shadow public abstract ItemStack getStack(int slot);
 
-//    private DefaultedList<ItemStack> mainHand;// = DefaultedList.ofSize(1, ItemStack.EMPTY);
-//    private DefaultedList<ItemStack> alternativeMainHand;// = DefaultedList.ofSize(1, ItemStack.EMPTY);
-//    private DefaultedList<ItemStack> alternativeOffHand;// = DefaultedList.ofSize(1, ItemStack.EMPTY);
-//    private DefaultedList<ItemStack> emptyMainHand;// = DefaultedList.ofSize(1, ItemStack.EMPTY);
-//    private DefaultedList<ItemStack> emptyOffHand;// = DefaultedList.ofSize(1, ItemStack.EMPTY);
-
-//    /**
-//     * @author TheRedBrain
-//     */
-//    @Inject(method = "<init>", at = @At("TAIL"))
-//    public void PlayerInventory(PlayerEntity player, CallbackInfo ci) {
-//        this.mainHand = DefaultedList.ofSize(1, ItemStack.EMPTY);
-//        this.alternativeMainHand = DefaultedList.ofSize(1, ItemStack.EMPTY);
-//        this.alternativeOffHand = DefaultedList.ofSize(1, ItemStack.EMPTY);
-//        this.emptyMainHand = DefaultedList.ofSize(1, ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON.getDefaultStack());
-//        this.emptyOffHand = DefaultedList.ofSize(1, ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON.getDefaultStack());
-//        this.combinedInventory = ImmutableList.of(this.main, this.armor, this.mainHand, this.offHand, this.alternativeMainHand, this.alternativeOffHand);
-//    }
+    @Shadow @Final public DefaultedList<ItemStack> offHand;
 
     @Inject(method = "getMainHandStack", at = @At("HEAD"), cancellable = true)
     public void bamcore$getMainHandStack(CallbackInfoReturnable<ItemStack> cir) {
         if (!player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.ADVENTURE_BUILDING_EFFECT) && !player.isCreative()) {
-            ItemStack emptyMainHandStack = ItemStack.EMPTY;
-            ItemStack mainHandStack = ItemStack.EMPTY;
-            Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
-            if (trinkets.isPresent()) {
-                if (trinkets.get().getInventory().get("empty_main_hand") != null) {
-                    if (trinkets.get().getInventory().get("empty_main_hand").get("empty_main_hand") != null) {
-                        emptyMainHandStack = trinkets.get().getInventory().get("empty_main_hand").get("empty_main_hand").getStack(0);
-                    }
-                }
-                if (trinkets.get().getInventory().get("main_hand") != null) {
-                    if (trinkets.get().getInventory().get("main_hand").get("main_hand") != null) {
-                        mainHandStack = trinkets.get().getInventory().get("main_hand").get("main_hand").getStack(0);
-                    }
-                }
-            }
-            ItemStack emptyStack = ItemStack.EMPTY;
+            ItemStack emptyMainHandStack = bamcore$getEmptyMainHand();
+            ItemStack mainHandStack = bamcore$getMainHand();
             if (!player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.WEAPONS_SHEATHED_EFFECT)) {
-                if (BetterAdventureModCoreItemUtils.isUsable(mainHandStack)) emptyStack = mainHandStack;
-            } else if (PlayerInventory.isValidHotbarIndex(this.selectedSlot)) {
-                emptyStack = this.main.get(this.selectedSlot);
+                cir.setReturnValue(BetterAdventureModCoreItemUtils.isUsable(mainHandStack) ? mainHandStack : emptyMainHandStack);
+                cir.cancel();
             }
-            boolean bl = emptyStack.isEmpty()/* || !ItemUtils.isUsable(emptyStack)*/;
-            cir.setReturnValue(bl ? emptyMainHandStack : emptyStack);
-            cir.cancel();
         }
     }
 
     @Override
     public ItemStack bamcore$getOffHandStack() {
-        ItemStack offHandStack = this.offHand.get(0);
-        ItemStack emptyOffHandStack = ItemStack.EMPTY;
-        boolean bl = !player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.ADVENTURE_BUILDING_EFFECT)
-                && !player.isCreative()
-                && (player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.WEAPONS_SHEATHED_EFFECT) || !BetterAdventureModCoreItemUtils.isUsable(offHandStack) || player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.TWO_HANDED_EFFECT));
-        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
-        if (trinkets.isPresent()) {
-            if (trinkets.get().getInventory().get("empty_main_hand") != null) {
-                if (trinkets.get().getInventory().get("empty_main_hand").get("empty_main_hand") != null) {
-                    emptyOffHandStack = trinkets.get().getInventory().get("empty_off_hand").get("empty_off_hand").getStack(0);
-                }
+        if (!player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.ADVENTURE_BUILDING_EFFECT) && !player.isCreative()) {
+            ItemStack emptyOffHandStack = bamcore$getEmptyOffHand();
+            ItemStack offHandStack = bamcore$getOffHand();
+            if (!player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.WEAPONS_SHEATHED_EFFECT) && !player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.TWO_HANDED_EFFECT)) {
+                return BetterAdventureModCoreItemUtils.isUsable(offHandStack) ? offHandStack : emptyOffHandStack;
             }
         }
-        return bl ? emptyOffHandStack : offHandStack;
+        return ItemStack.EMPTY;
     }
-
-//    /**
-//     * call this to set this player's internal unarmed weapon
-//     * @param itemStack is the default itemStack used when the main hand is empty
-//     */
-//    @Override
-//    public void bamcore$setEmptyMainHandStack(ItemStack itemStack) {
-//        this.emptyMainHand.set(0, itemStack);
-//    }
-//
-//    /**
-//     * call this to set this player's internal unarmed weapon
-//     * @param itemStack is the default itemStack used when the offhand is empty
-//     */
-//    @Override
-//    public void bamcore$setEmptyOffHandStack(ItemStack itemStack) {
-//        this.emptyOffHand.set(0, itemStack);
-//    }
-
-//    /**
-//     * @author TheRedBrain
-//     * @reason
-//     */
-//    @Inject(method = "getOccupiedSlotWithRoomForStack", at = @At("HEAD"), cancellable = true)
-//    public void bam$getOccupiedSlotWithRoomForStack(ItemStack stack, CallbackInfoReturnable<Integer> cir) {
-//        if (((DuckPlayerEntityMixin)this.player).isAdventure() && !this.player.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT)) {
-//
-//            for (int i = 0; i < this.main.size(); ++i) {
-//                if (!this.canStackAddMore(this.main.get(i), stack) || (i < 9 && !stack.isIn(Tags.ADVENTURE_HOTBAR_ITEMS))) continue;
-//                cir.setReturnValue(i);
-//                cir.cancel();
-//            }
-//            cir.setReturnValue(-1);
-//            cir.cancel();
-//        }
-//    }
 
     /**
      *
@@ -208,136 +108,24 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         return -1;
     }
 
-//    /**
-//     * @author TheRedBrain
-//     * @reason convenience, might redo later
-//     */
-//    @Overwrite
-//    public NbtList writeNbt(NbtList nbtList) {
-//        NbtCompound nbtCompound;
-//        int i;
-//        for (i = 0; i < this.main.size(); ++i) {
-//            if (this.main.get(i).isEmpty()) continue;
-//            nbtCompound = new NbtCompound();
-//            nbtCompound.putByte("Slot", (byte)i);
-//            this.main.get(i).writeNbt(nbtCompound);
-//            nbtList.add(nbtCompound);
-//        }
-//        for (i = 0; i < this.armor.size(); ++i) {
-//            if (this.armor.get(i).isEmpty()) continue;
-//            nbtCompound = new NbtCompound();
-//            nbtCompound.putByte("Slot", (byte)(i + 100));
-//            this.armor.get(i).writeNbt(nbtCompound);
-//            nbtList.add(nbtCompound);
-//        }
-//        for (i = 0; i < this.mainHand.size(); ++i) {
-//            if (this.mainHand.get(i).isEmpty()) continue;
-//            nbtCompound = new NbtCompound();
-//            nbtCompound.putByte("Slot", (byte)(i + 130));
-//            this.mainHand.get(i).writeNbt(nbtCompound);
-//            nbtList.add(nbtCompound);
-//        }
-//        for (i = 0; i < this.offHand.size(); ++i) {
-//            if (this.offHand.get(i).isEmpty()) continue;
-//            nbtCompound = new NbtCompound();
-//            nbtCompound.putByte("Slot", (byte)(i + 140));
-//            this.offHand.get(i).writeNbt(nbtCompound);
-//            nbtList.add(nbtCompound);
-//        }
-//        for (i = 0; i < this.alternativeMainHand.size(); ++i) {
-//            if (this.alternativeMainHand.get(i).isEmpty()) continue;
-//            nbtCompound = new NbtCompound();
-//            nbtCompound.putByte("Slot", (byte)(i + 145));
-//            this.alternativeMainHand.get(i).writeNbt(nbtCompound);
-//            nbtList.add(nbtCompound);
-//        }
-//        for (i = 0; i < this.alternativeOffHand.size(); ++i) {
-//            if (this.alternativeOffHand.get(i).isEmpty()) continue;
-//            nbtCompound = new NbtCompound();
-//            nbtCompound.putByte("Slot", (byte)(i + 150));
-//            this.alternativeOffHand.get(i).writeNbt(nbtCompound);
-//            nbtList.add(nbtCompound);
-//        }
-//        return nbtList;
-//    }
-//
-//    /**
-//     * @author TheRedBrain
-//     * @reason convenience, might redo later
-//     */
-//    @Overwrite
-//    public void readNbt(NbtList nbtList) {
-//        this.main.clear();
-//        this.armor.clear();
-//        this.offHand.clear();
-//        this.mainHand.clear();
-//        this.alternativeOffHand.clear();
-//        this.alternativeMainHand.clear();
-//        for (int i = 0; i < nbtList.size(); ++i) {
-//            NbtCompound nbtCompound = nbtList.getCompound(i);
-//            int j = nbtCompound.getByte("Slot") & 0xFF;
-//            ItemStack itemStack = ItemStack.fromNbt(nbtCompound);
-//            if (itemStack.isEmpty()) continue;
-//            if (j >= 0 && j < this.main.size()) {
-//                this.main.set(j, itemStack);
-//                continue;
-//            }
-//            if (j >= 100 && j < this.armor.size() + 100) {
-//                this.armor.set(j - 100, itemStack);
-//                continue;
-//            }
-//            if (j >= 130 && j < this.mainHand.size() + 130) {
-//                this.mainHand.set(j - 130, itemStack);
-//                continue;
-//            }
-//            if (j >= 140 && j < this.offHand.size() + 140) {
-//                this.offHand.set(j - 140, itemStack);
-//                continue;
-//            }
-//            if (j >= 145 && j < this.alternativeMainHand.size() + 145) {
-//                this.alternativeMainHand.set(j - 145, itemStack);
-//                continue;
-//            }
-//            if (j >= 150 && j < this.alternativeOffHand.size() + 150) {
-//                this.alternativeOffHand.set(j - 150, itemStack);
-//            }
-//        }
-//    }
-//
-//    @Inject(method = "size", at = @At("RETURN"), cancellable = true)
-//    public void bam$size(CallbackInfoReturnable<Integer> cir) {
-//        int oldSize = cir.getReturnValue();
-//        cir.setReturnValue(oldSize + this.mainHand.size() + this.alternativeOffHand.size() + this.alternativeMainHand.size() + this.emptyMainHand.size() + this.emptyOffHand.size());
-//    }
-//
-//    @Inject(method = "isEmpty", at = @At("TAIL"), cancellable = true)
-//    public void bam$isEmpty(CallbackInfoReturnable<Boolean> cir) {
-//        for (ItemStack itemStack : this.mainHand) {
-//            if (itemStack.isEmpty()) continue;
-//            cir.setReturnValue(false);
-//            cir.cancel();
-//        }
-//        for (ItemStack itemStack : this.alternativeMainHand) {
-//            if (itemStack.isEmpty()) continue;
-//            cir.setReturnValue(false);
-//            cir.cancel();
-//        }
-//        for (ItemStack itemStack : this.alternativeOffHand) {
-//            if (itemStack.isEmpty()) continue;
-//            cir.setReturnValue(false);
-//            cir.cancel();
-//        }
-//        for (ItemStack itemStack : this.emptyMainHand) {
-//            if (itemStack.isEmpty()) continue;
-//            cir.setReturnValue(false);
-//            cir.cancel();
-//        }
-//        for (ItemStack itemStack : this.emptyOffHand) {
-//            if (itemStack.isEmpty()) continue;
-//            cir.setReturnValue(false);
-//            cir.cancel();
-//        }
-//    }
+    /**
+     * @author TheRedBrain
+     * @reason overhaul armor
+     */
+    @Overwrite
+    public ItemStack getArmorStack(int slot) {
+        if (slot == 0) {
+            return this.bamcore$getFeetStack();
+        } else if (slot == 1) {
+            return this.bamcore$getLegStack();
+        } else if (slot == 2) {
+            return this.bamcore$getChestStack();
+        } else if (slot == 3) {
+            return this.bamcore$getHeadStack();
+        } else {
+            return ItemStack.EMPTY;
+        }
+    }
 
     /**
      * @author TheRedBrain
@@ -358,14 +146,10 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
             if ((itemStack.getItem() instanceof CustomArmorItem && !(((CustomArmorItem)itemStack.getItem()).isProtecting(itemStack))) || (itemStack.getItem() instanceof CustomDyeableArmorItem && !(((CustomDyeableArmorItem)itemStack.getItem()).isProtecting(itemStack))))  continue;
             itemStack.damage((int)amount, this.player, player -> player.sendEquipmentBreakStatus(EquipmentSlot.fromTypeIndex(EquipmentSlot.Type.ARMOR, i)));
         }
-
         float finalAmount = amount;
         TrinketsApi.getTrinketComponent(player).ifPresent(trinkets ->
                 trinkets.forEach((slotReference, itemStack) -> {
-                    if (itemStack.getItem() instanceof GlovesArmorTrinketItem && (((GlovesArmorTrinketItem) itemStack.getItem()).isProtecting(itemStack))) {
-                        itemStack.damage((int) finalAmount, this.player, player -> TrinketsApi.onTrinketBroken(itemStack, slotReference, player));
-                    }
-                    if (itemStack.getItem() instanceof ShouldersArmorTrinketItem && (((ShouldersArmorTrinketItem) itemStack.getItem()).isProtecting(itemStack))) {
+                    if ((!(damageSource.isIn(DamageTypeTags.IS_FIRE)) || itemStack.getItem().isFireproof()) && itemStack.getItem() instanceof ArmorTrinketItem && (((ArmorTrinketItem) itemStack.getItem()).isProtecting(itemStack))) {
                         itemStack.damage((int) finalAmount, this.player, player -> TrinketsApi.onTrinketBroken(itemStack, slotReference, player));
                     }
                 }));
@@ -397,8 +181,34 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         return oldStack;
     }
 
+    public ItemStack bamcore$getOffHand() {
+        ItemStack offHandStack = this.offHand.get(0);
+        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
+        if (trinkets.isPresent()) {
+            if (trinkets.get().getInventory().get("off_hand") != null) {
+                if (trinkets.get().getInventory().get("off_hand").get("off_hand") != null) {
+                    offHandStack = trinkets.get().getInventory().get("off_hand").get("off_hand").getStack(0);
+                }
+            }
+        }
+        return offHandStack;
+    }
+
+    public ItemStack bamcore$setOffHand(ItemStack itemStack) {
+        ItemStack oldStack = bamcore$getOffHand();
+        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
+        if (trinkets.isPresent()) {
+            if (trinkets.get().getInventory().get("off_hand") != null) {
+                if (trinkets.get().getInventory().get("off_hand").get("off_hand") != null) {
+                    trinkets.get().getInventory().get("off_hand").get("off_hand").setStack(0, itemStack);
+                }
+            }
+        }
+        return oldStack;
+    }
+
     public ItemStack bamcore$getAlternativeMainHand() {
-        ItemStack alternativeMainHandStack = this.main.get(this.selectedSlot);
+        ItemStack alternativeMainHandStack = ItemStack.EMPTY;
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
             if (trinkets.get().getInventory().get("alternative_main_hand") != null) {
@@ -424,7 +234,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
     }
 
     public ItemStack bamcore$getAlternativeOffHand() {
-        ItemStack alternativeOffHandStack = this.offHand.get(0);
+        ItemStack alternativeOffHandStack = ItemStack.EMPTY;
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
             if (trinkets.get().getInventory().get("alternative_off_hand") != null) {
@@ -447,5 +257,191 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
             }
         }
         return oldStack;
+    }
+
+    public ItemStack bamcore$getEmptyMainHand() {
+        ItemStack alternativeMainHandStack = ItemStack.EMPTY;
+        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
+        if (trinkets.isPresent()) {
+            if (trinkets.get().getInventory().get("alternative_main_hand") != null) {
+                if (trinkets.get().getInventory().get("alternative_main_hand").get("alternative_main_hand") != null) {
+                    alternativeMainHandStack = trinkets.get().getInventory().get("alternative_main_hand").get("alternative_main_hand").getStack(0);
+                }
+            }
+        }
+        return alternativeMainHandStack;
+    }
+
+    public ItemStack bamcore$setEmptyMainHand(ItemStack itemStack) {
+        ItemStack oldStack = bamcore$getAlternativeMainHand();
+        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
+        if (trinkets.isPresent()) {
+            if (trinkets.get().getInventory().get("alternative_main_hand") != null) {
+                if (trinkets.get().getInventory().get("alternative_main_hand").get("alternative_main_hand") != null) {
+                    trinkets.get().getInventory().get("alternative_main_hand").get("alternative_main_hand").setStack(0, itemStack);
+                }
+            }
+        }
+        return oldStack;
+    }
+
+    public ItemStack bamcore$getEmptyOffHand() {
+        ItemStack alternativeOffHandStack = ItemStack.EMPTY;
+        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
+        if (trinkets.isPresent()) {
+            if (trinkets.get().getInventory().get("alternative_off_hand") != null) {
+                if (trinkets.get().getInventory().get("alternative_off_hand").get("alternative_off_hand") != null) {
+                    alternativeOffHandStack = trinkets.get().getInventory().get("alternative_off_hand").get("alternative_off_hand").getStack(0);
+                }
+            }
+        }
+        return alternativeOffHandStack;
+    }
+
+    public ItemStack bamcore$setEmptyOffHand(ItemStack itemStack) {
+        ItemStack oldStack = bamcore$getAlternativeOffHand();
+        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
+        if (trinkets.isPresent()) {
+            if (trinkets.get().getInventory().get("alternative_off_hand") != null) {
+                if (trinkets.get().getInventory().get("alternative_off_hand").get("alternative_off_hand") != null) {
+                    trinkets.get().getInventory().get("alternative_off_hand").get("alternative_off_hand").setStack(0, itemStack);
+                }
+            }
+        }
+        return oldStack;
+    }
+
+    public ItemStack bamcore$getHeadStack() {
+        ItemStack alternativeOffHandStack = ItemStack.EMPTY;
+        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
+        if (trinkets.isPresent()) {
+            if (trinkets.get().getInventory().get("helmets") != null) {
+                if (trinkets.get().getInventory().get("helmets").get("helmet") != null) {
+                    alternativeOffHandStack = trinkets.get().getInventory().get("helmets").get("helmet").getStack(0);
+                }
+            }
+        }
+        return alternativeOffHandStack;
+    }
+
+    public ItemStack bamcore$setHeadStack(ItemStack itemStack) {
+        ItemStack oldStack = bamcore$getHeadStack();
+        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
+        if (trinkets.isPresent()) {
+            if (trinkets.get().getInventory().get("helmets") != null) {
+                if (trinkets.get().getInventory().get("helmets").get("helmet") != null) {
+                    trinkets.get().getInventory().get("helmets").get("helmet").setStack(0, itemStack);
+                }
+            }
+        }
+        return oldStack;
+    }
+
+    public ItemStack bamcore$getChestStack() {
+        ItemStack alternativeOffHandStack = ItemStack.EMPTY;
+        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
+        if (trinkets.isPresent()) {
+            if (trinkets.get().getInventory().get("chest_plates") != null) {
+                if (trinkets.get().getInventory().get("chest_plates").get("chest_plate") != null) {
+                    alternativeOffHandStack = trinkets.get().getInventory().get("chest_plates").get("chest_plate").getStack(0);
+                }
+            }
+        }
+        return alternativeOffHandStack;
+    }
+
+    public ItemStack bamcore$setChestStack(ItemStack itemStack) {
+        ItemStack oldStack = bamcore$getChestStack();
+        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
+        if (trinkets.isPresent()) {
+            if (trinkets.get().getInventory().get("chest_plates") != null) {
+                if (trinkets.get().getInventory().get("chest_plates").get("chest_plate") != null) {
+                    trinkets.get().getInventory().get("chest_plates").get("chest_plate").setStack(0, itemStack);
+                }
+            }
+        }
+        return oldStack;
+    }
+
+    public ItemStack bamcore$getLegStack() {
+        ItemStack alternativeOffHandStack = ItemStack.EMPTY;
+        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
+        if (trinkets.isPresent()) {
+            if (trinkets.get().getInventory().get("leggings") != null) {
+                if (trinkets.get().getInventory().get("leggings").get("leggings") != null) {
+                    alternativeOffHandStack = trinkets.get().getInventory().get("leggings").get("leggings").getStack(0);
+                }
+            }
+        }
+        return alternativeOffHandStack;
+    }
+
+    public ItemStack bamcore$setLegStack(ItemStack itemStack) {
+        ItemStack oldStack = bamcore$getLegStack();
+        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
+        if (trinkets.isPresent()) {
+            if (trinkets.get().getInventory().get("leggings") != null) {
+                if (trinkets.get().getInventory().get("leggings").get("leggings") != null) {
+                    trinkets.get().getInventory().get("leggings").get("leggings").setStack(0, itemStack);
+                }
+            }
+        }
+        return oldStack;
+    }
+
+    public ItemStack bamcore$getFeetStack() {
+        ItemStack alternativeOffHandStack = ItemStack.EMPTY;
+        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
+        if (trinkets.isPresent()) {
+            if (trinkets.get().getInventory().get("boots") != null) {
+                if (trinkets.get().getInventory().get("boots").get("boots") != null) {
+                    alternativeOffHandStack = trinkets.get().getInventory().get("boots").get("boots").getStack(0);
+                }
+            }
+        }
+        return alternativeOffHandStack;
+    }
+
+    public ItemStack bamcore$setFeetStack(ItemStack itemStack) {
+        ItemStack oldStack = bamcore$getFeetStack();
+        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
+        if (trinkets.isPresent()) {
+            if (trinkets.get().getInventory().get("boots") != null) {
+                if (trinkets.get().getInventory().get("boots").get("boots") != null) {
+                    trinkets.get().getInventory().get("boots").get("boots").setStack(0, itemStack);
+                }
+            }
+        }
+        return oldStack;
+    }
+
+    public List<ItemStack> getArmorTrinkets() {
+        return List.of(this.bamcore$getFeetStack(), this.bamcore$getLegStack(), this.bamcore$getGlovesStack(), this.bamcore$getChestStack(), this.bamcore$getShouldersStack(), this.bamcore$getHeadStack());
+    }
+
+    private ItemStack bamcore$getGlovesStack() {
+        ItemStack glovesStack = ItemStack.EMPTY;
+        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
+        if (trinkets.isPresent()) {
+            if (trinkets.get().getInventory().get("gloves") != null) {
+                if (trinkets.get().getInventory().get("gloves").get("gloves") != null) {
+                    glovesStack = trinkets.get().getInventory().get("gloves").get("gloves").getStack(0);
+                }
+            }
+        }
+        return glovesStack;
+    }
+
+    private ItemStack bamcore$getShouldersStack() {
+        ItemStack shouldersStack = ItemStack.EMPTY;
+        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
+        if (trinkets.isPresent()) {
+            if (trinkets.get().getInventory().get("shoulders") != null) {
+                if (trinkets.get().getInventory().get("shoulders").get("shoulders") != null) {
+                    shouldersStack = trinkets.get().getInventory().get("shoulders").get("shoulders").getStack(0);
+                }
+            }
+        }
+        return shouldersStack;
     }
 }

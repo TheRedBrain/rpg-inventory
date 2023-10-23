@@ -18,7 +18,6 @@
     "item.SwordItemMixin",
     "item.ToolItemMixin",
     "screen.BetterAdventureMode_PlayerScreenHandlerMixin",
-    "screen.slot.SlotMixin",
     "server.PlayerManagerMixin",
     "server.network.EntityTrackerEntryMixin",
     "server.network.ServerPlayerEntityMixin",

@@ -1,0 +1,9 @@
+{
+  "icon": "minecraft:item/empty_armor_slot_shield",
+  "quick_move_predicates": [
+    "bamcore:can_change_equipment"
+  ],
+  "tooltip_predicates": [
+    "trinkets:relevant"
+  ]
+}
