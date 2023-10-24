@@ -1,8 +1,11 @@
 package com.github.theredbrain.bamcore.entity.player;
 
+import dev.emi.trinkets.api.TrinketComponent;
+import dev.emi.trinkets.api.TrinketsApi;
 import net.minecraft.item.ItemStack;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface DuckPlayerInventoryMixin {
 
@@ -35,4 +38,6 @@ public interface DuckPlayerInventoryMixin {
     ItemStack bamcore$setLegStack(ItemStack itemStack);
     ItemStack bamcore$getFeetStack();
     ItemStack bamcore$setFeetStack(ItemStack itemStack);
+    ItemStack bamcore$getSpellSlotStack(int spellSlotNumber);
+    ItemStack bamcore$setSpellSlotStack(ItemStack itemStack, int spellSlotNumber);
 }

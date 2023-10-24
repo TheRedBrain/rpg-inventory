@@ -18,6 +18,7 @@ import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreStatusEffe
 import com.github.theredbrain.bamcore.registry.Tags;
 import com.mojang.authlib.GameProfile;
 import com.mojang.datafixers.util.Pair;
+import dev.emi.trinkets.SurvivalTrinketSlot;
 import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketsApi;
 import net.bettercombat.BetterCombat;
@@ -98,6 +99,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
     @Unique
     private int blockingTime = 0;
+
+    @Unique
+    private int oldActiveSpellSlotAmount = 0;
 
     protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
@@ -726,31 +730,27 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     }
 
     private void ejectItemsFromInactiveSpellSlots() {
-        // TODO IMPORTANT REACTIVATE
-//        int activeSpellSlotAmount = (int) this.getAttributeInstance(BetterAdventureModeCoreEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT).getValue();
-//
-//        if (this.oldActiveSpellSlotAmount != activeSpellSlotAmount) {
-//            int[] spellSlotIds = ((AdventureInventoryScreenHandler) this.bamcore$getAdventureInventoryScreenHandler()).getSpellSlotIds();
-//            // eject items from inactive slots
-//            for (int j = activeSpellSlotAmount; j < 8; j++) {
-//                PlayerInventory playerInventory = this.getInventory();
-//                int slotId = spellSlotIds[j];
-//                AdventureTrinketSlot ats = (AdventureTrinketSlot) this.bamcore$getAdventureInventoryScreenHandler().slots.get(slotId);
-//
-//                if (!ats.inventory.getStack(ats.getIndex()).isEmpty()) {
-//                    playerInventory.offerOrDrop(ats.inventory.removeStack(ats.getIndex()));
-//                    // TODO message to player
-//                }
-//            }
-//
-//            this.oldActiveSpellSlotAmount = activeSpellSlotAmount;
-//        }
+        int activeSpellSlotAmount = (int) this.getAttributeInstance(BetterAdventureModeCoreEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT).getValue();
+
+        if (this.oldActiveSpellSlotAmount != activeSpellSlotAmount) {
+            for (int j = activeSpellSlotAmount; j < 8; j++) {
+                PlayerInventory playerInventory = this.getInventory();
+
+                if (!((DuckPlayerInventoryMixin)playerInventory).bamcore$getSpellSlotStack(j).isEmpty()) {
+                    playerInventory.offerOrDrop(((DuckPlayerInventoryMixin)playerInventory).bamcore$setSpellSlotStack(ItemStack.EMPTY, j));
+                    if (((PlayerEntity) (Object) this) instanceof ServerPlayerEntity serverPlayerEntity) {
+                        serverPlayerEntity.sendMessageToClient(Text.translatable("hud.message.spellsRemovedFromInactiveSpellSlots"), true);
+                    }
+                }
+            }
+
+            this.oldActiveSpellSlotAmount = activeSpellSlotAmount;
+        }
     }
 
     private void ejectNonHotbarItemsFromHotbar() {
         if (this.bamcore$isAdventure() && !this.hasStatusEffect(BetterAdventureModeCoreStatusEffects.ADVENTURE_BUILDING_EFFECT)) {
             if (!this.isAdventureHotbarCleanedUp) {
-                // eject items from inactive slots
                 for (int i = 0; i < 9; i++) {
                     PlayerInventory playerInventory = this.getInventory();
                     Slot slot = this.playerScreenHandler.slots.get(i + 36);
@@ -762,7 +762,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
                 this.isAdventureHotbarCleanedUp = true;
             }
         } else {
-            this.isAdventureHotbarCleanedUp = false;
+            if (this.isAdventureHotbarCleanedUp) {
+                this.isAdventureHotbarCleanedUp = false;
+            }
         }
     }
     @Override

@@ -415,6 +415,32 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         return oldStack;
     }
 
+    public ItemStack bamcore$getSpellSlotStack(int spellSlotNumber) {
+        ItemStack alternativeOffHandStack = ItemStack.EMPTY;
+        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
+        if (trinkets.isPresent()) {
+            if (trinkets.get().getInventory().get("spell_slot_" + spellSlotNumber) != null) {
+                if (trinkets.get().getInventory().get("spell_slot_" + spellSlotNumber).get("spell") != null) {
+                    alternativeOffHandStack = trinkets.get().getInventory().get("spell_slot_" + spellSlotNumber).get("spell").getStack(0);
+                }
+            }
+        }
+        return alternativeOffHandStack;
+    }
+
+    public ItemStack bamcore$setSpellSlotStack(ItemStack itemStack, int spellSlotNumber) {
+        ItemStack oldStack = bamcore$getFeetStack();
+        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
+        if (trinkets.isPresent()) {
+            if (trinkets.get().getInventory().get("spell_slot_" + spellSlotNumber) != null) {
+                if (trinkets.get().getInventory().get("spell_slot_" + spellSlotNumber).get("spell") != null) {
+                    trinkets.get().getInventory().get("spell_slot_" + spellSlotNumber).get("spell").setStack(0, itemStack);
+                }
+            }
+        }
+        return oldStack;
+    }
+
     public List<ItemStack> getArmorTrinkets() {
         return List.of(this.bamcore$getFeetStack(), this.bamcore$getLegStack(), this.bamcore$getGlovesStack(), this.bamcore$getChestStack(), this.bamcore$getShouldersStack(), this.bamcore$getHeadStack());
     }

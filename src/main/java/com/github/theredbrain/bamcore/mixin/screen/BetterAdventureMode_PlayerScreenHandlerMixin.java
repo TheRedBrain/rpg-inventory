@@ -15,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.*;
@@ -113,6 +114,7 @@ public abstract class BetterAdventureMode_PlayerScreenHandlerMixin extends Scree
 //                }
 //            } else {
             if (BetterAdventureModeCore.serverConfig.use_adventure_inventory_screen) {
+                HashMap<Integer, Boolean> presentGroups = new HashMap<>(Map.of());
                 for (SlotGroup group : groups.values().stream().sorted(Comparator.comparing(SlotGroup::getOrder)).toList()) {
                     if (!hasSlots(trinkets, group)) {
                         continue;
@@ -127,6 +129,7 @@ public abstract class BetterAdventureMode_PlayerScreenHandlerMixin extends Scree
 //                                groupNums.put(group, -id);
 //                            }
 //                        }
+                        BetterAdventureModeCore.LOGGER.warn("Trinket slot groups with id != -1 are ignored. This applies to group " + group.getName());
                         continue;
                     } else {
                         int x;
@@ -134,74 +137,74 @@ public abstract class BetterAdventureMode_PlayerScreenHandlerMixin extends Scree
                         // begins at 1 because order=0 is the default
                         // this way most unwanted cases are avoided
                         if (order == 1) {
-                            // alternative main hand
-                            x = 59;
-                            y = 80;//98; // -18 to negate an offset on the OwoScreen I can't find the cause of
-
-                        } else if (order == 2) {
-                            // alternative off hand
-                            x = 77;
-                            y = 80;//98; // -18 to negate an offset on the OwoScreen I can't find the cause of
-
-                        } else if (order == 3) {
-                            // belts
-                            x = 8;
-                            y = 44;//62; // -18 to negate an offset on the OwoScreen I can't find the cause of
-
-                        } else if (order == 4) {
-                            // boots
-                            x = 77;
-                            y = 62;//80; // -18 to negate an offset on the OwoScreen I can't find the cause of
-
-                        } else if (order == 5) {
-                            // chest_plates
-                            x = 8;
-                            y = 26;//44; // -18 to negate an offset on the OwoScreen I can't find the cause of
-
-                        } else if (order == 6) {
-                            // gloves
-                            x = 77;
-                            y = 44;//62; // -18 to negate an offset on the OwoScreen I can't find the cause of
-
-                        } else if (order == 7) {
-                            // helmets
-                            x = 33;
-                            y = -10;//98; // -18 to negate an offset on the OwoScreen I can't find the cause of
-
-                        } else if (order == 8) {
                             // leggings
                             x = 8;
                             y = 62;//80; // -18 to negate an offset on the OwoScreen I can't find the cause of
 
-                        } else if (order == 9) {
-                            // main_hand
+                        } else if (order == 2) {
+                            // belts
                             x = 8;
-                            y = 80;//98; // -18 to negate an offset on the OwoScreen I can't find the cause of
+                            y = 44;//62; // -18 to negate an offset on the OwoScreen I can't find the cause of
 
-                        } else if (order == 10) {
+                        } else if (order == 3) {
+                            // chest_plates
+                            x = 8;
+                            y = 26;//44; // -18 to negate an offset on the OwoScreen I can't find the cause of
+
+                        } else if (order == 4) {
+                            // shoulders
+                            x = 8;
+                            y = 8;//26; // -18 to negate an offset on the OwoScreen I can't find the cause of
+
+                        } else if (order == 5) {
+                            // helmets
+                            x = 33;
+                            y = -10;//98; // -18 to negate an offset on the OwoScreen I can't find the cause of
+
+                        } else if (order == 6) {
                             // necklaces
                             x = 52;
                             y = -10;//8; // -18 to negate an offset on the OwoScreen I can't find the cause of
 
-                        } else if (order == 11) {
-                            // off_hand
-                            x = 26;
-                            y = 80;//98; // -18 to negate an offset on the OwoScreen I can't find the cause of
-
-                        } else if (order == 12) {
+                        } else if (order == 7) {
                             // rings 1
                             x = 77;
                             y = 8;//26; // -18 to negate an offset on the OwoScreen I can't find the cause of
 
-                        } else if (order == 13) {
+                        } else if (order == 8) {
                             // rings 2
                             x = 77;
                             y = 26;//44; // -18 to negate an offset on the OwoScreen I can't find the cause of
 
-                        } else if (order == 14) {
-                            // shoulders
+                        } else if (order == 9) {
+                            // gloves
+                            x = 77;
+                            y = 44;//62; // -18 to negate an offset on the OwoScreen I can't find the cause of
+
+                        } else if (order == 10) {
+                            // boots
+                            x = 77;
+                            y = 62;//80; // -18 to negate an offset on the OwoScreen I can't find the cause of
+
+                        } else if (order == 11) {
+                            // main_hand
                             x = 8;
-                            y = 8;//26; // -18 to negate an offset on the OwoScreen I can't find the cause of
+                            y = 80;//98; // -18 to negate an offset on the OwoScreen I can't find the cause of
+
+                        } else if (order == 12) {
+                            // off_hand
+                            x = 26;
+                            y = 80;//98; // -18 to negate an offset on the OwoScreen I can't find the cause of
+
+                        } else if (order == 13) {
+                            // alternative main hand
+                            x = 59;
+                            y = 80;//98; // -18 to negate an offset on the OwoScreen I can't find the cause of
+
+                        } else if (order == 14) {
+                            // alternative off hand
+                            x = 77;
+                            y = 80;//98; // -18 to negate an offset on the OwoScreen I can't find the cause of
 
                         } else if (order == 15) {
                             // spell slot 1
@@ -243,19 +246,25 @@ public abstract class BetterAdventureMode_PlayerScreenHandlerMixin extends Scree
                             x = this.spellSlotsX + 54;
                             y = this.spellSlotsY + 18;
 
+                        } else if (order == 23) {
+                            // these include empty hand slots which are necessary but should not be interacted with by the player
+                            if (!Objects.equals(group.getName(), "empty_main_hand") && !Objects.equals(group.getName(), "empty_off_hand")) {
+                                BetterAdventureModeCore.LOGGER.warn("Trinket Slots with order == 23 can not be interacted with by the player. This applies to group " + group.getName());
+                            }
+                            continue;
                         } else {
-//                            if (groupNum >= 4) {
-//                                x = 4 - (groupNum / 4) * 18;
-//                                y = 8 + (groupNum % 4) * 18;
-//                            } else {
-//                                x = 77;
-//                                y = 62 - groupNum * 18;
-//                            }
+                            BetterAdventureModeCore.LOGGER.warn("Trinket slot groups with order <= 0 or order > 23 are ignored. This applies to group " + group.getName());
                             continue;
                         }
                         groupPos.put(group, new Point(x, y));
                         groupNums.put(group, groupNum);
                         groupNum++;
+
+                        if (presentGroups.getOrDefault(order, false)) {
+                            BetterAdventureModeCore.LOGGER.warn("Multiple slot groups with order " + order + " are defined. This may lead to unexpected behaviour. This applies to group " + group.getName());
+                        } else {
+                            presentGroups.put(order, true);
+                        }
                     }
                 }
             } else {
@@ -292,38 +301,85 @@ public abstract class BetterAdventureMode_PlayerScreenHandlerMixin extends Scree
             slotWidths.clear();
             slotHeights.clear();
             slotTypes.clear();
-            for (Map.Entry<String, Map<String, TrinketInventory>> entry : trinkets.getInventory().entrySet()) {
-                String groupId = entry.getKey();
-                SlotGroup group = groups.get(groupId);
-                int groupOffset = 1;
 
-                if (group.getSlotId() != -1) {
-                    groupOffset++;
-                }
-                int width = 0;
-                Point pos = trinkets$getGroupPos(group);
-                if (pos == null) {
-                    continue;
-                }
-                for (Map.Entry<String, TrinketInventory> slot : entry.getValue().entrySet().stream().sorted((a, b) ->
-                        Integer.compare(a.getValue().getSlotType().getOrder(), b.getValue().getSlotType().getOrder())).toList()) {
-                    TrinketInventory stacks = slot.getValue();
-                    if (stacks.size() == 0) {
+            if (BetterAdventureModeCore.serverConfig.use_adventure_inventory_screen) {
+                int trinketSlotAmount = 22;
+
+                SurvivalTrinketSlot[] newSlots = new SurvivalTrinketSlot[trinketSlotAmount];
+
+                for (Map.Entry<String, Map<String, TrinketInventory>> entry : trinkets.getInventory().entrySet()) {
+                    String groupId = entry.getKey();
+                    SlotGroup group = groups.get(groupId);
+
+                    int width = 0;
+                    Point pos = trinkets$getGroupPos(group);
+                    if (pos == null) {
                         continue;
                     }
-                    int slotOffset = 1;
-                    int x = (int) ((groupOffset / 2) * 18 * Math.pow(-1, groupOffset));
-                    slotHeights.computeIfAbsent(group, (k) -> new ArrayList<>()).add(new Point(x, stacks.size()));
-                    slotTypes.computeIfAbsent(group, (k) -> new ArrayList<>()).add(stacks.getSlotType());
-                    for (int i = 0; i < stacks.size(); i++) {
-                        int y = (int) (pos.y() + (slotOffset / 2) * 18 * Math.pow(-1, slotOffset));
-                        this.addSlot(new SurvivalTrinketSlot(stacks, i, x + pos.x(), y, group, stacks.getSlotType(), i, groupOffset == 1 && i == 0));
-                        slotOffset++;
+                    for (Map.Entry<String, TrinketInventory> slot : entry.getValue().entrySet().stream().sorted((a, b) ->
+                            Integer.compare(a.getValue().getSlotType().getOrder(), b.getValue().getSlotType().getOrder())).toList()) {
+                        TrinketInventory stacks = slot.getValue();
+                        if (stacks.size() == 0) {
+                            continue;
+                        }
+                        if (stacks.size() > 1) {
+                            BetterAdventureModeCore.LOGGER.warn("Multiple slots are defined for slot group " + slot.getKey() + ". This may lead to unexpected behaviour");
+                        }
+                        int x = groupPos.get(group).x();
+                        slotHeights.computeIfAbsent(group, (k) -> new ArrayList<>()).add(new Point(x, stacks.size()));
+                        slotTypes.computeIfAbsent(group, (k) -> new ArrayList<>()).add(stacks.getSlotType());
+
+                        for (int i = 0; i < stacks.size(); i++) {
+                            int index = group.getOrder() - 1; // -1 to account for all groups with order=0 being ignored
+                            newSlots[index] = new SurvivalTrinketSlot(stacks, i, groupPos.get(group).x(), groupPos.get(group).y(), group, stacks.getSlotType(), 0, true);
+                        }
+
+//                    groupOffset++;
+                        width++;
                     }
-                    groupOffset++;
-                    width++;
+                    slotWidths.put(group, width);
                 }
-                slotWidths.put(group, width);
+
+                // add slots to screenHandler
+                for (int i = 0; i < trinketSlotAmount; i++) {
+                    if (newSlots[i] != null) {
+                        this.addSlot(newSlots[i]);
+                    }
+                }
+            } else {
+                for (Map.Entry<String, Map<String, TrinketInventory>> entry : trinkets.getInventory().entrySet()) {
+                    String groupId = entry.getKey();
+                    SlotGroup group = groups.get(groupId);
+                    int groupOffset = 1;
+
+                    if (group.getSlotId() != -1) {
+                        groupOffset++;
+                    }
+                    int width = 0;
+                    Point pos = trinkets$getGroupPos(group);
+                    if (pos == null) {
+                        continue;
+                    }
+                    for (Map.Entry<String, TrinketInventory> slot : entry.getValue().entrySet().stream().sorted((a, b) ->
+                            Integer.compare(a.getValue().getSlotType().getOrder(), b.getValue().getSlotType().getOrder())).toList()) {
+                        TrinketInventory stacks = slot.getValue();
+                        if (stacks.size() == 0) {
+                            continue;
+                        }
+                        int slotOffset = 1;
+                        int x = (int) ((groupOffset / 2) * 18 * Math.pow(-1, groupOffset));
+                        slotHeights.computeIfAbsent(group, (k) -> new ArrayList<>()).add(new Point(x, stacks.size()));
+                        slotTypes.computeIfAbsent(group, (k) -> new ArrayList<>()).add(stacks.getSlotType());
+                        for (int i = 0; i < stacks.size(); i++) {
+                            int y = (int) (pos.y() + (slotOffset / 2) * 18 * Math.pow(-1, slotOffset));
+                            this.addSlot(new SurvivalTrinketSlot(stacks, i, x + pos.x(), y, group, stacks.getSlotType(), i, groupOffset == 1 && i == 0));
+                            slotOffset++;
+                        }
+                        groupOffset++;
+                        width++;
+                    }
+                    slotWidths.put(group, width);
+                }
             }
 
             trinketSlotEnd = slots.size();
