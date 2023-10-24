@@ -303,6 +303,7 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
         disableSlot(handler.slots.get(45));
     }
 
+    // TODO json config files for attributes screen content
     private void buildAttributesScreen(PlayerEntity player) {
         this.component(FlowLayout.class, "additional_inventory_screen_right")
                 .child(Containers.verticalFlow(Sizing.fill(100), Sizing.fill(100))

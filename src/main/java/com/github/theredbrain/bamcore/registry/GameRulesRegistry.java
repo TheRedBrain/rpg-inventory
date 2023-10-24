@@ -19,7 +19,5 @@ public class GameRulesRegistry {
             GameRuleRegistry.register("resetRecipesOnDeath", GameRules.Category.PLAYER, GameRuleFactory.createBooleanRule(false));
     public static final GameRules.Key<GameRules.BooleanRule> TELEPORT_TO_SPAWN_ON_LOGIN =
             GameRuleRegistry.register("teleportToSpawnOnLogin", GameRules.Category.PLAYER, GameRuleFactory.createBooleanRule(false));
-    public static final GameRules.Key<GameRules.BooleanRule> USE_CUSTOM_INVENTORY_SCREEN =
-            GameRuleRegistry.register("useCustomInventoryScreen", GameRules.Category.PLAYER, GameRuleFactory.createBooleanRule(false));
     public static void init() {}
 }

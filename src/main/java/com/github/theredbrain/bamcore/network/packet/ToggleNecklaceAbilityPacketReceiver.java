@@ -39,6 +39,15 @@ public class ToggleNecklaceAbilityPacketReceiver implements ServerPlayNetworking
                 player.sendMessageToClient(Text.translatable("hud.message.noNecklaceEquipped"), true);
             } else if (((DuckPlayerEntityMixin) player).bamcore$getMana() > 0) {
                 if (necklaceItemStack.isIn(Tags.TELEPORT_HOME_NECKLACES)) {
+                    // TODO options
+                    //  - give a status effect
+                    //  --- maybe spawns particles
+                    //  --- when effect ends player is teleported
+                    //  - open little confirm screen
+                    //  --- maybe a countdown
+                    //  no instant teleport in dangerous situations
+                    //  don't respawn but teleport -> doesn't remove status effects
+                    //  or maybe removed effects is good? -> extra cost
                     server.getPlayerManager().respawnPlayer(player, true);
                 } else if (necklaceItemStack.getItem() instanceof AuraGrantingNecklaceTrinketItem) {
                     AuraStatusEffect auraStatusEffect = ((AuraGrantingNecklaceTrinketItem) necklaceItemStack.getItem()).getAuraStatusEffect();

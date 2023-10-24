@@ -1,5 +1,6 @@
 package com.github.theredbrain.bamcore.mixin.screen;
 
+import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreEntityAttributes;
 import com.google.common.collect.ImmutableList;
 import dev.emi.trinkets.Point;
@@ -8,8 +9,6 @@ import dev.emi.trinkets.TrinketPlayerScreenHandler;
 import dev.emi.trinkets.TrinketsClient;
 import dev.emi.trinkets.api.*;
 import dev.emi.trinkets.mixin.accessor.ScreenHandlerAccessor;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -113,13 +112,14 @@ public abstract class BetterAdventureMode_PlayerScreenHandlerMixin extends Scree
 //                    }
 //                }
 //            } else {
-            for (SlotGroup group : groups.values().stream().sorted(Comparator.comparing(SlotGroup::getOrder)).toList()) {
-                if (!hasSlots(trinkets, group)) {
-                    continue;
-                }
-                int order = group.getOrder();
-                int id = group.getSlotId();
-                if (id != -1) {
+            if (BetterAdventureModeCore.serverConfig.use_adventure_inventory_screen) {
+                for (SlotGroup group : groups.values().stream().sorted(Comparator.comparing(SlotGroup::getOrder)).toList()) {
+                    if (!hasSlots(trinkets, group)) {
+                        continue;
+                    }
+                    int order = group.getOrder();
+                    int id = group.getSlotId();
+                    if (id != -1) {
 //                        if (this.slots.size() > id) {
 //                            Slot slot = this.slots.get(id);
 //                            if (!(slot instanceof SurvivalTrinketSlot)) {
@@ -127,123 +127,123 @@ public abstract class BetterAdventureMode_PlayerScreenHandlerMixin extends Scree
 //                                groupNums.put(group, -id);
 //                            }
 //                        }
-                    continue;
-                } else {
-                    int x;
-                    int y;
-                    // begins at 1 because order=0 is the default
-                    // this way most unwanted cases are avoided
-                    if (order == 1) {
-                        // alternative main hand
-                        x = 59;
-                        y = 80;//98; // -18 to negate an offset on the OwoScreen I can't find the cause of
-
-                    } else if (order == 2) {
-                        // alternative off hand
-                        x = 77;
-                        y = 80;//98; // -18 to negate an offset on the OwoScreen I can't find the cause of
-
-                    } else if (order == 3) {
-                        // belts
-                        x = 8;
-                        y = 44;//62; // -18 to negate an offset on the OwoScreen I can't find the cause of
-
-                    } else if (order == 4) {
-                        // boots
-                        x = 77;
-                        y = 62;//80; // -18 to negate an offset on the OwoScreen I can't find the cause of
-
-                    } else if (order == 5) {
-                        // chest_plates
-                        x = 8;
-                        y = 26;//44; // -18 to negate an offset on the OwoScreen I can't find the cause of
-
-                    } else if (order == 6) {
-                        // gloves
-                        x = 77;
-                        y = 44;//62; // -18 to negate an offset on the OwoScreen I can't find the cause of
-
-                    } else if (order == 7) {
-                        // helmets
-                        x = 33;
-                        y = -10;//98; // -18 to negate an offset on the OwoScreen I can't find the cause of
-
-                    } else if (order == 8) {
-                        // leggings
-                        x = 8;
-                        y = 62;//80; // -18 to negate an offset on the OwoScreen I can't find the cause of
-
-                    } else if (order == 9) {
-                        // main_hand
-                        x = 8;
-                        y = 80;//98; // -18 to negate an offset on the OwoScreen I can't find the cause of
-
-                    } else if (order == 10) {
-                        // necklaces
-                        x = 52;
-                        y = -10;//8; // -18 to negate an offset on the OwoScreen I can't find the cause of
-
-                    } else if (order == 11) {
-                        // off_hand
-                        x = 26;
-                        y = 80;//98; // -18 to negate an offset on the OwoScreen I can't find the cause of
-
-                    } else if (order == 12) {
-                        // rings 1
-                        x = 77;
-                        y = 8;//26; // -18 to negate an offset on the OwoScreen I can't find the cause of
-
-                    } else if (order == 13) {
-                        // rings 2
-                        x = 77;
-                        y = 26;//44; // -18 to negate an offset on the OwoScreen I can't find the cause of
-
-                    } else if (order == 14) {
-                        // shoulders
-                        x = 8;
-                        y = 8;//26; // -18 to negate an offset on the OwoScreen I can't find the cause of
-
-                    } else if (order == 15) {
-                        // spell slot 1
-                        x = this.spellSlotsX;
-                        y = this.spellSlotsY;
-
-                    } else if (order == 16) {
-                        // spell slot 2
-                        x = this.spellSlotsX + 18;
-                        y = this.spellSlotsY;
-
-                    } else if (order == 17) {
-                        // spell slot 3
-                        x = this.spellSlotsX + 36;
-                        y = this.spellSlotsY;
-
-                    } else if (order == 18) {
-                        // spell slot 4
-                        x = this.spellSlotsX + 54;
-                        y = this.spellSlotsY;
-
-                    } else if (order == 19) {
-                        // spell slot 5
-                        x = this.spellSlotsX;
-                        y = this.spellSlotsY + 18;
-
-                    } else if (order == 20) {
-                        // spell slot 6
-                        x = this.spellSlotsX + 18;
-                        y = this.spellSlotsY + 18;
-
-                    } else if (order == 21) {
-                        // spell slot 7
-                        x = this.spellSlotsX + 36;
-                        y = this.spellSlotsY + 18;
-
-                    } else if (order == 22) {
-                        // spell slot 8
-                        x = this.spellSlotsX + 54;
-                        y = this.spellSlotsY + 18;
-
+                        continue;
                     } else {
+                        int x;
+                        int y;
+                        // begins at 1 because order=0 is the default
+                        // this way most unwanted cases are avoided
+                        if (order == 1) {
+                            // alternative main hand
+                            x = 59;
+                            y = 80;//98; // -18 to negate an offset on the OwoScreen I can't find the cause of
+
+                        } else if (order == 2) {
+                            // alternative off hand
+                            x = 77;
+                            y = 80;//98; // -18 to negate an offset on the OwoScreen I can't find the cause of
+
+                        } else if (order == 3) {
+                            // belts
+                            x = 8;
+                            y = 44;//62; // -18 to negate an offset on the OwoScreen I can't find the cause of
+
+                        } else if (order == 4) {
+                            // boots
+                            x = 77;
+                            y = 62;//80; // -18 to negate an offset on the OwoScreen I can't find the cause of
+
+                        } else if (order == 5) {
+                            // chest_plates
+                            x = 8;
+                            y = 26;//44; // -18 to negate an offset on the OwoScreen I can't find the cause of
+
+                        } else if (order == 6) {
+                            // gloves
+                            x = 77;
+                            y = 44;//62; // -18 to negate an offset on the OwoScreen I can't find the cause of
+
+                        } else if (order == 7) {
+                            // helmets
+                            x = 33;
+                            y = -10;//98; // -18 to negate an offset on the OwoScreen I can't find the cause of
+
+                        } else if (order == 8) {
+                            // leggings
+                            x = 8;
+                            y = 62;//80; // -18 to negate an offset on the OwoScreen I can't find the cause of
+
+                        } else if (order == 9) {
+                            // main_hand
+                            x = 8;
+                            y = 80;//98; // -18 to negate an offset on the OwoScreen I can't find the cause of
+
+                        } else if (order == 10) {
+                            // necklaces
+                            x = 52;
+                            y = -10;//8; // -18 to negate an offset on the OwoScreen I can't find the cause of
+
+                        } else if (order == 11) {
+                            // off_hand
+                            x = 26;
+                            y = 80;//98; // -18 to negate an offset on the OwoScreen I can't find the cause of
+
+                        } else if (order == 12) {
+                            // rings 1
+                            x = 77;
+                            y = 8;//26; // -18 to negate an offset on the OwoScreen I can't find the cause of
+
+                        } else if (order == 13) {
+                            // rings 2
+                            x = 77;
+                            y = 26;//44; // -18 to negate an offset on the OwoScreen I can't find the cause of
+
+                        } else if (order == 14) {
+                            // shoulders
+                            x = 8;
+                            y = 8;//26; // -18 to negate an offset on the OwoScreen I can't find the cause of
+
+                        } else if (order == 15) {
+                            // spell slot 1
+                            x = this.spellSlotsX;
+                            y = this.spellSlotsY;
+
+                        } else if (order == 16) {
+                            // spell slot 2
+                            x = this.spellSlotsX + 18;
+                            y = this.spellSlotsY;
+
+                        } else if (order == 17) {
+                            // spell slot 3
+                            x = this.spellSlotsX + 36;
+                            y = this.spellSlotsY;
+
+                        } else if (order == 18) {
+                            // spell slot 4
+                            x = this.spellSlotsX + 54;
+                            y = this.spellSlotsY;
+
+                        } else if (order == 19) {
+                            // spell slot 5
+                            x = this.spellSlotsX;
+                            y = this.spellSlotsY + 18;
+
+                        } else if (order == 20) {
+                            // spell slot 6
+                            x = this.spellSlotsX + 18;
+                            y = this.spellSlotsY + 18;
+
+                        } else if (order == 21) {
+                            // spell slot 7
+                            x = this.spellSlotsX + 36;
+                            y = this.spellSlotsY + 18;
+
+                        } else if (order == 22) {
+                            // spell slot 8
+                            x = this.spellSlotsX + 54;
+                            y = this.spellSlotsY + 18;
+
+                        } else {
 //                            if (groupNum >= 4) {
 //                                x = 4 - (groupNum / 4) * 18;
 //                                y = 8 + (groupNum % 4) * 18;
@@ -251,11 +251,40 @@ public abstract class BetterAdventureMode_PlayerScreenHandlerMixin extends Scree
 //                                x = 77;
 //                                y = 62 - groupNum * 18;
 //                            }
+                            continue;
+                        }
+                        groupPos.put(group, new Point(x, y));
+                        groupNums.put(group, groupNum);
+                        groupNum++;
+                    }
+                }
+            } else {
+                for (SlotGroup group : groups.values().stream().sorted(Comparator.comparing(SlotGroup::getOrder)).toList()) {
+                    if (!hasSlots(trinkets, group)) {
                         continue;
                     }
-                    groupPos.put(group, new Point(x, y));
-                    groupNums.put(group, groupNum);
-                    groupNum++;
+                    int id = group.getSlotId();
+                    if (id != -1) {
+                        if (this.slots.size() > id) {
+                            Slot slot = this.slots.get(id);
+                            if (!(slot instanceof SurvivalTrinketSlot)) {
+                                groupPos.put(group, new Point(slot.x, slot.y));
+                                groupNums.put(group, -id);
+                            }
+                        }
+                    } else {
+                        int x = 77;
+                        int y;
+                        if (groupNum >= 4) {
+                            x = 4 - (groupNum / 4) * 18;
+                            y = 8 + (groupNum % 4) * 18;
+                        } else {
+                            y = 62 - groupNum * 18;
+                        }
+                        groupPos.put(group, new Point(x, y));
+                        groupNums.put(group, groupNum);
+                        groupNum++;
+                    }
                 }
             }
             groupCount = Math.max(0, groupNum - 4);

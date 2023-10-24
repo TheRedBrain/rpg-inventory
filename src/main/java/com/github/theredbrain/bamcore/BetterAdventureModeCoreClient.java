@@ -1,20 +1,28 @@
 package com.github.theredbrain.bamcore;
 
 import com.github.theredbrain.bamcore.client.gui.screen.ingame.CraftingBenchBlockScreen;
+import com.github.theredbrain.bamcore.config.ClientConfig;
+import com.github.theredbrain.bamcore.config.ClientConfigWrapper;
 import com.github.theredbrain.bamcore.network.packet.BetterAdventureModCoreClientPacket;
 import com.github.theredbrain.bamcore.registry.ItemRegistry;
 import com.github.theredbrain.bamcore.registry.KeyBindingsRegistry;
 import com.github.theredbrain.bamcore.registry.ScreenHandlerTypesRegistry;
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
+import me.shedaniel.autoconfig.serializer.PartitioningSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
-import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
 
 public class BetterAdventureModeCoreClient implements ClientModInitializer {
 
+    public static ClientConfig clientConfig;
+
     @Override
     public void onInitializeClient() {
+        AutoConfig.register(ClientConfigWrapper.class, PartitioningSerializer.wrap(JanksonConfigSerializer::new));
+        clientConfig = ((ClientConfigWrapper)AutoConfig.getConfigHolder(ClientConfigWrapper.class).getConfig()).client;
         KeyBindingsRegistry.registerKeyBindings();
         registerBlockEntityRenderer();
         BetterAdventureModCoreClientPacket.init();
