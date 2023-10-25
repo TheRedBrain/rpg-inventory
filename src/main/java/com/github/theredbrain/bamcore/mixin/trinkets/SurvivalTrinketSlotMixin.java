@@ -21,55 +21,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Objects;
 
 @Mixin(SurvivalTrinketSlot.class)
-public abstract class SurvivalTrinketSlotMixin extends Slot/* implements OwoSlotExtension, SlotAccessor*/ {
+public abstract class SurvivalTrinketSlotMixin extends Slot {
 
     @Shadow @Final private TrinketInventory trinketInventory;
     @Shadow @Final private SlotGroup group;
-//    @Unique
-//    private boolean owo$disabledOverride = false;
-//
-//    @Unique
-//    private @Nullable PositionedRectangle owo$scissorArea = null;
 
     public SurvivalTrinketSlotMixin(Inventory inventory, int index, int x, int y) {
         super(inventory, index, x, y);
     }
-
-//    /**
-//     * @author TheRedBrain
-//     */
-//    @Override
-//    public void onQuickTransfer(ItemStack newItem, ItemStack original) {
-//        LivingEntity livingEntity = trinketInventory.getComponent().getEntity();
-//        if (livingEntity instanceof PlayerEntity playerEntity) {
-//            ((DuckPlayerEntityMixin)playerEntity).setShouldUpdateTrinketSlots(true);
-//        }
-//        super.onQuickTransfer(newItem, original);
-//    }
-//
-//    /**
-//     * @author TheRedBrain
-//     */
-//    @Override
-//    public void setStack(ItemStack stack) {
-//        LivingEntity livingEntity = trinketInventory.getComponent().getEntity();
-//        if (livingEntity instanceof PlayerEntity playerEntity) {
-//            ((DuckPlayerEntityMixin)playerEntity).setShouldUpdateTrinketSlots(true);
-//        }
-//        super.setStack(stack);
-//    }
-//
-//    /**
-//     * @author TheRedBrain
-//     */
-//    @Override
-//    public ItemStack takeStack(int amount) {
-//        LivingEntity livingEntity = trinketInventory.getComponent().getEntity();
-//        if (livingEntity instanceof PlayerEntity playerEntity) {
-//            ((DuckPlayerEntityMixin)playerEntity).setShouldUpdateTrinketSlots(true);
-//        }
-//        return super.takeStack(amount);
-//    }
 
     /**
      * @author TheRedBrain
@@ -88,23 +47,6 @@ public abstract class SurvivalTrinketSlotMixin extends Slot/* implements OwoSlot
         cir.setReturnValue(cir.getReturnValue() && (livingEntity.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT)|| bl || !bl2));
     }
 
-//    /**
-//     * @author TheRedBrain
-//     */
-//    @Inject(method = "canTakeItems", at = @At("RETURN"), cancellable = true)
-//    public void bamcore$canTakeItems(PlayerEntity player, CallbackInfoReturnable<Boolean> cir) {
-//        LivingEntity livingEntity = trinketInventory.getComponent().getEntity();
-//        boolean bl = false;
-//        if (livingEntity instanceof PlayerEntity playerEntity && !((DuckPlayerEntityMixin) playerEntity).bamcore$isAdventure()) {
-//            bl = true;
-//        }
-//        boolean bl2 = true;
-//        if (livingEntity.getServer() != null) {
-//            bl2 = livingEntity.getServer().getGameRules().getBoolean(GameRulesRegistry.REQUIRE_CIVILISATION_EFFECT_TO_UNEQUIP_GEAR_IN_ADVENTURE_MODE);
-//        }
-//        cir.setReturnValue(cir.getReturnValue() && (livingEntity.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT) || bl || !bl2));
-//    }
-
     /**
      * @author TheRedBrain
      */
@@ -122,7 +64,7 @@ public abstract class SurvivalTrinketSlotMixin extends Slot/* implements OwoSlot
      */
     @Inject(method = "isEnabled", at = @At("RETURN"), cancellable = true)
     public void isEnabled(CallbackInfoReturnable<Boolean> cir) {
-        cir.setReturnValue(cir.getReturnValue()/* && !this.owo$disabledOverride*/
+        cir.setReturnValue(cir.getReturnValue()
                 && !((Objects.equals(this.group.getName(), "spell_slot_1") && trinketInventory.getComponent().getEntity().getAttributeValue(BetterAdventureModeCoreEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT) < 1)
                 || (Objects.equals(this.group.getName(), "spell_slot_2") && trinketInventory.getComponent().getEntity().getAttributeValue(BetterAdventureModeCoreEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT) < 2)
                 || (Objects.equals(this.group.getName(), "spell_slot_3") && trinketInventory.getComponent().getEntity().getAttributeValue(BetterAdventureModeCoreEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT) < 3)
@@ -133,24 +75,4 @@ public abstract class SurvivalTrinketSlotMixin extends Slot/* implements OwoSlot
                 || (Objects.equals(this.group.getName(), "spell_slot_8") && trinketInventory.getComponent().getEntity().getAttributeValue(BetterAdventureModeCoreEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT) < 8)
                 || (this.group.getOrder() == 0)));
     }
-
-//    @Override
-//    public void owo$setDisabledOverride(boolean disabled) {
-//        this.owo$disabledOverride = disabled;
-//    }
-//
-//    @Override
-//    public boolean owo$getDisabledOverride() {
-//        return this.owo$disabledOverride;
-//    }
-//
-//    @Override
-//    public void owo$setScissorArea(@Nullable PositionedRectangle scissor) {
-//        this.owo$scissorArea = scissor;
-//    }
-//
-//    @Override
-//    public @Nullable PositionedRectangle owo$getScissorArea() {
-//        return this.owo$scissorArea;
-//    }
 }

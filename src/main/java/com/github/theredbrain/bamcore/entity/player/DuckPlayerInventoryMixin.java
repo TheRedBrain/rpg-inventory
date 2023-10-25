@@ -1,20 +1,13 @@
 package com.github.theredbrain.bamcore.entity.player;
 
-import dev.emi.trinkets.api.TrinketComponent;
-import dev.emi.trinkets.api.TrinketsApi;
 import net.minecraft.item.ItemStack;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface DuckPlayerInventoryMixin {
 
     List<ItemStack> getArmorTrinkets();
 
-    /**
-     *
-     * @return
-     */
     ItemStack bamcore$getOffHandStack();
 
     // these methods get/set the ItemStacks in the TrinketSlot inventories

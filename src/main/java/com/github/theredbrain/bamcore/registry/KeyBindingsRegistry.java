@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.registry;
 
-import com.github.theredbrain.bamcore.network.packet.BetterAdventureModCoreServerPacket;
+import com.github.theredbrain.bamcore.network.packet.BetterAdventureModeCoreServerPacket;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -100,19 +100,19 @@ public class KeyBindingsRegistry {
     }
     public static void sheatheWeapons(MinecraftClient client) {
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-        client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModCoreServerPacket.SHEATHE_WEAPONS_PACKET, buf));
+        client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModeCoreServerPacket.SHEATHE_WEAPONS_PACKET, buf));
     }
     public static void twoHandMainWeapon(MinecraftClient client) {
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-        client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModCoreServerPacket.TWO_HAND_MAIN_WEAPON_PACKET, buf));
+        client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModeCoreServerPacket.TWO_HAND_MAIN_WEAPON_PACKET, buf));
     }
     public static void syncSlotSwapHand(MinecraftClient client, boolean mainHand) {
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         buf.writeBoolean(mainHand);
-        client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModCoreServerPacket.SWAP_HAND_ITEMS_PACKET, buf));
+        client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModeCoreServerPacket.SWAP_HAND_ITEMS_PACKET, buf));
     }
     public static void toggleNecklaceAbility(MinecraftClient client) {
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-        client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModCoreServerPacket.TOGGLE_NECKLACE_ABILITY_PACKET, buf));
+        client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModeCoreServerPacket.TOGGLE_NECKLACE_ABILITY_PACKET, buf));
     }
 }

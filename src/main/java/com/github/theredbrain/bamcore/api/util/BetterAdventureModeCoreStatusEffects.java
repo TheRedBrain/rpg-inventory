@@ -6,7 +6,6 @@ import com.github.theredbrain.bamcore.effect.*;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -22,9 +21,6 @@ public class BetterAdventureModeCoreStatusEffects {
     public static final StatusEffect NEED_EMPTY_OFFHAND_EFFECT = new NeutralStatusEffect();
     public static final StatusEffect NO_ATTACK_ITEMS_EFFECT = new NeutralStatusEffect();
     public static final StatusEffect OVERBURDENED_EFFECT = new HarmfulStatusEffect().addAttributeModifier(EntityAttributes.GENERIC_MOVEMENT_SPEED, BetterAdventureModCoreAttributeModifierUUIDs.OVERBURDENED_EFFECT, -0.25, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
-    public static final StatusEffect PERMANENT_MOUNT_EFFECT = new NeutralStatusEffect();
-    // TODO move to bamdimensions
-//    public static final StatusEffect PORTAL_RESISTANCE_EFFECT = new PortalResistanceStatusEffect();
     public static final StatusEffect WEAPONS_SHEATHED_EFFECT = new NeutralStatusEffect();
     public static final StatusEffect TWO_HANDED_EFFECT = new NeutralStatusEffect();
     public static final StatusEffect STAGGERED = new HarmfulStatusEffect();
@@ -58,9 +54,6 @@ public class BetterAdventureModeCoreStatusEffects {
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("need_empty_offhand_effect"), NEED_EMPTY_OFFHAND_EFFECT);
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("no_attack_items_effect"), NO_ATTACK_ITEMS_EFFECT);
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("overburdened_effect"), OVERBURDENED_EFFECT);
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("permanent_mount_effect"), PERMANENT_MOUNT_EFFECT);
-        // TODO move to bamdimensions
-//        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("portal_resistance_effect"), PORTAL_RESISTANCE_EFFECT);
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("weapons_sheathed_effect"), WEAPONS_SHEATHED_EFFECT);
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("two_handed_effect"), TWO_HANDED_EFFECT);
 

@@ -1,9 +1,7 @@
 package com.github.theredbrain.bamcore.entity.player;
 
-import com.github.theredbrain.bamcore.block.entity.*;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.ScreenHandler;
 
 public interface DuckPlayerEntityMixin {
 
@@ -27,18 +25,5 @@ public interface DuckPlayerEntityMixin {
     float bamcore$getStamina();
     void bamcore$setStamina(float mana);
 
-//    ScreenHandler bamcore$getAdventureInventoryScreenHandler();
-
     boolean bamcore$isAdventure();
-
-//    void bamcore$openCraftingBenchBlockScreen(CraftingBenchBlockEntity craftingBenchBlockEntity);
-    void bamcore$openStructurePlacerBlockScreen(StructurePlacerBlockBlockEntity structurePlacerBlock);
-    void bamcore$openAreaFillerBlockScreen(AreaFillerBlockBlockEntity areaFillerBlock);
-    void bamcore$openRedstoneTriggerBlockScreen(RedstoneTriggerBlockBlockEntity redstoneTriggerBlock);
-    void bamcore$openRelayTriggerBlockScreen(RelayTriggerBlockBlockEntity relayTriggerBlock);
-    void bamcore$openDelayTriggerBlockScreen(DelayTriggerBlockBlockEntity delayTriggerBlock);
-    void bamcore$openChunkLoaderBlockScreen(ChunkLoaderBlockBlockEntity chunkLoaderBlock);
-
-//    void setShouldUpdateTrinketSlots(boolean shouldUpdateTrinketSlots);
-//    boolean shouldUpdateTrinketSlots();
 }

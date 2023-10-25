@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.mixin.server.network;
 
-import com.github.theredbrain.bamcore.network.packet.BetterAdventureModCoreServerPacket;
+import com.github.theredbrain.bamcore.network.packet.BetterAdventureModeCoreServerPacket;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
@@ -20,6 +20,7 @@ public class EntityTrackerEntryMixin {
 
     @Shadow @Final private Entity entity;
 
+    // TODO check if still necessary
     @Inject(method = "startTracking", at = @At(value = "TAIL"))
     public void bam$startTrackingAdditionalHandSlots(ServerPlayerEntity serverPlayer, CallbackInfo info) {
         if (this.entity instanceof PlayerEntity) {
@@ -28,13 +29,13 @@ public class EntityTrackerEntryMixin {
                 PacketByteBuf data = new PacketByteBuf(Unpooled.buffer());
                 data.writeInt(serverPlayer.getId());
                 data.writeBoolean(true);
-                ServerPlayNetworking.send((ServerPlayerEntity) player, BetterAdventureModCoreServerPacket.SWAPPED_HAND_ITEMS_PACKET, data);
+                ServerPlayNetworking.send((ServerPlayerEntity) player, BetterAdventureModeCoreServerPacket.SWAPPED_HAND_ITEMS_PACKET, data);
             }
             if (!serverPlayer.getInventory().getStack(43).isEmpty() || !serverPlayer.getInventory().getStack(45).isEmpty()) {
                 PacketByteBuf data = new PacketByteBuf(Unpooled.buffer());
                 data.writeInt(serverPlayer.getId());
                 data.writeBoolean(false);
-                ServerPlayNetworking.send((ServerPlayerEntity) player, BetterAdventureModCoreServerPacket.SWAPPED_HAND_ITEMS_PACKET, data);
+                ServerPlayNetworking.send((ServerPlayerEntity) player, BetterAdventureModeCoreServerPacket.SWAPPED_HAND_ITEMS_PACKET, data);
             }
         }
     }

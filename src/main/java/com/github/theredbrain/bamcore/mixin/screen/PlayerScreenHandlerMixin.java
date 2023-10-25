@@ -49,9 +49,6 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
     private PlayerInventory inventory;
     private int spellSlotsX = 98;
     private int spellSlotsY = 62;
-////    private int activeSpellSlotAmount = 0;
-////    private final int[] spellSlotIds = {48, 49, 50, 51, 52, 53, 54, 55};
-//    private final int trinketSlotAmount = 14;
 
     public PlayerScreenHandlerMixin() {
         super(null, 0);
@@ -68,7 +65,6 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 
     @Override
     public void trinkets$updateTrinketSlots(boolean slotsChanged) {
-//        boolean bl = owner.hasStatusEffect(BetterAdventureModeCoreStatusEffects.IS_CREATIVE);
         TrinketsApi.getTrinketComponent(owner).ifPresent(trinkets -> {
             if (slotsChanged) trinkets.update();
             Map<String, SlotGroup> groups = trinkets.getGroups();
@@ -82,36 +78,6 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 
             int groupNum = 1; // Start at 1 because offhand exists
 
-            // TODO config to allow vanilla screen
-//            if (bl) {
-//                for (SlotGroup group : groups.values().stream().sorted(Comparator.comparing(SlotGroup::getOrder)).toList()) {
-//                    if (!hasSlots(trinkets, group)) {
-//                        continue;
-//                    }
-//                    int id = group.getSlotId();
-//                    if (id != -1) {
-//                        if (this.slots.size() > id) {
-//                            Slot slot = this.slots.get(id);
-//                            if (!(slot instanceof SurvivalTrinketSlot)) {
-//                                groupPos.put(group, new Point(slot.x, slot.y));
-//                                groupNums.put(group, -id);
-//                            }
-//                        }
-//                    } else {
-//                        int x = 77;
-//                        int y;
-//                        if (groupNum >= 4) {
-//                            x = 4 - (groupNum / 4) * 18;
-//                            y = 8 + (groupNum % 4) * 18;
-//                        } else {
-//                            y = 62 - groupNum * 18;
-//                        }
-//                        groupPos.put(group, new Point(x, y));
-//                        groupNums.put(group, groupNum);
-//                        groupNum++;
-//                    }
-//                }
-//            } else {
             if (BetterAdventureModeCore.serverConfig.use_adventure_inventory_screen) {
                 HashMap<Integer, Boolean> presentGroups = new HashMap<>(Map.of());
                 for (SlotGroup group : groups.values().stream().sorted(Comparator.comparing(SlotGroup::getOrder)).toList()) {
@@ -121,15 +87,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
                     int order = group.getOrder();
                     int id = group.getSlotId();
                     if (id != -1) {
-//                        if (this.slots.size() > id) {
-//                            Slot slot = this.slots.get(id);
-//                            if (!(slot instanceof SurvivalTrinketSlot)) {
-//                                groupPos.put(group, new Point(slot.x, slot.y));
-//                                groupNums.put(group, -id);
-//                            }
-//                        }
                         BetterAdventureModeCore.LOGGER.warn("Trinket slot groups with id != -1 are ignored. This applies to group " + group.getName());
-                        continue;
                     } else {
                         int x;
                         int y;

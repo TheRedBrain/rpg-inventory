@@ -8,10 +8,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 
 @Environment(EnvType.CLIENT)
-public class BetterAdventureModCoreClientPacket {
+public class BetterAdventureModeCoreClientPacket {
 
     public static void init() {
-        ClientPlayNetworking.registerGlobalReceiver(BetterAdventureModCoreServerPacket.SWAPPED_HAND_ITEMS_PACKET, (client, handler, buffer, responseSender) -> {
+        ClientPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.SWAPPED_HAND_ITEMS_PACKET, (client, handler, buffer, responseSender) -> {
             int entityId = buffer.readInt();
             boolean mainHand = buffer.readBoolean();
             client.execute(() -> {

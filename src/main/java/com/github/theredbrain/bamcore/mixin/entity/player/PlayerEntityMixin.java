@@ -3,9 +3,6 @@ package com.github.theredbrain.bamcore.mixin.entity.player;
 import com.github.theredbrain.bamcore.api.block.AbstractSetSpawnBlock;
 import com.github.theredbrain.bamcore.api.item.BetterAdventureMode_BasicShieldItem;
 import com.github.theredbrain.bamcore.api.item.BetterAdventureMode_BasicWeaponItem;
-import com.github.theredbrain.bamcore.block.entity.AreaFillerBlockBlockEntity;
-import com.github.theredbrain.bamcore.block.entity.ChunkLoaderBlockBlockEntity;
-import com.github.theredbrain.bamcore.block.entity.StructurePlacerBlockBlockEntity;
 import com.github.theredbrain.bamcore.api.effect.FoodStatusEffect;
 import com.github.theredbrain.bamcore.entity.DamageUtility;
 import com.github.theredbrain.bamcore.entity.DuckLivingEntityMixin;
@@ -129,16 +126,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
     @Inject(method = "tick", at = @At("TAIL"))
     public void bamcore$tick(CallbackInfo ci) {
-
-//        // this is a workaround to allow different trinket slot positions based on the game mode
-//        // the screenHandler can not check for the game mode of a player but if the player has a status effect
-//        if (this.isCreative() && !this.hasStatusEffect(BetterAdventureModeCoreStatusEffects.IS_CREATIVE)) {
-//            this.addStatusEffect(new StatusEffectInstance(BetterAdventureModeCoreStatusEffects.IS_CREATIVE, -1, 0, false, false, false));
-//            ((TrinketPlayerScreenHandler)this.playerScreenHandler).trinkets$updateTrinketSlots(true);
-//        } else if (!this.isCreative() && this.hasStatusEffect(BetterAdventureModeCoreStatusEffects.IS_CREATIVE)) {
-//            this.removeStatusEffect(BetterAdventureModeCoreStatusEffects.IS_CREATIVE);
-//            ((TrinketPlayerScreenHandler)this.playerScreenHandler).trinkets$updateTrinketSlots(true);
-//        }
         if (this.isBlocking()) {
             this.blockingTime++;
         } else if (this.blockingTime > 0) {
@@ -704,22 +691,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
      */
     @Override
     public abstract boolean bamcore$isAdventure();
-
-//    @Override
-//    public void bamcore$openCraftingBenchBlockScreen(CraftingBenchBlockEntity craftingBenchBlockEntity) {
-//    }
-
-    @Override
-    public void bamcore$openStructurePlacerBlockScreen(StructurePlacerBlockBlockEntity structurePlacerBlock) {
-    }
-
-    @Override
-    public void bamcore$openAreaFillerBlockScreen(AreaFillerBlockBlockEntity areaFillerBlock) {
-    }
-
-    @Override
-    public void bamcore$openChunkLoaderBlockScreen(ChunkLoaderBlockBlockEntity chunkLoaderBlock) {
-    }
 
     private void ejectItemsFromInactiveSpellSlots() {
         int activeSpellSlotAmount = (int) this.getAttributeInstance(BetterAdventureModeCoreEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT).getValue();

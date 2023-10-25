@@ -20,11 +20,6 @@ public abstract class ToolItemMixin extends Item {
         super(settings);
     }
 
-//    @Override
-//    public boolean isUsable(ItemStack stack) {
-//        return stack.getDamage() < stack.getMaxDamage() - 1 || stack.isIn(Tags.EMPTY_HAND_WEAPONS);
-//    }
-
     /**
      * Gets or creates the translation key of this item when it is not protecting.
      */
