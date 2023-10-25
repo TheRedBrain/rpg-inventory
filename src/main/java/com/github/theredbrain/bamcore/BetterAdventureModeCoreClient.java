@@ -1,6 +1,5 @@
 package com.github.theredbrain.bamcore;
 
-import com.github.theredbrain.bamcore.client.gui.screen.ingame.CraftingBenchBlockScreen;
 import com.github.theredbrain.bamcore.config.ClientConfig;
 import com.github.theredbrain.bamcore.config.ClientConfigWrapper;
 import com.github.theredbrain.bamcore.network.packet.BetterAdventureModCoreClientPacket;
@@ -39,7 +38,6 @@ public class BetterAdventureModeCoreClient implements ClientModInitializer {
 //        HandledScreens.<TriggeredBlockScreenHandler, TriggeredBlockScreen>register(ExtendedScreenTypesRegistry.TRIGGERED_SCREEN_HANDLER, (gui, inventory, title) -> new TriggeredBlockScreen(gui, inventory.player, title));
         // TODO move to bamdimensions
 //        HandledScreens.register(ScreenHandlerTypesRegistry.TELEPORTER_BLOCK_SCREEN_HANDLER, TeleporterBlockScreen::new);
-        HandledScreens.register(ScreenHandlerTypesRegistry.CRAFTING_BENCH_BLOCK_SCREEN_HANDLER, CraftingBenchBlockScreen::new);
     }
 
     private void registerModelPredicateProviders() {

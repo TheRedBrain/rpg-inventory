@@ -42,7 +42,6 @@ public class BetterAdventureModeCore implements ModInitializer {
 		BetterAdventureModeCoreStatusEffects.registerEffects();
 		GameRulesRegistry.init();
 		PredicateRegistry.init();
-		RecipeRegistry.init();
 	}
 
 	public static Identifier identifier(String path) {

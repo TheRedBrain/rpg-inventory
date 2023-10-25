@@ -15,7 +15,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
-import org.apache.commons.lang3.tuple.MutablePair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.*;
@@ -26,7 +25,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.*;
 
 @Mixin(value = PlayerScreenHandler.class, priority = 1050) // overrides Trinkets
-public abstract class BetterAdventureMode_PlayerScreenHandlerMixin extends ScreenHandler implements TrinketPlayerScreenHandler {
+public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements TrinketPlayerScreenHandler {
     @Shadow @Final
     private PlayerEntity owner;
 
@@ -54,7 +53,7 @@ public abstract class BetterAdventureMode_PlayerScreenHandlerMixin extends Scree
 ////    private final int[] spellSlotIds = {48, 49, 50, 51, 52, 53, 54, 55};
 //    private final int trinketSlotAmount = 14;
 
-    public BetterAdventureMode_PlayerScreenHandlerMixin() {
+    public PlayerScreenHandlerMixin() {
         super(null, 0);
     }
 

@@ -1,28 +1,19 @@
 package com.github.theredbrain.bamcore.mixin.trinkets;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreEntityAttributes;
 import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreStatusEffects;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
+import com.github.theredbrain.bamcore.registry.GameRulesRegistry;
 import dev.emi.trinkets.SurvivalTrinketSlot;
 import dev.emi.trinkets.api.*;
-import io.wispforest.owo.mixin.ui.SlotAccessor;
-import io.wispforest.owo.ui.base.BaseOwoHandledScreen;
-import io.wispforest.owo.ui.core.PositionedRectangle;
-import io.wispforest.owo.util.pond.OwoSlotExtension;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -90,20 +81,40 @@ public abstract class SurvivalTrinketSlotMixin extends Slot/* implements OwoSlot
         if (livingEntity instanceof PlayerEntity playerEntity && !((DuckPlayerEntityMixin) playerEntity).bamcore$isAdventure()) {
             bl = true;
         }
-        cir.setReturnValue(cir.getReturnValue() && (livingEntity.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT) || bl));
+        boolean bl2 = true;
+        if (livingEntity.getServer() != null) {
+            bl2 = livingEntity.getServer().getGameRules().getBoolean(GameRulesRegistry.REQUIRE_CIVILISATION_EFFECT_TO_CHANGE_GEAR_IN_ADVENTURE_MODE);
+        }
+        cir.setReturnValue(cir.getReturnValue() && (livingEntity.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT)|| bl || !bl2));
     }
+
+//    /**
+//     * @author TheRedBrain
+//     */
+//    @Inject(method = "canTakeItems", at = @At("RETURN"), cancellable = true)
+//    public void bamcore$canTakeItems(PlayerEntity player, CallbackInfoReturnable<Boolean> cir) {
+//        LivingEntity livingEntity = trinketInventory.getComponent().getEntity();
+//        boolean bl = false;
+//        if (livingEntity instanceof PlayerEntity playerEntity && !((DuckPlayerEntityMixin) playerEntity).bamcore$isAdventure()) {
+//            bl = true;
+//        }
+//        boolean bl2 = true;
+//        if (livingEntity.getServer() != null) {
+//            bl2 = livingEntity.getServer().getGameRules().getBoolean(GameRulesRegistry.REQUIRE_CIVILISATION_EFFECT_TO_UNEQUIP_GEAR_IN_ADVENTURE_MODE);
+//        }
+//        cir.setReturnValue(cir.getReturnValue() && (livingEntity.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT) || bl || !bl2));
+//    }
 
     /**
      * @author TheRedBrain
      */
     @Inject(method = "canTakeItems", at = @At("RETURN"), cancellable = true)
     public void bamcore$canTakeItems(PlayerEntity player, CallbackInfoReturnable<Boolean> cir) {
-        LivingEntity livingEntity = trinketInventory.getComponent().getEntity();
-        boolean bl = false;
-        if (livingEntity instanceof PlayerEntity playerEntity && !((DuckPlayerEntityMixin) playerEntity).bamcore$isAdventure()) {
-            bl = true;
+        boolean bl = true;
+        if (player.getServer() != null) {
+            bl = player.getServer().getGameRules().getBoolean(GameRulesRegistry.REQUIRE_CIVILISATION_EFFECT_TO_CHANGE_GEAR_IN_ADVENTURE_MODE);
         }
-        cir.setReturnValue(cir.getReturnValue() && (livingEntity.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT) || bl));
+        cir.setReturnValue(cir.getReturnValue() && (player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT) || !bl || !((DuckPlayerEntityMixin) player).bamcore$isAdventure()));
     }
 
     /**

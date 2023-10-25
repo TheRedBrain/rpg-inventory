@@ -19,5 +19,7 @@ public class GameRulesRegistry {
             GameRuleRegistry.register("resetRecipesOnDeath", GameRules.Category.PLAYER, GameRuleFactory.createBooleanRule(false));
     public static final GameRules.Key<GameRules.BooleanRule> TELEPORT_TO_SPAWN_ON_LOGIN =
             GameRuleRegistry.register("teleportToSpawnOnLogin", GameRules.Category.PLAYER, GameRuleFactory.createBooleanRule(false));
+    public static final GameRules.Key<GameRules.BooleanRule> REQUIRE_CIVILISATION_EFFECT_TO_CHANGE_GEAR_IN_ADVENTURE_MODE =
+            GameRuleRegistry.register("requireCivilisationEffectToChangeGearInAdventureMode", GameRules.Category.PLAYER, GameRuleFactory.createBooleanRule(true));
     public static void init() {}
 }

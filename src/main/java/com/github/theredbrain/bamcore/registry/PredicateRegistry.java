@@ -45,11 +45,10 @@ public class PredicateRegistry {
             return TriState.FALSE;
         });
         TrinketsApi.registerTrinketPredicate(BetterAdventureModeCore.identifier("can_change_equipment"), (stack, ref, entity) -> {
-            boolean bl = false;
-            if (entity instanceof PlayerEntity playerEntity && !((DuckPlayerEntityMixin) playerEntity).bamcore$isAdventure()) {
-                bl = true;
-            }
-            if (entity.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT) || bl) {
+            if (entity.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT)
+                    || entity instanceof PlayerEntity playerEntity && !((DuckPlayerEntityMixin) playerEntity).bamcore$isAdventure()
+                    || entity.getServer() == null
+                    || !entity.getServer().getGameRules().getBoolean(GameRulesRegistry.REQUIRE_CIVILISATION_EFFECT_TO_CHANGE_GEAR_IN_ADVENTURE_MODE)) {
                 return TriState.TRUE;
             }
             return TriState.FALSE;
