@@ -1,11 +1,11 @@
-package com.github.theredbrain.bamcore.api.util;
+package com.github.theredbrain.bamcore.registry;
 
 import net.minecraft.entity.damage.DamageType;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
 
-public class BetterAdventureModeDamageTypes {
+public class DamageTypesRegistry {
 
     public static final RegistryKey<DamageType> PLAYER_BASHING_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, new Identifier("bamcore", "player_bashing_damage_type"));
     public static final RegistryKey<DamageType> PLAYER_PIERCING_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, new Identifier("bamcore", "player_piercing_damage_type"));

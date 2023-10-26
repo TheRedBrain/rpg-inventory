@@ -1,7 +1,7 @@
 package com.github.theredbrain.bamcore.mixin.bettercombat;
 
 import com.github.theredbrain.bamcore.api.item.BetterAdventureMode_BasicShieldItem;
-import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreStatusEffects;
+import com.github.theredbrain.bamcore.registry.StatusEffectsRegistry;
 import net.bettercombat.api.WeaponAttributes.Condition;
 import com.github.theredbrain.bamcore.registry.Tags;
 import net.bettercombat.api.WeaponAttributes;
@@ -144,10 +144,10 @@ public class PlayerAttackHelperMixin {
                     return isOffHandAttack;
                 case MOUNTED:
                     // repurposed for two-handed attacks
-                    return player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.TWO_HANDED_EFFECT);
+                    return player.hasStatusEffect(StatusEffectsRegistry.TWO_HANDED_EFFECT);
                 case NOT_MOUNTED:
                     // repurposed for non-two-handed attacks
-                    return !player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.TWO_HANDED_EFFECT);
+                    return !player.hasStatusEffect(StatusEffectsRegistry.TWO_HANDED_EFFECT);
                 default:
                     return true;
             }

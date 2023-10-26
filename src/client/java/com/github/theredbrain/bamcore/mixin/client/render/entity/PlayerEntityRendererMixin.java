@@ -1,8 +1,8 @@
 package com.github.theredbrain.bamcore.mixin.client.render.entity;
 
-import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreStatusEffects;
-import com.github.theredbrain.bamcore.client.render.renderer.SheathedMainHandItemFeatureRenderer;
-import com.github.theredbrain.bamcore.client.render.renderer.SheathedOffHandItemFeatureRenderer;
+import com.github.theredbrain.bamcore.registry.StatusEffectsRegistry;
+import com.github.theredbrain.bamcore.render.renderer.SheathedMainHandItemFeatureRenderer;
+import com.github.theredbrain.bamcore.render.renderer.SheathedOffHandItemFeatureRenderer;
 import com.github.theredbrain.bamcore.registry.Tags;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -72,7 +72,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
             if (useAction == UseAction.BRUSH) {
                 return BipedEntityModel.ArmPose.BRUSH;
             }
-        } else if (!player.handSwinging && ((itemStack.isOf(Items.CROSSBOW) && CrossbowItem.isCharged(itemStack))) || (player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.TWO_HANDED_EFFECT))) {
+        } else if (!player.handSwinging && ((itemStack.isOf(Items.CROSSBOW) && CrossbowItem.isCharged(itemStack))) || (player.hasStatusEffect(StatusEffectsRegistry.TWO_HANDED_EFFECT))) {
             return BipedEntityModel.ArmPose.CROSSBOW_HOLD;
         }
         return BipedEntityModel.ArmPose.ITEM;

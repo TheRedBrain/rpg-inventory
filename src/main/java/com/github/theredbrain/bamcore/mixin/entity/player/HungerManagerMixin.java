@@ -1,7 +1,7 @@
 package com.github.theredbrain.bamcore.mixin.entity.player;
 
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
-import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreStatusEffects;
+import com.github.theredbrain.bamcore.registry.StatusEffectsRegistry;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerEntity;
@@ -44,7 +44,7 @@ public class HungerManagerMixin {
         boolean isMoving = this.prevPosX != player.getX() || this.prevPosY != player.getY() || this.prevPosZ != player.getZ();
         boolean isBlocking = player.isBlocking();
         boolean isSprinting = player.isSprinting();
-        boolean isInCivilization = player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT);
+        boolean isInCivilization = player.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT);
         this.prevPosX = player.getX();
         this.prevPosY = player.getY();
         this.prevPosZ = player.getZ();
@@ -52,10 +52,10 @@ public class HungerManagerMixin {
         this.staminaTickTimer++;
         this.manaTickTimer++;
 
-        if (isOverBurdened() && !player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.OVERBURDENED_EFFECT)) {
-            player.addStatusEffect(new StatusEffectInstance(BetterAdventureModeCoreStatusEffects.OVERBURDENED_EFFECT, -1, 0, false, false, true));
-        } else if (!isOverBurdened() && player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.OVERBURDENED_EFFECT)) {
-            player.removeStatusEffect(BetterAdventureModeCoreStatusEffects.OVERBURDENED_EFFECT);
+        if (isOverBurdened() && !player.hasStatusEffect(StatusEffectsRegistry.OVERBURDENED_EFFECT)) {
+            player.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.OVERBURDENED_EFFECT, -1, 0, false, false, true));
+        } else if (!isOverBurdened() && player.hasStatusEffect(StatusEffectsRegistry.OVERBURDENED_EFFECT)) {
+            player.removeStatusEffect(StatusEffectsRegistry.OVERBURDENED_EFFECT);
         }
 
         int healthTickThreshold = 20;
@@ -108,9 +108,9 @@ public class HungerManagerMixin {
             if (((DuckPlayerEntityMixin)player).bamcore$getMana() < ((DuckPlayerEntityMixin)player).bamcore$getMaxMana()) {
                 float passiveRegeneration = ((DuckPlayerEntityMixin)player).bamcore$getManaRegeneration();
                 double civilisationEffectManaRegenerationMultiplier = isInCivilization ? 10 : 1;
-                double manaRegenerationEffectMultiplier = player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.MANA_REGENERATION_EFFECT) ? (player.getStatusEffect(BetterAdventureModeCoreStatusEffects.MANA_REGENERATION_EFFECT).getAmplifier() > 0 ? 1 : 0.5) : 0.5;
+                double manaRegenerationEffectMultiplier = player.hasStatusEffect(StatusEffectsRegistry.MANA_REGENERATION_EFFECT) ? (player.getStatusEffect(StatusEffectsRegistry.MANA_REGENERATION_EFFECT).getAmplifier() > 0 ? 1 : 0.5) : 0.5;
                 // regenerate mana
-                if (player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT) || player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.MANA_REGENERATION_EFFECT)) {
+                if (player.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT) || player.hasStatusEffect(StatusEffectsRegistry.MANA_REGENERATION_EFFECT)) {
                     ((DuckPlayerEntityMixin) player).bamcore$addMana((float) (passiveRegeneration * civilisationEffectManaRegenerationMultiplier * manaRegenerationEffectMultiplier));
                 }
             } else if (((DuckPlayerEntityMixin)player).bamcore$getMana() > ((DuckPlayerEntityMixin)player).bamcore$getMaxMana()) {

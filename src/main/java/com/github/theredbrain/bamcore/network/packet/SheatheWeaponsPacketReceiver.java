@@ -1,7 +1,7 @@
 package com.github.theredbrain.bamcore.network.packet;
 
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
-import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreStatusEffects;
+import com.github.theredbrain.bamcore.registry.StatusEffectsRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -20,12 +20,12 @@ public class SheatheWeaponsPacketReceiver implements ServerPlayNetworking.PlayCh
             if (((DuckPlayerEntityMixin) player).bamcore$getStamina() <= 0) {
                 player.sendMessageToClient(Text.translatable("hud.message.staminaTooLow"), true);
             } else {
-                if (player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.WEAPONS_SHEATHED_EFFECT)) {
-                    player.removeStatusEffect(BetterAdventureModeCoreStatusEffects.WEAPONS_SHEATHED_EFFECT);
+                if (player.hasStatusEffect(StatusEffectsRegistry.WEAPONS_SHEATHED_EFFECT)) {
+                    player.removeStatusEffect(StatusEffectsRegistry.WEAPONS_SHEATHED_EFFECT);
                 } else {
-                    player.addStatusEffect(new StatusEffectInstance(BetterAdventureModeCoreStatusEffects.WEAPONS_SHEATHED_EFFECT, -1, 0, false, false, true));
-                    if (player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.TWO_HANDED_EFFECT)) {
-                        player.removeStatusEffect(BetterAdventureModeCoreStatusEffects.TWO_HANDED_EFFECT);
+                    player.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.WEAPONS_SHEATHED_EFFECT, -1, 0, false, false, true));
+                    if (player.hasStatusEffect(StatusEffectsRegistry.TWO_HANDED_EFFECT)) {
+                        player.removeStatusEffect(StatusEffectsRegistry.TWO_HANDED_EFFECT);
                     }
                 }
             }

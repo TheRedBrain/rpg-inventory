@@ -1,11 +1,12 @@
 package com.github.theredbrain.bamcore;
 
-import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreEntityAttributes;
-import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreStatusEffects;
+import com.github.theredbrain.bamcore.registry.EntityAttributesRegistry;
+import com.github.theredbrain.bamcore.registry.StatusEffectsRegistry;
 import com.github.theredbrain.bamcore.config.ServerConfig;
 import com.github.theredbrain.bamcore.config.ServerConfigWrapper;
 import com.github.theredbrain.bamcore.network.packet.BetterAdventureModeCoreServerPacket;
 import com.github.theredbrain.bamcore.registry.*;
+import com.github.theredbrain.bamcore.world.DimensionsManager;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import me.shedaniel.autoconfig.serializer.PartitioningSerializer;
@@ -32,11 +33,13 @@ public class BetterAdventureModeCore implements ModInitializer {
 
 		// Registry
 		BlockRegistry.init();
-		BetterAdventureModeCoreEntityAttributes.registerAttributes();
+		EntityAttributesRegistry.registerAttributes();
+		DimensionsManager.init();
+		EntityRegistry.init();
 		EventsRegistry.initializeEvents();
 		ItemRegistry.init();
-//		ScreenHandlerTypesRegistry.registerAll();
-		BetterAdventureModeCoreStatusEffects.registerEffects();
+		ScreenHandlerTypesRegistry.registerAll();
+		StatusEffectsRegistry.registerEffects();
 		GameRulesRegistry.init();
 		PredicateRegistry.init();
 	}

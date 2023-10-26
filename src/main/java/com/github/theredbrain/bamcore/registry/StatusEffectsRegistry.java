@@ -1,7 +1,8 @@
-package com.github.theredbrain.bamcore.api.util;
+package com.github.theredbrain.bamcore.registry;
 
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.api.effect.AuraStatusEffect;
+import com.github.theredbrain.bamcore.api.util.BetterAdventureModCoreAttributeModifierUUIDs;
 import com.github.theredbrain.bamcore.effect.*;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -13,7 +14,7 @@ import net.spell_engine.api.effect.ActionImpairing;
 import net.spell_engine.api.effect.EntityActionsAllowed;
 import net.spell_engine.api.effect.Synchronized;
 
-public class BetterAdventureModeCoreStatusEffects {
+public class StatusEffectsRegistry {
 
     public static final StatusEffect ADVENTURE_BUILDING_EFFECT = new NeutralStatusEffect();
     public static final StatusEffect CIVILISATION_EFFECT = new NeutralStatusEffect();
@@ -23,13 +24,14 @@ public class BetterAdventureModeCoreStatusEffects {
     public static final StatusEffect OVERBURDENED_EFFECT = new HarmfulStatusEffect().addAttributeModifier(EntityAttributes.GENERIC_MOVEMENT_SPEED, BetterAdventureModCoreAttributeModifierUUIDs.OVERBURDENED_EFFECT, -0.25, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
     public static final StatusEffect WEAPONS_SHEATHED_EFFECT = new NeutralStatusEffect();
     public static final StatusEffect TWO_HANDED_EFFECT = new NeutralStatusEffect();
+    public static final StatusEffect PORTAL_RESISTANCE_EFFECT = new NeutralStatusEffect();
     public static final StatusEffect STAGGERED = new HarmfulStatusEffect();
     public static final StatusEffect BURNING = new HarmfulStatusEffect();
     public static final StatusEffect CHILLED = new HarmfulStatusEffect();
     public static final StatusEffect FROZEN = new HarmfulStatusEffect();
     public static final StatusEffect WET = new HarmfulStatusEffect();
     public static final StatusEffect TEST_AURA_EFFECT = new AuraStatusEffect(StatusEffects.GLOWING)
-            .addAttributeModifier(BetterAdventureModeCoreEntityAttributes.MAX_MANA, BetterAdventureModCoreAttributeModifierUUIDs.AURA_EFFECT, -0.25F, EntityAttributeModifier.Operation.MULTIPLY_TOTAL)
+            .addAttributeModifier(EntityAttributesRegistry.MAX_MANA, BetterAdventureModCoreAttributeModifierUUIDs.AURA_EFFECT, -0.25F, EntityAttributeModifier.Operation.MULTIPLY_TOTAL)
             ;
 
     public static void registerEffects() {
@@ -56,6 +58,8 @@ public class BetterAdventureModeCoreStatusEffects {
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("overburdened_effect"), OVERBURDENED_EFFECT);
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("weapons_sheathed_effect"), WEAPONS_SHEATHED_EFFECT);
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("two_handed_effect"), TWO_HANDED_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("portal_resistance_effect"), PORTAL_RESISTANCE_EFFECT);
+
 
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("staggered"), STAGGERED);
 

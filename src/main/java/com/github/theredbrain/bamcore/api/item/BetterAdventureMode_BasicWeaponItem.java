@@ -2,7 +2,7 @@ package com.github.theredbrain.bamcore.api.item;
 
 import com.github.theredbrain.bamcore.api.util.BetterAdventureModCoreAttributeModifierUUIDs;
 import com.github.theredbrain.bamcore.api.util.BetterAdventureModCoreItemUtils;
-import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreEntityAttributes;
+import com.github.theredbrain.bamcore.registry.EntityAttributesRegistry;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.block.BlockState;
@@ -104,7 +104,7 @@ public class BetterAdventureMode_BasicWeaponItem extends Item {
         ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
         builder.put(EntityAttributes.GENERIC_ATTACK_DAMAGE, new EntityAttributeModifier(ATTACK_DAMAGE_MODIFIER_ID, "Weapon modifier", (double)this.attackDamage, EntityAttributeModifier.Operation.ADDITION));
         builder.put(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_ID, "Weapon modifier", (double)this.attackSpeed, EntityAttributeModifier.Operation.ADDITION));
-        builder.put(BetterAdventureModeCoreEntityAttributes.EQUIPMENT_WEIGHT, new EntityAttributeModifier(UUID.fromString(BetterAdventureModCoreAttributeModifierUUIDs.MAIN_HAND_EQUIPMENT_WEIGHT), "Weapon modifier", (double)this.weight, EntityAttributeModifier.Operation.ADDITION));
+        builder.put(EntityAttributesRegistry.EQUIPMENT_WEIGHT, new EntityAttributeModifier(UUID.fromString(BetterAdventureModCoreAttributeModifierUUIDs.MAIN_HAND_EQUIPMENT_WEIGHT), "Weapon modifier", (double)this.weight, EntityAttributeModifier.Operation.ADDITION));
         return builder.build();
     }
 

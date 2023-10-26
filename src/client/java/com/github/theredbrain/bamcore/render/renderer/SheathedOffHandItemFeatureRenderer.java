@@ -1,8 +1,8 @@
-package com.github.theredbrain.bamcore.client.render.renderer;
+package com.github.theredbrain.bamcore.render.renderer;
 
 import com.github.theredbrain.bamcore.api.item.BetterAdventureMode_BasicShieldItem;
 import com.github.theredbrain.bamcore.api.item.BetterAdventureMode_BasicWeaponItem;
-import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreStatusEffects;
+import com.github.theredbrain.bamcore.registry.StatusEffectsRegistry;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerInventoryMixin;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -37,7 +37,7 @@ public class SheathedOffHandItemFeatureRenderer extends HeldItemFeatureRenderer<
 
         ItemStack offHandStack = ((DuckPlayerInventoryMixin) ((PlayerEntity) abstractClientPlayerEntity).getInventory()).bamcore$getOffHand();
 
-        if (!offHandStack.isEmpty() && (((PlayerEntity) abstractClientPlayerEntity).hasStatusEffect(BetterAdventureModeCoreStatusEffects.WEAPONS_SHEATHED_EFFECT) || ((PlayerEntity) abstractClientPlayerEntity).hasStatusEffect(BetterAdventureModeCoreStatusEffects.TWO_HANDED_EFFECT))) {
+        if (!offHandStack.isEmpty() && (((PlayerEntity) abstractClientPlayerEntity).hasStatusEffect(StatusEffectsRegistry.WEAPONS_SHEATHED_EFFECT) || ((PlayerEntity) abstractClientPlayerEntity).hasStatusEffect(StatusEffectsRegistry.TWO_HANDED_EFFECT))) {
             matrixStack.push();
             ModelPart modelPart = this.getContextModel().body;
             modelPart.rotate(matrixStack);

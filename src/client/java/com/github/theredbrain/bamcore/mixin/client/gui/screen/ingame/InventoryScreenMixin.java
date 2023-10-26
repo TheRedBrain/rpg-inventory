@@ -1,7 +1,7 @@
 package com.github.theredbrain.bamcore.mixin.client.gui.screen.ingame;
 
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
-import com.github.theredbrain.bamcore.client.gui.screen.ingame.AdventureInventoryScreen;
+import com.github.theredbrain.bamcore.gui.screen.ingame.AdventureInventoryScreen;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;

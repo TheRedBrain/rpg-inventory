@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.mixin.entity;
 
-import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreStatusEffects;
+import com.github.theredbrain.bamcore.registry.StatusEffectsRegistry;
 import com.github.theredbrain.bamcore.entity.DamageUtility;
 import com.github.theredbrain.bamcore.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.bamcore.registry.GameRulesRegistry;
@@ -372,7 +372,7 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
 
 //        BetterAdventureModeCore.LOGGER.info("try apply stagger");
         // apply stagger
-        if (source.isIn(Tags.STAGGERS) && !(this.getStaggerLimitMultiplier() == -1 || this.hasStatusEffect(BetterAdventureModeCoreStatusEffects.STAGGERED))) {
+        if (source.isIn(Tags.STAGGERS) && !(this.getStaggerLimitMultiplier() == -1 || this.hasStatusEffect(StatusEffectsRegistry.STAGGERED))) {
             float appliedStagger = (float) (amount * DamageUtility.getStaggerDamageMultiplierForDamageType(source));
 //            BetterAdventureModeCore.LOGGER.info("appliedStagger: " + appliedStagger);
             this.bamcore$addPoise(appliedStagger);
@@ -380,7 +380,7 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
 //            BetterAdventureModeCore.LOGGER.info("this.getMaxHealth() * this.getStaggerLimitMultiplier(): " + this.getMaxHealth() * this.getStaggerLimitMultiplier());
             if (this.bamcore$getPoise() >= this.getMaxHealth() * this.getStaggerLimitMultiplier()) {
 //                BetterAdventureModeCore.LOGGER.info(getEntityName() + " was staggered");
-                this.addStatusEffect(new StatusEffectInstance(BetterAdventureModeCoreStatusEffects.STAGGERED, this.getStaggerDuration(), 0, false, false, true));
+                this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.STAGGERED, this.getStaggerDuration(), 0, false, false, true));
             }
         }
 

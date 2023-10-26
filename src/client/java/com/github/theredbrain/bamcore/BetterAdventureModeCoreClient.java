@@ -2,14 +2,20 @@ package com.github.theredbrain.bamcore;
 
 import com.github.theredbrain.bamcore.config.ClientConfig;
 import com.github.theredbrain.bamcore.config.ClientConfigWrapper;
+import com.github.theredbrain.bamcore.gui.screen.ingame.TeleporterBlockScreen;
 import com.github.theredbrain.bamcore.network.packet.BetterAdventureModeCoreClientPacket;
+import com.github.theredbrain.bamcore.registry.EntityRegistry;
 import com.github.theredbrain.bamcore.registry.ItemRegistry;
 import com.github.theredbrain.bamcore.registry.KeyBindingsRegistry;
+import com.github.theredbrain.bamcore.registry.ScreenHandlerTypesRegistry;
+import com.github.theredbrain.bamcore.render.block.entity.TeleporterBlockBlockEntityRenderer;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import me.shedaniel.autoconfig.serializer.PartitioningSerializer;
 import net.fabricmc.api.ClientModInitializer;
+import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
+import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.util.Identifier;
 
 public class BetterAdventureModeCoreClient implements ClientModInitializer {
@@ -33,9 +39,11 @@ public class BetterAdventureModeCoreClient implements ClientModInitializer {
     }
 
     private void registerBlockEntityRenderer() {
+        BlockEntityRendererFactories.register(EntityRegistry.TELEPORTER_BLOCK_ENTITY, TeleporterBlockBlockEntityRenderer::new);
     }
 
     private void registerScreens() {
+        HandledScreens.register(ScreenHandlerTypesRegistry.TELEPORTER_BLOCK_SCREEN_HANDLER, TeleporterBlockScreen::new);
     }
 
     private void registerModelPredicateProviders() {

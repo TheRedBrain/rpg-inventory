@@ -1,7 +1,7 @@
 package com.github.theredbrain.bamcore.mixin.screen;
 
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
-import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreEntityAttributes;
+import com.github.theredbrain.bamcore.registry.EntityAttributesRegistry;
 import com.google.common.collect.ImmutableList;
 import dev.emi.trinkets.Point;
 import dev.emi.trinkets.SurvivalTrinketSlot;
@@ -440,14 +440,14 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
                         SlotType type = ts.getType();
                         SlotReference ref = new SlotReference((TrinketInventory) ts.inventory, ts.getIndex());
 
-                        if ((Objects.equals(type.getGroup(), "spell_slot_1") && player.getAttributeValue(BetterAdventureModeCoreEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT) < 1)
-                                || (Objects.equals(type.getGroup(), "spell_slot_2") && player.getAttributeValue(BetterAdventureModeCoreEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT) < 2)
-                                || (Objects.equals(type.getGroup(), "spell_slot_3") && player.getAttributeValue(BetterAdventureModeCoreEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT) < 3)
-                                || (Objects.equals(type.getGroup(), "spell_slot_4") && player.getAttributeValue(BetterAdventureModeCoreEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT) < 4)
-                                || (Objects.equals(type.getGroup(), "spell_slot_5") && player.getAttributeValue(BetterAdventureModeCoreEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT) < 5)
-                                || (Objects.equals(type.getGroup(), "spell_slot_6") && player.getAttributeValue(BetterAdventureModeCoreEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT) < 6)
-                                || (Objects.equals(type.getGroup(), "spell_slot_7") && player.getAttributeValue(BetterAdventureModeCoreEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT) < 7)
-                                || (Objects.equals(type.getGroup(), "spell_slot_8") && player.getAttributeValue(BetterAdventureModeCoreEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT) < 8)
+                        if ((Objects.equals(type.getGroup(), "spell_slot_1") && player.getAttributeValue(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT) < 1)
+                                || (Objects.equals(type.getGroup(), "spell_slot_2") && player.getAttributeValue(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT) < 2)
+                                || (Objects.equals(type.getGroup(), "spell_slot_3") && player.getAttributeValue(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT) < 3)
+                                || (Objects.equals(type.getGroup(), "spell_slot_4") && player.getAttributeValue(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT) < 4)
+                                || (Objects.equals(type.getGroup(), "spell_slot_5") && player.getAttributeValue(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT) < 5)
+                                || (Objects.equals(type.getGroup(), "spell_slot_6") && player.getAttributeValue(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT) < 6)
+                                || (Objects.equals(type.getGroup(), "spell_slot_7") && player.getAttributeValue(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT) < 7)
+                                || (Objects.equals(type.getGroup(), "spell_slot_8") && player.getAttributeValue(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT) < 8)
                         ) {
                             continue;
                         }

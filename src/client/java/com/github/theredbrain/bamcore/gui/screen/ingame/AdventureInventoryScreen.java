@@ -1,8 +1,8 @@
-package com.github.theredbrain.bamcore.client.gui.screen.ingame;
+package com.github.theredbrain.bamcore.gui.screen.ingame;
 
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.api.effect.FoodStatusEffect;
-import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreEntityAttributes;
+import com.github.theredbrain.bamcore.registry.EntityAttributesRegistry;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import com.google.common.collect.Ordering;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -114,11 +114,11 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
     private void updateAttributeScreen(PlayerEntity player) {
         if (this.showAttributeScreen) {
             this.component(LabelComponent.class, "attributes_max_health_value").text(Text.literal(String.valueOf((int)player.getAttributeValue(EntityAttributes.GENERIC_MAX_HEALTH))));
-            this.component(LabelComponent.class, "attributes_health_regeneration_value").text(Text.literal(String.valueOf(player.getAttributeValue(BetterAdventureModeCoreEntityAttributes.HEALTH_REGENERATION))));
+            this.component(LabelComponent.class, "attributes_health_regeneration_value").text(Text.literal(String.valueOf(player.getAttributeValue(EntityAttributesRegistry.HEALTH_REGENERATION))));
             this.component(LabelComponent.class, "attributes_armor_value").text(Text.literal(String.valueOf((int)player.getAttributeValue(EntityAttributes.GENERIC_ARMOR))));
             this.component(LabelComponent.class, "attributes_armor_toughness_value").text(Text.literal(String.valueOf(player.getAttributeValue(EntityAttributes.GENERIC_ARMOR_TOUGHNESS))));
-            this.component(LabelComponent.class, "attributes_max_stamina_value").text(Text.literal(String.valueOf((int)player.getAttributeValue(BetterAdventureModeCoreEntityAttributes.MAX_STAMINA))));
-            this.component(LabelComponent.class, "attributes_stamina_regeneration_value").text(Text.literal(String.valueOf(player.getAttributeValue(BetterAdventureModeCoreEntityAttributes.STAMINA_REGENERATION))));
+            this.component(LabelComponent.class, "attributes_max_stamina_value").text(Text.literal(String.valueOf((int)player.getAttributeValue(EntityAttributesRegistry.MAX_STAMINA))));
+            this.component(LabelComponent.class, "attributes_stamina_regeneration_value").text(Text.literal(String.valueOf(player.getAttributeValue(EntityAttributesRegistry.STAMINA_REGENERATION))));
             this.component(LabelComponent.class, "attributes_max_mana_value").text(Text.literal(String.valueOf((int)((DuckPlayerEntityMixin)player).bamcore$getMaxMana())));
             this.component(LabelComponent.class, "attributes_mana_regeneration_value").text(Text.literal(String.valueOf(((DuckPlayerEntityMixin)player).bamcore$getManaRegeneration())));
             this.component(LabelComponent.class, "attributes_encumbrance_value").text(
@@ -330,7 +330,7 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
                                                                 .children(List.of(
                                                                         Components.label(Text.translatable("attribute.name.generic.health_regeneration").append(Text.literal(": ")))
                                                                                 .color(Color.ofArgb(Colors.BLACK)),
-                                                                        Components.label(Text.literal(String.valueOf(player.getAttributeValue(BetterAdventureModeCoreEntityAttributes.HEALTH_REGENERATION))))
+                                                                        Components.label(Text.literal(String.valueOf(player.getAttributeValue(EntityAttributesRegistry.HEALTH_REGENERATION))))
                                                                                 .color(Color.ofArgb(Colors.BLACK)).id("attributes_health_regeneration_value")
                                                                 ))
                                                                 .margins(Insets.of(0, 2, 0, 0)),
@@ -354,7 +354,7 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
                                                                 .children(List.of(
                                                                         Components.label(Text.translatable("attribute.name.generic.max_stamina").append(Text.literal(": ")))
                                                                                 .color(Color.ofArgb(Colors.BLACK)),
-                                                                        Components.label(Text.literal(String.valueOf((int)player.getAttributeValue(BetterAdventureModeCoreEntityAttributes.MAX_STAMINA))))
+                                                                        Components.label(Text.literal(String.valueOf((int)player.getAttributeValue(EntityAttributesRegistry.MAX_STAMINA))))
                                                                                 .color(Color.ofArgb(Colors.BLACK)).id("attributes_max_stamina_value")
                                                                 ))
                                                                 .margins(Insets.of(0, 2, 0, 0)),
@@ -362,7 +362,7 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
                                                                 .children(List.of(
                                                                         Components.label(Text.translatable("attribute.name.generic.stamina_regeneration").append(Text.literal(": ")))
                                                                                 .color(Color.ofArgb(Colors.BLACK)),
-                                                                        Components.label(Text.literal(String.valueOf(player.getAttributeValue(BetterAdventureModeCoreEntityAttributes.STAMINA_REGENERATION))))
+                                                                        Components.label(Text.literal(String.valueOf(player.getAttributeValue(EntityAttributesRegistry.STAMINA_REGENERATION))))
                                                                                 .color(Color.ofArgb(Colors.BLACK)).id("attributes_stamina_regeneration_value")
                                                                 ))
                                                                 .margins(Insets.of(0, 2, 0, 0)),
@@ -449,7 +449,7 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
 
     private void buildSpellSlotBackgrounds(PlayerEntity player) {
 
-        int activeSpellSlotAmount = (int) player.getAttributeInstance(BetterAdventureModeCoreEntityAttributes.ACTIVE_SPELL_SLOT_AMOUNT).getValue();
+        int activeSpellSlotAmount = (int) player.getAttributeInstance(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT).getValue();
         if (this.oldActiveSpellSlotAmount != activeSpellSlotAmount) {
 
             component(FlowLayout.class, "spell_slots_container").clearChildren();

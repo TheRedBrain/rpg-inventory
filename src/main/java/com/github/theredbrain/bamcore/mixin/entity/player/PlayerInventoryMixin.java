@@ -6,7 +6,7 @@ import com.github.theredbrain.bamcore.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.bamcore.api.item.CustomArmorItem;
 import com.github.theredbrain.bamcore.api.item.CustomDyeableArmorItem;
 import com.github.theredbrain.bamcore.api.util.BetterAdventureModCoreItemUtils;
-import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreStatusEffects;
+import com.github.theredbrain.bamcore.registry.StatusEffectsRegistry;
 import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketsApi;
 import net.minecraft.entity.EquipmentSlot;
@@ -53,11 +53,11 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 
     @Inject(method = "getMainHandStack", at = @At("HEAD"), cancellable = true)
     public void bamcore$getMainHandStack(CallbackInfoReturnable<ItemStack> cir) {
-        if (!player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.ADVENTURE_BUILDING_EFFECT) && !player.isCreative()) {
+        if (!player.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT) && !player.isCreative()) {
             ItemStack emptyMainHandStack = bamcore$getEmptyMainHand();
             ItemStack mainHandStack = bamcore$getMainHand();
             // TODO think about this more, it seems off
-            if (!player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.WEAPONS_SHEATHED_EFFECT)) {
+            if (!player.hasStatusEffect(StatusEffectsRegistry.WEAPONS_SHEATHED_EFFECT)) {
                 cir.setReturnValue(BetterAdventureModCoreItemUtils.isUsable(mainHandStack) ? mainHandStack : emptyMainHandStack);
                 cir.cancel();
             }
@@ -66,11 +66,11 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 
     @Override
     public ItemStack bamcore$getOffHandStack() {
-        if (!player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.ADVENTURE_BUILDING_EFFECT) && !player.isCreative()) {
+        if (!player.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT) && !player.isCreative()) {
             ItemStack emptyOffHandStack = bamcore$getEmptyOffHand();
             ItemStack offHandStack = bamcore$getOffHand();
             // TODO think about this more, it seems off
-            if (!player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.WEAPONS_SHEATHED_EFFECT) && !player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.TWO_HANDED_EFFECT)) {
+            if (!player.hasStatusEffect(StatusEffectsRegistry.WEAPONS_SHEATHED_EFFECT) && !player.hasStatusEffect(StatusEffectsRegistry.TWO_HANDED_EFFECT)) {
                 return BetterAdventureModCoreItemUtils.isUsable(offHandStack) ? offHandStack : emptyOffHandStack;
             }
         }
@@ -84,7 +84,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
      */
     @Overwrite
     public int getEmptySlot() {
-        for (int i = ((DuckPlayerEntityMixin)this.player).bamcore$isAdventure() && !this.player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.ADVENTURE_BUILDING_EFFECT) ? 9 : 0; i < this.main.size(); ++i) {
+        for (int i = ((DuckPlayerEntityMixin)this.player).bamcore$isAdventure() && !this.player.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT) ? 9 : 0; i < this.main.size(); ++i) {
             if (!this.main.get(i).isEmpty()) continue;
             return i;
         }
@@ -102,7 +102,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
             return this.selectedSlot;
         }
 
-        for (int i = ((DuckPlayerEntityMixin)this.player).bamcore$isAdventure() && !this.player.hasStatusEffect(BetterAdventureModeCoreStatusEffects.ADVENTURE_BUILDING_EFFECT) ? 9 : 0; i < this.main.size(); ++i) {
+        for (int i = ((DuckPlayerEntityMixin)this.player).bamcore$isAdventure() && !this.player.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT) ? 9 : 0; i < this.main.size(); ++i) {
             if (!this.canStackAddMore(this.main.get(i), stack)) continue;
             return i;
         }

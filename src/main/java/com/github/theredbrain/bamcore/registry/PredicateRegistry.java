@@ -1,7 +1,6 @@
 package com.github.theredbrain.bamcore.registry;
 
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
-import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreStatusEffects;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import dev.emi.trinkets.api.TrinketsApi;
 import net.fabricmc.fabric.api.util.TriState;
@@ -45,7 +44,7 @@ public class PredicateRegistry {
             return TriState.FALSE;
         });
         TrinketsApi.registerTrinketPredicate(BetterAdventureModeCore.identifier("can_change_equipment"), (stack, ref, entity) -> {
-            if (entity.hasStatusEffect(BetterAdventureModeCoreStatusEffects.CIVILISATION_EFFECT)
+            if (entity.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT)
                     || entity instanceof PlayerEntity playerEntity && !((DuckPlayerEntityMixin) playerEntity).bamcore$isAdventure()
                     || entity.getServer() == null
                     || !entity.getServer().getGameRules().getBoolean(GameRulesRegistry.REQUIRE_CIVILISATION_EFFECT_TO_CHANGE_GEAR_IN_ADVENTURE_MODE)) {

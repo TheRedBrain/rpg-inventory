@@ -2,13 +2,10 @@ package com.github.theredbrain.bamcore.api.item;
 
 import com.github.theredbrain.bamcore.api.util.BetterAdventureModCoreAttributeModifierUUIDs;
 import com.github.theredbrain.bamcore.api.util.BetterAdventureModCoreItemUtils;
-import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreEntityAttributes;
+import com.github.theredbrain.bamcore.registry.EntityAttributesRegistry;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.BrushableBlock;
-import net.minecraft.block.entity.BrushableBlockEntity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
@@ -18,13 +15,7 @@ import net.minecraft.item.Equipment;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.*;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -118,7 +109,7 @@ public class BetterAdventureMode_BasicShieldItem extends Item implements Equipme
 
     protected Multimap<EntityAttribute, EntityAttributeModifier> buildModifiers() {
         ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
-        builder.put(BetterAdventureModeCoreEntityAttributes.EQUIPMENT_WEIGHT, new EntityAttributeModifier(UUID.fromString(BetterAdventureModCoreAttributeModifierUUIDs.OFFHAND_EQUIPMENT_WEIGHT), "Shield modifier", (double)this.weight, EntityAttributeModifier.Operation.ADDITION));
+        builder.put(EntityAttributesRegistry.EQUIPMENT_WEIGHT, new EntityAttributeModifier(UUID.fromString(BetterAdventureModCoreAttributeModifierUUIDs.OFFHAND_EQUIPMENT_WEIGHT), "Shield modifier", (double)this.weight, EntityAttributeModifier.Operation.ADDITION));
         return builder.build();
     }
 
