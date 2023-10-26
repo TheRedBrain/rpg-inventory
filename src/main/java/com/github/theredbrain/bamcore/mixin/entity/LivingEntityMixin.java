@@ -231,7 +231,6 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
         this.limbAnimator.setSpeed(1.5f);
         boolean bl2 = true;
 
-        // TODO remove damage cooldown?
         if ((float)this.timeUntilRegen > 10.0f && !source.isIn(DamageTypeTags.BYPASSES_COOLDOWN)) {
             if (amount <= this.lastDamageTime) {
                 return false;

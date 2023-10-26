@@ -19,7 +19,7 @@ public class BetterAdventureModeCoreClientPacket {
                     PlayerEntity player = (PlayerEntity) client.player.getWorld().getEntityById(entityId);
                     ItemStack alternativeItemStack;
                     ItemStack itemStack;
-                    if (player != client.player) {
+                    if (player != null && player != client.player) {
                         if (mainHand) {
                             alternativeItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).bamcore$getAlternativeMainHand().copy();
                             itemStack = ((DuckPlayerInventoryMixin) player.getInventory()).bamcore$getMainHand().copy();

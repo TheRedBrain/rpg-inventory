@@ -56,6 +56,7 @@
 	"gamerule.canSetSpawnOnRespawnAnchor": "Can set spawn on respawn anchor",
 
 	"hud.message.staminaTooLow": "Your stamina is too low",
+	"hud.message.manaTooLow": "Your mana is too low",
 
 	"trinkets.slot.belts.belt": "Belt",
 	"trinkets.slot.gloves.gloves": "Glove",

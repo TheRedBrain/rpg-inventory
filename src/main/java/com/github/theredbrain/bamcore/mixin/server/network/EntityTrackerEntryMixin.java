@@ -1,5 +1,6 @@
 package com.github.theredbrain.bamcore.mixin.server.network;
 
+import com.github.theredbrain.bamcore.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.bamcore.network.packet.BetterAdventureModeCoreServerPacket;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -20,18 +21,17 @@ public class EntityTrackerEntryMixin {
 
     @Shadow @Final private Entity entity;
 
-    // TODO check if still necessary
     @Inject(method = "startTracking", at = @At(value = "TAIL"))
     public void bam$startTrackingAdditionalHandSlots(ServerPlayerEntity serverPlayer, CallbackInfo info) {
         if (this.entity instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) entity;
-            if (!serverPlayer.getInventory().getStack(42).isEmpty() || !serverPlayer.getInventory().getStack(44).isEmpty()) {
+            if (!((DuckPlayerInventoryMixin)serverPlayer.getInventory()).bamcore$getMainHand().isEmpty() || !((DuckPlayerInventoryMixin)serverPlayer.getInventory()).bamcore$getAlternativeMainHand().isEmpty()) {
                 PacketByteBuf data = new PacketByteBuf(Unpooled.buffer());
                 data.writeInt(serverPlayer.getId());
                 data.writeBoolean(true);
                 ServerPlayNetworking.send((ServerPlayerEntity) player, BetterAdventureModeCoreServerPacket.SWAPPED_HAND_ITEMS_PACKET, data);
             }
-            if (!serverPlayer.getInventory().getStack(43).isEmpty() || !serverPlayer.getInventory().getStack(45).isEmpty()) {
+            if (!((DuckPlayerInventoryMixin)serverPlayer.getInventory()).bamcore$getOffHand().isEmpty() || !((DuckPlayerInventoryMixin)serverPlayer.getInventory()).bamcore$getAlternativeOffHand().isEmpty()) {
                 PacketByteBuf data = new PacketByteBuf(Unpooled.buffer());
                 data.writeInt(serverPlayer.getId());
                 data.writeBoolean(false);

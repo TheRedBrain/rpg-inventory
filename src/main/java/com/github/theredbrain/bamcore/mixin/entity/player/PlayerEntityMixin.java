@@ -442,7 +442,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
                 if (slot.getEntitySlotId() == 0) {
                     return ((DuckPlayerInventoryMixin)this.inventory).bamcore$getFeetStack();
                 } else if (slot.getEntitySlotId() == 1) {
-                    return ((DuckPlayerInventoryMixin)this.inventory).bamcore$getLegStack();
+                    return ((DuckPlayerInventoryMixin)this.inventory).bamcore$getLegsStack();
                 } else if (slot.getEntitySlotId() == 2) {
                     return ((DuckPlayerInventoryMixin)this.inventory).bamcore$getChestStack();
                 } else if (slot.getEntitySlotId() == 3) {
@@ -468,7 +468,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
             if (slot.getEntitySlotId() == 0) {
                 this.onEquipStack(slot, ((DuckPlayerInventoryMixin)this.inventory).bamcore$setFeetStack(stack), stack);
             } else if (slot.getEntitySlotId() == 1) {
-                this.onEquipStack(slot, ((DuckPlayerInventoryMixin)this.inventory).bamcore$setLegStack(stack), stack);
+                this.onEquipStack(slot, ((DuckPlayerInventoryMixin)this.inventory).bamcore$setLegsStack(stack), stack);
             } else if (slot.getEntitySlotId() == 2) {
                 this.onEquipStack(slot, ((DuckPlayerInventoryMixin)this.inventory).bamcore$setChestStack(stack), stack);
             } else if (slot.getEntitySlotId() == 3) {

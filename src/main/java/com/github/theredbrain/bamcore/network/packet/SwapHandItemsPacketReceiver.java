@@ -1,6 +1,7 @@
 package com.github.theredbrain.bamcore.network.packet;
 
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
+import com.github.theredbrain.bamcore.entity.player.DuckPlayerInventoryMixin;
 import dev.emi.trinkets.SurvivalTrinketSlot;
 import dev.emi.trinkets.TrinketPlayerScreenHandler;
 import dev.emi.trinkets.api.SlotType;
@@ -34,23 +35,27 @@ public class SwapHandItemsPacketReceiver implements ServerPlayNetworking.PlayCha
             Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
             if (trinkets.isPresent()) {
                 if (mainHand) {
-                    if (trinkets.get().getInventory().get("main_hand") != null) {
-                        if (trinkets.get().getInventory().get("main_hand").get("main_hand") != null) {
-                            itemStack = trinkets.get().getInventory().get("main_hand").get("main_hand").getStack(0);
-                        }
-                    }
-                    if (trinkets.get().getInventory().get("alternative_main_hand") != null) {
-                        if (trinkets.get().getInventory().get("alternative_main_hand").get("alternative_main_hand") != null) {
-                            alternateItemStack = trinkets.get().getInventory().get("alternative_main_hand").get("alternative_main_hand").getStack(0);
-                        }
-                    }
+                    itemStack = ((DuckPlayerInventoryMixin)player.getInventory()).bamcore$getMainHand();
+                    alternateItemStack = ((DuckPlayerInventoryMixin)player.getInventory()).bamcore$getAlternativeMainHand();
+//                    if (trinkets.get().getInventory().get("main_hand") != null) {
+//                        if (trinkets.get().getInventory().get("main_hand").get("main_hand") != null) {
+//                            itemStack = trinkets.get().getInventory().get("main_hand").get("main_hand").getStack(0);
+//                        }
+//                    }
+//                    if (trinkets.get().getInventory().get("alternative_main_hand") != null) {
+//                        if (trinkets.get().getInventory().get("alternative_main_hand").get("alternative_main_hand") != null) {
+//                            alternateItemStack = trinkets.get().getInventory().get("alternative_main_hand").get("alternative_main_hand").getStack(0);
+//                        }
+//                    }
                 } else {
-                    itemStack = player.getInventory().offHand.get(0);
-                    if (trinkets.get().getInventory().get("alternative_off_hand") != null) {
-                        if (trinkets.get().getInventory().get("alternative_off_hand").get("alternative_off_hand") != null) {
-                            alternateItemStack = trinkets.get().getInventory().get("alternative_off_hand").get("alternative_off_hand").getStack(0);
-                        }
-                    }
+                    itemStack = ((DuckPlayerInventoryMixin)player.getInventory()).bamcore$getOffHand();
+                    alternateItemStack = ((DuckPlayerInventoryMixin)player.getInventory()).bamcore$getAlternativeOffHand();
+//                    itemStack = player.getInventory().offHand.get(0);
+//                    if (trinkets.get().getInventory().get("alternative_off_hand") != null) {
+//                        if (trinkets.get().getInventory().get("alternative_off_hand").get("alternative_off_hand") != null) {
+//                            alternateItemStack = trinkets.get().getInventory().get("alternative_off_hand").get("alternative_off_hand").getStack(0);
+//                        }
+//                    }
                 }
             }
 
@@ -63,24 +68,28 @@ public class SwapHandItemsPacketReceiver implements ServerPlayNetworking.PlayCha
             }
 
             if (mainHand) {
-                if (trinkets.get().getInventory().get("main_hand") != null) {
-                    if (trinkets.get().getInventory().get("main_hand").get("main_hand") != null) {
-                        trinkets.get().getInventory().get("main_hand").get("main_hand").setStack(0, alternateItemStack);
-                    }
-                }
-                if (trinkets.get().getInventory().get("alternative_main_hand") != null) {
-                    if (trinkets.get().getInventory().get("alternative_main_hand").get("alternative_main_hand") != null) {
-                        trinkets.get().getInventory().get("alternative_main_hand").get("alternative_main_hand").setStack(0, itemStack);
-                    }
-                }
+                ((DuckPlayerInventoryMixin)player.getInventory()).bamcore$setMainHand(alternateItemStack);
+                ((DuckPlayerInventoryMixin)player.getInventory()).bamcore$setAlternativeMainHand(itemStack);
+//                if (trinkets.get().getInventory().get("main_hand") != null) {
+//                    if (trinkets.get().getInventory().get("main_hand").get("main_hand") != null) {
+//                        trinkets.get().getInventory().get("main_hand").get("main_hand").setStack(0, alternateItemStack);
+//                    }
+//                }
+//                if (trinkets.get().getInventory().get("alternative_main_hand") != null) {
+//                    if (trinkets.get().getInventory().get("alternative_main_hand").get("alternative_main_hand") != null) {
+//                        trinkets.get().getInventory().get("alternative_main_hand").get("alternative_main_hand").setStack(0, itemStack);
+//                    }
+//                }
             } else {
-                player.getInventory().offHand.set(0, alternateItemStack);
-                player.getInventory().markDirty();
-                if (trinkets.get().getInventory().get("alternative_off_hand") != null) {
-                    if (trinkets.get().getInventory().get("alternative_off_hand").get("alternative_off_hand") != null) {
-                        trinkets.get().getInventory().get("alternative_off_hand").get("alternative_off_hand").setStack(0, itemStack);
-                    }
-                }
+                ((DuckPlayerInventoryMixin)player.getInventory()).bamcore$setOffHand(alternateItemStack);
+                ((DuckPlayerInventoryMixin)player.getInventory()).bamcore$setAlternativeOffHand(itemStack);
+//                player.getInventory().offHand.set(0, alternateItemStack);
+//                player.getInventory().markDirty();
+//                if (trinkets.get().getInventory().get("alternative_off_hand") != null) {
+//                    if (trinkets.get().getInventory().get("alternative_off_hand").get("alternative_off_hand") != null) {
+//                        trinkets.get().getInventory().get("alternative_off_hand").get("alternative_off_hand").setStack(0, itemStack);
+//                    }
+//                }
             }
 
             // TODO play sounds

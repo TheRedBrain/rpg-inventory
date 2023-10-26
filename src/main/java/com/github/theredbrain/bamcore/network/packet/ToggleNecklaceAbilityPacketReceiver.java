@@ -58,7 +58,7 @@ public class ToggleNecklaceAbilityPacketReceiver implements ServerPlayNetworking
                     }
                 }
             } else {
-                player.sendMessageToClient(Text.translatable("hud.message.notEnoughMana"), true);
+                player.sendMessageToClient(Text.translatable("hud.message.manaTooLow"), true);
             }
         });
     }
