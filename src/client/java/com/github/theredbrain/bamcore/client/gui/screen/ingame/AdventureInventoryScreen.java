@@ -2,12 +2,15 @@ package com.github.theredbrain.bamcore.client.gui.screen.ingame;
 
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.api.effect.FoodStatusEffect;
-import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.bamcore.api.util.BetterAdventureModeCoreEntityAttributes;
+import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import com.google.common.collect.Ordering;
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.emi.trinkets.*;
-import dev.emi.trinkets.api.*;
+import dev.emi.trinkets.Point;
+import dev.emi.trinkets.TrinketPlayerScreenHandler;
+import dev.emi.trinkets.TrinketScreen;
+import dev.emi.trinkets.TrinketScreenManager;
+import dev.emi.trinkets.api.SlotGroup;
 import io.wispforest.owo.ui.base.BaseOwoHandledScreen;
 import io.wispforest.owo.ui.component.Components;
 import io.wispforest.owo.ui.component.LabelComponent;
@@ -41,11 +44,13 @@ import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Colors;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
 public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, PlayerScreenHandler/*AdventureInventoryScreenHandler*/> implements TrinketScreen {

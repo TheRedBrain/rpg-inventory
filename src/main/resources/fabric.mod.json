@@ -25,7 +25,11 @@
     ]
   },
   "mixins": [
-    "bamcore.mixins.json"
+    "bamcore.mixins.json",
+    {
+      "config": "bamcore.client.mixins.json",
+      "environment": "client"
+    }
   ],
 
   "depends": {

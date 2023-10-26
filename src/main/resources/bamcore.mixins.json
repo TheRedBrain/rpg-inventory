@@ -30,14 +30,6 @@
     "spell_engine.internals.SpellHelperMixin",
     "trinkets.SurvivalTrinketSlotMixin"
   ],
-  "client": [
-    "client.gui.hud.InGameHudMixin",
-    "client.gui.screen.ingame.InventoryScreenMixin",
-    "client.network.AbstractClientPlayerEntityMixin",
-    "client.network.ClientPlayerEntityMixin",
-    "client.render.entity.PlayerEntityRendererMixin",
-    "client.render.item.BuiltinModelItemRendererMixin"
-  ],
   "injectors": {
     "defaultRequire": 1
   }

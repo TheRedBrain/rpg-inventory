@@ -3,12 +3,12 @@ plugins {
 	id 'maven-publish'
 }
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
-
-archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
+
+base {
+	archivesName = project.archives_base_name
+}
 
 repositories {
 	// Add repositories to retrieve artifacts from in here.
@@ -61,6 +61,14 @@ repositories {
 }
 
 loom {
+	splitEnvironmentSourceSets()
+
+	mods {
+		"bamcore" {
+			sourceSet sourceSets.main
+			sourceSet sourceSets.client
+		}
+	}
 	accessWidenerPath = file("src/main/resources/bamcore.accesswidener")
 }
 
@@ -143,11 +151,14 @@ java {
 	// if it is present.
 	// If you remove this line, sources will not be generated.
 	withSourcesJar()
+
+	sourceCompatibility = JavaVersion.VERSION_17
+	targetCompatibility = JavaVersion.VERSION_17
 }
 
 jar {
 	from("LICENSE") {
-		rename { "${it}_${project.archivesBaseName}"}
+		rename { "${it}_${project.base.archivesName.get()}"}
 	}
 }
 
