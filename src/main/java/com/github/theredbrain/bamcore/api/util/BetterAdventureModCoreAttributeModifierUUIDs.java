@@ -4,8 +4,21 @@ import net.minecraft.util.math.MathHelper;
 
 public class BetterAdventureModCoreAttributeModifierUUIDs {
 
-    public static final String OVERBURDENED_EFFECT = MathHelper.randomUuid().toString();
+    //region food effects
+    public static final String SWEET_BERRY_FOOD_EFFECT = MathHelper.randomUuid().toString();
+    public static final String BROWN_MUSHROOM_FOOD_EFFECT = MathHelper.randomUuid().toString();
+    public static final String CHICKEN_MEAL_FOOD_EFFECT = MathHelper.randomUuid().toString();
+    public static final String RED_MUSHROOM_FOOD_EFFECT = MathHelper.randomUuid().toString();
+    public static final String GLOW_BERRY_FOOD_EFFECT = MathHelper.randomUuid().toString();
+    //endregion
+
+    //region beneficial effects
     public static final String AURA_EFFECT = MathHelper.randomUuid().toString();
+    //endregion
+
+    //region harmful effects
+    public static final String OVERBURDENED_EFFECT = MathHelper.randomUuid().toString();
+    //endregion
 
     //region trinket effects
     public static final String SPELL_SLOT_1 = MathHelper.randomUuid().toString();

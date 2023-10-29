@@ -1,6 +1,7 @@
 package com.github.theredbrain.bamcore.mixin.client.gui.hud;
 
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.BetterAdventureModeCoreClient;
 import com.github.theredbrain.bamcore.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerInventoryMixin;
@@ -9,20 +10,25 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.option.AttackIndicator;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Arm;
+import net.minecraft.util.Colors;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
+import net.spell_engine.client.util.Color;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.awt.*;
 
 @Environment(EnvType.CLIENT)
 @Mixin(InGameHud.class)
@@ -42,8 +48,11 @@ public abstract class InGameHudMixin {
 
     @Shadow @Final private static Identifier ICONS;
 
+    @Shadow public abstract TextRenderer getTextRenderer();
+
     private static final Identifier CUSTOM_WIDGETS_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/custom_widgets.png");
-    private static final Identifier CUSTOM_ICONS = BetterAdventureModeCore.identifier("textures/gui/custom_icons.png");
+    private static final Identifier CUSTOM_BARS = BetterAdventureModeCore.identifier("textures/gui/custom_bars.png");
+    private static final Identifier BARS = new Identifier("textures/gui/bars.png");
 
     @Inject(method = "renderHotbar", at = @At("HEAD"), cancellable = true)
     private void bamcore$renderHotbar(float tickDelta, DrawContext context, CallbackInfo ci) {
@@ -144,37 +153,72 @@ public abstract class InGameHudMixin {
             double poiseLimitMultiplier = ((DuckLivingEntityMixin) playerEntity).getStaggerLimitMultiplier();
 
             int attributeBarX = this.scaledWidth / 2 - 91;
-            int attributeBarY = this.scaledHeight - 32 + 3;
+            int attributeBarY = this.scaledHeight - 32 + 2;
+            int attributeBarNumberX;
+            int attributeBarNumberY;
             int normalizedHealthRatio = (int) (((double) health / Math.max(maxHealth, 1)) * 182);
             int normalizedStaminaRatio = (int)(((double) stamina / Math.max(maxStamina, 1)) * 182);
             int normalizedManaRatio = (int)(((double) mana / Math.max(maxMana, 1)) * 182);
             int normalizedPoiseRatio = (int)(((double) poise/* * 10*/ / Math.max(MathHelper.ceil(maxHealth * poiseLimitMultiplier/* * 10*/), 1)) * 62);
 
             this.client.getProfiler().push("health_bar");
-            context.drawTexture(CUSTOM_ICONS, attributeBarX, attributeBarY, 0, 0, 182, 5);
+            context.drawTexture(BARS, attributeBarX, attributeBarY, 0, 20, 182, 5);
             if (normalizedHealthRatio > 0) {
-                context.drawTexture(CUSTOM_ICONS, attributeBarX, attributeBarY, 0, 20, normalizedHealthRatio, 5);
+                context.drawTexture(BARS, attributeBarX, attributeBarY, 0, 25, normalizedHealthRatio, 5);
+            }
+            if (BetterAdventureModeCoreClient.clientConfig.show_resource_bar_numbers) {
+                this.client.getProfiler().swap("health_bar_number");
+                String string = "" + health;
+                attributeBarNumberX = (this.scaledWidth - this.getTextRenderer().getWidth(string)) / 2;
+                attributeBarNumberY = attributeBarY - 1;
+                context.drawText(this.getTextRenderer(), string, attributeBarNumberX + 1, attributeBarNumberY, 0, false);
+                context.drawText(this.getTextRenderer(), string, attributeBarNumberX - 1, attributeBarNumberY, 0, false);
+                context.drawText(this.getTextRenderer(), string, attributeBarNumberX, attributeBarNumberY + 1, 0, false);
+                context.drawText(this.getTextRenderer(), string, attributeBarNumberX, attributeBarNumberY - 1, 0, false);
+                context.drawText(this.getTextRenderer(), string, attributeBarNumberX, attributeBarNumberY, BetterAdventureModeCoreClient.clientConfig.health_bar_number_color, false);
             }
 
             this.client.getProfiler().swap("stamina_bar");
-            context.drawTexture(CUSTOM_ICONS, attributeBarX, attributeBarY - 7, 0, 0, 182, 5);
+            context.drawTexture(BARS, attributeBarX, attributeBarY - 9, 0, 30, 182, 5);
             if (normalizedStaminaRatio > 0) {
-                context.drawTexture(CUSTOM_ICONS, attributeBarX, attributeBarY - 7, 0, 5, normalizedStaminaRatio, 5);
+                context.drawTexture(BARS, attributeBarX, attributeBarY - 9, 0, 35, normalizedStaminaRatio, 5);
+            }
+            if (BetterAdventureModeCoreClient.clientConfig.show_resource_bar_numbers) {
+                this.client.getProfiler().swap("stamina_bar_number");
+                String string = "" + stamina;
+                attributeBarNumberX = (this.scaledWidth - this.getTextRenderer().getWidth(string)) / 2;
+                attributeBarNumberY = attributeBarY - 10;
+                context.drawText(this.getTextRenderer(), string, attributeBarNumberX + 1, attributeBarNumberY, 0, false);
+                context.drawText(this.getTextRenderer(), string, attributeBarNumberX - 1, attributeBarNumberY, 0, false);
+                context.drawText(this.getTextRenderer(), string, attributeBarNumberX, attributeBarNumberY + 1, 0, false);
+                context.drawText(this.getTextRenderer(), string, attributeBarNumberX, attributeBarNumberY - 1, 0, false);
+                context.drawText(this.getTextRenderer(), string, attributeBarNumberX, attributeBarNumberY, BetterAdventureModeCoreClient.clientConfig.stamina_bar_number_color, false);
             }
 
             if (maxMana > 0) {
                 this.client.getProfiler().swap("mana_bar");
-                context.drawTexture(CUSTOM_ICONS, attributeBarX, attributeBarY - 14, 0, 0, 182, 5);
+                context.drawTexture(BARS, attributeBarX, attributeBarY - 18, 0, 10, 182, 5);
                 if (normalizedManaRatio > 0) {
-                    context.drawTexture(CUSTOM_ICONS, attributeBarX, attributeBarY - 14, 0, 10, normalizedManaRatio, 5);
+                    context.drawTexture(BARS, attributeBarX, attributeBarY - 18, 0, 15, normalizedManaRatio, 5);
+                }
+                if (BetterAdventureModeCoreClient.clientConfig.show_resource_bar_numbers) {
+                    this.client.getProfiler().swap("mana_bar_number");
+                    String string = "" + mana;
+                    attributeBarNumberX = (this.scaledWidth - this.getTextRenderer().getWidth(string)) / 2;
+                    attributeBarNumberY = attributeBarY - 19;
+                    context.drawText(this.getTextRenderer(), string, attributeBarNumberX + 1, attributeBarNumberY, 0, false);
+                    context.drawText(this.getTextRenderer(), string, attributeBarNumberX - 1, attributeBarNumberY, 0, false);
+                    context.drawText(this.getTextRenderer(), string, attributeBarNumberX, attributeBarNumberY + 1, 0, false);
+                    context.drawText(this.getTextRenderer(), string, attributeBarNumberX, attributeBarNumberY - 1, 0, false);
+                    context.drawText(this.getTextRenderer(), string, attributeBarNumberX, attributeBarNumberY, BetterAdventureModeCoreClient.clientConfig.mana_bar_number_color, true);
                 }
             }
 
             if (poise > 0/* && !playerEntity.hasStatusEffect(BetterAdventureModeCoreStatusEffects.STAGGERED)*/) {
                 this.client.getProfiler().swap("stagger_bar");
-                context.drawTexture(CUSTOM_ICONS, attributeBarX + 60, this.scaledHeight / 2 - 7 + 25, 0, 25, 62, 5);
+                context.drawTexture(CUSTOM_BARS, attributeBarX + 60, this.scaledHeight / 2 - 7 + 25, 0, 40, 62, 5);
                 if (normalizedPoiseRatio > 0) {
-                    context.drawTexture(CUSTOM_ICONS, attributeBarX + 60, this.scaledHeight / 2 - 7 + 25, 0, 40, normalizedPoiseRatio, 5);
+                    context.drawTexture(CUSTOM_BARS, attributeBarX + 60, this.scaledHeight / 2 - 7 + 25, 0, 45, normalizedPoiseRatio, 5);
                 }
             }
             this.client.getProfiler().pop();

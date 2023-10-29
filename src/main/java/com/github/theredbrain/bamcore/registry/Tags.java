@@ -8,6 +8,8 @@ import net.minecraft.registry.tag.TagKey;
 
 public class Tags {
     //region ItemTags
+    public static final TagKey<Item> INTERACTIVE_STONE_BLOCK_TOOLS = TagKey.of(RegistryKeys.ITEM, BetterAdventureModeCore.identifier("tools/interactive_stone_block_tools"));
+    public static final TagKey<Item> INTERACTIVE_OAK_LOG_TOOLS = TagKey.of(RegistryKeys.ITEM, BetterAdventureModeCore.identifier("tools/interactive_oak_log_tools"));
     public static final TagKey<Item> ADVENTURE_HOTBAR_ITEMS = TagKey.of(RegistryKeys.ITEM, BetterAdventureModeCore.identifier("adventure_hotbar_items"));
     public static final TagKey<Item> ATTACK_ITEMS = TagKey.of(RegistryKeys.ITEM, BetterAdventureModeCore.identifier("attack_items"));
     public static final TagKey<Item> TWO_HANDED_ITEMS = TagKey.of(RegistryKeys.ITEM, BetterAdventureModeCore.identifier("two_handed_items"));

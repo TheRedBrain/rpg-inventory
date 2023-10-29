@@ -4,19 +4,21 @@ import com.github.theredbrain.bamcore.config.ClientConfig;
 import com.github.theredbrain.bamcore.config.ClientConfigWrapper;
 import com.github.theredbrain.bamcore.gui.screen.ingame.TeleporterBlockScreen;
 import com.github.theredbrain.bamcore.network.packet.BetterAdventureModeCoreClientPacket;
-import com.github.theredbrain.bamcore.registry.EntityRegistry;
-import com.github.theredbrain.bamcore.registry.ItemRegistry;
-import com.github.theredbrain.bamcore.registry.KeyBindingsRegistry;
-import com.github.theredbrain.bamcore.registry.ScreenHandlerTypesRegistry;
+import com.github.theredbrain.bamcore.registry.*;
 import com.github.theredbrain.bamcore.render.block.entity.TeleporterBlockBlockEntityRenderer;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import me.shedaniel.autoconfig.serializer.PartitioningSerializer;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.util.Identifier;
+import net.spell_engine.api.render.CustomModels;
+
+import java.util.List;
 
 public class BetterAdventureModeCoreClient implements ClientModInitializer {
 
@@ -33,9 +35,24 @@ public class BetterAdventureModeCoreClient implements ClientModInitializer {
 
         // Registry
         KeyBindingsRegistry.registerKeyBindings();
+        registerTransparency();
+        registerSpellModels();
         registerBlockEntityRenderer();
         registerScreens();
         registerModelPredicateProviders();
+    }
+
+    private void registerTransparency() {
+        BlockRenderLayerMap.INSTANCE.putBlock(BlockRegistry.INTERACTIVE_BERRY_BUSH_BLOCK, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(BlockRegistry.INTERACTIVE_RED_MUSHROOM_BLOCK, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(BlockRegistry.INTERACTIVE_BROWN_MUSHROOM_BLOCK, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(BlockRegistry.BONFIRE_BLOCK, RenderLayer.getCutout());
+    }
+
+    private void registerSpellModels() {
+        CustomModels.registerModelIds(List.of(
+                BetterAdventureModeCore.identifier("projectile/test_spell_projectile")
+        ));
     }
 
     private void registerBlockEntityRenderer() {

@@ -38,6 +38,7 @@ public class BetterAdventureModeCore implements ModInitializer {
 		EntityRegistry.init();
 		EventsRegistry.initializeEvents();
 		ItemRegistry.init();
+		ItemGroupRegistry.init();
 		ScreenHandlerTypesRegistry.registerAll();
 		StatusEffectsRegistry.registerEffects();
 		GameRulesRegistry.init();
