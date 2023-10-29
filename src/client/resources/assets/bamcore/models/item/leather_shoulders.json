@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "bamcore:item/leather_shoulders",
+    "layer1": "bamcore:item/leather_shoulders_overlay"
+  }
+}

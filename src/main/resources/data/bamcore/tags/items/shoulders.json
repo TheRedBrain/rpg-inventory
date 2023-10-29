@@ -1,4 +1,10 @@
 {
   "values": [
+    "bamcore:leather_shoulders",
+    "bamcore:chainmail_shoulders",
+    "bamcore:iron_shoulders",
+    "bamcore:diamond_shoulders",
+    "bamcore:golden_shoulders",
+    "bamcore:netherite_shoulders"
   ]
 }

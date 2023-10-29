@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=east,active=false": {
+      "model": "minecraft:block/campfire_off",
+      "y": 270
+    },
+    "facing=east,active=true": {
+      "model": "minecraft:block/campfire",
+      "y": 270
+    },
+    "facing=north,active=false": {
+      "model": "minecraft:block/campfire_off",
+      "y": 180
+    },
+    "facing=north,active=true": {
+      "model": "minecraft:block/campfire",
+      "y": 180
+    },
+    "facing=south,active=false": {
+      "model": "minecraft:block/campfire_off"
+    },
+    "facing=south,active=true": {
+      "model": "minecraft:block/campfire"
+    },
+    "facing=west,active=false": {
+      "model": "minecraft:block/campfire_off",
+      "y": 90
+    },
+    "facing=west,active=true": {
+      "model": "minecraft:block/campfire",
+      "y": 90
+    }
+  }
+}

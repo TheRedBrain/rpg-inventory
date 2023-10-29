@@ -1,5 +1,10 @@
 {
   "values": [
-    "minecraft:diamond_chestplate"
+    "bamcore:leather_chestplate",
+    "bamcore:chainmail_chestplate",
+    "bamcore:iron_chestplate",
+    "bamcore:diamond_chestplate",
+    "bamcore:golden_chestplate",
+    "bamcore:netherite_chestplate"
   ]
 }

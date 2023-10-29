@@ -1,5 +1,10 @@
 {
   "values": [
-    "minecraft:diamond_helmet"
+    "bamcore:leather_helmet",
+    "bamcore:chainmail_helmet",
+    "bamcore:iron_helmet",
+    "bamcore:diamond_helmet",
+    "bamcore:golden_helmet",
+    "bamcore:netherite_helmet"
   ]
 }

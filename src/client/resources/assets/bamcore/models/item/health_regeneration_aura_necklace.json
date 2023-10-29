@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "bamcore:item/health_regeneration_aura_necklace"
+  }
+}

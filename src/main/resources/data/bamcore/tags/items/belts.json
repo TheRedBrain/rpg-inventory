@@ -1,6 +1,11 @@
 {
   "values": [
     "bamcore:test_belt",
-    "bamcore:mana_test_belt"
+    "bamcore:mana_test_belt",
+    "bamcore:mana_regeneration_belt",
+    "bamcore:depth_strider_belt",
+    "bamcore:looting_belt",
+    "bamcore:unbreaking_belt",
+    "bamcore:feather_falling_belt"
   ]
 }

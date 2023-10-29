@@ -1,11 +1,11 @@
 {
   "values": [
-    "minecraft:wooden_axe",
-    "minecraft:stone_axe",
-    "minecraft:iron_axe",
-    "minecraft:diamond_axe",
-    "minecraft:golden_axe",
-    "minecraft:netherite_axe",
+    "bamcore:wooden_sword",
+    "bamcore:stone_sword",
+    "bamcore:iron_sword",
+    "bamcore:diamond_sword",
+    "bamcore:golden_sword",
+    "bamcore:netherite_sword",
     "minecraft:wooden_sword",
     "minecraft:stone_sword",
     "minecraft:iron_sword",

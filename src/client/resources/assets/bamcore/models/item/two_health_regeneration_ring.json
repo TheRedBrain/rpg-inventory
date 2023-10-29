@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "bamcore:item/two_health_regeneration_ring"
+  }
+}

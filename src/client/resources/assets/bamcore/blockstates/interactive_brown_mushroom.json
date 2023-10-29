@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "intact=true": {
+      "model": "minecraft:block/brown_mushroom"
+    },
+    "intact=false": {
+      "model": "minecraft:block/air"
+    }
+  }
+}

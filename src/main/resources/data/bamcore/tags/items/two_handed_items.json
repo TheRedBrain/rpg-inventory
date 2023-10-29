@@ -1,6 +1,18 @@
 {
   "values": [
     "minecraft:bow",
-    "minecraft:crossbow"
+    "minecraft:crossbow",
+    "bamcore:wooden_axe",
+    "bamcore:stone_axe",
+    "bamcore:iron_axe",
+    "bamcore:diamond_axe",
+    "bamcore:golden_axe",
+    "bamcore:netherite_axe",
+    "bamcore:wooden_pickaxe",
+    "bamcore:stone_pickaxe",
+    "bamcore:iron_pickaxe",
+    "bamcore:diamond_pickaxe",
+    "bamcore:golden_pickaxe",
+    "bamcore:netherite_pickaxe"
   ]
 }

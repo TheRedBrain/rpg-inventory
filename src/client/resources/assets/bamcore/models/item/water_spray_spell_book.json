@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "bamcore:item/water_spray_spell_book"
+  }
+}

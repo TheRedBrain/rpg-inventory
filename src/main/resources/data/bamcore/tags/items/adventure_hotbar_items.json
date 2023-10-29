@@ -1,4 +1,9 @@
 {
   "values": [
+    "bamcore:sweet_berries",
+    "bamcore:glow_berries",
+    "bamcore:brown_mushroom",
+    "bamcore:red_mushroom",
+    "bamcore:fireball_spell_scroll"
   ]
 }

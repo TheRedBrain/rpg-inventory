@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "bamcore:item/teleport_home_necklace"
+  }
+}

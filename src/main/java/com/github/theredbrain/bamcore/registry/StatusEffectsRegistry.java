@@ -18,7 +18,7 @@ import net.spell_engine.api.effect.Synchronized;
 public class StatusEffectsRegistry {
 
     //region Food Effects
-    public static final StatusEffect SWEET_BERRY_FOOD_EFFECT = new FoodStatusEffect()
+    public static final StatusEffect SWEET_BERRIES_FOOD_EFFECT = new FoodStatusEffect()
             .addAttributeModifier(EntityAttributes.GENERIC_MAX_HEALTH, BetterAdventureModCoreAttributeModifierUUIDs.SWEET_BERRY_FOOD_EFFECT, 30.0F, EntityAttributeModifier.Operation.ADDITION)
             .addAttributeModifier(EntityAttributesRegistry.HEALTH_REGENERATION, BetterAdventureModCoreAttributeModifierUUIDs.SWEET_BERRY_FOOD_EFFECT, 2.0F, EntityAttributeModifier.Operation.ADDITION)
 //            .addAttributeModifier(EntityAttributesRegistry.MAX_STAMINA, BetterAdventureModCoreAttributeModifierUUIDs.SWEET_BERRY_FOOD_EFFECT, 25.0F, EntityAttributeModifier.Operation.ADDITION)
@@ -41,7 +41,7 @@ public class StatusEffectsRegistry {
             .addAttributeModifier(EntityAttributes.GENERIC_MAX_HEALTH, BetterAdventureModCoreAttributeModifierUUIDs.RED_MUSHROOM_FOOD_EFFECT, 35.0F, EntityAttributeModifier.Operation.ADDITION)
             .addAttributeModifier(EntityAttributesRegistry.MAX_STAMINA, BetterAdventureModCoreAttributeModifierUUIDs.RED_MUSHROOM_FOOD_EFFECT, 35.0F, EntityAttributeModifier.Operation.ADDITION)
             .addAttributeModifier(EntityAttributesRegistry.MAX_MANA, BetterAdventureModCoreAttributeModifierUUIDs.RED_MUSHROOM_FOOD_EFFECT, 35.0F, EntityAttributeModifier.Operation.ADDITION);
-    public static final StatusEffect GLOW_BERRY_FOOD_EFFECT = new FoodStatusEffect()
+    public static final StatusEffect GLOW_BERRIES_FOOD_EFFECT = new FoodStatusEffect()
             .addAttributeModifier(EntityAttributesRegistry.MAX_MANA, BetterAdventureModCoreAttributeModifierUUIDs.GLOW_BERRY_FOOD_EFFECT, 30.0F, EntityAttributeModifier.Operation.ADDITION)
             .addAttributeModifier(EntityAttributesRegistry.MANA_REGENERATION, BetterAdventureModCoreAttributeModifierUUIDs.GLOW_BERRY_FOOD_EFFECT, 2.0F, EntityAttributeModifier.Operation.ADDITION);
     //endregion Food Effects
@@ -108,11 +108,11 @@ public class StatusEffectsRegistry {
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("wet"), WET);
 
         // food effects
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("sweet_berry_food_effect"), SWEET_BERRY_FOOD_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("sweet_berry_food_effect"), SWEET_BERRIES_FOOD_EFFECT);
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("brown_mushroom_food_effect"), BROWN_MUSHROOM_FOOD_EFFECT);
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("chicken_meal_food_effect"), CHICKEN_MEAL_FOOD_EFFECT);
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("red_mushroom_food_effect"), RED_MUSHROOM_FOOD_EFFECT);
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("glow_berry_food_effect"), GLOW_BERRY_FOOD_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("glow_berry_food_effect"), GLOW_BERRIES_FOOD_EFFECT);
 
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("health_regeneration_aura_effect"), HEALTH_REGENERATION_AURA_EFFECT);
 

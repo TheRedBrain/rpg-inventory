@@ -9,6 +9,7 @@ import dev.emi.trinkets.api.TrinketItem;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
@@ -83,6 +84,7 @@ public class ItemRegistry {
     // rings
     public static final Item TWO_HEALTH_REGENERATION_RING = registerItem("two_health_regeneration_ring", new ModifyEntityAttributeRingItem(EntityAttributesRegistry.HEALTH_REGENERATION, "health_regeneration", 2, EntityAttributeModifier.Operation.ADDITION, new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT);
     public static final Item THREE_SPELL_SLOT_RING = registerItem("three_spell_slot_ring", new ModifyEntityAttributeRingItem(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT, "active_spell_slot_amount", 3, EntityAttributeModifier.Operation.ADDITION, new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT);
+    public static final Item ARMOR_TOUGHNESS_RING = registerItem("armor_toughness_ring", new ModifyEntityAttributeRingItem(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, "armor_toughness", 0.25, EntityAttributeModifier.Operation.ADDITION, new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT);
 
     // elemental spell books
     public static final Item FIREBALL_SPELL_BOOK = registerSpellContainerItem("fireball_spell_book", new MultiSlotSpellBookItem(-1, BetterAdventureModeCore.identifier("fireball"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT, List.of("bamcontent:fireball"));
@@ -103,31 +105,51 @@ public class ItemRegistry {
     public static final Item FIREBALL_SPELL_SCROLL = registerItem("fireball_spell_scroll", new Item(new FabricItemSettings().maxCount(16)), ItemGroupRegistry.BAM_EQUIPMENT);
 
     // food
-    public static final Item SWEET_BERRY_FOOD = registerItem("sweet_berry_food", new AdventureFoodConsumable(new FabricItemSettings().maxCount(16).food(AdventureFoodComponents.SWEET_BERRY_FOOD)), ItemGroupRegistry.BAM_FOOD);
-    public static final Item BROWN_MUSHROOM_FOOD = registerItem("brown_mushroom_food", new AdventureFoodConsumable(new FabricItemSettings().maxCount(16).food(AdventureFoodComponents.BROWN_MUSHROOM_FOOD)), ItemGroupRegistry.BAM_FOOD);
-    public static final Item RED_MUSHROOM_FOOD = registerItem("red_mushroom_food", new AdventureFoodConsumable(new FabricItemSettings().maxCount(16).food(AdventureFoodComponents.RED_MUSHROOM_FOOD)), ItemGroupRegistry.BAM_FOOD);
-    public static final Item GLOW_BERRY_FOOD = registerItem("glow_berry_food", new AdventureFoodConsumable(new FabricItemSettings().maxCount(16).food(AdventureFoodComponents.GLOW_BERRY_FOOD)), ItemGroupRegistry.BAM_FOOD);
+    public static final Item SWEET_BERRIES = registerItem("sweet_berries", new AdventureFoodConsumable(new FabricItemSettings().maxCount(16).food(AdventureFoodComponents.SWEET_BERRIES)), ItemGroupRegistry.BAM_FOOD);
+    public static final Item BROWN_MUSHROOM = registerItem("brown_mushroom", new AdventureFoodConsumable(new FabricItemSettings().maxCount(16).food(AdventureFoodComponents.BROWN_MUSHROOM)), ItemGroupRegistry.BAM_FOOD);
+    public static final Item RED_MUSHROOM = registerItem("red_mushroom", new AdventureFoodConsumable(new FabricItemSettings().maxCount(16).food(AdventureFoodComponents.RED_MUSHROOM)), ItemGroupRegistry.BAM_FOOD);
+    public static final Item GLOW_BERRIES = registerItem("glow_berries", new AdventureFoodConsumable(new FabricItemSettings().maxCount(16).food(AdventureFoodComponents.GLOW_BERRIES)), ItemGroupRegistry.BAM_FOOD);
     //endregion Hotbar Items
     
     // weapons
     public static final Item ELEMENTAL_FIRE_WAND = registerFilteredSpellProxyItem("elemental_fire_wand", new StaffItem(ToolMaterials.WOOD, new FabricItemSettings().maxDamage(50)), ItemGroupRegistry.BAM_EQUIPMENT, List.of("bamcontent:burning_touch"), "bamcontent:elemental_fire_wand_pool");
     public static final Item ELEMENTAL_ICE_WAND = registerFilteredSpellProxyItem("elemental_ice_wand", new StaffItem(ToolMaterials.WOOD, new FabricItemSettings().maxDamage(50)), ItemGroupRegistry.BAM_EQUIPMENT, List.of("bamcontent:chilling_touch"), "bamcontent:elemental_ice_wand_pool");
 
-    public static final Item ZWEIHANDER = registerItem("zweihander", new BetterAdventureMode_BasicWeaponItem(DamageTypes.PLAYER_ATTACK, DamageTypes.PLAYER_ATTACK,7, -3.5F, 5, 5,  new Item.Settings().maxDamage(336)), ItemGroupRegistry.BAM_EQUIPMENT);
+//    public static final Item ZWEIHANDER = registerItem("zweihander", new BetterAdventureMode_BasicWeaponItem(DamageTypes.PLAYER_ATTACK, DamageTypes.PLAYER_ATTACK,7, -3.5F, 5, 5,  new Item.Settings().maxDamage(336)), ItemGroupRegistry.BAM_EQUIPMENT);
+    public static final Item WOODEN_SWORD = registerItem("wooden_sword", new BetterAdventureMode_BasicWeaponItem(DamageTypesRegistry.PLAYER_SLASHING_DAMAGE_TYPE, DamageTypesRegistry.PLAYER_PIERCING_DAMAGE_TYPE,3, -2.4F, 1, 1,  new Item.Settings().maxDamage(50)), ItemGroupRegistry.BAM_EQUIPMENT);
+    public static final Item STONE_SWORD = registerItem("stone_sword", new BetterAdventureMode_BasicWeaponItem(DamageTypesRegistry.PLAYER_SLASHING_DAMAGE_TYPE, DamageTypesRegistry.PLAYER_PIERCING_DAMAGE_TYPE,4, -2.4F, 1, 3,  new Item.Settings().maxDamage(100)), ItemGroupRegistry.BAM_EQUIPMENT);
+    public static final Item GOLDEN_SWORD = registerItem("golden_sword", new BetterAdventureMode_BasicWeaponItem(DamageTypesRegistry.PLAYER_SLASHING_DAMAGE_TYPE, DamageTypesRegistry.PLAYER_PIERCING_DAMAGE_TYPE,3, -2.4F, 1, 4,  new Item.Settings().maxDamage(50)), ItemGroupRegistry.BAM_EQUIPMENT);
+    public static final Item IRON_SWORD = registerItem("iron_sword", new BetterAdventureMode_BasicWeaponItem(DamageTypesRegistry.PLAYER_SLASHING_DAMAGE_TYPE, DamageTypesRegistry.PLAYER_PIERCING_DAMAGE_TYPE,5, -2.4F, 1, 3,  new Item.Settings().maxDamage(200)), ItemGroupRegistry.BAM_EQUIPMENT);
+    public static final Item DIAMOND_SWORD = registerItem("diamond_sword", new BetterAdventureMode_BasicWeaponItem(DamageTypesRegistry.PLAYER_SLASHING_DAMAGE_TYPE, DamageTypesRegistry.PLAYER_PIERCING_DAMAGE_TYPE,6, -2.4F, 2, 3,  new Item.Settings().maxDamage(250)), ItemGroupRegistry.BAM_EQUIPMENT);
+    public static final Item NETHERITE_SWORD = registerItem("netherite_sword", new BetterAdventureMode_BasicWeaponItem(DamageTypesRegistry.PLAYER_SLASHING_DAMAGE_TYPE, DamageTypesRegistry.PLAYER_PIERCING_DAMAGE_TYPE,7, -2.4F, 2, 3,  new Item.Settings().maxDamage(300)), ItemGroupRegistry.BAM_EQUIPMENT);
+
+    public static final Item WOODEN_PICKAXE = registerItem("wooden_pickaxe", new BetterAdventureMode_BasicWeaponItem(DamageTypesRegistry.PLAYER_PIERCING_DAMAGE_TYPE, DamageTypesRegistry.PLAYER_PIERCING_DAMAGE_TYPE,3, -2.8F, 1, 1,  new Item.Settings().maxDamage(50)), ItemGroupRegistry.BAM_EQUIPMENT);
+    public static final Item STONE_PICKAXE = registerItem("stone_pickaxe", new BetterAdventureMode_BasicWeaponItem(DamageTypesRegistry.PLAYER_PIERCING_DAMAGE_TYPE, DamageTypesRegistry.PLAYER_PIERCING_DAMAGE_TYPE,4, -2.8F, 1, 3,  new Item.Settings().maxDamage(100)), ItemGroupRegistry.BAM_EQUIPMENT);
+    public static final Item GOLDEN_PICKAXE = registerItem("golden_pickaxe", new BetterAdventureMode_BasicWeaponItem(DamageTypesRegistry.PLAYER_PIERCING_DAMAGE_TYPE, DamageTypesRegistry.PLAYER_PIERCING_DAMAGE_TYPE,3, -2.8F, 1, 4,  new Item.Settings().maxDamage(50)), ItemGroupRegistry.BAM_EQUIPMENT);
+    public static final Item IRON_PICKAXE = registerItem("iron_pickaxe", new BetterAdventureMode_BasicWeaponItem(DamageTypesRegistry.PLAYER_PIERCING_DAMAGE_TYPE, DamageTypesRegistry.PLAYER_PIERCING_DAMAGE_TYPE,5, -2.8F, 1, 3,  new Item.Settings().maxDamage(200)), ItemGroupRegistry.BAM_EQUIPMENT);
+    public static final Item DIAMOND_PICKAXE = registerItem("diamond_pickaxe", new BetterAdventureMode_BasicWeaponItem(DamageTypesRegistry.PLAYER_PIERCING_DAMAGE_TYPE, DamageTypesRegistry.PLAYER_PIERCING_DAMAGE_TYPE,6, -2.8F, 2, 3,  new Item.Settings().maxDamage(250)), ItemGroupRegistry.BAM_EQUIPMENT);
+    public static final Item NETHERITE_PICKAXE = registerItem("netherite_pickaxe", new BetterAdventureMode_BasicWeaponItem(DamageTypesRegistry.PLAYER_PIERCING_DAMAGE_TYPE, DamageTypesRegistry.PLAYER_PIERCING_DAMAGE_TYPE,7, -2.8F, 2, 3,  new Item.Settings().maxDamage(300)), ItemGroupRegistry.BAM_EQUIPMENT);
+
+    public static final Item WOODEN_AXE = registerItem("wooden_axe", new BetterAdventureMode_BasicWeaponItem(DamageTypesRegistry.PLAYER_SLASHING_DAMAGE_TYPE, DamageTypesRegistry.PLAYER_SLASHING_DAMAGE_TYPE,3, -3.0F, 1, 1,  new Item.Settings().maxDamage(50)), ItemGroupRegistry.BAM_EQUIPMENT);
+    public static final Item STONE_AXE = registerItem("stone_axe", new BetterAdventureMode_BasicWeaponItem(DamageTypesRegistry.PLAYER_SLASHING_DAMAGE_TYPE, DamageTypesRegistry.PLAYER_SLASHING_DAMAGE_TYPE,4, -3.0F, 1, 3,  new Item.Settings().maxDamage(100)), ItemGroupRegistry.BAM_EQUIPMENT);
+    public static final Item GOLDEN_AXE = registerItem("golden_axe", new BetterAdventureMode_BasicWeaponItem(DamageTypesRegistry.PLAYER_SLASHING_DAMAGE_TYPE, DamageTypesRegistry.PLAYER_SLASHING_DAMAGE_TYPE,3, -3.0F, 1, 4,  new Item.Settings().maxDamage(50)), ItemGroupRegistry.BAM_EQUIPMENT);
+    public static final Item IRON_AXE = registerItem("iron_axe", new BetterAdventureMode_BasicWeaponItem(DamageTypesRegistry.PLAYER_SLASHING_DAMAGE_TYPE, DamageTypesRegistry.PLAYER_SLASHING_DAMAGE_TYPE,5, -3.0F, 1, 3,  new Item.Settings().maxDamage(200)), ItemGroupRegistry.BAM_EQUIPMENT);
+    public static final Item DIAMOND_AXE = registerItem("diamond_axe", new BetterAdventureMode_BasicWeaponItem(DamageTypesRegistry.PLAYER_SLASHING_DAMAGE_TYPE, DamageTypesRegistry.PLAYER_SLASHING_DAMAGE_TYPE,6, -3.0F, 2, 3,  new Item.Settings().maxDamage(250)), ItemGroupRegistry.BAM_EQUIPMENT);
+    public static final Item NETHERITE_AXE = registerItem("netherite_axe", new BetterAdventureMode_BasicWeaponItem(DamageTypesRegistry.PLAYER_SLASHING_DAMAGE_TYPE, DamageTypesRegistry.PLAYER_SLASHING_DAMAGE_TYPE,7, -3.0F, 2, 3,  new Item.Settings().maxDamage(300)), ItemGroupRegistry.BAM_EQUIPMENT);
 
     public static final Item DEFAULT_EMPTY_HAND_WEAPON = registerItem("default_empty_hand_weapon", new EmptyHandWeapon(1, -3.0F, 1, new Item.Settings()), null);
 
     // test items
-    public static final Item TEST_NECKLACE = registerItem("test_necklace", new TrinketItem(new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT);
-    public static final Item TEST_WAND = registerFilteredSpellProxyItem("test_wand", new StaffItem(ToolMaterials.WOOD, new FabricItemSettings().maxDamage(50)), ItemGroupRegistry.BAM_EQUIPMENT, List.of(), "bamcontent:test_wand_pool");
-    public static final Item TEST_BELT = registerItem("test_belt", new TrinketItem(new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT);
-    public static final Item TEST_RING = registerItem("test_ring", new TrinketItem(new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT);
-    public static final Item MANA_TEST_BELT = registerItem("mana_test_belt", new ManaTestBeltItem(new FabricItemSettings().maxCount(1)), ItemGroups.COMBAT);
-    public static final Item TEST_BUCKLER = registerItem("test_buckler", new BetterAdventureMode_BasicShieldItem(2, 0.2, true, 3.0, 2, new FabricItemSettings().maxDamage(336)), ItemGroups.COMBAT);
-    public static final Item TEST_NORMAL_SHIELD = registerItem("test_normal_shield", new BetterAdventureMode_BasicShieldItem(3, 0.5, true, 1.5, 3, new FabricItemSettings().maxDamage(336)), ItemGroups.COMBAT);
-    public static final Item TEST_TOWER_SHIELD = registerItem("test_tower_shield", new BetterAdventureMode_BasicShieldItem(5, 1.0, false, 1.0, 5, new FabricItemSettings().maxDamage(336)), ItemGroups.COMBAT);
-    public static final Item TEST_SWORD = registerItem("test_sword", new BetterAdventureMode_BasicWeaponItem(DamageTypesRegistry.PLAYER_SLASHING_DAMAGE_TYPE, DamageTypesRegistry.PLAYER_PIERCING_DAMAGE_TYPE, 4, -3.0F, 3, 2, new FabricItemSettings().maxDamage(336)), ItemGroups.COMBAT);
-    public static final Item TEST_AURA_NECKLACE = registerItem("test_aura_necklace", new AuraGrantingNecklaceTrinketItem((AuraStatusEffect) StatusEffectsRegistry.TEST_AURA_EFFECT, new FabricItemSettings().maxCount(1)), ItemGroups.COMBAT);
+    public static final Item TEST_NECKLACE = registerItem("test_necklace", new TrinketItem(new FabricItemSettings().maxCount(1)), ItemGroups.OPERATOR);
+    public static final Item TEST_WAND = registerFilteredSpellProxyItem("test_wand", new StaffItem(ToolMaterials.WOOD, new FabricItemSettings().maxDamage(50)), ItemGroups.OPERATOR, List.of(), "bamcontent:test_wand_pool");
+    public static final Item TEST_BELT = registerItem("test_belt", new TrinketItem(new FabricItemSettings().maxCount(1)), ItemGroups.OPERATOR);
+    public static final Item TEST_RING = registerItem("test_ring", new TrinketItem(new FabricItemSettings().maxCount(1)), ItemGroups.OPERATOR);
+    public static final Item MANA_TEST_BELT = registerItem("mana_test_belt", new ManaTestBeltItem(new FabricItemSettings().maxCount(1)), ItemGroups.OPERATOR);
+    public static final Item TEST_BUCKLER = registerItem("test_buckler", new BetterAdventureMode_BasicShieldItem(2, 0.2, true, 3.0, 2, new FabricItemSettings().maxDamage(336)), ItemGroups.OPERATOR);
+    public static final Item TEST_NORMAL_SHIELD = registerItem("test_normal_shield", new BetterAdventureMode_BasicShieldItem(3, 0.5, true, 1.5, 3, new FabricItemSettings().maxDamage(336)), ItemGroups.OPERATOR);
+    public static final Item TEST_TOWER_SHIELD = registerItem("test_tower_shield", new BetterAdventureMode_BasicShieldItem(5, 1.0, false, 1.0, 5, new FabricItemSettings().maxDamage(336)), ItemGroups.OPERATOR);
+    public static final Item TEST_SWORD = registerItem("test_sword", new BetterAdventureMode_BasicWeaponItem(DamageTypesRegistry.PLAYER_SLASHING_DAMAGE_TYPE, DamageTypesRegistry.PLAYER_PIERCING_DAMAGE_TYPE, 4, -3.0F, 3, 2, new FabricItemSettings().maxDamage(336)), ItemGroups.OPERATOR);
+    public static final Item TEST_AURA_NECKLACE = registerItem("test_aura_necklace", new AuraGrantingNecklaceTrinketItem((AuraStatusEffect) StatusEffectsRegistry.TEST_AURA_EFFECT, new FabricItemSettings().maxCount(1)), ItemGroups.OPERATOR);
 
 
     private static Item registerItem(String name, Item item, @Nullable RegistryKey<ItemGroup> itemGroup) {

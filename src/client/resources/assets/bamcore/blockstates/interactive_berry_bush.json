@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "intact=true": {
+      "model": "minecraft:block/sweet_berry_bush_stage3"
+    },
+    "intact=false": {
+      "model": "minecraft:block/sweet_berry_bush_stage2"
+    }
+  }
+}
