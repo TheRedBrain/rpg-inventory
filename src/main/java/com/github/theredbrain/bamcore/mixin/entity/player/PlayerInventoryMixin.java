@@ -1,6 +1,7 @@
 package com.github.theredbrain.bamcore.mixin.entity.player;
 
 import com.github.theredbrain.bamcore.api.item.ArmorTrinketItem;
+import com.github.theredbrain.bamcore.api.item.ModeledTrinketItem;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.bamcore.api.item.CustomArmorItem;
@@ -416,6 +417,163 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         return oldStack;
     }
 
+    public ItemStack bamcore$getGlovesStack() {
+        ItemStack glovesStack = ItemStack.EMPTY;
+        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
+        if (trinkets.isPresent()) {
+            if (trinkets.get().getInventory().get("gloves") != null) {
+                if (trinkets.get().getInventory().get("gloves").get("gloves") != null) {
+                    glovesStack = trinkets.get().getInventory().get("gloves").get("gloves").getStack(0);
+                }
+            }
+        }
+        return glovesStack;
+    }
+
+    public ItemStack bamcore$setGlovesStack(ItemStack itemStack) {
+        ItemStack oldStack = bamcore$getFeetStack();
+        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
+        if (trinkets.isPresent()) {
+            if (trinkets.get().getInventory().get("boots") != null) {
+                if (trinkets.get().getInventory().get("boots").get("boots") != null) {
+                    trinkets.get().getInventory().get("boots").get("boots").setStack(0, itemStack);
+                }
+            }
+        }
+        return oldStack;
+    }
+
+    public ItemStack bamcore$getShouldersStack() {
+        ItemStack shouldersStack = ItemStack.EMPTY;
+        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
+        if (trinkets.isPresent()) {
+            if (trinkets.get().getInventory().get("shoulders") != null) {
+                if (trinkets.get().getInventory().get("shoulders").get("shoulders") != null) {
+                    shouldersStack = trinkets.get().getInventory().get("shoulders").get("shoulders").getStack(0);
+                }
+            }
+        }
+        return shouldersStack;
+    }
+
+    public ItemStack bamcore$setShouldersStack(ItemStack itemStack) {
+        ItemStack oldStack = bamcore$getFeetStack();
+        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
+        if (trinkets.isPresent()) {
+            if (trinkets.get().getInventory().get("boots") != null) {
+                if (trinkets.get().getInventory().get("boots").get("boots") != null) {
+                    trinkets.get().getInventory().get("boots").get("boots").setStack(0, itemStack);
+                }
+            }
+        }
+        return oldStack;
+    }
+
+    public ItemStack bamcore$getRing1Stack() {
+        ItemStack rings1Stack = ItemStack.EMPTY;
+        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
+        if (trinkets.isPresent()) {
+            if (trinkets.get().getInventory().get("rings_1") != null) {
+                if (trinkets.get().getInventory().get("rings_1").get("ring") != null) {
+                    rings1Stack = trinkets.get().getInventory().get("rings_1").get("ring").getStack(0);
+                }
+            }
+        }
+        return rings1Stack;
+    }
+
+    public ItemStack bamcore$setRing1Stack(ItemStack itemStack) {
+        ItemStack oldStack = bamcore$getFeetStack();
+        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
+        if (trinkets.isPresent()) {
+            if (trinkets.get().getInventory().get("rings_1") != null) {
+                if (trinkets.get().getInventory().get("rings_1").get("ring") != null) {
+                    trinkets.get().getInventory().get("rings_1").get("ring").setStack(0, itemStack);
+                }
+            }
+        }
+        return oldStack;
+    }
+
+    public ItemStack bamcore$getRing2Stack() {
+        ItemStack rings2Stack = ItemStack.EMPTY;
+        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
+        if (trinkets.isPresent()) {
+            if (trinkets.get().getInventory().get("rings_2") != null) {
+                if (trinkets.get().getInventory().get("rings_2").get("ring") != null) {
+                    rings2Stack = trinkets.get().getInventory().get("rings_2").get("ring").getStack(0);
+                }
+            }
+        }
+        return rings2Stack;
+    }
+
+    public ItemStack bamcore$setRing2Stack(ItemStack itemStack) {
+        ItemStack oldStack = bamcore$getFeetStack();
+        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
+        if (trinkets.isPresent()) {
+            if (trinkets.get().getInventory().get("rings_2") != null) {
+                if (trinkets.get().getInventory().get("rings_2").get("ring") != null) {
+                    trinkets.get().getInventory().get("rings_2").get("ring").setStack(0, itemStack);
+                }
+            }
+        }
+        return oldStack;
+    }
+
+    public ItemStack bamcore$getBeltStack() {
+        ItemStack beltsStack = ItemStack.EMPTY;
+        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
+        if (trinkets.isPresent()) {
+            if (trinkets.get().getInventory().get("belts") != null) {
+                if (trinkets.get().getInventory().get("belts").get("belt") != null) {
+                    beltsStack = trinkets.get().getInventory().get("belts").get("belt").getStack(0);
+                }
+            }
+        }
+        return beltsStack;
+    }
+
+    public ItemStack bamcore$setBeltStack(ItemStack itemStack) {
+        ItemStack oldStack = bamcore$getFeetStack();
+        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
+        if (trinkets.isPresent()) {
+            if (trinkets.get().getInventory().get("belts") != null) {
+                if (trinkets.get().getInventory().get("belts").get("belt") != null) {
+                    trinkets.get().getInventory().get("belts").get("belt").setStack(0, itemStack);
+                }
+            }
+        }
+        return oldStack;
+    }
+
+    public ItemStack bamcore$getNecklaceStack() {
+        ItemStack necklacesStack = ItemStack.EMPTY;
+        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
+        if (trinkets.isPresent()) {
+            if (trinkets.get().getInventory().get("necklaces") != null) {
+                if (trinkets.get().getInventory().get("necklaces").get("necklace") != null) {
+                    necklacesStack = trinkets.get().getInventory().get("necklaces").get("necklace").getStack(0);
+                }
+            }
+        }
+        return necklacesStack;
+    }
+
+    public ItemStack bamcore$setNecklaceStack(ItemStack itemStack) {
+        ItemStack oldStack = bamcore$getFeetStack();
+        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
+        if (trinkets.isPresent()) {
+            if (trinkets.get().getInventory().get("necklaces") != null) {
+                if (trinkets.get().getInventory().get("necklaces").get("necklace") != null) {
+                    trinkets.get().getInventory().get("necklaces").get("necklace").setStack(0, itemStack);
+                }
+            }
+        }
+        return oldStack;
+    }
+
+
     public ItemStack bamcore$getSpellSlotStack(int spellSlotNumber) {
         ItemStack spellSlotStack = ItemStack.EMPTY;
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
@@ -444,31 +602,5 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 
     public List<ItemStack> getArmorTrinkets() {
         return List.of(this.bamcore$getFeetStack(), this.bamcore$getLegsStack(), this.bamcore$getGlovesStack(), this.bamcore$getChestStack(), this.bamcore$getShouldersStack(), this.bamcore$getHeadStack());
-    }
-
-    private ItemStack bamcore$getGlovesStack() {
-        ItemStack glovesStack = ItemStack.EMPTY;
-        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
-        if (trinkets.isPresent()) {
-            if (trinkets.get().getInventory().get("gloves") != null) {
-                if (trinkets.get().getInventory().get("gloves").get("gloves") != null) {
-                    glovesStack = trinkets.get().getInventory().get("gloves").get("gloves").getStack(0);
-                }
-            }
-        }
-        return glovesStack;
-    }
-
-    private ItemStack bamcore$getShouldersStack() {
-        ItemStack shouldersStack = ItemStack.EMPTY;
-        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
-        if (trinkets.isPresent()) {
-            if (trinkets.get().getInventory().get("shoulders") != null) {
-                if (trinkets.get().getInventory().get("shoulders").get("shoulders") != null) {
-                    shouldersStack = trinkets.get().getInventory().get("shoulders").get("shoulders").getStack(0);
-                }
-            }
-        }
-        return shouldersStack;
     }
 }

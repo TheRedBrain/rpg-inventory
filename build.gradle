@@ -58,17 +58,22 @@ repositories {
 	maven {
 		url 'https://maven.wispforest.io'
 	}
+
+	// Azure Armor Lib
+	maven {
+		url 'https://libs.azuredoom.com:4443/mods'
+	}
 }
 
 loom {
-	splitEnvironmentSourceSets()
-
-	mods {
-		"bamcore" {
-			sourceSet sourceSets.main
-			sourceSet sourceSets.client
-		}
-	}
+//	splitEnvironmentSourceSets()
+//
+//	mods {
+//		"bamcore" {
+//			sourceSet sourceSets.main
+//			sourceSet sourceSets.client
+//		}
+//	}
 	accessWidenerPath = file("src/main/resources/bamcore.accesswidener")
 }
 
@@ -144,6 +149,9 @@ dependencies {
 	// Cardinal Components
 	modImplementation ("dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cca_version}")
 	modImplementation ("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cca_version}")
+
+	// Azure Armor Lib
+	modImplementation("mod.azure.azurelibarmor:azurelibarmor-fabric-${project.mc_version}:${project.azure_armor_version}")
 }
 
 processResources {

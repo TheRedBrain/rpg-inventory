@@ -31,6 +31,18 @@ public interface DuckPlayerInventoryMixin {
     ItemStack bamcore$setLegsStack(ItemStack itemStack);
     ItemStack bamcore$getFeetStack();
     ItemStack bamcore$setFeetStack(ItemStack itemStack);
+    ItemStack bamcore$getGlovesStack();
+    ItemStack bamcore$setGlovesStack(ItemStack itemStack);
+    ItemStack bamcore$getShouldersStack();
+    ItemStack bamcore$setShouldersStack(ItemStack itemStack);
+    ItemStack bamcore$getRing1Stack();
+    ItemStack bamcore$setRing1Stack(ItemStack itemStack);
+    ItemStack bamcore$getRing2Stack();
+    ItemStack bamcore$setRing2Stack(ItemStack itemStack);
+    ItemStack bamcore$getBeltStack();
+    ItemStack bamcore$setBeltStack(ItemStack itemStack);
+    ItemStack bamcore$getNecklaceStack();
+    ItemStack bamcore$setNecklaceStack(ItemStack itemStack);
     ItemStack bamcore$getSpellSlotStack(int spellSlotNumber);
     ItemStack bamcore$setSpellSlotStack(ItemStack itemStack, int spellSlotNumber);
 }

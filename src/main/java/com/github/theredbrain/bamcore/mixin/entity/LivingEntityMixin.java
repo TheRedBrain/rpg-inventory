@@ -10,6 +10,7 @@ import dev.emi.trinkets.api.event.TrinketDropCallback;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
+import net.minecraft.entity.attribute.AttributeContainer;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTracker;
 import net.minecraft.entity.data.DataTracker;
@@ -42,65 +43,100 @@ import java.util.function.Predicate;
 @Mixin(value = LivingEntity.class, priority = 950)
 public abstract class LivingEntityMixin extends Entity implements DuckLivingEntityMixin {
 
-    @Shadow public abstract float getMaxHealth();
+    @Shadow
+    public abstract float getMaxHealth();
 
-    @Shadow private @Nullable DamageSource lastDamageSource;
-    @Shadow private long lastDamageTime;
+    @Shadow
+    private @Nullable DamageSource lastDamageSource;
+    @Shadow
+    private long lastDamageTime;
 
-    @Shadow protected abstract void playHurtSound(DamageSource source);
+    @Shadow
+    protected abstract void playHurtSound(DamageSource source);
 
-    @Shadow public abstract void onDeath(DamageSource damageSource);
+    @Shadow
+    public abstract void onDeath(DamageSource damageSource);
 
-    @Shadow protected abstract @Nullable SoundEvent getDeathSound();
+    @Shadow
+    protected abstract @Nullable SoundEvent getDeathSound();
 
-    @Shadow public abstract boolean isDead();
+    @Shadow
+    public abstract boolean isDead();
 
-    @Shadow protected abstract boolean tryUseTotem(DamageSource source);
+    @Shadow
+    protected abstract boolean tryUseTotem(DamageSource source);
 
-    @Shadow protected abstract float getSoundVolume();
+    @Shadow
+    protected abstract float getSoundVolume();
 
-    @Shadow public abstract float getSoundPitch();
+    @Shadow
+    public abstract float getSoundPitch();
 
-    @Shadow public abstract void tiltScreen(double deltaX, double deltaZ);
+    @Shadow
+    public abstract void tiltScreen(double deltaX, double deltaZ);
 
-    @Shadow public abstract void takeKnockback(double strength, double x, double z);
+    @Shadow
+    public abstract void takeKnockback(double strength, double x, double z);
 
-    @Shadow public abstract boolean hasStatusEffect(StatusEffect effect);
+    @Shadow
+    public abstract boolean hasStatusEffect(StatusEffect effect);
 
-    @Shadow public abstract boolean isSleeping();
+    @Shadow
+    public abstract boolean isSleeping();
 
-    @Shadow public abstract void wakeUp();
+    @Shadow
+    public abstract void wakeUp();
 
-    @Shadow protected int despawnCounter;
-    @Shadow @Final public LimbAnimator limbAnimator;
-    @Shadow protected float lastDamageTaken;
-    @Shadow public int hurtTime;
-    @Shadow public int maxHurtTime;
+    @Shadow
+    protected int despawnCounter;
+    @Shadow
+    @Final
+    public LimbAnimator limbAnimator;
+    @Shadow
+    protected float lastDamageTaken;
+    @Shadow
+    public int hurtTime;
+    @Shadow
+    public int maxHurtTime;
 
-    @Shadow public abstract ItemStack getEquippedStack(EquipmentSlot var1);
+    @Shadow
+    public abstract ItemStack getEquippedStack(EquipmentSlot var1);
 
-    @Shadow public abstract void damageHelmet(DamageSource source, float amount);
+    @Shadow
+    public abstract void damageHelmet(DamageSource source, float amount);
 
-    @Shadow protected int playerHitTimer;
-    @Shadow @Nullable protected PlayerEntity attackingPlayer;
+    @Shadow
+    protected int playerHitTimer;
+    @Shadow
+    @Nullable
+    protected PlayerEntity attackingPlayer;
 
-    @Shadow public abstract void setAttacker(@Nullable LivingEntity attacker);
+    @Shadow
+    public abstract void setAttacker(@Nullable LivingEntity attacker);
 
-    @Shadow public abstract boolean addStatusEffect(StatusEffectInstance effect);
+    @Shadow
+    public abstract boolean addStatusEffect(StatusEffectInstance effect);
 
-    @Shadow protected abstract float applyArmorToDamage(DamageSource source, float amount);
+    @Shadow
+    protected abstract float applyArmorToDamage(DamageSource source, float amount);
 
-    @Shadow public abstract float getAbsorptionAmount();
+    @Shadow
+    public abstract float getAbsorptionAmount();
 
-    @Shadow public abstract void setAbsorptionAmount(float amount);
+    @Shadow
+    public abstract void setAbsorptionAmount(float amount);
 
-    @Shadow public abstract DamageTracker getDamageTracker();
+    @Shadow
+    public abstract DamageTracker getDamageTracker();
 
-    @Shadow public abstract void setHealth(float health);
+    @Shadow
+    public abstract void setHealth(float health);
 
-    @Shadow public abstract float getHealth();
+    @Shadow
+    public abstract float getHealth();
 
-    @Shadow public abstract @Nullable StatusEffectInstance getStatusEffect(StatusEffect effect);
+    @Shadow
+    public abstract @Nullable StatusEffectInstance getStatusEffect(StatusEffect effect);
 
     @Unique
     private static final TrackedData<Float> POISE = DataTracker.registerData(LivingEntity.class, TrackedDataHandlerRegistry.FLOAT);
@@ -178,7 +214,7 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
             entity.setPos(entity.getX(), this.getEyeY() - 0.3, entity.getZ());
             entity.setPickupDelay(40);
             float magnitude = this.random.nextFloat() * 0.5f;
-            float angle = this.random.nextFloat() * ((float)Math.PI * 2);
+            float angle = this.random.nextFloat() * ((float) Math.PI * 2);
             entity.setVelocity(-MathHelper.sin(angle) * magnitude, 0.2f, MathHelper.cos(angle) * magnitude);
         }
     }
@@ -231,7 +267,7 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
         this.limbAnimator.setSpeed(1.5f);
         boolean bl2 = true;
 
-        if ((float)this.timeUntilRegen > 10.0f && !source.isIn(DamageTypeTags.BYPASSES_COOLDOWN)) {
+        if ((float) this.timeUntilRegen > 10.0f && !source.isIn(DamageTypeTags.BYPASSES_COOLDOWN)) {
             if (amount <= this.lastDamageTime) {
                 return false;
             }
@@ -251,20 +287,20 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
         if ((entity2 = source.getAttacker()) != null) {
             WolfEntity wolfEntity;
             if (entity2 instanceof LivingEntity) {
-                LivingEntity livingEntity2 = (LivingEntity)entity2;
+                LivingEntity livingEntity2 = (LivingEntity) entity2;
                 if (!source.isIn(DamageTypeTags.NO_ANGER)) {
                     this.setAttacker(livingEntity2);
                 }
             }
             if (entity2 instanceof PlayerEntity) {
-                PlayerEntity playerEntity = (PlayerEntity)entity2;
+                PlayerEntity playerEntity = (PlayerEntity) entity2;
                 this.playerHitTimer = 100;
                 this.attackingPlayer = playerEntity;
-            } else if (entity2 instanceof WolfEntity && (wolfEntity = (WolfEntity)entity2).isTamed()) {
+            } else if (entity2 instanceof WolfEntity && (wolfEntity = (WolfEntity) entity2).isTamed()) {
                 PlayerEntity playerEntity2;
                 this.playerHitTimer = 100;
                 LivingEntity livingEntity = wolfEntity.getOwner();
-                this.attackingPlayer = livingEntity instanceof PlayerEntity ? (playerEntity2 = (PlayerEntity)livingEntity) : null;
+                this.attackingPlayer = livingEntity instanceof PlayerEntity ? (playerEntity2 = (PlayerEntity) livingEntity) : null;
             }
         }
         if (bl2) {
@@ -312,7 +348,7 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
 //            }
         }
         if (entity2 instanceof ServerPlayerEntity) {
-            Criteria.PLAYER_HURT_ENTITY.trigger((ServerPlayerEntity)entity2, this, source, f, amount, bl);
+            Criteria.PLAYER_HURT_ENTITY.trigger((ServerPlayerEntity) entity2, this, source, f, amount, bl);
         }
         return bl3;
     }
@@ -331,11 +367,11 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
         if (source.isIn(DamageTypeTags.BYPASSES_EFFECTS)) {
             return amount;
         }
-        if (this.hasStatusEffect(StatusEffects.RESISTANCE) && !source.isIn(DamageTypeTags.BYPASSES_RESISTANCE) && (h = (g = amount) - (amount = Math.max((f = amount * (float)(j = 25 - (i = (this.getStatusEffect(StatusEffects.RESISTANCE).getAmplifier() + 1) * 5))) / 25.0f, 0.0f))) > 0.0f && h < 3.4028235E37f) {
+        if (this.hasStatusEffect(StatusEffects.RESISTANCE) && !source.isIn(DamageTypeTags.BYPASSES_RESISTANCE) && (h = (g = amount) - (amount = Math.max((f = amount * (float) (j = 25 - (i = (this.getStatusEffect(StatusEffects.RESISTANCE).getAmplifier() + 1) * 5))) / 25.0f, 0.0f))) > 0.0f && h < 3.4028235E37f) {
             if (((LivingEntity) (Object) this) instanceof ServerPlayerEntity) {
                 ((ServerPlayerEntity) (Object) this).increaseStat(Stats.DAMAGE_RESISTED, Math.round(h * 10.0f));
             } else if (source.getAttacker() instanceof ServerPlayerEntity) {
-                ((ServerPlayerEntity)source.getAttacker()).increaseStat(Stats.DAMAGE_DEALT_RESISTED, Math.round(h * 10.0f));
+                ((ServerPlayerEntity) source.getAttacker()).increaseStat(Stats.DAMAGE_DEALT_RESISTED, Math.round(h * 10.0f));
             }
         }
         if (amount <= 0.0f) {
@@ -390,7 +426,7 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
         this.setAbsorptionAmount(this.getAbsorptionAmount() - (f - amount));
         float g = f - amount;
         if (g > 0.0f && g < 3.4028235E37f && (entity = source.getAttacker()) instanceof ServerPlayerEntity) {
-            ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity)entity;
+            ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) entity;
             serverPlayerEntity.increaseStat(Stats.DAMAGE_DEALT_ABSORBED, Math.round(g * 10.0f));
         }
         if (amount == 0.0f) {

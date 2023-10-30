@@ -32,5 +32,13 @@
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "client": [
+    "client.gui.hud.InGameHudMixin",
+    "client.gui.screen.ingame.InventoryScreenMixin",
+    "client.network.AbstractClientPlayerEntityMixin",
+    "client.network.ClientPlayerEntityMixin",
+    "client.render.entity.PlayerEntityRendererMixin",
+    "client.render.item.BuiltinModelItemRendererMixin"
+  ]
 }

@@ -1,10 +1,9 @@
 package com.github.theredbrain.bamcore.api.item;
 
-import com.github.theredbrain.bamcore.registry.EntityAttributesRegistry;
 import com.github.theredbrain.bamcore.api.util.BetterAdventureModCoreAttributeModifierUUIDs;
+import com.github.theredbrain.bamcore.registry.EntityAttributesRegistry;
 import com.google.common.collect.Multimap;
 import dev.emi.trinkets.api.SlotReference;
-import dev.emi.trinkets.api.TrinketItem;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
@@ -18,15 +17,16 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public class ArmorTrinketItem extends TrinketItem {
+public class ArmorTrinketItem extends ModeledTrinketItem {
 
     @Nullable
     private String translationKeyBroken;
     private final double armor;
     private final double armorToughness;
     private final double weight;
-    public ArmorTrinketItem(double armor, double armorToughness, double weight, Settings settings) {
-        super(settings);
+
+    public ArmorTrinketItem(double armor, double armorToughness, double weight, Identifier assetSubpath, Settings settings) {
+        super(assetSubpath, settings);
         this.armor = armor;
         this.armorToughness = armorToughness;
         this.weight = weight;
