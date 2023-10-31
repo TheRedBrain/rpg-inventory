@@ -3,7 +3,7 @@
 	"minecraft:geometry": [
 		{
 			"description": {
-				"identifier": "geometry.iron_armor",
+				"identifier": "geometry.base_armor",
 				"texture_width": 128,
 				"texture_height": 128,
 				"visible_bounds_width": 3,
