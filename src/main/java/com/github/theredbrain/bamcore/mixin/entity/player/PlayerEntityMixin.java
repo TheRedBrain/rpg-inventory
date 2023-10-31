@@ -440,19 +440,19 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         if (slot == EquipmentSlot.OFFHAND) {
             return ((DuckPlayerInventoryMixin)this.inventory).bamcore$getOffHandStack();
         }
-        if (slot.getType() == EquipmentSlot.Type.ARMOR) {
-            ItemStack stack = ItemStack.EMPTY;
-                if (slot.getEntitySlotId() == 0) {
-                    return ((DuckPlayerInventoryMixin)this.inventory).bamcore$getFeetStack();
-                } else if (slot.getEntitySlotId() == 1) {
-                    return ((DuckPlayerInventoryMixin)this.inventory).bamcore$getLegsStack();
-                } else if (slot.getEntitySlotId() == 2) {
-                    return ((DuckPlayerInventoryMixin)this.inventory).bamcore$getChestStack();
-                } else if (slot.getEntitySlotId() == 3) {
-                    return ((DuckPlayerInventoryMixin)this.inventory).bamcore$getHeadStack();
-                }
-            return stack;
-        }
+//        if (slot.getType() == EquipmentSlot.Type.ARMOR) {
+//            ItemStack stack = ItemStack.EMPTY;
+//                if (slot.getEntitySlotId() == 0) {
+//                    return ((DuckPlayerInventoryMixin)this.inventory).bamcore$getFeetStack();
+//                } else if (slot.getEntitySlotId() == 1) {
+//                    return ((DuckPlayerInventoryMixin)this.inventory).bamcore$getLegsStack();
+//                } else if (slot.getEntitySlotId() == 2) {
+//                    return ((DuckPlayerInventoryMixin)this.inventory).bamcore$getChestStack();
+//                } else if (slot.getEntitySlotId() == 3) {
+//                    return ((DuckPlayerInventoryMixin)this.inventory).bamcore$getHeadStack();
+//                }
+//            return stack;
+//        }
         return ItemStack.EMPTY;
     }
 

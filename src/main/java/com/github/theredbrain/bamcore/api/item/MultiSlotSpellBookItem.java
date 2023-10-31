@@ -14,7 +14,7 @@ import net.spell_engine.api.item.trinket.SpellBookItem;
 import java.util.UUID;
 
 public class MultiSlotSpellBookItem extends SpellBookItem {
-    private int slot_amount_addition;
+    private final int slot_amount_addition;
     public MultiSlotSpellBookItem(int slot_amount_addition, Identifier poolId, Settings settings) {
         super(poolId, settings);
         this.slot_amount_addition = slot_amount_addition;

@@ -1,9 +1,14 @@
 package com.github.theredbrain.bamcore.api.item;
 
 import com.github.theredbrain.bamcore.api.util.BetterAdventureModCoreAttributeModifierUUIDs;
+import com.github.theredbrain.bamcore.azurelib.BetterAdventureModeRenderProvider;
+import com.github.theredbrain.bamcore.client.render.renderer.ArmorTrinketRenderer;
+import com.github.theredbrain.bamcore.client.render.renderer.ModeledTrinketRenderer;
+import com.github.theredbrain.bamcore.item.ModeledTrinketItem;
 import com.github.theredbrain.bamcore.registry.EntityAttributesRegistry;
 import com.google.common.collect.Multimap;
 import dev.emi.trinkets.api.SlotReference;
+import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
@@ -16,6 +21,7 @@ import net.minecraft.util.Util;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
+import java.util.function.Consumer;
 
 public class ArmorTrinketItem extends ModeledTrinketItem {
 
@@ -77,5 +83,20 @@ public class ArmorTrinketItem extends ModeledTrinketItem {
                     new EntityAttributeModifier(slotUuid, "Equipment Weight", this.weight, EntityAttributeModifier.Operation.ADDITION));
         }
         return map;
+    }
+
+    @Override
+    public void createRenderer(Consumer<Object> consumer) {
+        consumer.accept(new BetterAdventureModeRenderProvider() {
+            private ModeledTrinketRenderer<?> renderer;
+            @Override
+            public BipedEntityModel<LivingEntity> getGenericTrinketModel(LivingEntity livingEntity, ItemStack itemStack, String slotGroup, String slotName, BipedEntityModel<LivingEntity> original) {
+                if (this.renderer == null) {
+                    this.renderer = new ArmorTrinketRenderer(ArmorTrinketItem.this.assetSubpath);
+                }
+                this.renderer.prepForRender(livingEntity, itemStack, slotGroup, slotName, original);
+                return this.renderer;
+            }
+        });
     }
 }

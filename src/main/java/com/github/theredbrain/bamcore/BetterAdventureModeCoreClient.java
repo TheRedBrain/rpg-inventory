@@ -11,10 +11,13 @@ import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import me.shedaniel.autoconfig.serializer.PartitioningSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
+import net.minecraft.item.DyeableItem;
+import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
 import net.spell_engine.api.render.CustomModels;
 
@@ -40,6 +43,7 @@ public class BetterAdventureModeCoreClient implements ClientModInitializer {
         registerBlockEntityRenderer();
         registerScreens();
         registerModelPredicateProviders();
+        registerColors();
     }
 
     private void registerTransparency() {
@@ -61,6 +65,10 @@ public class BetterAdventureModeCoreClient implements ClientModInitializer {
 
     private void registerScreens() {
         HandledScreens.register(ScreenHandlerTypesRegistry.TELEPORTER_BLOCK_SCREEN_HANDLER, TeleporterBlockScreen::new);
+    }
+
+    private void registerColors() {
+        ColorProviderRegistry.ITEM.register((stack, tintIndex) -> tintIndex > 0 ? -1 : ((DyeableItem)((Object)stack.getItem())).getColor(stack), ItemRegistry.LEATHER_HELMET, ItemRegistry.LEATHER_CHESTPLATE, ItemRegistry.LEATHER_LEGGINGS, ItemRegistry.LEATHER_BOOTS, ItemRegistry.LEATHER_GLOVES, ItemRegistry.LEATHER_SHOULDERS);
     }
 
     private void registerModelPredicateProviders() {

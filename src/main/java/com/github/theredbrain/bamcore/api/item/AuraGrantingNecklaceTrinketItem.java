@@ -2,14 +2,14 @@ package com.github.theredbrain.bamcore.api.item;
 
 import com.github.theredbrain.bamcore.api.effect.AuraStatusEffect;
 import dev.emi.trinkets.api.SlotReference;
-import dev.emi.trinkets.api.TrinketItem;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Identifier;
 
-public class AuraGrantingNecklaceTrinketItem extends TrinketItem {
+public class AuraGrantingNecklaceTrinketItem extends AccessoryTrinketItem {
     private final AuraStatusEffect auraStatusEffect;
-    public AuraGrantingNecklaceTrinketItem(AuraStatusEffect auraStatusEffect, Settings settings) {
-        super(settings);
+    public AuraGrantingNecklaceTrinketItem(AuraStatusEffect auraStatusEffect, Identifier assetSubpath, Settings settings) {
+        super(assetSubpath, settings);
         this.auraStatusEffect = auraStatusEffect;
     }
 

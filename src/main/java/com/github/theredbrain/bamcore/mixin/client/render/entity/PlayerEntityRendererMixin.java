@@ -1,5 +1,6 @@
 package com.github.theredbrain.bamcore.mixin.client.render.entity;
 
+import com.github.theredbrain.bamcore.client.render.entity.feature.TrinketFeatureRenderer;
 import com.github.theredbrain.bamcore.client.render.renderer.SheathedMainHandItemFeatureRenderer;
 import com.github.theredbrain.bamcore.client.render.renderer.SheathedOffHandItemFeatureRenderer;
 import com.github.theredbrain.bamcore.registry.StatusEffectsRegistry;
@@ -35,6 +36,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
 
     @Inject(method = "<init>", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILSOFT)
     private void initMixin(EntityRendererFactory.Context ctx, boolean slim, CallbackInfo info) {
+        this.addFeature(new TrinketFeatureRenderer(this, this.model));
         this.addFeature(new SheathedMainHandItemFeatureRenderer(this, ctx.getHeldItemRenderer()));
         this.addFeature(new SheathedOffHandItemFeatureRenderer(this, ctx.getHeldItemRenderer()));
     }
