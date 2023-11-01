@@ -16,11 +16,9 @@ import net.minecraft.client.render.entity.feature.FeatureRendererContext;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.DyeableItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Optional;
@@ -66,25 +64,16 @@ public class TrinketFeatureRenderer<T extends LivingEntity, M extends BipedEntit
             return;
         }
 
-        if (item instanceof DyeableItem dyeableTrinketItem) {
-            int i = dyeableTrinketItem.getColor(itemStack);
-            float f = (float)(i >> 16 & 0xFF) / 255.0f;
-            float g = (float)(i >> 8 & 0xFF) / 255.0f;
-            float h = (float)(i & 0xFF) / 255.0f;
-            this.renderTrinket(matrices, vertexConsumers, entity, slotGroup, slotName, light, itemStack, model, f, g, h, null);
-            this.renderTrinket(matrices, vertexConsumers, entity, slotGroup, slotName, light, itemStack, model, 1.0f, 1.0f, 1.0f, "overlay");
-        } else {
-            this.renderTrinket(matrices, vertexConsumers, entity, slotGroup, slotName, light, itemStack, model, 1.0f, 1.0f, 1.0f, null);
-        }
+        this.renderTrinket(matrices, vertexConsumers, entity, slotGroup, slotName, light, itemStack, model, 1.0f, 1.0f, 1.0f);
     }
 
-    private void renderTrinket(MatrixStack matrices, VertexConsumerProvider vertexConsumers, T entity, String slotGroup, String slotName, int light, ItemStack itemStack, A model, float red, float green, float blue, @Nullable String overlay) {
-        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getArmorCutoutNoCull(this.getTrinketTexture(((ModeledTrinketItem)itemStack.getItem()), overlay)));
+    private void renderTrinket(MatrixStack matrices, VertexConsumerProvider vertexConsumers, T entity, String slotGroup, String slotName, int light, ItemStack itemStack, A model, float red, float green, float blue) {
+        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getArmorCutoutNoCull(this.getTrinketTexture(((ModeledTrinketItem)itemStack.getItem()))));
         BetterAdventureModeRenderProvider.of(itemStack).getGenericTrinketModel(entity, itemStack, slotGroup, slotName, (BipedEntityModel<LivingEntity>)model).render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV, red, green, blue, 1.0f);
     }
 
-    private Identifier getTrinketTexture(ModeledTrinketItem modeledTrinketItem, @Nullable String overlay) {
-        String string = modeledTrinketItem.assetSubpath.getNamespace() + ":textures/item/" + modeledTrinketItem.assetSubpath.getPath() + (String)(overlay == null ? "" : "_" + overlay) + ".png";
+    private Identifier getTrinketTexture(ModeledTrinketItem modeledTrinketItem) {
+        String string = modeledTrinketItem.assetSubpath.getNamespace() + ":textures/item/" + modeledTrinketItem.assetSubpath.getPath() + ".png";
         return TRINKET_TEXTURE_CACHE.computeIfAbsent(string, Identifier::new);
     }
 }

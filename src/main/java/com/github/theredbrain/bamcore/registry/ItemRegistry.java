@@ -5,7 +5,6 @@ import com.github.theredbrain.bamcore.api.effect.AuraStatusEffect;
 import com.github.theredbrain.bamcore.api.item.*;
 import com.github.theredbrain.bamcore.api.util.BetterAdventureModCoreItemUtils;
 import com.github.theredbrain.bamcore.item.*;
-import dev.emi.trinkets.api.TrinketItem;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
@@ -70,20 +69,20 @@ public class ItemRegistry {
 
     //region Accessories
     // belts
-    public static final Item MANA_REGENERATION_BELT = registerItem("mana_regeneration_belt", new AccessoryTrinketItem(BetterAdventureModeCore.identifier("model/accessory/invisible"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT);
-    public static final Item DEPTH_STRIDER_BELT = registerItem("depth_strider_belt", new AccessoryTrinketItem(BetterAdventureModeCore.identifier("model/accessory/invisible"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT);
-    public static final Item LOOTING_BELT = registerItem("looting_belt", new AccessoryTrinketItem(BetterAdventureModeCore.identifier("model/accessory/invisible"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT);
-    public static final Item UNBREAKING_BELT = registerItem("unbreaking_belt", new AccessoryTrinketItem(BetterAdventureModeCore.identifier("model/accessory/invisible"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT);
-    public static final Item FEATHER_FALLING_BELT = registerItem("feather_falling_belt", new AccessoryTrinketItem(BetterAdventureModeCore.identifier("model/accessory/invisible"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT);
+    public static final Item MANA_REGENERATION_BELT = registerItem("mana_regeneration_belt", new AccessoryTrinketItem(BetterAdventureModeCore.identifier("model/accessory/belt_basic"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT);
+    public static final Item DEPTH_STRIDER_BELT = registerItem("depth_strider_belt", new AccessoryTrinketItem(BetterAdventureModeCore.identifier("model/accessory/belt_basic"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT);
+    public static final Item LOOTING_BELT = registerItem("looting_belt", new AccessoryTrinketItem(BetterAdventureModeCore.identifier("model/accessory/belt_basic"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT);
+    public static final Item UNBREAKING_BELT = registerItem("unbreaking_belt", new AccessoryTrinketItem(BetterAdventureModeCore.identifier("model/accessory/belt_basic"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT);
+    public static final Item FEATHER_FALLING_BELT = registerItem("feather_falling_belt", new AccessoryTrinketItem(BetterAdventureModeCore.identifier("model/accessory/belt_basic"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT);
 
     // necklaces
-    public static final Item TELEPORT_HOME_NECKLACE = registerItem("teleport_home_necklace", new AccessoryTrinketItem(BetterAdventureModeCore.identifier("model/accessory/invisible"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT);
-    public static final Item HEALTH_REGENERATION_AURA_NECKLACE = registerItem("health_regeneration_aura_necklace", new AuraGrantingNecklaceTrinketItem((AuraStatusEffect) StatusEffectsRegistry.HEALTH_REGENERATION_AURA_EFFECT, BetterAdventureModeCore.identifier("model/accessory/invisible"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT);
+    public static final Item TELEPORT_HOME_NECKLACE = registerItem("teleport_home_necklace", new AccessoryTrinketItem(BetterAdventureModeCore.identifier("model/accessory/necklace_basic"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT);
+    public static final Item HEALTH_REGENERATION_AURA_NECKLACE = registerItem("health_regeneration_aura_necklace", new AuraGrantingNecklaceTrinketItem((AuraStatusEffect) StatusEffectsRegistry.HEALTH_REGENERATION_AURA_EFFECT, BetterAdventureModeCore.identifier("model/accessory/necklace_basic"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT);
 
     // rings
-    public static final Item TWO_HEALTH_REGENERATION_RING = registerItem("two_health_regeneration_ring", new ModifyEntityAttributeRingItem(EntityAttributesRegistry.HEALTH_REGENERATION, "health_regeneration", 2, EntityAttributeModifier.Operation.ADDITION, BetterAdventureModeCore.identifier("model/accessory/invisible"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT);
-    public static final Item THREE_SPELL_SLOT_RING = registerItem("three_spell_slot_ring", new ModifyEntityAttributeRingItem(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT, "active_spell_slot_amount", 3, EntityAttributeModifier.Operation.ADDITION, BetterAdventureModeCore.identifier("model/accessory/invisible"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT);
-    public static final Item ARMOR_TOUGHNESS_RING = registerItem("armor_toughness_ring", new ModifyEntityAttributeRingItem(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, "armor_toughness", 0.25, EntityAttributeModifier.Operation.ADDITION, BetterAdventureModeCore.identifier("model/accessory/invisible"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT);
+    public static final Item TWO_HEALTH_REGENERATION_RING = registerItem("two_health_regeneration_ring", new ModifyEntityAttributeRingItem(EntityAttributesRegistry.HEALTH_REGENERATION, "health_regeneration", 2, EntityAttributeModifier.Operation.ADDITION, BetterAdventureModeCore.identifier("model/accessory/ring_basic"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT);
+    public static final Item THREE_SPELL_SLOT_RING = registerItem("three_spell_slot_ring", new ModifyEntityAttributeRingItem(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT, "active_spell_slot_amount", 3, EntityAttributeModifier.Operation.ADDITION, BetterAdventureModeCore.identifier("model/accessory/ring_basic"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT);
+    public static final Item ARMOR_TOUGHNESS_RING = registerItem("armor_toughness_ring", new ModifyEntityAttributeRingItem(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, "armor_toughness", 0.25, EntityAttributeModifier.Operation.ADDITION, BetterAdventureModeCore.identifier("model/accessory/ring_basic"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT);
 
     // elemental spell books
     public static final Item FIREBALL_SPELL_BOOK = registerSpellContainerItem("fireball_spell_book", new MultiSlotSpellBookItem(-1, BetterAdventureModeCore.identifier("fireball"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT, List.of("bamcontent:fireball"));
@@ -139,10 +138,10 @@ public class ItemRegistry {
     public static final Item DEFAULT_EMPTY_HAND_WEAPON = registerItem("default_empty_hand_weapon", new EmptyHandWeapon(1, -3.0F, 1, new Item.Settings()), null);
 
     // test items
-    public static final Item TEST_NECKLACE = registerItem("test_necklace", new AccessoryTrinketItem(BetterAdventureModeCore.identifier("model/accessory/invisible"), new FabricItemSettings().maxCount(1)), ItemGroups.OPERATOR);
+    public static final Item TEST_NECKLACE = registerItem("test_necklace", new AccessoryTrinketItem(BetterAdventureModeCore.identifier("model/accessory/necklace_basic"), new FabricItemSettings().maxCount(1)), ItemGroups.OPERATOR);
     public static final Item TEST_WAND = registerFilteredSpellProxyItem("test_wand", new StaffItem(ToolMaterials.WOOD, new FabricItemSettings().maxDamage(50)), ItemGroups.OPERATOR, List.of(), "bamcontent:test_wand_pool");
-    public static final Item TEST_BELT = registerItem("test_belt", new AccessoryTrinketItem(BetterAdventureModeCore.identifier("model/accessory/invisible"), new FabricItemSettings().maxCount(1)), ItemGroups.OPERATOR);
-    public static final Item TEST_RING = registerItem("test_ring", new AccessoryTrinketItem(BetterAdventureModeCore.identifier("model/accessory/invisible"), new FabricItemSettings().maxCount(1)), ItemGroups.OPERATOR);
+    public static final Item TEST_BELT = registerItem("test_belt", new AccessoryTrinketItem(BetterAdventureModeCore.identifier("model/accessory/belt_basic"), new FabricItemSettings().maxCount(1)), ItemGroups.OPERATOR);
+    public static final Item TEST_RING = registerItem("test_ring", new AccessoryTrinketItem(BetterAdventureModeCore.identifier("model/accessory/ring_basic"), new FabricItemSettings().maxCount(1)), ItemGroups.OPERATOR);
     public static final Item MANA_TEST_BELT = registerItem("mana_test_belt", new ManaTestBeltItem(new FabricItemSettings().maxCount(1)), ItemGroups.OPERATOR);
     public static final Item TEST_BUCKLER = registerItem("test_buckler", new BetterAdventureMode_BasicShieldItem(2, 0.2, true, 3.0, 2, new FabricItemSettings().maxDamage(336)), ItemGroups.OPERATOR);
     public static final Item TEST_NORMAL_SHIELD = registerItem("test_normal_shield", new BetterAdventureMode_BasicShieldItem(3, 0.5, true, 1.5, 3, new FabricItemSettings().maxDamage(336)), ItemGroups.OPERATOR);
