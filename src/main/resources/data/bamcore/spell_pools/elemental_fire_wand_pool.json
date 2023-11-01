@@ -1,0 +1,12 @@
+{
+  "spell_ids": [
+    "bamcore:fireball",
+    "bamcore:dragons_breath",
+    "bamcore:ring_of_fire",
+    "bamcore:frost_shards",
+    "bamcore:glacier",
+    "bamcore:cold_snap",
+    "bamcore:lightning_strike",
+    "bamcore:water_spray"
+  ]
+}
