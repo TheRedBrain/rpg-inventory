@@ -11,6 +11,7 @@ import mod.azure.azurelibarmor.cache.texture.AnimatableTexture;
 import mod.azure.azurelibarmor.constant.DataTickets;
 import mod.azure.azurelibarmor.core.animatable.GeoAnimatable;
 import mod.azure.azurelibarmor.core.animation.AnimationState;
+import mod.azure.azurelibarmor.core.object.Color;
 import mod.azure.azurelibarmor.model.GeoModel;
 import mod.azure.azurelibarmor.renderer.GeoRenderer;
 import mod.azure.azurelibarmor.renderer.layer.GeoRenderLayer;
@@ -27,6 +28,7 @@ import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.item.DyeableItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
@@ -137,6 +139,18 @@ public class ModeledTrinketRenderer<T extends Item & GeoItem> extends BipedEntit
     @Override
     public RenderLayer getRenderType(T animatable, Identifier texture, @org.jetbrains.annotations.Nullable VertexConsumerProvider bufferSource, float partialTick) {
         return RenderLayer.getArmorCutoutNoCull(texture);
+    }
+
+    /**
+     * Gets a tint-applying color to render the given animatable with.<br>
+     * Returns {@link Color#WHITE} by default
+     */
+    @Override
+    public Color getRenderColor(T animatable, float partialTick, int packedLight) {
+        if (this.currentStack.getItem() instanceof DyeableItem dyeableItem) {
+            return Color.ofOpaque((dyeableItem).getColor(this.currentStack));
+        }
+        return Color.WHITE;
     }
 
     /**
