@@ -1,6 +1,7 @@
 package com.github.theredbrain.bamcore.client.render.renderer;
 
 import com.github.theredbrain.bamcore.api.item.ArmorTrinketItem;
+import com.github.theredbrain.bamcore.api.util.BetterAdventureModCoreItemUtils;
 import com.github.theredbrain.bamcore.azurelib.BetterAdventureModeCoreDataTickets;
 import com.github.theredbrain.bamcore.azurelib.Trinket;
 import dev.emi.trinkets.api.SlotReference;
@@ -488,7 +489,7 @@ public class ModeledTrinketRenderer<T extends Item & GeoItem> extends BipedEntit
     protected void applyBoneVisibilityByTrinketSlot(String currentSlotGroup, String currentSlotName) { // TODO trinket slot
         setVisible(false);
 
-        if (this.currentStack.getItem() instanceof ArmorTrinketItem && !((ArmorTrinketItem) this.currentStack.getItem()).isProtecting(this.currentStack)) return;
+        if (this.currentStack.getItem() instanceof ArmorTrinketItem && !BetterAdventureModCoreItemUtils.isUsable(this.currentStack)) return;
 
 //        SlotType slotType = currentSlotGroup.inventory().getSlotType();
         if (currentSlotGroup.equals("helmets")/* && slotType.getName().equals("helmet")*/) {

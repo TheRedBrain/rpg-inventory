@@ -3,17 +3,13 @@ package com.github.theredbrain.bamcore.mixin.entity.player;
 import com.github.theredbrain.bamcore.api.item.ArmorTrinketItem;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerInventoryMixin;
-import com.github.theredbrain.bamcore.api.item.CustomArmorItem;
-import com.github.theredbrain.bamcore.api.item.CustomDyeableArmorItem;
 import com.github.theredbrain.bamcore.api.util.BetterAdventureModCoreItemUtils;
 import com.github.theredbrain.bamcore.registry.StatusEffectsRegistry;
 import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketsApi;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.util.collection.DefaultedList;
@@ -141,16 +137,10 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         if ((amount /= 6.0f) < 1.0f) {
             amount = 1.0f;
         }
-        for (int i : slots) {
-            ItemStack itemStack = this.armor.get(i);
-            if (damageSource.isIn(DamageTypeTags.IS_FIRE) && itemStack.getItem().isFireproof() || !(itemStack.getItem() instanceof ArmorItem)) continue;
-            if ((itemStack.getItem() instanceof CustomArmorItem && !(((CustomArmorItem)itemStack.getItem()).isProtecting(itemStack))) || (itemStack.getItem() instanceof CustomDyeableArmorItem && !(((CustomDyeableArmorItem)itemStack.getItem()).isProtecting(itemStack))))  continue;
-            itemStack.damage((int)amount, this.player, player -> player.sendEquipmentBreakStatus(EquipmentSlot.fromTypeIndex(EquipmentSlot.Type.ARMOR, i)));
-        }
         float finalAmount = amount;
         TrinketsApi.getTrinketComponent(player).ifPresent(trinkets ->
                 trinkets.forEach((slotReference, itemStack) -> {
-                    if ((!(damageSource.isIn(DamageTypeTags.IS_FIRE)) || itemStack.getItem().isFireproof()) && itemStack.getItem() instanceof ArmorTrinketItem && (((ArmorTrinketItem) itemStack.getItem()).isProtecting(itemStack))) {
+                    if ((!(damageSource.isIn(DamageTypeTags.IS_FIRE)) || itemStack.getItem().isFireproof()) && itemStack.getItem() instanceof ArmorTrinketItem && BetterAdventureModCoreItemUtils.isUsable(itemStack)) {
                         itemStack.damage((int) finalAmount, this.player, player -> TrinketsApi.onTrinketBroken(itemStack, slotReference, player));
                     }
                 }));

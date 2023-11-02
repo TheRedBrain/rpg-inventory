@@ -109,7 +109,7 @@ public class BetterAdventureMode_BasicShieldItem extends Item implements Equipme
 
     protected Multimap<EntityAttribute, EntityAttributeModifier> buildModifiers() {
         ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
-        builder.put(EntityAttributesRegistry.EQUIPMENT_WEIGHT, new EntityAttributeModifier(UUID.fromString(BetterAdventureModCoreAttributeModifierUUIDs.OFFHAND_EQUIPMENT_WEIGHT), "Shield modifier", (double)this.weight, EntityAttributeModifier.Operation.ADDITION));
+        builder.put(EntityAttributesRegistry.EQUIPMENT_WEIGHT, new EntityAttributeModifier(UUID.fromString(BetterAdventureModCoreAttributeModifierUUIDs.OFF_HAND_SLOT), "equipment_weight", (double)this.weight, EntityAttributeModifier.Operation.ADDITION));
         return builder.build();
     }
 

@@ -31,11 +31,15 @@ public class BetterAdventureModCoreAttributeModifierUUIDs {
     public static final String SPELL_SLOT_8 = MathHelper.randomUuid().toString();
     public static final String RING_SLOT_1 = MathHelper.randomUuid().toString();
     public static final String RING_SLOT_2 = MathHelper.randomUuid().toString();
-    public static final String GLOVE_SLOT = MathHelper.randomUuid().toString();
     public static final String BELT_SLOT = MathHelper.randomUuid().toString();
     public static final String NECKLACE_SLOT = MathHelper.randomUuid().toString();
+    public static final String HELMET_SLOT = MathHelper.randomUuid().toString();
+    public static final String CHESTPLATE_SLOT = MathHelper.randomUuid().toString();
+    public static final String LEGGINGS_SLOT = MathHelper.randomUuid().toString();
+    public static final String BOOTS_SLOT = MathHelper.randomUuid().toString();
+    public static final String GLOVES_SLOT = MathHelper.randomUuid().toString();
     public static final String SHOULDERS_SLOT = MathHelper.randomUuid().toString();
     //endregion
-    public static final String MAIN_HAND_EQUIPMENT_WEIGHT = MathHelper.randomUuid().toString();
-    public static final String OFFHAND_EQUIPMENT_WEIGHT = MathHelper.randomUuid().toString();
+    public static final String MAIN_HAND_SLOT = MathHelper.randomUuid().toString();
+    public static final String OFF_HAND_SLOT = MathHelper.randomUuid().toString();
 }

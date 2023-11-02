@@ -1,6 +1,7 @@
 package com.github.theredbrain.bamcore.api.item;
 
 import com.github.theredbrain.bamcore.api.util.BetterAdventureModCoreAttributeModifierUUIDs;
+import com.github.theredbrain.bamcore.api.util.BetterAdventureModCoreItemUtils;
 import com.github.theredbrain.bamcore.azurelib.BetterAdventureModeRenderProvider;
 import com.github.theredbrain.bamcore.client.render.renderer.ArmorTrinketRenderer;
 import com.github.theredbrain.bamcore.client.render.renderer.ModeledTrinketRenderer;
@@ -13,7 +14,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
@@ -38,13 +38,6 @@ public class ArmorTrinketItem extends ModeledTrinketItem {
         this.weight = weight;
     }
 
-    /**
-     * {@return whether this item should provide its attribute modifiers and if should be rendered}
-     */
-    public boolean isProtecting(ItemStack stack) {
-        return stack.getDamage() < stack.getMaxDamage() - 1;
-    }
-
     @Override
     public boolean isDamageable() {
         return this.getMaxDamage() > 1;
@@ -65,16 +58,16 @@ public class ArmorTrinketItem extends ModeledTrinketItem {
      */
     @Override
     public String getTranslationKey(ItemStack stack) {
-        return ((ArmorTrinketItem)stack.getItem()).isProtecting(stack) ? this.getTranslationKey() : this.getOrCreateTranslationKeyBroken();
+        return BetterAdventureModCoreItemUtils.isUsable(stack) ? this.getTranslationKey() : this.getOrCreateTranslationKeyBroken();
     }
 
     @Override
     public Multimap<EntityAttribute, EntityAttributeModifier> getModifiers(ItemStack stack, SlotReference slot, LivingEntity entity, UUID uuid) {
         Multimap<EntityAttribute, EntityAttributeModifier> map = super.getModifiers(stack, slot, entity, uuid);
         String group = slot.inventory().getSlotType().getGroup();
-        UUID slotUuid = group.equals("boots") ? ArmorItem.MODIFIERS.get(ArmorItem.Type.BOOTS) : group.equals("leggings") ? ArmorItem.MODIFIERS.get(ArmorItem.Type.LEGGINGS) : group.equals("gloves") ? UUID.fromString(BetterAdventureModCoreAttributeModifierUUIDs.GLOVE_SLOT) : group.equals("chest_plates") ? ArmorItem.MODIFIERS.get(ArmorItem.Type.CHESTPLATE) : group.equals("shoulders") ? UUID.fromString(BetterAdventureModCoreAttributeModifierUUIDs.SHOULDERS_SLOT) : group.equals("helmets") ? ArmorItem.MODIFIERS.get(ArmorItem.Type.HELMET) : null;
+        UUID slotUuid = group.equals("boots") ? UUID.fromString(BetterAdventureModCoreAttributeModifierUUIDs.BOOTS_SLOT) : group.equals("leggings") ? UUID.fromString(BetterAdventureModCoreAttributeModifierUUIDs.LEGGINGS_SLOT) : group.equals("gloves") ? UUID.fromString(BetterAdventureModCoreAttributeModifierUUIDs.GLOVES_SLOT) : group.equals("chest_plates") ? UUID.fromString(BetterAdventureModCoreAttributeModifierUUIDs.CHESTPLATE_SLOT) : group.equals("shoulders") ? UUID.fromString(BetterAdventureModCoreAttributeModifierUUIDs.SHOULDERS_SLOT) : group.equals("helmets") ? UUID.fromString(BetterAdventureModCoreAttributeModifierUUIDs.HELMET_SLOT) : null;
 
-        if (slotUuid != null && this.isProtecting(stack)) {
+        if (slotUuid != null && BetterAdventureModCoreItemUtils.isUsable(stack)) {
             map.put(EntityAttributes.GENERIC_ARMOR,
                     new EntityAttributeModifier(slotUuid, "Armor", this.armor, EntityAttributeModifier.Operation.ADDITION));
             map.put(EntityAttributes.GENERIC_ARMOR_TOUGHNESS,

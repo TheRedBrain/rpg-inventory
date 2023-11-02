@@ -7,6 +7,9 @@ import net.spell_engine.api.spell.SpellContainer;
 
 public class BetterAdventureModCoreItemUtils {
 
+    /**
+     * {@return whether this item should provide its attribute modifiers and if should be rendered}
+     */
     public static boolean isUsable(ItemStack stack) {
         return stack.getDamage() < stack.getMaxDamage() - 1 || stack.isIn(Tags.EMPTY_HAND_WEAPONS);
     }

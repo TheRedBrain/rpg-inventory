@@ -102,9 +102,12 @@ public class BetterAdventureMode_BasicWeaponItem extends Item {
 
     protected Multimap<EntityAttribute, EntityAttributeModifier> buildModifiers() {
         ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
-        builder.put(EntityAttributes.GENERIC_ATTACK_DAMAGE, new EntityAttributeModifier(ATTACK_DAMAGE_MODIFIER_ID, "Weapon modifier", (double)this.attackDamage, EntityAttributeModifier.Operation.ADDITION));
-        builder.put(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_ID, "Weapon modifier", (double)this.attackSpeed, EntityAttributeModifier.Operation.ADDITION));
-        builder.put(EntityAttributesRegistry.EQUIPMENT_WEIGHT, new EntityAttributeModifier(UUID.fromString(BetterAdventureModCoreAttributeModifierUUIDs.MAIN_HAND_EQUIPMENT_WEIGHT), "Weapon modifier", (double)this.weight, EntityAttributeModifier.Operation.ADDITION));
+        builder.put(EntityAttributes.GENERIC_ATTACK_DAMAGE,
+                new EntityAttributeModifier(UUID.fromString(BetterAdventureModCoreAttributeModifierUUIDs.MAIN_HAND_SLOT), "generic_attack_damage", (double)this.attackDamage, EntityAttributeModifier.Operation.ADDITION));
+        builder.put(EntityAttributes.GENERIC_ATTACK_SPEED,
+                new EntityAttributeModifier(UUID.fromString(BetterAdventureModCoreAttributeModifierUUIDs.MAIN_HAND_SLOT), "generic_attack_speed", (double)this.attackSpeed, EntityAttributeModifier.Operation.ADDITION));
+        builder.put(EntityAttributesRegistry.EQUIPMENT_WEIGHT,
+                new EntityAttributeModifier(UUID.fromString(BetterAdventureModCoreAttributeModifierUUIDs.MAIN_HAND_SLOT), "equipment_weight", (double)this.weight, EntityAttributeModifier.Operation.ADDITION));
         return builder.build();
     }
 

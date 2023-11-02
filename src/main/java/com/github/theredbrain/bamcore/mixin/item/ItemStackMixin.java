@@ -2,8 +2,6 @@ package com.github.theredbrain.bamcore.mixin.item;
 
 import com.github.theredbrain.bamcore.api.item.BetterAdventureMode_BasicWeaponItem;
 import com.github.theredbrain.bamcore.api.item.BetterAdventureMode_BasicShieldItem;
-import com.github.theredbrain.bamcore.api.item.CustomArmorItem;
-import com.github.theredbrain.bamcore.api.item.CustomDyeableArmorItem;
 import com.github.theredbrain.bamcore.api.util.BetterAdventureModCoreItemUtils;
 import com.github.theredbrain.bamcore.registry.Tags;
 import com.google.common.collect.*;
@@ -61,14 +59,6 @@ public abstract class ItemStackMixin {
      */
     @Inject(method = "getAttributeModifiers", at = @At("HEAD"), cancellable = true)
     public void bam$getAttributeModifiers(EquipmentSlot slot, CallbackInfoReturnable<Multimap<EntityAttribute, EntityAttributeModifier>> cir) {
-        if (this.getItem() instanceof CustomArmorItem && !(((CustomArmorItem)this.getItem()).isProtecting((ItemStack) (Object) this))) {
-            cir.setReturnValue(HashMultimap.create());
-            cir.cancel();
-        }
-        if (this.getItem() instanceof CustomDyeableArmorItem && !(((CustomDyeableArmorItem)this.getItem()).isProtecting((ItemStack) (Object) this))) {
-            cir.setReturnValue(HashMultimap.create());
-            cir.cancel();
-        }
         if (this.getItem() instanceof BetterAdventureMode_BasicWeaponItem && !(BetterAdventureModCoreItemUtils.isUsable((ItemStack) (Object) this))) {
             cir.setReturnValue(HashMultimap.create());
             cir.cancel();

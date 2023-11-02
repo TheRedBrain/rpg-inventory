@@ -15,14 +15,14 @@ extendable method net/minecraft/client/gui/screen/ingame/HandledScreen drawSlot 
 #accessible field net/minecraft/entity/LivingEntity syncedArmorStacks Lnet/minecraft/util/collection/DefaultedList;
 #mutable field net/minecraft/entity/LivingEntity syncedArmorStacks Lnet/minecraft/util/collection/DefaultedList;
 
-accessible field net/minecraft/item/ArmorItem MODIFIERS Ljava/util/EnumMap;
-mutable field net/minecraft/item/ArmorItem MODIFIERS Ljava/util/EnumMap;
+#accessible field net/minecraft/item/ArmorItem MODIFIERS Ljava/util/EnumMap;
+#mutable field net/minecraft/item/ArmorItem MODIFIERS Ljava/util/EnumMap;
 
 #accessible field net/minecraft/item/ItemStack LORE_STYLE Lnet/minecraft/text/Style; # necessary?
 #accessible field net/minecraft/item/ItemStack DISABLED_TEXT Lnet/minecraft/text/Text; # necessary?
 
-accessible field net/minecraft/item/Item ATTACK_DAMAGE_MODIFIER_ID Ljava/util/UUID;
-accessible field net/minecraft/item/Item ATTACK_SPEED_MODIFIER_ID Ljava/util/UUID;
+#accessible field net/minecraft/item/Item ATTACK_DAMAGE_MODIFIER_ID Ljava/util/UUID;
+#accessible field net/minecraft/item/Item ATTACK_SPEED_MODIFIER_ID Ljava/util/UUID;
 
 accessible field net/minecraft/client/render/WorldRenderer bufferBuilders Lnet/minecraft/client/render/BufferBuilderStorage;
 
