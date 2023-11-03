@@ -1,14 +1,23 @@
 package com.github.theredbrain.bamcore.registry;
 
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.api.item.BetterAdventureMode_BasicWeaponItem;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.bamcore.network.event.PlayerDeathCallback;
 import com.github.theredbrain.bamcore.network.event.PlayerFirstJoinCallback;
 import com.github.theredbrain.bamcore.network.event.PlayerJoinCallback;
+import com.github.theredbrain.bamcore.network.packet.BetterAdventureModeCoreServerPacket;
 import com.github.theredbrain.bamcore.world.DimensionsManager;
 import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketsApi;
+import io.netty.buffer.Unpooled;
+import net.bettercombat.api.client.BetterCombatClientEvents;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 
 import java.util.Optional;
 
@@ -39,6 +48,16 @@ public class EventsRegistry {
             if (server.getGameRules().getBoolean(GameRulesRegistry.RESET_RECIPES_ON_DEATH)) {
                 player.getRecipeBook().lockRecipes(server.getRecipeManager().values(), player);
             }
+        });
+    }
+
+    @Environment(EnvType.CLIENT)
+    public static void initializeClientEvents() {
+
+        BetterCombatClientEvents.ATTACK_START.register((clientPlayerEntity, attackHand) -> {
+            PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+            buf.writeItemStack(attackHand.itemStack());
+            clientPlayerEntity.networkHandler.sendPacket(new CustomPayloadC2SPacket(BetterAdventureModeCoreServerPacket.ATTACK_STAMINA_COST_PACKET, buf));
         });
     }
 }

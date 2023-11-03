@@ -44,6 +44,7 @@ public class BetterAdventureModeCoreClient implements ClientModInitializer {
         registerScreens();
         registerModelPredicateProviders();
         registerColors();
+        EventsRegistry.initializeClientEvents();
     }
 
     private void registerTransparency() {

@@ -1,5 +1,6 @@
 package com.github.theredbrain.bamcore.mixin.entity.player;
 
+import com.github.theredbrain.bamcore.entity.player.DuckHungerManagerMixin;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.bamcore.registry.StatusEffectsRegistry;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -12,7 +13,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(value = HungerManager.class, priority = 950)
-public class HungerManagerMixin {
+public class HungerManagerMixin implements DuckHungerManagerMixin {
     @Unique
     private int healthTickTimer = 0;
     @Unique

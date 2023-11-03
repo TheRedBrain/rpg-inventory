@@ -2,6 +2,7 @@ package com.github.theredbrain.bamcore.client.network.packet;
 
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.bamcore.network.packet.BetterAdventureModeCoreServerPacket;
+import net.bettercombat.api.MinecraftClient_BetterCombat;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -32,6 +33,17 @@ public class BetterAdventureModeCoreClientPacket {
                             ((DuckPlayerInventoryMixin) player.getInventory()).bamcore$setAlternativeOffHand(itemStack);
                             ((DuckPlayerInventoryMixin) player.getInventory()).bamcore$setOffHand(alternativeItemStack);
                         }
+                    }
+                }
+            });
+        });
+        ClientPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.CANCEL_ATTACK_PACKET, (client, handler, buffer, responseSender) -> {
+            int entityId = buffer.readInt();
+            client.execute(() -> {
+                if (client.player != null && client.player.getWorld().getEntityById(entityId) != null) {
+                    PlayerEntity player = (PlayerEntity) client.player.getWorld().getEntityById(entityId);
+                    if (player != null && player == client.player) {
+                        ((MinecraftClient_BetterCombat)client).cancelUpswing();
                     }
                 }
             });

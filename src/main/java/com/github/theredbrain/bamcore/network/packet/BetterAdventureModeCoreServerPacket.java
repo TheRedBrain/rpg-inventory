@@ -11,6 +11,8 @@ public class BetterAdventureModeCoreServerPacket {
     public static final Identifier SHEATHE_WEAPONS_PACKET = BetterAdventureModeCore.identifier("sheathe_weapons");
     public static final Identifier TWO_HAND_MAIN_WEAPON_PACKET = BetterAdventureModeCore.identifier("two_hand_main_weapon");
     public static final Identifier TOGGLE_NECKLACE_ABILITY_PACKET = BetterAdventureModeCore.identifier("toggle_necklace_ability_weapon");
+    public static final Identifier ATTACK_STAMINA_COST_PACKET = BetterAdventureModeCore.identifier("attack_stamina_cost");
+    public static final Identifier CANCEL_ATTACK_PACKET = BetterAdventureModeCore.identifier("attack_stamina_cost");
 //    public static final Identifier SHEATHED_WEAPONS_PACKET = RPGMod.identifier("sheathed_weapons"); // TODO if weapon sheathing is not visible in multiplayer
 
     public static final Identifier UPDATE_TELEPORTER_BLOCK = BetterAdventureModeCore.identifier("update_teleporter_block");
@@ -35,6 +37,10 @@ public class BetterAdventureModeCoreServerPacket {
 
         ToggleNecklaceAbilityPacketReceiver toggleNecklaceAbilityPacketReceiver = new ToggleNecklaceAbilityPacketReceiver();
         ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.TOGGLE_NECKLACE_ABILITY_PACKET, toggleNecklaceAbilityPacketReceiver);
+
+        AttackStaminaCostPacketReceiver attackStaminaCostPacketReceiver = new AttackStaminaCostPacketReceiver();
+        ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.ATTACK_STAMINA_COST_PACKET, attackStaminaCostPacketReceiver);
+
 
         UpdateTeleporterBlockPacketReceiver updateTeleporterBlockPacketReceiver = new UpdateTeleporterBlockPacketReceiver();
         ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.UPDATE_TELEPORTER_BLOCK, updateTeleporterBlockPacketReceiver);

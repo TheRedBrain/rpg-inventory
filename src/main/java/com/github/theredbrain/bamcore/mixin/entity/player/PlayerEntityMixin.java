@@ -4,11 +4,10 @@ import com.github.theredbrain.bamcore.api.block.AbstractSetSpawnBlock;
 import com.github.theredbrain.bamcore.api.item.BetterAdventureMode_BasicShieldItem;
 import com.github.theredbrain.bamcore.api.item.BetterAdventureMode_BasicWeaponItem;
 import com.github.theredbrain.bamcore.api.effect.FoodStatusEffect;
-import com.github.theredbrain.bamcore.block.entity.AreaFillerBlockBlockEntity;
-import com.github.theredbrain.bamcore.block.entity.ChunkLoaderBlockBlockEntity;
-import com.github.theredbrain.bamcore.block.entity.StructurePlacerBlockBlockEntity;
+import com.github.theredbrain.bamcore.block.entity.*;
 import com.github.theredbrain.bamcore.entity.DamageUtility;
 import com.github.theredbrain.bamcore.entity.DuckLivingEntityMixin;
+import com.github.theredbrain.bamcore.entity.player.DuckHungerManagerMixin;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.bamcore.registry.EntityAttributesRegistry;
@@ -29,6 +28,7 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -83,6 +83,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
     @Shadow public abstract void sendMessage(Text message, boolean overlay);
 
+    @Shadow protected HungerManager hungerManager;
     private static final TrackedData<Float> MANA = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Float> STAMINA = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.FLOAT);
 
@@ -406,13 +407,10 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
     @Inject(method = {"attack"}, at = @At("HEAD"), cancellable = true)
     public void bamcore$attack(Entity target, CallbackInfo ci) {
-        if (this.bamcore$getStamina() <= 0) {
+        ItemStack mainHandStack = this.getMainHandStack();
+        if (this.bamcore$getStamina() + ((BetterAdventureMode_BasicWeaponItem)mainHandStack.getItem()).getStaminaCost() <= 0) {
             this.sendMessage(Text.translatable("hud.message.staminaTooLow"), true);
             ci.cancel();
-        }
-        ItemStack mainHandStack = this.getMainHandStack();
-        if (mainHandStack.getItem() instanceof BetterAdventureMode_BasicWeaponItem) {
-            this.bamcore$addStamina(-((BetterAdventureMode_BasicWeaponItem)mainHandStack.getItem()).getStaminaCost());
         }
     }
 
@@ -440,19 +438,19 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         if (slot == EquipmentSlot.OFFHAND) {
             return ((DuckPlayerInventoryMixin)this.inventory).bamcore$getOffHandStack();
         }
-//        if (slot.getType() == EquipmentSlot.Type.ARMOR) {
-//            ItemStack stack = ItemStack.EMPTY;
-//                if (slot.getEntitySlotId() == 0) {
-//                    return ((DuckPlayerInventoryMixin)this.inventory).bamcore$getFeetStack();
-//                } else if (slot.getEntitySlotId() == 1) {
-//                    return ((DuckPlayerInventoryMixin)this.inventory).bamcore$getLegsStack();
-//                } else if (slot.getEntitySlotId() == 2) {
-//                    return ((DuckPlayerInventoryMixin)this.inventory).bamcore$getChestStack();
-//                } else if (slot.getEntitySlotId() == 3) {
-//                    return ((DuckPlayerInventoryMixin)this.inventory).bamcore$getHeadStack();
-//                }
-//            return stack;
-//        }
+        if (slot.getType() == EquipmentSlot.Type.ARMOR) {
+            ItemStack stack = ItemStack.EMPTY;
+                if (slot.getEntitySlotId() == 0) {
+                    return ((DuckPlayerInventoryMixin)this.inventory).bamcore$getFeetStack();
+                } else if (slot.getEntitySlotId() == 1) {
+                    return ((DuckPlayerInventoryMixin)this.inventory).bamcore$getLegsStack();
+                } else if (slot.getEntitySlotId() == 2) {
+                    return ((DuckPlayerInventoryMixin)this.inventory).bamcore$getChestStack();
+                } else if (slot.getEntitySlotId() == 3) {
+                    return ((DuckPlayerInventoryMixin)this.inventory).bamcore$getHeadStack();
+                }
+            return stack;
+        }
         return ItemStack.EMPTY;
     }
 
@@ -467,7 +465,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
             this.onEquipStack(slot, ((DuckPlayerInventoryMixin)this.inventory).bamcore$setMainHand(stack), stack);
         } else if (slot == EquipmentSlot.OFFHAND) {
             this.onEquipStack(slot, ((DuckPlayerInventoryMixin)this.inventory).bamcore$setOffHand(stack), stack);
-        } else if (slot.getType() == EquipmentSlot.Type.ARMOR) {
+        }
+        else if (slot.getType() == EquipmentSlot.Type.ARMOR) {
             if (slot.getEntitySlotId() == 0) {
                 this.onEquipStack(slot, ((DuckPlayerInventoryMixin)this.inventory).bamcore$setFeetStack(stack), stack);
             } else if (slot.getEntitySlotId() == 1) {
@@ -592,7 +591,19 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         }
     }
 
+    @Override
+    public void heal(float amount) {
+        float f = this.getHealth();
+        if (f > 0.0f) {
+            this.setHealth(f + amount);
+        }
+        if (amount < 0) {
+            ((DuckHungerManagerMixin)this.hungerManager).setHealthTickTimer(0);
+        }
+    }
+
     // custom check for adventure food
+    @Unique
     public boolean bamcore$canConsumeItem(ItemStack itemStack) {
         List<Pair<StatusEffectInstance, Float>> list = itemStack.getItem().getFoodComponent().getStatusEffects();
         if (itemStack.isFood() && list != null) {
@@ -604,6 +615,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         return false;
     }
 
+    @Unique
     public boolean bamcore$tryEatAdventureFood(StatusEffectInstance statusEffectInstance) {
         if (getStatusEffects().isEmpty()) {
             return true;
@@ -651,6 +663,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     public void bamcore$addMana(float amount) {
         float f = this.bamcore$getMana();
         this.bamcore$setMana(f + amount);
+        if (amount < 0) {
+            ((DuckHungerManagerMixin)this.hungerManager).setManaTickTimer(0);
+        }
     }
 
     @Override
@@ -677,6 +692,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     public void bamcore$addStamina(float amount) {
         float f = this.bamcore$getStamina();
         this.bamcore$setStamina(f + amount);
+        if (amount < 0) {
+            ((DuckHungerManagerMixin)this.hungerManager).setStaminaTickTimer(0);
+        }
     }
 
     @Override
@@ -695,6 +713,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     @Override
     public abstract boolean bamcore$isAdventure();
 
+    @Unique
     private void ejectItemsFromInactiveSpellSlots() {
         int activeSpellSlotAmount = (int) this.getAttributeInstance(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT).getValue();
 
@@ -714,6 +733,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         }
     }
 
+    @Unique
     private void ejectNonHotbarItemsFromHotbar() {
         if (this.bamcore$isAdventure() && !this.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT)) {
             if (!this.isAdventureHotbarCleanedUp) {
@@ -749,6 +769,18 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
     @Override
     public void bamcore$openAreaFillerBlockScreen(AreaFillerBlockBlockEntity areaFillerBlock) {
+    }
+
+    @Override
+    public void bamcore$openRedstoneTriggerBlockScreen(RedstoneTriggerBlockBlockEntity redstoneTriggerBlock) {
+    }
+
+    @Override
+    public void bamcore$openRelayTriggerBlockScreen(RelayTriggerBlockBlockEntity relayTriggerBlock) {
+    }
+
+    @Override
+    public void bamcore$openDelayTriggerBlockScreen(DelayTriggerBlockBlockEntity delayTriggerBlock) {
     }
 
     @Override
