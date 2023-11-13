@@ -82,18 +82,8 @@ public abstract class ItemStackMixin {
         PlayerEntity playerEntity = context.getPlayer();
         BlockPos blockPos = context.getBlockPos();
 
-        BetterAdventureModeCore.LOGGER.info("blockPos: " + blockPos);
-        BlockPos housingBlockPos = new BlockPos(0, 0, 0);
-        if (playerEntity != null) {
-            housingBlockPos = ComponentsRegistry.CURRENT_HOUSING_BLOCK_POS.get(playerEntity).getValue();
-        }
-        boolean bl = false;
-
         CachedBlockPosition cachedBlockPosition = new CachedBlockPosition(context.getWorld(), blockPos, false);
-        if (!Objects.equals(housingBlockPos, new BlockPos(0, 0, 0)) && context.getWorld().getBlockEntity(housingBlockPos) instanceof HousingBlockBlockEntity housingBlockEntity) {
-            bl = housingBlockEntity.restrictBlockBreakingAreaContains(cachedBlockPosition.getBlockPos());
-        }
-        if (playerEntity != null && !playerEntity.getAbilities().allowModifyWorld && !playerEntity.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT) && !bl && !this.canPlaceOn(context.getWorld().getRegistryManager().get(RegistryKeys.BLOCK), cachedBlockPosition)) {
+        if (playerEntity != null && !playerEntity.getAbilities().allowModifyWorld && !playerEntity.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT)/* && !bl*/ && !this.canPlaceOn(context.getWorld().getRegistryManager().get(RegistryKeys.BLOCK), cachedBlockPosition)) {
             return ActionResult.PASS;
         }
         Item item = this.getItem();

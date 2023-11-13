@@ -50,6 +50,7 @@ public class SetHousingBlockOwnerPacketReceiver implements ServerPlayNetworking.
                         housingBlockBlockEntity.setIsOwnerSet(false);
                         player.sendMessage(Text.translatable("housing_block.unclaimed_successful"), true);
                         player.removeStatusEffect(StatusEffectsRegistry.HOUSING_OWNER_EFFECT);
+                        player.removeStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT);
                     } else {
                         housingBlockBlockEntity.setIsOwnerSet(true);
                         player.sendMessage(Text.translatable("housing_block.claimed_successful"), true);

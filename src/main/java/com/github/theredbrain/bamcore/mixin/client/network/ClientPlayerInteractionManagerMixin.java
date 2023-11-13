@@ -9,17 +9,24 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.network.SequencedPacketCreator;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.network.packet.c2s.play.PlayerActionC2SPacket;
+import net.minecraft.network.packet.c2s.play.PlayerInteractBlockC2SPacket;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.GameMode;
+import org.apache.commons.lang3.mutable.MutableObject;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -39,6 +46,8 @@ public abstract class ClientPlayerInteractionManagerMixin {
     @Shadow public abstract boolean breakBlock(BlockPos pos);
 
     @Shadow private int blockBreakingCooldown;
+
+    @Shadow protected abstract void syncSelectedSlot();
 
     @Inject(method = "breakBlock", at = @At("HEAD"), cancellable = true)
     public void bamcore$breakBlock(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
@@ -77,6 +86,24 @@ public abstract class ClientPlayerInteractionManagerMixin {
             }
             cir.setReturnValue(bl);
             cir.cancel();
+        }
+    }
+
+    @Inject(method = "interactBlock", at = @At("HEAD"), cancellable = true)
+    public void interactBlock(ClientPlayerEntity player, Hand hand, BlockHitResult hitResult, CallbackInfoReturnable<ActionResult> cir) {
+        if (this.gameMode == GameMode.ADVENTURE && player.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT)) {
+            this.syncSelectedSlot();
+            BlockPos housingBlockPos = ComponentsRegistry.CURRENT_HOUSING_BLOCK_POS.get(player).getValue();
+            boolean bl = false;
+            if (!Objects.equals(housingBlockPos, new BlockPos(0, 0, 0)) && this.client.world != null && this.client.world.getBlockEntity(housingBlockPos) instanceof HousingBlockBlockEntity housingBlockEntity) {
+                BetterAdventureModeCore.LOGGER.info("hitResult.getBlockPos().offset(hitResult.getSide()): " + hitResult.getBlockPos().offset(hitResult.getSide()));
+                bl = housingBlockEntity.restrictBlockBreakingAreaContains(hitResult.getBlockPos().offset(hitResult.getSide()));
+                BetterAdventureModeCore.LOGGER.info("bl: " + bl);
+            }
+            if (!bl) {
+                cir.setReturnValue(ActionResult.FAIL);
+                cir.cancel();
+            }
         }
     }
 }
