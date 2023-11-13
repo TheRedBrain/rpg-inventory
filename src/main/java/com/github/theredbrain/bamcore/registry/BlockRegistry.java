@@ -41,6 +41,7 @@ public class BlockRegistry {
     //endregion Content Blocks
 
     //region Operator Blocks
+    public static final Block HOUSING_BLOCK = registerBlock("housing_block", new HousingBlock(FabricBlockSettings.create().mapColor(MapColor.LIGHT_GRAY).requiresTool().strength(-1.0f, 3600000.0f).dropsNothing()), ItemGroups.OPERATOR);
     public static final Block TELEPORTER_BLOCK = registerBlock("teleporter_block", new TeleporterBlock(FabricBlockSettings.create().mapColor(MapColor.LIGHT_GRAY).requiresTool().strength(-1.0f, 3600000.0f).dropsNothing()), ItemGroups.OPERATOR);
     public static final Block STRUCTURE_PLACER_BLOCK = registerBlock("structure_placer_block", new StructurePlacerBlock(FabricBlockSettings.create().mapColor(MapColor.LIGHT_GRAY).requiresTool().strength(-1.0f, 3600000.0f).dropsNothing()), ItemGroups.OPERATOR);
     public static final Block AREA_FILLER_BLOCK = registerBlock("area_filler_block", new AreaFillerBlock(FabricBlockSettings.create().mapColor(MapColor.LIGHT_GRAY).requiresTool().strength(-1.0f, 3600000.0f).dropsNothing()), ItemGroups.OPERATOR);

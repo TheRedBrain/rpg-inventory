@@ -21,6 +21,7 @@
     "server.PlayerManagerMixin",
     "server.network.EntityTrackerEntryMixin",
     "server.network.ServerPlayerEntityMixin",
+    "server.network.ServerPlayerInteractionManagerMixin",
     "server.network.ServerPlayNetworkHandlerMixin",
     "spell_engine.api.spell.SpellContainerMixin",
     "spell_engine.api.spell.SpellCostMixin",
@@ -38,6 +39,7 @@
     "client.gui.screen.ingame.InventoryScreenMixin",
     "client.network.AbstractClientPlayerEntityMixin",
     "client.network.ClientPlayerEntityMixin",
+    "client.network.ClientPlayerInteractionManagerMixin",
     "client.render.entity.PlayerEntityRendererMixin",
     "client.render.item.BuiltinModelItemRendererMixin"
   ]

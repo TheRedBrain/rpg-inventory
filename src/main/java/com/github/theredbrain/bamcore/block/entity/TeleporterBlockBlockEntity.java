@@ -27,6 +27,7 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TeleporterBlockBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, Inventory {
@@ -58,6 +59,11 @@ public class TeleporterBlockBlockEntity extends BlockEntity implements ExtendedS
 
     private boolean consumeKeyItemStack = false;
     private DefaultedList<ItemStack> requiredKeyItemStack = DefaultedList.ofSize(1, ItemStack.EMPTY);
+
+
+    private int accessibleHousesListSize = 0;
+    private List<String> accessibleHousesList = new ArrayList<>(List.of());
+
     private String teleportButtonLabel = "gui.teleport";
     private String cancelTeleportButtonLabel = "gui.cancel";
 
@@ -120,6 +126,12 @@ public class TeleporterBlockBlockEntity extends BlockEntity implements ExtendedS
 
         nbt.putBoolean("consumeKeyItemStack", this.consumeKeyItemStack);
         Inventories.writeNbt(nbt, this.requiredKeyItemStack);
+
+        this.accessibleHousesListSize = this.accessibleHousesList.size();
+        nbt.putInt("accessibleHousesListSize", this.accessibleHousesListSize);
+        for (int i = 0; i < this.accessibleHousesList.size(); i++) {
+            nbt.putString("accessibleHouse_" + i, this.accessibleHousesList.get(i));
+        }
 
         nbt.putString("teleportButtonLabel", this.teleportButtonLabel);
         nbt.putString("cancelTeleportButtonLabel", this.cancelTeleportButtonLabel);
@@ -188,6 +200,11 @@ public class TeleporterBlockBlockEntity extends BlockEntity implements ExtendedS
         this.consumeKeyItemStack = nbt.getBoolean("consumeKeyItemStack");
         this.requiredKeyItemStack = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
         Inventories.readNbt(nbt, this.requiredKeyItemStack);
+
+        this.accessibleHousesListSize = nbt.getInt("accessibleHousesListSize");
+        for (int p = 0; p < this.accessibleHousesListSize; p++) {
+            this.accessibleHousesList.add(nbt.getString("accessibleHouse_" + p));
+        }
 
         this.teleportButtonLabel = nbt.getString("teleportButtonLabel");
         this.cancelTeleportButtonLabel = nbt.getString("cancelTeleportButtonLabel");
@@ -457,6 +474,18 @@ public class TeleporterBlockBlockEntity extends BlockEntity implements ExtendedS
     public void setRequiredKeyItemStack(DefaultedList<ItemStack> requiredKeyItemStack) {
         this.requiredKeyItemStack = requiredKeyItemStack;
     }
+
+    public List<String> getAccessibleHousesList() {
+        return accessibleHousesList;
+    }
+
+    // TODO check if input is valid
+    public boolean setAccessibleHousesList(List<String> accessibleHousesList) {
+        this.accessibleHousesList = accessibleHousesList;
+        this.accessibleHousesListSize = this.accessibleHousesList.size();
+        return true;
+    }
+
     public String getCancelTeleportButtonLabel() {
         return cancelTeleportButtonLabel;
     }

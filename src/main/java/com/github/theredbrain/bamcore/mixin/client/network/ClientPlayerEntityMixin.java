@@ -1,8 +1,11 @@
 package com.github.theredbrain.bamcore.mixin.client.network;
 
+import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.block.entity.*;
 import com.github.theredbrain.bamcore.client.gui.screen.ingame.*;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
+import com.github.theredbrain.bamcore.registry.ComponentsRegistry;
+import com.github.theredbrain.bamcore.registry.StatusEffectsRegistry;
 import com.mojang.authlib.GameProfile;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -10,6 +13,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -33,6 +37,39 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
     @Overwrite
     private boolean canSprint() {
         return this.hasVehicle() || this.bamcore$getStamina() > 0 || this.getAbilities().allowFlying;
+    }
+
+    @Override
+    public void bamcore$openHousingScreen() {
+        HousingBlockBlockEntity housingBlockBlockEntity = null;
+        BetterAdventureModeCore.LOGGER.info("this.client.getServer() != null: " + (this.client.getServer() != null));
+        BetterAdventureModeCore.LOGGER.info("this.client.world != null: " + (this.client.world != null));
+        BetterAdventureModeCore.LOGGER.info("this.client.world: " + (this.client.world.getRegistryKey().getValue()));
+        World world = this.client.world;
+        if (world != null) {
+            BetterAdventureModeCore.LOGGER.info("world != null: " + (world != null));
+            BetterAdventureModeCore.LOGGER.info("blockentity != null: " + (world.getBlockEntity(ComponentsRegistry.CURRENT_HOUSING_BLOCK_POS.get(this).getValue()) != null));
+        }
+        if (this.client.getServer() != null && this.client.world != null && this.client.world.getBlockEntity(ComponentsRegistry.CURRENT_HOUSING_BLOCK_POS.get(this).getValue()) instanceof HousingBlockBlockEntity housingBlockBlockEntity1) {
+            housingBlockBlockEntity = housingBlockBlockEntity1;
+        }
+        int currentPermissionLevel;
+        if (this.hasStatusEffect(StatusEffectsRegistry.HOUSING_OWNER_EFFECT) && housingBlockBlockEntity != null) {
+            currentPermissionLevel = 0;
+        } else if (this.hasStatusEffect(StatusEffectsRegistry.HOUSING_CO_OWNER_EFFECT) && housingBlockBlockEntity != null) {
+            currentPermissionLevel = 1;
+        } else if (this.hasStatusEffect(StatusEffectsRegistry.HOUSING_TRUSTED_EFFECT) && housingBlockBlockEntity != null) {
+            currentPermissionLevel = 2;
+        } else if (this.hasStatusEffect(StatusEffectsRegistry.HOUSING_GUEST_EFFECT) && housingBlockBlockEntity != null) {
+            currentPermissionLevel = 3;
+        } else if (this.hasStatusEffect(StatusEffectsRegistry.HOUSING_STRANGER_EFFECT) && housingBlockBlockEntity != null) {
+            currentPermissionLevel = 4;
+        } else {
+            currentPermissionLevel = 5;
+        }
+
+        BetterAdventureModeCore.LOGGER.info("housingBlockBlockEntity != null: " + (housingBlockBlockEntity != null));
+        this.client.setScreen(new HousingScreen(housingBlockBlockEntity, currentPermissionLevel, this.isCreative()));
     }
 
     @Override

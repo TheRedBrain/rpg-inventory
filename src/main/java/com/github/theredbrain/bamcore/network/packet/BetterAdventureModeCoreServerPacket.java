@@ -13,8 +13,11 @@ public class BetterAdventureModeCoreServerPacket {
     public static final Identifier TOGGLE_NECKLACE_ABILITY_PACKET = BetterAdventureModeCore.identifier("toggle_necklace_ability_weapon");
     public static final Identifier ATTACK_STAMINA_COST_PACKET = BetterAdventureModeCore.identifier("attack_stamina_cost");
     public static final Identifier CANCEL_ATTACK_PACKET = BetterAdventureModeCore.identifier("attack_stamina_cost");
+    public static final Identifier ADD_STATUS_EFFECT_PACKET = BetterAdventureModeCore.identifier("add_status_effect");
 //    public static final Identifier SHEATHED_WEAPONS_PACKET = RPGMod.identifier("sheathed_weapons"); // TODO if weapon sheathing is not visible in multiplayer
 
+    public static final Identifier UPDATE_HOUSING_BLOCK_ADVENTURE = BetterAdventureModeCore.identifier("update_housing_block_adventure");
+    public static final Identifier UPDATE_HOUSING_BLOCK_CREATIVE = BetterAdventureModeCore.identifier("update_housing_block_creative");
     public static final Identifier UPDATE_TELEPORTER_BLOCK = BetterAdventureModeCore.identifier("update_teleporter_block");
     public static final Identifier UPDATE_AREA_FILLER_BLOCK = BetterAdventureModeCore.identifier("update_area_filler_block");
     public static final Identifier UPDATE_STRUCTURE_PLACER_BLOCK = BetterAdventureModeCore.identifier("update_structure_placer_block");
@@ -41,6 +44,15 @@ public class BetterAdventureModeCoreServerPacket {
         AttackStaminaCostPacketReceiver attackStaminaCostPacketReceiver = new AttackStaminaCostPacketReceiver();
         ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.ATTACK_STAMINA_COST_PACKET, attackStaminaCostPacketReceiver);
 
+        AddStatusEffectPacketReceiver addStatusEffectPacketReceiver = new AddStatusEffectPacketReceiver();
+        ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.ADD_STATUS_EFFECT_PACKET, addStatusEffectPacketReceiver);
+
+
+        UpdateHousingBlockAdventurePacketReceiver updateHousingBlockAdventurePacketReceiver = new UpdateHousingBlockAdventurePacketReceiver();
+        ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.UPDATE_HOUSING_BLOCK_ADVENTURE, updateHousingBlockAdventurePacketReceiver);
+
+        UpdateHousingBlockCreativePacketReceiver updateHousingBlockCreativePacketReceiver = new UpdateHousingBlockCreativePacketReceiver();
+        ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.UPDATE_HOUSING_BLOCK_CREATIVE, updateHousingBlockCreativePacketReceiver);
 
         UpdateTeleporterBlockPacketReceiver updateTeleporterBlockPacketReceiver = new UpdateTeleporterBlockPacketReceiver();
         ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.UPDATE_TELEPORTER_BLOCK, updateTeleporterBlockPacketReceiver);

@@ -4,6 +4,7 @@ import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.block.entity.TeleporterBlockBlockEntity;
 import com.github.theredbrain.bamcore.network.packet.BetterAdventureModeCoreServerPacket;
 import com.github.theredbrain.bamcore.registry.ComponentsRegistry;
+import com.github.theredbrain.bamcore.registry.StatusEffectsRegistry;
 import com.github.theredbrain.bamcore.screen.TeleporterBlockScreenHandler;
 import io.netty.buffer.Unpooled;
 import io.wispforest.owo.ui.base.BaseOwoHandledScreen;
@@ -18,6 +19,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.PlayerListEntry;
+import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
@@ -950,13 +952,19 @@ public class TeleporterBlockScreen extends BaseOwoHandledScreen<FlowLayout, Tele
     }
 
     private void givePortalResistanceEffect() {
-        // TODO rework into a packet
-        String playerName = this.client.player.getName().getString();
-        String command = "effect clear " + playerName + " bamcore:portal_resistance_effect";
-        String command2 = "effect give " + playerName + " bamcore:portal_resistance_effect 5 0 true";
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
 
-        this.client.getNetworkHandler().sendCommand(command);
-        this.client.getNetworkHandler().sendCommand(command2);
+        buf.writeInt(StatusEffect.getRawId(StatusEffectsRegistry.PORTAL_RESISTANCE_EFFECT));
+        buf.writeInt(5);
+        buf.writeInt(0);
+        buf.writeBoolean(false);
+        buf.writeBoolean(false);
+        buf.writeBoolean(false);
+        buf.writeBoolean(true);
+
+        if (this.client != null && this.client.getNetworkHandler() != null) {
+            this.client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModeCoreServerPacket.ADD_STATUS_EFFECT_PACKET, buf));
+        }
     }
 
     private int parseInt(String string) {

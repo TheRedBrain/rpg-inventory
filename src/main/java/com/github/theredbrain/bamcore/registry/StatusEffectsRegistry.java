@@ -52,6 +52,15 @@ public class StatusEffectsRegistry {
 
     //endregion Aura Effects
 
+    //region housing effects
+    public static final StatusEffect HOUSING_OWNER_EFFECT = new NeutralStatusEffect();
+    public static final StatusEffect HOUSING_CO_OWNER_EFFECT = new NeutralStatusEffect();
+    public static final StatusEffect HOUSING_TRUSTED_EFFECT = new NeutralStatusEffect();
+    public static final StatusEffect HOUSING_GUEST_EFFECT = new NeutralStatusEffect();
+    public static final StatusEffect HOUSING_STRANGER_EFFECT = new NeutralStatusEffect();
+    public static final StatusEffect EDIT_HOUSING_RESISTANCE_EFFECT = new NeutralStatusEffect();
+    //endregion housing effects
+
     public static final StatusEffect ADVENTURE_BUILDING_EFFECT = new NeutralStatusEffect();
     public static final StatusEffect CIVILISATION_EFFECT = new NeutralStatusEffect();
     public static final StatusEffect MANA_REGENERATION_EFFECT = new BeneficialStatusEffect();
@@ -89,6 +98,13 @@ public class StatusEffectsRegistry {
 //        RemoveOnHit.configure(WEAPONS_SHEATHED_EFFECT, true);
 
         // --- Registration ---
+        // housing effects
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("housing_owner_effect"), HOUSING_OWNER_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("housing_co_owner_effect"), HOUSING_CO_OWNER_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("housing_trusted_effect"), HOUSING_TRUSTED_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("housing_guest_effect"), HOUSING_GUEST_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("housing_stranger_effect"), HOUSING_STRANGER_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("edit_housing_resistance_effect"), EDIT_HOUSING_RESISTANCE_EFFECT);
         // utility effects
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("adventure_building_effect"), ADVENTURE_BUILDING_EFFECT);
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("civilisation_effect"), CIVILISATION_EFFECT);

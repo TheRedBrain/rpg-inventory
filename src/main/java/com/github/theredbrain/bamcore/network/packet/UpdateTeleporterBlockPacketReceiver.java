@@ -15,6 +15,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class UpdateTeleporterBlockPacketReceiver implements ServerPlayNetworking.PlayChannelHandler {
 
     @Override
@@ -57,6 +60,13 @@ public class UpdateTeleporterBlockPacketReceiver implements ServerPlayNetworking
         BlockPos regenerateTargetDungeonTriggerBlockPosition = buf.readBlockPos();
 
         boolean consumeKeyItemStack = buf.readBoolean();
+
+        int accessibleHousesListSize = buf.readInt();
+        List<String> accessibleHousesList = new ArrayList<>(List.of());
+        for (int i = 0; i < accessibleHousesListSize; i++) {
+            accessibleHousesList.add(buf.readString());
+        }
+
         String teleportButtonLabel = buf.readString();
         String cancelTeleportButtonLabel = buf.readString();
 
@@ -152,6 +162,10 @@ public class UpdateTeleporterBlockPacketReceiver implements ServerPlayNetworking
                 }
                 if (!teleporterBlockBlockEntity.setConsumeKeyItemStack(consumeKeyItemStack)) {
                     player.sendMessage(Text.translatable("teleporter_block.consumeKeyItemStack.invalid"), false);
+                    updateSuccessful = false;
+                }
+                if (!teleporterBlockBlockEntity.setAccessibleHousesList(accessibleHousesList)) {
+                    player.sendMessage(Text.translatable("teleporter_block.accessibleHousesList.invalid"), false);
                     updateSuccessful = false;
                 }
                 if (!teleporterBlockBlockEntity.setTeleportButtonLabel(teleportButtonLabel)) {

@@ -1,5 +1,6 @@
 package com.github.theredbrain.bamcore.registry;
 
+import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.bamcore.network.packet.BetterAdventureModeCoreServerPacket;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -18,11 +19,13 @@ public class KeyBindingsRegistry {
     public static KeyBinding swapMainHand;
     public static KeyBinding swapOffHand;
     public static KeyBinding toggleNecklaceAbility;
+    public static KeyBinding openHousingScreen;
     public static boolean sheatheWeaponsBoolean;
     public static boolean twoHandMainWeaponBoolean;
     public static boolean swapMainHandBoolean;
     public static boolean swapOffHandBoolean;
     public static boolean toggleNecklaceAbilityBoolean;
+    public static boolean openHousingScreenBoolean;
 
     public static void registerKeyBindings() {
         KeyBindingsRegistry.sheatheWeapons = KeyBindingHelper.registerKeyBinding(new KeyBinding(
@@ -53,6 +56,12 @@ public class KeyBindingsRegistry {
                 "key.bamcore.toggleNecklaceAbility",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_Z,
+                "category.bamcore.category"
+        ));
+        KeyBindingsRegistry.openHousingScreen = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.bamcore.housingScreen",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_H,
                 "category.bamcore.category"
         ));
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
@@ -96,6 +105,14 @@ public class KeyBindingsRegistry {
             } else if (toggleNecklaceAbilityBoolean) {
                 toggleNecklaceAbilityBoolean = false;
             }
+            if (KeyBindingsRegistry.openHousingScreen.wasPressed()) {
+                if (!openHousingScreenBoolean) {
+                    openHousingScreen(client);
+                }
+                openHousingScreenBoolean = true;
+            } else if (openHousingScreenBoolean) {
+                openHousingScreenBoolean = false;
+            }
         });
     }
     public static void sheatheWeapons(MinecraftClient client) {
@@ -114,5 +131,10 @@ public class KeyBindingsRegistry {
     public static void toggleNecklaceAbility(MinecraftClient client) {
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModeCoreServerPacket.TOGGLE_NECKLACE_ABILITY_PACKET, buf));
+    }
+    public static void openHousingScreen(MinecraftClient client) {
+        if (client.player != null) {
+            ((DuckPlayerEntityMixin)client.player).bamcore$openHousingScreen();
+        }
     }
 }

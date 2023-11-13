@@ -1,24 +1,40 @@
 package com.github.theredbrain.bamcore.mixin.item;
 
+import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.api.item.BetterAdventureMode_BasicWeaponItem;
 import com.github.theredbrain.bamcore.api.item.BetterAdventureMode_BasicShieldItem;
 import com.github.theredbrain.bamcore.api.util.BetterAdventureModCoreItemUtils;
+import com.github.theredbrain.bamcore.block.entity.HousingBlockBlockEntity;
+import com.github.theredbrain.bamcore.registry.ComponentsRegistry;
+import com.github.theredbrain.bamcore.registry.StatusEffectsRegistry;
 import com.github.theredbrain.bamcore.registry.Tags;
 import com.google.common.collect.*;
 import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketsApi;
 import net.minecraft.advancement.criterion.Criteria;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.enchantment.UnbreakingEnchantment;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUsageContext;
+import net.minecraft.network.packet.c2s.play.PlayerActionC2SPacket;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.stat.Stats;
 import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
+import net.minecraft.world.GameMode;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -27,6 +43,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -54,24 +71,42 @@ public abstract class ItemStackMixin {
 
     @Shadow public abstract int getMaxDamage();
 
+    @Shadow public abstract boolean canPlaceOn(Registry<Block> blockRegistry, CachedBlockPosition pos);
+
     /**
      * @author TheRedBrain
+     * @reason TODO
      */
-    @Inject(method = "getAttributeModifiers", at = @At("HEAD"), cancellable = true)
-    public void bam$getAttributeModifiers(EquipmentSlot slot, CallbackInfoReturnable<Multimap<EntityAttribute, EntityAttributeModifier>> cir) {
-        if (this.getItem() instanceof BetterAdventureMode_BasicWeaponItem && !(BetterAdventureModCoreItemUtils.isUsable((ItemStack) (Object) this))) {
-            cir.setReturnValue(HashMultimap.create());
-            cir.cancel();
+    @Overwrite
+    public ActionResult useOnBlock(ItemUsageContext context) {
+        PlayerEntity playerEntity = context.getPlayer();
+        BlockPos blockPos = context.getBlockPos();
+
+        BetterAdventureModeCore.LOGGER.info("blockPos: " + blockPos);
+        BlockPos housingBlockPos = new BlockPos(0, 0, 0);
+        if (playerEntity != null) {
+            housingBlockPos = ComponentsRegistry.CURRENT_HOUSING_BLOCK_POS.get(playerEntity).getValue();
         }
-        if (this.getItem() instanceof BetterAdventureMode_BasicShieldItem && !(BetterAdventureModCoreItemUtils.isUsable((ItemStack) (Object) this))) {
-            cir.setReturnValue(HashMultimap.create());
-            cir.cancel();
+        boolean bl = false;
+
+        CachedBlockPosition cachedBlockPosition = new CachedBlockPosition(context.getWorld(), blockPos, false);
+        if (!Objects.equals(housingBlockPos, new BlockPos(0, 0, 0)) && context.getWorld().getBlockEntity(housingBlockPos) instanceof HousingBlockBlockEntity housingBlockEntity) {
+            bl = housingBlockEntity.restrictBlockBreakingAreaContains(cachedBlockPosition.getBlockPos());
         }
+        if (playerEntity != null && !playerEntity.getAbilities().allowModifyWorld && !playerEntity.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT) && !bl && !this.canPlaceOn(context.getWorld().getRegistryManager().get(RegistryKeys.BLOCK), cachedBlockPosition)) {
+            return ActionResult.PASS;
+        }
+        Item item = this.getItem();
+        ActionResult actionResult = item.useOnBlock(context);
+        if (playerEntity != null && actionResult.shouldIncrementStat()) {
+            playerEntity.incrementStat(Stats.USED.getOrCreateStat(item));
+        }
+        return actionResult;
     }
 
     /**
      * @author TheRedBrain
-     * @reason
+     * @reason TODO
      */
     @Overwrite
     public boolean damage(int amount, Random random, @Nullable ServerPlayerEntity player) {
@@ -105,5 +140,20 @@ public abstract class ItemStackMixin {
         i = this.getDamage() + amount;
         this.setDamage(i);
         return i >= this.getMaxDamage();
+    }
+
+    /**
+     * @author TheRedBrain
+     */
+    @Inject(method = "getAttributeModifiers", at = @At("HEAD"), cancellable = true)
+    public void bam$getAttributeModifiers(EquipmentSlot slot, CallbackInfoReturnable<Multimap<EntityAttribute, EntityAttributeModifier>> cir) {
+        if (this.getItem() instanceof BetterAdventureMode_BasicWeaponItem && !(BetterAdventureModCoreItemUtils.isUsable((ItemStack) (Object) this))) {
+            cir.setReturnValue(HashMultimap.create());
+            cir.cancel();
+        }
+        if (this.getItem() instanceof BetterAdventureMode_BasicShieldItem && !(BetterAdventureModCoreItemUtils.isUsable((ItemStack) (Object) this))) {
+            cir.setReturnValue(HashMultimap.create());
+            cir.cancel();
+        }
     }
 }

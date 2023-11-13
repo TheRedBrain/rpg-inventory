@@ -151,14 +151,14 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         }
         ItemStack itemStackMainHand = this.getEquippedStack(EquipmentSlot.MAINHAND);
         ItemStack itemStackOffHand = this.getEquippedStack(EquipmentSlot.OFFHAND);
-        if (!itemStackMainHand.isIn(Tags.ATTACK_ITEMS) && this.bamcore$isAdventure()) {
+        if (!itemStackMainHand.isIn(Tags.ATTACK_ITEMS) && this.bamcore$isAdventure() && !this.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT)) {
             if (!this.hasStatusEffect(StatusEffectsRegistry.NO_ATTACK_ITEMS_EFFECT)) {
                 this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.NO_ATTACK_ITEMS_EFFECT, -1, 0, false, false, false));
             }
         } else {
             this.removeStatusEffect(StatusEffectsRegistry.NO_ATTACK_ITEMS_EFFECT);
         }
-        if (itemStackMainHand.isIn(Tags.TWO_HANDED_ITEMS) && !this.hasStatusEffect(StatusEffectsRegistry.TWO_HANDED_EFFECT) && this.bamcore$isAdventure()) {
+        if (itemStackMainHand.isIn(Tags.TWO_HANDED_ITEMS) && !this.hasStatusEffect(StatusEffectsRegistry.TWO_HANDED_EFFECT) && this.bamcore$isAdventure() && !this.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT)) {
             if (!this.hasStatusEffect(StatusEffectsRegistry.NEED_EMPTY_OFFHAND_EFFECT)) {
                 this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.NEED_EMPTY_OFFHAND_EFFECT, -1, 0, false, false, false));
             }
@@ -761,6 +761,10 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     @Override
     public double getStaggerLimitMultiplier() {
         return 0.4;
+    }
+
+    @Override
+    public void bamcore$openHousingScreen() {
     }
 
     @Override
