@@ -36,6 +36,7 @@ import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Environment(EnvType.CLIENT)
@@ -49,6 +50,7 @@ public class HousingScreen extends BaseOwoScreen<FlowLayout> {
     private final boolean showCreativeTab;
     private boolean showRestrictBlockBreakingArea = false;
     private int currentTab = 0;
+    private int ownerMode = 0; // 0: dimension owner, 1: first interaction
 
     public HousingScreen(@Nullable HousingBlockBlockEntity housingBlockBlockEntity, int currentPermissionLevel, boolean showCreativeTab) {
         this.housingBlockBlockEntity = housingBlockBlockEntity;
@@ -56,6 +58,7 @@ public class HousingScreen extends BaseOwoScreen<FlowLayout> {
         this.showCreativeTab = showCreativeTab;
         if (housingBlockBlockEntity != null) {
             this.showRestrictBlockBreakingArea = housingBlockBlockEntity.getShowRestrictBlockBreakingArea();
+            this.ownerMode = housingBlockBlockEntity.getOwnerMode();
         }
     }
 
@@ -101,6 +104,16 @@ public class HousingScreen extends BaseOwoScreen<FlowLayout> {
         }
         this.component(ButtonComponent.class, "toggleShowRestrictBlockBreakingAreaButton").setMessage(this.showRestrictBlockBreakingArea ? Text.translatable("gui.housing_block.toggleShowRestrictBlockBreakingAreaButton.on") : Text.translatable("gui.housing_block.toggleShowRestrictBlockBreakingAreaButton.off"));
         this.component(ButtonComponent.class, "toggleShowRestrictBlockBreakingAreaButton").tooltip(this.showRestrictBlockBreakingArea ? Text.translatable("gui.housing_block.toggleShowRestrictBlockBreakingAreaButton.on.tooltip") : Text.translatable("gui.housing_block.toggleShowRestrictBlockBreakingAreaButton.off.tooltip"));
+    }
+
+    private void toggleOwnerMode() {
+        if (this.ownerMode == 0) {
+            this.ownerMode = 1;
+        } else {
+            this.ownerMode = 0;
+        }
+        this.component(ButtonComponent.class, "toggleOwnerModeButton").setMessage(this.ownerMode == 0 ? Text.translatable("gui.housing_block.toggleOwnerModeButton_0") : Text.translatable("gui.housing_block.toggleOwnerModeButton_1"));
+        this.component(ButtonComponent.class, "toggleOwnerModeButton").tooltip(this.ownerMode == 0 ? Text.translatable("gui.housing_block.toggleOwnerModeButton_0.tooltip") : Text.translatable("gui.housing_block.toggleOwnerModeButton_1.tooltip"));
     }
 
     private void leaveCurrentHouse() {
@@ -178,6 +191,14 @@ public class HousingScreen extends BaseOwoScreen<FlowLayout> {
                                             ))
                                             .verticalAlignment(VerticalAlignment.CENTER)
                                             .horizontalAlignment(HorizontalAlignment.CENTER),
+
+                                    Components.button(this.ownerMode == 0 ? Text.translatable("gui.housing_block.toggleOwnerModeButton_0")
+                                                            : Text.translatable("gui.housing_block.toggleOwnerModeButton_1")
+                                                    , button -> this.toggleOwnerMode())
+                                            .sizing(Sizing.fill(100), Sizing.fixed(20))
+                                            .tooltip(this.ownerMode == 0 ? Text.translatable("gui.housing_block.toggleOwnerModeButton_0.tooltip")
+                                                    : Text.translatable("gui.housing_block.toggleOwnerModeButton_1.tooltip"))
+                                            .id("toggleOwnerModeButton"),
 
                                     // save/close buttons
                                     Containers.horizontalFlow(Sizing.fill(30), Sizing.content())
@@ -270,7 +291,10 @@ public class HousingScreen extends BaseOwoScreen<FlowLayout> {
                                         .id("toggleAdventureBuildingEffectButton"),
                                 Components.button(Text.translatable("gui.housing_screen.tabCurrentHouse.editHousingButton"), button -> this.updateTabContent(2))
                                         .sizing(Sizing.content(), Sizing.content())
-                                        .id("editHousingButton")
+                                        .id("editHousingButton"),
+                                Components.button(Text.translatable("gui.housing_screen.tabCurrentHouse.unclaimHouseButton"), button -> this.trySetHouseOwner(false))
+                                        .sizing(Sizing.content(), Sizing.content())
+                                        .id("unclaimHouseButton")
                         ));
             } else if (this.currentPermissionLevel == 1) {
                 this.component(FlowLayout.class, "tab_current_house_title_container")
@@ -294,6 +318,14 @@ public class HousingScreen extends BaseOwoScreen<FlowLayout> {
                 this.component(FlowLayout.class, "tab_current_house_title_container")
                         .child(Components.label(Text.translatable("gui.housing_screen.tabCurrentHouse.title.stranger"))
                                 .color(Color.ofArgb(Colors.BLACK)));
+                if (this.ownerMode == 1 && Objects.equals(this.housingBlockBlockEntity.getOwner(), "")) {
+                    this.component(FlowLayout.class, "tab_current_house_content_container")
+                            .child(
+                                    Components.button(Text.translatable("gui.housing_screen.tabCurrentHouse.claimHouseButton"), button -> this.trySetHouseOwner(true))
+                                            .sizing(Sizing.content(), Sizing.content())
+                                            .id("claimHouseButton")
+                            );
+                }
             }
 
             // content
@@ -465,6 +497,8 @@ public class HousingScreen extends BaseOwoScreen<FlowLayout> {
                 this.parseInt(this.component(TextBoxComponent.class, "restrictBlockBreakingAreaPositionOffsetZ").getText())
         ));
 
+        buf.writeInt(this.ownerMode);
+
         this.client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModeCoreServerPacket.UPDATE_HOUSING_BLOCK_CREATIVE, buf));
         return true;
     }
@@ -546,5 +580,22 @@ public class HousingScreen extends BaseOwoScreen<FlowLayout> {
                 );
             }
         }
+    }
+
+    private void trySetHouseOwner(boolean claim) {
+        if (this.housingBlockBlockEntity != null && this.housingBlockBlockEntity.getOwnerMode() == 1 && this.client != null && this.client.player != null) {
+            PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+
+            buf.writeBlockPos(this.housingBlockBlockEntity.getPos());
+
+            if (claim) {
+                buf.writeString(this.client.player.getUuidAsString());
+            } else {
+                buf.writeString("");
+            }
+
+            this.client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModeCoreServerPacket.SET_HOUSING_OWNER_BLOCK, buf));
+        }
+        this.close();
     }
 }

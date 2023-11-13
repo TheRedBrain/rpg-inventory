@@ -1,6 +1,5 @@
 package com.github.theredbrain.bamcore.mixin.client.network;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.block.entity.*;
 import com.github.theredbrain.bamcore.client.gui.screen.ingame.*;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
@@ -13,7 +12,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -42,14 +40,6 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
     @Override
     public void bamcore$openHousingScreen() {
         HousingBlockBlockEntity housingBlockBlockEntity = null;
-        BetterAdventureModeCore.LOGGER.info("this.client.getServer() != null: " + (this.client.getServer() != null));
-        BetterAdventureModeCore.LOGGER.info("this.client.world != null: " + (this.client.world != null));
-        BetterAdventureModeCore.LOGGER.info("this.client.world: " + (this.client.world.getRegistryKey().getValue()));
-        World world = this.client.world;
-        if (world != null) {
-            BetterAdventureModeCore.LOGGER.info("world != null: " + (world != null));
-            BetterAdventureModeCore.LOGGER.info("blockentity != null: " + (world.getBlockEntity(ComponentsRegistry.CURRENT_HOUSING_BLOCK_POS.get(this).getValue()) != null));
-        }
         if (this.client.getServer() != null && this.client.world != null && this.client.world.getBlockEntity(ComponentsRegistry.CURRENT_HOUSING_BLOCK_POS.get(this).getValue()) instanceof HousingBlockBlockEntity housingBlockBlockEntity1) {
             housingBlockBlockEntity = housingBlockBlockEntity1;
         }
@@ -67,8 +57,6 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
         } else {
             currentPermissionLevel = 5;
         }
-
-        BetterAdventureModeCore.LOGGER.info("housingBlockBlockEntity != null: " + (housingBlockBlockEntity != null));
         this.client.setScreen(new HousingScreen(housingBlockBlockEntity, currentPermissionLevel, this.isCreative()));
     }
 

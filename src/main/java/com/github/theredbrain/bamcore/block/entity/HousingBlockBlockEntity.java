@@ -28,6 +28,7 @@ public class HousingBlockBlockEntity extends BlockEntity {
     private boolean showRestrictBlockBreakingArea = false;
     private Vec3i restrictBlockBreakingAreaDimensions = Vec3i.ZERO;
     private BlockPos restrictBlockBreakingAreaPositionOffset = new BlockPos(0, 1, 0);
+    private int ownerMode = 0; // 0: dimension owner, 1: first interaction
     public HousingBlockBlockEntity(BlockPos pos, BlockState state) {
         super(EntityRegistry.HOUSING_BLOCK_ENTITY, pos, state);
     }
@@ -65,6 +66,8 @@ public class HousingBlockBlockEntity extends BlockEntity {
         nbt.putInt("restrictBlockBreakingAreaPositionOffsetX", this.restrictBlockBreakingAreaPositionOffset.getX());
         nbt.putInt("restrictBlockBreakingAreaPositionOffsetY", this.restrictBlockBreakingAreaPositionOffset.getY());
         nbt.putInt("restrictBlockBreakingAreaPositionOffsetZ", this.restrictBlockBreakingAreaPositionOffset.getZ());
+
+        nbt.putInt("ownerMode", ownerMode);
     }
 
     @Override
@@ -103,6 +106,8 @@ public class HousingBlockBlockEntity extends BlockEntity {
         int m = MathHelper.clamp(nbt.getInt("restrictBlockBreakingAreaPositionOffsetY"), -48, 48);
         int n = MathHelper.clamp(nbt.getInt("restrictBlockBreakingAreaPositionOffsetZ"), -48, 48);
         this.restrictBlockBreakingAreaPositionOffset = new BlockPos(l, m, n);
+
+        this.ownerMode = nbt.getInt("ownerMode");
     }
 
     public BlockEntityUpdateS2CPacket toUpdatePacket() {
@@ -117,7 +122,7 @@ public class HousingBlockBlockEntity extends BlockEntity {
     public static void tick(World world, BlockPos pos, BlockState state, HousingBlockBlockEntity blockEntity) {
         if (world.getTime() % 20L == 0L) {
             if (blockEntity.hasWorld() && !blockEntity.isOwnerSet) {
-                if (Objects.equals(blockEntity.owner, "")) {
+                if (Objects.equals(blockEntity.owner, "") && blockEntity.ownerMode == 0) {
                     blockEntity.owner = initOwner(blockEntity.world);
                     BetterAdventureModeCore.LOGGER.info(blockEntity.owner);
                     blockEntity.isOwnerSet = true;
@@ -132,7 +137,8 @@ public class HousingBlockBlockEntity extends BlockEntity {
                 playerEntity = (PlayerEntity) var11.next();
 
                 String playerName = playerEntity.getName().getString();
-                if (Objects.equals(playerName, blockEntity.getOwner()) || playerEntity.isCreative() || true) {
+                String playerUuid = playerEntity.getUuidAsString();
+                if (Objects.equals(playerUuid, blockEntity.getOwner()) || playerEntity.isCreative()) {
                     playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.HOUSING_OWNER_EFFECT, 100, 0, true, false, true));
                 } else if (blockEntity.getCoOwnerList().contains(playerName)) {
                     playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.HOUSING_CO_OWNER_EFFECT, 100, 0, true, false, true));
@@ -150,6 +156,11 @@ public class HousingBlockBlockEntity extends BlockEntity {
 
     public String getOwner() {
         return owner;
+    }
+
+    public boolean setOwner(String owner) {
+        this.owner = owner;
+        return true;
     }
 
     public List<String> getCoOwnerList() {
@@ -207,6 +218,20 @@ public class HousingBlockBlockEntity extends BlockEntity {
     public boolean setRestrictBlockBreakingAreaPositionOffset(BlockPos restrictBlockBreakingAreaPositionOffset) {
         this.restrictBlockBreakingAreaPositionOffset = restrictBlockBreakingAreaPositionOffset;
         return true;
+    }
+
+    public int getOwnerMode() {
+        return ownerMode;
+    }
+
+    // TODO check if input is valid
+    public boolean setOwnerMode(int ownerMode) {
+        this.ownerMode = ownerMode;
+        return true;
+    }
+
+    public void setIsOwnerSet(boolean isOwnerSet) {
+        this.isOwnerSet = isOwnerSet;
     }
 
     private static String initOwner(World world) {

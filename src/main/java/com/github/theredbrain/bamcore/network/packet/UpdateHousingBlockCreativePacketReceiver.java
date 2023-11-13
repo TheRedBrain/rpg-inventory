@@ -34,6 +34,8 @@ public class UpdateHousingBlockCreativePacketReceiver implements ServerPlayNetwo
         Vec3i restrictBlockBreakingAreaDimensions = new Vec3i(restrictBlockBreakingAreaDimensionsX, restrictBlockBreakingAreaDimensionsY, restrictBlockBreakingAreaDimensionsZ);
         BlockPos restrictBlockBreakingAreaPositionOffset = buf.readBlockPos();
 
+        int ownerMode = buf.readInt();
+
         server.execute(() -> {
             World world = player.getWorld();
 
@@ -54,6 +56,10 @@ public class UpdateHousingBlockCreativePacketReceiver implements ServerPlayNetwo
                 }
                 if (!housingBlockBlockEntity.setRestrictBlockBreakingAreaPositionOffset(restrictBlockBreakingAreaPositionOffset)) {
                     player.sendMessage(Text.translatable("housing_block.restrictBlockBreakingAreaPositionOffset.invalid"), false);
+                    updateSuccessful = false;
+                }
+                if (!housingBlockBlockEntity.setOwnerMode(ownerMode)) {
+                    player.sendMessage(Text.translatable("housing_block.ownerMode.invalid"), false);
                     updateSuccessful = false;
                 }
                 if (updateSuccessful) {
