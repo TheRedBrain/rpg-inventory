@@ -128,7 +128,15 @@ public class HousingBlockBlockEntity extends BlockEntity {
                     blockEntity.isOwnerSet = true;
                 }
             }
-            Box box = (new Box(pos)).expand(10);
+
+            Box box = new Box(
+                    blockEntity.pos.getX() + blockEntity.restrictBlockBreakingAreaPositionOffset.getX(),
+                    blockEntity.pos.getY() + blockEntity.restrictBlockBreakingAreaPositionOffset.getY(),
+                    blockEntity.pos.getZ() + blockEntity.restrictBlockBreakingAreaPositionOffset.getZ(),
+                    blockEntity.pos.getX() + blockEntity.restrictBlockBreakingAreaPositionOffset.getX() + blockEntity.restrictBlockBreakingAreaDimensions.getX(),
+                    blockEntity.pos.getY() + blockEntity.restrictBlockBreakingAreaPositionOffset.getY() + blockEntity.restrictBlockBreakingAreaDimensions.getY(),
+                    blockEntity.pos.getZ() + blockEntity.restrictBlockBreakingAreaPositionOffset.getZ() + blockEntity.restrictBlockBreakingAreaDimensions.getZ()
+            );
             List<PlayerEntity> list = world.getNonSpectatingEntities(PlayerEntity.class, box);
             Iterator var11 = list.iterator();
 
