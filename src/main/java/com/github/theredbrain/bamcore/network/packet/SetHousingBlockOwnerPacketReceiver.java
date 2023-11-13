@@ -1,6 +1,7 @@
 package com.github.theredbrain.bamcore.network.packet;
 
 import com.github.theredbrain.bamcore.block.entity.HousingBlockBlockEntity;
+import com.github.theredbrain.bamcore.registry.StatusEffectsRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
@@ -48,6 +49,7 @@ public class SetHousingBlockOwnerPacketReceiver implements ServerPlayNetworking.
                     if (Objects.equals(owner, "")) {
                         housingBlockBlockEntity.setIsOwnerSet(false);
                         player.sendMessage(Text.translatable("housing_block.unclaimed_successful"), true);
+                        player.removeStatusEffect(StatusEffectsRegistry.HOUSING_OWNER_EFFECT);
                     } else {
                         housingBlockBlockEntity.setIsOwnerSet(true);
                         player.sendMessage(Text.translatable("housing_block.claimed_successful"), true);

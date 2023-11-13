@@ -116,7 +116,7 @@ public class HousingScreen extends BaseOwoScreen<FlowLayout> {
         this.component(ButtonComponent.class, "toggleOwnerModeButton").tooltip(this.ownerMode == 0 ? Text.translatable("gui.housing_block.toggleOwnerModeButton_0.tooltip") : Text.translatable("gui.housing_block.toggleOwnerModeButton_1.tooltip"));
     }
 
-    private void leaveCurrentHouse() {
+    private void leaveCurrentHouse() { // TODO use a packet?
         if (this.client != null && this.client.player != null && this.client.getServer() != null) {
             PlayerEntity playerEntity = this.client.player;
             Pair<Pair<String, BlockPos>, Boolean> housingAccessPos = ComponentsRegistry.HOUSING_ACCESS_POS.get(playerEntity).getValue();
@@ -555,6 +555,7 @@ public class HousingScreen extends BaseOwoScreen<FlowLayout> {
         if (this.client != null && this.client.getNetworkHandler() != null) {
             this.client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModeCoreServerPacket.ADD_STATUS_EFFECT_PACKET, buf));
         }
+        this.close();
     }
 
     private void deleteEntry(ButtonComponent buttonComponent) {
