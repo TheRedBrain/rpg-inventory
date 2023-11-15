@@ -1,6 +1,7 @@
 package com.github.theredbrain.bamcore.mixin.client.gui.screen.ingame;
 
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.client.gui.screen.ingame.AdventureCreativeInventoryScreen;
 import com.github.theredbrain.bamcore.client.gui.screen.ingame.AdventureInventoryScreen;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -25,8 +26,13 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
 
     @Inject(method = "handledScreenTick", at = @At("HEAD"), cancellable = true)
     public void bamcore$handledScreenTick(CallbackInfo ci) {
-        if (BetterAdventureModeCore.serverConfig.use_adventure_inventory_screen && !this.client.interactionManager.hasCreativeInventory()) {
-            this.client.setScreen(new AdventureInventoryScreen(this.client.player));
+        if (BetterAdventureModeCore.serverConfig.use_adventure_inventory_screen && this.client != null && this.client.player != null) {
+            if (this.client.interactionManager != null && this.client.interactionManager.hasCreativeInventory()) {
+//                this.client.setScreen(new AdventureCreativeInventoryScreen(this.client.player, this.client.player.networkHandler.getEnabledFeatures(), this.client.options.getOperatorItemsTab().getValue()));
+                this.client.setScreen(new CreativeInventoryScreen(this.client.player, this.client.player.networkHandler.getEnabledFeatures(), this.client.options.getOperatorItemsTab().getValue()));
+            } else {
+                this.client.setScreen(new AdventureInventoryScreen(this.client.player));
+            }
             ci.cancel();
         }
     }
@@ -35,7 +41,7 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
     protected void init(CallbackInfo ci) {
         if (BetterAdventureModeCore.serverConfig.use_adventure_inventory_screen && this.client != null && this.client.player != null) {
             if (this.client.interactionManager != null && this.client.interactionManager.hasCreativeInventory()) {
-                // TODO build CreativeAdventureInventoryScreen which recognizes the new positions for trinket slots
+//                this.client.setScreen(new AdventureCreativeInventoryScreen(this.client.player, this.client.player.networkHandler.getEnabledFeatures(), this.client.options.getOperatorItemsTab().getValue()));
                 this.client.setScreen(new CreativeInventoryScreen(this.client.player, this.client.player.networkHandler.getEnabledFeatures(), this.client.options.getOperatorItemsTab().getValue()));
             } else {
                 this.client.setScreen(new AdventureInventoryScreen(this.client.player));

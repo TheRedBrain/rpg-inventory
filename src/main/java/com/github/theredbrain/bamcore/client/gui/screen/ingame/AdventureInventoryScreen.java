@@ -53,7 +53,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
-public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, PlayerScreenHandler/*AdventureInventoryScreenHandler*/> implements TrinketScreen {
+public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, PlayerScreenHandler> implements TrinketScreen {
     public static final Identifier INVENTORY_SLOT_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/inventory_slot_texture.png");
     public static final Identifier STATUS_EFFECT_BACKGROUND_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/status_effects_background.png");
     public static final Identifier CHARACTER_BACKGROUND_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/character_background_texture.png");
