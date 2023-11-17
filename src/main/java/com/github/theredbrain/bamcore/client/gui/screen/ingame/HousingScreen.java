@@ -144,6 +144,7 @@ public class HousingScreen extends BaseOwoScreen<FlowLayout> {
         if (this.showCreativeTab && this.housingBlockBlockEntity != null) {
             Vec3i restrictBlockBreakingAreaDimensions = this.housingBlockBlockEntity.getRestrictBlockBreakingAreaDimensions();
             BlockPos restrictBlockBreakingAreaPositionOffset = this.housingBlockBlockEntity.getRestrictBlockBreakingAreaPositionOffset();
+            BlockPos triggeredBlockPositionOffset = this.housingBlockBlockEntity.getTriggeredBlockPositionOffset();
             rootComponent.children(List.of(
                     Containers.verticalFlow(Sizing.fixed(250), Sizing.fixed(166))
                             .children(List.of(
@@ -188,6 +189,24 @@ public class HousingScreen extends BaseOwoScreen<FlowLayout> {
                                                             .tooltip(Text.translatable("gui.housing_block.restrictBlockBreakingAreaPositionOffsetZ.tooltip"))
                                                             .margins(Insets.of(1, 1, 1, 1))
                                                             .id("restrictBlockBreakingAreaPositionOffsetZ")
+                                            ))
+                                            .verticalAlignment(VerticalAlignment.CENTER)
+                                            .horizontalAlignment(HorizontalAlignment.CENTER),
+
+                                    Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
+                                            .children(List.of(
+                                                    Components.textBox(Sizing.fill(32), Integer.toString(triggeredBlockPositionOffset.getX()))
+                                                            .tooltip(Text.translatable("gui.housing_block.triggeredBlockPositionOffsetX.tooltip"))
+                                                            .margins(Insets.of(1, 1, 1, 1))
+                                                            .id("triggeredBlockPositionOffsetX"),
+                                                    Components.textBox(Sizing.fill(32), Integer.toString(triggeredBlockPositionOffset.getY()))
+                                                            .tooltip(Text.translatable("gui.housing_block.triggeredBlockPositionOffsetY.tooltip"))
+                                                            .margins(Insets.of(1, 1, 1, 1))
+                                                            .id("triggeredBlockPositionOffsetY"),
+                                                    Components.textBox(Sizing.fill(32), Integer.toString(triggeredBlockPositionOffset.getZ()))
+                                                            .tooltip(Text.translatable("gui.housing_block.triggeredBlockPositionOffsetZ.tooltip"))
+                                                            .margins(Insets.of(1, 1, 1, 1))
+                                                            .id("triggeredBlockPositionOffsetZ")
                                             ))
                                             .verticalAlignment(VerticalAlignment.CENTER)
                                             .horizontalAlignment(HorizontalAlignment.CENTER),
@@ -405,7 +424,11 @@ public class HousingScreen extends BaseOwoScreen<FlowLayout> {
                                                                                             Components.textBox(Sizing.fill(55), "New Guest"),
                                                                                             Components.button(Text.translatable("gui.housing_screen.tabEditHouse.addEntry"), this::addEntry)
                                                                                     ))
-                                                                    ))
+                                                                    )),
+                                                            Components.button(ScreenTexts.CANCEL, button -> this.updateTabContent(1))
+                                                                    .sizing(Sizing.content(), Sizing.content())
+                                                                    .id("cancelEditHousingButton"),
+                                                            Components.button(Text.translatable("gui.housing_screen.tabEditHouse.resetHouse"), button -> this.resetHouse())
                                                     ))
                                     )
                                     .scrollbar(ScrollContainer.Scrollbar.vanilla())
@@ -496,6 +519,11 @@ public class HousingScreen extends BaseOwoScreen<FlowLayout> {
                 this.parseInt(this.component(TextBoxComponent.class, "restrictBlockBreakingAreaPositionOffsetY").getText()),
                 this.parseInt(this.component(TextBoxComponent.class, "restrictBlockBreakingAreaPositionOffsetZ").getText())
         ));
+        buf.writeBlockPos(new BlockPos(
+                this.parseInt(this.component(TextBoxComponent.class, "triggeredBlockPositionOffsetX").getText()),
+                this.parseInt(this.component(TextBoxComponent.class, "triggeredBlockPositionOffsetY").getText()),
+                this.parseInt(this.component(TextBoxComponent.class, "triggeredBlockPositionOffsetZ").getText())
+        ));
 
         buf.writeInt(this.ownerMode);
 
@@ -581,6 +609,17 @@ public class HousingScreen extends BaseOwoScreen<FlowLayout> {
                 );
             }
         }
+    }
+
+    private void resetHouse() {
+        if (this.housingBlockBlockEntity != null && this.housingBlockBlockEntity.getOwnerMode() == 1 && this.client != null && this.client.player != null) {
+            PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+
+            buf.writeBlockPos(this.housingBlockBlockEntity.getPos());
+
+            this.client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModeCoreServerPacket.RESET_HOUSE_HOUSING_BLOCK, buf));
+        }
+        this.close();
     }
 
     private void trySetHouseOwner(boolean claim) {

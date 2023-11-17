@@ -85,7 +85,7 @@ public class RelayTriggerBlockBlockEntity extends RotatedBlockEntity implements 
             BlockEntity blockEntity;
             for (BlockPos triggeredBlock : this.triggeredBlocks) {
                 blockEntity = world.getBlockEntity(new BlockPos(this.pos.getX() + triggeredBlock.getX(), this.pos.getY() + triggeredBlock.getY(), this.pos.getZ() + triggeredBlock.getZ()));
-                if (blockEntity instanceof Triggerable triggerable) {
+                if (blockEntity instanceof Triggerable triggerable && blockEntity != this) {
                     triggerable.trigger();
                 }
             }

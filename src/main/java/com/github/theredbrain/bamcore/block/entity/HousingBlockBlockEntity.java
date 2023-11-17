@@ -183,7 +183,7 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
     }
 
     public String getOwner() {
-        return owner;
+        return this.owner;
     }
 
     public boolean setOwner(String owner) {
@@ -192,7 +192,7 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
     }
 
     public List<String> getCoOwnerList() {
-        return coOwnerList;
+        return this.coOwnerList;
     }
 
     public boolean setCoOwnerList(List<String> coOwnerList) {
@@ -201,7 +201,7 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
     }
 
     public List<String> getTrustedList() {
-        return trustedList;
+        return this.trustedList;
     }
 
     public boolean setTrustedList(List<String> trustedList) {
@@ -210,7 +210,7 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
     }
 
     public List<String> getGuestList() {
-        return guestList;
+        return this.guestList;
     }
 
     public boolean setGuestList(List<String> guestList) {
@@ -219,7 +219,7 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
     }
 
     public boolean getShowRestrictBlockBreakingArea() {
-        return showRestrictBlockBreakingArea;
+        return this.showRestrictBlockBreakingArea;
     }
 
     // TODO check if input is valid
@@ -229,7 +229,7 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
     }
 
     public Vec3i getRestrictBlockBreakingAreaDimensions() {
-        return restrictBlockBreakingAreaDimensions;
+        return this.restrictBlockBreakingAreaDimensions;
     }
 
     // TODO check if input is valid
@@ -239,7 +239,7 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
     }
 
     public BlockPos getRestrictBlockBreakingAreaPositionOffset() {
-        return restrictBlockBreakingAreaPositionOffset;
+        return this.restrictBlockBreakingAreaPositionOffset;
     }
 
     // TODO check if input is valid
@@ -248,8 +248,18 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
         return true;
     }
 
+    public BlockPos getTriggeredBlockPositionOffset() {
+        return this.triggeredBlockPositionOffset;
+    }
+
+    // TODO check if input is valid
+    public boolean setTriggeredBlockPositionOffset(BlockPos triggeredBlockPositionOffset) {
+        this.triggeredBlockPositionOffset = triggeredBlockPositionOffset;
+        return true;
+    }
+
     public int getOwnerMode() {
-        return ownerMode;
+        return this.ownerMode;
     }
 
     // TODO check if input is valid

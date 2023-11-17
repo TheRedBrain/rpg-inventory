@@ -19,6 +19,7 @@ public class BetterAdventureModeCoreServerPacket {
     public static final Identifier UPDATE_HOUSING_BLOCK_ADVENTURE = BetterAdventureModeCore.identifier("update_housing_block_adventure");
     public static final Identifier UPDATE_HOUSING_BLOCK_CREATIVE = BetterAdventureModeCore.identifier("update_housing_block_creative");
     public static final Identifier SET_HOUSING_OWNER_BLOCK = BetterAdventureModeCore.identifier("set_housing_owner_block");
+    public static final Identifier RESET_HOUSE_HOUSING_BLOCK = BetterAdventureModeCore.identifier("reset_house_housing_block");
     public static final Identifier UPDATE_TELEPORTER_BLOCK = BetterAdventureModeCore.identifier("update_teleporter_block");
     public static final Identifier UPDATE_AREA_FILLER_BLOCK = BetterAdventureModeCore.identifier("update_area_filler_block");
     public static final Identifier UPDATE_JIGSAW_PLACER_BLOCK = BetterAdventureModeCore.identifier("update_jigsaw_placer_block");
@@ -57,6 +58,9 @@ public class BetterAdventureModeCoreServerPacket {
 
         SetHousingBlockOwnerPacketReceiver setHousingBlockOwnerPacketReceiver = new SetHousingBlockOwnerPacketReceiver();
         ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.SET_HOUSING_OWNER_BLOCK, setHousingBlockOwnerPacketReceiver);
+
+        ResetHouseHousingBlockPacketReceiver resetHouseHousingBlockPacketReceiver = new ResetHouseHousingBlockPacketReceiver();
+        ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.RESET_HOUSE_HOUSING_BLOCK, resetHouseHousingBlockPacketReceiver);
 
         UpdateTeleporterBlockPacketReceiver updateTeleporterBlockPacketReceiver = new UpdateTeleporterBlockPacketReceiver();
         ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.UPDATE_TELEPORTER_BLOCK, updateTeleporterBlockPacketReceiver);

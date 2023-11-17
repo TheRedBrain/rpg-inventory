@@ -93,7 +93,7 @@ public class DelayTriggerBlockBlockEntity extends RotatedBlockEntity implements 
     public void triggerTriggeredBlock() {
         if (this.world != null) {
             BlockEntity blockEntity = world.getBlockEntity(new BlockPos(this.pos.getX() + this.triggeredBlockPositionOffset.getX(), this.pos.getY() + this.triggeredBlockPositionOffset.getY(), this.pos.getZ() + this.triggeredBlockPositionOffset.getZ()));
-            if (blockEntity instanceof Triggerable triggerable) {
+            if (blockEntity instanceof Triggerable triggerable && blockEntity != this) {
                 triggerable.trigger();
             }
         }
