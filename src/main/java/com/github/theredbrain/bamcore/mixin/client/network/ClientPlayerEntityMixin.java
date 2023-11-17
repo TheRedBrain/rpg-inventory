@@ -61,8 +61,8 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
     }
 
     @Override
-    public void bamcore$openStructurePlacerBlockScreen(StructurePlacerBlockBlockEntity structurePlacerBlock) {
-        this.client.setScreen(new StructurePlacerBlockScreen(structurePlacerBlock));
+    public void bamcore$openJigsawPlacerBlockScreen(JigsawPlacerBlockBlockEntity jigsawPlacerBlock) {
+        this.client.setScreen(new JigsawPlacerBlockScreen(jigsawPlacerBlock));
     }
 
     @Override

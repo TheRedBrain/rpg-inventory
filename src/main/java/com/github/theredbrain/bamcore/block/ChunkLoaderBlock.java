@@ -13,7 +13,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class ChunkLoaderBlock extends BlockWithEntity implements OperatorBlock {
+public class ChunkLoaderBlock extends RotatedBlockWithEntity implements OperatorBlock {
     public ChunkLoaderBlock(Settings settings) {
         super(settings);
     }

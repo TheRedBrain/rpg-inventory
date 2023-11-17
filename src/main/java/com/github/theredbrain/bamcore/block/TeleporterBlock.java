@@ -17,7 +17,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class TeleporterBlock extends BlockWithEntity implements OperatorBlock {
+public class TeleporterBlock extends RotatedBlockWithEntity implements OperatorBlock {
 //    public static final EnumProperty<StructureBlockMode> MODE = Properties.STRUCTURE_BLOCK_MODE;
 
     public TeleporterBlock(Settings settings) {

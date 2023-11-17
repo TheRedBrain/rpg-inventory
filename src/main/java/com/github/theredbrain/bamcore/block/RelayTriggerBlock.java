@@ -13,7 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class RelayTriggerBlock extends BlockWithEntity {
+public class RelayTriggerBlock extends RotatedBlockWithEntity {
 
     public RelayTriggerBlock(Settings settings) {
         super(settings);

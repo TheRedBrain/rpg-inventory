@@ -16,7 +16,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class DelayTriggerBlock extends BlockWithEntity {
+public class DelayTriggerBlock extends RotatedBlockWithEntity {
 
     public DelayTriggerBlock(Settings settings) {
         super(settings);

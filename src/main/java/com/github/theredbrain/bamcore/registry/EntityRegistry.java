@@ -22,9 +22,9 @@ public class EntityRegistry {
     public static final BlockEntityType<TeleporterBlockBlockEntity> TELEPORTER_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
             BetterAdventureModeCore.identifier("teleporter_block"),
             FabricBlockEntityTypeBuilder.create(TeleporterBlockBlockEntity::new, BlockRegistry.TELEPORTER_BLOCK).build());
-    public static final BlockEntityType<StructurePlacerBlockBlockEntity> STRUCTURE_PLACER_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
+    public static final BlockEntityType<JigsawPlacerBlockBlockEntity> STRUCTURE_PLACER_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
             BetterAdventureModeCore.identifier("structure_placer_block"),
-            FabricBlockEntityTypeBuilder.create(StructurePlacerBlockBlockEntity::new, BlockRegistry.STRUCTURE_PLACER_BLOCK).build());
+            FabricBlockEntityTypeBuilder.create(JigsawPlacerBlockBlockEntity::new, BlockRegistry.JIGSAW_PLACER_BLOCK).build());
     public static final BlockEntityType<AreaFillerBlockBlockEntity> AREA_FILLER_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
             BetterAdventureModeCore.identifier("area_filler_block"),
             FabricBlockEntityTypeBuilder.create(AreaFillerBlockBlockEntity::new, BlockRegistry.AREA_FILLER_BLOCK).build());

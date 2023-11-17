@@ -13,7 +13,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class AreaFillerBlock extends BlockWithEntity implements OperatorBlock {
+public class AreaFillerBlock extends RotatedBlockWithEntity implements OperatorBlock {
     public AreaFillerBlock(Settings settings) {
         super(settings);
     }

@@ -21,7 +21,7 @@ public class BetterAdventureModeCoreServerPacket {
     public static final Identifier SET_HOUSING_OWNER_BLOCK = BetterAdventureModeCore.identifier("set_housing_owner_block");
     public static final Identifier UPDATE_TELEPORTER_BLOCK = BetterAdventureModeCore.identifier("update_teleporter_block");
     public static final Identifier UPDATE_AREA_FILLER_BLOCK = BetterAdventureModeCore.identifier("update_area_filler_block");
-    public static final Identifier UPDATE_STRUCTURE_PLACER_BLOCK = BetterAdventureModeCore.identifier("update_structure_placer_block");
+    public static final Identifier UPDATE_JIGSAW_PLACER_BLOCK = BetterAdventureModeCore.identifier("update_jigsaw_placer_block");
     public static final Identifier UPDATE_REDSTONE_TRIGGER_BLOCK = BetterAdventureModeCore.identifier("update_redstone_trigger_block");
     public static final Identifier UPDATE_RELAY_TRIGGER_BLOCK = BetterAdventureModeCore.identifier("update_relay_trigger_block");
     public static final Identifier UPDATE_DELAY_TRIGGER_BLOCK = BetterAdventureModeCore.identifier("update_delay_trigger_block");
@@ -64,8 +64,8 @@ public class BetterAdventureModeCoreServerPacket {
         UpdateAreaFillerBlockPacketReceiver updateAreaFillerBlockPacketReceiver = new UpdateAreaFillerBlockPacketReceiver();
         ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.UPDATE_AREA_FILLER_BLOCK, updateAreaFillerBlockPacketReceiver);
 
-        UpdateStructurePlacerBlockPacketReceiver updateStructurePlacerBlockPacketReceiver = new UpdateStructurePlacerBlockPacketReceiver();
-        ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.UPDATE_STRUCTURE_PLACER_BLOCK, updateStructurePlacerBlockPacketReceiver);
+        UpdateJigsawPlacerBlockPacketReceiver updateJigsawPlacerBlockPacketReceiver = new UpdateJigsawPlacerBlockPacketReceiver();
+        ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.UPDATE_JIGSAW_PLACER_BLOCK, updateJigsawPlacerBlockPacketReceiver);
 
         UpdateRedstoneTriggerBlockPacketReceiver updateRedstoneTriggerBlockPacketReceiver = new UpdateRedstoneTriggerBlockPacketReceiver();
         ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.UPDATE_REDSTONE_TRIGGER_BLOCK, updateRedstoneTriggerBlockPacketReceiver);

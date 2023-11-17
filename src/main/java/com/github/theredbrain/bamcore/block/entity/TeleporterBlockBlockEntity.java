@@ -1,5 +1,7 @@
 package com.github.theredbrain.bamcore.block.entity;
 
+import com.github.theredbrain.bamcore.api.util.BlockRotationUtils;
+import com.github.theredbrain.bamcore.block.RotatedBlockWithEntity;
 import com.github.theredbrain.bamcore.registry.StatusEffectsRegistry;
 import com.github.theredbrain.bamcore.registry.BlockRegistry;
 import com.github.theredbrain.bamcore.registry.EntityRegistry;
@@ -19,18 +21,22 @@ import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.BlockMirror;
+import net.minecraft.util.BlockRotation;
+import net.minecraft.util.Pair;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TeleporterBlockBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, Inventory {
+public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements ExtendedScreenHandlerFactory, Inventory {
 
     private String teleporterName = "teleporterName";
     private boolean showActivationArea = false;
@@ -53,8 +59,7 @@ public class TeleporterBlockBlockEntity extends BlockEntity implements ExtendedS
 //    private boolean regenerateDungeon = false;
     private String targetDungeonStructureIdentifier = "";
     private BlockPos targetDungeonStructureStartPosition = new BlockPos(0, 0, 0);
-    private int targetDungeonChunkX = 0;
-    private int targetDungeonChunkZ = 0;
+    private MutablePair<Integer, Integer> targetDungeonChunk = new MutablePair<>(0, 0);
     private BlockPos regenerateTargetDungeonTriggerBlockPosition = new BlockPos(0, 0, 0);
 
     private boolean consumeKeyItemStack = false;
@@ -74,7 +79,6 @@ public class TeleporterBlockBlockEntity extends BlockEntity implements ExtendedS
 
     @Override
     protected void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
         nbt.putString("teleporterName", this.teleporterName);
         nbt.putBoolean("showActivationArea", this.showActivationArea);
 
@@ -116,8 +120,8 @@ public class TeleporterBlockBlockEntity extends BlockEntity implements ExtendedS
         nbt.putInt("targetDungeonStructureStartPositionY", this.targetDungeonStructureStartPosition.getY());
         nbt.putInt("targetDungeonStructureStartPositionZ", this.targetDungeonStructureStartPosition.getZ());
 
-        nbt.putInt("targetDungeonChunkX", this.targetDungeonChunkX);
-        nbt.putInt("targetDungeonChunkZ", this.targetDungeonChunkZ);
+        nbt.putInt("targetDungeonChunkX", this.targetDungeonChunk.getLeft());
+        nbt.putInt("targetDungeonChunkZ", this.targetDungeonChunk.getRight());
 
         nbt.putInt("regenerateTargetDungeonTriggerBlockPositionX", this.regenerateTargetDungeonTriggerBlockPosition.getX());
         nbt.putInt("regenerateTargetDungeonTriggerBlockPositionY", this.regenerateTargetDungeonTriggerBlockPosition.getY());
@@ -135,11 +139,12 @@ public class TeleporterBlockBlockEntity extends BlockEntity implements ExtendedS
 
         nbt.putString("teleportButtonLabel", this.teleportButtonLabel);
         nbt.putString("cancelTeleportButtonLabel", this.cancelTeleportButtonLabel);
+
+        super.writeNbt(nbt);
     }
 
     @Override
     public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
         this.teleporterName = nbt.getString("teleporterName");
         this.showActivationArea = nbt.getBoolean("showActivationArea");
 
@@ -189,8 +194,8 @@ public class TeleporterBlockBlockEntity extends BlockEntity implements ExtendedS
                 nbt.getInt("targetDungeonStructureStartPositionY"),
                 nbt.getInt("targetDungeonStructureStartPositionZ")
         );
-        this.targetDungeonChunkX = nbt.getInt("targetDungeonChunkX");
-        this.targetDungeonChunkZ = nbt.getInt("targetDungeonChunkZ");
+        this.targetDungeonChunk.setLeft(nbt.getInt("targetDungeonChunkX"));
+        this.targetDungeonChunk.setRight(nbt.getInt("targetDungeonChunkZ"));
         this.regenerateTargetDungeonTriggerBlockPosition = new BlockPos(
                 nbt.getInt("regenerateTargetDungeonTriggerBlockPositionX"),
                 nbt.getInt("regenerateTargetDungeonTriggerBlockPositionY"),
@@ -208,6 +213,8 @@ public class TeleporterBlockBlockEntity extends BlockEntity implements ExtendedS
 
         this.teleportButtonLabel = nbt.getString("teleportButtonLabel");
         this.cancelTeleportButtonLabel = nbt.getString("cancelTeleportButtonLabel");
+
+        super.readNbt(nbt);
     }
 
     public BlockEntityUpdateS2CPacket toUpdatePacket() {
@@ -424,22 +431,22 @@ public class TeleporterBlockBlockEntity extends BlockEntity implements ExtendedS
     }
 
     public int getTargetDungeonChunkX() {
-        return targetDungeonChunkX;
+        return targetDungeonChunk.getLeft();
     }
 
     // TODO check if input is valid
     public boolean setTargetDungeonChunkX(int targetDungeonChunkX) {
-        this.targetDungeonChunkX = targetDungeonChunkX;
+        this.targetDungeonChunk.setLeft(targetDungeonChunkX);
         return true;
     }
 
     public int getTargetDungeonChunkZ() {
-        return targetDungeonChunkZ;
+        return targetDungeonChunk.getRight();
     }
 
     // TODO check if input is valid
     public boolean setTargetDungeonChunkZ(int targetDungeonChunkZ) {
-        this.targetDungeonChunkZ = targetDungeonChunkZ;
+        this.targetDungeonChunk.setRight(targetDungeonChunkZ);
         return true;
     }
 
@@ -583,6 +590,56 @@ public class TeleporterBlockBlockEntity extends BlockEntity implements ExtendedS
     public void clear() {
         this.requiredKeyItemStack.clear();
         this.markDirty();
+    }
+
+    // TODO yaws and pitch and targetChunk
+    @Override
+    protected void onRotate(BlockState state) {
+        if (state.getBlock() instanceof RotatedBlockWithEntity) {
+            if (state.get(RotatedBlockWithEntity.ROTATED) != this.rotated) {
+                BlockRotation blockRotation = BlockRotationUtils.calculateRotationFromDifferentRotatedStates(state.get(RotatedBlockWithEntity.ROTATED), this.rotated);
+                this.activationAreaPositionOffset = BlockRotationUtils.rotateOffsetBlockPos(this.activationAreaPositionOffset, blockRotation);
+                this.outgoingTeleportTeleporterPosition = BlockRotationUtils.rotateOffsetBlockPos(this.outgoingTeleportTeleporterPosition, blockRotation);
+                this.incomingTeleportPositionOffset = BlockRotationUtils.rotateOffsetBlockPos(this.incomingTeleportPositionOffset, blockRotation);
+                this.outgoingTeleportPosition = BlockRotationUtils.rotateOffsetBlockPos(this.outgoingTeleportPosition, blockRotation);
+                this.targetDungeonStructureStartPosition = BlockRotationUtils.rotateOffsetBlockPos(this.targetDungeonStructureStartPosition, blockRotation);
+                this.regenerateTargetDungeonTriggerBlockPosition = BlockRotationUtils.rotateOffsetBlockPos(this.regenerateTargetDungeonTriggerBlockPosition, blockRotation);
+
+                this.incomingTeleportPositionYaw = BlockRotationUtils.rotateYaw(this.incomingTeleportPositionYaw, blockRotation);
+                this.outgoingTeleportPositionYaw = BlockRotationUtils.rotateYaw(this.outgoingTeleportPositionYaw, blockRotation);
+
+                this.activationAreaDimensions = BlockRotationUtils.rotateOffsetVec3i(this.activationAreaDimensions, blockRotation);
+                this.rotated = state.get(RotatedBlockWithEntity.ROTATED);
+            }
+            if (state.get(RotatedBlockWithEntity.X_MIRRORED) != this.x_mirrored) {
+                this.activationAreaPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.activationAreaPositionOffset, BlockMirror.FRONT_BACK);
+                this.outgoingTeleportTeleporterPosition = BlockRotationUtils.mirrorOffsetBlockPos(this.outgoingTeleportTeleporterPosition, BlockMirror.FRONT_BACK);
+                this.incomingTeleportPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.incomingTeleportPositionOffset, BlockMirror.FRONT_BACK);
+                this.outgoingTeleportPosition = BlockRotationUtils.mirrorOffsetBlockPos(this.outgoingTeleportPosition, BlockMirror.FRONT_BACK);
+                this.targetDungeonStructureStartPosition = BlockRotationUtils.mirrorOffsetBlockPos(this.targetDungeonStructureStartPosition, BlockMirror.FRONT_BACK);
+                this.regenerateTargetDungeonTriggerBlockPosition = BlockRotationUtils.mirrorOffsetBlockPos(this.regenerateTargetDungeonTriggerBlockPosition, BlockMirror.FRONT_BACK);
+
+                this.incomingTeleportPositionYaw = BlockRotationUtils.mirrorYaw(this.incomingTeleportPositionYaw, BlockMirror.FRONT_BACK);
+                this.outgoingTeleportPositionYaw = BlockRotationUtils.mirrorYaw(this.outgoingTeleportPositionYaw, BlockMirror.FRONT_BACK);
+
+                this.activationAreaDimensions = BlockRotationUtils.mirrorOffsetVec3i(this.activationAreaDimensions, BlockMirror.FRONT_BACK);
+                this.x_mirrored = state.get(RotatedBlockWithEntity.X_MIRRORED);
+            }
+            if (state.get(RotatedBlockWithEntity.Z_MIRRORED) != this.z_mirrored) {
+                this.activationAreaPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.activationAreaPositionOffset, BlockMirror.LEFT_RIGHT);
+                this.outgoingTeleportTeleporterPosition = BlockRotationUtils.mirrorOffsetBlockPos(this.outgoingTeleportTeleporterPosition, BlockMirror.LEFT_RIGHT);
+                this.incomingTeleportPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.incomingTeleportPositionOffset, BlockMirror.LEFT_RIGHT);
+                this.outgoingTeleportPosition = BlockRotationUtils.mirrorOffsetBlockPos(this.outgoingTeleportPosition, BlockMirror.LEFT_RIGHT);
+                this.targetDungeonStructureStartPosition = BlockRotationUtils.mirrorOffsetBlockPos(this.targetDungeonStructureStartPosition, BlockMirror.LEFT_RIGHT);
+                this.regenerateTargetDungeonTriggerBlockPosition = BlockRotationUtils.mirrorOffsetBlockPos(this.regenerateTargetDungeonTriggerBlockPosition, BlockMirror.LEFT_RIGHT);
+
+                this.incomingTeleportPositionYaw = BlockRotationUtils.mirrorYaw(this.incomingTeleportPositionYaw, BlockMirror.LEFT_RIGHT);
+                this.outgoingTeleportPositionYaw = BlockRotationUtils.mirrorYaw(this.outgoingTeleportPositionYaw, BlockMirror.LEFT_RIGHT);
+
+                this.activationAreaDimensions = BlockRotationUtils.mirrorOffsetVec3i(this.activationAreaDimensions, BlockMirror.LEFT_RIGHT);
+                this.z_mirrored = state.get(RotatedBlockWithEntity.Z_MIRRORED);
+            }
+        }
     }
 }
 

@@ -1,10 +1,12 @@
 package com.github.theredbrain.bamcore.client.gui.screen.ingame;
 
-import com.github.theredbrain.bamcore.block.entity.StructurePlacerBlockBlockEntity;
+import com.github.theredbrain.bamcore.block.entity.JigsawPlacerBlockBlockEntity;
+import com.github.theredbrain.bamcore.client.owo.CustomTextBoxComponent;
 import com.github.theredbrain.bamcore.network.packet.BetterAdventureModeCoreServerPacket;
 import com.github.theredbrain.bamcore.registry.BlockRegistry;
 import io.netty.buffer.Unpooled;
 import io.wispforest.owo.ui.base.BaseOwoScreen;
+import io.wispforest.owo.ui.component.ButtonComponent;
 import io.wispforest.owo.ui.component.Components;
 import io.wispforest.owo.ui.component.TextBoxComponent;
 import io.wispforest.owo.ui.container.Containers;
@@ -12,10 +14,13 @@ import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.block.JigsawBlock;
+import net.minecraft.block.entity.JigsawBlockEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
@@ -23,22 +28,33 @@ import org.lwjgl.glfw.GLFW;
 import java.util.List;
 
 @Environment(value= EnvType.CLIENT)
-public class StructurePlacerBlockScreen extends BaseOwoScreen<FlowLayout> {
-    private final StructurePlacerBlockBlockEntity structurePlacerBlock;
+public class JigsawPlacerBlockScreen extends BaseOwoScreen<FlowLayout> {
+    private final JigsawPlacerBlockBlockEntity jigsawPlacerBlock;
+    private JigsawBlockEntity.Joint joint;
 
-    public StructurePlacerBlockScreen(StructurePlacerBlockBlockEntity structurePlacerBlock) {
-        super(Text.translatable(BlockRegistry.STRUCTURE_PLACER_BLOCK.getTranslationKey()));
-        this.structurePlacerBlock = structurePlacerBlock;
+    public JigsawPlacerBlockScreen(JigsawPlacerBlockBlockEntity jigsawPlacerBlock) {
+        super(Text.translatable(BlockRegistry.JIGSAW_PLACER_BLOCK.getTranslationKey()));
+        this.jigsawPlacerBlock = jigsawPlacerBlock;
+        this.joint = jigsawPlacerBlock.getJoint();
     }
 
     private void done() {
-        if (this.updateStructurePlacerBlock()) {
+        if (this.updateJigsawPlacerBlock()) {
             this.close();
         }
     }
 
     private void cancel() {
         this.close();
+    }
+
+    private void toggleJoint() {
+        if (this.joint.equals(JigsawBlockEntity.Joint.ALIGNED)) {
+            this.joint = JigsawBlockEntity.Joint.ROLLABLE;
+        } else {
+            this.joint = JigsawBlockEntity.Joint.ALIGNED;
+        }
+        this.component(ButtonComponent.class, "toggleJointButton").setMessage(this.joint.asText());
     }
 
     @Override
@@ -48,8 +64,7 @@ public class StructurePlacerBlockScreen extends BaseOwoScreen<FlowLayout> {
 
     @Override
     protected void build(FlowLayout rootComponent) {
-        BlockPos placementPositionOffset = this.structurePlacerBlock.getPlacementPositionOffset();
-        BlockPos triggeredBlockPositionOffset = this.structurePlacerBlock.getTriggeredBlockPositionOffset();
+        BlockPos triggeredBlockPositionOffset = this.jigsawPlacerBlock.getTriggeredBlockPositionOffset();
         rootComponent
                 .surface(Surface.VANILLA_TRANSLUCENT)
                 .horizontalAlignment(HorizontalAlignment.CENTER)
@@ -60,28 +75,23 @@ public class StructurePlacerBlockScreen extends BaseOwoScreen<FlowLayout> {
                         .color(Color.ofArgb(0xFFFFFF))
                         .margins(Insets.of(1, 1, 1, 1))
                         .sizing(Sizing.content(), Sizing.content()),
-                Components.textBox(Sizing.fill(30), this.structurePlacerBlock.getPlacedStructureIdentifier())
-                        .tooltip(Text.translatable("gui.structure_placer_block.placedStructureIdentifier.tooltip"))
+//                Components.textBox(Sizing.fill(30), this.jigsawPlacerBlock.getName().toString())
+//                        .tooltip(Text.translatable("gui.jigsaw_placer_block.name.tooltip"))
+//                        .margins(Insets.of(1, 1, 1, 1))
+//                        .id("nameTextBox"),
+                new CustomTextBoxComponent(Sizing.fill(30), 128)
+                        .text(this.jigsawPlacerBlock.getTarget().toString())
+                        .tooltip(Text.translatable("gui.jigsaw_placer_block.target.tooltip"))
                         .margins(Insets.of(1, 1, 1, 1))
-                        .id("placedStructureIdentifier"),
-                Containers.horizontalFlow(Sizing.fill(50), Sizing.content())
-                        .children(List.of(
-                                Components.textBox(Sizing.fill(32), Integer.toString(placementPositionOffset.getX()))
-                                        .tooltip(Text.translatable("gui.structure_placer_block.placementPositionOffsetX.tooltip"))
-                                        .margins(Insets.of(1, 1, 1, 1))
-                                        .id("placementPositionOffsetX"),
-                                Components.textBox(Sizing.fill(32), Integer.toString(placementPositionOffset.getY()))
-                                        .tooltip(Text.translatable("gui.structure_placer_block.placementPositionOffsetY.tooltip"))
-                                        .margins(Insets.of(1, 1, 1, 1))
-                                        .id("placementPositionOffsetY"),
-                                Components.textBox(Sizing.fill(32), Integer.toString(placementPositionOffset.getZ()))
-                                        .tooltip(Text.translatable("gui.structure_placer_block.placementPositionOffsetZ.tooltip"))
-                                        .margins(Insets.of(1, 1, 1, 1))
-                                        .id("placementPositionOffsetZ")
-                        ))
-                        .verticalAlignment(VerticalAlignment.CENTER)
-                        .horizontalAlignment(HorizontalAlignment.CENTER),
-                Containers.horizontalFlow(Sizing.fill(50), Sizing.content())
+                        .id("targetTextBox"),
+                new CustomTextBoxComponent(Sizing.fill(30), 128)
+                        .text(this.jigsawPlacerBlock.getPool().getValue().toString())
+                        .tooltip(Text.translatable("gui.jigsaw_placer_block.pool.tooltip"))
+                        .margins(Insets.of(1, 1, 1, 1))
+                        .id("poolTextBox"),
+                Containers.horizontalFlow(Sizing.content(), Sizing.content())
+                        .id("toggleJointButtonContainer"),
+                Containers.horizontalFlow(Sizing.fill(30), Sizing.content())
                         .children(List.of(
                                 Components.textBox(Sizing.fill(32), Integer.toString(triggeredBlockPositionOffset.getX()))
                                         .tooltip(Text.translatable("gui.triggered_block.triggeredBlockPositionOffsetX.tooltip"))
@@ -109,6 +119,13 @@ public class StructurePlacerBlockScreen extends BaseOwoScreen<FlowLayout> {
                         .verticalAlignment(VerticalAlignment.CENTER)
                         .horizontalAlignment(HorizontalAlignment.CENTER)
         ));
+        if (JigsawBlock.getFacing(this.jigsawPlacerBlock.getCachedState()).getAxis().isVertical()) {
+            this.component(FlowLayout.class, "toggleJointButtonContainer").child(
+                    Components.button(this.joint.asText(), button -> this.toggleJoint())
+                            .sizing(Sizing.fill(30), Sizing.fixed(20))
+                            .id("toggleJointButton")
+            );
+        }
     }
 
     @Override
@@ -120,18 +137,16 @@ public class StructurePlacerBlockScreen extends BaseOwoScreen<FlowLayout> {
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
-    private boolean updateStructurePlacerBlock() {
+    private boolean updateJigsawPlacerBlock() {
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
 
-        buf.writeBlockPos(this.structurePlacerBlock.getPos());
+        buf.writeBlockPos(this.jigsawPlacerBlock.getPos());
 
-        buf.writeString(this.component(TextBoxComponent.class, "placedStructureIdentifier").getText());
+//        buf.writeString(this.component(TextBoxComponent.class, "nameTextBox").getText());
+        buf.writeString(this.component(CustomTextBoxComponent.class, "targetTextBox").getText());
+        buf.writeString(this.component(CustomTextBoxComponent.class, "poolTextBox").getText());
 
-        buf.writeBlockPos(new BlockPos(
-                this.parseInt(this.component(TextBoxComponent.class, "placementPositionOffsetX").getText()),
-                this.parseInt(this.component(TextBoxComponent.class, "placementPositionOffsetY").getText()),
-                this.parseInt(this.component(TextBoxComponent.class, "placementPositionOffsetZ").getText())
-        ));
+        buf.writeString(this.joint.asString());
 
         buf.writeBlockPos(new BlockPos(
                 this.parseInt(this.component(TextBoxComponent.class, "triggeredBlockPositionOffsetX").getText()),
@@ -139,7 +154,7 @@ public class StructurePlacerBlockScreen extends BaseOwoScreen<FlowLayout> {
                 this.parseInt(this.component(TextBoxComponent.class, "triggeredBlockPositionOffsetZ").getText())
         ));
 
-        this.client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModeCoreServerPacket.UPDATE_STRUCTURE_PLACER_BLOCK, buf));
+        this.client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModeCoreServerPacket.UPDATE_JIGSAW_PLACER_BLOCK, buf));
         return true;
     }
 

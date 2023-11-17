@@ -1,5 +1,7 @@
 package com.github.theredbrain.bamcore.block.entity;
 
+import com.github.theredbrain.bamcore.api.util.BlockRotationUtils;
+import com.github.theredbrain.bamcore.block.RotatedBlockWithEntity;
 import com.github.theredbrain.bamcore.block.Triggerable;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.bamcore.registry.EntityRegistry;
@@ -9,11 +11,16 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.BlockMirror;
+import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
 
-public class AreaFillerBlockBlockEntity extends BlockEntity implements Triggerable {
+import java.util.ArrayList;
+import java.util.List;
+
+public class AreaFillerBlockBlockEntity extends RotatedBlockEntity implements Triggerable {
     private String fillerBlockIdentifier = "minecraft:air";
     private Vec3i filledAreaDimensions = Vec3i.ZERO;
     private BlockPos filledAreaPositionOffset = new BlockPos(0, 1, 0);
@@ -24,7 +31,6 @@ public class AreaFillerBlockBlockEntity extends BlockEntity implements Triggerab
 
     @Override
     protected void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
         nbt.putString("fillerBlockIdentifier", this.fillerBlockIdentifier);
 
         nbt.putInt("filledAreaDimensionsX", this.filledAreaDimensions.getX());
@@ -38,11 +44,12 @@ public class AreaFillerBlockBlockEntity extends BlockEntity implements Triggerab
         nbt.putInt("triggeredBlockPositionOffsetX", this.triggeredBlockPositionOffset.getX());
         nbt.putInt("triggeredBlockPositionOffsetY", this.triggeredBlockPositionOffset.getY());
         nbt.putInt("triggeredBlockPositionOffsetZ", this.triggeredBlockPositionOffset.getZ());
+
+        super.writeNbt(nbt);
     }
 
     @Override
     public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
         this.fillerBlockIdentifier = nbt.getString("fillerBlockIdentifier");
 
         int i = MathHelper.clamp(nbt.getInt("filledAreaDimensionsX"), 0, 48);
@@ -59,6 +66,8 @@ public class AreaFillerBlockBlockEntity extends BlockEntity implements Triggerab
         int p = MathHelper.clamp(nbt.getInt("triggeredBlockPositionOffsetY"), -48, 48);
         int q = MathHelper.clamp(nbt.getInt("triggeredBlockPositionOffsetZ"), -48, 48);
         this.triggeredBlockPositionOffset = new BlockPos(o, p, q);
+
+        super.readNbt(nbt);
     }
 
     public BlockEntityUpdateS2CPacket toUpdatePacket() {
@@ -136,6 +145,31 @@ public class AreaFillerBlockBlockEntity extends BlockEntity implements Triggerab
             BlockEntity blockEntity = world.getBlockEntity(new BlockPos(this.pos.getX() + this.triggeredBlockPositionOffset.getX(), this.pos.getY() + this.triggeredBlockPositionOffset.getY(), this.pos.getZ() + this.triggeredBlockPositionOffset.getZ()));
             if (blockEntity instanceof Triggerable triggerable && blockEntity != this) {
                 triggerable.trigger();
+            }
+        }
+    }
+
+    @Override
+    protected void onRotate(BlockState state) {
+        if (state.getBlock() instanceof RotatedBlockWithEntity) {
+            if (state.get(RotatedBlockWithEntity.ROTATED) != this.rotated) {
+                BlockRotation blockRotation = BlockRotationUtils.calculateRotationFromDifferentRotatedStates(state.get(RotatedBlockWithEntity.ROTATED), this.rotated);
+                this.triggeredBlockPositionOffset = BlockRotationUtils.rotateOffsetBlockPos(this.triggeredBlockPositionOffset, blockRotation);
+                this.filledAreaPositionOffset = BlockRotationUtils.rotateOffsetBlockPos(this.filledAreaPositionOffset, blockRotation);
+                this.filledAreaDimensions = BlockRotationUtils.rotateOffsetVec3i(this.filledAreaDimensions, blockRotation);
+                this.rotated = state.get(RotatedBlockWithEntity.ROTATED);
+            }
+            if (state.get(RotatedBlockWithEntity.X_MIRRORED) != this.x_mirrored) {
+                this.triggeredBlockPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.triggeredBlockPositionOffset, BlockMirror.FRONT_BACK);
+                this.filledAreaPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.filledAreaPositionOffset, BlockMirror.FRONT_BACK);
+                this.filledAreaDimensions = BlockRotationUtils.mirrorOffsetVec3i(this.filledAreaDimensions, BlockMirror.FRONT_BACK);
+                this.x_mirrored = state.get(RotatedBlockWithEntity.X_MIRRORED);
+            }
+            if (state.get(RotatedBlockWithEntity.Z_MIRRORED) != this.z_mirrored) {
+                this.triggeredBlockPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.triggeredBlockPositionOffset, BlockMirror.LEFT_RIGHT);
+                this.filledAreaPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.filledAreaPositionOffset, BlockMirror.LEFT_RIGHT);
+                this.filledAreaDimensions = BlockRotationUtils.mirrorOffsetVec3i(this.filledAreaDimensions, BlockMirror.LEFT_RIGHT);
+                this.z_mirrored = state.get(RotatedBlockWithEntity.Z_MIRRORED);
             }
         }
     }

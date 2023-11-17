@@ -29,7 +29,7 @@ public interface DuckPlayerEntityMixin {
     boolean bamcore$isAdventure();
 
     void bamcore$openHousingScreen();
-    void bamcore$openStructurePlacerBlockScreen(StructurePlacerBlockBlockEntity structurePlacerBlock);
+    void bamcore$openJigsawPlacerBlockScreen(JigsawPlacerBlockBlockEntity jigsawPlacerBlock);
     void bamcore$openAreaFillerBlockScreen(AreaFillerBlockBlockEntity areaFillerBlock);
     void bamcore$openRedstoneTriggerBlockScreen(RedstoneTriggerBlockBlockEntity redstoneTriggerBlock);
     void bamcore$openRelayTriggerBlockScreen(RelayTriggerBlockBlockEntity relayTriggerBlock);
