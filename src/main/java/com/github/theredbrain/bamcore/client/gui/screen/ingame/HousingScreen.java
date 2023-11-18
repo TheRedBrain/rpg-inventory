@@ -219,6 +219,12 @@ public class HousingScreen extends BaseOwoScreen<FlowLayout> {
                                                     : Text.translatable("gui.housing_block.toggleOwnerModeButton_1.tooltip"))
                                             .id("toggleOwnerModeButton"),
 
+                                    Components.button(Text.translatable("gui.housing_block.resetOwnerButton")
+                                                    , button -> this.trySetHouseOwner(false))
+                                            .sizing(Sizing.fill(100), Sizing.fixed(20))
+                                            .tooltip(Text.translatable("gui.housing_block.resetOwnerButton.tooltip"))
+                                            .id("resetOwnerButton"),
+
                                     // save/close buttons
                                     Containers.horizontalFlow(Sizing.fill(30), Sizing.content())
                                             .children(List.of(

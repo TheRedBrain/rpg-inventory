@@ -166,7 +166,7 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
 
                 String playerName = playerEntity.getName().getString();
                 String playerUuid = playerEntity.getUuidAsString();
-                if (Objects.equals(playerUuid, blockEntity.getOwner()) || playerEntity.isCreative()) {
+                if (Objects.equals(playerUuid, blockEntity.getOwner())/* || playerEntity.isCreative()*/) {
                     playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.HOUSING_OWNER_EFFECT, 100, 0, true, false, true));
                 } else if (blockEntity.getCoOwnerList().contains(playerName)) {
                     playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.HOUSING_CO_OWNER_EFFECT, 100, 0, true, false, true));

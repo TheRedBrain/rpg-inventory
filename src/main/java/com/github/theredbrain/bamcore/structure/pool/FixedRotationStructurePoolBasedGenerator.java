@@ -93,8 +93,7 @@ public class FixedRotationStructurePoolBasedGenerator extends StructurePoolBased
         if (optional.isPresent()) {
             StructurePiecesCollector structurePiecesCollector = optional.get().generate();
             for (StructurePiece structurePiece : structurePiecesCollector.toList().pieces()) {
-                if (!(structurePiece instanceof PoolStructurePiece)) continue;
-                PoolStructurePiece poolStructurePiece = (PoolStructurePiece)structurePiece;
+                if (!(structurePiece instanceof PoolStructurePiece poolStructurePiece)) continue;
                 poolStructurePiece.generate((StructureWorldAccess)world, structureAccessor, chunkGenerator, random, BlockBox.infinite(), pos, keepJigsaws);
             }
             return true;

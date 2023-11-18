@@ -1,6 +1,5 @@
 package com.github.theredbrain.bamcore.block.entity;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.api.util.BlockRotationUtils;
 import com.github.theredbrain.bamcore.block.RotatedBlockWithEntity;
 import com.github.theredbrain.bamcore.block.Triggerable;
@@ -90,7 +89,6 @@ public class JigsawPlacerBlockBlockEntity extends RotatedBlockEntity implements 
     }
 
     public Identifier getTarget() {
-        BetterAdventureModeCore.LOGGER.info("getTarget: " + this.target);
         return this.target;
     }
 
