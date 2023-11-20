@@ -45,10 +45,12 @@ public class UpdateTeleporterBlockPacketReceiver implements ServerPlayNetworking
         boolean showAdventureScreen = buf.readBoolean();
 
         boolean indirectTeleportationMode = buf.readBoolean();
+
         BlockPos outgoingTeleportTeleporterPosition = buf.readBlockPos();
         BlockPos incomingTeleportPositionOffset = buf.readBlockPos();
         double incomingTeleportPositionYaw = buf.readDouble();
         double incomingTeleportPositionPitch = buf.readDouble();
+
         BlockPos outgoingTeleportPosition = buf.readBlockPos();
         double outgoingTeleportPositionYaw = buf.readDouble();
         double outgoingTeleportPositionPitch = buf.readDouble();

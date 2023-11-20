@@ -63,7 +63,6 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
     private boolean consumeKeyItemStack = false;
     private DefaultedList<ItemStack> requiredKeyItemStack = DefaultedList.ofSize(1, ItemStack.EMPTY);
 
-
     private int accessibleHousesListSize = 0;
     private List<String> accessibleHousesList = new ArrayList<>(List.of());
 

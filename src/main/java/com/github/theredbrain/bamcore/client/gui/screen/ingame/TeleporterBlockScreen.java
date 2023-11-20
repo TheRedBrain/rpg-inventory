@@ -898,6 +898,11 @@ public class TeleporterBlockScreen extends BaseOwoHandledScreen<FlowLayout, Tele
         ));
 
         buf.writeBoolean(this.consumeKeyItemStack);
+
+        buf.writeInt(0);
+        for (int i = 0; i < 0; i++) {
+            buf.writeString("");
+        }
         buf.writeString(this.component(TextBoxComponent.class, "teleportButtonLabel").getText());
         buf.writeString(this.component(TextBoxComponent.class, "cancelTeleportButtonLabel").getText());
 
