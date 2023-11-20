@@ -23,6 +23,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.client.gui.widget.PageTurnWidget;
 import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.render.RenderLayer;
@@ -286,7 +287,6 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
                             0,
                             i);
         }
-
         // disable vanilla crafting slots
         disableSlot(handler.slots.get(0));
         disableSlot(handler.slots.get(1));
@@ -615,13 +615,12 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
 
     @Override
     protected void init() {
-//        if (this.client.interactionManager.hasCreativeInventory()) {
-//            // TODO call custom CreativeInventoryScreen
-//            this.client.setScreen(new CreativeInventoryScreen(this.client.player, this.client.player.networkHandler.getEnabledFeatures(), this.client.options.getOperatorItemsTab().getValue()));
-//            return;
-//        }
         TrinketScreenManager.init(this);
         super.init();
+
+        if (this.client.interactionManager.hasCreativeInventory()) {
+            this.client.setScreen(new CreativeInventoryScreen(this.client.player, this.client.player.networkHandler.getEnabledFeatures(), this.client.options.getOperatorItemsTab().getValue()));
+        }
     }
 
     @Override

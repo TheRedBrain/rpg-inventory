@@ -16,6 +16,8 @@ public class ClientConfig implements ConfigData {
     public int stamina_bar_number_color = -6250336;
     @Comment("Color of the mana bar number.")
     public int mana_bar_number_color = -6250336;
+    @Comment("Additional debug log is shown in the console.")
+    public boolean show_debug_log = true;
     public ClientConfig() {
 
     }

@@ -29,3 +29,5 @@ accessible method net/minecraft/structure/pool/StructurePoolBasedGenerator gener
 accessible field net/minecraft/client/render/WorldRenderer bufferBuilders Lnet/minecraft/client/render/BufferBuilderStorage;
 
 accessible method net/minecraft/client/render/WorldRenderer canDrawEntityOutlines ()Z
+
+accessible class net/minecraft/client/gui/screen/ingame/CreativeInventoryScreen$CreativeSlot

@@ -8,7 +8,6 @@ import com.github.theredbrain.bamcore.registry.EntityRegistry;
 import com.github.theredbrain.bamcore.screen.TeleporterBlockScreenHandler;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -23,7 +22,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Pair;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -233,7 +231,6 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
         }
     }
 
-    // TODO rename to a more fitting name
     private static void tryOpenScreenRemotely(World world, BlockPos pos, BlockState state, TeleporterBlockBlockEntity blockEntity) {
         if (world.isClient) {
             return;
@@ -592,7 +589,6 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
         this.markDirty();
     }
 
-    // TODO yaws and pitch and targetChunk
     @Override
     protected void onRotate(BlockState state) {
         if (state.getBlock() instanceof RotatedBlockWithEntity) {
@@ -608,6 +604,8 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
                 this.incomingTeleportPositionYaw = BlockRotationUtils.rotateYaw(this.incomingTeleportPositionYaw, blockRotation);
                 this.outgoingTeleportPositionYaw = BlockRotationUtils.rotateYaw(this.outgoingTeleportPositionYaw, blockRotation);
 
+                this.targetDungeonChunk = BlockRotationUtils.rotateOffset2DPosition(this.targetDungeonChunk, blockRotation);
+
                 this.activationAreaDimensions = BlockRotationUtils.rotateOffsetVec3i(this.activationAreaDimensions, blockRotation);
                 this.rotated = state.get(RotatedBlockWithEntity.ROTATED);
             }
@@ -622,6 +620,8 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
                 this.incomingTeleportPositionYaw = BlockRotationUtils.mirrorYaw(this.incomingTeleportPositionYaw, BlockMirror.FRONT_BACK);
                 this.outgoingTeleportPositionYaw = BlockRotationUtils.mirrorYaw(this.outgoingTeleportPositionYaw, BlockMirror.FRONT_BACK);
 
+                this.targetDungeonChunk = BlockRotationUtils.mirrorOffset2DPosition(this.targetDungeonChunk, BlockMirror.FRONT_BACK);
+
                 this.activationAreaDimensions = BlockRotationUtils.mirrorOffsetVec3i(this.activationAreaDimensions, BlockMirror.FRONT_BACK);
                 this.x_mirrored = state.get(RotatedBlockWithEntity.X_MIRRORED);
             }
@@ -635,6 +635,8 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
 
                 this.incomingTeleportPositionYaw = BlockRotationUtils.mirrorYaw(this.incomingTeleportPositionYaw, BlockMirror.LEFT_RIGHT);
                 this.outgoingTeleportPositionYaw = BlockRotationUtils.mirrorYaw(this.outgoingTeleportPositionYaw, BlockMirror.LEFT_RIGHT);
+
+                this.targetDungeonChunk = BlockRotationUtils.mirrorOffset2DPosition(this.targetDungeonChunk, BlockMirror.LEFT_RIGHT);
 
                 this.activationAreaDimensions = BlockRotationUtils.mirrorOffsetVec3i(this.activationAreaDimensions, BlockMirror.LEFT_RIGHT);
                 this.z_mirrored = state.get(RotatedBlockWithEntity.Z_MIRRORED);

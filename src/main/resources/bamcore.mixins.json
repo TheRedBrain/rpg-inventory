@@ -36,6 +36,7 @@
   },
   "client": [
     "client.gui.hud.InGameHudMixin",
+    "client.gui.screen.ingame.CreativeInventoryScreenMixin",
     "client.gui.screen.ingame.InventoryScreenMixin",
     "client.network.AbstractClientPlayerEntityMixin",
     "client.network.ClientPlayerEntityMixin",

@@ -4,6 +4,7 @@ import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
+import org.apache.commons.lang3.tuple.MutablePair;
 
 public class BlockRotationUtils {
 
@@ -109,6 +110,28 @@ public class BlockRotationUtils {
             }
         } else {
             return yaw;
+        }
+    }
+
+    public static MutablePair<Integer, Integer> rotateOffset2DPosition(MutablePair<Integer, Integer> offsetPosition, BlockRotation rotation) {
+        if (rotation == BlockRotation.CLOCKWISE_90) {
+            return MutablePair.of(-(offsetPosition.getRight()), offsetPosition.getLeft());
+        } else if (rotation == BlockRotation.CLOCKWISE_180) {
+            return MutablePair.of(-(offsetPosition.getLeft()), -(offsetPosition.getRight()));
+        } else if (rotation == BlockRotation.COUNTERCLOCKWISE_90) {
+            return MutablePair.of(offsetPosition.getRight(), -(offsetPosition.getLeft()));
+        } else {
+            return offsetPosition;
+        }
+    }
+
+    public static MutablePair<Integer, Integer> mirrorOffset2DPosition(MutablePair<Integer, Integer> offsetPosition, BlockMirror mirror) {
+        if (mirror == BlockMirror.FRONT_BACK) {
+            return MutablePair.of(-(offsetPosition.getLeft()), offsetPosition.getRight());
+        } else if (mirror == BlockMirror.LEFT_RIGHT) {
+            return MutablePair.of(offsetPosition.getLeft(), -(offsetPosition.getRight()));
+        } else {
+            return offsetPosition;
         }
     }
 }
