@@ -11,6 +11,7 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import me.shedaniel.autoconfig.serializer.PartitioningSerializer;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +38,7 @@ public class BetterAdventureModeCore implements ModInitializer {
 		DimensionsManager.init();
 		EntityRegistry.init();
 		EventsRegistry.initializeEvents();
+		HousingRegistry.init();
 		ItemRegistry.init();
 		ItemGroupRegistry.init();
 		ScreenHandlerTypesRegistry.registerAll();

@@ -16,6 +16,8 @@ public class BetterAdventureModeCoreServerPacket {
     public static final Identifier ADD_STATUS_EFFECT_PACKET = BetterAdventureModeCore.identifier("add_status_effect");
 //    public static final Identifier SHEATHED_WEAPONS_PACKET = RPGMod.identifier("sheathed_weapons"); // TODO if weapon sheathing is not visible in multiplayer
 
+    public static final Identifier SYNC_CONFIG = BetterAdventureModeCore.identifier("sync_config");
+    public static final Identifier SYNC_PLAYER_HOUSES = BetterAdventureModeCore.identifier("sync_player_houses");
     public static final Identifier UPDATE_HOUSING_BLOCK_ADVENTURE = BetterAdventureModeCore.identifier("update_housing_block_adventure");
     public static final Identifier UPDATE_HOUSING_BLOCK_CREATIVE = BetterAdventureModeCore.identifier("update_housing_block_creative");
     public static final Identifier SET_HOUSING_OWNER_BLOCK = BetterAdventureModeCore.identifier("set_housing_owner_block");

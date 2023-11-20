@@ -2,6 +2,7 @@ package com.github.theredbrain.bamcore.client.network.packet;
 
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.bamcore.network.packet.BetterAdventureModeCoreServerPacket;
+import com.github.theredbrain.bamcore.registry.HousingRegistry;
 import net.bettercombat.api.MinecraftClient_BetterCombat;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -47,6 +48,9 @@ public class BetterAdventureModeCoreClientPacket {
                     }
                 }
             });
+        });
+        ClientPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.SYNC_PLAYER_HOUSES, (client, handler, buffer, responseSender) -> {
+            HousingRegistry.decodeRegistry(buffer);
         });
     }
 }

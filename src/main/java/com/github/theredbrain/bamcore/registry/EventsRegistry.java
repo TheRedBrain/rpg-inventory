@@ -16,6 +16,7 @@ import io.netty.buffer.Unpooled;
 import net.bettercombat.api.client.BetterCombatClientEvents;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
@@ -51,6 +52,9 @@ public class EventsRegistry {
             if (server.getGameRules().getBoolean(GameRulesRegistry.RESET_RECIPES_ON_DEATH)) {
                 player.getRecipeBook().lockRecipes(server.getRecipeManager().values(), player);
             }
+        });
+        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+            sender.sendPacket(BetterAdventureModeCoreServerPacket.SYNC_PLAYER_HOUSES, HousingRegistry.getEncodedRegistry());
         });
     }
 

@@ -1,0 +1,8 @@
+{
+  "controlBlockPosX": 1,
+  "controlBlockPosY": 1,
+  "controlBlockPosZ": 1,
+  "unlockAdvancement": "minecraft:story/smelt_iron",
+  "showLockedHouse": true,
+  "showUnlockAdvancement": true
+}
