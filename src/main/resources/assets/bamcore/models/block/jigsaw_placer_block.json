@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube_directional",
+  "textures": {
+    "down": "bamcore:block/jigsaw_placer_side",
+    "east": "bamcore:block/jigsaw_placer_side",
+    "north": "bamcore:block/jigsaw_placer_top",
+    "particle": "bamcore:block/jigsaw_placer_top",
+    "south": "bamcore:block/trigger_block",
+    "up": "bamcore:block/jigsaw_placer_lock",
+    "west": "bamcore:block/jigsaw_placer_side"
+  }
+}

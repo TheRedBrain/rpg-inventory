@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "bamcore:block/housing_block"
+    }
+  }
+}

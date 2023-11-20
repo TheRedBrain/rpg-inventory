@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "bamcore:block/trigger_block",
+    "side": "bamcore:block/relay_trigger_block_side"
+  }
+}
