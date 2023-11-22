@@ -31,6 +31,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
@@ -144,6 +145,7 @@ public class HousingScreen extends BaseOwoScreen<FlowLayout> {
         if (this.showCreativeTab && this.housingBlockBlockEntity != null) {
             Vec3i restrictBlockBreakingAreaDimensions = this.housingBlockBlockEntity.getRestrictBlockBreakingAreaDimensions();
             BlockPos restrictBlockBreakingAreaPositionOffset = this.housingBlockBlockEntity.getRestrictBlockBreakingAreaPositionOffset();
+            MutablePair<BlockPos, MutablePair<Double, Double>> entranceBlockPositionOffset = this.housingBlockBlockEntity.getEntrance();
             BlockPos triggeredBlockPositionOffset = this.housingBlockBlockEntity.getTriggeredBlockPositionOffset();
             rootComponent.children(List.of(
                     Containers.verticalFlow(Sizing.fixed(250), Sizing.fixed(166))
@@ -193,6 +195,39 @@ public class HousingScreen extends BaseOwoScreen<FlowLayout> {
                                             .verticalAlignment(VerticalAlignment.CENTER)
                                             .horizontalAlignment(HorizontalAlignment.CENTER),
 
+                                    // entrance
+                                    Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
+                                            .children(List.of(
+                                                    Components.textBox(Sizing.fill(32), Integer.toString(entranceBlockPositionOffset.getLeft().getX()))
+                                                            .tooltip(Text.translatable("gui.housing_block.entrancePositionOffsetX.tooltip"))
+                                                            .margins(Insets.of(1, 1, 1, 1))
+                                                            .id("entrancePositionOffsetX"),
+                                                    Components.textBox(Sizing.fill(32), Integer.toString(entranceBlockPositionOffset.getLeft().getY()))
+                                                            .tooltip(Text.translatable("gui.housing_block.entrancePositionOffsetY.tooltip"))
+                                                            .margins(Insets.of(1, 1, 1, 1))
+                                                            .id("entrancePositionOffsetY"),
+                                                    Components.textBox(Sizing.fill(32), Integer.toString(entranceBlockPositionOffset.getLeft().getZ()))
+                                                            .tooltip(Text.translatable("gui.housing_block.entrancePositionOffsetZ.tooltip"))
+                                                            .margins(Insets.of(1, 1, 1, 1))
+                                                            .id("entrancePositionOffsetZ")
+                                            ))
+                                            .verticalAlignment(VerticalAlignment.CENTER)
+                                            .horizontalAlignment(HorizontalAlignment.CENTER),
+                                    Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
+                                            .children(List.of(
+                                                    Components.textBox(Sizing.fill(50), Double.toString(entranceBlockPositionOffset.getRight().getRight()))
+                                                            .tooltip(Text.translatable("gui.housing_block.entranceYaw.tooltip"))
+                                                            .margins(Insets.of(1, 1, 1, 1))
+                                                            .id("entranceYaw"),
+                                                    Components.textBox(Sizing.fill(50), Double.toString(entranceBlockPositionOffset.getRight().getRight()))
+                                                            .tooltip(Text.translatable("gui.housing_block.entrancePitch.tooltip"))
+                                                            .margins(Insets.of(1, 1, 1, 1))
+                                                            .id("entrancePitch")
+                                            ))
+                                            .verticalAlignment(VerticalAlignment.CENTER)
+                                            .horizontalAlignment(HorizontalAlignment.CENTER),
+
+                                    // triggered block
                                     Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
                                             .children(List.of(
                                                     Components.textBox(Sizing.fill(32), Integer.toString(triggeredBlockPositionOffset.getX()))
@@ -526,6 +561,13 @@ public class HousingScreen extends BaseOwoScreen<FlowLayout> {
                 this.parseInt(this.component(TextBoxComponent.class, "restrictBlockBreakingAreaPositionOffsetZ").getText())
         ));
         buf.writeBlockPos(new BlockPos(
+                this.parseInt(this.component(TextBoxComponent.class, "entrancePositionOffsetX").getText()),
+                this.parseInt(this.component(TextBoxComponent.class, "entrancePositionOffsetY").getText()),
+                this.parseInt(this.component(TextBoxComponent.class, "entrancePositionOffsetZ").getText())
+        ));
+        buf.writeDouble(this.parseDouble(this.component(TextBoxComponent.class, "entranceYaw").getText()));
+        buf.writeDouble(this.parseDouble(this.component(TextBoxComponent.class, "entrancePitch").getText()));
+        buf.writeBlockPos(new BlockPos(
                 this.parseInt(this.component(TextBoxComponent.class, "triggeredBlockPositionOffsetX").getText()),
                 this.parseInt(this.component(TextBoxComponent.class, "triggeredBlockPositionOffsetY").getText()),
                 this.parseInt(this.component(TextBoxComponent.class, "triggeredBlockPositionOffsetZ").getText())
@@ -572,6 +614,14 @@ public class HousingScreen extends BaseOwoScreen<FlowLayout> {
             return Integer.parseInt(string);
         } catch (NumberFormatException numberFormatException) {
             return 0;
+        }
+    }
+
+    private double parseDouble(String string) {
+        try {
+            return Double.parseDouble(string);
+        } catch (NumberFormatException numberFormatException) {
+            return 0.0;
         }
     }
 

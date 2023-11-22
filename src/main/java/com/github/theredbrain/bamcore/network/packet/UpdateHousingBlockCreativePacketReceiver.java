@@ -14,6 +14,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.tuple.MutablePair;
 
 public class UpdateHousingBlockCreativePacketReceiver implements ServerPlayNetworking.PlayChannelHandler {
 
@@ -33,6 +34,9 @@ public class UpdateHousingBlockCreativePacketReceiver implements ServerPlayNetwo
         int restrictBlockBreakingAreaDimensionsZ = buf.readInt();
         Vec3i restrictBlockBreakingAreaDimensions = new Vec3i(restrictBlockBreakingAreaDimensionsX, restrictBlockBreakingAreaDimensionsY, restrictBlockBreakingAreaDimensionsZ);
         BlockPos restrictBlockBreakingAreaPositionOffset = buf.readBlockPos();
+        BlockPos entrancePositionOffset = buf.readBlockPos();
+        double entranceYaw = buf.readDouble();
+        double entrancePitch = buf.readDouble();
         BlockPos triggeredBlockPositionOffset = buf.readBlockPos();
 
         int ownerMode = buf.readInt();
@@ -57,6 +61,10 @@ public class UpdateHousingBlockCreativePacketReceiver implements ServerPlayNetwo
                 }
                 if (!housingBlockBlockEntity.setRestrictBlockBreakingAreaPositionOffset(restrictBlockBreakingAreaPositionOffset)) {
                     player.sendMessage(Text.translatable("housing_block.restrictBlockBreakingAreaPositionOffset.invalid"), false);
+                    updateSuccessful = false;
+                }
+                if (!housingBlockBlockEntity.setEntrance(new MutablePair<>(entrancePositionOffset, new MutablePair<>(entranceYaw, entrancePitch)))) {
+                    player.sendMessage(Text.translatable("housing_block.entrance.invalid"), false);
                     updateSuccessful = false;
                 }
                 if (!housingBlockBlockEntity.setTriggeredBlockPositionOffset(triggeredBlockPositionOffset)) {

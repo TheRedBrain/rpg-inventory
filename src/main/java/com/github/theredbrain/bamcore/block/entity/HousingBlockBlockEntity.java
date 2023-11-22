@@ -3,11 +3,8 @@ package com.github.theredbrain.bamcore.block.entity;
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.api.util.BlockRotationUtils;
 import com.github.theredbrain.bamcore.api.util.UUIDUtilities;
-import com.github.theredbrain.bamcore.block.HousingBlock;
-import com.github.theredbrain.bamcore.block.RedstoneTriggerBlock;
 import com.github.theredbrain.bamcore.block.RotatedBlockWithEntity;
 import com.github.theredbrain.bamcore.block.Triggerable;
-import com.github.theredbrain.bamcore.registry.BlockRegistry;
 import com.github.theredbrain.bamcore.registry.ComponentsRegistry;
 import com.github.theredbrain.bamcore.registry.EntityRegistry;
 import com.github.theredbrain.bamcore.registry.StatusEffectsRegistry;
@@ -24,6 +21,7 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.tuple.MutablePair;
 
 import java.util.*;
 
@@ -38,6 +36,7 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
     private BlockPos restrictBlockBreakingAreaPositionOffset = new BlockPos(0, 1, 0);
     private int ownerMode = 0; // 0: dimension owner, 1: first interaction
     private BlockPos triggeredBlockPositionOffset = new BlockPos(0, 1, 0);
+    private MutablePair<BlockPos, MutablePair<Double, Double>> entrance = new MutablePair<>(new BlockPos(0, 1, 0), new MutablePair<>(0.0, 0.0));
     public HousingBlockBlockEntity(BlockPos pos, BlockState state) {
         super(EntityRegistry.HOUSING_BLOCK_ENTITY, pos, state);
     }
@@ -80,6 +79,12 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
         nbt.putInt("triggeredBlockPositionOffsetX", this.triggeredBlockPositionOffset.getX());
         nbt.putInt("triggeredBlockPositionOffsetY", this.triggeredBlockPositionOffset.getY());
         nbt.putInt("triggeredBlockPositionOffsetZ", this.triggeredBlockPositionOffset.getZ());
+
+        nbt.putInt("entrance_X", this.entrance.getLeft().getX());
+        nbt.putInt("entrance_Y", this.entrance.getLeft().getY());
+        nbt.putInt("entrance_Z", this.entrance.getLeft().getZ());
+        nbt.putDouble("entrance_Yaw", this.entrance.getRight().getLeft());
+        nbt.putDouble("entrance_Pitch", this.entrance.getRight().getRight());
 
         super.writeNbt(nbt);
     }
@@ -126,6 +131,14 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
         int p = MathHelper.clamp(nbt.getInt("triggeredBlockPositionOffsetY"), -48, 48);
         int q = MathHelper.clamp(nbt.getInt("triggeredBlockPositionOffsetZ"), -48, 48);
         this.triggeredBlockPositionOffset = new BlockPos(o, p, q);
+
+        int entrance_X = nbt.getInt("entrance_X");
+        int entrance_Y = nbt.getInt("entrance_Y");
+        int entrance_Z = nbt.getInt("entrance_Z");
+        this.entrance.setLeft(new BlockPos(entrance_X, entrance_Y, entrance_Z));
+        double entrance_Yaw = nbt.getDouble("entrance_Yaw");
+        double entrance_Pitch = nbt.getDouble("entrance_Pitch");
+        this.entrance.setRight(new MutablePair<>(entrance_Yaw, entrance_Pitch));
 
         super.readNbt(nbt);
     }
@@ -265,6 +278,15 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
     // TODO check if input is valid
     public boolean setOwnerMode(int ownerMode) {
         this.ownerMode = ownerMode;
+        return true;
+    }
+
+    public MutablePair<BlockPos, MutablePair<Double, Double>> getEntrance() {
+        return entrance;
+    }
+
+    public boolean setEntrance(MutablePair<BlockPos, MutablePair<Double, Double>> entrance) {
+        this.entrance = entrance;
         return true;
     }
 

@@ -35,7 +35,7 @@ implements BlockEntityRenderer<TeleporterBlockBlockEntity> {
         if (!MinecraftClient.getInstance().player.isCreativeLevelTwoOp() && !MinecraftClient.getInstance().player.isSpectator()) {
             return;
         }
-        BlockPos incomingTeleportPositionOffset = teleporterBlockBlockEntity.getIncomingTeleportPositionOffset();
+//        BlockPos incomingTeleportPositionOffset = teleporterBlockBlockEntity.getIncomingTeleportPositionOffset();
         BlockPos blockPos = teleporterBlockBlockEntity.getActivationAreaPositionOffset();
         Vec3i vec3i = teleporterBlockBlockEntity.getActivationAreaDimensions();
         if (vec3i.getX() < 1 || vec3i.getY() < 1 || vec3i.getZ() < 1) {
@@ -44,9 +44,9 @@ implements BlockEntityRenderer<TeleporterBlockBlockEntity> {
 //        if (teleporterBlockBlockEntity.getMode() != StructureBlockMode.SAVE && teleporterBlockBlockEntity.getMode() != StructureBlockMode.LOAD) {
 //            return;
 //        }
-        double x = incomingTeleportPositionOffset.getX();
-        double y = incomingTeleportPositionOffset.getY();
-        double z = incomingTeleportPositionOffset.getZ();
+//        double x = incomingTeleportPositionOffset.getX();
+//        double y = incomingTeleportPositionOffset.getY();
+//        double z = incomingTeleportPositionOffset.getZ();
 
         double d = blockPos.getX();
         double e = blockPos.getZ();
@@ -104,7 +104,7 @@ implements BlockEntityRenderer<TeleporterBlockBlockEntity> {
         VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getLines());
         if (teleporterBlockBlockEntity.getShowActivationArea()) {
             WorldRenderer.drawBox(matrixStack, vertexConsumer, m, g, n, o, h, p, 0.9f, 0.9f, 0.9f, 1.0f, 0.5f, 0.5f, 0.5f);
-            WorldRenderer.drawBox(matrixStack, vertexConsumer, x, y, z, x + 1, y + 1, z + 1,  0.0f, 1.0f, 0.0f, 1.0f, 0.5f, 0.5f, 0.5f);
+//            WorldRenderer.drawBox(matrixStack, vertexConsumer, x, y, z, x + 1, y + 1, z + 1,  0.0f, 1.0f, 0.0f, 1.0f, 0.5f, 0.5f, 0.5f);
             this.renderInvisibleBlocks(teleporterBlockBlockEntity, vertexConsumer, blockPos, matrixStack);
         }
 //        if (teleporterBlockBlockEntity.getMode() == StructureBlockMode.SAVE && teleporterBlockBlockEntity.shouldShowAir()) {

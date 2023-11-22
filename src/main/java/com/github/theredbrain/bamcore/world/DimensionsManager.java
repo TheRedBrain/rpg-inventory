@@ -20,14 +20,16 @@ public class DimensionsManager {
         LifecycleHack.markNamespaceStable("bamcore");
     }
 
-    public static void addAndSaveDynamicDimension(Identifier dimensionId, MinecraftServer server) {
+    public static void addAndSaveDynamicDimension(Identifier dimensionId, MinecraftServer server, String bluePrintDimension) {
         // may throw exception here
 
-//        Identifier blueprintDimId = RPGMod.identifier("blueprint_dungeons");
-//        RegistryKey<World> registryKey = RegistryKey.of(RegistryKeys.WORLD, blueprintDimId);
-//        ServerWorld serverWorld = server.getWorld(registryKey);
+        Identifier blueprintDimId = BetterAdventureModeCore.identifier(bluePrintDimension);
+        RegistryKey<World> registryKey = RegistryKey.of(RegistryKeys.WORLD, blueprintDimId);
+        ServerWorld serverWorld = server.getWorld(registryKey);
 
-        ServerWorld serverWorld = server.getOverworld();
+        if (serverWorld == null) {
+            serverWorld = server.getOverworld();
+        }
 
         if (serverWorld != null) {
             ChunkGenerator generator = serverWorld.getChunkManager().getChunkGenerator();

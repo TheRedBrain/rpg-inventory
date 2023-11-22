@@ -4,7 +4,6 @@ import com.github.theredbrain.bamcore.block.entity.TeleporterBlockBlockEntity;
 import com.github.theredbrain.bamcore.registry.EntityRegistry;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.OperatorBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -18,11 +17,9 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 public class TeleporterBlock extends RotatedBlockWithEntity implements OperatorBlock {
-//    public static final EnumProperty<StructureBlockMode> MODE = Properties.STRUCTURE_BLOCK_MODE;
 
     public TeleporterBlock(Settings settings) {
         super(settings);
-//        this.setDefaultState((BlockState) ((BlockState) this.stateManager.getDefaultState()).with(MODE, StructureBlockMode.LOAD));
     }
 
     @Override
@@ -46,38 +43,8 @@ public class TeleporterBlock extends RotatedBlockWithEntity implements OperatorB
         return ActionResult.CONSUME;
     }
 
-//    @Override
-//    public NamedScreenHandlerFactory createScreenHandlerFactory(BlockState state, World world, BlockPos pos) {
-//        BlockEntity blockEntity = world.getBlockEntity(pos);
-//        Text name = Text.literal("Teleporter");
-//        TeleporterBlockBlockEntity teleporterBlockBlockEntity;
-//        if (blockEntity instanceof TeleporterBlockBlockEntity) {
-//            teleporterBlockBlockEntity = (TeleporterBlockBlockEntity) blockEntity;
-//            name = Text.literal(teleporterBlockBlockEntity.getTeleporterName());
-//        } else {
-//            teleporterBlockBlockEntity = null;
-//        }
-//        return new ExtendedScreenHandlerFactory((syncId, inventory, player) -> new TeleporterBlockScreenHandler(syncId, inventory, teleporterBlockBlockEntity), name);
-//    }
-
-//    @Override
-//    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-//        BlockEntity blockEntity;
-//        if (world.isClient) {
-//            return;
-//        }
-////        if (placer != null && (blockEntity = world.getBlockEntity(pos)) instanceof TeleporterBlockBlockEntity) {
-////            ((StructureBlockBlockEntity) blockEntity).setAuthor(placer);
-////        }
-//    }
-
     @Override
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.MODEL;
     }
-
-//    @Override
-//    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-//        builder.add(MODE);
-//    }
 }

@@ -3,7 +3,6 @@ package com.github.theredbrain.bamcore.client.gui.screen.ingame;
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.block.entity.TeleporterBlockBlockEntity;
 import com.github.theredbrain.bamcore.network.packet.BetterAdventureModeCoreServerPacket;
-import com.github.theredbrain.bamcore.registry.ComponentsRegistry;
 import com.github.theredbrain.bamcore.registry.StatusEffectsRegistry;
 import com.github.theredbrain.bamcore.screen.TeleporterBlockScreenHandler;
 import io.netty.buffer.Unpooled;
@@ -48,10 +47,17 @@ public class TeleporterBlockScreen extends BaseOwoHandledScreen<FlowLayout, Tele
     private TeleporterBlockBlockEntity teleporterBlock;
     private boolean showCreativeTab;
     private boolean showActivationArea;
-    private boolean indirectTeleportationMode;
     private boolean showAdventureScreen;
-    private int dimensionMode;
-    // TODO change consumeKeyItemStack to a string identifying the item and an int identifying the count
+
+    /**
+     * 0: direct teleport, 1: specific location, 2: dungeon mode, 3: house mode
+     */
+    private int teleportationMode;
+
+    /**
+     * 0: world spawn, 1: player spawn, 2: housing/dungeon access position
+     */
+    private int specificLocationType;
     private boolean consumeKeyItemStack;
 
     public TeleporterBlockScreen(TeleporterBlockScreenHandler handler, PlayerInventory inventory, Text title) {
@@ -60,8 +66,7 @@ public class TeleporterBlockScreen extends BaseOwoHandledScreen<FlowLayout, Tele
         this.showCreativeTab = handler.getShowCreativeTab();
     }
 
-    // button callbacks
-    //region
+    //region button callbacks
     private void teleport() {
         if (this.tryTeleport()) {
             this.close();
@@ -122,20 +127,18 @@ public class TeleporterBlockScreen extends BaseOwoHandledScreen<FlowLayout, Tele
     private void confirmDungeonRegeneration() {
         if (this.tryDungeonRegeneration()) {
             component(OverlayContainer.class, "dungeonRegenerationConfirmScreen").remove();
-            this.buildAdventureModeScreen(this.uiAdapter.rootComponent);
+            this.buildAdventureModeScreen();
         }
     }
 
     private void cancelDungeonRegeneration() {
         component(OverlayContainer.class, "dungeonRegenerationConfirmScreen").remove();
-        this.buildAdventureModeScreen(this.uiAdapter.rootComponent);
+        this.buildAdventureModeScreen();
     }
 
     private void updateCurrentTeleportationTargetEntry(PlayerListEntry clientPlayer, PlayerListEntry newTeleportationTargetPlayer) {
 
-        for (Component child : component(FlowLayout.class, "currentTeleportationTargetEntryContainer").children()) {
-            child.remove();
-        }
+        component(FlowLayout.class, "currentTeleportationTargetEntryContainer").clearChildren();
 
         component(FlowLayout.class, "currentTeleportationTargetEntryContainer").children(List.of(
                 Components.texture(newTeleportationTargetPlayer.getSkinTexture(), 8, 8, 8, 8, 64, 64)
@@ -148,11 +151,11 @@ public class TeleporterBlockScreen extends BaseOwoHandledScreen<FlowLayout, Tele
                         .id("currentTeleportationTargetEntryLabel")
         ));
 
-        if (clientPlayer != newTeleportationTargetPlayer) {
-            component(ButtonComponent.class, "regenerateDungeonButton").active = false;
-        } else {
-            component(ButtonComponent.class, "regenerateDungeonButton").active = ComponentsRegistry.PLAYER_SPECIFIC_DIMENSION_IDS.get(this.client.getServer().getPlayerManager().getPlayer(clientPlayer.getProfile().getId())).getStatus(this.teleporterBlock.getOutgoingTeleportDimension());
-        }
+//        if (clientPlayer != newTeleportationTargetPlayer) {
+//            component(ButtonComponent.class, "regenerateDungeonButton").active = false;
+//        } else {
+//            component(ButtonComponent.class, "regenerateDungeonButton").active = ComponentsRegistry.PLAYER_SPECIFIC_DIMENSION_IDS.get(this.client.getServer().getPlayerManager().getPlayer(clientPlayer.getProfile().getId())).getStatus(this.teleporterBlock.getOutgoingTeleportDimension());
+//        }
     }
 
     private void done() {
@@ -163,8 +166,8 @@ public class TeleporterBlockScreen extends BaseOwoHandledScreen<FlowLayout, Tele
 
     private void cancel() {
         this.teleporterBlock.setShowActivationArea(this.showActivationArea);
-        this.teleporterBlock.setDimensionMode(this.dimensionMode);
-        this.teleporterBlock.setIndirectTeleportationMode(this.indirectTeleportationMode);
+        this.teleporterBlock.setTeleportationMode(this.teleportationMode);
+        this.teleporterBlock.setSpecificLocationType(this.specificLocationType);
         this.teleporterBlock.setConsumeKeyItemStack(this.consumeKeyItemStack);
         this.close();
     }
@@ -195,38 +198,67 @@ public class TeleporterBlockScreen extends BaseOwoHandledScreen<FlowLayout, Tele
         this.component(ButtonComponent.class, "toggleShowAdventureScreenButton").tooltip(this.showAdventureScreen ? Text.translatable("gui.teleporter_block.toggleShowAdventureScreenButton.on.tooltip") : Text.translatable("gui.teleporter_block.toggleShowAdventureScreenButton.off.tooltip"));
     }
 
-    private void switchDimensionMode() {
-        if (this.dimensionMode == 0) {
-            this.dimensionMode = 1;
-        } else if (this.dimensionMode == 1) {
-            this.dimensionMode = 2;
+    private void switchTeleportationMode() {
+        if (this.teleportationMode == 0) {
+            this.teleportationMode = 1;
+        } else if (this.teleportationMode == 1) {
+            this.teleportationMode = 2;
+        } else if (this.teleportationMode == 2) {
+            this.teleportationMode = 3;
         } else {
-            this.dimensionMode = 0;
+            this.teleportationMode = 0;
         }
-        this.component(ButtonComponent.class, "switchDimensionModeButton").setMessage(this.dimensionMode == 0 ? Text.translatable("gui.teleporter_block.switchDimensionModeButton.static") : this.dimensionMode == 1 ? Text.translatable("gui.teleporter_block.switchDimensionModeButton.dynamic") : Text.translatable("gui.teleporter_block.switchDimensionModeButton.current"));
-        this.component(ButtonComponent.class, "switchDimensionModeButton").tooltip(this.dimensionMode == 0 ? Text.translatable("gui.teleporter_block.switchDimensionModeButton.static.tooltip") : this.dimensionMode == 1 ? Text.translatable("gui.teleporter_block.switchDimensionModeButton.dynamic.tooltip") : Text.translatable("gui.teleporter_block.switchDimensionModeButton.current.tooltip"));
-        this.component(TextBoxComponent.class, "outgoingTeleportDimension").tooltip((this.dimensionMode == 0 || this.dimensionMode == 2) ? Text.translatable("gui.teleporter_block.outgoingTeleportDimension.tooltip") : Text.translatable("gui.teleporter_block.outgoingTeleportDimensionGroup.tooltip"));
+        this.component(ButtonComponent.class, "switchTeleportationModeButton")
+                .setMessage(this.teleportationMode == 1 ? Text.translatable("gui.teleporter_block.switchTeleportationModeButton.1")
+                        : this.teleportationMode == 2 ? Text.translatable("gui.teleporter_block.switchTeleportationModeButton.2")
+                        : this.teleportationMode == 3 ? Text.translatable("gui.teleporter_block.switchTeleportationModeButton.3")
+                        : Text.translatable("gui.teleporter_block.switchTeleportationModeButton.0"));
+        this.component(ButtonComponent.class, "switchTeleportationModeButton")
+                .tooltip(this.teleportationMode == 1 ? Text.translatable("gui.teleporter_block.switchTeleportationModeButton.1.tooltip")
+                        : this.teleportationMode == 2 ? Text.translatable("gui.teleporter_block.switchTeleportationModeButton.2.tooltip")
+                        : this.teleportationMode == 3 ? Text.translatable("gui.teleporter_block.switchTeleportationModeButton.3.tooltip")
+                        : Text.translatable("gui.teleporter_block.switchTeleportationModeButton.0.tooltip"));
+        buildTeleportationModeSettings();
     }
 
-    private void toggleIndirectTeleportationMode() {
-        if (this.indirectTeleportationMode) {
-            this.indirectTeleportationMode = false;
-        } else {
-            this.indirectTeleportationMode = true;
-        }
-        this.component(ButtonComponent.class, "toggleIndirectTeleportationModeButton")
-                .setMessage(this.indirectTeleportationMode ? Text.translatable("gui.teleporter_block.toggleIndirectTeleportationModeButton.on")
-                        : Text.translatable("gui.teleporter_block.toggleIndirectTeleportationModeButton.off"));
-        this.component(ButtonComponent.class, "toggleIndirectTeleportationModeButton")
-                .tooltip(this.indirectTeleportationMode ? Text.translatable("gui.teleporter_block.toggleIndirectTeleportationModeButton.on.tooltip")
-                        : Text.translatable("gui.teleporter_block.toggleIndirectTeleportationModeButton.off.tooltip"));
+    private void addLocationToLocationList(String identifier, String entrance) {
+        this.component(FlowLayout.class, "locationsListContainer").child(
+                Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
+                        .children(List.of(
+                                Components.label(Text.of(identifier))
+                                        .shadow(true)
+                                        .color(Color.ofArgb(0xFFFFFF))
+                                        .margins(Insets.of(1, 1, 1, 1))
+                                        .sizing(Sizing.fill(40), Sizing.content()),
+                                Components.label(Text.of(entrance))
+                                        .shadow(true)
+                                        .color(Color.ofArgb(0xFFFFFF))
+                                        .margins(Insets.of(1, 1, 1, 1))
+                                        .sizing(Sizing.fill(40), Sizing.content()),
+                                Components.button(Text.translatable("gui.teleporter_block.deleteLocationsListEntryButton"), button -> button.parent().remove())
+                                        .sizing(Sizing.fill(20), Sizing.content())
+                        ))
+        );
+    }
 
-        this.component(TextBoxComponent.class, "outgoingTeleportTeleporterPositionX").active = this.indirectTeleportationMode;
-        this.component(TextBoxComponent.class, "outgoingTeleportTeleporterPositionX").visible = this.indirectTeleportationMode;
-        this.component(TextBoxComponent.class, "outgoingTeleportTeleporterPositionY").active = this.indirectTeleportationMode;
-        this.component(TextBoxComponent.class, "outgoingTeleportTeleporterPositionY").visible = this.indirectTeleportationMode;
-        this.component(TextBoxComponent.class, "outgoingTeleportTeleporterPositionZ").active = this.indirectTeleportationMode;
-        this.component(TextBoxComponent.class, "outgoingTeleportTeleporterPositionZ").visible = this.indirectTeleportationMode;
+    private void switchSpecificLocationType() {
+        if (this.teleportationMode == 3) {
+            if (this.specificLocationType == 0) {
+                this.specificLocationType = 1;
+            } else if (this.specificLocationType == 1) {
+                this.specificLocationType = 2;
+            } else {
+                this.specificLocationType = 0;
+            }
+            this.component(ButtonComponent.class, "switchSpecificLocationTypeButton")
+                    .setMessage(this.specificLocationType == 1 ? Text.translatable("gui.teleporter_block.switchSpecificLocationTypeButton.1")
+                            : this.specificLocationType == 2 ? Text.translatable("gui.teleporter_block.switchSpecificLocationTypeButton.2")
+                            : Text.translatable("gui.teleporter_block.switchSpecificLocationTypeButton.0"));
+            this.component(ButtonComponent.class, "switchSpecificLocationTypeButton")
+                    .tooltip(this.specificLocationType == 1 ? Text.translatable("gui.teleporter_block.switchSpecificLocationTypeButton.1.tooltip")
+                            : this.specificLocationType == 2 ? Text.translatable("gui.teleporter_block.switchSpecificLocationTypeButton.2.tooltip")
+                            : Text.translatable("gui.teleporter_block.switchSpecificLocationTypeButton.0.tooltip"));
+        }
     }
 
     private void toggleConsumeKeyItemStack() {
@@ -237,7 +269,7 @@ public class TeleporterBlockScreen extends BaseOwoHandledScreen<FlowLayout, Tele
         }
         this.component(ButtonComponent.class, "consumeKeyItemStackButton").setMessage(this.consumeKeyItemStack ? Text.translatable("gui.teleporter_block.keyItemButton.yes") : Text.translatable("gui.teleporter_block.keyItemButton.no"));
     }
-    //endregion
+    //endregion button callbacks
 
     @Override
     protected @NotNull OwoUIAdapter<FlowLayout> createAdapter() {
@@ -248,11 +280,6 @@ public class TeleporterBlockScreen extends BaseOwoHandledScreen<FlowLayout, Tele
     protected void build(FlowLayout rootComponent) {
         Vec3i activationAreaDimensions = this.teleporterBlock.getActivationAreaDimensions();
         BlockPos activationAreaPositionOffset = this.teleporterBlock.getActivationAreaPositionOffset();
-        BlockPos outgoingTeleportTeleporterPosition = this.teleporterBlock.getOutgoingTeleportTeleporterPosition();
-        BlockPos incomingTeleportPositionOffset = this.teleporterBlock.getIncomingTeleportPositionOffset();
-        BlockPos outgoingTeleportPosition = this.teleporterBlock.getOutgoingTeleportPosition();
-        BlockPos targetDungeonStructureStartPosition = this.teleporterBlock.getTargetDungeonStructureStartPosition();
-        BlockPos regenerateTargetDungeonTriggerBlockPosition = this.teleporterBlock.getRegenerateTargetDungeonTriggerBlockPosition();
         rootComponent
                 .surface(Surface.VANILLA_TRANSLUCENT)
                 .horizontalAlignment(HorizontalAlignment.CENTER)
@@ -317,22 +344,6 @@ public class TeleporterBlockScreen extends BaseOwoHandledScreen<FlowLayout, Tele
                                                                 .verticalAlignment(VerticalAlignment.CENTER)
                                                                 .horizontalAlignment(HorizontalAlignment.CENTER),
 
-                                                        // target dimension
-                                                        Components.button(this.dimensionMode == 0 ? Text.translatable("gui.teleporter_block.switchDimensionModeButton.static")
-                                                                                : this.dimensionMode == 1 ? Text.translatable("gui.teleporter_block.switchDimensionModeButton.dynamic")
-                                                                                : Text.translatable("gui.teleporter_block.switchDimensionModeButton.current")
-                                                                        , button -> this.switchDimensionMode())
-                                                                .sizing(Sizing.fill(100), Sizing.fixed(20))
-                                                                .tooltip(this.dimensionMode == 0 ? Text.translatable("gui.teleporter_block.switchDimensionModeButton.static.tooltip")
-                                                                        : this.dimensionMode == 1 ? Text.translatable("gui.teleporter_block.switchDimensionModeButton.dynamic.tooltip")
-                                                                        : Text.translatable("gui.teleporter_block.switchDimensionModeButton.current.tooltip"))
-                                                                .id("switchDimensionModeButton"),
-                                                        Components.textBox(Sizing.fill(100), this.teleporterBlock.getOutgoingTeleportDimension())
-                                                                .tooltip((this.dimensionMode == 0 || this.dimensionMode == 2) ? Text.translatable("gui.teleporter_block.outgoingTeleportDimension.tooltip")
-                                                                        : Text.translatable("gui.teleporter_block.outgoingTeleportDimensionGroup.tooltip"))
-                                                                .margins(Insets.of(1, 1, 1, 1))
-                                                                .id("outgoingTeleportDimension"),
-
                                                         // showAdventureScreen switch
                                                         Components.button(this.showAdventureScreen ? Text.translatable("gui.teleporter_block.toggleShowAdventureScreenButton.on")
                                                                                 : Text.translatable("gui.teleporter_block.toggleShowAdventureScreenButton.off"),
@@ -342,148 +353,20 @@ public class TeleporterBlockScreen extends BaseOwoHandledScreen<FlowLayout, Tele
                                                                         : Text.translatable("gui.teleporter_block.toggleShowAdventureScreenButton.off.tooltip"))
                                                                 .id("toggleShowAdventureScreenButton"),
 
-                                                        // teleportation mode switch / outgoing teleport teleporter position
-                                                        Components.button(this.indirectTeleportationMode ? Text.translatable("gui.teleporter_block.toggleIndirectTeleportationModeButton.on")
-                                                                                : Text.translatable("gui.teleporter_block.toggleIndirectTeleportationModeButton.off"),
-                                                                        button -> this.toggleIndirectTeleportationMode())
+                                                        // teleportation mode
+                                                        Components.button(this.teleportationMode == 1 ? Text.translatable("gui.teleporter_block.switchTeleportationModeButton.1")
+                                                                                : this.teleportationMode == 2 ? Text.translatable("gui.teleporter_block.switchTeleportationModeButton.2")
+                                                                                : this.teleportationMode == 3 ? Text.translatable("gui.teleporter_block.switchTeleportationModeButton.3")
+                                                                                : Text.translatable("gui.teleporter_block.switchTeleportationModeButton.0")
+                                                                        , button -> this.switchTeleportationMode())
                                                                 .sizing(Sizing.fill(100), Sizing.fixed(20))
-                                                                .tooltip(this.indirectTeleportationMode ? Text.translatable("gui.teleporter_block.toggleIndirectTeleportationModeButton.on.tooltip")
-                                                                        : Text.translatable("gui.teleporter_block.toggleIndirectTeleportationModeButton.off.tooltip"))
-                                                                .id("toggleIndirectTeleportationModeButton"),
-                                                        Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
-                                                                .children(List.of(
-                                                                        Components.textBox(Sizing.fill(32), Integer.toString(outgoingTeleportTeleporterPosition.getX()))
-                                                                                .tooltip(Text.translatable("gui.teleporter_block.outgoingTeleportTeleporterPositionX.tooltip"))
-                                                                                .margins(Insets.of(1, 1, 1, 1))
-                                                                                .id("outgoingTeleportTeleporterPositionX"),
-                                                                        Components.textBox(Sizing.fill(32), Integer.toString(outgoingTeleportTeleporterPosition.getY()))
-                                                                                .tooltip(Text.translatable("gui.teleporter_block.outgoingTeleportTeleporterPositionY.tooltip"))
-                                                                                .margins(Insets.of(1, 1, 1, 1))
-                                                                                .id("outgoingTeleportTeleporterPositionY"),
-                                                                        Components.textBox(Sizing.fill(32), Integer.toString(outgoingTeleportTeleporterPosition.getZ()))
-                                                                                .tooltip(Text.translatable("gui.teleporter_block.outgoingTeleportTeleporterPositionZ.tooltip"))
-                                                                                .margins(Insets.of(1, 1, 1, 1))
-                                                                                .id("outgoingTeleportTeleporterPositionZ")
-                                                                ))
-                                                                .verticalAlignment(VerticalAlignment.CENTER)
-                                                                .horizontalAlignment(HorizontalAlignment.CENTER),
-
-                                                        // incoming/outgoing teleport positions
-                                                        Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
-                                                                .children(List.of(
-                                                                        Components.textBox(Sizing.fill(32), Integer.toString(incomingTeleportPositionOffset.getX()))
-                                                                                .tooltip(Text.translatable("gui.teleporter_block.incomingTeleportPositionOffsetX.tooltip"))
-                                                                                .margins(Insets.of(1, 1, 1, 1))
-                                                                                .id("incomingTeleportPositionOffsetX"),
-                                                                        Components.textBox(Sizing.fill(32), Integer.toString(incomingTeleportPositionOffset.getY()))
-                                                                                .tooltip(Text.translatable("gui.teleporter_block.incomingTeleportPositionOffsetY.tooltip"))
-                                                                                .margins(Insets.of(1, 1, 1, 1))
-                                                                                .id("incomingTeleportPositionOffsetY"),
-                                                                        Components.textBox(Sizing.fill(32), Integer.toString(incomingTeleportPositionOffset.getZ()))
-                                                                                .tooltip(Text.translatable("gui.teleporter_block.incomingTeleportPositionOffsetZ.tooltip"))
-                                                                                .margins(Insets.of(1, 1, 1, 1))
-                                                                                .id("incomingTeleportPositionOffsetZ")
-                                                                ))
-                                                                .verticalAlignment(VerticalAlignment.CENTER)
-                                                                .horizontalAlignment(HorizontalAlignment.CENTER),
-                                                        Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
-                                                                .children(List.of(
-                                                                        Components.textBox(Sizing.fill(32), Integer.toString(outgoingTeleportPosition.getX()))
-                                                                                .tooltip(Text.translatable("gui.teleporter_block.outgoingTeleportPositionX.tooltip"))
-                                                                                .margins(Insets.of(1, 1, 1, 1))
-                                                                                .id("outgoingTeleportPositionX"),
-                                                                        Components.textBox(Sizing.fill(32), Integer.toString(outgoingTeleportPosition.getY()))
-                                                                                .tooltip(Text.translatable("gui.teleporter_block.outgoingTeleportPositionY.tooltip"))
-                                                                                .margins(Insets.of(1, 1, 1, 1))
-                                                                                .id("outgoingTeleportPositionY"),
-                                                                        Components.textBox(Sizing.fill(32), Integer.toString(outgoingTeleportPosition.getZ()))
-                                                                                .tooltip(Text.translatable("gui.teleporter_block.outgoingTeleportPositionZ.tooltip"))
-                                                                                .margins(Insets.of(1, 1, 1, 1))
-                                                                                .id("outgoingTeleportPositionZ")
-                                                                ))
-                                                                .verticalAlignment(VerticalAlignment.CENTER)
-                                                                .horizontalAlignment(HorizontalAlignment.CENTER),
-
-                                                        // incoming/outgoing teleport yaw/pitch
-                                                        Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
-                                                                .children(List.of(
-                                                                        Components.textBox(Sizing.fill(49), Double.toString(this.teleporterBlock.getIncomingTeleportPositionYaw()))
-                                                                                .tooltip(Text.translatable("gui.teleporter_block.incomingTeleportPositionYaw.tooltip"))
-                                                                                .margins(Insets.of(1, 1, 1, 1))
-                                                                                .id("incomingTeleportPositionYaw"),
-                                                                        Components.textBox(Sizing.fill(49), Double.toString(this.teleporterBlock.getIncomingTeleportPositionPitch()))
-                                                                                .tooltip(Text.translatable("gui.teleporter_block.incomingTeleportPositionPitch.tooltip"))
-                                                                                .margins(Insets.of(1, 1, 1, 1))
-                                                                                .id("incomingTeleportPositionPitch")
-                                                                ))
-                                                                .verticalAlignment(VerticalAlignment.CENTER)
-                                                                .horizontalAlignment(HorizontalAlignment.CENTER),
-                                                        Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
-                                                                .children(List.of(
-                                                                        Components.textBox(Sizing.fill(49), Double.toString(this.teleporterBlock.getOutgoingTeleportPositionYaw()))
-                                                                                .tooltip(Text.translatable("gui.teleporter_block.outgoingTeleportPositionYaw.tooltip"))
-                                                                                .margins(Insets.of(1, 1, 1, 1))
-                                                                                .id("outgoingTeleportPositionYaw"),
-                                                                        Components.textBox(Sizing.fill(49), Double.toString(this.teleporterBlock.getOutgoingTeleportPositionPitch()))
-                                                                                .tooltip(Text.translatable("gui.teleporter_block.outgoingTeleportPositionPitch.tooltip"))
-                                                                                .margins(Insets.of(1, 1, 1, 1))
-                                                                                .id("outgoingTeleportPositionPitch")
-                                                                ))
-                                                                .verticalAlignment(VerticalAlignment.CENTER)
-                                                                .horizontalAlignment(HorizontalAlignment.CENTER),
-
-                                                        // data for (re-)generating the target dungeon
-                                                        Components.textBox(Sizing.fill(100), this.teleporterBlock.getTargetDungeonStructureIdentifier())
-                                                                .tooltip(Text.translatable("gui.teleporter_block.targetDungeonStructureIdentifier.tooltip"))
-                                                                .margins(Insets.of(1, 1, 1, 1))
-                                                                .id("targetDungeonStructureIdentifier"),
-                                                        Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
-                                                                .children(List.of(
-                                                                        Components.textBox(Sizing.fill(32), Integer.toString(targetDungeonStructureStartPosition.getX()))
-                                                                                .tooltip(Text.translatable("gui.teleporter_block.targetDungeonStructureStartPositionX.tooltip"))
-                                                                                .margins(Insets.of(1, 1, 1, 1))
-                                                                                .id("targetDungeonStructureStartPositionX"),
-                                                                        Components.textBox(Sizing.fill(32), Integer.toString(targetDungeonStructureStartPosition.getY()))
-                                                                                .tooltip(Text.translatable("gui.teleporter_block.targetDungeonStructureStartPositionY.tooltip"))
-                                                                                .margins(Insets.of(1, 1, 1, 1))
-                                                                                .id("targetDungeonStructureStartPositionY"),
-                                                                        Components.textBox(Sizing.fill(32), Integer.toString(targetDungeonStructureStartPosition.getZ()))
-                                                                                .tooltip(Text.translatable("gui.teleporter_block.targetDungeonStructureStartPositionZ.tooltip"))
-                                                                                .margins(Insets.of(1, 1, 1, 1))
-                                                                                .id("targetDungeonStructureStartPositionZ")
-                                                                ))
-                                                                .verticalAlignment(VerticalAlignment.CENTER)
-                                                                .horizontalAlignment(HorizontalAlignment.CENTER),
-                                                        Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
-                                                                .children(List.of(
-                                                                        Components.textBox(Sizing.fill(49), Integer.toString(this.teleporterBlock.getTargetDungeonChunkX()))
-                                                                                .tooltip(Text.translatable("gui.teleporter_block.targetDungeonChunkX.tooltip"))
-                                                                                .margins(Insets.of(1, 1, 1, 1))
-                                                                                .id("targetDungeonChunkX"),
-                                                                        Components.textBox(Sizing.fill(49), Integer.toString(this.teleporterBlock.getTargetDungeonChunkZ()))
-                                                                                .tooltip(Text.translatable("gui.teleporter_block.targetDungeonChunkZ.tooltip"))
-                                                                                .margins(Insets.of(1, 1, 1, 1))
-                                                                                .id("targetDungeonChunkZ")
-                                                                ))
-                                                                .verticalAlignment(VerticalAlignment.CENTER)
-                                                                .horizontalAlignment(HorizontalAlignment.CENTER),
-                                                        Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
-                                                                .children(List.of(
-                                                                        Components.textBox(Sizing.fill(32), Integer.toString(regenerateTargetDungeonTriggerBlockPosition.getX()))
-                                                                                .tooltip(Text.translatable("gui.teleporter_block.regenerateTargetDungeonTriggerBlockPositionX.tooltip"))
-                                                                                .margins(Insets.of(1, 1, 1, 1))
-                                                                                .id("regenerateTargetDungeonTriggerBlockPositionX"),
-                                                                        Components.textBox(Sizing.fill(32), Integer.toString(regenerateTargetDungeonTriggerBlockPosition.getY()))
-                                                                                .tooltip(Text.translatable("gui.teleporter_block.regenerateTargetDungeonTriggerBlockPositionY.tooltip"))
-                                                                                .margins(Insets.of(1, 1, 1, 1))
-                                                                                .id("regenerateTargetDungeonTriggerBlockPositionY"),
-                                                                        Components.textBox(Sizing.fill(32), Integer.toString(regenerateTargetDungeonTriggerBlockPosition.getZ()))
-                                                                                .tooltip(Text.translatable("gui.teleporter_block.regenerateTargetDungeonTriggerBlockPositionZ.tooltip"))
-                                                                                .margins(Insets.of(1, 1, 1, 1))
-                                                                                .id("regenerateTargetDungeonTriggerBlockPositionZ")
-                                                                ))
-                                                                .verticalAlignment(VerticalAlignment.CENTER)
-                                                                .horizontalAlignment(HorizontalAlignment.CENTER),
+                                                                .tooltip(this.teleportationMode == 1 ? Text.translatable("gui.teleporter_block.switchTeleportationModeButton.1.tooltip")
+                                                                        : this.teleportationMode == 2 ? Text.translatable("gui.teleporter_block.switchTeleportationModeButton.2.tooltip")
+                                                                        : this.teleportationMode == 3 ? Text.translatable("gui.teleporter_block.switchTeleportationModeButton.3.tooltip")
+                                                                        : Text.translatable("gui.teleporter_block.switchTeleportationModeButton.0.tooltip"))
+                                                                .id("switchTeleportationModeButton"),
+                                                        Containers.verticalFlow(Sizing.content(), Sizing.content())
+                                                                .id("teleportationModeSettingsContainer"),
 
                                                         // adventure screen customization
                                                         Components.textBox(Sizing.fill(100), this.teleporterBlock.getTeleporterName())
@@ -535,6 +418,7 @@ public class TeleporterBlockScreen extends BaseOwoHandledScreen<FlowLayout, Tele
                         .horizontalAlignment(HorizontalAlignment.CENTER)
                         .id("creative_container")
                 );
+            buildTeleportationModeSettings();
 
             for (int i = 0; i < 3; ++i) {
                 for (int j = 0; j < 9; ++j) {
@@ -547,24 +431,39 @@ public class TeleporterBlockScreen extends BaseOwoHandledScreen<FlowLayout, Tele
             }
             disableSlot(36);
             disableSlot(38);
-        //endregion
+        //endregion creative mode screen
         } else {
         //region adventure mode screen
 
-            if (!this.showAdventureScreen && (this.dimensionMode == 0 || this.dimensionMode == 2)) {
+            if (!this.showAdventureScreen && (this.teleportationMode == 0 || this.teleportationMode == 1)) {
                 this.teleport();
             } else {
-                this.buildAdventureModeScreen(rootComponent);
+                rootComponent.child(Containers.verticalFlow(Sizing.fill(100), Sizing.content())
+                        .verticalAlignment(VerticalAlignment.CENTER)
+                        .horizontalAlignment(HorizontalAlignment.CENTER)
+                        .id("adventure_container"));
+                this.buildAdventureModeScreen();
             }
-        //endregion
+        //endregion adventure mode screen
         }
     }
 
-    private void buildAdventureModeScreen(FlowLayout rootComponent) {
+    //region build screen components
+    private void buildAdventureModeScreen() {
+        this.component(FlowLayout.class, "adventure_container").clearChildren();
+        disableSlot(36);
+        disableSlot(37);
+        disableSlot(38);
 
-        if (this.teleporterBlock.getDimensionMode() == 0 || this.teleporterBlock.getDimensionMode() == 2) {
-            //region static dimension mode
-            rootComponent.child(Containers.verticalFlow(Sizing.fill(100), Sizing.content())
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 0; j < 9; ++j) {
+                disableSlot(j + (i + 1) * 9);
+            }
+        }
+
+        if (this.teleporterBlock.getTeleportationMode() == 2) {
+            //region dungeon mode
+            this.component(FlowLayout.class, "adventure_container").child(Containers.verticalFlow(Sizing.fill(100), Sizing.content())
                     .children(List.of(
                             Components.label(Text.translatable(this.teleporterBlock.getTeleporterName()))
                                     .shadow(true)
@@ -572,82 +471,8 @@ public class TeleporterBlockScreen extends BaseOwoHandledScreen<FlowLayout, Tele
                                     .margins(Insets.of(1, 1, 1, 1))
                                     .sizing(Sizing.content(), Sizing.content())
                                     .id("adventureScreenTitle"),
-                            Containers.horizontalFlow(Sizing.fill(30), Sizing.content())
-                                    .children(List.of(
-                                            Components.button(Text.translatable(this.teleporterBlock.getTeleportButtonLabel()), button -> this.teleport())
-                                                    .sizing(Sizing.fill(49), Sizing.content())
-                                                    .id("teleportButton"),
-                                            Components.button(Text.translatable(this.teleporterBlock.getCancelTeleportButtonLabel()), button -> this.cancelTeleport())
-                                                    .sizing(Sizing.fill(49), Sizing.content())
-                                                    .id("cancelTeleportButton")
-                                    ))
-                                    .margins(Insets.of(1, 1, 1, 1))
-                                    .verticalAlignment(VerticalAlignment.CENTER)
-                                    .horizontalAlignment(HorizontalAlignment.CENTER)
-                                    .id("adventureScreenButtons")
-                    ))
-                    .verticalAlignment(VerticalAlignment.CENTER)
-                    .horizontalAlignment(HorizontalAlignment.CENTER)
-                    .id("adventure_container")
-            );
-            //endregion
-        } else {
-            //region dynamic dimension mode
-            rootComponent.child(Containers.verticalFlow(Sizing.fill(100), Sizing.content())
-                    .children(List.of(
-                            Components.label(Text.translatable(this.teleporterBlock.getTeleporterName()))
-                                    .shadow(true)
-                                    .color(Color.ofArgb(0xFFFFFF))
-                                    .margins(Insets.of(1, 1, 1, 1))
-                                    .sizing(Sizing.content(), Sizing.content())
-                                    .id("adventureScreenTitle"),
-                            Components.label(Text.translatable("gui.teleporter_block.currentTeleportationTargetEntry.label"))
-                                    .shadow(true)
-                                    .color(Color.ofArgb(0xFFFFFF))
-                                    .margins(Insets.of(1, 1, 1, 1))
-                                    .sizing(Sizing.content(), Sizing.content())
-                                    .id("currentTeleportationTargetEntryLabel"),
-                            Containers.horizontalFlow(Sizing.fixed(200), Sizing.content())
-                                    .verticalAlignment(VerticalAlignment.CENTER)
-                                    .horizontalAlignment(HorizontalAlignment.CENTER)
-                                    .id("currentTeleportationTargetEntryContainer"),
-                            Containers.verticalScroll(Sizing.fixed(200), Sizing.fixed(100), Containers.verticalFlow(Sizing.fill(100), Sizing.fill(100))
-                                            .children(List.of(
-
-                                                    Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
-                                                            .verticalAlignment(VerticalAlignment.CENTER)
-                                                            .horizontalAlignment(HorizontalAlignment.CENTER)
-                                                            .id("currentPlayerTargetEntryContainer"),
-                                                    Containers.collapsible(Sizing.fill(100), Sizing.content(), Text.translatable("gui.teleporter_block.currentTeamTargetEntries.label"), true)
-                                                            .verticalAlignment(VerticalAlignment.CENTER)
-                                                            .horizontalAlignment(HorizontalAlignment.CENTER)
-                                                            .id("currentTeamTargetEntries")
-                                                        /*
-                                                         Current target
-                                                             defaults to current player or owner of current dimension
-
-                                                         lists of viable targets
-                                                             current player
-                                                             team
-                                                             guild (later)
-                                                             friends (later)
-                                                             public (later)
-                                                             clicking on a viable target updates the current target
-
-                                                         target composition
-                                                            player skin
-                                                            player name
-                                                            button "choose as target"
-                                                         */
-
-                                            ))
-                                            .verticalAlignment(VerticalAlignment.CENTER)
-                                            .horizontalAlignment(HorizontalAlignment.CENTER)
-                                            .id("player_list_scroll_container_content")
-                                    )
-                                    .verticalAlignment(VerticalAlignment.CENTER)
-                                    .horizontalAlignment(HorizontalAlignment.CENTER)
-                                    .id("player_list_scroll_container"),
+                            Containers.verticalFlow(Sizing.fill(100), Sizing.content())
+                                    .id("playerListContainer"),
                             Containers.verticalFlow(Sizing.fill(100), Sizing.content())
                                     .verticalAlignment(VerticalAlignment.CENTER)
                                     .horizontalAlignment(HorizontalAlignment.CENTER)
@@ -669,51 +494,133 @@ public class TeleporterBlockScreen extends BaseOwoHandledScreen<FlowLayout, Tele
                                     .horizontalAlignment(HorizontalAlignment.CENTER)
                                     .id("adventureScreenButtons")
                     ))
+            );
+            this.buildPlayerList();
+
+            if (!handler.slots.get(37).getStack().isEmpty()) {
+                BetterAdventureModeCore.LOGGER.info("slots enabled");
+                enableSlot(36);
+                enableSlot(38);
+                component(FlowLayout.class, "keyItemContainer").children(List.of(
+                        Containers.horizontalFlow(Sizing.fill(100), Sizing.content()).children(List.of(
+                                        slotAsComponent(38),
+                                        slotAsComponent(36)
+                                ))
+                                .margins(Insets.of(1, 1, 1, 1))
+                                .verticalAlignment(VerticalAlignment.CENTER)
+                                .horizontalAlignment(HorizontalAlignment.CENTER)
+                                .id("keyItemSlots"),
+                        Containers.grid(Sizing.content(), Sizing.content(), 3, 9)
+                                .padding(Insets.of(4))
+                                .id("playerInventorySlots_adventure")
+                ));
+                for (int i = 0; i < 3; ++i) {
+                    for (int j = 0; j < 9; ++j) {
+                        enableSlot(j + (i + 1) * 9);
+                        component(GridLayout.class, "playerInventorySlots_adventure").child(
+                                        slotAsComponent(j + (i + 1) * 9)
+                                                .margins(Insets.of(1, 1, 1, 1)),
+                                        i,
+                                        j)
+                                .id("slot_" + i + "_" + j);
+                    }
+                }
+            }
+            //endregion
+        } else if (this.teleporterBlock.getTeleportationMode() == 3) {
+            //region house mode
+            this.component(FlowLayout.class, "adventure_container").child(Containers.verticalFlow(Sizing.fill(100), Sizing.content())
+                    .children(List.of(
+                            Components.label(Text.translatable(this.teleporterBlock.getTeleporterName()))
+                                    .shadow(true)
+                                    .color(Color.ofArgb(0xFFFFFF))
+                                    .margins(Insets.of(1, 1, 1, 1))
+                                    .sizing(Sizing.content(), Sizing.content())
+                                    .id("adventureScreenTitle"),
+                            Containers.verticalFlow(Sizing.fill(100), Sizing.content())
+                                    .id("playerListContainer"),
+                            Containers.horizontalFlow(Sizing.fill(30), Sizing.content())
+                                    .children(List.of(
+                                            Components.button(Text.translatable(this.teleporterBlock.getTeleportButtonLabel()), button -> this.teleport())
+                                                    .sizing(Sizing.fill(49), Sizing.content())
+                                                    .id("teleportButton"),
+                                            Components.button(Text.translatable(this.teleporterBlock.getCancelTeleportButtonLabel()), button -> this.cancelTeleport())
+                                                    .sizing(Sizing.fill(49), Sizing.content())
+                                                    .id("cancelTeleportButton")
+                                    ))
+                                    .margins(Insets.of(1, 1, 1, 1))
+                                    .verticalAlignment(VerticalAlignment.CENTER)
+                                    .horizontalAlignment(HorizontalAlignment.CENTER)
+                                    .id("adventureScreenButtons")
+                    ))
+            );
+            this.buildPlayerList();
+            //endregion
+        } else {
+            //region static dimension mode
+            this.component(FlowLayout.class, "adventure_container").child(Containers.verticalFlow(Sizing.fill(100), Sizing.content())
+                    .children(List.of(
+                            Components.label(Text.translatable(this.teleporterBlock.getTeleporterName()))
+                                    .shadow(true)
+                                    .color(Color.ofArgb(0xFFFFFF))
+                                    .margins(Insets.of(1, 1, 1, 1))
+                                    .sizing(Sizing.content(), Sizing.content())
+                                    .id("adventureScreenTitle"),
+                            Containers.horizontalFlow(Sizing.fill(30), Sizing.content())
+                                    .children(List.of(
+                                            Components.button(Text.translatable(this.teleporterBlock.getTeleportButtonLabel()), button -> this.teleport())
+                                                    .sizing(Sizing.fill(49), Sizing.content())
+                                                    .id("teleportButton"),
+                                            Components.button(Text.translatable(this.teleporterBlock.getCancelTeleportButtonLabel()), button -> this.cancelTeleport())
+                                                    .sizing(Sizing.fill(49), Sizing.content())
+                                                    .id("cancelTeleportButton")
+                                    ))
+                                    .margins(Insets.of(1, 1, 1, 1))
+                                    .verticalAlignment(VerticalAlignment.CENTER)
+                                    .horizontalAlignment(HorizontalAlignment.CENTER)
+                                    .id("adventureScreenButtons")
+                    ))
                     .verticalAlignment(VerticalAlignment.CENTER)
                     .horizontalAlignment(HorizontalAlignment.CENTER)
                     .id("adventure_container")
             );
-            this.populatePlayerList();
             //endregion
         }
+    }
 
-        if (!handler.slots.get(37).getStack().isEmpty()) {
-            BetterAdventureModeCore.LOGGER.info("slots enabled");
-            component(FlowLayout.class, "keyItemContainer").children(List.of(
-                    Containers.horizontalFlow(Sizing.fill(100), Sizing.content()).children(List.of(
-                                    slotAsComponent(38),
-                                    slotAsComponent(36)
-                            ))
-                            .margins(Insets.of(1, 1, 1, 1))
-                            .verticalAlignment(VerticalAlignment.CENTER)
-                            .horizontalAlignment(HorizontalAlignment.CENTER)
-                            .id("keyItemSlots"),
-                    Containers.grid(Sizing.content(), Sizing.content(), 3, 9)
-                            .padding(Insets.of(4))
-                            .id("playerInventorySlots_adventure")
-            ));
-            for (int i = 0; i < 3; ++i) {
-                for (int j = 0; j < 9; ++j) {
-                    component(GridLayout.class, "playerInventorySlots_adventure").child(
-                                    slotAsComponent(j + (i + 1) * 9)
-                                            .margins(Insets.of(1, 1, 1, 1)),
-                                    i,
-                                    j)
-                            .id("slot_" + i + "_" + j);
-                }
-            }
-        } else {
-            BetterAdventureModeCore.LOGGER.info("slots disabled");
-            disableSlot(36);
-            disableSlot(38);
+    private void buildPlayerList() {
+        this.component(FlowLayout.class, "playerListContainer").children(List.of(
+                Components.label(Text.translatable("gui.teleporter_block.currentTeleportationTargetEntry.label"))
+                        .shadow(true)
+                        .color(Color.ofArgb(0xFFFFFF))
+                        .margins(Insets.of(1, 1, 1, 1))
+                        .sizing(Sizing.content(), Sizing.content())
+                        .id("currentTeleportationTargetEntryLabel"),
+                Containers.horizontalFlow(Sizing.fixed(200), Sizing.content())
+                        .verticalAlignment(VerticalAlignment.CENTER)
+                        .horizontalAlignment(HorizontalAlignment.CENTER)
+                        .id("currentTeleportationTargetEntryContainer"),
+                Containers.verticalScroll(Sizing.fixed(200), Sizing.fixed(100), Containers.verticalFlow(Sizing.fill(100), Sizing.fill(100))
+                                .children(List.of(
 
-            for (int i = 0; i < 3; ++i) {
-                for (int j = 0; j < 9; ++j) {
-                    disableSlot(j + (i + 1) * 9);
-                }
-            }
-        }
-        disableSlot(37);
+                                        Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
+                                                .verticalAlignment(VerticalAlignment.CENTER)
+                                                .horizontalAlignment(HorizontalAlignment.CENTER)
+                                                .id("currentPlayerTargetEntryContainer"),
+                                        Containers.verticalFlow(Sizing.fill(100), Sizing.content())
+                                                .verticalAlignment(VerticalAlignment.CENTER)
+                                                .horizontalAlignment(HorizontalAlignment.CENTER)
+                                                .id("currentTeamTargetEntries")
+                                ))
+                                .verticalAlignment(VerticalAlignment.CENTER)
+                                .horizontalAlignment(HorizontalAlignment.CENTER)
+                                .id("player_list_scroll_container_content")
+                        )
+                        .verticalAlignment(VerticalAlignment.CENTER)
+                        .horizontalAlignment(HorizontalAlignment.CENTER)
+                        .id("player_list_scroll_container")
+        ));
+        this.populatePlayerList();
     }
 
     private void populatePlayerList() {
@@ -722,17 +629,6 @@ public class TeleporterBlockScreen extends BaseOwoHandledScreen<FlowLayout, Tele
             PlayerListEntry currentPlayer = this.client.player.networkHandler.getPlayerListEntry(this.client.player.getUuid());
 
             if (currentPlayer != null) {
-
-//                component(FlowLayout.class, "currentTeleportationTargetEntryContainer").children(List.of(
-//                        Components.texture(currentPlayer.getSkinTexture(), 8, 8, 8, 8, 64, 64)
-//                                .sizing(Sizing.fixed(16), Sizing.fixed(16)),
-//                        Components.label(Text.of(currentPlayer.getProfile().getName()))
-//                                .shadow(true)
-//                                .color(Color.ofArgb(0xFFFFFF))
-//                                .margins(Insets.of(1, 1, 1, 1))
-//                                .sizing(Sizing.content(), Sizing.content())
-//                                .id("currentTeleportationTargetEntryLabel")
-//                ));
 
                 component(FlowLayout.class, "currentPlayerTargetEntryContainer").children(List.of(
                         Components.texture(currentPlayer.getSkinTexture(), 8, 8, 8, 8, 64, 64)
@@ -782,6 +678,98 @@ public class TeleporterBlockScreen extends BaseOwoHandledScreen<FlowLayout, Tele
         }
     }
 
+    private void buildTeleportationModeSettings() {
+        this.component(FlowLayout.class, "teleportationModeSettingsContainer").clearChildren();
+        if (this.teleportationMode == 1) {
+            this.component(FlowLayout.class, "teleportationModeSettingsContainer")
+                    .children(List.of(
+                            Components.button(this.specificLocationType == 1 ? Text.translatable("gui.teleporter_block.switchSpecificLocationTypeButton.1")
+                                                    : this.specificLocationType == 2 ? Text.translatable("gui.teleporter_block.switchSpecificLocationTypeButton.2")
+                                                    : Text.translatable("gui.teleporter_block.switchSpecificLocationTypeButton.0")
+                                            , button -> this.switchSpecificLocationType())
+                                    .sizing(Sizing.fill(100), Sizing.fixed(20))
+                                    .tooltip(this.specificLocationType == 1 ? Text.translatable("gui.teleporter_block.switchSpecificLocationTypeButton.1.tooltip")
+                                            : this.specificLocationType == 2 ? Text.translatable("gui.teleporter_block.switchSpecificLocationTypeButton.2.tooltip")
+                                            : Text.translatable("gui.teleporter_block.switchSpecificLocationTypeButton.0.tooltip"))
+                                    .id("switchSpecificLocationTypeButton")
+                    ));
+        } else if (this.teleportationMode == 2 || this.teleportationMode == 3) {
+            this.component(FlowLayout.class, "teleportationModeSettingsContainer")
+                    .children(List.of(
+                            Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
+                                    .id("locationsListContainer"),
+                            Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
+                                    .children(List.of(
+                                            Components.textBox(Sizing.fill(25), ""),
+                                            Components.textBox(Sizing.fill(25), ""),
+                                            Components.button(Text.translatable("gui.teleporter_block.addLocationsListEntryButton"), button -> this.addLocationToLocationList(((TextBoxComponent)button.parent().children().get(0)).getText(), ((TextBoxComponent)button.parent().children().get(1)).getText()))
+                                                    .sizing(Sizing.fill(50), Sizing.content())
+                                    ))
+                    ));
+            buildLocationsList();
+        } else {
+            BlockPos directTeleportPositionOffset = this.teleporterBlock.getDirectTeleportPositionOffset();
+            this.component(FlowLayout.class, "teleportationModeSettingsContainer")
+                    .children(List.of(
+                            Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
+                                    .children(List.of(
+                                            Components.textBox(Sizing.fill(32), Integer.toString(directTeleportPositionOffset.getX()))
+                                                    .tooltip(Text.translatable("gui.teleporter_block.directTeleportPositionOffsetX.tooltip"))
+                                                    .margins(Insets.of(1, 1, 1, 1))
+                                                    .id("directTeleportPositionOffsetX"),
+                                            Components.textBox(Sizing.fill(32), Integer.toString(directTeleportPositionOffset.getY()))
+                                                    .tooltip(Text.translatable("gui.teleporter_block.directTeleportPositionOffsetY.tooltip"))
+                                                    .margins(Insets.of(1, 1, 1, 1))
+                                                    .id("directTeleportPositionOffsetY"),
+                                            Components.textBox(Sizing.fill(32), Integer.toString(directTeleportPositionOffset.getZ()))
+                                                    .tooltip(Text.translatable("gui.teleporter_block.directTeleportPositionOffsetZ.tooltip"))
+                                                    .margins(Insets.of(1, 1, 1, 1))
+                                                    .id("directTeleportPositionOffsetZ")
+                                    ))
+                                    .verticalAlignment(VerticalAlignment.CENTER)
+                                    .horizontalAlignment(HorizontalAlignment.CENTER),
+                            Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
+                                    .children(List.of(
+                                            Components.textBox(Sizing.fill(49), Double.toString(this.teleporterBlock.getDirectTeleportPositionOffsetYaw()))
+                                                    .tooltip(Text.translatable("gui.teleporter_block.directTeleportPositionOffsetYaw.tooltip"))
+                                                    .margins(Insets.of(1, 1, 1, 1))
+                                                    .id("directTeleportPositionOffsetYaw"),
+                                            Components.textBox(Sizing.fill(49), Double.toString(this.teleporterBlock.getDirectTeleportPositionOffsetPitch()))
+                                                    .tooltip(Text.translatable("gui.teleporter_block.directTeleportPositionOffsetPitch.tooltip"))
+                                                    .margins(Insets.of(1, 1, 1, 1))
+                                                    .id("directTeleportPositionOffsetPitch")
+                                    ))
+                                    .verticalAlignment(VerticalAlignment.CENTER)
+                                    .horizontalAlignment(HorizontalAlignment.CENTER)
+                    ));
+        }
+    }
+
+    private void buildLocationsList() {
+        int locationsListSize = this.teleporterBlock.getLocationsList().size();
+        this.component(FlowLayout.class, "locationsListContainer").clearChildren();
+        for (int i = 0; i < locationsListSize; i++) {
+            this.component(FlowLayout.class, "locationsListContainer").child(
+                    Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
+                            .children(List.of(
+                                    Components.label(Text.of(this.teleporterBlock.getLocationsList().get(i).getLeft()))
+                                            .shadow(true)
+                                            .color(Color.ofArgb(0xFFFFFF))
+                                            .margins(Insets.of(1, 1, 1, 1))
+                                            .sizing(Sizing.fill(25), Sizing.content()),
+                                    Components.label(Text.of(this.teleporterBlock.getLocationsList().get(i).getRight()))
+                                            .shadow(true)
+                                            .color(Color.ofArgb(0xFFFFFF))
+                                            .margins(Insets.of(1, 1, 1, 1))
+                                            .sizing(Sizing.fill(25), Sizing.content()),
+                                    Components.button(Text.translatable("gui.teleporter_block.deleteLocationsListEntryButton"), button -> button.parent().remove())
+                                            .sizing(Sizing.fill(50), Sizing.content())
+                            ))
+            );
+        }
+    }
+    //endregion build screen components
+
     @Override
     protected void init() {
         if (this.client != null && this.client.world != null) {
@@ -791,9 +779,8 @@ public class TeleporterBlockScreen extends BaseOwoHandledScreen<FlowLayout, Tele
             }
         }
         this.showActivationArea = this.teleporterBlock.getShowActivationArea();
-        this.dimensionMode = this.teleporterBlock.getDimensionMode();
+        this.teleportationMode = this.teleporterBlock.getTeleportationMode();
         this.showAdventureScreen = this.teleporterBlock.getShowAdventureScreen();
-        this.indirectTeleportationMode = this.teleporterBlock.getIndirectTeleportationMode();
         this.consumeKeyItemStack = this.teleporterBlock.getConsumeKeyItemStack();
 
         super.init();
@@ -855,54 +842,44 @@ public class TeleporterBlockScreen extends BaseOwoHandledScreen<FlowLayout, Tele
                 this.parseInt(this.component(TextBoxComponent.class, "activationAreaPositionOffsetZ").getText())
         ));
 
-        buf.writeInt(this.dimensionMode);
-        buf.writeString(this.component(TextBoxComponent.class, "outgoingTeleportDimension").getText());
-
         buf.writeBoolean(this.showAdventureScreen);
 
-        buf.writeBoolean(this.indirectTeleportationMode);
-        buf.writeBlockPos(new BlockPos(
-                this.parseInt(this.component(TextBoxComponent.class, "outgoingTeleportTeleporterPositionX").getText()),
-                this.parseInt(this.component(TextBoxComponent.class, "outgoingTeleportTeleporterPositionY").getText()),
-                this.parseInt(this.component(TextBoxComponent.class, "outgoingTeleportTeleporterPositionZ").getText())
-        ));
-        buf.writeBlockPos(new BlockPos(
-                this.parseInt(this.component(TextBoxComponent.class, "incomingTeleportPositionOffsetX").getText()),
-                this.parseInt(this.component(TextBoxComponent.class, "incomingTeleportPositionOffsetY").getText()),
-                this.parseInt(this.component(TextBoxComponent.class, "incomingTeleportPositionOffsetZ").getText())
-        ));
+        buf.writeInt(this.teleportationMode);
 
-        buf.writeDouble(this.parseDouble(this.component(TextBoxComponent.class, "incomingTeleportPositionYaw").getText()));
-        buf.writeDouble(this.parseDouble(this.component(TextBoxComponent.class, "incomingTeleportPositionPitch").getText()));
+        if (this.teleportationMode == 0) {
+            buf.writeBlockPos(new BlockPos(
+                    this.parseInt(this.component(TextBoxComponent.class, "directTeleportPositionOffsetX").getText()),
+                    this.parseInt(this.component(TextBoxComponent.class, "directTeleportPositionOffsetY").getText()),
+                    this.parseInt(this.component(TextBoxComponent.class, "directTeleportPositionOffsetZ").getText())
+            ));
 
-        buf.writeBlockPos(new BlockPos(
-                this.parseInt(this.component(TextBoxComponent.class, "outgoingTeleportPositionX").getText()),
-                this.parseInt(this.component(TextBoxComponent.class, "outgoingTeleportPositionY").getText()),
-                this.parseInt(this.component(TextBoxComponent.class, "outgoingTeleportPositionZ").getText())
-        ));
-        buf.writeDouble(this.parseDouble(this.component(TextBoxComponent.class, "outgoingTeleportPositionYaw").getText()));
-        buf.writeDouble(this.parseDouble(this.component(TextBoxComponent.class, "outgoingTeleportPositionPitch").getText()));
+            buf.writeDouble(this.parseDouble(this.component(TextBoxComponent.class, "directTeleportPositionOffsetYaw").getText()));
+            buf.writeDouble(this.parseDouble(this.component(TextBoxComponent.class, "directTeleportPositionOffsetPitch").getText()));
+        } else {
+            buf.writeBlockPos(new BlockPos(0, 0, 0));
+            buf.writeDouble(0.0);
+            buf.writeDouble(0.0);
+        }
+        if (this.teleportationMode == 1) {
 
-        buf.writeString(this.component(TextBoxComponent.class, "targetDungeonStructureIdentifier").getText());
-        buf.writeBlockPos(new BlockPos(
-                this.parseInt(this.component(TextBoxComponent.class, "targetDungeonStructureStartPositionX").getText()),
-                this.parseInt(this.component(TextBoxComponent.class, "targetDungeonStructureStartPositionY").getText()),
-                this.parseInt(this.component(TextBoxComponent.class, "targetDungeonStructureStartPositionZ").getText())
-        ));
-        buf.writeInt(this.parseInt(this.component(TextBoxComponent.class, "targetDungeonChunkX").getText()));
-        buf.writeInt(this.parseInt(this.component(TextBoxComponent.class, "targetDungeonChunkZ").getText()));
-        buf.writeBlockPos(new BlockPos(
-                this.parseInt(this.component(TextBoxComponent.class, "regenerateTargetDungeonTriggerBlockPositionX").getText()),
-                this.parseInt(this.component(TextBoxComponent.class, "regenerateTargetDungeonTriggerBlockPositionY").getText()),
-                this.parseInt(this.component(TextBoxComponent.class, "regenerateTargetDungeonTriggerBlockPositionZ").getText())
-        ));
+            buf.writeInt(this.specificLocationType);
+
+        } else {
+            buf.writeInt(-1);
+        }
+        if (this.teleportationMode == 2 || this.teleportationMode == 3) {
+            int locationsListSize = this.component(FlowLayout.class, "locationsListContainer").children().size();
+            buf.writeInt(locationsListSize);
+            for (int i = 0; i < locationsListSize; i++) {
+                buf.writeString(((LabelComponent)((FlowLayout)this.component(FlowLayout.class, "locationsListContainer").children().get(i)).children().get(0)).text().getString());
+                buf.writeString(((LabelComponent)((FlowLayout)this.component(FlowLayout.class, "locationsListContainer").children().get(i)).children().get(1)).text().getString());
+            }
+        } else {
+            buf.writeInt(0);
+        }
 
         buf.writeBoolean(this.consumeKeyItemStack);
 
-        buf.writeInt(0);
-        for (int i = 0; i < 0; i++) {
-            buf.writeString("");
-        }
         buf.writeString(this.component(TextBoxComponent.class, "teleportButtonLabel").getText());
         buf.writeString(this.component(TextBoxComponent.class, "cancelTeleportButtonLabel").getText());
 
@@ -911,46 +888,45 @@ public class TeleporterBlockScreen extends BaseOwoHandledScreen<FlowLayout, Tele
     }
 
     private boolean tryDungeonRegeneration() {
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-//        buf.writeString(component(LabelComponent.class, "currentTeleportationTargetEntryLabel").text().getString());
-        buf.writeString(this.client.player.getName().getString());
-
-        buf.writeString(this.teleporterBlock.getOutgoingTeleportDimension());
-
-        buf.writeString(this.teleporterBlock.getTargetDungeonStructureIdentifier());
-        buf.writeBlockPos(this.teleporterBlock.getTargetDungeonStructureStartPosition());
-
-        buf.writeInt(this.teleporterBlock.getTargetDungeonChunkX());
-        buf.writeInt(this.teleporterBlock.getTargetDungeonChunkZ());
-        buf.writeBlockPos(this.teleporterBlock.getRegenerateTargetDungeonTriggerBlockPosition());
+//        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+////        buf.writeString(component(LabelComponent.class, "currentTeleportationTargetEntryLabel").text().getString());
+//        buf.writeString(this.client.player.getName().getString());
 //
-        this.client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModeCoreServerPacket.REGENERATE_DIMENSION_FROM_TELEPORTER_BLOCK, buf));
+//        buf.writeString(this.teleporterBlock.getOutgoingTeleportDimension());
+//
+//        buf.writeString(this.teleporterBlock.getTargetDungeonStructureIdentifier());
+//        buf.writeBlockPos(this.teleporterBlock.getTargetDungeonStructureStartPosition());
+//
+//        buf.writeInt(this.teleporterBlock.getTargetDungeonChunkX());
+//        buf.writeInt(this.teleporterBlock.getTargetDungeonChunkZ());
+//        buf.writeBlockPos(this.teleporterBlock.getRegenerateTargetDungeonTriggerBlockPosition());
+////
+//        this.client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModeCoreServerPacket.REGENERATE_DIMENSION_FROM_TELEPORTER_BLOCK, buf));
         return true;
     }
 
     private boolean tryTeleport() {
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-        if (this.teleporterBlock.getDimensionMode() == 0 || this.teleporterBlock.getDimensionMode() == 2) {
-            buf.writeString(this.client.player.getName().getString());
-        } else {
+
+        buf.writeBlockPos(this.teleporterBlock.getPos());
+
+        buf.writeInt(this.teleporterBlock.getTeleportationMode());
+
+        buf.writeBlockPos(this.teleporterBlock.getDirectTeleportPositionOffset());
+        buf.writeDouble(this.teleporterBlock.getDirectTeleportPositionOffsetYaw());
+        buf.writeDouble(this.teleporterBlock.getDirectTeleportPositionOffsetPitch());
+
+        buf.writeInt(this.teleporterBlock.getSpecificLocationType());
+
+        if (this.teleporterBlock.getTeleportationMode() == 2 || this.teleporterBlock.getTeleportationMode() == 3) {
             buf.writeString(component(LabelComponent.class, "currentTeleportationTargetEntryLabel").text().getString());
+            buf.writeString(""); // TODO get chosen dungeon/house
+            buf.writeString(""); // TODO get chosen dungeon/house entrance
+        } else {
+            buf.writeString("");
+            buf.writeString("");
+            buf.writeString("");
         }
-
-        buf.writeInt(this.teleporterBlock.getDimensionMode());
-        buf.writeString(this.teleporterBlock.getOutgoingTeleportDimension());
-
-        buf.writeBoolean(this.teleporterBlock.getIndirectTeleportationMode());
-        buf.writeBlockPos(this.teleporterBlock.getOutgoingTeleportTeleporterPosition());
-
-        buf.writeBlockPos(this.teleporterBlock.getOutgoingTeleportPosition());
-        buf.writeDouble(this.teleporterBlock.getOutgoingTeleportPositionYaw());
-        buf.writeDouble(this.teleporterBlock.getOutgoingTeleportPositionPitch());
-
-        buf.writeString(this.teleporterBlock.getTargetDungeonStructureIdentifier());
-        buf.writeBlockPos(this.teleporterBlock.getTargetDungeonStructureStartPosition());
-
-        buf.writeInt(this.teleporterBlock.getTargetDungeonChunkX());
-        buf.writeInt(this.teleporterBlock.getTargetDungeonChunkZ());
 
         this.client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModeCoreServerPacket.TELEPORT_FROM_TELEPORTER_BLOCK, buf));
         return true;

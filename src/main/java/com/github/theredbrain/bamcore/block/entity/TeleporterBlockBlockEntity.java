@@ -22,13 +22,13 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
+import net.minecraft.util.Pair;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
-import org.apache.commons.lang3.tuple.MutablePair;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -40,38 +40,31 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
     private boolean showActivationArea = false;
     private Vec3i activationAreaDimensions = Vec3i.ZERO;
     private BlockPos activationAreaPositionOffset = new BlockPos(0, 1, 0);
-    private boolean showAdventureScreen = true;
-    private int dimensionMode = 0;
-    private String outgoingTeleportDimension = "minecraft:overworld";
-    private boolean indirectTeleportationMode = false;
-    private BlockPos outgoingTeleportTeleporterPosition = new BlockPos(0, 0, 0);
-    private BlockPos incomingTeleportPositionOffset = new BlockPos(0, 1, 0);
-    private double incomingTeleportPositionYaw = 0.0;
-    private double incomingTeleportPositionPitch = 0.0;
 
-    private BlockPos outgoingTeleportPosition = new BlockPos(0, 0, 0);
-    private double outgoingTeleportPositionYaw = 0.0;
-    private double outgoingTeleportPositionPitch = 0.0;
+    private boolean showAdventureScreen = true; //
 
-    // TODO convert to a map of multiple pairs for bigger dungeons
-//    private boolean regenerateDungeon = false;
-    private String targetDungeonStructureIdentifier = "";
-    private BlockPos targetDungeonStructureStartPosition = new BlockPos(0, 0, 0);
-    private MutablePair<Integer, Integer> targetDungeonChunk = new MutablePair<>(0, 0);
-    private BlockPos regenerateTargetDungeonTriggerBlockPosition = new BlockPos(0, 0, 0);
+    private int teleportationMode = 0;
+
+    // direct teleportation mode
+    private BlockPos directTeleportPositionOffset = new BlockPos(0, 0, 0);
+    private double directTeleportPositionOffsetYaw = 0.0;
+    private double directTeleportPositionOffsetPitch = 0.0;
+
+    // specific location mode
+    private int specificLocationType = 0;
+
+    // dungeon mode
+    // player house mode
+    private List<Pair<String, String>> locationsList = new ArrayList<>(List.of());
 
     private boolean consumeKeyItemStack = false;
     private DefaultedList<ItemStack> requiredKeyItemStack = DefaultedList.ofSize(1, ItemStack.EMPTY);
-
-    private int accessibleHousesListSize = 0;
-    private List<String> accessibleHousesList = new ArrayList<>(List.of());
 
     private String teleportButtonLabel = "gui.teleport";
     private String cancelTeleportButtonLabel = "gui.cancel";
 
     public TeleporterBlockBlockEntity(BlockPos pos, BlockState state) {
         super(EntityRegistry.TELEPORTER_BLOCK_ENTITY, pos, state);
-//        ItemStack test = new ItemStack(Registries.ITEM.get(new Identifier("")), 1);
     }
 
     @Override
@@ -87,52 +80,25 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
         nbt.putInt("activationAreaPositionOffsetY", this.activationAreaPositionOffset.getY());
         nbt.putInt("activationAreaPositionOffsetZ", this.activationAreaPositionOffset.getZ());
 
-        nbt.putInt("dimensionMode", this.dimensionMode);
-        nbt.putString("outgoingTeleportDimension", this.outgoingTeleportDimension);
-
         nbt.putBoolean("showAdventureScreen", this.showAdventureScreen);
 
-        nbt.putBoolean("indirectTeleportationMode", this.indirectTeleportationMode);
-        nbt.putInt("outgoingTeleportTeleporterPositionX", this.outgoingTeleportTeleporterPosition.getX());
-        nbt.putInt("outgoingTeleportTeleporterPositionY", this.outgoingTeleportTeleporterPosition.getY());
-        nbt.putInt("outgoingTeleportTeleporterPositionZ", this.outgoingTeleportTeleporterPosition.getZ());
+        nbt.putInt("teleportationMode", this.teleportationMode);
 
-        nbt.putInt("incomingTeleportPositionOffsetX", this.incomingTeleportPositionOffset.getX());
-        nbt.putInt("incomingTeleportPositionOffsetY", this.incomingTeleportPositionOffset.getY());
-        nbt.putInt("incomingTeleportPositionOffsetZ", this.incomingTeleportPositionOffset.getZ());
-        nbt.putDouble("incomingTeleportPositionYaw", this.incomingTeleportPositionYaw);
-        nbt.putDouble("incomingTeleportPositionPitch", this.incomingTeleportPositionPitch);
+        nbt.putInt("directTeleportPositionOffsetX", this.directTeleportPositionOffset.getX());
+        nbt.putInt("directTeleportPositionOffsetY", this.directTeleportPositionOffset.getY());
+        nbt.putInt("directTeleportPositionOffsetZ", this.directTeleportPositionOffset.getZ());
+        nbt.putDouble("directTeleportPositionOffsetYaw", this.directTeleportPositionOffsetYaw);
+        nbt.putDouble("directTeleportPositionOffsetPitch", this.directTeleportPositionOffsetPitch);
 
-        nbt.putInt("outgoingTeleportPositionX", this.outgoingTeleportPosition.getX());
-        nbt.putInt("outgoingTeleportPositionY", this.outgoingTeleportPosition.getY());
-        nbt.putInt("outgoingTeleportPositionZ", this.outgoingTeleportPosition.getZ());
-        nbt.putDouble("outgoingTeleportPositionYaw", this.outgoingTeleportPositionYaw);
-        nbt.putDouble("outgoingTeleportPositionPitch", this.outgoingTeleportPositionPitch);
+        nbt.putInt("specificLocationType", this.specificLocationType);
 
-//        nbt.putBoolean("regenerateDungeon", this.regenerateDungeon);
-
-        nbt.putString("targetDungeonStructureIdentifier", this.targetDungeonStructureIdentifier);
-
-        nbt.putInt("targetDungeonStructureStartPositionX", this.targetDungeonStructureStartPosition.getX());
-        nbt.putInt("targetDungeonStructureStartPositionY", this.targetDungeonStructureStartPosition.getY());
-        nbt.putInt("targetDungeonStructureStartPositionZ", this.targetDungeonStructureStartPosition.getZ());
-
-        nbt.putInt("targetDungeonChunkX", this.targetDungeonChunk.getLeft());
-        nbt.putInt("targetDungeonChunkZ", this.targetDungeonChunk.getRight());
-
-        nbt.putInt("regenerateTargetDungeonTriggerBlockPositionX", this.regenerateTargetDungeonTriggerBlockPosition.getX());
-        nbt.putInt("regenerateTargetDungeonTriggerBlockPositionY", this.regenerateTargetDungeonTriggerBlockPosition.getY());
-        nbt.putInt("regenerateTargetDungeonTriggerBlockPositionZ", this.regenerateTargetDungeonTriggerBlockPosition.getZ());
-
+        for (int i = 0; i < this.locationsList.size(); i++) {
+            nbt.putString("locationsListIdentifier_" + i, this.locationsList.get(i).getLeft());
+            nbt.putString("locationsListEntrance_" + i, this.locationsList.get(i).getRight());
+        }
 
         nbt.putBoolean("consumeKeyItemStack", this.consumeKeyItemStack);
         Inventories.writeNbt(nbt, this.requiredKeyItemStack);
-
-        this.accessibleHousesListSize = this.accessibleHousesList.size();
-        nbt.putInt("accessibleHousesListSize", this.accessibleHousesListSize);
-        for (int i = 0; i < this.accessibleHousesList.size(); i++) {
-            nbt.putString("accessibleHouse_" + i, this.accessibleHousesList.get(i));
-        }
 
         nbt.putString("teleportButtonLabel", this.teleportButtonLabel);
         nbt.putString("cancelTeleportButtonLabel", this.cancelTeleportButtonLabel);
@@ -155,58 +121,29 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
         int n = MathHelper.clamp(nbt.getInt("activationAreaPositionOffsetZ"), -48, 48);
         this.activationAreaPositionOffset = new BlockPos(l, m, n);
 
-        this.dimensionMode = nbt.getInt("dimensionMode");
-        this.outgoingTeleportDimension = nbt.getString("outgoingTeleportDimension");
-
         this.showAdventureScreen = nbt.getBoolean("showAdventureScreen");
 
-        this.indirectTeleportationMode = nbt.getBoolean("indirectTeleportationMode");
-        this.outgoingTeleportTeleporterPosition = new BlockPos(
-                nbt.getInt("outgoingTeleportTeleporterPositionX"),
-                nbt.getInt("outgoingTeleportTeleporterPositionY"),
-                nbt.getInt("outgoingTeleportTeleporterPositionZ")
-        );
+        this.teleportationMode = nbt.getInt("teleportationMode");
 
-        this.incomingTeleportPositionOffset = new BlockPos(
-                nbt.getInt("incomingTeleportPositionOffsetX"),
-                nbt.getInt("incomingTeleportPositionOffsetY"),
-                nbt.getInt("incomingTeleportPositionOffsetZ")
+        this.directTeleportPositionOffset = new BlockPos(
+                nbt.getInt("directTeleportPositionOffsetX"),
+                nbt.getInt("directTeleportPositionOffsetY"),
+                nbt.getInt("directTeleportPositionOffsetZ")
         );
-        this.incomingTeleportPositionYaw = nbt.getDouble("incomingTeleportPositionYaw");
-        this.incomingTeleportPositionPitch = nbt.getDouble("incomingTeleportPositionPitch");
+        this.directTeleportPositionOffsetYaw = nbt.getDouble("directTeleportPositionOffsetYaw");
+        this.directTeleportPositionOffsetPitch = nbt.getDouble("directTeleportPositionOffsetPitch");
 
-        this.outgoingTeleportPosition = new BlockPos(
-                nbt.getInt("outgoingTeleportPositionX"),
-                nbt.getInt("outgoingTeleportPositionY"),
-                nbt.getInt("outgoingTeleportPositionZ")
-        );
-        this.outgoingTeleportPositionYaw = nbt.getDouble("outgoingTeleportPositionYaw");
-        this.outgoingTeleportPositionPitch = nbt.getDouble("outgoingTeleportPositionPitch");
+        this.specificLocationType = nbt.getInt("specificLocationType");
 
-//        this.regenerateDungeon = nbt.getBoolean("regenerateDungeon");
-
-        this.targetDungeonStructureIdentifier = nbt.getString("targetDungeonStructureIdentifier");
-        this.targetDungeonStructureStartPosition = new BlockPos(
-                nbt.getInt("targetDungeonStructureStartPositionX"),
-                nbt.getInt("targetDungeonStructureStartPositionY"),
-                nbt.getInt("targetDungeonStructureStartPositionZ")
-        );
-        this.targetDungeonChunk.setLeft(nbt.getInt("targetDungeonChunkX"));
-        this.targetDungeonChunk.setRight(nbt.getInt("targetDungeonChunkZ"));
-        this.regenerateTargetDungeonTriggerBlockPosition = new BlockPos(
-                nbt.getInt("regenerateTargetDungeonTriggerBlockPositionX"),
-                nbt.getInt("regenerateTargetDungeonTriggerBlockPositionY"),
-                nbt.getInt("regenerateTargetDungeonTriggerBlockPositionZ")
-        );
+        int locationsListSize = nbt.getInt("locationsListSize");
+        this.locationsList.clear();
+        for (int p = 0; p < locationsListSize; p++) {
+            this.locationsList.add(new Pair<>(nbt.getString("locationsListIdentifier_" + p), nbt.getString("locationsListEntrance_" + p)));
+        }
 
         this.consumeKeyItemStack = nbt.getBoolean("consumeKeyItemStack");
         this.requiredKeyItemStack = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
         Inventories.readNbt(nbt, this.requiredKeyItemStack);
-
-        this.accessibleHousesListSize = nbt.getInt("accessibleHousesListSize");
-        for (int p = 0; p < this.accessibleHousesListSize; p++) {
-            this.accessibleHousesList.add(nbt.getString("accessibleHouse_" + p));
-        }
 
         this.teleportButtonLabel = nbt.getString("teleportButtonLabel");
         this.cancelTeleportButtonLabel = nbt.getString("cancelTeleportButtonLabel");
@@ -293,29 +230,9 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
     }
 
     /**
-     *
-     * @return dimensionMode, true: static, false: dynamic TODO 0: static, 1: dynamic, 2: current
+     * Determines whether a pop-up window is shown where the player can confirm or deny the teleport.
+     * Has an effect only in some modes
      */
-    public int getDimensionMode() {
-        return dimensionMode;
-    }
-
-    // TODO check if input is valid
-    public boolean setDimensionMode(int dimensionMode) {
-        this.dimensionMode = dimensionMode;
-        return true;
-    }
-
-    public String getOutgoingTeleportDimension() {
-        return outgoingTeleportDimension;
-    }
-
-    // TODO check if input is valid
-    public boolean setOutgoingTeleportDimension(String outgoingTeleportDimension) {
-        this.outgoingTeleportDimension = outgoingTeleportDimension;
-        return true;
-    }
-
     public boolean getShowAdventureScreen() {
         return showAdventureScreen;
     }
@@ -326,133 +243,69 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
         return true;
     }
 
-    public boolean getIndirectTeleportationMode() {
-        return indirectTeleportationMode;
+    /**
+     * @return 0: direct teleport, 1: specific location, 2: dungeon mode, 3: house mode
+     */
+    public int getTeleportationMode() {
+        return teleportationMode;
     }
 
     // TODO check if input is valid
-    public boolean setIndirectTeleportationMode(boolean indirectTeleportationMode) {
-        this.indirectTeleportationMode = indirectTeleportationMode;
+    public boolean setTeleportationMode(int teleportationMode) {
+        this.teleportationMode = teleportationMode;
         return true;
     }
 
-    public BlockPos getOutgoingTeleportTeleporterPosition() {
-        return outgoingTeleportTeleporterPosition;
+    public BlockPos getDirectTeleportPositionOffset() {
+        return directTeleportPositionOffset;
     }
 
     // TODO check if input is valid
-    public boolean setOutgoingTeleportTeleporterPosition(BlockPos outgoingTeleportTeleporterPosition) {
-        this.outgoingTeleportTeleporterPosition = outgoingTeleportTeleporterPosition;
+    public boolean setDirectTeleportPositionOffset(BlockPos directTeleportPositionOffset) {
+        this.directTeleportPositionOffset = directTeleportPositionOffset;
         return true;
     }
 
-    public BlockPos getIncomingTeleportPositionOffset() {
-        return incomingTeleportPositionOffset;
+    public double getDirectTeleportPositionOffsetYaw() {
+        return directTeleportPositionOffsetYaw;
     }
 
     // TODO check if input is valid
-    public boolean setIncomingTeleportPositionOffset(BlockPos incomingTeleportPositionOffset) {
-        this.incomingTeleportPositionOffset = incomingTeleportPositionOffset;
+    public boolean setDirectTeleportPositionOffsetYaw(double directTeleportPositionOffsetYaw) {
+        this.directTeleportPositionOffsetYaw = directTeleportPositionOffsetYaw;
         return true;
     }
 
-    public double getIncomingTeleportPositionYaw() {
-        return incomingTeleportPositionYaw;
+    public double getDirectTeleportPositionOffsetPitch() {
+        return directTeleportPositionOffsetPitch;
     }
 
     // TODO check if input is valid
-    public boolean setIncomingTeleportPositionYaw(double incomingTeleportPositionYaw) {
-        this.incomingTeleportPositionYaw = incomingTeleportPositionYaw;
+    public boolean setDirectTeleportPositionOffsetPitch(double directTeleportPositionOffsetPitch) {
+        this.directTeleportPositionOffsetPitch = directTeleportPositionOffsetPitch;
         return true;
     }
 
-    public double getIncomingTeleportPositionPitch() {
-        return incomingTeleportPositionPitch;
+    /**
+     * @return 0: world spawn, 1: player spawn, 2: housing/dungeon access position
+     */
+    public int getSpecificLocationType() {
+        return specificLocationType;
     }
 
     // TODO check if input is valid
-    public boolean setIncomingTeleportPositionPitch(double incomingTeleportPositionPitch) {
-        this.incomingTeleportPositionPitch = incomingTeleportPositionPitch;
+    public boolean setSpecificLocationType(int specificLocationType) {
+        this.specificLocationType = specificLocationType;
         return true;
     }
 
-    public BlockPos getOutgoingTeleportPosition() {
-        return outgoingTeleportPosition;
+    public List<Pair<String, String>> getLocationsList() {
+        return locationsList;
     }
 
     // TODO check if input is valid
-    public boolean setOutgoingTeleportPosition(BlockPos outgoingTeleportPosition) {
-        this.outgoingTeleportPosition = outgoingTeleportPosition;
-        return true;
-    }
-
-    public double getOutgoingTeleportPositionYaw() {
-        return outgoingTeleportPositionYaw;
-    }
-
-    // TODO check if input is valid
-    public boolean setOutgoingTeleportPositionYaw(double outgoingTeleportPositionYaw) {
-        this.outgoingTeleportPositionYaw = outgoingTeleportPositionYaw;
-        return true;
-    }
-
-    public double getOutgoingTeleportPositionPitch() {
-        return outgoingTeleportPositionPitch;
-    }
-
-    // TODO check if input is valid
-    public boolean setOutgoingTeleportPositionPitch(double outgoingTeleportPositionPitch) {
-        this.outgoingTeleportPositionPitch = outgoingTeleportPositionPitch;
-        return true;
-    }
-
-    public String getTargetDungeonStructureIdentifier() {
-        return targetDungeonStructureIdentifier;
-    }
-
-    // TODO check if input is valid
-    public boolean setTargetDungeonStructureIdentifier(String targetDungeonStructureIdentifier) {
-        this.targetDungeonStructureIdentifier = targetDungeonStructureIdentifier;
-        return true;
-    }
-
-    public BlockPos getTargetDungeonStructureStartPosition() {
-        return targetDungeonStructureStartPosition;
-    }
-
-    // TODO check if input is valid
-    public boolean setTargetDungeonStructureStartPosition(BlockPos targetDungeonStructureStartPosition) {
-        this.targetDungeonStructureStartPosition = targetDungeonStructureStartPosition;
-        return true;
-    }
-
-    public int getTargetDungeonChunkX() {
-        return targetDungeonChunk.getLeft();
-    }
-
-    // TODO check if input is valid
-    public boolean setTargetDungeonChunkX(int targetDungeonChunkX) {
-        this.targetDungeonChunk.setLeft(targetDungeonChunkX);
-        return true;
-    }
-
-    public int getTargetDungeonChunkZ() {
-        return targetDungeonChunk.getRight();
-    }
-
-    // TODO check if input is valid
-    public boolean setTargetDungeonChunkZ(int targetDungeonChunkZ) {
-        this.targetDungeonChunk.setRight(targetDungeonChunkZ);
-        return true;
-    }
-
-    public BlockPos getRegenerateTargetDungeonTriggerBlockPosition() {
-        return regenerateTargetDungeonTriggerBlockPosition;
-    }
-
-    // TODO check if input is valid
-    public boolean setRegenerateTargetDungeonTriggerBlockPosition(BlockPos regenerateTargetDungeonTriggerBlockPosition) {
-        this.regenerateTargetDungeonTriggerBlockPosition = regenerateTargetDungeonTriggerBlockPosition;
+    public boolean setLocationsList(List<Pair<String, String>> locationsList) {
+        this.locationsList = locationsList;
         return true;
     }
 
@@ -466,28 +319,17 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
         return true;
     }
 
-    public boolean isKeyItemStackSlotVisible() {
-        return !(requiredKeyItemStack.get(0).isEmpty());
-    }
-
-    public DefaultedList<ItemStack> getRequiredKeyItemStack() {
-        return requiredKeyItemStack;
-    }
-
-    public void setRequiredKeyItemStack(DefaultedList<ItemStack> requiredKeyItemStack) {
-        this.requiredKeyItemStack = requiredKeyItemStack;
-    }
-
-    public List<String> getAccessibleHousesList() {
-        return accessibleHousesList;
-    }
-
-    // TODO check if input is valid
-    public boolean setAccessibleHousesList(List<String> accessibleHousesList) {
-        this.accessibleHousesList = accessibleHousesList;
-        this.accessibleHousesListSize = this.accessibleHousesList.size();
-        return true;
-    }
+//    public boolean isKeyItemStackSlotVisible() {
+//        return !(requiredKeyItemStack.get(0).isEmpty());
+//    }
+//
+//    public DefaultedList<ItemStack> getRequiredKeyItemStack() {
+//        return requiredKeyItemStack;
+//    }
+//
+//    public void setRequiredKeyItemStack(DefaultedList<ItemStack> requiredKeyItemStack) {
+//        this.requiredKeyItemStack = requiredKeyItemStack;
+//    }
 
     public String getCancelTeleportButtonLabel() {
         return cancelTeleportButtonLabel;
@@ -594,48 +436,27 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
             if (state.get(RotatedBlockWithEntity.ROTATED) != this.rotated) {
                 BlockRotation blockRotation = BlockRotationUtils.calculateRotationFromDifferentRotatedStates(state.get(RotatedBlockWithEntity.ROTATED), this.rotated);
                 this.activationAreaPositionOffset = BlockRotationUtils.rotateOffsetBlockPos(this.activationAreaPositionOffset, blockRotation);
-                this.outgoingTeleportTeleporterPosition = BlockRotationUtils.rotateOffsetBlockPos(this.outgoingTeleportTeleporterPosition, blockRotation);
-                this.incomingTeleportPositionOffset = BlockRotationUtils.rotateOffsetBlockPos(this.incomingTeleportPositionOffset, blockRotation);
-                this.outgoingTeleportPosition = BlockRotationUtils.rotateOffsetBlockPos(this.outgoingTeleportPosition, blockRotation);
-                this.targetDungeonStructureStartPosition = BlockRotationUtils.rotateOffsetBlockPos(this.targetDungeonStructureStartPosition, blockRotation);
-                this.regenerateTargetDungeonTriggerBlockPosition = BlockRotationUtils.rotateOffsetBlockPos(this.regenerateTargetDungeonTriggerBlockPosition, blockRotation);
+                this.directTeleportPositionOffset = BlockRotationUtils.rotateOffsetBlockPos(this.directTeleportPositionOffset, blockRotation);
 
-                this.incomingTeleportPositionYaw = BlockRotationUtils.rotateYaw(this.incomingTeleportPositionYaw, blockRotation);
-                this.outgoingTeleportPositionYaw = BlockRotationUtils.rotateYaw(this.outgoingTeleportPositionYaw, blockRotation);
-
-                this.targetDungeonChunk = BlockRotationUtils.rotateOffset2DPosition(this.targetDungeonChunk, blockRotation);
+                this.directTeleportPositionOffsetYaw = BlockRotationUtils.rotateYaw(this.directTeleportPositionOffsetYaw, blockRotation);
 
                 this.activationAreaDimensions = BlockRotationUtils.rotateOffsetVec3i(this.activationAreaDimensions, blockRotation);
                 this.rotated = state.get(RotatedBlockWithEntity.ROTATED);
             }
             if (state.get(RotatedBlockWithEntity.X_MIRRORED) != this.x_mirrored) {
                 this.activationAreaPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.activationAreaPositionOffset, BlockMirror.FRONT_BACK);
-                this.outgoingTeleportTeleporterPosition = BlockRotationUtils.mirrorOffsetBlockPos(this.outgoingTeleportTeleporterPosition, BlockMirror.FRONT_BACK);
-                this.incomingTeleportPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.incomingTeleportPositionOffset, BlockMirror.FRONT_BACK);
-                this.outgoingTeleportPosition = BlockRotationUtils.mirrorOffsetBlockPos(this.outgoingTeleportPosition, BlockMirror.FRONT_BACK);
-                this.targetDungeonStructureStartPosition = BlockRotationUtils.mirrorOffsetBlockPos(this.targetDungeonStructureStartPosition, BlockMirror.FRONT_BACK);
-                this.regenerateTargetDungeonTriggerBlockPosition = BlockRotationUtils.mirrorOffsetBlockPos(this.regenerateTargetDungeonTriggerBlockPosition, BlockMirror.FRONT_BACK);
+                this.directTeleportPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.directTeleportPositionOffset, BlockMirror.FRONT_BACK);
 
-                this.incomingTeleportPositionYaw = BlockRotationUtils.mirrorYaw(this.incomingTeleportPositionYaw, BlockMirror.FRONT_BACK);
-                this.outgoingTeleportPositionYaw = BlockRotationUtils.mirrorYaw(this.outgoingTeleportPositionYaw, BlockMirror.FRONT_BACK);
-
-                this.targetDungeonChunk = BlockRotationUtils.mirrorOffset2DPosition(this.targetDungeonChunk, BlockMirror.FRONT_BACK);
+                this.directTeleportPositionOffsetYaw = BlockRotationUtils.mirrorYaw(this.directTeleportPositionOffsetYaw, BlockMirror.FRONT_BACK);
 
                 this.activationAreaDimensions = BlockRotationUtils.mirrorOffsetVec3i(this.activationAreaDimensions, BlockMirror.FRONT_BACK);
                 this.x_mirrored = state.get(RotatedBlockWithEntity.X_MIRRORED);
             }
             if (state.get(RotatedBlockWithEntity.Z_MIRRORED) != this.z_mirrored) {
                 this.activationAreaPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.activationAreaPositionOffset, BlockMirror.LEFT_RIGHT);
-                this.outgoingTeleportTeleporterPosition = BlockRotationUtils.mirrorOffsetBlockPos(this.outgoingTeleportTeleporterPosition, BlockMirror.LEFT_RIGHT);
-                this.incomingTeleportPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.incomingTeleportPositionOffset, BlockMirror.LEFT_RIGHT);
-                this.outgoingTeleportPosition = BlockRotationUtils.mirrorOffsetBlockPos(this.outgoingTeleportPosition, BlockMirror.LEFT_RIGHT);
-                this.targetDungeonStructureStartPosition = BlockRotationUtils.mirrorOffsetBlockPos(this.targetDungeonStructureStartPosition, BlockMirror.LEFT_RIGHT);
-                this.regenerateTargetDungeonTriggerBlockPosition = BlockRotationUtils.mirrorOffsetBlockPos(this.regenerateTargetDungeonTriggerBlockPosition, BlockMirror.LEFT_RIGHT);
+                this.directTeleportPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.directTeleportPositionOffset, BlockMirror.LEFT_RIGHT);
 
-                this.incomingTeleportPositionYaw = BlockRotationUtils.mirrorYaw(this.incomingTeleportPositionYaw, BlockMirror.LEFT_RIGHT);
-                this.outgoingTeleportPositionYaw = BlockRotationUtils.mirrorYaw(this.outgoingTeleportPositionYaw, BlockMirror.LEFT_RIGHT);
-
-                this.targetDungeonChunk = BlockRotationUtils.mirrorOffset2DPosition(this.targetDungeonChunk, BlockMirror.LEFT_RIGHT);
+                this.directTeleportPositionOffsetYaw = BlockRotationUtils.mirrorYaw(this.directTeleportPositionOffsetYaw, BlockMirror.LEFT_RIGHT);
 
                 this.activationAreaDimensions = BlockRotationUtils.mirrorOffsetVec3i(this.activationAreaDimensions, BlockMirror.LEFT_RIGHT);
                 this.z_mirrored = state.get(RotatedBlockWithEntity.Z_MIRRORED);

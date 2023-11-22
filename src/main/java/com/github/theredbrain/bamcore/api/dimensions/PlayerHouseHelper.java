@@ -23,8 +23,8 @@ public class PlayerHouseHelper {
         return playerHouse;
     }
 
-    public static String encode(PlayerHouse container) {
+    public static String encode(PlayerHouse playerHouse) {
         var gson = new Gson();
-        return gson.toJson(container);
+        return gson.toJson(playerHouse);
     }
 }

@@ -1,6 +1,7 @@
 package com.github.theredbrain.bamcore.registry;
 
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.BetterAdventureModeCoreClient;
 import com.github.theredbrain.bamcore.api.dimensions.PlayerHouse;
 import com.github.theredbrain.bamcore.api.dimensions.PlayerHouseHelper;
 import com.google.common.reflect.TypeToken;
@@ -19,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class HousingRegistry {
+public class PlayerHousesRegistry {
 
     static Map<Identifier, PlayerHouse> registeredHouses = new HashMap<>();
 
@@ -27,7 +28,7 @@ public class HousingRegistry {
         registeredHouses.put(itemId, playerHouse);
     }
 
-    static PlayerHouse getHouse(Identifier houseId) {
+    public static PlayerHouse getHouse(Identifier houseId) {
         return registeredHouses.get(houseId);
     }
 
@@ -58,7 +59,7 @@ public class HousingRegistry {
                 e.printStackTrace();
             }
         }
-        HousingRegistry.registeredHouses = registeredHouses;
+        PlayerHousesRegistry.registeredHouses = registeredHouses;
     }
 
     // NETWORK SYNC
@@ -84,8 +85,10 @@ public class HousingRegistry {
             buffer.writeString(chunk);
         }
 
-        BetterAdventureModeCore.LOGGER.info("Encoded Weapon Attribute registry size (with package overhead): " + buffer.readableBytes()
-                + " bytes (in " + chunks.size() + " string chunks with the size of "  + chunkSize + ")");
+        if (BetterAdventureModeCoreClient.clientConfig.show_debug_log) {
+            BetterAdventureModeCore.LOGGER.info("Encoded Weapon Attribute registry size (with package overhead): " + buffer.readableBytes()
+                    + " bytes (in " + chunks.size() + " string chunks with the size of " + chunkSize + ")");
+        }
         encodedRegisteredHouses = buffer;
     }
 
@@ -95,10 +98,10 @@ public class HousingRegistry {
         for (int i = 0; i < chunkCount; ++i) {
             json = json.concat(buffer.readString());
         }
-        BetterAdventureModeCore.LOGGER.info("Decoded Weapon Attribute registry in " + chunkCount + " string chunks");
-//        if (BetterCombat.config.weapon_registry_logging) {
-//            LOGGER.info("Weapon Attribute registry received: " + json);
-//        }
+        if (BetterAdventureModeCoreClient.clientConfig.show_debug_log) {
+            BetterAdventureModeCore.LOGGER.info("Decoded Weapon Attribute registry in " + chunkCount + " string chunks");
+            BetterAdventureModeCore.LOGGER.info("Weapon Attribute registry received: " + json);
+        }
         var gson = new Gson();
         Type mapType = new TypeToken<Map<String, PlayerHouse>>() {}.getType();
         Map<String, PlayerHouse> readRegisteredHouses = gson.fromJson(json, mapType);
