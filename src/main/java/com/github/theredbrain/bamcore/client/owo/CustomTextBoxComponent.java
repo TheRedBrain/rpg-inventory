@@ -73,7 +73,7 @@ public class CustomTextBoxComponent extends TextFieldWidget {
 
     public CustomTextBoxComponent text(String text) {
         this.setText(text);
-        this.setCursorToStart();
+        this.setCursorToStart(false);
         return this;
     }
 

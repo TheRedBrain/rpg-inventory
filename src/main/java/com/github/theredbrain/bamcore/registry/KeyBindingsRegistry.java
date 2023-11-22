@@ -1,15 +1,13 @@
 package com.github.theredbrain.bamcore.registry;
 
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
-import com.github.theredbrain.bamcore.network.packet.BetterAdventureModeCoreServerPacket;
-import io.netty.buffer.Unpooled;
+import com.github.theredbrain.bamcore.network.packet.*;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import org.lwjgl.glfw.GLFW;
 
 public class KeyBindingsRegistry {
@@ -67,7 +65,7 @@ public class KeyBindingsRegistry {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (KeyBindingsRegistry.swapMainHand.wasPressed()) {
                 if (!swapMainHandBoolean) {
-                    syncSlotSwapHand(client, true);
+                    syncSlotSwapHand(true);
                 }
                 swapMainHandBoolean = true;
             } else if (swapMainHandBoolean) {
@@ -75,7 +73,7 @@ public class KeyBindingsRegistry {
             }
             if (KeyBindingsRegistry.swapOffHand.wasPressed()) {
                 if (!swapOffHandBoolean) {
-                    syncSlotSwapHand(client, false);
+                    syncSlotSwapHand(false);
                 }
                 swapOffHandBoolean = true;
             } else if (swapOffHandBoolean) {
@@ -83,7 +81,7 @@ public class KeyBindingsRegistry {
             }
             if (KeyBindingsRegistry.sheatheWeapons.wasPressed()) {
                 if (!sheatheWeaponsBoolean) {
-                    sheatheWeapons(client);
+                    sheatheWeapons();
                 }
                 sheatheWeaponsBoolean = true;
             } else if (sheatheWeaponsBoolean) {
@@ -91,7 +89,7 @@ public class KeyBindingsRegistry {
             }
             if (KeyBindingsRegistry.twoHandMainWeapon.wasPressed()) {
                 if (!twoHandMainWeaponBoolean) {
-                    twoHandMainWeapon(client);
+                    twoHandMainWeapon();
                 }
                 twoHandMainWeaponBoolean = true;
             } else if (twoHandMainWeaponBoolean) {
@@ -99,7 +97,7 @@ public class KeyBindingsRegistry {
             }
             if (KeyBindingsRegistry.toggleNecklaceAbility.wasPressed()) {
                 if (!toggleNecklaceAbilityBoolean) {
-                    toggleNecklaceAbility(client);
+                    toggleNecklaceAbility();
                 }
                 toggleNecklaceAbilityBoolean = true;
             } else if (toggleNecklaceAbilityBoolean) {
@@ -115,22 +113,17 @@ public class KeyBindingsRegistry {
             }
         });
     }
-    public static void sheatheWeapons(MinecraftClient client) {
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-        client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModeCoreServerPacket.SHEATHE_WEAPONS_PACKET, buf));
+    public static void sheatheWeapons() {
+        ClientPlayNetworking.send(new SheatheWeaponsPacket());
     }
-    public static void twoHandMainWeapon(MinecraftClient client) {
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-        client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModeCoreServerPacket.TWO_HAND_MAIN_WEAPON_PACKET, buf));
+    public static void twoHandMainWeapon() {
+        ClientPlayNetworking.send(new TwoHandMainWeaponPacket());
     }
-    public static void syncSlotSwapHand(MinecraftClient client, boolean mainHand) {
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-        buf.writeBoolean(mainHand);
-        client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModeCoreServerPacket.SWAP_HAND_ITEMS_PACKET, buf));
+    public static void syncSlotSwapHand(boolean mainHand) {
+        ClientPlayNetworking.send(new SwapHandItemsPacket(mainHand));
     }
-    public static void toggleNecklaceAbility(MinecraftClient client) {
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-        client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModeCoreServerPacket.TOGGLE_NECKLACE_ABILITY_PACKET, buf));
+    public static void toggleNecklaceAbility() {
+        ClientPlayNetworking.send(new ToggleNecklaceAbilityPacket());
     }
     public static void openHousingScreen(MinecraftClient client) {
         if (client.player != null) {

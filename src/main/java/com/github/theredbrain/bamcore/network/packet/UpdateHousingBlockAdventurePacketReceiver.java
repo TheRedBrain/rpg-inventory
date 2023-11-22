@@ -17,62 +17,46 @@ import net.minecraft.world.World;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UpdateHousingBlockAdventurePacketReceiver implements ServerPlayNetworking.PlayChannelHandler {
-
+public class UpdateHousingBlockAdventurePacketReceiver implements ServerPlayNetworking.PlayPacketHandler<UpdateHousingBlockAdventurePacket> {
     @Override
-    public void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
+    public void receive(UpdateHousingBlockAdventurePacket packet, ServerPlayerEntity player, PacketSender responseSender) {
 
         if (!player.isCreativeLevelTwoOp()) {
             return;
         }
 
-        BlockPos housingBlockPos = buf.readBlockPos();
+        BlockPos housingBlockPosition = packet.housingBlockPosition;
 
-        List<String> coOwnerList = new ArrayList<>(List.of());
-        int coOwnerListSize = buf.readInt();
-        for (int i = 0; i < coOwnerListSize; i++) {
-            coOwnerList.add(buf.readString());
-        }
-        List<String> trustedList = new ArrayList<>(List.of());
-        int trustedListSize = buf.readInt();
-        for (int i = 0; i < trustedListSize; i++) {
-            trustedList.add(buf.readString());
-        }
+        List<String> coOwnerList = packet.coOwnerList;
+        List<String> trustedList = packet.trustedList;
+        List<String> guestList = packet.guestList;
 
-        List<String> guestList = new ArrayList<>(List.of());
-        int guestListSize = buf.readInt();
-        for (int i = 0; i < guestListSize; i++) {
-            guestList.add(buf.readString());
-        }
+        World world = player.getWorld();
 
-        server.execute(() -> {
-            World world = player.getWorld();
+        boolean updateSuccessful = true;
 
-            boolean updateSuccessful = true;
+        BlockEntity blockEntity = world.getBlockEntity(housingBlockPosition);
+        BlockState blockState = world.getBlockState(housingBlockPosition);
 
-            BlockEntity blockEntity = world.getBlockEntity(housingBlockPos);
-            BlockState blockState = world.getBlockState(housingBlockPos);
+        if (blockEntity instanceof HousingBlockBlockEntity housingBlockBlockEntity) {
 
-            if (blockEntity instanceof HousingBlockBlockEntity housingBlockBlockEntity) {
-
-                if (!housingBlockBlockEntity.setCoOwnerList(coOwnerList)) {
-                    player.sendMessage(Text.translatable("housing_block.coOwnerList.invalid"), false);
-                    updateSuccessful = false;
-                }
-                if (!housingBlockBlockEntity.setTrustedList(trustedList)) {
-                    player.sendMessage(Text.translatable("housing_block.trustedList.invalid"), false);
-                    updateSuccessful = false;
-                }
-                if (!housingBlockBlockEntity.setGuestList(guestList)) {
-                    player.sendMessage(Text.translatable("housing_block.guestList.invalid"), false);
-                    updateSuccessful = false;
-                }
-                if (updateSuccessful) {
-                    player.sendMessage(Text.translatable("housing_block.update_successful"), true);
-                }
-                housingBlockBlockEntity.markDirty();
-                world.updateListeners(housingBlockPos, blockState, blockState, Block.NOTIFY_ALL);
+            if (!housingBlockBlockEntity.setCoOwnerList(coOwnerList)) {
+                player.sendMessage(Text.translatable("housing_block.coOwnerList.invalid"), false);
+                updateSuccessful = false;
             }
-        });
+            if (!housingBlockBlockEntity.setTrustedList(trustedList)) {
+                player.sendMessage(Text.translatable("housing_block.trustedList.invalid"), false);
+                updateSuccessful = false;
+            }
+            if (!housingBlockBlockEntity.setGuestList(guestList)) {
+                player.sendMessage(Text.translatable("housing_block.guestList.invalid"), false);
+                updateSuccessful = false;
+            }
+            if (updateSuccessful) {
+                player.sendMessage(Text.translatable("housing_block.update_successful"), true);
+            }
+            housingBlockBlockEntity.markDirty();
+            world.updateListeners(housingBlockPosition, blockState, blockState, Block.NOTIFY_ALL);
+        }
     }
 }

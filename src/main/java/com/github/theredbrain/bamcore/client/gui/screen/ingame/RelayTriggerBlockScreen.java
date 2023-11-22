@@ -1,9 +1,8 @@
 package com.github.theredbrain.bamcore.client.gui.screen.ingame;
 
 import com.github.theredbrain.bamcore.block.entity.RelayTriggerBlockBlockEntity;
-import com.github.theredbrain.bamcore.network.packet.BetterAdventureModeCoreServerPacket;
+import com.github.theredbrain.bamcore.network.packet.UpdateRelayTriggerBlockPacket;
 import com.github.theredbrain.bamcore.registry.BlockRegistry;
-import io.netty.buffer.Unpooled;
 import io.wispforest.owo.ui.base.BaseOwoScreen;
 import io.wispforest.owo.ui.component.Components;
 import io.wispforest.owo.ui.component.TextBoxComponent;
@@ -13,14 +12,14 @@ import io.wispforest.owo.ui.container.ScrollContainer;
 import io.wispforest.owo.ui.core.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Environment(value= EnvType.CLIENT)
@@ -148,29 +147,22 @@ public class RelayTriggerBlockScreen extends BaseOwoScreen<FlowLayout> {
     }
 
     private boolean updateRelayTriggerBlock() {
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-
-        // teleporter block position
-        buf.writeBlockPos(this.relayTriggerBlock.getPos());
-
         List<Component> list = component(FlowLayout.class, "creativeScreenScrollingContent").children();
 
         int creativeScreenScrollingContentSize = list.size();
 
-        buf.writeInt(creativeScreenScrollingContentSize);
+        List<BlockPos> triggeredBlocks = new ArrayList<>();
 
         for (int i = 0; i < creativeScreenScrollingContentSize; i++) {
             FlowLayout triggeredBlockEntry = (FlowLayout) list.get(i);
 
-            buf.writeBlockPos(new BlockPos(
+            triggeredBlocks.add(new BlockPos(
                     this.parseInt(((TextBoxComponent)(triggeredBlockEntry.children().get(0))).getText()),
                     this.parseInt(((TextBoxComponent)(triggeredBlockEntry.children().get(1))).getText()),
                     this.parseInt(((TextBoxComponent)(triggeredBlockEntry.children().get(2))).getText())
             ));
-//            buf.writeInt(this.parseInt(((TextBoxComponent)(triggeredBlockEntry.children().get(3))).getText()));
         }
-
-        this.client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModeCoreServerPacket.UPDATE_RELAY_TRIGGER_BLOCK, buf));
+        ClientPlayNetworking.send(new UpdateRelayTriggerBlockPacket(this.relayTriggerBlock.getPos(), triggeredBlocks));
         return true;
     }
 

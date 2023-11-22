@@ -20,7 +20,7 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.item.DyeableItem;
 import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
-import net.spell_engine.api.render.CustomModels;
+//import net.spell_engine.api.render.CustomModels;
 
 import java.util.List;
 
@@ -56,9 +56,10 @@ public class BetterAdventureModeCoreClient implements ClientModInitializer {
     }
 
     private void registerSpellModels() {
-        CustomModels.registerModelIds(List.of(
-                BetterAdventureModeCore.identifier("projectile/test_spell_projectile")
-        ));
+        // TODO SpellEngine 1.20.2
+//        CustomModels.registerModelIds(List.of(
+//                BetterAdventureModeCore.identifier("projectile/test_spell_projectile")
+//        ));
     }
 
     private void registerBlockEntityRenderer() {

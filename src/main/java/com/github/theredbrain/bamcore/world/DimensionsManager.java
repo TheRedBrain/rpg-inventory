@@ -35,10 +35,10 @@ public class DimensionsManager {
             ChunkGenerator generator = serverWorld.getChunkManager().getChunkGenerator();
 //            Identifier dimId = RPGMod.identifier(player.getUuid().toString() + "_dungeons");
 
-            DynamicDimensionsImpl.addDimensionDynamically(dimensionId, new DimensionOptions(serverWorld.getDimensionEntry(), generator));
+            DynamicDimensionsImpl.addDimensionDynamically(server, dimensionId, new DimensionOptions(serverWorld.getDimensionEntry(), generator));
 
-            RegistryKey<World> newRegistryKey = RegistryKey.of(RegistryKeys.WORLD, dimensionId);
-            DimensionAPI.saveDimensionConfiguration(newRegistryKey);
+//            RegistryKey<World> newRegistryKey = RegistryKey.of(RegistryKeys.WORLD, dimensionId);
+//            DimensionAPI.saveDimensionConfiguration(newRegistryKey);
         }
     }
 
@@ -53,7 +53,7 @@ public class DimensionsManager {
         if (serverWorld != null) {
             DimensionAPI.removeDimensionDynamically(serverWorld);
 
-            DimensionAPI.deleteDimensionConfiguration(serverWorld.getRegistryKey());
+//            DimensionAPI.deleteDimensionConfiguration(serverWorld.getRegistryKey());
 
         }
     }

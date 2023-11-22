@@ -4,29 +4,23 @@ import com.github.theredbrain.bamcore.block.entity.HousingBlockBlockEntity;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class ResetHouseHousingBlockPacketReceiver implements ServerPlayNetworking.PlayChannelHandler {
-
+public class ResetHouseHousingBlockPacketReceiver implements ServerPlayNetworking.PlayPacketHandler<ResetHouseHousingBlockPacket> {
     @Override
-    public void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
+    public void receive(ResetHouseHousingBlockPacket packet, ServerPlayerEntity player, PacketSender responseSender) {
 
-        BlockPos housingBlockPos = buf.readBlockPos();
+        BlockPos housingBlockPosition = packet.housingBlockPosition;
 
-        server.execute(() -> {
-            World world = player.getWorld();
+        World world = player.getWorld();
 
-            BlockEntity blockEntity = world.getBlockEntity(housingBlockPos);
+        BlockEntity blockEntity = world.getBlockEntity(housingBlockPosition);
 
-            // TODO teleport all players inside to their spawn?
-            if (blockEntity instanceof HousingBlockBlockEntity housingBlockBlockEntity) {
-                housingBlockBlockEntity.trigger();
-            }
-        });
+        // TODO teleport all players inside to their spawn?
+        if (blockEntity instanceof HousingBlockBlockEntity housingBlockBlockEntity) {
+            housingBlockBlockEntity.trigger();
+        }
     }
 }

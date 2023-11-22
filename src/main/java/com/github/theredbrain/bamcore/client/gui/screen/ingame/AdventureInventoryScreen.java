@@ -24,6 +24,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
+import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.gui.widget.PageTurnWidget;
 import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.render.RenderLayer;
@@ -640,7 +641,7 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
     protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
         int i = this.x;
         int j = this.y;
-        drawEntity(i + 51, j + 93, 30, (float)(i + 51) - this.mouseX, (float)(j + 93 - 50) - this.mouseY, this.client.player);
+        InventoryScreen.drawEntity(context, i + 20, j + 20, i + 69, j + 90, 30, 0.0625f, this.mouseX, this.mouseY, this.client.player);
 //        TrinketScreenManager.drawExtraGroups(context);
     }
 

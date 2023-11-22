@@ -4,10 +4,9 @@ import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.block.entity.HousingBlockBlockEntity;
 import com.github.theredbrain.bamcore.client.owo.CustomButtonComponent;
 import com.github.theredbrain.bamcore.client.owo.ExtendedSurface;
-import com.github.theredbrain.bamcore.network.packet.BetterAdventureModeCoreServerPacket;
+import com.github.theredbrain.bamcore.network.packet.*;
 import com.github.theredbrain.bamcore.registry.ComponentsRegistry;
 import com.github.theredbrain.bamcore.registry.StatusEffectsRegistry;
-import io.netty.buffer.Unpooled;
 import io.wispforest.owo.ui.base.BaseOwoScreen;
 import io.wispforest.owo.ui.component.ButtonComponent;
 import io.wispforest.owo.ui.component.Components;
@@ -18,10 +17,9 @@ import io.wispforest.owo.ui.container.ScrollContainer;
 import io.wispforest.owo.ui.core.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.entity.effect.StatusEffect;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.screen.ScreenTexts;
@@ -36,6 +34,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -546,66 +545,58 @@ public class HousingScreen extends BaseOwoScreen<FlowLayout> {
     }
 
     private boolean updateHousingBlockCreative() {
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-
-        buf.writeBlockPos(this.housingBlockBlockEntity.getPos());
-
-        buf.writeBoolean(this.showRestrictBlockBreakingArea);
-
-        buf.writeInt(this.parseInt(this.component(TextBoxComponent.class, "restrictBlockBreakingAreaDimensionsX").getText()));
-        buf.writeInt(this.parseInt(this.component(TextBoxComponent.class, "restrictBlockBreakingAreaDimensionsY").getText()));
-        buf.writeInt(this.parseInt(this.component(TextBoxComponent.class, "restrictBlockBreakingAreaDimensionsZ").getText()));
-        buf.writeBlockPos(new BlockPos(
-                this.parseInt(this.component(TextBoxComponent.class, "restrictBlockBreakingAreaPositionOffsetX").getText()),
-                this.parseInt(this.component(TextBoxComponent.class, "restrictBlockBreakingAreaPositionOffsetY").getText()),
-                this.parseInt(this.component(TextBoxComponent.class, "restrictBlockBreakingAreaPositionOffsetZ").getText())
+        ClientPlayNetworking.send(new UpdateHousingBlockCreativePacket(
+                this.housingBlockBlockEntity.getPos(),
+                this.showRestrictBlockBreakingArea,
+                new Vec3i(
+                        this.parseInt(this.component(TextBoxComponent.class, "restrictBlockBreakingAreaDimensionsX").getText()),
+                        this.parseInt(this.component(TextBoxComponent.class, "restrictBlockBreakingAreaDimensionsY").getText()),
+                        this.parseInt(this.component(TextBoxComponent.class, "restrictBlockBreakingAreaDimensionsZ").getText())
+                ),
+                new BlockPos(
+                        this.parseInt(this.component(TextBoxComponent.class, "entrancePositionOffsetX").getText()),
+                        this.parseInt(this.component(TextBoxComponent.class, "entrancePositionOffsetY").getText()),
+                        this.parseInt(this.component(TextBoxComponent.class, "entrancePositionOffsetZ").getText())
+                ),
+                new BlockPos(
+                        this.parseInt(this.component(TextBoxComponent.class, "entrancePositionOffsetX").getText()),
+                        this.parseInt(this.component(TextBoxComponent.class, "entrancePositionOffsetY").getText()),
+                        this.parseInt(this.component(TextBoxComponent.class, "entrancePositionOffsetZ").getText())
+                ),
+                this.parseDouble(this.component(TextBoxComponent.class, "entranceYaw").getText()),
+                this.parseDouble(this.component(TextBoxComponent.class, "entrancePitch").getText()),
+                new BlockPos(
+                        this.parseInt(this.component(TextBoxComponent.class, "triggeredBlockPositionOffsetX").getText()),
+                        this.parseInt(this.component(TextBoxComponent.class, "triggeredBlockPositionOffsetY").getText()),
+                        this.parseInt(this.component(TextBoxComponent.class, "triggeredBlockPositionOffsetZ").getText())
+                ),
+                this.ownerMode
         ));
-        buf.writeBlockPos(new BlockPos(
-                this.parseInt(this.component(TextBoxComponent.class, "entrancePositionOffsetX").getText()),
-                this.parseInt(this.component(TextBoxComponent.class, "entrancePositionOffsetY").getText()),
-                this.parseInt(this.component(TextBoxComponent.class, "entrancePositionOffsetZ").getText())
-        ));
-        buf.writeDouble(this.parseDouble(this.component(TextBoxComponent.class, "entranceYaw").getText()));
-        buf.writeDouble(this.parseDouble(this.component(TextBoxComponent.class, "entrancePitch").getText()));
-        buf.writeBlockPos(new BlockPos(
-                this.parseInt(this.component(TextBoxComponent.class, "triggeredBlockPositionOffsetX").getText()),
-                this.parseInt(this.component(TextBoxComponent.class, "triggeredBlockPositionOffsetY").getText()),
-                this.parseInt(this.component(TextBoxComponent.class, "triggeredBlockPositionOffsetZ").getText())
-        ));
-
-        buf.writeInt(this.ownerMode);
-
-        this.client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModeCoreServerPacket.UPDATE_HOUSING_BLOCK_CREATIVE, buf));
         return true;
     }
 
     private boolean updateHousingBlockAdventure() {
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-
-        buf.writeBlockPos(this.housingBlockBlockEntity.getPos());
-
-        List<Component> coOwnerList = component(FlowLayout.class, "coOwnerListContent").children();
-        int coOwnerListSize = coOwnerList.size();
-        buf.writeInt(coOwnerListSize);
-        for (int i = 0; i < coOwnerListSize; i++) {
-            buf.writeString(((TextBoxComponent)(((FlowLayout)coOwnerList.get(i)).children().get(0))).getText());
+        List<String> coOwnerList = new ArrayList<>();
+        for (int i = 0; i < component(FlowLayout.class, "coOwnerListContent").children().size(); i++) {
+            coOwnerList.add((((TextBoxComponent)(((FlowLayout)component(FlowLayout.class, "coOwnerListContent").children().get(i)).children().get(0))).getText()));
         }
 
-        List<Component> trustedList = component(FlowLayout.class, "trustedListContent").children();
-        int trustedListSize = trustedList.size();
-        buf.writeInt(trustedListSize);
-        for (int i = 0; i < trustedListSize; i++) {
-            buf.writeString(((TextBoxComponent)(((FlowLayout)trustedList.get(i)).children().get(0))).getText());
+        List<String> trustedList = new ArrayList<>();
+        for (int i = 0; i < component(FlowLayout.class, "trustedListContent").children().size(); i++) {
+            trustedList.add(((TextBoxComponent)(((FlowLayout)component(FlowLayout.class, "trustedListContent").children().get(i)).children().get(0))).getText());
         }
 
-        List<Component> guestList = component(FlowLayout.class, "guestListContent").children();
-        int guestListSize = guestList.size();
-        buf.writeInt(guestListSize);
-        for (int i = 0; i < guestListSize; i++) {
-            buf.writeString(((TextBoxComponent)(((FlowLayout)guestList.get(i)).children().get(0))).getText());
+        List<String> guestList = new ArrayList<>();
+        for (int i = 0; i < component(FlowLayout.class, "guestListContent").children().size(); i++) {
+            guestList.add(((TextBoxComponent)(((FlowLayout)component(FlowLayout.class, "guestListContent").children().get(i)).children().get(0))).getText());
         }
 
-        this.client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModeCoreServerPacket.UPDATE_HOUSING_BLOCK_ADVENTURE, buf));
+        ClientPlayNetworking.send(new UpdateHousingBlockAdventurePacket(
+                this.housingBlockBlockEntity.getPos(),
+                coOwnerList,
+                trustedList,
+                guestList
+        ));
         return true;
     }
 
@@ -626,19 +617,15 @@ public class HousingScreen extends BaseOwoScreen<FlowLayout> {
     }
 
     private void toggleAdventureBuildingEffect() {
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-
-        buf.writeInt(StatusEffect.getRawId(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT));
-        buf.writeInt(-1);
-        buf.writeInt(0);
-        buf.writeBoolean(false);
-        buf.writeBoolean(false);
-        buf.writeBoolean(false);
-        buf.writeBoolean(true);
-
-        if (this.client != null && this.client.getNetworkHandler() != null) {
-            this.client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModeCoreServerPacket.ADD_STATUS_EFFECT_PACKET, buf));
-        }
+        ClientPlayNetworking.send(new AddStatusEffectPacket(
+                Registries.STATUS_EFFECT.getId(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT),
+                -1,
+                0,
+                false,
+                false,
+                false,
+                true
+        ));
         this.close();
     }
 
@@ -668,29 +655,20 @@ public class HousingScreen extends BaseOwoScreen<FlowLayout> {
     }
 
     private void resetHouse() {
-        if (this.housingBlockBlockEntity != null && this.housingBlockBlockEntity.getOwnerMode() == 1 && this.client != null && this.client.player != null) {
-            PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-
-            buf.writeBlockPos(this.housingBlockBlockEntity.getPos());
-
-            this.client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModeCoreServerPacket.RESET_HOUSE_HOUSING_BLOCK, buf));
+        if (this.housingBlockBlockEntity != null && this.housingBlockBlockEntity.getOwnerMode() == 1) {
+            ClientPlayNetworking.send(new ResetHouseHousingBlockPacket(
+                    this.housingBlockBlockEntity.getPos()
+            ));
         }
         this.close();
     }
 
     private void trySetHouseOwner(boolean claim) {
         if (this.housingBlockBlockEntity != null && this.housingBlockBlockEntity.getOwnerMode() == 1 && this.client != null && this.client.player != null) {
-            PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-
-            buf.writeBlockPos(this.housingBlockBlockEntity.getPos());
-
-            if (claim) {
-                buf.writeString(this.client.player.getUuidAsString());
-            } else {
-                buf.writeString("");
-            }
-
-            this.client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModeCoreServerPacket.SET_HOUSING_OWNER_BLOCK, buf));
+            ClientPlayNetworking.send(new SetHousingBlockOwnerPacket(
+                    this.housingBlockBlockEntity.getPos(),
+                    claim ? this.client.player.getUuidAsString() : ""
+            ));
         }
         this.close();
     }

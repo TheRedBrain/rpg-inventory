@@ -5,31 +5,25 @@ import com.github.theredbrain.bamcore.registry.StatusEffectsRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 
-public class SheatheWeaponsPacketReceiver implements ServerPlayNetworking.PlayChannelHandler {
+public class SheatheWeaponsPacketReceiver implements ServerPlayNetworking.PlayPacketHandler<SheatheWeaponsPacket> {
     @Override
-    public void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
+    public void receive(SheatheWeaponsPacket packet, ServerPlayerEntity player, PacketSender responseSender) {
 
-        server.execute(() -> {
-
-            if (((DuckPlayerEntityMixin) player).bamcore$getStamina() <= 0) {
-                player.sendMessageToClient(Text.translatable("hud.message.staminaTooLow"), true);
+        if (((DuckPlayerEntityMixin) player).bamcore$getStamina() <= 0) {
+            player.sendMessageToClient(Text.translatable("hud.message.staminaTooLow"), true);
+        } else {
+            if (player.hasStatusEffect(StatusEffectsRegistry.WEAPONS_SHEATHED_EFFECT)) {
+                player.removeStatusEffect(StatusEffectsRegistry.WEAPONS_SHEATHED_EFFECT);
             } else {
-                if (player.hasStatusEffect(StatusEffectsRegistry.WEAPONS_SHEATHED_EFFECT)) {
-                    player.removeStatusEffect(StatusEffectsRegistry.WEAPONS_SHEATHED_EFFECT);
-                } else {
-                    player.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.WEAPONS_SHEATHED_EFFECT, -1, 0, false, false, true));
-                    if (player.hasStatusEffect(StatusEffectsRegistry.TWO_HANDED_EFFECT)) {
-                        player.removeStatusEffect(StatusEffectsRegistry.TWO_HANDED_EFFECT);
-                    }
+                player.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.WEAPONS_SHEATHED_EFFECT, -1, 0, false, false, true));
+                if (player.hasStatusEffect(StatusEffectsRegistry.TWO_HANDED_EFFECT)) {
+                    player.removeStatusEffect(StatusEffectsRegistry.TWO_HANDED_EFFECT);
                 }
             }
-            // TODO play sounds, maybe when getting and losing the effect
-        });
+        }
+        // TODO play sounds, maybe when getting and losing the effect
     }
 }

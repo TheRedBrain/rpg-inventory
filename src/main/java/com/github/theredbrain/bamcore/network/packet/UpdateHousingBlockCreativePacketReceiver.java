@@ -6,9 +6,6 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
@@ -16,71 +13,65 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.MutablePair;
 
-public class UpdateHousingBlockCreativePacketReceiver implements ServerPlayNetworking.PlayChannelHandler {
-
+public class UpdateHousingBlockCreativePacketReceiver implements ServerPlayNetworking.PlayPacketHandler<UpdateHousingBlockCreativePacket> {
     @Override
-    public void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
+    public void receive(UpdateHousingBlockCreativePacket packet, ServerPlayerEntity player, PacketSender responseSender) {
 
         if (!player.isCreativeLevelTwoOp()) {
             return;
         }
 
-        BlockPos housingBlockPos = buf.readBlockPos();
+        BlockPos housingBlockPosition = packet.housingBlockPosition;
 
-        boolean showRestrictBlockBreakingArea = buf.readBoolean();
+        boolean showRestrictBlockBreakingArea = packet.showRestrictBlockBreakingArea;
 
-        int restrictBlockBreakingAreaDimensionsX = buf.readInt();
-        int restrictBlockBreakingAreaDimensionsY = buf.readInt();
-        int restrictBlockBreakingAreaDimensionsZ = buf.readInt();
-        Vec3i restrictBlockBreakingAreaDimensions = new Vec3i(restrictBlockBreakingAreaDimensionsX, restrictBlockBreakingAreaDimensionsY, restrictBlockBreakingAreaDimensionsZ);
-        BlockPos restrictBlockBreakingAreaPositionOffset = buf.readBlockPos();
-        BlockPos entrancePositionOffset = buf.readBlockPos();
-        double entranceYaw = buf.readDouble();
-        double entrancePitch = buf.readDouble();
-        BlockPos triggeredBlockPositionOffset = buf.readBlockPos();
+        Vec3i restrictBlockBreakingAreaDimensions = packet.restrictBlockBreakingAreaDimensions;
+        BlockPos restrictBlockBreakingAreaPositionOffset = packet.restrictBlockBreakingAreaPositionOffset;
+        BlockPos entrancePositionOffset = packet.entrancePositionOffset;
+        double entranceYaw = packet.entranceYaw;
+        double entrancePitch = packet.entrancePitch;
+        BlockPos triggeredBlockPositionOffset = packet.triggeredBlockPositionOffset;
 
-        int ownerMode = buf.readInt();
+        int ownerMode = packet.ownerMode;
 
-        server.execute(() -> {
-            World world = player.getWorld();
+        World world = player.getWorld();
 
-            boolean updateSuccessful = true;
+        boolean updateSuccessful = true;
 
-            BlockEntity blockEntity = world.getBlockEntity(housingBlockPos);
-            BlockState blockState = world.getBlockState(housingBlockPos);
+        BlockEntity blockEntity = world.getBlockEntity(housingBlockPosition);
+        BlockState blockState = world.getBlockState(housingBlockPosition);
 
-            if (blockEntity instanceof HousingBlockBlockEntity housingBlockBlockEntity) {
+        if (blockEntity instanceof HousingBlockBlockEntity housingBlockBlockEntity) {
 
-                if (!housingBlockBlockEntity.setShowRestrictBlockBreakingArea(showRestrictBlockBreakingArea)) {
-                    player.sendMessage(Text.translatable("housing_block.showRestrictBlockBreakingArea.invalid"), false);
-                    updateSuccessful = false;
-                }
-                if (!housingBlockBlockEntity.setRestrictBlockBreakingAreaDimensions(restrictBlockBreakingAreaDimensions)) {
-                    player.sendMessage(Text.translatable("housing_block.restrictBlockBreakingAreaDimensions.invalid"), false);
-                    updateSuccessful = false;
-                }
-                if (!housingBlockBlockEntity.setRestrictBlockBreakingAreaPositionOffset(restrictBlockBreakingAreaPositionOffset)) {
-                    player.sendMessage(Text.translatable("housing_block.restrictBlockBreakingAreaPositionOffset.invalid"), false);
-                    updateSuccessful = false;
-                }
-                if (!housingBlockBlockEntity.setEntrance(new MutablePair<>(entrancePositionOffset, new MutablePair<>(entranceYaw, entrancePitch)))) {
-                    player.sendMessage(Text.translatable("housing_block.entrance.invalid"), false);
-                    updateSuccessful = false;
-                }
-                if (!housingBlockBlockEntity.setTriggeredBlockPositionOffset(triggeredBlockPositionOffset)) {
-                    player.sendMessage(Text.translatable("housing_block.triggeredBlockPositionOffset.invalid"), false);
-                    updateSuccessful = false;
-                }
-                if (!housingBlockBlockEntity.setOwnerMode(ownerMode)) {
-                    player.sendMessage(Text.translatable("housing_block.ownerMode.invalid"), false);
-                    updateSuccessful = false;
-                }
-                if (updateSuccessful) {
-                    player.sendMessage(Text.translatable("housing_block.update_successful"), true);
-                }
-                housingBlockBlockEntity.markDirty();
-                world.updateListeners(housingBlockPos, blockState, blockState, Block.NOTIFY_ALL);
+            if (!housingBlockBlockEntity.setShowRestrictBlockBreakingArea(showRestrictBlockBreakingArea)) {
+                player.sendMessage(Text.translatable("housing_block.showRestrictBlockBreakingArea.invalid"), false);
+                updateSuccessful = false;
             }
-        });
+            if (!housingBlockBlockEntity.setRestrictBlockBreakingAreaDimensions(restrictBlockBreakingAreaDimensions)) {
+                player.sendMessage(Text.translatable("housing_block.restrictBlockBreakingAreaDimensions.invalid"), false);
+                updateSuccessful = false;
+            }
+            if (!housingBlockBlockEntity.setRestrictBlockBreakingAreaPositionOffset(restrictBlockBreakingAreaPositionOffset)) {
+                player.sendMessage(Text.translatable("housing_block.restrictBlockBreakingAreaPositionOffset.invalid"), false);
+                updateSuccessful = false;
+            }
+            if (!housingBlockBlockEntity.setEntrance(new MutablePair<>(entrancePositionOffset, new MutablePair<>(entranceYaw, entrancePitch)))) {
+                player.sendMessage(Text.translatable("housing_block.entrance.invalid"), false);
+                updateSuccessful = false;
+            }
+            if (!housingBlockBlockEntity.setTriggeredBlockPositionOffset(triggeredBlockPositionOffset)) {
+                player.sendMessage(Text.translatable("housing_block.triggeredBlockPositionOffset.invalid"), false);
+                updateSuccessful = false;
+            }
+            if (!housingBlockBlockEntity.setOwnerMode(ownerMode)) {
+                player.sendMessage(Text.translatable("housing_block.ownerMode.invalid"), false);
+                updateSuccessful = false;
+            }
+            if (updateSuccessful) {
+                player.sendMessage(Text.translatable("housing_block.update_successful"), true);
+            }
+            housingBlockBlockEntity.markDirty();
+            world.updateListeners(housingBlockPosition, blockState, blockState, Block.NOTIFY_ALL);
+        }
     }
 }

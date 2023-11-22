@@ -1,9 +1,8 @@
 package com.github.theredbrain.bamcore.client.gui.screen.ingame;
 
 import com.github.theredbrain.bamcore.block.entity.AreaFillerBlockBlockEntity;
-import com.github.theredbrain.bamcore.network.packet.BetterAdventureModeCoreServerPacket;
+import com.github.theredbrain.bamcore.network.packet.UpdateAreaFillerBlockPacket;
 import com.github.theredbrain.bamcore.registry.BlockRegistry;
-import io.netty.buffer.Unpooled;
 import io.wispforest.owo.ui.base.BaseOwoScreen;
 import io.wispforest.owo.ui.component.Components;
 import io.wispforest.owo.ui.component.TextBoxComponent;
@@ -12,8 +11,7 @@ import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
@@ -140,29 +138,25 @@ public class AreaFillerBlockScreen extends BaseOwoScreen<FlowLayout> {
     }
 
     private boolean updateAreaFillerBlock() {
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-
-        buf.writeBlockPos(this.areaFillerBlock.getPos());
-
-        buf.writeString(this.component(TextBoxComponent.class, "fillerBlockIdentifier").getText());
-
-        buf.writeInt(this.parseInt(this.component(TextBoxComponent.class, "filledAreaDimensionsX").getText()));
-        buf.writeInt(this.parseInt(this.component(TextBoxComponent.class, "filledAreaDimensionsY").getText()));
-        buf.writeInt(this.parseInt(this.component(TextBoxComponent.class, "filledAreaDimensionsZ").getText()));
-
-        buf.writeBlockPos(new BlockPos(
-                this.parseInt(this.component(TextBoxComponent.class, "filledAreaPositionOffsetX").getText()),
-                this.parseInt(this.component(TextBoxComponent.class, "filledAreaPositionOffsetY").getText()),
-                this.parseInt(this.component(TextBoxComponent.class, "filledAreaPositionOffsetZ").getText())
+        ClientPlayNetworking.send(new UpdateAreaFillerBlockPacket(
+                this.areaFillerBlock.getPos(),
+                this.component(TextBoxComponent.class, "fillerBlockIdentifier").getText(),
+                new Vec3i(
+                        this.parseInt(this.component(TextBoxComponent.class, "filledAreaDimensionsX").getText()),
+                        this.parseInt(this.component(TextBoxComponent.class, "filledAreaDimensionsY").getText()),
+                        this.parseInt(this.component(TextBoxComponent.class, "filledAreaDimensionsZ").getText())
+                ),
+                new BlockPos(
+                        this.parseInt(this.component(TextBoxComponent.class, "filledAreaPositionOffsetX").getText()),
+                        this.parseInt(this.component(TextBoxComponent.class, "filledAreaPositionOffsetY").getText()),
+                        this.parseInt(this.component(TextBoxComponent.class, "filledAreaPositionOffsetZ").getText())
+                ),
+                new BlockPos(
+                        this.parseInt(this.component(TextBoxComponent.class, "triggeredBlockPositionOffsetX").getText()),
+                        this.parseInt(this.component(TextBoxComponent.class, "triggeredBlockPositionOffsetY").getText()),
+                        this.parseInt(this.component(TextBoxComponent.class, "triggeredBlockPositionOffsetZ").getText())
+                )
         ));
-
-        buf.writeBlockPos(new BlockPos(
-                this.parseInt(this.component(TextBoxComponent.class, "triggeredBlockPositionOffsetX").getText()),
-                this.parseInt(this.component(TextBoxComponent.class, "triggeredBlockPositionOffsetY").getText()),
-                this.parseInt(this.component(TextBoxComponent.class, "triggeredBlockPositionOffsetZ").getText())
-        ));
-
-        this.client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModeCoreServerPacket.UPDATE_AREA_FILLER_BLOCK, buf));
         return true;
     }
 

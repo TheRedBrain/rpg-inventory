@@ -1,0 +1,103 @@
+package com.github.theredbrain.bamcore.client.owo;
+
+import io.wispforest.owo.mixin.ui.access.TextFieldWidgetAccessor;
+import io.wispforest.owo.ui.core.CursorStyle;
+import io.wispforest.owo.ui.core.OwoUIDrawContext;
+import io.wispforest.owo.ui.core.Sizing;
+import io.wispforest.owo.ui.parsing.UIModel;
+import io.wispforest.owo.ui.parsing.UIParsing;
+import io.wispforest.owo.util.EventSource;
+import io.wispforest.owo.util.EventStream;
+import io.wispforest.owo.util.Observable;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.text.Text;
+import org.lwjgl.glfw.GLFW;
+import org.w3c.dom.Element;
+
+import java.util.Map;
+import java.util.function.Consumer;
+
+public class CustomTextBoxComponent extends TextFieldWidget {
+
+    protected final Observable<Boolean> showsBackground = Observable.of(((TextFieldWidgetAccessor) this).owo$drawsBackground());
+
+    protected final Observable<String> textValue = Observable.of("");
+    protected final EventStream<CustomTextBoxComponent.OnChanged> changedEvents = CustomTextBoxComponent.OnChanged.newStream();
+
+    public CustomTextBoxComponent(Sizing horizontalSizing, int maxLength) {
+        super(MinecraftClient.getInstance().textRenderer, 0, 0, 0, 0, Text.empty());
+
+        this.textValue.observe(this.changedEvents.sink()::onChanged);
+        this.sizing(horizontalSizing, Sizing.content());
+        this.setMaxLength(maxLength);
+
+        this.showsBackground.observe(a -> this.widgetWrapper().notifyParentIfMounted());
+    }
+
+    /**
+     * @deprecated Subscribe to {@link #onChanged()} instead
+     */
+    @Override
+    @Deprecated(forRemoval = true)
+    public void setChangedListener(Consumer<String> changedListener) {
+        super.setChangedListener(changedListener);
+    }
+
+    @Override
+    public void drawFocusHighlight(OwoUIDrawContext context, int mouseX, int mouseY, float partialTicks, float delta) {
+        // noop, since TextFieldWidget already does this
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        boolean result = super.keyPressed(keyCode, scanCode, modifiers);
+
+        if (keyCode == GLFW.GLFW_KEY_TAB) {
+            this.write("    ");
+            return true;
+        } else {
+            return result;
+        }
+    }
+
+    @Override
+    public void setDrawsBackground(boolean drawsBackground) {
+        super.setDrawsBackground(drawsBackground);
+        this.showsBackground.set(drawsBackground);
+    }
+
+    public EventSource<CustomTextBoxComponent.OnChanged> onChanged() {
+        return changedEvents.source();
+    }
+
+    public CustomTextBoxComponent text(String text) {
+        this.setText(text);
+        this.setCursorToStart();
+        return this;
+    }
+
+    @Override
+    public void parseProperties(UIModel spec, Element element, Map<String, Element> children) {
+        super.parseProperties(spec, element, children);
+        UIParsing.apply(children, "show-background", UIParsing::parseBool, this::setDrawsBackground);
+        UIParsing.apply(children, "max-length", UIParsing::parseUnsignedInt, this::setMaxLength);
+        UIParsing.apply(children, "text", e -> e.getTextContent().strip(), this::text);
+    }
+
+    protected CursorStyle owo$preferredCursorStyle() {
+        return CursorStyle.TEXT;
+    }
+
+    public interface OnChanged {
+        void onChanged(String value);
+
+        static EventStream<CustomTextBoxComponent.OnChanged> newStream() {
+            return new EventStream<>(subscribers -> value -> {
+                for (var subscriber : subscribers) {
+                    subscriber.onChanged(value);
+                }
+            });
+        }
+    }
+}

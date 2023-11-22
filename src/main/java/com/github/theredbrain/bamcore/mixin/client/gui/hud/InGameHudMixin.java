@@ -22,6 +22,7 @@ import net.minecraft.util.math.MathHelper;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -40,15 +41,34 @@ public abstract class InGameHudMixin {
 
     @Shadow protected abstract void renderHotbarItem(DrawContext context, int x, int y, float f, PlayerEntity player, ItemStack stack, int seed);
 
-    @Shadow @Final private static Identifier WIDGETS_TEXTURE;
-
-    @Shadow @Final private static Identifier ICONS;
+    @Shadow @Final private static Identifier HOTBAR_TEXTURE;
+    @Shadow @Final private static Identifier HOTBAR_SELECTION_TEXTURE;
+    @Shadow @Final private static Identifier HOTBAR_ATTACK_INDICATOR_BACKGROUND_TEXTURE;
+    @Shadow @Final private static Identifier HOTBAR_ATTACK_INDICATOR_PROGRESS_TEXTURE;
 
     @Shadow public abstract TextRenderer getTextRenderer();
 
+    @Unique
+    private static final Identifier HOTBAR_HAND_SLOTS_TEXTURE = BetterAdventureModeCore.identifier("hud/hotbar_hand_slots");
+    private static final Identifier HOTBAR_ALTERNATE_HAND_SLOTS_TEXTURE = BetterAdventureModeCore.identifier("hud/hotbar_alternate_hand_slots");
     private static final Identifier CUSTOM_WIDGETS_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/custom_widgets.png");
     private static final Identifier CUSTOM_BARS = BetterAdventureModeCore.identifier("textures/gui/custom_bars.png");
-    private static final Identifier BARS = new Identifier("textures/gui/bars.png");
+    @Unique
+    private static final Identifier HEALTH_BAR_BACKGROUND_TEXTURE = new Identifier("boss_bar/red_background");
+    @Unique
+    private static final Identifier HEALTH_BAR_PROGRESS_TEXTURE = new Identifier("boss_bar/red_progress");
+    @Unique
+    private static final Identifier MANA_BAR_BACKGROUND_TEXTURE = new Identifier("boss_bar/blue_background");
+    @Unique
+    private static final Identifier MANA_BAR_PROGRESS_TEXTURE = new Identifier("boss_bar/blue_progress");
+    @Unique
+    private static final Identifier STAGGER_BAR_BACKGROUND_TEXTURE = BetterAdventureModeCore.identifier("hud/stagger_bar_background");
+    @Unique
+    private static final Identifier STAGGER_BAR_PROGRESS_TEXTURE = BetterAdventureModeCore.identifier("hud/stagger_bar_progress");
+    @Unique
+    private static final Identifier STAMINA_BAR_BACKGROUND_TEXTURE = new Identifier("boss_bar/green_background");
+    @Unique
+    private static final Identifier STAMINA_BAR_PROGRESS_TEXTURE = new Identifier("boss_bar/green_progress");
 
     @Inject(method = "renderHotbar", at = @At("HEAD"), cancellable = true)
     private void bamcore$renderHotbar(float tickDelta, DrawContext context, CallbackInfo ci) {
@@ -69,12 +89,12 @@ public abstract class InGameHudMixin {
 
             context.getMatrices().push();
             context.getMatrices().translate(0.0F, 0.0F, -90.0F);
-            context.drawTexture(WIDGETS_TEXTURE, i - 91, this.scaledHeight - 22 - raisedDistance, 0, 0, 182, 22);
-            context.drawTexture(WIDGETS_TEXTURE, i - 91 - 1 + playerEntity.getInventory().selectedSlot * 20, this.scaledHeight - 22 - 1 - raisedDistance, 0, 22, 24, 24);
+            context.drawGuiTexture(HOTBAR_TEXTURE, i - 91, this.scaledHeight - 22 - raisedDistance, 182, 22);
+            context.drawGuiTexture(HOTBAR_SELECTION_TEXTURE, i - 91 - 1 + playerEntity.getInventory().selectedSlot * 20, this.scaledHeight - 22 - 1 - raisedDistance, 24, 24);
 
             // slots for all hand items
-            context.drawTexture(CUSTOM_WIDGETS_TEXTURE, i - 91 - 49, this.scaledHeight - 23 - raisedDistance, 0, 0, 49, 24);
-            context.drawTexture(CUSTOM_WIDGETS_TEXTURE, i + 91, this.scaledHeight - 23 - raisedDistance, 49, 0, 49, 24);
+            context.drawGuiTexture(HOTBAR_HAND_SLOTS_TEXTURE, i - 91 - 49, this.scaledHeight - 23 - raisedDistance, 49, 24);
+            context.drawGuiTexture(HOTBAR_ALTERNATE_HAND_SLOTS_TEXTURE, i + 91, this.scaledHeight - 23 - raisedDistance, 49, 24);
 
             context.getMatrices().pop();
             int l = 1;
@@ -113,8 +133,10 @@ public abstract class InGameHudMixin {
                     }
 
                     int p = (int)(f * 19.0F);
-                    context.drawTexture(ICONS, o, n, 0, 94, 18, 18);
-                    context.drawTexture(ICONS, o, n + 18 - p, 18, 112 - p, 18, p);
+//                    context.drawTexture(ICONS, o, n, 0, 94, 18, 18);
+//                    context.drawTexture(ICONS, o, n + 18 - p, 18, 112 - p, 18, p);
+                    context.drawGuiTexture(HOTBAR_ATTACK_INDICATOR_BACKGROUND_TEXTURE, o, n, 18, 18);
+                    context.drawGuiTexture(HOTBAR_ATTACK_INDICATOR_PROGRESS_TEXTURE, 18, 18, 0, 18 - p, o, n + 18 - p, 18, p);
                 }
             }
 
@@ -158,9 +180,9 @@ public abstract class InGameHudMixin {
             int normalizedPoiseRatio = (int)(((double) poise/* * 10*/ / Math.max(MathHelper.ceil(maxHealth * poiseLimitMultiplier/* * 10*/), 1)) * 62);
 
             this.client.getProfiler().push("health_bar");
-            context.drawTexture(BARS, attributeBarX, attributeBarY, 0, 20, 182, 5);
+            context.drawGuiTexture(HEALTH_BAR_BACKGROUND_TEXTURE, attributeBarX, attributeBarY, 182, 5);
             if (normalizedHealthRatio > 0) {
-                context.drawTexture(BARS, attributeBarX, attributeBarY, 0, 25, normalizedHealthRatio, 5);
+                context.drawGuiTexture(HEALTH_BAR_PROGRESS_TEXTURE, attributeBarX, attributeBarY, normalizedHealthRatio, 5);
             }
             if (BetterAdventureModeCoreClient.clientConfig.show_resource_bar_numbers) {
                 this.client.getProfiler().swap("health_bar_number");
@@ -175,9 +197,9 @@ public abstract class InGameHudMixin {
             }
 
             this.client.getProfiler().swap("stamina_bar");
-            context.drawTexture(BARS, attributeBarX, attributeBarY - 9, 0, 30, 182, 5);
+            context.drawGuiTexture(STAMINA_BAR_BACKGROUND_TEXTURE, attributeBarX, attributeBarY - 9, 182, 5);
             if (normalizedStaminaRatio > 0) {
-                context.drawTexture(BARS, attributeBarX, attributeBarY - 9, 0, 35, normalizedStaminaRatio, 5);
+                context.drawGuiTexture(STAMINA_BAR_PROGRESS_TEXTURE, attributeBarX, attributeBarY - 9, normalizedStaminaRatio, 5);
             }
             if (BetterAdventureModeCoreClient.clientConfig.show_resource_bar_numbers) {
                 this.client.getProfiler().swap("stamina_bar_number");
@@ -193,9 +215,9 @@ public abstract class InGameHudMixin {
 
             if (maxMana > 0) {
                 this.client.getProfiler().swap("mana_bar");
-                context.drawTexture(BARS, attributeBarX, attributeBarY - 18, 0, 10, 182, 5);
+                context.drawGuiTexture(MANA_BAR_BACKGROUND_TEXTURE, attributeBarX, attributeBarY - 18, 182, 5);
                 if (normalizedManaRatio > 0) {
-                    context.drawTexture(BARS, attributeBarX, attributeBarY - 18, 0, 15, normalizedManaRatio, 5);
+                    context.drawGuiTexture(MANA_BAR_PROGRESS_TEXTURE, attributeBarX, attributeBarY - 18, normalizedManaRatio, 5);
                 }
                 if (BetterAdventureModeCoreClient.clientConfig.show_resource_bar_numbers) {
                     this.client.getProfiler().swap("mana_bar_number");
@@ -212,9 +234,9 @@ public abstract class InGameHudMixin {
 
             if (poise > 0/* && !playerEntity.hasStatusEffect(BetterAdventureModeCoreStatusEffects.STAGGERED)*/) {
                 this.client.getProfiler().swap("stagger_bar");
-                context.drawTexture(CUSTOM_BARS, attributeBarX + 60, this.scaledHeight / 2 - 7 + 25, 0, 40, 62, 5);
+                context.drawGuiTexture(STAGGER_BAR_BACKGROUND_TEXTURE, attributeBarX + 60, this.scaledHeight / 2 - 7 + 25, 62, 5);
                 if (normalizedPoiseRatio > 0) {
-                    context.drawTexture(CUSTOM_BARS, attributeBarX + 60, this.scaledHeight / 2 - 7 + 25, 0, 45, normalizedPoiseRatio, 5);
+                    context.drawGuiTexture(STAGGER_BAR_PROGRESS_TEXTURE, attributeBarX + 60, this.scaledHeight / 2 - 7 + 25, normalizedPoiseRatio, 5);
                 }
             }
             this.client.getProfiler().pop();

@@ -1,9 +1,8 @@
 package com.github.theredbrain.bamcore.client.gui.screen.ingame;
 
 import com.github.theredbrain.bamcore.block.entity.DelayTriggerBlockBlockEntity;
-import com.github.theredbrain.bamcore.network.packet.BetterAdventureModeCoreServerPacket;
+import com.github.theredbrain.bamcore.network.packet.UpdateDelayTriggerBlockPacket;
 import com.github.theredbrain.bamcore.registry.BlockRegistry;
-import io.netty.buffer.Unpooled;
 import io.wispforest.owo.ui.base.BaseOwoScreen;
 import io.wispforest.owo.ui.component.Components;
 import io.wispforest.owo.ui.component.TextBoxComponent;
@@ -12,8 +11,7 @@ import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
@@ -103,20 +101,15 @@ public class DelayTriggerBlockScreen extends BaseOwoScreen<FlowLayout> {
     }
 
     private boolean updateDelayTriggerBlock() {
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-
-        // teleporter block position
-        buf.writeBlockPos(this.delayTriggerBlock.getPos());
-
-        buf.writeBlockPos(new BlockPos(
-                this.parseInt(this.component(TextBoxComponent.class, "triggeredBlockPositionOffsetX").getText()),
-                this.parseInt(this.component(TextBoxComponent.class, "triggeredBlockPositionOffsetY").getText()),
-                this.parseInt(this.component(TextBoxComponent.class, "triggeredBlockPositionOffsetZ").getText())
+        ClientPlayNetworking.send(new UpdateDelayTriggerBlockPacket(
+                this.delayTriggerBlock.getPos(),
+                new BlockPos(
+                        this.parseInt(this.component(TextBoxComponent.class, "triggeredBlockPositionOffsetX").getText()),
+                        this.parseInt(this.component(TextBoxComponent.class, "triggeredBlockPositionOffsetY").getText()),
+                        this.parseInt(this.component(TextBoxComponent.class, "triggeredBlockPositionOffsetZ").getText())
+                ),
+                this.parseInt(this.component(TextBoxComponent.class, "triggerDelay").getText())
         ));
-
-        buf.writeInt(this.parseInt(this.component(TextBoxComponent.class, "triggerDelay").getText()));
-
-        this.client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModeCoreServerPacket.UPDATE_DELAY_TRIGGER_BLOCK, buf));
         return true;
     }
 

@@ -34,62 +34,43 @@ public class BetterAdventureModeCoreServerPacket {
     public static final Identifier REGENERATE_DIMENSION_FROM_TELEPORTER_BLOCK = BetterAdventureModeCore.identifier("regenerate_dimension_from_teleporter_block");
 
     public static void init() {
-        SwapHandItemsPacketReceiver swapHandItemsPacketReceiver = new SwapHandItemsPacketReceiver();
-        ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.SWAP_HAND_ITEMS_PACKET, swapHandItemsPacketReceiver);
+        ServerPlayNetworking.registerGlobalReceiver(SwapHandItemsPacket.TYPE, new SwapHandItemsPacketReceiver());
 
-        SheatheWeaponsPacketReceiver sheatheWeaponsPacketReceiver = new SheatheWeaponsPacketReceiver();
-        ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.SHEATHE_WEAPONS_PACKET, sheatheWeaponsPacketReceiver);
+        ServerPlayNetworking.registerGlobalReceiver(SheatheWeaponsPacket.TYPE, new SheatheWeaponsPacketReceiver());
 
-        TwoHandMainWeaponPacketReceiver twoHandMainWeaponPacketReceiver = new TwoHandMainWeaponPacketReceiver();
-        ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.TWO_HAND_MAIN_WEAPON_PACKET, twoHandMainWeaponPacketReceiver);
+        ServerPlayNetworking.registerGlobalReceiver(TwoHandMainWeaponPacket.TYPE, new TwoHandMainWeaponPacketReceiver());
 
-        ToggleNecklaceAbilityPacketReceiver toggleNecklaceAbilityPacketReceiver = new ToggleNecklaceAbilityPacketReceiver();
-        ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.TOGGLE_NECKLACE_ABILITY_PACKET, toggleNecklaceAbilityPacketReceiver);
+        ServerPlayNetworking.registerGlobalReceiver(ToggleNecklaceAbilityPacket.TYPE, new ToggleNecklaceAbilityPacketReceiver());
 
-        AttackStaminaCostPacketReceiver attackStaminaCostPacketReceiver = new AttackStaminaCostPacketReceiver();
-        ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.ATTACK_STAMINA_COST_PACKET, attackStaminaCostPacketReceiver);
+        ServerPlayNetworking.registerGlobalReceiver(AttackStaminaCostPacket.TYPE, new AttackStaminaCostPacketReceiver());
 
-        AddStatusEffectPacketReceiver addStatusEffectPacketReceiver = new AddStatusEffectPacketReceiver();
-        ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.ADD_STATUS_EFFECT_PACKET, addStatusEffectPacketReceiver);
+        ServerPlayNetworking.registerGlobalReceiver(AddStatusEffectPacket.TYPE, new AddStatusEffectPacketReceiver());
 
 
-        UpdateHousingBlockAdventurePacketReceiver updateHousingBlockAdventurePacketReceiver = new UpdateHousingBlockAdventurePacketReceiver();
-        ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.UPDATE_HOUSING_BLOCK_ADVENTURE, updateHousingBlockAdventurePacketReceiver);
+        ServerPlayNetworking.registerGlobalReceiver(UpdateHousingBlockAdventurePacket.TYPE, new UpdateHousingBlockAdventurePacketReceiver());
 
-        UpdateHousingBlockCreativePacketReceiver updateHousingBlockCreativePacketReceiver = new UpdateHousingBlockCreativePacketReceiver();
-        ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.UPDATE_HOUSING_BLOCK_CREATIVE, updateHousingBlockCreativePacketReceiver);
+        ServerPlayNetworking.registerGlobalReceiver(UpdateHousingBlockCreativePacket.TYPE, new UpdateHousingBlockCreativePacketReceiver());
 
-        SetHousingBlockOwnerPacketReceiver setHousingBlockOwnerPacketReceiver = new SetHousingBlockOwnerPacketReceiver();
-        ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.SET_HOUSING_OWNER_BLOCK, setHousingBlockOwnerPacketReceiver);
+        ServerPlayNetworking.registerGlobalReceiver(SetHousingBlockOwnerPacket.TYPE, new SetHousingBlockOwnerPacketReceiver());
 
-        ResetHouseHousingBlockPacketReceiver resetHouseHousingBlockPacketReceiver = new ResetHouseHousingBlockPacketReceiver();
-        ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.RESET_HOUSE_HOUSING_BLOCK, resetHouseHousingBlockPacketReceiver);
+        ServerPlayNetworking.registerGlobalReceiver(ResetHouseHousingBlockPacket.TYPE, new ResetHouseHousingBlockPacketReceiver());
 
-        UpdateTeleporterBlockPacketReceiver updateTeleporterBlockPacketReceiver = new UpdateTeleporterBlockPacketReceiver();
-        ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.UPDATE_TELEPORTER_BLOCK, updateTeleporterBlockPacketReceiver);
+        ServerPlayNetworking.registerGlobalReceiver(UpdateTeleporterBlockPacket.TYPE, new UpdateTeleporterBlockPacketReceiver());
 
-        UpdateAreaFillerBlockPacketReceiver updateAreaFillerBlockPacketReceiver = new UpdateAreaFillerBlockPacketReceiver();
-        ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.UPDATE_AREA_FILLER_BLOCK, updateAreaFillerBlockPacketReceiver);
+        ServerPlayNetworking.registerGlobalReceiver(UpdateAreaFillerBlockPacket.TYPE, new UpdateAreaFillerBlockPacketReceiver());
 
-        UpdateJigsawPlacerBlockPacketReceiver updateJigsawPlacerBlockPacketReceiver = new UpdateJigsawPlacerBlockPacketReceiver();
-        ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.UPDATE_JIGSAW_PLACER_BLOCK, updateJigsawPlacerBlockPacketReceiver);
+        ServerPlayNetworking.registerGlobalReceiver(UpdateJigsawPlacerBlockPacket.TYPE, new UpdateJigsawPlacerBlockPacketReceiver());
 
-        UpdateRedstoneTriggerBlockPacketReceiver updateRedstoneTriggerBlockPacketReceiver = new UpdateRedstoneTriggerBlockPacketReceiver();
-        ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.UPDATE_REDSTONE_TRIGGER_BLOCK, updateRedstoneTriggerBlockPacketReceiver);
+        ServerPlayNetworking.registerGlobalReceiver(UpdateRedstoneTriggerBlockPacket.TYPE, new UpdateRedstoneTriggerBlockPacketReceiver());
 
-        UpdateRelayTriggerBlockPacketReceiver updateRelayTriggerBlockPacketReceiver = new UpdateRelayTriggerBlockPacketReceiver();
-        ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.UPDATE_RELAY_TRIGGER_BLOCK, updateRelayTriggerBlockPacketReceiver);
+        ServerPlayNetworking.registerGlobalReceiver(UpdateRelayTriggerBlockPacket.TYPE, new UpdateRelayTriggerBlockPacketReceiver());
 
-        UpdateDelayTriggerBlockPacketReceiver updateDelayTriggerBlockPacketReceiver = new UpdateDelayTriggerBlockPacketReceiver();
-        ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.UPDATE_DELAY_TRIGGER_BLOCK, updateDelayTriggerBlockPacketReceiver);
+        ServerPlayNetworking.registerGlobalReceiver(UpdateDelayTriggerBlockPacket.TYPE, new UpdateDelayTriggerBlockPacketReceiver());
 
-        UpdateChunkLoaderBlockPacketReceiver updateChunkLoaderBlockPacketReceiver = new UpdateChunkLoaderBlockPacketReceiver();
-        ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.UPDATE_CHUNK_LOADER_BLOCK, updateChunkLoaderBlockPacketReceiver);
+        ServerPlayNetworking.registerGlobalReceiver(UpdateChunkLoaderBlockPacket.TYPE, new UpdateChunkLoaderBlockPacketReceiver());
 
-        TeleportFromTeleporterBlockPacketReceiver teleportFromTeleporterBlockPacketReceiver = new TeleportFromTeleporterBlockPacketReceiver();
-        ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.TELEPORT_FROM_TELEPORTER_BLOCK, teleportFromTeleporterBlockPacketReceiver);
+        ServerPlayNetworking.registerGlobalReceiver(TeleportFromTeleporterBlockPacket.TYPE, new TeleportFromTeleporterBlockPacketReceiver());
 
-        RegenerateDimensionFromTeleporterBlockPacketReceiver regenerateDimensionFromTeleporterBlockPacketReceiver = new RegenerateDimensionFromTeleporterBlockPacketReceiver();
-        ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.REGENERATE_DIMENSION_FROM_TELEPORTER_BLOCK, regenerateDimensionFromTeleporterBlockPacketReceiver);
+//        ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.REGENERATE_DIMENSION_FROM_TELEPORTER_BLOCK, new RegenerateDimensionFromTeleporterBlockPacketReceiver());
     }
 }

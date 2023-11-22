@@ -23,12 +23,6 @@
     "server.network.ServerPlayerEntityMixin",
     "server.network.ServerPlayerInteractionManagerMixin",
     "server.network.ServerPlayNetworkHandlerMixin",
-    "spell_engine.api.spell.SpellContainerMixin",
-    "spell_engine.api.spell.SpellCostMixin",
-    "spell_engine.api.spell.SpellImpactActionDamageMixin",
-    "spell_engine.api.spell.SpellImpactActionHealMixin",
-    "spell_engine.internals.SpellContainerHelperMixin",
-    "spell_engine.internals.SpellHelperMixin",
     "trinkets.SurvivalTrinketSlotMixin"
   ],
   "injectors": {

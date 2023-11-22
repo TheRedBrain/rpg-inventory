@@ -1,9 +1,8 @@
 package com.github.theredbrain.bamcore.client.gui.screen.ingame;
 
 import com.github.theredbrain.bamcore.block.entity.ChunkLoaderBlockBlockEntity;
-import com.github.theredbrain.bamcore.network.packet.BetterAdventureModeCoreServerPacket;
+import com.github.theredbrain.bamcore.network.packet.UpdateChunkLoaderBlockPacket;
 import com.github.theredbrain.bamcore.registry.BlockRegistry;
-import io.netty.buffer.Unpooled;
 import io.wispforest.owo.ui.base.BaseOwoScreen;
 import io.wispforest.owo.ui.component.ButtonComponent;
 import io.wispforest.owo.ui.component.Components;
@@ -13,8 +12,7 @@ import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
@@ -143,24 +141,19 @@ public class ChunkLoaderBlockScreen extends BaseOwoScreen<FlowLayout> {
     }
 
     private boolean updateChunkLoaderBlock() {
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-
-        buf.writeBlockPos(this.chunkLoaderBlock.getPos());
-
-        buf.writeBoolean(this.loadChunk);
-
-        buf.writeInt(this.parseInt(this.component(TextBoxComponent.class, "startChunkX").getText()));
-        buf.writeInt(this.parseInt(this.component(TextBoxComponent.class, "startChunkZ").getText()));
-        buf.writeInt(this.parseInt(this.component(TextBoxComponent.class, "endChunkX").getText()));
-        buf.writeInt(this.parseInt(this.component(TextBoxComponent.class, "endChunkZ").getText()));
-
-        buf.writeBlockPos(new BlockPos(
-                this.parseInt(this.component(TextBoxComponent.class, "triggeredBlockPositionOffsetX").getText()),
-                this.parseInt(this.component(TextBoxComponent.class, "triggeredBlockPositionOffsetY").getText()),
-                this.parseInt(this.component(TextBoxComponent.class, "triggeredBlockPositionOffsetZ").getText())
+        ClientPlayNetworking.send(new UpdateChunkLoaderBlockPacket(
+                this.chunkLoaderBlock.getPos(),
+                this.loadChunk,
+                this.parseInt(this.component(TextBoxComponent.class, "startChunkX").getText()),
+                this.parseInt(this.component(TextBoxComponent.class, "startChunkZ").getText()),
+                this.parseInt(this.component(TextBoxComponent.class, "endChunkX").getText()),
+                this.parseInt(this.component(TextBoxComponent.class, "endChunkZ").getText()),
+                new BlockPos(
+                        this.parseInt(this.component(TextBoxComponent.class, "triggeredBlockPositionOffsetX").getText()),
+                        this.parseInt(this.component(TextBoxComponent.class, "triggeredBlockPositionOffsetY").getText()),
+                        this.parseInt(this.component(TextBoxComponent.class, "triggeredBlockPositionOffsetZ").getText())
+                )
         ));
-
-        this.client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModeCoreServerPacket.UPDATE_CHUNK_LOADER_BLOCK, buf));
         return true;
     }
 

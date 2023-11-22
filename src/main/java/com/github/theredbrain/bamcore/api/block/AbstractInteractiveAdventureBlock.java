@@ -2,8 +2,8 @@ package com.github.theredbrain.bamcore.api.block;
 
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.api.util.BetterAdventureModCoreItemUtils;
-import de.dafuqs.revelationary.api.advancements.AdvancementHelper;
-import de.dafuqs.revelationary.api.revelations.RevelationAware;
+//import de.dafuqs.revelationary.api.advancements.AdvancementHelper;
+//import de.dafuqs.revelationary.api.revelations.RevelationAware;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -33,7 +33,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
-public abstract class AbstractInteractiveAdventureBlock extends Block implements RevelationAware {
+public abstract class AbstractInteractiveAdventureBlock extends Block/* implements RevelationAware*/ {
     public static final BooleanProperty INTACT;
     private final TagKey<Item> requiredTools;
     private final boolean requiresTools;
@@ -53,9 +53,9 @@ public abstract class AbstractInteractiveAdventureBlock extends Block implements
         this.setDefaultState(this.getStateManager().getDefaultState().with(INTACT, true));
         this.cloakedBlock = cloakedBlock;
         this.cloakAdvancementIdentifier = cloakAdvancementIdentifier;
-        if (this.cloakAdvancementIdentifier != null) {
-            RevelationAware.register(this);
-        }
+//        if (this.cloakAdvancementIdentifier != null) {
+//            RevelationAware.register(this);
+//        }
     }
 
     @Override
@@ -66,7 +66,7 @@ public abstract class AbstractInteractiveAdventureBlock extends Block implements
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         ItemStack tool = player.getStackInHand(Hand.MAIN_HAND);
-        if (!world.isClient() && (this.cloakAdvancementIdentifier == null || AdvancementHelper.hasAdvancement(player, this.getCloakAdvancementIdentifier()))) {
+        if (!world.isClient() && (this.cloakAdvancementIdentifier == null/* || AdvancementHelper.hasAdvancement(player, this.getCloakAdvancementIdentifier())*/)) {
             if (state.isOf(this)
                     && (!this.requiresTools
                         || (tool.isIn(this.requiredTools) && tool.getItem() instanceof ToolItem && (BetterAdventureModCoreItemUtils.isUsable(tool) && hand == Hand.MAIN_HAND) || (tool.isIn(this.requiredTools) && !(tool.getItem() instanceof ToolItem) && hand == Hand.MAIN_HAND)))) {
@@ -132,37 +132,37 @@ public abstract class AbstractInteractiveAdventureBlock extends Block implements
         INTACT = BooleanProperty.of("intact");
     }
 
-    // Revelationary stuff
+//    // Revelationary stuff
+//
+//    public Identifier getCloakAdvancementIdentifier() {
+//        return this.cloakAdvancementIdentifier;
+//    }
+//
+//    public Map<BlockState, BlockState> getBlockStateCloaks() {
+//        Hashtable<BlockState, BlockState> hashtable = new Hashtable();
+//        if (this.cloakedBlock != null) {
+//            hashtable.put(this.getDefaultState(), this.cloakedBlock.getDefaultState());
+//            hashtable.put(this.getDefaultState().with(INTACT, false), this.cloakedBlock.getDefaultState());
+//        } else {
+//            hashtable.put(this.getDefaultState(), this.getDefaultState());
+//            hashtable.put(this.getDefaultState().with(INTACT, false), this.getDefaultState().with(INTACT, false));
+//        }
+//        return hashtable;
+//    }
 
-    public Identifier getCloakAdvancementIdentifier() {
-        return this.cloakAdvancementIdentifier;
-    }
+//    public Pair<Item, Item> getItemCloak() {
+//        if (this.cloakedBlock != null) {
+//            return new Pair<>(this.asItem(), this.cloakedBlock.asItem());
+//        } else {
+//            return new Pair<>(this.asItem(), this.asItem());
+//        }
+//    }
 
-    public Map<BlockState, BlockState> getBlockStateCloaks() {
-        Hashtable<BlockState, BlockState> hashtable = new Hashtable();
-        if (this.cloakedBlock != null) {
-            hashtable.put(this.getDefaultState(), this.cloakedBlock.getDefaultState());
-            hashtable.put(this.getDefaultState().with(INTACT, false), this.cloakedBlock.getDefaultState());
-        } else {
-            hashtable.put(this.getDefaultState(), this.getDefaultState());
-            hashtable.put(this.getDefaultState().with(INTACT, false), this.getDefaultState().with(INTACT, false));
-        }
-        return hashtable;
-    }
-
-    public Pair<Item, Item> getItemCloak() {
-        if (this.cloakedBlock != null) {
-            return new Pair<>(this.asItem(), this.cloakedBlock.asItem());
-        } else {
-            return new Pair<>(this.asItem(), this.asItem());
-        }
-    }
-
-    public boolean isVisibleTo(@Nullable PlayerEntity player) {
-        boolean bl = true;
-        if (this.cloakAdvancementIdentifier != null) {
-            bl = AdvancementHelper.hasAdvancement(player, this.getCloakAdvancementIdentifier());
-        }
-        return bl;
-    }
+//    public boolean isVisibleTo(@Nullable PlayerEntity player) {
+//        boolean bl = true;
+//        if (this.cloakAdvancementIdentifier != null) {
+//            bl = AdvancementHelper.hasAdvancement(player, this.getCloakAdvancementIdentifier());
+//        }
+//        return bl;
+//    }
 }

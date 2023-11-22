@@ -2,10 +2,11 @@ package com.github.theredbrain.bamcore.client.gui.screen.ingame;
 
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.block.entity.TeleporterBlockBlockEntity;
-import com.github.theredbrain.bamcore.network.packet.BetterAdventureModeCoreServerPacket;
+import com.github.theredbrain.bamcore.network.packet.AddStatusEffectPacket;
+import com.github.theredbrain.bamcore.network.packet.TeleportFromTeleporterBlockPacket;
+import com.github.theredbrain.bamcore.network.packet.UpdateTeleporterBlockPacket;
 import com.github.theredbrain.bamcore.registry.StatusEffectsRegistry;
 import com.github.theredbrain.bamcore.screen.TeleporterBlockScreenHandler;
-import io.netty.buffer.Unpooled;
 import io.wispforest.owo.ui.base.BaseOwoHandledScreen;
 import io.wispforest.owo.ui.component.ButtonComponent;
 import io.wispforest.owo.ui.component.Components;
@@ -15,30 +16,30 @@ import io.wispforest.owo.ui.container.*;
 import io.wispforest.owo.ui.core.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.PlayerListEntry;
-import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
+import net.minecraft.registry.Registries;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.StringVisitable;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Environment(value= EnvType.CLIENT)
 public class TeleporterBlockScreen extends BaseOwoHandledScreen<FlowLayout, TeleporterBlockScreenHandler> {
-//public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHandler> {
     private static final Text EDIT_TELEPORTER_TITLE = Text.translatable("gui.edit_teleporter_title");
     public static final Identifier ADVENTURE_TELEPORTER_SCREEN_BACKGROUND_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/adventure_teleporter_screen.png");
     public static final Identifier CREATIVE_TELEPORTER_SCREEN_BACKGROUND_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/creative_teleporter_screen.png");
@@ -141,7 +142,7 @@ public class TeleporterBlockScreen extends BaseOwoHandledScreen<FlowLayout, Tele
         component(FlowLayout.class, "currentTeleportationTargetEntryContainer").clearChildren();
 
         component(FlowLayout.class, "currentTeleportationTargetEntryContainer").children(List.of(
-                Components.texture(newTeleportationTargetPlayer.getSkinTexture(), 8, 8, 8, 8, 64, 64)
+                Components.texture(newTeleportationTargetPlayer.getSkinTextures().texture(), 8, 8, 8, 8, 64, 64)
                         .sizing(Sizing.fixed(16), Sizing.fixed(16)),
                 Components.label(Text.of(newTeleportationTargetPlayer.getProfile().getName()))
                         .shadow(true)
@@ -631,7 +632,7 @@ public class TeleporterBlockScreen extends BaseOwoHandledScreen<FlowLayout, Tele
             if (currentPlayer != null) {
 
                 component(FlowLayout.class, "currentPlayerTargetEntryContainer").children(List.of(
-                        Components.texture(currentPlayer.getSkinTexture(), 8, 8, 8, 8, 64, 64)
+                        Components.texture(currentPlayer.getSkinTextures().texture(), 8, 8, 8, 8, 64, 64)
                                 .sizing(Sizing.fixed(16), Sizing.fixed(16)),
                         Components.label(Text.of(currentPlayer.getProfile().getName()))
                                 .shadow(true)
@@ -656,7 +657,7 @@ public class TeleporterBlockScreen extends BaseOwoHandledScreen<FlowLayout, Tele
                             component(CollapsibleContainer.class, "currentTeamTargetEntries")
                                     .child(Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
                                             .children(List.of(
-                                                    Components.texture(teamPlayer.getSkinTexture(), 8, 8, 8, 8, 64, 64)
+                                                    Components.texture(teamPlayer.getSkinTextures().texture(), 8, 8, 8, 8, 64, 64)
                                                             .sizing(Sizing.fixed(16), Sizing.fixed(16)),
                                                     Components.label(Text.of(teamPlayer.getProfile().getName()))
                                                             .shadow(true)
@@ -824,66 +825,68 @@ public class TeleporterBlockScreen extends BaseOwoHandledScreen<FlowLayout, Tele
     }
 
     private boolean updateTeleporterBlock() {
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
 
-        // teleporter block position
-        buf.writeBlockPos(this.teleporterBlock.getPos());
-
-        // teleporter block information
-        buf.writeString(this.component(TextBoxComponent.class, "teleporterName").getText());
-        buf.writeBoolean(this.showActivationArea);
-
-        buf.writeInt(this.parseInt(this.component(TextBoxComponent.class, "activationAreaDimensionsX").getText()));
-        buf.writeInt(this.parseInt(this.component(TextBoxComponent.class, "activationAreaDimensionsY").getText()));
-        buf.writeInt(this.parseInt(this.component(TextBoxComponent.class, "activationAreaDimensionsZ").getText()));
-        buf.writeBlockPos(new BlockPos(
-                this.parseInt(this.component(TextBoxComponent.class, "activationAreaPositionOffsetX").getText()),
-                this.parseInt(this.component(TextBoxComponent.class, "activationAreaPositionOffsetY").getText()),
-                this.parseInt(this.component(TextBoxComponent.class, "activationAreaPositionOffsetZ").getText())
-        ));
-
-        buf.writeBoolean(this.showAdventureScreen);
-
-        buf.writeInt(this.teleportationMode);
-
+        BlockPos directTeleportPositionOffset;
+        double directTeleportPositionOffsetYaw;
+        double directTeleportPositionOffsetPitch;
         if (this.teleportationMode == 0) {
-            buf.writeBlockPos(new BlockPos(
+            directTeleportPositionOffset = new BlockPos(
                     this.parseInt(this.component(TextBoxComponent.class, "directTeleportPositionOffsetX").getText()),
                     this.parseInt(this.component(TextBoxComponent.class, "directTeleportPositionOffsetY").getText()),
                     this.parseInt(this.component(TextBoxComponent.class, "directTeleportPositionOffsetZ").getText())
-            ));
+            );
 
-            buf.writeDouble(this.parseDouble(this.component(TextBoxComponent.class, "directTeleportPositionOffsetYaw").getText()));
-            buf.writeDouble(this.parseDouble(this.component(TextBoxComponent.class, "directTeleportPositionOffsetPitch").getText()));
+            directTeleportPositionOffsetYaw = this.parseDouble(this.component(TextBoxComponent.class, "directTeleportPositionOffsetYaw").getText());
+            directTeleportPositionOffsetPitch = this.parseDouble(this.component(TextBoxComponent.class, "directTeleportPositionOffsetPitch").getText());
         } else {
-            buf.writeBlockPos(new BlockPos(0, 0, 0));
-            buf.writeDouble(0.0);
-            buf.writeDouble(0.0);
+            directTeleportPositionOffset = new BlockPos(0, 0, 0);
+            directTeleportPositionOffsetYaw = 0.0;
+            directTeleportPositionOffsetPitch = 0.0;
         }
+        int specificLocationType;
         if (this.teleportationMode == 1) {
 
-            buf.writeInt(this.specificLocationType);
+            specificLocationType = this.specificLocationType;
 
         } else {
-            buf.writeInt(-1);
+            specificLocationType = -1;
         }
+        List<Pair<String, String>> locationsList = new ArrayList<>();
         if (this.teleportationMode == 2 || this.teleportationMode == 3) {
             int locationsListSize = this.component(FlowLayout.class, "locationsListContainer").children().size();
-            buf.writeInt(locationsListSize);
             for (int i = 0; i < locationsListSize; i++) {
-                buf.writeString(((LabelComponent)((FlowLayout)this.component(FlowLayout.class, "locationsListContainer").children().get(i)).children().get(0)).text().getString());
-                buf.writeString(((LabelComponent)((FlowLayout)this.component(FlowLayout.class, "locationsListContainer").children().get(i)).children().get(1)).text().getString());
+                locationsList.add(new Pair<>(
+                        ((LabelComponent)((FlowLayout)this.component(FlowLayout.class, "locationsListContainer").children().get(i)).children().get(0)).text().getString(),
+                        ((LabelComponent)((FlowLayout)this.component(FlowLayout.class, "locationsListContainer").children().get(i)).children().get(1)).text().getString())
+                );
             }
-        } else {
-            buf.writeInt(0);
         }
 
-        buf.writeBoolean(this.consumeKeyItemStack);
-
-        buf.writeString(this.component(TextBoxComponent.class, "teleportButtonLabel").getText());
-        buf.writeString(this.component(TextBoxComponent.class, "cancelTeleportButtonLabel").getText());
-
-        this.client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModeCoreServerPacket.UPDATE_TELEPORTER_BLOCK, buf));
+        ClientPlayNetworking.send(new UpdateTeleporterBlockPacket(
+                this.teleporterBlock.getPos(),
+                this.component(TextBoxComponent.class, "teleporterName").getText(),
+                this.showActivationArea,
+                new Vec3i(
+                        this.parseInt(this.component(TextBoxComponent.class, "activationAreaDimensionsX").getText()),
+                        this.parseInt(this.component(TextBoxComponent.class, "activationAreaDimensionsY").getText()),
+                        this.parseInt(this.component(TextBoxComponent.class, "activationAreaDimensionsZ").getText())
+                ),
+                new BlockPos(
+                        this.parseInt(this.component(TextBoxComponent.class, "activationAreaPositionOffsetX").getText()),
+                        this.parseInt(this.component(TextBoxComponent.class, "activationAreaPositionOffsetY").getText()),
+                        this.parseInt(this.component(TextBoxComponent.class, "activationAreaPositionOffsetZ").getText())
+                ),
+                this.showAdventureScreen,
+                this.teleportationMode,
+                directTeleportPositionOffset,
+                directTeleportPositionOffsetYaw,
+                directTeleportPositionOffsetPitch,
+                specificLocationType,
+                locationsList,
+                this.consumeKeyItemStack,
+                this.component(TextBoxComponent.class, "teleportButtonLabel").getText(),
+                this.component(TextBoxComponent.class, "cancelTeleportButtonLabel").getText()
+        ));
         return true;
     }
 
@@ -906,46 +909,44 @@ public class TeleporterBlockScreen extends BaseOwoHandledScreen<FlowLayout, Tele
     }
 
     private boolean tryTeleport() {
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-
-        buf.writeBlockPos(this.teleporterBlock.getPos());
-
-        buf.writeInt(this.teleporterBlock.getTeleportationMode());
-
-        buf.writeBlockPos(this.teleporterBlock.getDirectTeleportPositionOffset());
-        buf.writeDouble(this.teleporterBlock.getDirectTeleportPositionOffsetYaw());
-        buf.writeDouble(this.teleporterBlock.getDirectTeleportPositionOffsetPitch());
-
-        buf.writeInt(this.teleporterBlock.getSpecificLocationType());
-
-        if (this.teleporterBlock.getTeleportationMode() == 2 || this.teleporterBlock.getTeleportationMode() == 3) {
-            buf.writeString(component(LabelComponent.class, "currentTeleportationTargetEntryLabel").text().getString());
-            buf.writeString(""); // TODO get chosen dungeon/house
-            buf.writeString(""); // TODO get chosen dungeon/house entrance
-        } else {
-            buf.writeString("");
-            buf.writeString("");
-            buf.writeString("");
-        }
-
-        this.client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModeCoreServerPacket.TELEPORT_FROM_TELEPORTER_BLOCK, buf));
+        boolean bl = this.teleporterBlock.getTeleportationMode() == 2 || this.teleporterBlock.getTeleportationMode() == 3;
+        ClientPlayNetworking.send(new TeleportFromTeleporterBlockPacket(
+                this.teleporterBlock.getPos(),
+                this.teleporterBlock.getTeleportationMode(),
+                this.teleporterBlock.getDirectTeleportPositionOffset(),
+                this.teleporterBlock.getDirectTeleportPositionOffsetYaw(),
+                this.teleporterBlock.getDirectTeleportPositionOffsetPitch(),
+                this.teleporterBlock.getSpecificLocationType(),
+                bl ? component(LabelComponent.class, "currentTeleportationTargetEntryLabel").text().getString() : "",
+                ""/*TODO get chosen dungeon/house*/,
+                ""/*TODO get chosen dungeon/house entrance*/)
+        );
         return true;
     }
 
     private void givePortalResistanceEffect() {
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+//        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
 
-        buf.writeInt(StatusEffect.getRawId(StatusEffectsRegistry.PORTAL_RESISTANCE_EFFECT));
-        buf.writeInt(5);
-        buf.writeInt(0);
-        buf.writeBoolean(false);
-        buf.writeBoolean(false);
-        buf.writeBoolean(false);
-        buf.writeBoolean(true);
+//        buf.writeInt( Registries.STATUS_EFFECT.getId(StatusEffectsRegistry.PORTAL_RESISTANCE_EFFECT);
+//        buf.writeInt(5);
+//        buf.writeInt(0);
+//        buf.writeBoolean(false);
+//        buf.writeBoolean(false);
+//        buf.writeBoolean(false);
+//        buf.writeBoolean(true);
 
-        if (this.client != null && this.client.getNetworkHandler() != null) {
-            this.client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModeCoreServerPacket.ADD_STATUS_EFFECT_PACKET, buf));
-        }
+        ClientPlayNetworking.send(new AddStatusEffectPacket(
+                Registries.STATUS_EFFECT.getId(StatusEffectsRegistry.PORTAL_RESISTANCE_EFFECT),
+                5,
+                0,
+                false,
+                false,
+                false,
+                true)
+        );
+//        if (this.client != null && this.client.getNetworkHandler() != null) {
+//            this.client.getNetworkHandler().sendPacket((Packet<?>) );
+//        }
     }
 
     private int parseInt(String string) {

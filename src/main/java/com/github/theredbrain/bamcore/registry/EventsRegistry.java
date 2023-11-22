@@ -6,14 +6,15 @@ import com.github.theredbrain.bamcore.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.bamcore.network.event.PlayerDeathCallback;
 import com.github.theredbrain.bamcore.network.event.PlayerFirstJoinCallback;
 import com.github.theredbrain.bamcore.network.event.PlayerJoinCallback;
+import com.github.theredbrain.bamcore.network.packet.AttackStaminaCostPacket;
 import com.github.theredbrain.bamcore.network.packet.BetterAdventureModeCoreServerPacket;
 import io.netty.buffer.Unpooled;
 import net.bettercombat.api.client.BetterCombatClientEvents;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 
 public class EventsRegistry {
     public static void initializeEvents() {
@@ -55,9 +56,9 @@ public class EventsRegistry {
     public static void initializeClientEvents() {
 
         BetterCombatClientEvents.ATTACK_START.register((clientPlayerEntity, attackHand) -> {
-            PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-            buf.writeItemStack(attackHand.itemStack());
-            clientPlayerEntity.networkHandler.sendPacket(new CustomPayloadC2SPacket(BetterAdventureModeCoreServerPacket.ATTACK_STAMINA_COST_PACKET, buf));
+            ClientPlayNetworking.send(new AttackStaminaCostPacket(
+                    attackHand.itemStack()
+            ));
         });
     }
 }

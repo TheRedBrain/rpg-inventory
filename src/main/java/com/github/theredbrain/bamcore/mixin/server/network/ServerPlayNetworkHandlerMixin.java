@@ -16,7 +16,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
     @Shadow
     public ServerPlayerEntity player;
 
-    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayerEntity;onDisconnect()V"), method = "onDisconnected")
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerCommonNetworkHandler;onDisconnected(Lnet/minecraft/text/Text;)V"), method = "onDisconnected")
     private void onPlayerLeave(Text reason, CallbackInfo info) {
         PlayerLeaveCallback.EVENT.invoker().leaveServer(this.player, this.player.getServer());
     }

@@ -11,9 +11,9 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import net.spell_engine.api.effect.ActionImpairing;
-import net.spell_engine.api.effect.EntityActionsAllowed;
-import net.spell_engine.api.effect.Synchronized;
+//import net.spell_engine.api.effect.ActionImpairing;
+//import net.spell_engine.api.effect.EntityActionsAllowed;
+//import net.spell_engine.api.effect.Synchronized;
 
 public class StatusEffectsRegistry {
 
@@ -82,19 +82,21 @@ public class StatusEffectsRegistry {
     public static void registerEffects() {
         // --- Configuration ---
         // utility effects
-        ActionImpairing.configure(NO_ATTACK_ITEMS_EFFECT, new EntityActionsAllowed(true, true, new EntityActionsAllowed.PlayersAllowed(false, true, true), new EntityActionsAllowed.MobsAllowed(true), EntityActionsAllowed.SemanticType.NONE));
-        ActionImpairing.configure(NEED_EMPTY_OFFHAND_EFFECT, new EntityActionsAllowed(true, true, new EntityActionsAllowed.PlayersAllowed(false, false, false), new EntityActionsAllowed.MobsAllowed(true), EntityActionsAllowed.SemanticType.NONE));
-        ActionImpairing.configure(STAGGERED, new EntityActionsAllowed(false, false, new EntityActionsAllowed.PlayersAllowed(false, false, false), new EntityActionsAllowed.MobsAllowed(false), EntityActionsAllowed.SemanticType.STUN));
-//        ActionImpairing.configure(OVERBURDENED_EFFECT, new EntityActionsAllowed(false, true, new EntityActionsAllowed.PlayersAllowed(true, true, true), new EntityActionsAllowed.MobsAllowed(true), EntityActionsAllowed.SemanticType.NONE));
-        Synchronized.configure(WEAPONS_SHEATHED_EFFECT, true);
-        Synchronized.configure(TWO_HANDED_EFFECT, true);
-        Synchronized.configure(STAGGERED, true);
-        Synchronized.configure(BURNING, true);
-        Synchronized.configure(CHILLED, true);
-        Synchronized.configure(FROZEN, true);
-        Synchronized.configure(WET, true);
-        Synchronized.configure(TEST_AURA_EFFECT, true);
-        Synchronized.configure(HEALTH_REGENERATION_AURA_EFFECT, true);
+        // TODO SpellEngine 1.20.2
+//        ActionImpairing.configure(NO_ATTACK_ITEMS_EFFECT, new EntityActionsAllowed(true, true, new EntityActionsAllowed.PlayersAllowed(false, true, true), new EntityActionsAllowed.MobsAllowed(true), EntityActionsAllowed.SemanticType.NONE));
+//        ActionImpairing.configure(NEED_EMPTY_OFFHAND_EFFECT, new EntityActionsAllowed(true, true, new EntityActionsAllowed.PlayersAllowed(false, false, false), new EntityActionsAllowed.MobsAllowed(true), EntityActionsAllowed.SemanticType.NONE));
+//        ActionImpairing.configure(STAGGERED, new EntityActionsAllowed(false, false, new EntityActionsAllowed.PlayersAllowed(false, false, false), new EntityActionsAllowed.MobsAllowed(false), EntityActionsAllowed.SemanticType.STUN));
+////        ActionImpairing.configure(OVERBURDENED_EFFECT, new EntityActionsAllowed(false, true, new EntityActionsAllowed.PlayersAllowed(true, true, true), new EntityActionsAllowed.MobsAllowed(true), EntityActionsAllowed.SemanticType.NONE));
+//        Synchronized.configure(WEAPONS_SHEATHED_EFFECT, true);
+//        Synchronized.configure(TWO_HANDED_EFFECT, true);
+//        Synchronized.configure(STAGGERED, true);
+//        Synchronized.configure(BURNING, true);
+//        Synchronized.configure(CHILLED, true);
+//        Synchronized.configure(FROZEN, true);
+//        Synchronized.configure(WET, true);
+//        Synchronized.configure(TEST_AURA_EFFECT, true);
+//        Synchronized.configure(HEALTH_REGENERATION_AURA_EFFECT, true);
+
 //        RemoveOnHit.configure(WEAPONS_SHEATHED_EFFECT, true);
 
         // --- Registration ---

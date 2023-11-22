@@ -2,7 +2,7 @@ package com.github.theredbrain.bamcore.client.gui.screen.ingame;
 
 import com.github.theredbrain.bamcore.block.entity.JigsawPlacerBlockBlockEntity;
 import com.github.theredbrain.bamcore.client.owo.CustomTextBoxComponent;
-import com.github.theredbrain.bamcore.network.packet.BetterAdventureModeCoreServerPacket;
+import com.github.theredbrain.bamcore.network.packet.UpdateJigsawPlacerBlockPacket;
 import com.github.theredbrain.bamcore.registry.BlockRegistry;
 import io.netty.buffer.Unpooled;
 import io.wispforest.owo.ui.base.BaseOwoScreen;
@@ -14,13 +14,12 @@ import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.block.JigsawBlock;
 import net.minecraft.block.entity.JigsawBlockEntity;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
@@ -75,10 +74,6 @@ public class JigsawPlacerBlockScreen extends BaseOwoScreen<FlowLayout> {
                         .color(Color.ofArgb(0xFFFFFF))
                         .margins(Insets.of(1, 1, 1, 1))
                         .sizing(Sizing.content(), Sizing.content()),
-//                Components.textBox(Sizing.fill(30), this.jigsawPlacerBlock.getName().toString())
-//                        .tooltip(Text.translatable("gui.jigsaw_placer_block.name.tooltip"))
-//                        .margins(Insets.of(1, 1, 1, 1))
-//                        .id("nameTextBox"),
                 new CustomTextBoxComponent(Sizing.fill(30), 128)
                         .text(this.jigsawPlacerBlock.getTarget().toString())
                         .tooltip(Text.translatable("gui.jigsaw_placer_block.target.tooltip"))
@@ -142,7 +137,6 @@ public class JigsawPlacerBlockScreen extends BaseOwoScreen<FlowLayout> {
 
         buf.writeBlockPos(this.jigsawPlacerBlock.getPos());
 
-//        buf.writeString(this.component(TextBoxComponent.class, "nameTextBox").getText());
         buf.writeString(this.component(CustomTextBoxComponent.class, "targetTextBox").getText());
         buf.writeString(this.component(CustomTextBoxComponent.class, "poolTextBox").getText());
 
@@ -154,7 +148,17 @@ public class JigsawPlacerBlockScreen extends BaseOwoScreen<FlowLayout> {
                 this.parseInt(this.component(TextBoxComponent.class, "triggeredBlockPositionOffsetZ").getText())
         ));
 
-        this.client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModeCoreServerPacket.UPDATE_JIGSAW_PLACER_BLOCK, buf));
+        ClientPlayNetworking.send(new UpdateJigsawPlacerBlockPacket(
+                this.jigsawPlacerBlock.getPos(),
+                this.component(CustomTextBoxComponent.class, "targetTextBox").getText(),
+                this.component(CustomTextBoxComponent.class, "poolTextBox").getText(),
+                this.joint,
+                new BlockPos(
+                        this.parseInt(this.component(TextBoxComponent.class, "triggeredBlockPositionOffsetX").getText()),
+                        this.parseInt(this.component(TextBoxComponent.class, "triggeredBlockPositionOffsetY").getText()),
+                        this.parseInt(this.component(TextBoxComponent.class, "triggeredBlockPositionOffsetZ").getText())
+                )
+        ));
         return true;
     }
 
