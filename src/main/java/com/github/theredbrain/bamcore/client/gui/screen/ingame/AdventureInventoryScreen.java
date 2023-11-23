@@ -638,10 +638,15 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
     }
 
     @Override
+    public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
+//        super.renderBackground(context, mouseX, mouseY, delta);
+        TrinketScreenManager.update(mouseX, mouseY);
+        this.drawBackground(context, delta, mouseX, mouseY);
+    }
+
+    @Override
     protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
-        int i = this.x;
-        int j = this.y;
-        InventoryScreen.drawEntity(context, i + 20, j + 20, i + 69, j + 90, 30, 0.0625f, this.mouseX, this.mouseY, this.client.player);
+        InventoryScreen.drawEntity(context, 150, 44, 201, 116, 30, 0.0625f, this.mouseX, this.mouseY, this.client.player);
 //        TrinketScreenManager.drawExtraGroups(context);
     }
 
