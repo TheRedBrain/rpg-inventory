@@ -49,7 +49,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
     @Unique
     private PlayerInventory inventory;
     private int spellSlotsX = 98;
-    private int spellSlotsY = 62;
+    private int spellSlotsY = 93;
 
     public PlayerScreenHandlerMixin() {
         super(null, 0);
@@ -97,72 +97,72 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
                         if (order == 1) {
                             // leggings
                             x = 8;
-                            y = 62;//80; // -18 to negate an offset on the OwoScreen I can't find the cause of
+                            y = 93;
 
                         } else if (order == 2) {
                             // belts
                             x = 8;
-                            y = 44;//62; // -18 to negate an offset on the OwoScreen I can't find the cause of
+                            y = 75;
 
                         } else if (order == 3) {
                             // chest_plates
                             x = 8;
-                            y = 26;//44; // -18 to negate an offset on the OwoScreen I can't find the cause of
+                            y = 57;
 
                         } else if (order == 4) {
                             // shoulders
                             x = 8;
-                            y = 8;//26; // -18 to negate an offset on the OwoScreen I can't find the cause of
+                            y = 39;
 
                         } else if (order == 5) {
                             // helmets
                             x = 33;
-                            y = -10;//98; // -18 to negate an offset on the OwoScreen I can't find the cause of
+                            y = 21;
 
                         } else if (order == 6) {
                             // necklaces
                             x = 52;
-                            y = -10;//8; // -18 to negate an offset on the OwoScreen I can't find the cause of
+                            y = 21;
 
                         } else if (order == 7) {
                             // rings 1
                             x = 77;
-                            y = 8;//26; // -18 to negate an offset on the OwoScreen I can't find the cause of
+                            y = 39;
 
                         } else if (order == 8) {
                             // rings 2
                             x = 77;
-                            y = 26;//44; // -18 to negate an offset on the OwoScreen I can't find the cause of
+                            y = 57;
 
                         } else if (order == 9) {
                             // gloves
                             x = 77;
-                            y = 44;//62; // -18 to negate an offset on the OwoScreen I can't find the cause of
+                            y = 75;
 
                         } else if (order == 10) {
                             // boots
                             x = 77;
-                            y = 62;//80; // -18 to negate an offset on the OwoScreen I can't find the cause of
+                            y = 93;
 
                         } else if (order == 11) {
                             // main_hand
                             x = 8;
-                            y = 80;//98; // -18 to negate an offset on the OwoScreen I can't find the cause of
+                            y = 111;
 
                         } else if (order == 12) {
                             // off_hand
                             x = 26;
-                            y = 80;//98; // -18 to negate an offset on the OwoScreen I can't find the cause of
+                            y = 111;
 
                         } else if (order == 13) {
                             // alternative main hand
                             x = 59;
-                            y = 80;//98; // -18 to negate an offset on the OwoScreen I can't find the cause of
+                            y = 111;
 
                         } else if (order == 14) {
                             // alternative off hand
                             x = 77;
-                            y = 80;//98; // -18 to negate an offset on the OwoScreen I can't find the cause of
+                            y = 111;
 
                         } else if (order == 15) {
                             // spell slot 1

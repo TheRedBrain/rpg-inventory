@@ -110,6 +110,7 @@
 	"gui.teleporter_block.cancelTeleportButtonLabel.tooltip": "Label of right Button in Adventure GUI",
 
 
+	"gui.triggered_block.triggeredBlockPositionOffset": "Triggered Block Position Offset",
 	"gui.triggered_block.triggeredBlockPositionOffsetX.tooltip": "Triggered Block Position Offset: X",
 	"gui.triggered_block.triggeredBlockPositionOffsetY.tooltip": "Triggered Block Position Offset: Y",
 	"gui.triggered_block.triggeredBlockPositionOffsetZ.tooltip": "Triggered Block Position Offset: Z",

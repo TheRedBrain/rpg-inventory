@@ -18,6 +18,7 @@
     "item.SwordItemMixin",
     "item.ToolItemMixin",
     "screen.PlayerScreenHandlerMixin",
+    "screen.SlotMixin",
     "server.PlayerManagerMixin",
     "server.network.EntityTrackerEntryMixin",
     "server.network.ServerPlayerEntityMixin",

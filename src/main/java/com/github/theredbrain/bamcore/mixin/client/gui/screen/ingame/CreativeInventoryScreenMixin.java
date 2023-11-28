@@ -24,9 +24,9 @@ public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScre
 
     @Shadow private static ItemGroup selectedTab;
     @Unique
-    private static final Identifier TAB_ADVENTURE_INVENTORY_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/creative_inventory/tab_adventure_inventory.png");
+    private static final Identifier TAB_ADVENTURE_INVENTORY_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/adventure_creative_inventory/tab_adventure_inventory.png");
     @Unique
-    private static final Identifier SPELL_SLOTS_BACKGROUND = BetterAdventureModeCore.identifier("textures/gui/container/creative_inventory/spell_slots_background.png");
+    private static final Identifier SPELL_SLOTS_BACKGROUND = BetterAdventureModeCore.identifier("textures/gui/container/adventure_creative_inventory/spell_slots_background.png");
 
     private CreativeInventoryScreenMixin() {
         super(null, null, null);

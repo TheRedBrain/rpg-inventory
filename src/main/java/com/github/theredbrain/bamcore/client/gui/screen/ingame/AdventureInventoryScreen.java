@@ -2,8 +2,8 @@ package com.github.theredbrain.bamcore.client.gui.screen.ingame;
 
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.api.effect.FoodStatusEffect;
-import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.bamcore.registry.EntityAttributesRegistry;
+import com.github.theredbrain.bamcore.screen.DuckSlotMixin;
 import com.google.common.collect.Ordering;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.emi.trinkets.Point;
@@ -11,521 +11,80 @@ import dev.emi.trinkets.TrinketPlayerScreenHandler;
 import dev.emi.trinkets.TrinketScreen;
 import dev.emi.trinkets.TrinketScreenManager;
 import dev.emi.trinkets.api.SlotGroup;
-import io.wispforest.owo.ui.base.BaseOwoHandledScreen;
-import io.wispforest.owo.ui.component.Components;
-import io.wispforest.owo.ui.component.LabelComponent;
-import io.wispforest.owo.ui.container.Containers;
-import io.wispforest.owo.ui.container.FlowLayout;
-import io.wispforest.owo.ui.container.GridLayout;
-import io.wispforest.owo.ui.container.ScrollContainer;
-import io.wispforest.owo.ui.core.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
-import net.minecraft.client.gui.widget.PageTurnWidget;
-import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.texture.Sprite;
+import net.minecraft.client.texture.StatusEffectSpriteManager;
 import net.minecraft.client.util.math.Rect2i;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffectUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
 import net.minecraft.screen.PlayerScreenHandler;
+import net.minecraft.screen.ScreenTexts;
 import net.minecraft.screen.slot.Slot;
-import net.minecraft.text.OrderedText;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.util.Colors;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.NotNull;
-import org.joml.Quaternionf;
+import net.minecraft.util.math.MathHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
-public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, PlayerScreenHandler> implements TrinketScreen {
-    public static final Identifier INVENTORY_SLOT_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/inventory_slot_texture.png");
-    public static final Identifier STATUS_EFFECT_BACKGROUND_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/status_effects_background.png");
-    public static final Identifier CHARACTER_BACKGROUND_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/character_background_texture.png");
-    public static final Identifier CUSTOM_WIDGETS_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/custom_widgets.png");
-    public static final Identifier CUSTOM_STATUS_EFFECT_WIDGETS_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/custom_status_effect_widgets.png");
+public class AdventureInventoryScreen extends HandledScreen<PlayerScreenHandler> implements TrinketScreen {
+    public static final Identifier ADVENTURE_INVENTORY_SIDES_BACKGROUND_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/adventure_inventory/adventure_inventory_sides_background.png");
+    private static final Identifier INVENTORY_SLOT_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/inventory_slot.png");
+    private static final Identifier EFFECT_BACKGROUND_SMALL_TEXTURE = new Identifier("container/inventory/effect_background_small");
+    private static final Identifier EFFECT_SCROLLER_BACKGROUND_TEXTURE = BetterAdventureModeCore.identifier("container/adventure_inventory/scroller_background");
+    private static final Identifier EFFECT_SCROLLER_TEXTURE = BetterAdventureModeCore.identifier("container/adventure_inventory/scroller");
     private float mouseX;
     private float mouseY;
     private boolean showAttributeScreen = false;
-    private int oldActiveSpellSlotAmount = 0;
     private int oldEffectsListSize = 0;
     private List<StatusEffectInstance> foodEffectsList = new ArrayList<>(Collections.emptyList());
     private List<StatusEffectInstance> negativeEffectsList = new ArrayList<>(Collections.emptyList());
     private List<StatusEffectInstance> positiveEffectsList = new ArrayList<>(Collections.emptyList());
     private List<StatusEffectInstance> neutralEffectsList = new ArrayList<>(Collections.emptyList());
+    private int foodScrollPosition = 0;
+    private int negativeScrollPosition = 0;
+    private int positiveScrollPosition = 0;
+    private int neutralScrollPosition = 0;
+    private int foodEffectsRowAmount = 1;
+    private int negativeEffectsRowAmount = 1;
+    private int positiveEffectsRowAmount = 1;
+    private int neutralEffectsRowAmount = 1;
+    private float foodScrollAmount = 0.0f;
+    private float negativeScrollAmount = 0.0f;
+    private float positiveScrollAmount = 0.0f;
+    private float neutralScrollAmount = 0.0f;
+    private boolean foodMouseClicked = false;
+    private boolean negativeMouseClicked = false;
+    private boolean positiveMouseClicked = false;
+    private boolean neutralMouseClicked = false;
 
     public AdventureInventoryScreen(PlayerEntity player) {
         super(player.playerScreenHandler, player.getInventory(), Text.translatable("gui.adventureInventory"));
+        this.backgroundWidth = 176;
+        this.backgroundHeight = 228;
     }
 
     public void handledScreenTick() {
         PlayerEntity player = this.handler.player();
-        this.updateAttributeScreen(player);
-        this.buildSpellSlotBackgrounds(player);
-        this.updateEffectsScreen(player);
+//        this.updateAttributeScreen(player);
+//        this.updateEffectsScreen(player);
         TrinketScreenManager.tick();
     }
 
-    @Override
-    protected @NotNull OwoUIAdapter<FlowLayout> createAdapter() {
-        return OwoUIAdapter.create(this, Containers::verticalFlow);
-    }
-
-    private void toggleAttributeScreen() {
-        if (this.showAttributeScreen) {
-            this.showAttributeScreen = false;
-        } else {
-            this.showAttributeScreen = true;
-        }
-        this.component(FlowLayout.class, "toggleAttributeScreenButtonContainer")
-                .clearChildren()
-                .child(
-                        Components.wrapVanillaWidget(new PageTurnWidget(0, 0, !this.showAttributeScreen, button -> this.toggleAttributeScreen(), true))
-                );
-        if (this.showAttributeScreen) {
-            this.component(FlowLayout.class, "additional_inventory_screen_right").clearChildren();
-            this.buildAttributesScreen(this.handler.player());
-//            this.component(FlowLayout.class, "additional_inventory_screen_right").child(Containers.horizontalFlow(Sizing.fill(100), Sizing.fill(100)).surface(Surface.PANEL));
-        } else {
-            this.component(FlowLayout.class, "additional_inventory_screen_right").clearChildren();
-        }
-//                .setMessage(this.showAttributeScreen ? Text.translatable("gui.adventureInventory.toggleAttributeScreenButton.on")
-//                        : Text.translatable("gui.adventureInventory.toggleAttributeScreenButton.off"));
-//        this.component(ButtonComponent.class, "toggleAttributeScreenButton")
-//                .tooltip(this.showAttributeScreen ? Text.translatable("gui.adventureInventory.toggleAttributeScreenButton.on.tooltip")
-//                        : Text.translatable("gui.adventureInventory.toggleAttributeScreenButton.off.tooltip"));
-    }
-
-    private void updateAttributeScreen(PlayerEntity player) {
-        if (this.showAttributeScreen) {
-            this.component(LabelComponent.class, "attributes_max_health_value").text(Text.literal(String.valueOf((int)player.getAttributeValue(EntityAttributes.GENERIC_MAX_HEALTH))));
-            this.component(LabelComponent.class, "attributes_health_regeneration_value").text(Text.literal(String.valueOf(player.getAttributeValue(EntityAttributesRegistry.HEALTH_REGENERATION))));
-            this.component(LabelComponent.class, "attributes_armor_value").text(Text.literal(String.valueOf((int)player.getAttributeValue(EntityAttributes.GENERIC_ARMOR))));
-            this.component(LabelComponent.class, "attributes_armor_toughness_value").text(Text.literal(String.valueOf(player.getAttributeValue(EntityAttributes.GENERIC_ARMOR_TOUGHNESS))));
-            this.component(LabelComponent.class, "attributes_max_stamina_value").text(Text.literal(String.valueOf((int)player.getAttributeValue(EntityAttributesRegistry.MAX_STAMINA))));
-            this.component(LabelComponent.class, "attributes_stamina_regeneration_value").text(Text.literal(String.valueOf(player.getAttributeValue(EntityAttributesRegistry.STAMINA_REGENERATION))));
-            this.component(LabelComponent.class, "attributes_max_mana_value").text(Text.literal(String.valueOf((int)((DuckPlayerEntityMixin)player).bamcore$getMaxMana())));
-            this.component(LabelComponent.class, "attributes_mana_regeneration_value").text(Text.literal(String.valueOf(((DuckPlayerEntityMixin)player).bamcore$getManaRegeneration())));
-            this.component(LabelComponent.class, "attributes_encumbrance_value").text(
-                    Text.literal(String.valueOf((int)((DuckPlayerEntityMixin)player).bamcore$getEquipmentWeight()))
-                    .append(Text.literal("/"))
-                    .append(Text.literal(String.valueOf((int)((DuckPlayerEntityMixin)player).bamcore$getMaxEquipmentWeight())))
-            );
-//            this.component(LabelComponent.class, "attributes_max_poise_value").text(Text.literal(String.valueOf(player.getAttributeValue(EntityAttributesRegistry.MAX_POISE)))); // TODO poise
-        }
-    }
-
-    @Override
-    protected void build(FlowLayout rootComponent) {
-        rootComponent
-                .surface(Surface.VANILLA_TRANSLUCENT)
-                .horizontalAlignment(HorizontalAlignment.CENTER)
-                .verticalAlignment(VerticalAlignment.CENTER)
-                .id("root");
-        rootComponent.child(Containers.horizontalFlow(Sizing.content(), Sizing.content())
-                .children(List.of(
-                        Containers.verticalFlow(Sizing.fixed(130), Sizing.fixed(228))
-                                .id("additional_inventory_screen_left"),
-                        Containers.verticalFlow(Sizing.content(), Sizing.content())
-                                .children(List.of(
-                                        Containers.horizontalFlow(Sizing.content(), Sizing.content())
-                                                .children(List.of(
-                                                        Containers.verticalFlow(Sizing.fixed(87), Sizing.content())
-                                                                .children(List.of(
-                                                                        Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
-                                                                                .children(List.of(
-                                                                                        Components.label(Text.translatable("gui.adventureInventory.equipmentSlots"))
-                                                                                                .color(Color.ofArgb(Colors.BLACK))
-                                                                                                .margins(Insets.of(0, 4, 0, 0))
-                                                                                )),
-                                                                        Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
-                                                                                .children(List.of(
-                                                                                        Containers.verticalFlow(Sizing.fixed(18), Sizing.fixed(18))
-                                                                                                .surface(Surface.tiled(INVENTORY_SLOT_TEXTURE, 18, 18))
-                                                                                                .id("helmet_slot_container"),
-                                                                                        Containers.verticalFlow(Sizing.fixed(18), Sizing.fixed(18))
-                                                                                                .margins(Insets.of(0, 0, 1, 0))
-                                                                                                .surface(Surface.tiled(INVENTORY_SLOT_TEXTURE, 18, 18))
-                                                                                                .id("necklaces_slot_container")
-                                                                                ))
-                                                                                .padding(Insets.of(0, 0, 25, 25))
-                                                                                .id("equipment_slots_top_row"),
-                                                                        Containers.horizontalFlow(Sizing.content(), Sizing.content())
-                                                                                .children(List.of(
-                                                                                        Containers.verticalFlow(Sizing.content(), Sizing.content())
-                                                                                                .children(List.of(
-                                                                                                        Containers.verticalFlow(Sizing.fixed(18), Sizing.fixed(18))
-                                                                                                                .id("shoulders_slot_container"),
-                                                                                                        Containers.verticalFlow(Sizing.fixed(18), Sizing.fixed(18))
-                                                                                                                .id("chest_plate_slot_container"),
-                                                                                                        Containers.verticalFlow(Sizing.fixed(18), Sizing.fixed(18))
-                                                                                                                .id("belts_slot_container"),
-                                                                                                        Containers.verticalFlow(Sizing.fixed(18), Sizing.fixed(18))
-                                                                                                                .id("leggings_slot_container")
-                                                                                                ))
-                                                                                                .surface(Surface.tiled(INVENTORY_SLOT_TEXTURE, 18, 18)),
-                                                                                        Containers.verticalFlow(Sizing.fixed(51), Sizing.fixed(72))
-                                                                                                .surface(Surface.tiled(CHARACTER_BACKGROUND_TEXTURE, 51, 72)),
-                                                                                        Containers.verticalFlow(Sizing.content(), Sizing.content())
-                                                                                                .children(List.of(
-                                                                                                        Containers.verticalFlow(Sizing.fixed(18), Sizing.fixed(18))
-                                                                                                                .id("rings_1_slot_container"),
-                                                                                                        Containers.verticalFlow(Sizing.fixed(18), Sizing.fixed(18))
-                                                                                                                .id("rings_2_slot_container"),
-                                                                                                        Containers.verticalFlow(Sizing.fixed(18), Sizing.fixed(18))
-                                                                                                                .id("gloves_slot_container"),
-                                                                                                        Containers.verticalFlow(Sizing.fixed(18), Sizing.fixed(18))
-                                                                                                                .id("boots_slot_container")
-                                                                                                ))
-                                                                                                .surface(Surface.tiled(INVENTORY_SLOT_TEXTURE, 18, 18))
-                                                                                ))
-                                                                                .id("equipment_slots_middle_row"),
-                                                                        Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
-                                                                                .children(List.of(
-                                                                                        Containers.horizontalFlow(Sizing.content(), Sizing.content())
-                                                                                                .children(List.of(
-                                                                                                        Containers.verticalFlow(Sizing.fixed(18), Sizing.fixed(18))
-                                                                                                                .id("main_hand_slot_container"),
-                                                                                                        Containers.verticalFlow(Sizing.fixed(18), Sizing.fixed(18))
-                                                                                                                .id("off_hand_slot_container")
-                                                                                                ))
-                                                                                                .surface(Surface.tiled(INVENTORY_SLOT_TEXTURE, 18, 18)),
-                                                                                        Containers.verticalFlow(Sizing.fixed(15), Sizing.fixed(18)),
-                                                                                        Containers.horizontalFlow(Sizing.content(), Sizing.content())
-                                                                                                .children(List.of(
-                                                                                                        Containers.verticalFlow(Sizing.fixed(18), Sizing.fixed(18))
-                                                                                                                .id("alternative_main_hand_slot_container"),
-                                                                                                        Containers.verticalFlow(Sizing.fixed(18), Sizing.fixed(18))
-                                                                                                                .id("alternative_off_hand_slot_container")
-                                                                                                ))
-                                                                                                .surface(Surface.tiled(INVENTORY_SLOT_TEXTURE, 18, 18))
-                                                                                ))
-                                                                                .verticalAlignment(VerticalAlignment.CENTER)
-                                                                                .horizontalAlignment(HorizontalAlignment.CENTER)
-                                                                                .id("equipment_slots_bottom_row")
-                                                                ))
-                                                                .id("equipment_slots_container_left"),
-                                                        Containers.verticalFlow(Sizing.fixed(72), Sizing.content())
-                                                                .children(List.of(
-                                                                        Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
-                                                                                .children(List.of(
-                                                                                        Containers.verticalFlow(Sizing.content(), Sizing.content())
-                                                                                                .child(
-                                                                                                        Components.wrapVanillaWidget(new PageTurnWidget(0, 0, !this.showAttributeScreen, button -> this.toggleAttributeScreen(), true))
-                                                                                                )
-                                                                                                .id("toggleAttributeScreenButtonContainer")
-                                                                                ))
-                                                                                .horizontalAlignment(HorizontalAlignment.RIGHT),
-                                                                        Containers.verticalFlow(Sizing.fill(100), Sizing.fixed(54)),
-                                                                        Containers.verticalFlow(Sizing.fill(100), Sizing.fixed(18)).child(
-                                                                                Components.label(Text.translatable("gui.adventureInventory.spellSlots"))
-                                                                                        .color(Color.ofArgb(Colors.BLACK))
-                                                                                        .margins(Insets.of(4, 5, 0, 0))
-                                                                        ),
-                                                                        Containers.verticalFlow(Sizing.fill(100), Sizing.fixed(36))
-                                                                                .id("spell_slots_container")
-                                                                ))
-                                                                .margins(Insets.of(0, 0, 3, 0))
-                                                                .id("equipment_slots_container_right")
-                                                )),
-                                        Containers.horizontalFlow(Sizing.fixed(162), Sizing.content())
-                                                .child(Components.label(this.title)
-                                                        .color(Color.ofArgb(Colors.BLACK))
-                                                        .margins(Insets.of(4, 0, 0, 0))),
-                                        Containers.verticalFlow(Sizing.content(), Sizing.content())
-                                                .children(List.of(
-                                                        // main inventory
-                                                        Containers.grid(Sizing.content(), Sizing.fixed(54), 3, 9)
-                                                                .surface(Surface.tiled(INVENTORY_SLOT_TEXTURE, 18, 18))
-                                                                .margins(Insets.of(0, 4, 0, 0))
-                                                                .id("main_inventory_slots_container"),
-                                                        // hotbar
-                                                        Containers.grid(Sizing.content(), Sizing.fixed(18), 1, 9)
-                                                                .surface(Surface.tiled(INVENTORY_SLOT_TEXTURE, 18, 18))
-                                                                .id("hotbar_slots_container")
-                                                ))
-                                                .padding(Insets.of(4, 0, 0, 0))
-                                                .id("inventory_slots_container")
-                                ))
-                                .padding(Insets.of(7, 7, 7, 7))
-                                .surface(Surface.PANEL)
-                                .id("main_inventory"),
-                        Containers.verticalFlow(Sizing.fixed(130), Sizing.fixed(228))
-                                .id("additional_inventory_screen_right")
-                ))
-        );
-
-        for (int i = 0; i < 3; ++i) {
-            for (int j = 0; j < 9; ++j) {
-                component(GridLayout.class, "main_inventory_slots_container").child(
-                                slotAsComponent(j + (i + 1) * 9)
-                                        .margins(Insets.of(1, 1, 1, 1)),
-                                i,
-                                j);
-            }
-        }
-        for (int i = 0; i < 9; ++i) {
-            component(GridLayout.class, "hotbar_slots_container").child(
-                            slotAsComponent(i + 36)
-                                    .margins(Insets.of(1, 1, 1, 1)),
-                            0,
-                            i);
-        }
-        // disable vanilla crafting slots
-        disableSlot(handler.slots.get(0));
-        disableSlot(handler.slots.get(1));
-        disableSlot(handler.slots.get(2));
-        disableSlot(handler.slots.get(3));
-        disableSlot(handler.slots.get(4));
-
-        // disable vanilla armor slots
-        disableSlot(handler.slots.get(5));
-        disableSlot(handler.slots.get(6));
-        disableSlot(handler.slots.get(7));
-        disableSlot(handler.slots.get(8));
-
-        // disable vanilla offhand slot
-        disableSlot(handler.slots.get(45));
-    }
-
-    // TODO json config files for attributes screen content
-    private void buildAttributesScreen(PlayerEntity player) {
-        this.component(FlowLayout.class, "additional_inventory_screen_right")
-                .child(Containers.verticalFlow(Sizing.fill(100), Sizing.fill(100))
-                        .children(List.of(
-                                Containers.verticalFlow(Sizing.fill(100), Sizing.content())
-                                        .child(
-                                                Components.label(Text.translatable("gui.adventureInventory.attributes"))
-                                                        .color(Color.ofArgb(Colors.BLACK))
-                                                        .margins(Insets.of(0, 0, 0, 0))
-                                        ),
-                                Containers.verticalScroll(Sizing.fill(100), Sizing.fixed(201),
-                                        Containers.verticalFlow(Sizing.content(), Sizing.content())
-                                                .children(List.of(
-                                                        Containers.horizontalFlow(Sizing.content(), Sizing.content())
-                                                                .children(List.of(
-                                                                        Components.label(Text.translatable("attribute.name.generic.max_health").append(Text.literal(": ")))
-                                                                                .color(Color.ofArgb(Colors.BLACK)),
-                                                                        Components.label(Text.literal(String.valueOf((int)player.getAttributeValue(EntityAttributes.GENERIC_MAX_HEALTH))))
-                                                                                .color(Color.ofArgb(Colors.BLACK)).id("attributes_max_health_value")
-                                                                ))
-                                                                .margins(Insets.of(0, 2, 0, 0)),
-                                                        Containers.horizontalFlow(Sizing.content(), Sizing.content())
-                                                                .children(List.of(
-                                                                        Components.label(Text.translatable("attribute.name.generic.health_regeneration").append(Text.literal(": ")))
-                                                                                .color(Color.ofArgb(Colors.BLACK)),
-                                                                        Components.label(Text.literal(String.valueOf(player.getAttributeValue(EntityAttributesRegistry.HEALTH_REGENERATION))))
-                                                                                .color(Color.ofArgb(Colors.BLACK)).id("attributes_health_regeneration_value")
-                                                                ))
-                                                                .margins(Insets.of(0, 2, 0, 0)),
-                                                        Containers.horizontalFlow(Sizing.content(), Sizing.content())
-                                                                .children(List.of(
-                                                                        Components.label(Text.translatable("attribute.name.generic.armor").append(Text.literal(": ")))
-                                                                                .color(Color.ofArgb(Colors.BLACK)),
-                                                                        Components.label(Text.literal(String.valueOf((int)player.getAttributeValue(EntityAttributes.GENERIC_ARMOR))))
-                                                                                .color(Color.ofArgb(Colors.BLACK)).id("attributes_armor_value")
-                                                                ))
-                                                                .margins(Insets.of(0, 2, 0, 0)),
-                                                        Containers.horizontalFlow(Sizing.content(), Sizing.content())
-                                                                .children(List.of(
-                                                                        Components.label(Text.translatable("attribute.name.generic.armor_toughness").append(Text.literal(": ")))
-                                                                                .color(Color.ofArgb(Colors.BLACK)),
-                                                                        Components.label(Text.literal(String.valueOf(player.getAttributeValue(EntityAttributes.GENERIC_ARMOR_TOUGHNESS))))
-                                                                                .color(Color.ofArgb(Colors.BLACK)).id("attributes_armor_toughness_value")
-                                                                ))
-                                                                .margins(Insets.of(0, 2, 0, 0)),
-                                                        Containers.horizontalFlow(Sizing.content(), Sizing.content())
-                                                                .children(List.of(
-                                                                        Components.label(Text.translatable("attribute.name.generic.max_stamina").append(Text.literal(": ")))
-                                                                                .color(Color.ofArgb(Colors.BLACK)),
-                                                                        Components.label(Text.literal(String.valueOf((int)player.getAttributeValue(EntityAttributesRegistry.MAX_STAMINA))))
-                                                                                .color(Color.ofArgb(Colors.BLACK)).id("attributes_max_stamina_value")
-                                                                ))
-                                                                .margins(Insets.of(0, 2, 0, 0)),
-                                                        Containers.horizontalFlow(Sizing.content(), Sizing.content())
-                                                                .children(List.of(
-                                                                        Components.label(Text.translatable("attribute.name.generic.stamina_regeneration").append(Text.literal(": ")))
-                                                                                .color(Color.ofArgb(Colors.BLACK)),
-                                                                        Components.label(Text.literal(String.valueOf(player.getAttributeValue(EntityAttributesRegistry.STAMINA_REGENERATION))))
-                                                                                .color(Color.ofArgb(Colors.BLACK)).id("attributes_stamina_regeneration_value")
-                                                                ))
-                                                                .margins(Insets.of(0, 2, 0, 0)),
-                                                        Containers.horizontalFlow(Sizing.content(), Sizing.content())
-                                                                .children(List.of(
-                                                                        Components.label(Text.translatable("attribute.name.generic.max_mana").append(Text.literal(": ")))
-                                                                                .color(Color.ofArgb(Colors.BLACK)),
-                                                                        Components.label(Text.literal(String.valueOf((int)((DuckPlayerEntityMixin)player).bamcore$getMaxMana())))
-                                                                                .color(Color.ofArgb(Colors.BLACK)).id("attributes_max_mana_value")
-                                                                ))
-                                                                .margins(Insets.of(0, 2, 0, 0)),
-                                                        Containers.horizontalFlow(Sizing.content(), Sizing.content())
-                                                                .children(List.of(
-                                                                        Components.label(Text.translatable("attribute.name.generic.mana_regeneration").append(Text.literal(": ")))
-                                                                                .color(Color.ofArgb(Colors.BLACK)),
-                                                                        Components.label(Text.literal(String.valueOf(((DuckPlayerEntityMixin)player).bamcore$getManaRegeneration())))
-                                                                                .color(Color.ofArgb(Colors.BLACK)).id("attributes_mana_regeneration_value")
-                                                                ))
-                                                                .margins(Insets.of(0, 2, 0, 0)),
-                                                        Containers.horizontalFlow(Sizing.content(), Sizing.content())
-                                                                .children(List.of(
-                                                                        Components.label(Text.translatable("gui.adventureInventory.attributes.encumbrance").append(Text.literal(": ")))
-                                                                                .color(Color.ofArgb(Colors.BLACK)),
-                                                                        Components.label(Text.literal(String.valueOf((int)((DuckPlayerEntityMixin)player).bamcore$getEquipmentWeight()))
-                                                                                        .append(Text.literal("/"))
-                                                                                        .append(Text.literal(String.valueOf((int)((DuckPlayerEntityMixin)player).bamcore$getMaxEquipmentWeight())))
-                                                                                )
-                                                                                .color(Color.ofArgb(Colors.BLACK)).id("attributes_encumbrance_value")
-                                                                ))
-                                                                .margins(Insets.of(0, 2, 0, 0))/*,
-                                                        Containers.horizontalFlow(Sizing.content(), Sizing.content()) // TODO poise
-                                                                .children(List.of(
-                                                                        Components.label(Text.translatable("attribute.name.generic.max_poise").append(Text.literal(": ")))
-                                                                                .color(Color.ofArgb(Colors.BLACK)),
-                                                                        Components.label(Text.literal(String.valueOf(player.getAttributeValue(EntityAttributesRegistry.MAX_POISE))))
-                                                                                .color(Color.ofArgb(Colors.BLACK)).id("attributes_max_poise_value")
-                                                                ))
-                                                                .margins(Insets.of(0, 2, 0, 0))*/
-                                                ))
-                                                .padding(Insets.of(2, 0, 2, 2))
-                                        )
-                                        .scrollbar(ScrollContainer.Scrollbar.vanillaFlat())
-                        ))
-                        .padding(Insets.of(7, 7, 7, 7))
-                        .surface(Surface.PANEL)
-                        .id("attributes"));
-    }
-
-    private void buildStatusEffectsScreen() {
-        this.component(FlowLayout.class, "additional_inventory_screen_left").clearChildren();
-        this.component(FlowLayout.class, "additional_inventory_screen_left")
-                .child(Containers.verticalFlow(Sizing.fill(100), Sizing.fill(100))
-                        .children(List.of(
-                                Containers.verticalFlow(Sizing.fill(100), Sizing.content())
-                                        .child(
-                                                Components.label(Text.translatable("gui.adventureInventory.status_effects"))
-                                                        .color(Color.ofArgb(Colors.BLACK))
-                                                        .margins(Insets.of(0, 4, 0, 0))
-                                        ),
-                                Containers.verticalScroll(Sizing.fill(100), Sizing.fixed(201),
-                                        Containers.verticalFlow(Sizing.content(), Sizing.content())
-                                                .children(List.of(
-                                                        Containers.verticalFlow(Sizing.content(), Sizing.content())
-                                                                .margins(Insets.of(0, 0, 0, 0))
-                                                                .id("food_effects_panel"),
-                                                        Containers.verticalFlow(Sizing.content(), Sizing.content())
-                                                                .margins(Insets.of(0, 0, 0, 0))
-                                                                .id("negative_effects_panel"),
-                                                        Containers.verticalFlow(Sizing.content(), Sizing.content())
-                                                                .margins(Insets.of(0, 0, 0, 0))
-                                                                .id("positive_effects_panel"),
-                                                        Containers.verticalFlow(Sizing.content(), Sizing.content())
-                                                                .margins(Insets.of(0, 0, 0, 0))
-                                                                .id("neutral_effects_panel")
-                                                ))
-                                                .padding(Insets.of(2, 0, 2, 2))
-                                        )
-                                        .scrollbar(ScrollContainer.Scrollbar.vanillaFlat())
-                        ))
-                        .padding(Insets.of(7, 7, 7, 7))
-                        .surface(Surface.PANEL)
-                        .id("status_effects"));
-    }
-
-    private void buildSpellSlotBackgrounds(PlayerEntity player) {
-
-        int activeSpellSlotAmount = (int) player.getAttributeInstance(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT).getValue();
-        if (this.oldActiveSpellSlotAmount != activeSpellSlotAmount) {
-
-            component(FlowLayout.class, "spell_slots_container").clearChildren();
-
-            component(FlowLayout.class, "spell_slots_container")
-                    .child(Containers.grid(Sizing.fill(100), Sizing.fixed(36), 2, 4)
-                            .id("spell_slots_container_grid"));
-
-            // build active spell slot backgrounds
-            for (int i = 0; i < activeSpellSlotAmount; i++) {
-
-                this.component(GridLayout.class, "spell_slots_container_grid")
-                        .child(Containers.horizontalFlow(Sizing.fixed(18), Sizing.fixed(18))
-                                        .surface(Surface.tiled(INVENTORY_SLOT_TEXTURE, 18, 18))
-                                        .id("spell_slot_" + (i + 1)),
-                                i < 4 ? 0 : 1,
-                                i < 4 ? i : i - 4
-                        );
-            }
-
-            this.oldActiveSpellSlotAmount = activeSpellSlotAmount;
-        }
-    }
-
-    private void buildEffectContainers(String effectCategory) {
-        List<StatusEffectInstance> effectsList = Objects.equals(effectCategory, "food") ? this.foodEffectsList : Objects.equals(effectCategory, "negative") ? this.negativeEffectsList : Objects.equals(effectCategory, "positive") ? this.positiveEffectsList : this.neutralEffectsList;
-        this.component(FlowLayout.class, effectCategory + "_effects_panel").clearChildren();
-        this.component(FlowLayout.class, effectCategory + "_effects_panel")
-                .child(Containers.verticalFlow(Sizing.fill(100), Sizing.content())
-                        .children(List.of(
-                                Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
-                                        .child(
-                                                Components.label(Text.translatable("gui.adventureInventory.status_effects." + effectCategory + "_effects"))
-                                                        .color(Color.ofArgb(Colors.BLACK))
-                                                        .margins(Insets.of(4, 0, 0, 0))
-                                        ),
-                                Containers.verticalFlow(Sizing.fill(100), Sizing.content()).id(effectCategory + "_effects_container")
-                        ))
-                );
-        int listSize = effectsList.size();
-        int rowAmount = 1;
-        if (listSize > 3) {
-            rowAmount = (listSize - (listSize % 3)) / 3;
-        }
-        int j = 0;
-        this.component(FlowLayout.class, effectCategory + "_effects_container")
-                .child(Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
-                        .horizontalAlignment(HorizontalAlignment.CENTER)
-                        .verticalAlignment(VerticalAlignment.CENTER)
-                        .id(effectCategory + "_effects_panel_row_" + j));
-        for (int i = 0; i < listSize; i++) {
-            StatusEffect statusEffect = effectsList.get(i).getEffectType();
-            this.component(FlowLayout.class, effectCategory + "_effects_panel_row_" + j)
-                    .child(Containers.horizontalFlow(Sizing.fixed(32), Sizing.fixed(32))
-                            .child(Components.texture(statusEffectTexture(statusEffect), 0, 0, 18, 18, 18,18))
-                            .surface(Surface.tiled(STATUS_EFFECT_BACKGROUND_TEXTURE, 32, 32))
-                            .horizontalAlignment(HorizontalAlignment.CENTER)
-                            .verticalAlignment(VerticalAlignment.CENTER)
-                            .margins(Insets.of(2, 2, 2, 2))
-//                            .tooltip(effectsList.get(i).getEffectType().getName().copy())
-//                            .tooltip(TooltipComponent.of(getStatusEffectDescription(effectsList.get(i))))
-                            .id(effectCategory + "_effect_container_" + i)
-                    );
-            if (i % 3 == 2) {
-                j++;
-                this.component(FlowLayout.class, effectCategory + "_effects_container")
-                        .child(Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
-                                .horizontalAlignment(HorizontalAlignment.CENTER)
-                                .verticalAlignment(VerticalAlignment.CENTER)
-                                .id(effectCategory + "_effects_panel_row_" + j));
-            }
-        }
-    }
-
-    private void updateEffectsScreen(PlayerEntity player) {
+    private void updateEffectsLists(PlayerEntity player) {
         List<StatusEffectInstance> effectsList = Ordering.natural().sortedCopy(player.getStatusEffects());
         List<StatusEffectInstance> visibleEffectsList = new ArrayList<>(Collections.emptyList());
         for (StatusEffectInstance statusEffectInstance : effectsList) {
@@ -535,7 +94,6 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
         }
         int visibleEffectsListSize = visibleEffectsList.size();
         if (visibleEffectsListSize == 0) {
-            this.component(FlowLayout.class, "additional_inventory_screen_left").clearChildren();
             this.oldEffectsListSize = 0;
             return;
         }
@@ -553,6 +111,16 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
             this.positiveEffectsList.clear();
             this.neutralEffectsList.clear();
 
+            this.foodScrollPosition = 0;
+            this.negativeScrollPosition = 0;
+            this.positiveScrollPosition = 0;
+            this.neutralScrollPosition = 0;
+
+            this.foodScrollAmount = 0.0f;
+            this.negativeScrollAmount = 0.0f;
+            this.positiveScrollAmount = 0.0f;
+            this.neutralScrollAmount = 0.0f;
+
             for (StatusEffectInstance statusEffectInstance : visibleEffectsList) {
                 if (statusEffectInstance.getEffectType() instanceof FoodStatusEffect) {
                     this.foodEffectsList.add(statusEffectInstance);
@@ -564,134 +132,82 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
                     this.neutralEffectsList.add(statusEffectInstance);
                 }
             }
-            this.buildStatusEffectsScreen();
-
-            if (!this.foodEffectsList.isEmpty()) {
-                buildEffectContainers("food");
-            }
-            if (!this.negativeEffectsList.isEmpty()) {
-                buildEffectContainers("negative");
-            }
-            if (!this.positiveEffectsList.isEmpty()) {
-                buildEffectContainers("positive");
-            }
-            if (!this.neutralEffectsList.isEmpty()) {
-                buildEffectContainers("neutral");
-            }
-        }/* else {
-            if (!this.foodEffectsList.isEmpty()) {
-                updateEffectContainers("food");
-            }
-            if (!this.negativeEffectsList.isEmpty()) {
-                updateEffectContainers("negative");
-            }
-            if (!this.positiveEffectsList.isEmpty()) {
-                updateEffectContainers("positive");
-            }
-            if (!this.neutralEffectsList.isEmpty()) {
-                updateEffectContainers("neutral");
-            }
-        }*/
+            this.foodEffectsRowAmount = Math.max(1, this.calculateStatusEffectRowAmount(this.foodEffectsList.size()));
+            this.negativeEffectsRowAmount = Math.max(1, this.calculateStatusEffectRowAmount(this.negativeEffectsList.size()));
+            this.positiveEffectsRowAmount = Math.max(1, this.calculateStatusEffectRowAmount(this.positiveEffectsList.size()));
+            this.neutralEffectsRowAmount = Math.max(1, this.calculateStatusEffectRowAmount(this.neutralEffectsList.size()));
+        }
         visibleEffectsList.clear();
     }
 
-    private void updateEffectContainers(String effectCategory) {
-        List<StatusEffectInstance> effectsList = Objects.equals(effectCategory, "food") ? this.foodEffectsList : Objects.equals(effectCategory, "negative") ? this.negativeEffectsList : Objects.equals(effectCategory, "positive") ? this.positiveEffectsList : this.neutralEffectsList;
-        if (!effectsList.isEmpty()) {
-            for (int i = 0; i < effectsList.size(); i++) {
-                this.component(FlowLayout.class, effectCategory + "_effect_container_" + i).tooltip(getStatusEffectTooltip(effectsList.get(i)));
-//                this.component(FlowLayout.class, effectCategory + "_effect_container_" + i).tooltip(getStatusEffectDescription(effectsList.get(i)));
-            }
-        }
-    }
-
-    private Identifier statusEffectTexture(StatusEffect statusEffect) {
-        Identifier statusEffectId = Registries.STATUS_EFFECT.getId(statusEffect);
-        if (statusEffectId != null) {
-            return new Identifier(statusEffectId.getNamespace(), "textures/mob_effect/" + statusEffectId.getPath() + ".png");
-        } else {
-            return new Identifier("textures/mob_effect/luck.png");
-        }
+    private int calculateStatusEffectRowAmount(int statusEffectListSize) {
+        return statusEffectListSize / 3 + (statusEffectListSize % 3 > 0 ? 1 : 0);
     }
 
     @Override
     protected void init() {
         TrinketScreenManager.init(this);
-        super.init();
-
         if (this.client.interactionManager.hasCreativeInventory()) {
             this.client.setScreen(new CreativeInventoryScreen(this.client.player, this.client.player.networkHandler.getEnabledFeatures(), this.client.options.getOperatorItemsTab().getValue()));
+            return;
         }
+        super.init();
+
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 0; j < 9; ++j) {
+                this.handler.getSlot(j + (i + 1) * 9).y = 146 + i * 18;
+            }
+        }
+        for (int i = 0; i < 9; ++i) {
+            this.handler.getSlot(i + 36).y = 204;
+        }
+
+        // disable vanilla crafting slots
+        ((DuckSlotMixin)this.handler.slots.get(0)).bamcore$setDisabledOverride(true);
+        ((DuckSlotMixin)this.handler.slots.get(1)).bamcore$setDisabledOverride(true);
+        ((DuckSlotMixin)this.handler.slots.get(2)).bamcore$setDisabledOverride(true);
+        ((DuckSlotMixin)this.handler.slots.get(3)).bamcore$setDisabledOverride(true);
+        ((DuckSlotMixin)this.handler.slots.get(4)).bamcore$setDisabledOverride(true);
+
+        // disable vanilla armor slots
+        ((DuckSlotMixin)this.handler.slots.get(5)).bamcore$setDisabledOverride(true);
+        ((DuckSlotMixin)this.handler.slots.get(6)).bamcore$setDisabledOverride(true);
+        ((DuckSlotMixin)this.handler.slots.get(7)).bamcore$setDisabledOverride(true);
+        ((DuckSlotMixin)this.handler.slots.get(8)).bamcore$setDisabledOverride(true);
+
+        // disable vanilla offhand slot
+        ((DuckSlotMixin)this.handler.slots.get(45)).bamcore$setDisabledOverride(true);
     }
 
     @Override
     protected void drawForeground(DrawContext context, int mouseX, int mouseY) {
-//        TrinketScreenManager.drawActiveGroup(context);
+        context.drawText(this.textRenderer, this.title, this.titleX, this.titleY, 0x404040, false);
     }
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         TrinketScreenManager.update(mouseX, mouseY);
         super.render(context, mouseX, mouseY, delta);
+        this.drawStatusEffects(context, mouseX, mouseY);
+        this.drawMouseoverTooltip(context, mouseX, mouseY);
         this.mouseX = mouseX;
         this.mouseY = mouseY;
     }
 
     @Override
-    public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
-//        super.renderBackground(context, mouseX, mouseY, delta);
-        TrinketScreenManager.update(mouseX, mouseY);
-        this.drawBackground(context, delta, mouseX, mouseY);
-    }
-
-    @Override
     protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
-        InventoryScreen.drawEntity(context, 150, 44, 201, 116, 30, 0.0625f, this.mouseX, this.mouseY, this.client.player);
-//        TrinketScreenManager.drawExtraGroups(context);
-    }
-
-    public static void drawEntity(int x, int y, int size, float mouseX, float mouseY, LivingEntity entity) {
-        float f = (float)Math.atan(mouseX / 40.0f);
-        float g = (float)Math.atan(mouseY / 40.0f);
-        MatrixStack matrixStack = RenderSystem.getModelViewStack();
-        matrixStack.push();
-        matrixStack.translate(x, y -18 /* -18 to negate an offset on the OwoScreen I can't find the cause of*/, 1050.0f);
-        matrixStack.scale(1.0f, 1.0f, -1.0f);
-        RenderSystem.applyModelViewMatrix();
-        MatrixStack matrixStack2 = new MatrixStack();
-        matrixStack2.translate(0.0f, 0.0f, 1000.0f);
-        matrixStack2.scale(size, size, size);
-        Quaternionf quaternionf = new Quaternionf().rotateZ((float)Math.PI);
-        Quaternionf quaternionf2 = new Quaternionf().rotateX(g * 20.0f * ((float)Math.PI / 180));
-        quaternionf.mul(quaternionf2);
-        matrixStack2.multiply(quaternionf);
-        float h = entity.bodyYaw;
-        float i = entity.getYaw();
-        float j = entity.getPitch();
-        float k = entity.prevHeadYaw;
-        float l = entity.headYaw;
-        entity.bodyYaw = 180.0f + f * 20.0f;
-        entity.setYaw(180.0f + f * 40.0f);
-        entity.setPitch(-g * 20.0f);
-        entity.headYaw = entity.getYaw();
-        entity.prevHeadYaw = entity.getYaw();
-        DiffuseLighting.method_34742();
-        EntityRenderDispatcher entityRenderDispatcher = MinecraftClient.getInstance().getEntityRenderDispatcher();
-        quaternionf2.conjugate();
-        entityRenderDispatcher.setRotation(quaternionf2);
-        entityRenderDispatcher.setRenderShadows(false);
-        VertexConsumerProvider.Immediate immediate = MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
-        RenderSystem.runAsFancy(() -> entityRenderDispatcher.render(entity, 0.0, 0.0, 0.0, 0.0f, 1.0f, matrixStack2, immediate, 0xF000F0));
-        immediate.draw();
-        entityRenderDispatcher.setRenderShadows(true);
-        entity.bodyYaw = h;
-        entity.setYaw(i);
-        entity.setPitch(j);
-        entity.prevHeadYaw = k;
-        entity.headYaw = l;
-        matrixStack.pop();
-        RenderSystem.applyModelViewMatrix();
-        DiffuseLighting.enableGuiDepthLighting();
+        int i = this.x;
+        int j = this.y;
+        int activeSpellSlotAmount = 0;
+        if (this.client != null && this.client.player != null) {
+            activeSpellSlotAmount = (int) this.client.player.getAttributeInstance(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT).getValue();
+            updateEffectsLists(this.client.player);
+        }
+        context.drawTexture(BetterAdventureModeCore.identifier("textures/gui/container/adventure_inventory/adventure_inventory_main_background_" + activeSpellSlotAmount + ".png"), i, j, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
+        if (this.oldEffectsListSize > 0) {
+            context.drawTexture(ADVENTURE_INVENTORY_SIDES_BACKGROUND_TEXTURE, i - 130, j, 0, 0, 130, this.backgroundHeight, 130, this.backgroundHeight);
+        }
+        InventoryScreen.drawEntity(context, i + 26, j + 39, i + 75, j + 109, 30, 0.0625f, this.mouseX, this.mouseY, this.client.player);
     }
 
     @Override
@@ -713,36 +229,197 @@ public class AdventureInventoryScreen extends BaseOwoHandledScreen<FlowLayout, P
         RenderSystem.enableDepthTest();
     }
 
-    private List<Text> getStatusEffectTooltip(StatusEffectInstance statusEffect) {
-        List<Text> list = List.of(this.getStatusEffectTitle(statusEffect));
-//        list.addAll(this.getStatusEffectDescription(statusEffect));
-//        list.add(TooltipComponent.of((OrderedText) StatusEffectUtil.getDurationText(statusEffect, 1.0f)));
-//        BetterAdventureModeCore.LOGGER.info(list.toString());
-        return list;
+    private void drawStatusEffects(DrawContext context, int mouseX, int mouseY) {
+        int i = this.x - 123;
+        int j = this.y + 7;
+        context.drawText(this.textRenderer, Text.translatable("gui.adventureInventory.status_effects"), i + 1, j, 0x404040, false);
+        j += 13;
+        if (this.foodEffectsList.size() > 0) {
+
+            context.drawText(this.textRenderer, Text.translatable("gui.adventureInventory.status_effects.food_effects"), i + 1, j, 0x404040, false);
+            j += 13;
+            for (int k = 3 * this.foodScrollPosition; k < Math.min(this.foodEffectsList.size(), (3 * (1 + this.foodScrollPosition))); k++) {
+                drawStatusEffectTexturesAndToolTips(context, i, j, k, mouseX, mouseY, this.foodEffectsList.get(k));
+            }
+            if (this.foodEffectsRowAmount > 1) {
+                context.drawGuiTexture(EFFECT_SCROLLER_BACKGROUND_TEXTURE, i + 109, j, 8, 32);
+                int k = (int)(23.0f * this.foodScrollAmount);
+                context.drawGuiTexture(EFFECT_SCROLLER_TEXTURE, i + 110, j + 1 + k, 6, 7);
+            }
+            j += 37;
+        } else {
+            j += 50;
+        }
+        if (this.negativeEffectsList.size() > 0) {
+
+            context.drawText(this.textRenderer, Text.translatable("gui.adventureInventory.status_effects.negative_effects"), i + 1, j, 0x404040, false);
+            j += 13;
+            for (int k = 3 * this.negativeScrollPosition; k < Math.min(this.negativeEffectsList.size(), (3 * (1 + this.negativeScrollPosition))); k++) {
+                drawStatusEffectTexturesAndToolTips(context, i, j, k, mouseX, mouseY, this.negativeEffectsList.get(k));
+            }
+            if (this.negativeEffectsRowAmount > 1) {
+                context.drawGuiTexture(EFFECT_SCROLLER_BACKGROUND_TEXTURE, i + 109, j, 8, 32);
+                int k = (int)(23.0f * this.negativeScrollAmount);
+                context.drawGuiTexture(EFFECT_SCROLLER_TEXTURE, i + 110, j + 1 + k, 6, 7);
+            }
+            j += 37;
+        } else {
+            j += 50;
+        }
+        if (this.positiveEffectsList.size() > 0) {
+
+            context.drawText(this.textRenderer, Text.translatable("gui.adventureInventory.status_effects.positive_effects"), i + 1, j, 0x404040, false);
+            j += 13;
+            for (int k = 3 * this.positiveScrollPosition; k < Math.min(this.positiveEffectsList.size(), (3 * (1 + this.positiveScrollPosition))); k++) {
+                drawStatusEffectTexturesAndToolTips(context, i, j, k, mouseX, mouseY, this.positiveEffectsList.get(k));
+            }
+            if (this.positiveEffectsRowAmount > 1) {
+                context.drawGuiTexture(EFFECT_SCROLLER_BACKGROUND_TEXTURE, i + 109, j, 8, 32);
+                int k = (int)(23.0f * this.positiveScrollAmount);
+                context.drawGuiTexture(EFFECT_SCROLLER_TEXTURE, i + 110, j + 1 + k, 6, 7);
+            }
+            j += 37;
+        } else {
+            j += 50;
+        }
+        if (this.neutralEffectsList.size() > 0) {
+
+            context.drawText(this.textRenderer, Text.translatable("gui.adventureInventory.status_effects.neutral_effects"), i + 1, j, 0x404040, false);
+            j += 13;
+            for (int k = 3 * this.neutralScrollPosition; k < Math.min(this.neutralEffectsList.size(), (3 * (1 + this.neutralScrollPosition))); k++) {
+                drawStatusEffectTexturesAndToolTips(context, i, j, k, mouseX, mouseY, this.neutralEffectsList.get(k));
+            }
+            if (this.neutralEffectsRowAmount > 1) {
+                context.drawGuiTexture(EFFECT_SCROLLER_BACKGROUND_TEXTURE, i + 109, j, 8, 32);
+                int k = (int)(23.0f * this.neutralScrollAmount);
+                context.drawGuiTexture(EFFECT_SCROLLER_TEXTURE, i + 110, j + 1 + k, 6, 7);
+            }
+        }
+
     }
 
-    private OrderedText getStatusEffectDescription(StatusEffectInstance statusEffect) {
-        Text text = statusEffect.getEffectType().getName().copy();
-//        if (statusEffect.getAmplifier() >= 1 && statusEffect.getAmplifier() <= 9) {
-//            text.append(ScreenTexts.SPACE).append(Text.translatable("enchantment.level." + (statusEffect.getAmplifier() + 1)));
-//        }
-        return (OrderedText) text;
+    private void drawStatusEffectTexturesAndToolTips(DrawContext context, int x, int y, int z, int mouseX, int mouseY, StatusEffectInstance statusEffectInstance) {
+        StatusEffectSpriteManager statusEffectSpriteManager = this.client.getStatusEffectSpriteManager();
+        int i = x + 3 + ((z % 3) * 35);
+        context.drawGuiTexture(EFFECT_BACKGROUND_SMALL_TEXTURE, i, y, 32, 32);
+        Sprite sprite = statusEffectSpriteManager.getSprite(statusEffectInstance.getEffectType());
+        context.drawSprite(i + 7, y + 7, 0, 18, 18, sprite);
+        if (mouseX >= i && mouseX <= i + 32 && mouseY >= y && mouseY <= y + 32) {
+            List<Text> list = getStatusEffectTooltip(statusEffectInstance);
+            context.drawTooltip(this.textRenderer, list, Optional.empty(), mouseX, mouseY);
+        }
     }
 
-    private Text getStatusEffectTitle(StatusEffectInstance statusEffect) {
-        Text text = statusEffect.getEffectType().getName().copy();
-//        if (statusEffect.getAmplifier() >= 1 && statusEffect.getAmplifier() <= 9) {
-//            text.append(ScreenTexts.SPACE).append(Text.translatable("enchantment.level." + (statusEffect.getAmplifier() + 1)));
-//        }
-        return text;
+    private List<Text> getStatusEffectTooltip(StatusEffectInstance statusEffectInstance) {
+        if (statusEffectInstance.isInfinite()) {
+            return List.of(getStatusEffectName(statusEffectInstance), getStatusEffectDescription(statusEffectInstance));
+        }
+        return List.of(getStatusEffectName(statusEffectInstance), StatusEffectUtil.getDurationText(statusEffectInstance, 1.0f), getStatusEffectDescription(statusEffectInstance));
+    }
 
-//        MutableText mutableText = statusEffect.getEffectType().getName().copy();
-//        if (statusEffect.getAmplifier() >= 1 && statusEffect.getAmplifier() <= 9) {
-//            MutableText var10000 = mutableText.append(ScreenTexts.SPACE);
-//            int var10001 = statusEffect.getAmplifier();
-//            var10000.append(Text.translatable("enchantment.level." + (var10001 + 1)));
-//        }
-//        return mutableText.formatted(Formatting.LIGHT_PURPLE);
+    private Text getStatusEffectName(StatusEffectInstance statusEffectInstance) {
+        MutableText mutableText = statusEffectInstance.getEffectType().getName().copy();
+        if (statusEffectInstance.getAmplifier() >= 1 && statusEffectInstance.getAmplifier() <= 9) {
+            mutableText.append(ScreenTexts.SPACE).append(Text.translatable("enchantment.level." + (statusEffectInstance.getAmplifier() + 1)));
+        }
+        return mutableText;
+    }
+
+    private Text getStatusEffectDescription(StatusEffectInstance statusEffectInstance) {
+        return Text.translatable(statusEffectInstance.getEffectType().getTranslationKey() + ".description");
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        this.foodMouseClicked = false;
+        this.negativeMouseClicked = false;
+        this.positiveMouseClicked = false;
+        this.neutralMouseClicked = false;
+        int i = this.x - 13;
+        int j;
+        if (this.foodEffectsRowAmount > 1) {
+            j = this.y + 34;
+            if (mouseX >= (double)i && mouseX < (double)(i + 6) && mouseY >= (double)j && mouseY < (double)(j + 30)) {
+                this.foodMouseClicked = true;
+            }
+        }
+        if (this.negativeEffectsRowAmount > 1) {
+            j = this.y + 84;
+            if (mouseX >= (double)i && mouseX < (double)(i + 6) && mouseY >= (double)j && mouseY < (double)(j + 30)) {
+                this.negativeMouseClicked = true;
+            }
+        }
+        if (this.positiveEffectsRowAmount > 1) {
+            j = this.y + 134;
+            if (mouseX >= (double)i && mouseX < (double)(i + 6) && mouseY >= (double)j && mouseY < (double)(j + 30)) {
+                this.positiveMouseClicked = true;
+            }
+        }
+        if (this.neutralEffectsRowAmount > 1) {
+            j = this.y + 184;
+            if (mouseX >= (double)i && mouseX < (double)(i + 6) && mouseY >= (double)j && mouseY < (double)(j + 30)) {
+                this.neutralMouseClicked = true;
+            }
+        }
+        return super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+        if (this.foodEffectsRowAmount > 1 && this.foodMouseClicked) {
+            int i = this.foodEffectsRowAmount - 1;
+            float f = (float)deltaY / (float)i;
+            this.foodScrollAmount = MathHelper.clamp(this.foodScrollAmount + f, 0.0f, 1.0f);
+            this.foodScrollPosition = (int)((double)(this.foodScrollAmount * (float)i));
+        }
+        if (this.negativeEffectsRowAmount > 1 && this.negativeMouseClicked) {
+            int i = this.negativeEffectsRowAmount - 1;
+            float f = (float)deltaY / (float)i;
+            this.negativeScrollAmount = MathHelper.clamp(this.negativeScrollAmount + f, 0.0f, 1.0f);
+            this.negativeScrollPosition = (int)((double)(this.negativeScrollAmount * (float)i));
+        }
+        if (this.positiveEffectsRowAmount > 1 && this.positiveMouseClicked) {
+            int i = this.positiveEffectsRowAmount - 1;
+            float f = (float)deltaY / (float)i;
+            this.positiveScrollAmount = MathHelper.clamp(this.positiveScrollAmount + f, 0.0f, 1.0f);
+            this.positiveScrollPosition = (int)((double)(this.positiveScrollAmount * (float)i));
+        }
+        if (this.neutralEffectsRowAmount > 1 && this.neutralMouseClicked) {
+            int i = this.neutralEffectsRowAmount - 1;
+            float f = (float)deltaY / (float)i;
+            this.neutralScrollAmount = MathHelper.clamp(this.neutralScrollAmount + f, 0.0f, 1.0f);
+            this.neutralScrollPosition = (int)((double)(this.neutralScrollAmount * (float)i));
+        }
+        return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+        if (this.foodEffectsRowAmount > 1 && mouseX >= this.x - 123 && mouseX <= this.x - 4 && mouseY >= this.y + 33 && mouseY <= this.y + 65) {
+            int i = this.foodEffectsRowAmount - 1;
+            float f = (float)verticalAmount / (float)i;
+            this.foodScrollAmount = MathHelper.clamp(this.foodScrollAmount - f, 0.0f, 1.0f);
+            this.foodScrollPosition = (int)((double)(this.foodScrollAmount * (float)i));
+        }
+        if (this.negativeEffectsRowAmount > 1 && mouseX >= this.x - 123 && mouseX <= this.x - 4 && mouseY >= this.y + 83 && mouseY <= this.y + 115) {
+            int i = this.negativeEffectsRowAmount - 1;
+            float f = (float)verticalAmount / (float)i;
+            this.negativeScrollAmount = MathHelper.clamp(this.negativeScrollAmount - f, 0.0f, 1.0f);
+            this.negativeScrollPosition = (int)((double)(this.negativeScrollAmount * (float)i));
+        }
+        if (this.positiveEffectsRowAmount > 1 && mouseX >= this.x - 123 && mouseX <= this.x - 4 && mouseY >= this.y + 133 && mouseY <= this.y + 165) {
+            int i = this.positiveEffectsRowAmount - 1;
+            float f = (float)verticalAmount / (float)i;
+            this.positiveScrollAmount = MathHelper.clamp(this.positiveScrollAmount - f, 0.0f, 1.0f);
+            this.positiveScrollPosition = (int)((double)(this.positiveScrollAmount * (float)i));
+        }
+        if (this.neutralEffectsRowAmount > 1 && mouseX >= this.x - 123 && mouseX <= this.x - 4 && mouseY >= this.y + 183 && mouseY <= this.y + 215) {
+            int i = this.neutralEffectsRowAmount - 1;
+            float f = (float)verticalAmount / (float)i;
+            this.neutralScrollAmount = MathHelper.clamp(this.neutralScrollAmount - f, 0.0f, 1.0f);
+            this.neutralScrollPosition = (int)((double)(this.neutralScrollAmount * (float)i));
+        }
+        return true;
     }
 
     @Override

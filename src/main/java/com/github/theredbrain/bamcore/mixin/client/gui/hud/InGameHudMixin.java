@@ -50,9 +50,8 @@ public abstract class InGameHudMixin {
 
     @Unique
     private static final Identifier HOTBAR_HAND_SLOTS_TEXTURE = BetterAdventureModeCore.identifier("hud/hotbar_hand_slots");
+    @Unique
     private static final Identifier HOTBAR_ALTERNATE_HAND_SLOTS_TEXTURE = BetterAdventureModeCore.identifier("hud/hotbar_alternate_hand_slots");
-    private static final Identifier CUSTOM_WIDGETS_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/custom_widgets.png");
-    private static final Identifier CUSTOM_BARS = BetterAdventureModeCore.identifier("textures/gui/custom_bars.png");
     @Unique
     private static final Identifier HEALTH_BAR_BACKGROUND_TEXTURE = new Identifier("boss_bar/red_background");
     @Unique

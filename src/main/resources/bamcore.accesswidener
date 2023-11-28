@@ -31,3 +31,6 @@ accessible field net/minecraft/client/render/WorldRenderer bufferBuilders Lnet/m
 accessible method net/minecraft/client/render/WorldRenderer canDrawEntityOutlines ()Z
 
 accessible class net/minecraft/client/gui/screen/ingame/CreativeInventoryScreen$CreativeSlot
+
+mutable field net/minecraft/screen/slot/Slot x I
+mutable field net/minecraft/screen/slot/Slot y I
