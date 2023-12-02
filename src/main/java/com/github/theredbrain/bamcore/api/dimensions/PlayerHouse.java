@@ -9,33 +9,39 @@ public final class PlayerHouse {
     private final int housingBlockPosX;
     private final int housingBlockPosY;
     private final int housingBlockPosZ;
+    private final String displayName;
     private final String unlockAdvancement;
     private final boolean showLockedHouse;
     private final boolean showUnlockAdvancement;
 
-    public PlayerHouse(int housingBlockPosX, int housingBlockPosY, int housingBlockPosZ, String unlockAdvancement, boolean showLockedHouse, boolean showUnlockAdvancement) {
+    public PlayerHouse(int housingBlockPosX, int housingBlockPosY, int housingBlockPosZ, String unlockAdvancement, String displayName, boolean showLockedHouse, boolean showUnlockAdvancement) {
         this.housingBlockPosX = housingBlockPosX;
         this.housingBlockPosY = housingBlockPosY;
         this.housingBlockPosZ = housingBlockPosZ;
+        this.displayName = displayName;
         this.unlockAdvancement = unlockAdvancement;
         this.showLockedHouse = showLockedHouse;
         this.showUnlockAdvancement = showUnlockAdvancement;
     }
 
     public BlockPos housingBlockPos() {
-        return new BlockPos(housingBlockPosX, housingBlockPosY, housingBlockPosZ);
+        return new BlockPos(this.housingBlockPosX, this.housingBlockPosY, this.housingBlockPosZ);
+    }
+
+    public String getDisplayName() {
+        return this.displayName;
     }
 
     public Identifier unlockAdvancement() {
-        return new Identifier(unlockAdvancement);
+        return new Identifier(this.unlockAdvancement);
     }
 
     public boolean showLockedHouse() {
-        return showLockedHouse;
+        return this.showLockedHouse;
     }
 
     public boolean showUnlockAdvancement() {
-        return showUnlockAdvancement;
+        return this.showUnlockAdvancement;
     }
 
     @Override
@@ -46,6 +52,7 @@ public final class PlayerHouse {
         return this.housingBlockPosX == that.housingBlockPosX
                 && this.housingBlockPosY == that.housingBlockPosY
                 && this.housingBlockPosZ == that.housingBlockPosZ
+                && Objects.equals(this.displayName, that.displayName)
                 && Objects.equals(this.unlockAdvancement, that.unlockAdvancement)
                 && this.showLockedHouse == that.showLockedHouse
                 && this.showUnlockAdvancement == that.showUnlockAdvancement;
@@ -53,17 +60,18 @@ public final class PlayerHouse {
 
     @Override
     public int hashCode() {
-        return Objects.hash(housingBlockPosX, housingBlockPosY, housingBlockPosZ, unlockAdvancement, showLockedHouse, showUnlockAdvancement);
+        return Objects.hash(this.housingBlockPosX, this.housingBlockPosY, this.housingBlockPosZ, this.displayName, this.unlockAdvancement, this.showLockedHouse, this.showUnlockAdvancement);
     }
 
     @Override
     public String toString() {
         return "PlayerHouse[" +
-                "controlBlockPosX=" + housingBlockPosX + ", " +
-                "controlBlockPosY=" + housingBlockPosY + ", " +
-                "controlBlockPosZ=" + housingBlockPosZ + ", " +
-                "unlockAdvancement=" + unlockAdvancement + ", " +
-                "showLockedHouse=" + showLockedHouse + ", " +
-                "showUnlockAdvancement=" + showUnlockAdvancement + "]";
+                "controlBlockPosX=" + this.housingBlockPosX + ", " +
+                "controlBlockPosY=" + this.housingBlockPosY + ", " +
+                "controlBlockPosZ=" + this.housingBlockPosZ + ", " +
+                "displayName=" + this.displayName + ", " +
+                "unlockAdvancement=" + this.unlockAdvancement + ", " +
+                "showLockedHouse=" + this.showLockedHouse + ", " +
+                "showUnlockAdvancement=" + this.showUnlockAdvancement + "]";
     }
 }

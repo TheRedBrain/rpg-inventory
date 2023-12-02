@@ -2,6 +2,7 @@ package com.github.theredbrain.bamcore.network.packet;
 
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.api.util.PacketByteBufUtils;
+import com.github.theredbrain.bamcore.block.entity.TeleporterBlockBlockEntity;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.minecraft.network.PacketByteBuf;
@@ -9,7 +10,6 @@ import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class UpdateTeleporterBlockPacket implements FabricPacket {
@@ -20,31 +20,34 @@ public class UpdateTeleporterBlockPacket implements FabricPacket {
 
     public final BlockPos teleportBlockPosition;
 
-    public final String teleporterName;
-
     public final boolean showActivationArea;
     public final Vec3i activationAreaDimensions;
     public final BlockPos activationAreaPositionOffset;
 
     public final boolean showAdventureScreen;
 
-    public final int teleportationMode;
+    public final TeleporterBlockBlockEntity.TeleportationMode teleportationMode;
 
     public final BlockPos directTeleportPositionOffset;
-    public final double directTeleportPositionOffsetYaw;
-    public final double directTeleportPositionOffsetPitch;
+    public final double directTeleportOrientationYaw;
+    public final double directTeleportOrientationPitch;
 
-    public final int specificLocationType;
+    public final TeleporterBlockBlockEntity.LocationType locationType;
 
-    public final List<Pair<String, String>> locationsList;
+    public final List<Pair<String, String>> dungeonLocationsList;
+    public final List<String> housingLocationsList;
 
     public final boolean consumeKeyItemStack;
+
+    public final String teleporterName;
+    public final String currentTargetOwnerLabel;
+    public final String currentTargetIdentifierLabel;
+    public final String currentTargetEntranceLabel;
     public final String teleportButtonLabel;
     public final String cancelTeleportButtonLabel;
 
-    public UpdateTeleporterBlockPacket(BlockPos teleportBlockPosition, String teleporterName, boolean showActivationArea, Vec3i activationAreaDimensions, BlockPos activationAreaPositionOffset, boolean showAdventureScreen, int teleportationMode, BlockPos directTeleportPositionOffset, double directTeleportPositionOffsetYaw, double directTeleportPositionOffsetPitch, int specificLocationType, List<Pair<String, String>> locationsList, boolean consumeKeyItemStack, String teleportButtonLabel, String cancelTeleportButtonLabel) {
+    public UpdateTeleporterBlockPacket(BlockPos teleportBlockPosition, boolean showActivationArea, Vec3i activationAreaDimensions, BlockPos activationAreaPositionOffset, boolean showAdventureScreen, String teleportationMode, BlockPos directTeleportPositionOffset, double directTeleportOrientationYaw, double directTeleportOrientationPitch, String locationType, List<Pair<String, String>> dungeonLocationsList, List<String> housingLocationsList, boolean consumeKeyItemStack, String teleporterName, String currentTargetOwnerLabel, String currentTargetIdentifierLabel, String currentTargetEntranceLabel, String teleportButtonLabel, String cancelTeleportButtonLabel) {
         this.teleportBlockPosition = teleportBlockPosition;
-        this.teleporterName = teleporterName;
 
         this.showActivationArea = showActivationArea;
 
@@ -52,16 +55,22 @@ public class UpdateTeleporterBlockPacket implements FabricPacket {
         this.activationAreaPositionOffset = activationAreaPositionOffset;
 
         this.showAdventureScreen = showAdventureScreen;
-        this.teleportationMode = teleportationMode;
+        this.teleportationMode = TeleporterBlockBlockEntity.TeleportationMode.byName(teleportationMode).orElseGet(() -> TeleporterBlockBlockEntity.TeleportationMode.DIRECT);
         this.directTeleportPositionOffset = directTeleportPositionOffset;
-        this.directTeleportPositionOffsetYaw = directTeleportPositionOffsetYaw;
-        this.directTeleportPositionOffsetPitch = directTeleportPositionOffsetPitch;
+        this.directTeleportOrientationYaw = directTeleportOrientationYaw;
+        this.directTeleportOrientationPitch = directTeleportOrientationPitch;
 
-        this.specificLocationType = specificLocationType;
+        this.locationType = TeleporterBlockBlockEntity.LocationType.byName(locationType).orElseGet(() -> TeleporterBlockBlockEntity.LocationType.WORLD_SPAWN);
 
-        this.locationsList = locationsList;
+        this.dungeonLocationsList = dungeonLocationsList;
+        this.housingLocationsList = housingLocationsList;
 
         this.consumeKeyItemStack = consumeKeyItemStack;
+
+        this.teleporterName = teleporterName;
+        this.currentTargetOwnerLabel = currentTargetOwnerLabel;
+        this.currentTargetIdentifierLabel = currentTargetIdentifierLabel;
+        this.currentTargetEntranceLabel = currentTargetEntranceLabel;
         this.teleportButtonLabel = teleportButtonLabel;
         this.cancelTeleportButtonLabel = cancelTeleportButtonLabel;
     }
@@ -69,7 +78,6 @@ public class UpdateTeleporterBlockPacket implements FabricPacket {
     public UpdateTeleporterBlockPacket(PacketByteBuf buf) {
         this(
                 buf.readBlockPos(),
-                buf.readString(),
                 buf.readBoolean(),
                 new Vec3i(
                         buf.readInt(),
@@ -78,13 +86,18 @@ public class UpdateTeleporterBlockPacket implements FabricPacket {
                 ),
                 buf.readBlockPos(),
                 buf.readBoolean(),
-                buf.readInt(),
+                buf.readString(),
                 buf.readBlockPos(),
                 buf.readDouble(),
                 buf.readDouble(),
-                buf.readInt(),
+                buf.readString(),
                 buf.readList(new PacketByteBufUtils.PairStringStringListReader()),
+                buf.readList(new PacketByteBufUtils.StringListReader()),
                 buf.readBoolean(),
+                buf.readString(),
+                buf.readString(),
+                buf.readString(),
+                buf.readString(),
                 buf.readString(),
                 buf.readString()
         );
@@ -96,7 +109,7 @@ public class UpdateTeleporterBlockPacket implements FabricPacket {
     @Override
     public void write(PacketByteBuf buf) {
         buf.writeBlockPos(this.teleportBlockPosition);
-        buf.writeString(this.teleporterName);
+
         buf.writeBoolean(this.showActivationArea);
 
         buf.writeInt(this.activationAreaDimensions.getX());
@@ -106,17 +119,23 @@ public class UpdateTeleporterBlockPacket implements FabricPacket {
 
         buf.writeBoolean(this.showAdventureScreen);
 
-        buf.writeInt(this.teleportationMode);
+        buf.writeString(this.teleportationMode.asString());
 
         buf.writeBlockPos(this.directTeleportPositionOffset);
-        buf.writeDouble(this.directTeleportPositionOffsetYaw);
-        buf.writeDouble(this.directTeleportPositionOffsetPitch);
+        buf.writeDouble(this.directTeleportOrientationYaw);
+        buf.writeDouble(this.directTeleportOrientationPitch);
 
-        buf.writeInt(this.specificLocationType);
+        buf.writeString(this.locationType.asString());
 
-        buf.writeCollection(this.locationsList, new PacketByteBufUtils.PairStringStringListWriter());
+        buf.writeCollection(this.dungeonLocationsList, new PacketByteBufUtils.PairStringStringListWriter());
+        buf.writeCollection(this.housingLocationsList, new PacketByteBufUtils.StringListWriter());
 
         buf.writeBoolean(this.consumeKeyItemStack);
+
+        buf.writeString(this.teleporterName);
+        buf.writeString(this.currentTargetOwnerLabel);
+        buf.writeString(this.currentTargetIdentifierLabel);
+        buf.writeString(this.currentTargetEntranceLabel);
         buf.writeString(this.teleportButtonLabel);
         buf.writeString(this.cancelTeleportButtonLabel);
     }

@@ -1,0 +1,9 @@
+{
+  "controlBlockPosX": 1,
+  "controlBlockPosY": 1,
+  "controlBlockPosZ": 1,
+  "displayName": "player_dimensions.player_houses.house_3",
+  "unlockAdvancement": "minecraft:story/lava_bucket",
+  "showLockedHouse": false,
+  "showUnlockAdvancement": true
+}

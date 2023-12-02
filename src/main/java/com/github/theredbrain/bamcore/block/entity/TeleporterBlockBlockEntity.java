@@ -23,6 +23,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Pair;
+import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -32,36 +33,43 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements ExtendedScreenHandlerFactory, Inventory {
 
-    private String teleporterName = "teleporterName";
     private boolean showActivationArea = false;
     private Vec3i activationAreaDimensions = Vec3i.ZERO;
     private BlockPos activationAreaPositionOffset = new BlockPos(0, 1, 0);
 
     private boolean showAdventureScreen = true; //
 
-    private int teleportationMode = 0;
+    private TeleportationMode teleportationMode = TeleportationMode.DIRECT;
 
     // direct teleportation mode
     private BlockPos directTeleportPositionOffset = new BlockPos(0, 0, 0);
-    private double directTeleportPositionOffsetYaw = 0.0;
-    private double directTeleportPositionOffsetPitch = 0.0;
+    private double directTeleportOrientationYaw = 0.0;
+    private double directTeleportOrientationPitch = 0.0;
 
     // specific location mode
-    private int specificLocationType = 0;
+    private LocationType locationType = LocationType.WORLD_SPAWN;
 
     // dungeon mode
+    private List<Pair<String, String>> dungeonLocationsList = new ArrayList<>(List.of());
+
     // player house mode
-    private List<Pair<String, String>> locationsList = new ArrayList<>(List.of());
+    private List<String> housingLocationsList = new ArrayList<>(List.of());
 
     private boolean consumeKeyItemStack = false;
     private DefaultedList<ItemStack> requiredKeyItemStack = DefaultedList.ofSize(1, ItemStack.EMPTY);
 
-    private String teleportButtonLabel = "gui.teleport";
-    private String cancelTeleportButtonLabel = "gui.cancel";
+    private String teleporterName = "gui.teleporter_block.teleporter_name_field.label";
+    private String currentTargetOwnerLabel = "gui.teleporter_block.target_owner_field.label";
+    private String currentTargetIdentifierLabel = "gui.teleporter_block.target_identifier_field.label";
+    private String currentTargetEntranceLabel = "gui.teleporter_block.target_entrance_field.label";
+    private String teleportButtonLabel = "gui.teleporter_block.teleport_button.label";
+    private String cancelTeleportButtonLabel = "gui.teleporter_block.cancel_teleport_button.label";
 
     public TeleporterBlockBlockEntity(BlockPos pos, BlockState state) {
         super(EntityRegistry.TELEPORTER_BLOCK_ENTITY, pos, state);
@@ -82,24 +90,35 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
 
         nbt.putBoolean("showAdventureScreen", this.showAdventureScreen);
 
-        nbt.putInt("teleportationMode", this.teleportationMode);
+        nbt.putString("teleportationMode", this.teleportationMode.asString());
 
         nbt.putInt("directTeleportPositionOffsetX", this.directTeleportPositionOffset.getX());
         nbt.putInt("directTeleportPositionOffsetY", this.directTeleportPositionOffset.getY());
         nbt.putInt("directTeleportPositionOffsetZ", this.directTeleportPositionOffset.getZ());
-        nbt.putDouble("directTeleportPositionOffsetYaw", this.directTeleportPositionOffsetYaw);
-        nbt.putDouble("directTeleportPositionOffsetPitch", this.directTeleportPositionOffsetPitch);
+        nbt.putDouble("directTeleportPositionOffsetYaw", this.directTeleportOrientationYaw);
+        nbt.putDouble("directTeleportPositionOffsetPitch", this.directTeleportOrientationPitch);
 
-        nbt.putInt("specificLocationType", this.specificLocationType);
+        nbt.putString("locationType", this.locationType.asString());
 
-        for (int i = 0; i < this.locationsList.size(); i++) {
-            nbt.putString("locationsListIdentifier_" + i, this.locationsList.get(i).getLeft());
-            nbt.putString("locationsListEntrance_" + i, this.locationsList.get(i).getRight());
+        nbt.putInt("dungeonLocationsListSize", this.dungeonLocationsList.size());
+
+        for (int i = 0; i < this.dungeonLocationsList.size(); i++) {
+            nbt.putString("dungeonLocationsListIdentifier_" + i, this.dungeonLocationsList.get(i).getLeft());
+            nbt.putString("dungeonLocationsListEntrance_" + i, this.dungeonLocationsList.get(i).getRight());
+        }
+
+        nbt.putInt("housingLocationsListSize", this.housingLocationsList.size());
+
+        for (int i = 0; i < this.housingLocationsList.size(); i++) {
+            nbt.putString("housingLocationsListIdentifier_" + i, this.housingLocationsList.get(i));
         }
 
         nbt.putBoolean("consumeKeyItemStack", this.consumeKeyItemStack);
         Inventories.writeNbt(nbt, this.requiredKeyItemStack);
 
+        nbt.putString("currentTargetOwnerLabel", this.currentTargetOwnerLabel);
+        nbt.putString("currentTargetIdentifierLabel", this.currentTargetIdentifierLabel);
+        nbt.putString("currentTargetEntranceLabel", this.currentTargetEntranceLabel);
         nbt.putString("teleportButtonLabel", this.teleportButtonLabel);
         nbt.putString("cancelTeleportButtonLabel", this.cancelTeleportButtonLabel);
 
@@ -123,28 +142,37 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
 
         this.showAdventureScreen = nbt.getBoolean("showAdventureScreen");
 
-        this.teleportationMode = nbt.getInt("teleportationMode");
+        this.teleportationMode = TeleportationMode.byName(nbt.getString("teleportationMode")).orElseGet(() -> TeleportationMode.DIRECT);
 
         this.directTeleportPositionOffset = new BlockPos(
                 nbt.getInt("directTeleportPositionOffsetX"),
                 nbt.getInt("directTeleportPositionOffsetY"),
                 nbt.getInt("directTeleportPositionOffsetZ")
         );
-        this.directTeleportPositionOffsetYaw = nbt.getDouble("directTeleportPositionOffsetYaw");
-        this.directTeleportPositionOffsetPitch = nbt.getDouble("directTeleportPositionOffsetPitch");
+        this.directTeleportOrientationYaw = nbt.getDouble("directTeleportPositionOffsetYaw");
+        this.directTeleportOrientationPitch = nbt.getDouble("directTeleportPositionOffsetPitch");
 
-        this.specificLocationType = nbt.getInt("specificLocationType");
+        this.locationType = LocationType.byName(nbt.getString("locationType")).orElseGet(() -> LocationType.WORLD_SPAWN);
 
-        int locationsListSize = nbt.getInt("locationsListSize");
-        this.locationsList.clear();
-        for (int p = 0; p < locationsListSize; p++) {
-            this.locationsList.add(new Pair<>(nbt.getString("locationsListIdentifier_" + p), nbt.getString("locationsListEntrance_" + p)));
+        int dungeonLocationsListSize = nbt.getInt("dungeonLocationsListSize");
+        this.dungeonLocationsList.clear();
+        for (int p = 0; p < dungeonLocationsListSize; p++) {
+            this.dungeonLocationsList.add(new Pair<>(nbt.getString("dungeonLocationsListIdentifier_" + p), nbt.getString("dungeonLocationsListEntrance_" + p)));
+        }
+
+        int housingLocationsListSize = nbt.getInt("housingLocationsListSize");
+        this.housingLocationsList.clear();
+        for (int p = 0; p < housingLocationsListSize; p++) {
+            this.housingLocationsList.add(nbt.getString("housingLocationsListIdentifier_" + p));
         }
 
         this.consumeKeyItemStack = nbt.getBoolean("consumeKeyItemStack");
         this.requiredKeyItemStack = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
         Inventories.readNbt(nbt, this.requiredKeyItemStack);
 
+        this.currentTargetOwnerLabel = nbt.getString("currentTargetOwnerLabel");
+        this.currentTargetIdentifierLabel = nbt.getString("currentTargetIdentifierLabel");
+        this.currentTargetEntranceLabel = nbt.getString("currentTargetEntranceLabel");
         this.teleportButtonLabel = nbt.getString("teleportButtonLabel");
         this.cancelTeleportButtonLabel = nbt.getString("cancelTeleportButtonLabel");
 
@@ -243,15 +271,12 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
         return true;
     }
 
-    /**
-     * @return 0: direct teleport, 1: specific location, 2: dungeon mode, 3: house mode
-     */
-    public int getTeleportationMode() {
+    public TeleportationMode getTeleportationMode() {
         return teleportationMode;
     }
 
     // TODO check if input is valid
-    public boolean setTeleportationMode(int teleportationMode) {
+    public boolean setTeleportationMode(TeleportationMode teleportationMode) {
         this.teleportationMode = teleportationMode;
         return true;
     }
@@ -266,46 +291,53 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
         return true;
     }
 
-    public double getDirectTeleportPositionOffsetYaw() {
-        return directTeleportPositionOffsetYaw;
+    public double getDirectTeleportOrientationYaw() {
+        return directTeleportOrientationYaw;
     }
 
     // TODO check if input is valid
-    public boolean setDirectTeleportPositionOffsetYaw(double directTeleportPositionOffsetYaw) {
-        this.directTeleportPositionOffsetYaw = directTeleportPositionOffsetYaw;
+    public boolean setDirectTeleportOrientationYaw(double directTeleportOrientationYaw) {
+        this.directTeleportOrientationYaw = directTeleportOrientationYaw;
         return true;
     }
 
-    public double getDirectTeleportPositionOffsetPitch() {
-        return directTeleportPositionOffsetPitch;
+    public double getDirectTeleportOrientationPitch() {
+        return directTeleportOrientationPitch;
     }
 
     // TODO check if input is valid
-    public boolean setDirectTeleportPositionOffsetPitch(double directTeleportPositionOffsetPitch) {
-        this.directTeleportPositionOffsetPitch = directTeleportPositionOffsetPitch;
+    public boolean setDirectTeleportOrientationPitch(double directTeleportOrientationPitch) {
+        this.directTeleportOrientationPitch = directTeleportOrientationPitch;
         return true;
     }
 
-    /**
-     * @return 0: world spawn, 1: player spawn, 2: housing/dungeon access position
-     */
-    public int getSpecificLocationType() {
-        return specificLocationType;
+    public LocationType getLocationType() {
+        return locationType;
     }
 
     // TODO check if input is valid
-    public boolean setSpecificLocationType(int specificLocationType) {
-        this.specificLocationType = specificLocationType;
+    public boolean setLocationType(LocationType locationType) {
+        this.locationType = locationType;
         return true;
     }
 
-    public List<Pair<String, String>> getLocationsList() {
-        return locationsList;
+    public List<Pair<String, String>> getDungeonLocationsList() {
+        return this.dungeonLocationsList;
     }
 
     // TODO check if input is valid
-    public boolean setLocationsList(List<Pair<String, String>> locationsList) {
-        this.locationsList = locationsList;
+    public boolean setDungeonLocationsList(List<Pair<String, String>> dungeonLocationsList) {
+        this.dungeonLocationsList = dungeonLocationsList;
+        return true;
+    }
+
+    public List<String> getHousingLocationsList() {
+        return this.housingLocationsList;
+    }
+
+    // TODO check if input is valid
+    public boolean setHousingLocationsList(List<String> housingLocationsList) {
+        this.housingLocationsList = housingLocationsList;
         return true;
     }
 
@@ -331,23 +363,53 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
 //        this.requiredKeyItemStack = requiredKeyItemStack;
 //    }
 
-    public String getCancelTeleportButtonLabel() {
-        return cancelTeleportButtonLabel;
+    public String getCurrentTargetOwnerLabel() {
+        return this.currentTargetOwnerLabel;
     }
 
     // TODO check if input is valid
-    public boolean setCancelTeleportButtonLabel(String cancelTeleportButtonLabel) {
-        this.cancelTeleportButtonLabel = cancelTeleportButtonLabel;
+    public boolean setCurrentTargetOwnerLabel(String currentTargetOwnerLabel) {
+        this.currentTargetOwnerLabel = currentTargetOwnerLabel;
+        return true;
+    }
+
+    public String getCurrentTargetIdentifierLabel() {
+        return this.currentTargetIdentifierLabel;
+    }
+
+    // TODO check if input is valid
+    public boolean setCurrentTargetIdentifierLabel(String currentTargetIdentifierLabel) {
+        this.currentTargetIdentifierLabel = currentTargetIdentifierLabel;
+        return true;
+    }
+
+    public String getCurrentTargetEntranceLabel() {
+        return this.currentTargetEntranceLabel;
+    }
+
+    // TODO check if input is valid
+    public boolean setCurrentTargetEntranceLabel(String currentTargetEntranceLabel) {
+        this.currentTargetEntranceLabel = currentTargetEntranceLabel;
         return true;
     }
 
     public String getTeleportButtonLabel() {
-        return teleportButtonLabel;
+        return this.teleportButtonLabel;
     }
 
     // TODO check if input is valid
     public boolean setTeleportButtonLabel(String teleportButtonLabel) {
         this.teleportButtonLabel = teleportButtonLabel;
+        return true;
+    }
+
+    public String getCancelTeleportButtonLabel() {
+        return this.cancelTeleportButtonLabel;
+    }
+
+    // TODO check if input is valid
+    public boolean setCancelTeleportButtonLabel(String cancelTeleportButtonLabel) {
+        this.cancelTeleportButtonLabel = cancelTeleportButtonLabel;
         return true;
     }
     //endregion
@@ -369,7 +431,7 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
 
     @Override
     public Text getDisplayName() {
-        return Text.literal(this.teleporterName);
+        return Text.translatable(this.teleporterName);
     }
 
     @Override
@@ -438,7 +500,7 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
                 this.activationAreaPositionOffset = BlockRotationUtils.rotateOffsetBlockPos(this.activationAreaPositionOffset, blockRotation);
                 this.directTeleportPositionOffset = BlockRotationUtils.rotateOffsetBlockPos(this.directTeleportPositionOffset, blockRotation);
 
-                this.directTeleportPositionOffsetYaw = BlockRotationUtils.rotateYaw(this.directTeleportPositionOffsetYaw, blockRotation);
+                this.directTeleportOrientationYaw = BlockRotationUtils.rotateYaw(this.directTeleportOrientationYaw, blockRotation);
 
                 this.activationAreaDimensions = BlockRotationUtils.rotateOffsetVec3i(this.activationAreaDimensions, blockRotation);
                 this.rotated = state.get(RotatedBlockWithEntity.ROTATED);
@@ -447,7 +509,7 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
                 this.activationAreaPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.activationAreaPositionOffset, BlockMirror.FRONT_BACK);
                 this.directTeleportPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.directTeleportPositionOffset, BlockMirror.FRONT_BACK);
 
-                this.directTeleportPositionOffsetYaw = BlockRotationUtils.mirrorYaw(this.directTeleportPositionOffsetYaw, BlockMirror.FRONT_BACK);
+                this.directTeleportOrientationYaw = BlockRotationUtils.mirrorYaw(this.directTeleportOrientationYaw, BlockMirror.FRONT_BACK);
 
                 this.activationAreaDimensions = BlockRotationUtils.mirrorOffsetVec3i(this.activationAreaDimensions, BlockMirror.FRONT_BACK);
                 this.x_mirrored = state.get(RotatedBlockWithEntity.X_MIRRORED);
@@ -456,11 +518,64 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
                 this.activationAreaPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.activationAreaPositionOffset, BlockMirror.LEFT_RIGHT);
                 this.directTeleportPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.directTeleportPositionOffset, BlockMirror.LEFT_RIGHT);
 
-                this.directTeleportPositionOffsetYaw = BlockRotationUtils.mirrorYaw(this.directTeleportPositionOffsetYaw, BlockMirror.LEFT_RIGHT);
+                this.directTeleportOrientationYaw = BlockRotationUtils.mirrorYaw(this.directTeleportOrientationYaw, BlockMirror.LEFT_RIGHT);
 
                 this.activationAreaDimensions = BlockRotationUtils.mirrorOffsetVec3i(this.activationAreaDimensions, BlockMirror.LEFT_RIGHT);
                 this.z_mirrored = state.get(RotatedBlockWithEntity.Z_MIRRORED);
             }
+        }
+    }
+
+    public static enum TeleportationMode implements StringIdentifiable
+    {
+        DIRECT("direct"),
+        SAVED_LOCATIONS("saved_locations"),
+        DUNGEONS("dungeons"),
+        HOUSING("housing");
+
+        private final String name;
+
+        private TeleportationMode(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String asString() {
+            return this.name;
+        }
+
+        public static Optional<TeleportationMode> byName(String name) {
+            return Arrays.stream(TeleportationMode.values()).filter(teleportationMode -> teleportationMode.asString().equals(name)).findFirst();
+        }
+
+        public Text asText() {
+            return Text.translatable("gui.teleporter_block.teleportationMode." + this.name);
+        }
+    }
+
+    public static enum LocationType implements StringIdentifiable
+    {
+        WORLD_SPAWN("world_spawn"),
+        PLAYER_SPAWN("player_spawn"),
+        DIMENSION_ACCESS_POSITION("dimension_access_position");
+
+        private final String name;
+
+        private LocationType(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String asString() {
+            return this.name;
+        }
+
+        public static Optional<LocationType> byName(String name) {
+            return Arrays.stream(LocationType.values()).filter(locationType -> locationType.asString().equals(name)).findFirst();
+        }
+
+        public Text asText() {
+            return Text.translatable("gui.teleporter_block.locationType." + this.name);
         }
     }
 }

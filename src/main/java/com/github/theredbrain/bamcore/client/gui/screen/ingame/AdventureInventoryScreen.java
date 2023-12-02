@@ -45,7 +45,7 @@ public class AdventureInventoryScreen extends HandledScreen<PlayerScreenHandler>
     private static final Identifier INVENTORY_SLOT_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/inventory_slot.png");
     private static final Identifier EFFECT_BACKGROUND_SMALL_TEXTURE = new Identifier("container/inventory/effect_background_small");
     private static final Identifier EFFECT_SCROLLER_BACKGROUND_TEXTURE = BetterAdventureModeCore.identifier("container/adventure_inventory/scroller_background");
-    private static final Identifier EFFECT_SCROLLER_TEXTURE = BetterAdventureModeCore.identifier("container/adventure_inventory/scroller");
+    private static final Identifier EFFECT_SCROLLER_TEXTURE = BetterAdventureModeCore.identifier("container/scroller");
     private float mouseX;
     private float mouseY;
     private boolean showAttributeScreen = false;

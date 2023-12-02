@@ -140,7 +140,7 @@ dependencies {
 	// Miscellaneous Utility Library
 	modImplementation "com.github.iPortalTeam.ImmersivePortalsMod:q_misc_util:${project.q_misc_util_version}"
 
-	// Miscellaneous Utility Library
+	// Immersive Portals
 	modImplementation  "com.github.iPortalTeam.ImmersivePortalsMod:build:${project.q_misc_util_version}"
 
 	// Cardinal Components

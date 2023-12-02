@@ -2,30 +2,30 @@ package com.github.theredbrain.bamcore.client.gui.screen.ingame;
 
 import com.github.theredbrain.bamcore.block.entity.RedstoneTriggerBlockBlockEntity;
 import com.github.theredbrain.bamcore.network.packet.UpdateRedstoneTriggerBlockPacket;
-import com.github.theredbrain.bamcore.registry.BlockRegistry;
-import io.wispforest.owo.ui.base.BaseOwoScreen;
-import io.wispforest.owo.ui.component.Components;
-import io.wispforest.owo.ui.component.TextBoxComponent;
-import io.wispforest.owo.ui.container.Containers;
-import io.wispforest.owo.ui.container.FlowLayout;
-import io.wispforest.owo.ui.core.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.util.NarratorManager;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
-import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.List;
-
 @Environment(value= EnvType.CLIENT)
-public class RedstoneTriggerBlockScreen extends BaseOwoScreen<FlowLayout> {
+public class RedstoneTriggerBlockScreen extends Screen {
+    private static final Text TRIGGERED_BLOCK_POSITION_TEXT = Text.translatable("gui.triggered_block.triggeredBlockPositionOffset");
     private final RedstoneTriggerBlockBlockEntity redstoneTriggerBlock;
+    private TextFieldWidget triggeredBlockPositionOffsetXField;
+    private TextFieldWidget triggeredBlockPositionOffsetYField;
+    private TextFieldWidget triggeredBlockPositionOffsetZField;
 
     public RedstoneTriggerBlockScreen(RedstoneTriggerBlockBlockEntity redstoneTriggerBlock) {
-        super(Text.translatable(BlockRegistry.REDSTONE_TRIGGER_BLOCK.getTranslationKey()));
+        super(NarratorManager.EMPTY);
         this.redstoneTriggerBlock = redstoneTriggerBlock;
     }
 
@@ -40,51 +40,33 @@ public class RedstoneTriggerBlockScreen extends BaseOwoScreen<FlowLayout> {
     }
 
     @Override
-    protected @NotNull OwoUIAdapter<FlowLayout> createAdapter() {
-        return OwoUIAdapter.create(this, Containers::verticalFlow);
+    protected void init() {
+        this.triggeredBlockPositionOffsetXField = new TextFieldWidget(this.textRenderer, this.width / 2 - 154, 115, 100, 20, Text.translatable(""));
+        this.triggeredBlockPositionOffsetXField.setMaxLength(128);
+        this.triggeredBlockPositionOffsetXField.setText(Integer.toString(this.redstoneTriggerBlock.getTriggeredBlockPositionOffset().getX()));
+        this.addSelectableChild(this.triggeredBlockPositionOffsetXField);
+        this.triggeredBlockPositionOffsetYField = new TextFieldWidget(this.textRenderer, this.width / 2 - 50, 115, 100, 20, Text.translatable(""));
+        this.triggeredBlockPositionOffsetYField.setMaxLength(128);
+        this.triggeredBlockPositionOffsetYField.setText(Integer.toString(this.redstoneTriggerBlock.getTriggeredBlockPositionOffset().getY()));
+        this.addSelectableChild(this.triggeredBlockPositionOffsetYField);
+        this.triggeredBlockPositionOffsetZField = new TextFieldWidget(this.textRenderer, this.width / 2 + 54, 115, 100, 20, Text.translatable(""));
+        this.triggeredBlockPositionOffsetZField.setMaxLength(128);
+        this.triggeredBlockPositionOffsetZField.setText(Integer.toString(this.redstoneTriggerBlock.getTriggeredBlockPositionOffset().getZ()));
+        this.addSelectableChild(this.triggeredBlockPositionOffsetZField);
+        this.addDrawableChild(ButtonWidget.builder(ScreenTexts.DONE, button -> this.done()).dimensions(this.width / 2 - 4 - 150, 145, 150, 20).build());
+        this.addDrawableChild(ButtonWidget.builder(ScreenTexts.CANCEL, button -> this.cancel()).dimensions(this.width / 2 + 4, 145, 150, 20).build());
+        this.setInitialFocus(this.triggeredBlockPositionOffsetXField);
     }
 
     @Override
-    protected void build(FlowLayout rootComponent) {
-            BlockPos triggeredBlockPositionOffset = this.redstoneTriggerBlock.getTriggeredBlockPositionOffset();
-            rootComponent
-                    .surface(Surface.VANILLA_TRANSLUCENT)
-                    .horizontalAlignment(HorizontalAlignment.CENTER)
-                    .verticalAlignment(VerticalAlignment.CENTER);
-            rootComponent.children(List.of(
-                    Components.label(this.title)
-                            .shadow(true)
-                            .color(Color.ofArgb(0xFFFFFF))
-                            .margins(Insets.of(1, 1, 1, 1))
-                            .sizing(Sizing.content(), Sizing.content()),
-                    Containers.horizontalFlow(Sizing.fill(50), Sizing.content())
-                            .children(List.of(
-                                    Components.textBox(Sizing.fill(32), Integer.toString(triggeredBlockPositionOffset.getX()))
-                                            .tooltip(Text.translatable("gui.triggered_block.triggeredBlockPositionOffsetX.tooltip"))
-                                            .margins(Insets.of(1, 1, 1, 1))
-                                            .id("triggeredBlockPositionOffsetX"),
-                                    Components.textBox(Sizing.fill(32), Integer.toString(triggeredBlockPositionOffset.getY()))
-                                            .tooltip(Text.translatable("gui.triggered_block.triggeredBlockPositionOffsetY.tooltip"))
-                                            .margins(Insets.of(1, 1, 1, 1))
-                                            .id("triggeredBlockPositionOffsetY"),
-                                    Components.textBox(Sizing.fill(32), Integer.toString(triggeredBlockPositionOffset.getZ()))
-                                            .tooltip(Text.translatable("gui.triggered_block.triggeredBlockPositionOffsetZ.tooltip"))
-                                            .margins(Insets.of(1, 1, 1, 1))
-                                            .id("triggeredBlockPositionOffsetZ")
-                            ))
-                            .verticalAlignment(VerticalAlignment.CENTER)
-                            .horizontalAlignment(HorizontalAlignment.CENTER),
-                    Containers.horizontalFlow(Sizing.fill(30), Sizing.content())
-                            .children(List.of(
-                                    Components.button(Text.translatable("gui.save"), button -> this.done())
-                                            .sizing(Sizing.fill(49), Sizing.fixed(20)),
-                                    Components.button(ScreenTexts.CANCEL, button -> this.cancel())
-                                            .sizing(Sizing.fill(49), Sizing.fixed(20))
-                            ))
-                            .margins(Insets.of(1, 1, 1, 1))
-                            .verticalAlignment(VerticalAlignment.CENTER)
-                            .horizontalAlignment(HorizontalAlignment.CENTER)
-            ));
+    public void resize(MinecraftClient client, int width, int height) {
+        String string2 = this.triggeredBlockPositionOffsetXField.getText();
+        String string3 = this.triggeredBlockPositionOffsetYField.getText();
+        String string4 = this.triggeredBlockPositionOffsetZField.getText();
+        this.init(client, width, height);
+        this.triggeredBlockPositionOffsetXField.setText(string2);
+        this.triggeredBlockPositionOffsetYField.setText(string3);
+        this.triggeredBlockPositionOffsetZField.setText(string4);
     }
 
     @Override
@@ -100,12 +82,21 @@ public class RedstoneTriggerBlockScreen extends BaseOwoScreen<FlowLayout> {
         ClientPlayNetworking.send(new UpdateRedstoneTriggerBlockPacket(
                 this.redstoneTriggerBlock.getPos(),
                 new BlockPos(
-                        this.parseInt(this.component(TextBoxComponent.class, "triggeredBlockPositionOffsetX").getText()),
-                        this.parseInt(this.component(TextBoxComponent.class, "triggeredBlockPositionOffsetY").getText()),
-                        this.parseInt(this.component(TextBoxComponent.class, "triggeredBlockPositionOffsetZ").getText())
+                        parseInt(this.triggeredBlockPositionOffsetXField.getText()),
+                        parseInt(this.triggeredBlockPositionOffsetYField.getText()),
+                        parseInt(this.triggeredBlockPositionOffsetZField.getText())
                 )
         ));
         return true;
+    }
+
+    @Override
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        super.render(context, mouseX, mouseY, delta);
+        context.drawTextWithShadow(this.textRenderer, TRIGGERED_BLOCK_POSITION_TEXT, this.width / 2 - 153, 105, 0xA0A0A0);
+        this.triggeredBlockPositionOffsetXField.render(context, mouseX, mouseY, delta);
+        this.triggeredBlockPositionOffsetYField.render(context, mouseX, mouseY, delta);
+        this.triggeredBlockPositionOffsetZField.render(context, mouseX, mouseY, delta);
     }
 
     private int parseInt(String string) {

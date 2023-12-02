@@ -22,11 +22,9 @@ public class UpdateTeleporterBlockPacketReceiver implements ServerPlayNetworking
         if (!player.isCreativeLevelTwoOp()) {
             return;
         }
-        // teleporter block position
+
         BlockPos teleportBlockPosition = packet.teleportBlockPosition;
 
-        // teleporter block information
-        String teleporterName = packet.teleporterName;
         boolean showActivationArea = packet.showActivationArea;
 
         Vec3i activationAreaDimensions = packet.activationAreaDimensions;
@@ -34,18 +32,23 @@ public class UpdateTeleporterBlockPacketReceiver implements ServerPlayNetworking
 
         boolean showAdventureScreen = packet.showAdventureScreen;
 
-        int teleportationMode = packet.teleportationMode;
+        TeleporterBlockBlockEntity.TeleportationMode teleportationMode = packet.teleportationMode;
 
         BlockPos directTeleportPositionOffset = packet.directTeleportPositionOffset;
-        double directTeleportPositionOffsetYaw = packet.directTeleportPositionOffsetYaw;
-        double directTeleportPositionOffsetPitch = packet.directTeleportPositionOffsetPitch;
+        double directTeleportOrientationYaw = packet.directTeleportOrientationYaw;
+        double directTeleportOrientationPitch = packet.directTeleportOrientationPitch;
 
-        int specificLocationType = packet.specificLocationType;
+        TeleporterBlockBlockEntity.LocationType specificLocationType = packet.locationType;
 
-        List<Pair<String, String>> locationsList = packet.locationsList;
+        List<Pair<String, String>> dungeonLocationsList = packet.dungeonLocationsList;
+        List<String> housingLocationsList = packet.housingLocationsList;
 
         boolean consumeKeyItemStack = packet.consumeKeyItemStack;
 
+        String teleporterName = packet.teleporterName;
+        String currentTargetOwnerLabel = packet.currentTargetOwnerLabel;
+        String currentTargetIdentifierLabel = packet.currentTargetIdentifierLabel;
+        String currentTargetEntranceLabel = packet.currentTargetEntranceLabel;
         String teleportButtonLabel = packet.teleportButtonLabel;
         String cancelTeleportButtonLabel = packet.cancelTeleportButtonLabel;
 
@@ -57,10 +60,6 @@ public class UpdateTeleporterBlockPacketReceiver implements ServerPlayNetworking
         BlockState blockState = world.getBlockState(teleportBlockPosition);
 
         if (blockEntity instanceof TeleporterBlockBlockEntity teleporterBlockBlockEntity) {
-            if (!teleporterBlockBlockEntity.setTeleporterName(teleporterName)) {
-                player.sendMessage(Text.translatable("teleporter_block.teleporterName.invalid"), false);
-                updateSuccessful = false;
-            }
             if (!teleporterBlockBlockEntity.setShowActivationArea(showActivationArea)) {
                 player.sendMessage(Text.translatable("teleporter_block.showActivationArea.invalid"), false);
                 updateSuccessful = false;
@@ -81,32 +80,53 @@ public class UpdateTeleporterBlockPacketReceiver implements ServerPlayNetworking
                 player.sendMessage(Text.translatable("teleporter_block.teleportationMode.invalid"), false);
                 updateSuccessful = false;
             }
-            if (teleportationMode == 0) {
+            if (teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DIRECT) {
                 if (!teleporterBlockBlockEntity.setDirectTeleportPositionOffset(directTeleportPositionOffset)) {
                     player.sendMessage(Text.translatable("teleporter_block.directTeleportPositionOffset.invalid"), false);
                     updateSuccessful = false;
                 }
-                if (!teleporterBlockBlockEntity.setDirectTeleportPositionOffsetYaw(directTeleportPositionOffsetYaw)) {
-                    player.sendMessage(Text.translatable("teleporter_block.directTeleportPositionOffsetYaw.invalid"), false);
+                if (!teleporterBlockBlockEntity.setDirectTeleportOrientationYaw(directTeleportOrientationYaw)) {
+                    player.sendMessage(Text.translatable("teleporter_block.directTeleportOrientationYaw.invalid"), false);
                     updateSuccessful = false;
                 }
-                if (!teleporterBlockBlockEntity.setDirectTeleportPositionOffsetPitch(directTeleportPositionOffsetPitch)) {
-                    player.sendMessage(Text.translatable("teleporter_block.directTeleportPositionOffsetPitch.invalid"), false);
+                if (!teleporterBlockBlockEntity.setDirectTeleportOrientationPitch(directTeleportOrientationPitch)) {
+                    player.sendMessage(Text.translatable("teleporter_block.directTeleportOrientationPitch.invalid"), false);
                     updateSuccessful = false;
                 }
-            } else if (teleportationMode == 1) {
-                if (!teleporterBlockBlockEntity.setSpecificLocationType(specificLocationType)) {
+            } else if (teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.SAVED_LOCATIONS) {
+                if (!teleporterBlockBlockEntity.setLocationType(specificLocationType)) {
                     player.sendMessage(Text.translatable("teleporter_block.specificLocationType.invalid"), false);
                     updateSuccessful = false;
                 }
-            } else if (teleportationMode == 2 || teleportationMode == 3) {
-                if (!teleporterBlockBlockEntity.setLocationsList(locationsList)) {
-                    player.sendMessage(Text.translatable("teleporter_block.accessibleHousesList.invalid"), false);
+            } else if (teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DUNGEONS) {
+                if (!teleporterBlockBlockEntity.setDungeonLocationsList(dungeonLocationsList)) {
+                    player.sendMessage(Text.translatable("teleporter_block.dungeonLocationsList.invalid"), false);
+                    updateSuccessful = false;
+                }
+            } else if (teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.HOUSING) {
+                if (!teleporterBlockBlockEntity.setHousingLocationsList(housingLocationsList)) {
+                    player.sendMessage(Text.translatable("teleporter_block.housingLocationsList.invalid"), false);
                     updateSuccessful = false;
                 }
             }
             if (!teleporterBlockBlockEntity.setConsumeKeyItemStack(consumeKeyItemStack)) {
                 player.sendMessage(Text.translatable("teleporter_block.consumeKeyItemStack.invalid"), false);
+                updateSuccessful = false;
+            }
+            if (!teleporterBlockBlockEntity.setTeleporterName(teleporterName)) {
+                player.sendMessage(Text.translatable("teleporter_block.teleporterName.invalid"), false);
+                updateSuccessful = false;
+            }
+            if (!teleporterBlockBlockEntity.setCurrentTargetOwnerLabel(currentTargetOwnerLabel)) {
+                player.sendMessage(Text.translatable("teleporter_block.currentTargetOwnerLabel.invalid"), false);
+                updateSuccessful = false;
+            }
+            if (!teleporterBlockBlockEntity.setCurrentTargetIdentifierLabel(currentTargetIdentifierLabel)) {
+                player.sendMessage(Text.translatable("teleporter_block.currentTargetIdentifierLabel.invalid"), false);
+                updateSuccessful = false;
+            }
+            if (!teleporterBlockBlockEntity.setCurrentTargetEntranceLabel(currentTargetEntranceLabel)) {
+                player.sendMessage(Text.translatable("teleporter_block.currentTargetEntranceLabel.invalid"), false);
                 updateSuccessful = false;
             }
             if (!teleporterBlockBlockEntity.setTeleportButtonLabel(teleportButtonLabel)) {

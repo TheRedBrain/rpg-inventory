@@ -2,7 +2,7 @@
   "controlBlockPosX": 1,
   "controlBlockPosY": 1,
   "controlBlockPosZ": 1,
-  "displayName": "player_dimensions.player_houses.test_house",
+  "displayName": "player_dimensions.player_houses.house_1",
   "unlockAdvancement": "minecraft:story/smelt_iron",
   "showLockedHouse": true,
   "showUnlockAdvancement": true

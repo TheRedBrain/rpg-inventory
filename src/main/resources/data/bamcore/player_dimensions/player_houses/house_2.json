@@ -2,8 +2,8 @@
   "controlBlockPosX": 1,
   "controlBlockPosY": 1,
   "controlBlockPosZ": 1,
-  "displayName": "player_dimensions.player_dungeons.test_dungeon",
+  "displayName": "player_dimensions.player_houses.house_2",
   "unlockAdvancement": "minecraft:story/mine_diamond",
-  "showLockedDungeon": true,
+  "showLockedHouse": true,
   "showUnlockAdvancement": true
 }

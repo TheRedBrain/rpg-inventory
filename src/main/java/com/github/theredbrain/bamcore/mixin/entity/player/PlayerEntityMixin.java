@@ -408,7 +408,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     @Inject(method = {"attack"}, at = @At("HEAD"), cancellable = true)
     public void bamcore$attack(Entity target, CallbackInfo ci) {
         ItemStack mainHandStack = this.getMainHandStack();
-        if (this.bamcore$getStamina() + ((BetterAdventureMode_BasicWeaponItem)mainHandStack.getItem()).getStaminaCost() <= 0) {
+        if (mainHandStack.getItem() instanceof BetterAdventureMode_BasicWeaponItem && this.bamcore$getStamina() + ((BetterAdventureMode_BasicWeaponItem)mainHandStack.getItem()).getStaminaCost() <= 0) {
             this.sendMessage(Text.translatable("hud.message.staminaTooLow"), true);
             ci.cancel();
         }

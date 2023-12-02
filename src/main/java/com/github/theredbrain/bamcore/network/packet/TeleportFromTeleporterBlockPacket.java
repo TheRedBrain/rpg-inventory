@@ -1,10 +1,10 @@
 package com.github.theredbrain.bamcore.network.packet;
 
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.block.entity.TeleporterBlockBlockEntity;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
 public class TeleportFromTeleporterBlockPacket implements FabricPacket {
@@ -15,32 +15,32 @@ public class TeleportFromTeleporterBlockPacket implements FabricPacket {
 
     public final BlockPos teleportBlockPosition;
 
-    public final int teleportationMode;
+    public final TeleporterBlockBlockEntity.TeleportationMode teleportationMode;
 
     public final BlockPos directTeleportPositionOffset;
-    public final double directTeleportPositionOffsetYaw;
-    public final double directTeleportPositionOffsetPitch;
+    public final double directTeleportOrientationYaw;
+    public final double directTeleportOrientationPitch;
 
-    public final int specificLocationType;
+    public final TeleporterBlockBlockEntity.LocationType locationType;
 
     public final String targetDimensionOwnerName;
     public final String targetLocation;
     public final String targetLocationEntrance;
 
-    public TeleportFromTeleporterBlockPacket(BlockPos teleportBlockPosition, int teleportationMode, BlockPos directTeleportPositionOffset, double directTeleportPositionOffsetYaw, double directTeleportPositionOffsetPitch, int specificLocationType, String targetDimensionOwnerName, String targetLocation, String targetLocationEntrance) {
+    public TeleportFromTeleporterBlockPacket(BlockPos teleportBlockPosition, String teleportationMode, BlockPos directTeleportPositionOffset, double directTeleportOrientationYaw, double directTeleportOrientationPitch, String locationType, String targetDimensionOwnerName, String targetLocation, String targetLocationEntrance) {
         this.teleportBlockPosition = teleportBlockPosition;
-        this.teleportationMode = teleportationMode;
+        this.teleportationMode = TeleporterBlockBlockEntity.TeleportationMode.byName(teleportationMode).orElseGet(() -> TeleporterBlockBlockEntity.TeleportationMode.DIRECT);
         this.directTeleportPositionOffset = directTeleportPositionOffset;
-        this.directTeleportPositionOffsetYaw = directTeleportPositionOffsetYaw;
-        this.directTeleportPositionOffsetPitch = directTeleportPositionOffsetPitch;
-        this.specificLocationType = specificLocationType;
+        this.directTeleportOrientationYaw = directTeleportOrientationYaw;
+        this.directTeleportOrientationPitch = directTeleportOrientationPitch;
+        this.locationType = TeleporterBlockBlockEntity.LocationType.byName(locationType).orElseGet(() -> TeleporterBlockBlockEntity.LocationType.WORLD_SPAWN);
         this.targetDimensionOwnerName = targetDimensionOwnerName;
         this.targetLocation = targetLocation;
         this.targetLocationEntrance = targetLocationEntrance;
     }
 
     public TeleportFromTeleporterBlockPacket(PacketByteBuf buf) {
-        this(buf.readBlockPos(), buf.readInt(), buf.readBlockPos(), buf.readDouble(), buf.readDouble(), buf.readInt(), buf.readString(), buf.readString(), buf.readString());
+        this(buf.readBlockPos(), buf.readString(), buf.readBlockPos(), buf.readDouble(), buf.readDouble(), buf.readString(), buf.readString(), buf.readString(), buf.readString());
     }
     @Override
     public PacketType<?> getType() {
@@ -49,11 +49,11 @@ public class TeleportFromTeleporterBlockPacket implements FabricPacket {
     @Override
     public void write(PacketByteBuf buf) {
         buf.writeBlockPos(this.teleportBlockPosition);
-        buf.writeInt(this.teleportationMode);
+        buf.writeString(this.teleportationMode.asString());
         buf.writeBlockPos(this.directTeleportPositionOffset);
-        buf.writeDouble(this.directTeleportPositionOffsetYaw);
-        buf.writeDouble(this.directTeleportPositionOffsetPitch);
-        buf.writeInt(this.specificLocationType);
+        buf.writeDouble(this.directTeleportOrientationYaw);
+        buf.writeDouble(this.directTeleportOrientationPitch);
+        buf.writeString(this.locationType.asString());
         buf.writeString(this.targetDimensionOwnerName);
         buf.writeString(this.targetLocation);
         buf.writeString(this.targetLocationEntrance);

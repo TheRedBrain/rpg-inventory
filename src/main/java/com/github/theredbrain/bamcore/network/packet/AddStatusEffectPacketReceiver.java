@@ -28,7 +28,6 @@ public class AddStatusEffectPacketReceiver implements ServerPlayNetworking.PlayP
             if (toggle && player.hasStatusEffect(statusEffect)) {
                 player.removeStatusEffect(statusEffect);
             } else {
-                BetterAdventureModeCore.LOGGER.info("add status effect " + statusEffect.getName());
                 player.addStatusEffect(new StatusEffectInstance(statusEffect, duration, amplifier, ambient, showParticles, showIcon));
             }
         }

@@ -1,9 +1,11 @@
 package com.github.theredbrain.bamcore.network.packet;
 
+import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.api.dimensions.PlayerDungeon;
 import com.github.theredbrain.bamcore.api.dimensions.PlayerHouse;
 import com.github.theredbrain.bamcore.block.entity.DungeonControlBlockEntity;
 import com.github.theredbrain.bamcore.block.entity.HousingBlockBlockEntity;
+import com.github.theredbrain.bamcore.block.entity.TeleporterBlockBlockEntity;
 import com.github.theredbrain.bamcore.registry.ComponentsRegistry;
 import com.github.theredbrain.bamcore.registry.PlayerDungeonsRegistry;
 import com.github.theredbrain.bamcore.registry.PlayerHousesRegistry;
@@ -27,13 +29,13 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
 
         BlockPos teleportBlockPosition = packet.teleportBlockPosition;
 
-        int teleportationMode = packet.teleportationMode;
+        TeleporterBlockBlockEntity.TeleportationMode teleportationMode = packet.teleportationMode;
 
         BlockPos directTeleportPositionOffset = packet.directTeleportPositionOffset;
-        double directTeleportPositionOffsetYaw = packet.directTeleportPositionOffsetYaw;
-        double directTeleportPositionOffsetPitch = packet.directTeleportPositionOffsetPitch;
+        double directTeleportOrientationYaw = packet.directTeleportOrientationYaw;
+        double directTeleportOrientationPitch = packet.directTeleportOrientationPitch;
 
-        int specificLocationType = packet.specificLocationType;
+        TeleporterBlockBlockEntity.LocationType locationType = packet.locationType;
 
         String targetDimensionOwnerName = packet.targetDimensionOwnerName;
         String targetLocation = packet.targetLocation;
@@ -62,17 +64,17 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
             targetPitch = serverPlayerEntity.getPitch();
         }
 //            boolean useDynamicDimensionFallback = false;
-        if (teleportationMode == 0) {
+        if (teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DIRECT) {
             if (serverPlayerEntity != null) {
-                serverPlayerEntity.teleport(serverWorld, teleportBlockPosition.getX() + directTeleportPositionOffset.getX() + 0.5, teleportBlockPosition.getY() + directTeleportPositionOffset.getY(), teleportBlockPosition.getZ() + directTeleportPositionOffset.getZ() + 0.5, (float) directTeleportPositionOffsetYaw, (float) directTeleportPositionOffsetPitch);
+                serverPlayerEntity.teleport(serverWorld, teleportBlockPosition.getX() + directTeleportPositionOffset.getX() + 0.5, teleportBlockPosition.getY() + directTeleportPositionOffset.getY(), teleportBlockPosition.getZ() + directTeleportPositionOffset.getZ() + 0.5, (float) directTeleportOrientationYaw, (float) directTeleportOrientationPitch);
             }
             return;
-        } else if (teleportationMode == 1) {
+        } else if (teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.SAVED_LOCATIONS) {
             Pair<Pair<String, BlockPos>, Boolean> housing_access_pos = ComponentsRegistry.HOUSING_ACCESS_POS.get(player).getValue();
-            if (specificLocationType == 2 && housing_access_pos.getRight()) {
+            if (locationType == TeleporterBlockBlockEntity.LocationType.DIMENSION_ACCESS_POSITION && housing_access_pos.getRight()) {
                 targetWorld = server.getWorld(RegistryKey.of(RegistryKeys.WORLD, new Identifier(housing_access_pos.getLeft().getLeft())));
                 targetPos = housing_access_pos.getLeft().getRight();
-            } else if (specificLocationType == 1 && serverPlayerEntity != null) {
+            } else if (locationType == TeleporterBlockBlockEntity.LocationType.PLAYER_SPAWN && serverPlayerEntity != null) {
                 targetWorld = server.getWorld(serverPlayerEntity.getSpawnPointDimension());
                 targetPos = serverPlayerEntity.getSpawnPointPosition();
             } else {
@@ -83,7 +85,7 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
                 serverPlayerEntity.teleport(targetWorld, targetPos.getX(), targetPos.getY(), targetPos.getZ(), 0.0F, 0.0F);
             }
             return;
-        } else if (teleportationMode == 2) {
+        } else if (teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DUNGEONS) {
             ServerPlayerEntity targetDimensionOwner = server.getPlayerManager().getPlayer(targetDimensionOwnerName);
             if (targetDimensionOwner == null) {
                 targetDimensionOwner = serverPlayerEntity;
@@ -93,7 +95,7 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
             targetWorld = server.getWorld(dimensionregistryKey);
 
             if (targetWorld == null) {
-                DimensionsManager.addAndSaveDynamicDimension(targetDimensionId, server, "dungeon_dimension");
+                DimensionsManager.addAndSaveDynamicDimension(targetDimensionId, server, true);
                 dimensionregistryKey = RegistryKey.of(RegistryKeys.WORLD, targetDimensionId);
                 targetWorld = server.getWorld(dimensionregistryKey);
 //                    if (targetDimensionOwner != null) {
@@ -105,6 +107,8 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
             }
 
             PlayerDungeon dungeon = PlayerDungeonsRegistry.getDungeon(Identifier.tryParse(targetLocation));
+
+//            BetterAdventureModeCore.LOGGER.info("dungeon: " + dungeon.toString());
             if (targetWorld != null && dungeon != null && targetWorld.getBlockEntity(dungeon.controlBlockPos()) instanceof DungeonControlBlockEntity dungeonControlBlock) {
 //                    MutablePair<BlockPos, MutablePair<Double, Double>> sideEntrance = !Objects.equals(targetLocationEntrance, "") ? dungeonControlBlock.getSideEntrances().get(targetLocationEntrance) : null;
 //                    BlockPos targetPos;
@@ -119,7 +123,7 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
                 targetPitch = mainEntrance.getRight().getRight();
 //                    }
             }
-        } else if (teleportationMode == 3) {
+        } else if (teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.HOUSING) {
             ServerPlayerEntity targetDimensionOwner = server.getPlayerManager().getPlayer(targetDimensionOwnerName);
             if (targetDimensionOwner == null) {
                 targetDimensionOwner = serverPlayerEntity;
@@ -129,7 +133,7 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
             targetWorld = server.getWorld(dimensionregistryKey);
 
             if (targetWorld == null) {
-                DimensionsManager.addAndSaveDynamicDimension(targetDimensionId, server, "housing_dimension");
+                DimensionsManager.addAndSaveDynamicDimension(targetDimensionId, server, false);
                 dimensionregistryKey = RegistryKey.of(RegistryKeys.WORLD, targetDimensionId);
                 targetWorld = server.getWorld(dimensionregistryKey);
 //                    if (targetDimensionOwner != null) {
@@ -149,6 +153,7 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
             }
         }
 
+        BetterAdventureModeCore.LOGGER.info("targetWorld: " + targetWorld.getRegistryKey().getValue().getPath());
         if (serverPlayerEntity != null) {
             serverPlayerEntity.teleport(targetWorld, targetPos.getX(), targetPos.getY(), targetPos.getZ(), (float) targetYaw, (float) targetPitch);
         }
