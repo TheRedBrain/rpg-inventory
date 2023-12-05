@@ -1,7 +1,8 @@
 {
-  "controlBlockPosX": 1,
-  "controlBlockPosY": 1,
-  "controlBlockPosZ": 1,
+  "housingBlockPosX": -100,
+  "housingBlockPosY": 118,
+  "housingBlockPosZ": -100,
+  "structureIdentifier": "bamcore:housing_dungeon",
   "displayName": "player_dimensions.player_houses.house_1",
   "unlockAdvancement": "minecraft:story/smelt_iron",
   "showLockedHouse": true,

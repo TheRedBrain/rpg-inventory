@@ -18,8 +18,8 @@ import org.lwjgl.glfw.GLFW;
 
 @Environment(value= EnvType.CLIENT)
 public class DelayTriggerBlockScreen extends Screen {
-    private static final Text TRIGGERED_BLOCK_POSITION_TEXT = Text.translatable("gui.triggered_block.triggeredBlockPositionOffset");
-    private static final Text TRIGGER_DELAY_TEXT = Text.translatable("gui.delay_trigger_block.triggeredBlockTriggerDelay");
+    private static final Text TRIGGERED_BLOCK_POSITION_OFFSET_LABEL_TEXT = Text.translatable("gui.triggered_block.triggeredBlockPositionOffset");
+    private static final Text TRIGGER_DELAY_LABEL_TEXT = Text.translatable("gui.delay_trigger_block.triggeredBlockTriggerDelay");
     private final DelayTriggerBlockBlockEntity delayTriggerBlock;
     private TextFieldWidget triggeredBlockPositionOffsetXField;
     private TextFieldWidget triggeredBlockPositionOffsetYField;
@@ -102,11 +102,11 @@ public class DelayTriggerBlockScreen extends Screen {
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
-        context.drawTextWithShadow(this.textRenderer, TRIGGERED_BLOCK_POSITION_TEXT, this.width / 2 - 153, 70, 0xA0A0A0);
+        context.drawTextWithShadow(this.textRenderer, TRIGGERED_BLOCK_POSITION_OFFSET_LABEL_TEXT, this.width / 2 - 153, 70, 0xA0A0A0);
         this.triggeredBlockPositionOffsetXField.render(context, mouseX, mouseY, delta);
         this.triggeredBlockPositionOffsetYField.render(context, mouseX, mouseY, delta);
         this.triggeredBlockPositionOffsetZField.render(context, mouseX, mouseY, delta);
-        context.drawTextWithShadow(this.textRenderer, TRIGGER_DELAY_TEXT, this.width / 2 - 49, 105, 0xA0A0A0);
+        context.drawTextWithShadow(this.textRenderer, TRIGGER_DELAY_LABEL_TEXT, this.width / 2 - 49, 105, 0xA0A0A0);
         this.triggerDelayField.render(context, mouseX, mouseY, delta);
     }
 

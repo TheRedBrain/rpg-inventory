@@ -35,4 +35,5 @@ public interface DuckPlayerEntityMixin {
     void bamcore$openRelayTriggerBlockScreen(RelayTriggerBlockBlockEntity relayTriggerBlock);
     void bamcore$openDelayTriggerBlockScreen(DelayTriggerBlockBlockEntity delayTriggerBlock);
     void bamcore$openChunkLoaderBlockScreen(ChunkLoaderBlockBlockEntity chunkLoaderBlock);
+    void bamcore$openUseRelayBlockScreen(UseRelayBlockEntity useRelayBlock);
 }

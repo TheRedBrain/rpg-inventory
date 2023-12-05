@@ -1,6 +1,7 @@
 package com.github.theredbrain.bamcore.network.packet;
 
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.block.entity.HousingBlockBlockEntity;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.minecraft.network.PacketByteBuf;
@@ -21,9 +22,9 @@ public class UpdateHousingBlockCreativePacket implements FabricPacket {
     public final double entranceYaw;
     public final double entrancePitch;
     public final BlockPos triggeredBlockPositionOffset;
-    public final int ownerMode;
+    public final HousingBlockBlockEntity.OwnerMode ownerMode;
 
-    public UpdateHousingBlockCreativePacket(BlockPos housingBlockPosition, boolean showRestrictBlockBreakingArea, Vec3i restrictBlockBreakingAreaDimensions, BlockPos restrictBlockBreakingAreaPositionOffset, BlockPos entrancePositionOffset, double entranceYaw, double entrancePitch, BlockPos triggeredBlockPositionOffset, int ownerMode) {
+    public UpdateHousingBlockCreativePacket(BlockPos housingBlockPosition, boolean showRestrictBlockBreakingArea, Vec3i restrictBlockBreakingAreaDimensions, BlockPos restrictBlockBreakingAreaPositionOffset, BlockPos entrancePositionOffset, double entranceYaw, double entrancePitch, BlockPos triggeredBlockPositionOffset, String ownerMode) {
         this.housingBlockPosition = housingBlockPosition;
         this.showRestrictBlockBreakingArea = showRestrictBlockBreakingArea;
         this.restrictBlockBreakingAreaDimensions = restrictBlockBreakingAreaDimensions;
@@ -32,7 +33,7 @@ public class UpdateHousingBlockCreativePacket implements FabricPacket {
         this.entranceYaw = entranceYaw;
         this.entrancePitch = entrancePitch;
         this.triggeredBlockPositionOffset = triggeredBlockPositionOffset;
-        this.ownerMode = ownerMode;
+        this.ownerMode = HousingBlockBlockEntity.OwnerMode.byName(ownerMode).orElseGet(() -> HousingBlockBlockEntity.OwnerMode.DIMENSION_OWNER);
     }
 
     public UpdateHousingBlockCreativePacket(PacketByteBuf buf) {
@@ -49,7 +50,7 @@ public class UpdateHousingBlockCreativePacket implements FabricPacket {
                 buf.readDouble(),
                 buf.readDouble(),
                 buf.readBlockPos(),
-                buf.readInt()
+                buf.readString()
         );
     }
     @Override
@@ -68,7 +69,7 @@ public class UpdateHousingBlockCreativePacket implements FabricPacket {
         buf.writeDouble(this.entranceYaw);
         buf.writeDouble(this.entrancePitch);
         buf.writeBlockPos(this.triggeredBlockPositionOffset);
-        buf.writeInt(this.ownerMode);
+        buf.writeString(this.ownerMode.asString());
     }
 
 }

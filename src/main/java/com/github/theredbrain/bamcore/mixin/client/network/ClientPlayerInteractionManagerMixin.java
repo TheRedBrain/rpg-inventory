@@ -73,7 +73,7 @@ public abstract class ClientPlayerInteractionManagerMixin {
             BlockPos housingBlockPos = ComponentsRegistry.CURRENT_HOUSING_BLOCK_POS.get(this.client.player).getValue();
             boolean bl = false;
             if (!Objects.equals(housingBlockPos, new BlockPos(0, 0, 0)) && this.client.world != null && this.client.world.getBlockEntity(housingBlockPos) instanceof HousingBlockBlockEntity housingBlockEntity) {
-                bl = housingBlockEntity.restrictBlockBreakingAreaContains(pos);
+                bl = housingBlockEntity.influenceAreaContains(pos);
             }
             if (bl) {
                 BlockState blockState = this.client.world.getBlockState(pos);
@@ -97,7 +97,7 @@ public abstract class ClientPlayerInteractionManagerMixin {
             boolean bl = false;
             if (!Objects.equals(housingBlockPos, new BlockPos(0, 0, 0)) && this.client.world != null && this.client.world.getBlockEntity(housingBlockPos) instanceof HousingBlockBlockEntity housingBlockEntity) {
                 BetterAdventureModeCore.LOGGER.info("hitResult.getBlockPos().offset(hitResult.getSide()): " + hitResult.getBlockPos().offset(hitResult.getSide()));
-                bl = housingBlockEntity.restrictBlockBreakingAreaContains(hitResult.getBlockPos().offset(hitResult.getSide()));
+                bl = housingBlockEntity.influenceAreaContains(hitResult.getBlockPos().offset(hitResult.getSide()));
                 BetterAdventureModeCore.LOGGER.info("bl: " + bl);
             }
             if (!bl) {

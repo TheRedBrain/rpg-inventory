@@ -27,6 +27,21 @@
 	"gui.adventureInventory.toggleAttributeScreenButton.off": "Show Attribute Screen",
 	"gui.adventureInventory.toggleAttributeScreenButton.off.tooltip": "Show Attribute Screen",
 
+	"gui.housing_screen.creativeScreenPage.influence": "Influence Settings",
+	"gui.housing_screen.creativeScreenPage.entrance": "Entrance Settings",
+	"gui.housing_screen.creativeScreenPage.triggered_block": "Triggered Block Settings",
+	"gui.housing_screen.creativeScreenPage.owner": "Owner Settings",
+
+	"gui.housing_block.ownerMode.dimension_owner": "Dimension Owner",
+	"gui.housing_block.ownerMode.interaction": "Interaction",
+
+	"gui.housing_screen.hide_influence_area_label": "Hide Influence Area",
+	"gui.housing_screen.show_influence_area_label": "Show Influence Area",
+	"gui.housing_screen.influence_area_dimensions_label": "Influence Area Dimensions",
+	"gui.housing_screen.influence_area_position_offset_label": "Influence Area Position Offset",
+	"gui.housing_screen.entrance_position_offset_label": "Entrance Position Offset",
+	"gui.housing_screen.entrance_orientation_label": "Entrance Orientation",
+
 	"gui.housing_screen.tabHousesList.button": "Your houses",
 	"gui.housing_screen.tabHousesList.title": "Your houses",
 	"gui.housing_screen.tabCurrentHouse.button": "Current house",
@@ -80,10 +95,13 @@
 	"gui.teleporter_block.creativeScreenPage.activation": "Activation Settings",
 	"gui.teleporter_block.creativeScreenPage.teleportation_mode": "Teleportation Settings",
 	"gui.teleporter_block.creativeScreenPage.adventure_screen_customization": "Adventure Screen Settings",
+	"gui.teleporter_block.hide_adventure_screen_label": "Hide Adventure Screen",
+	"gui.teleporter_block.show_adventure_screen_label": "Show Adventure Screen",
+	"gui.teleporter_block.hide_activation_area_label": "Hide Activation Area",
 	"gui.teleporter_block.show_activation_area_label": "Show Activation Area",
 	"gui.teleporter_block.activation_area_dimensions_label": "Activation Area Dimensions",
 	"gui.teleporter_block.activation_area_position_offset_label": "Activation Area Offset",
-	"gui.teleporter_block.show_adventure_screen_label": "Show Adventure Screen",
+	"gui.teleporter_block.set_access_position_label": "Set Access Position on Teleport",
 	"gui.teleporter_block.teleportation_mode_label": "Teleportation Mode",
 	"gui.teleporter_block.teleportationMode.direct": "Direct",
 	"gui.teleporter_block.teleportationMode.saved_locations": "Saved Location",
@@ -193,8 +211,7 @@
 	"hud.message.manaTooLow": "Your mana is too low",
 
 	"player_dimensions.player_dungeons.test_dungeon": "Test Dungeon",
-	"player_dimensions.player_dungeons.test_dungeon.side_entrance": "Side Entrance",
-	"player_dimensions.player_dungeons.entrance_affix_to": " to ",
+	"player_dimensions.player_dungeons.test_dungeon.side_entrance": "Side Entrance to ",
 
 	"player_dimensions.player_houses.house_1": "House 1",
 	"player_dimensions.player_houses.house_2": "House 2",

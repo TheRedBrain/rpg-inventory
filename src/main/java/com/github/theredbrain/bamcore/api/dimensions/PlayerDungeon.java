@@ -4,6 +4,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
 import java.util.Objects;
 
 public final class PlayerDungeon {
@@ -14,8 +15,9 @@ public final class PlayerDungeon {
     private final String unlockAdvancement;
     private final boolean showLockedDungeon;
     private final boolean showUnlockAdvancement;
+    private final @Nullable Map<String, String> side_entrances;
 
-    public PlayerDungeon(int controlBlockPosX, int controlBlockPosY, int controlBlockPosZ, String unlockAdvancement, String displayName, boolean showLockedDungeon, boolean showUnlockAdvancement) {
+    public PlayerDungeon(int controlBlockPosX, int controlBlockPosY, int controlBlockPosZ, String unlockAdvancement, String displayName, boolean showLockedDungeon, boolean showUnlockAdvancement, @Nullable Map<String, String> side_entrances) {
         this.controlBlockPosX = controlBlockPosX;
         this.controlBlockPosY = controlBlockPosY;
         this.controlBlockPosZ = controlBlockPosZ;
@@ -23,6 +25,7 @@ public final class PlayerDungeon {
         this.unlockAdvancement = unlockAdvancement;
         this.showLockedDungeon = showLockedDungeon;
         this.showUnlockAdvancement = showUnlockAdvancement;
+        this.side_entrances = side_entrances;
     }
 
     public BlockPos controlBlockPos() {
@@ -43,6 +46,25 @@ public final class PlayerDungeon {
 
     public boolean showUnlockAdvancement() {
         return this.showUnlockAdvancement;
+    }
+
+    public boolean hasEntrance(String entrance) {
+        if (this.side_entrances != null) {
+            return this.side_entrances.containsKey(entrance);
+        }
+        return false;
+    }
+
+    public boolean hasSideEntrances() {
+        return this.side_entrances != null;
+    }
+
+    public String getEntranceDisplayName(String entrance) {
+        String entranceDisplayName = "";
+        if (this.side_entrances != null && this.side_entrances.get(entrance) != null) {
+            entranceDisplayName = this.side_entrances.get(entrance);
+        }
+        return entranceDisplayName;
     }
 
     @Override

@@ -36,7 +36,7 @@ implements BlockEntityRenderer<HousingBlockBlockEntity> {
             return;
         }
         BlockPos blockPos = housingBlockBlockEntity.getRestrictBlockBreakingAreaPositionOffset();
-        Vec3i vec3i = housingBlockBlockEntity.getRestrictBlockBreakingAreaDimensions();
+        Vec3i vec3i = housingBlockBlockEntity.getInfluenceAreaDimensions();
         if (vec3i.getX() < 1 || vec3i.getY() < 1 || vec3i.getZ() < 1) {
             return;
         }
@@ -98,7 +98,7 @@ implements BlockEntityRenderer<HousingBlockBlockEntity> {
         float r = 0.9f;
         float s = 0.5f;
         VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getLines());
-        if (housingBlockBlockEntity.getShowRestrictBlockBreakingArea()) {
+        if (housingBlockBlockEntity.getShowInfluenceArea()) {
             WorldRenderer.drawBox(matrixStack, vertexConsumer, m, g, n, o, h, p, 0.9f, 0.9f, 0.9f, 1.0f, 0.5f, 0.5f, 0.5f);
             this.renderInvisibleBlocks(housingBlockBlockEntity, vertexConsumer, blockPos, matrixStack);
         }
@@ -111,7 +111,7 @@ implements BlockEntityRenderer<HousingBlockBlockEntity> {
         World blockView = entity.getWorld();
         BlockPos blockPos = entity.getPos();
         BlockPos blockPos2 = blockPos.add(pos);
-        for (BlockPos blockPos3 : BlockPos.iterate(blockPos2, blockPos2.add(entity.getRestrictBlockBreakingAreaDimensions()).add(-1, -1, -1))) {
+        for (BlockPos blockPos3 : BlockPos.iterate(blockPos2, blockPos2.add(entity.getInfluenceAreaDimensions()).add(-1, -1, -1))) {
             boolean bl5;
             BlockState blockState = blockView.getBlockState(blockPos3);
             boolean bl = blockState.isAir();

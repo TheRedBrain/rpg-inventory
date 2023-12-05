@@ -85,7 +85,13 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
         this.client.setScreen(new DelayTriggerBlockScreen(delayTriggerBlock));
     }
 
+    @Override
     public void bamcore$openChunkLoaderBlockScreen(ChunkLoaderBlockBlockEntity chunkLoaderBlock) {
         this.client.setScreen(new ChunkLoaderBlockScreen(chunkLoaderBlock));
+    }
+
+    @Override
+    public void bamcore$openUseRelayBlockScreen(UseRelayBlockEntity useRelayBlock) {
+        this.client.setScreen(new UseRelayBlockScreen(useRelayBlock));
     }
 }

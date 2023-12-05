@@ -14,8 +14,10 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.text.Text;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
+import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
@@ -31,10 +33,10 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
     private List<String> coOwnerList = new ArrayList<>(List.of());
     private List<String> trustedList = new ArrayList<>(List.of());
     private List<String> guestList = new ArrayList<>(List.of());
-    private boolean showRestrictBlockBreakingArea = false;
-    private Vec3i restrictBlockBreakingAreaDimensions = Vec3i.ZERO;
-    private BlockPos restrictBlockBreakingAreaPositionOffset = new BlockPos(0, 1, 0);
-    private int ownerMode = 0; // 0: dimension owner, 1: first interaction
+    private boolean showInfluenceArea = false;
+    private Vec3i influenceAreaDimensions = Vec3i.ZERO;
+    private BlockPos influenceAreaPositionOffset = new BlockPos(0, 1, 0);
+    private HousingBlockBlockEntity.OwnerMode ownerMode = OwnerMode.DIMENSION_OWNER; // 0: dimension owner, 1: first interaction
     private BlockPos triggeredBlockPositionOffset = new BlockPos(0, 1, 0);
     private MutablePair<BlockPos, MutablePair<Double, Double>> entrance = new MutablePair<>(new BlockPos(0, 1, 0), new MutablePair<>(0.0, 0.0));
     public HousingBlockBlockEntity(BlockPos pos, BlockState state) {
@@ -64,17 +66,17 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
             nbt.putString("guestListEntry" + i, this.guestList.get(i));
         }
 
-        nbt.putBoolean("showRestrictBlockBreakingArea", this.showRestrictBlockBreakingArea);
+        nbt.putBoolean("showInfluenceArea", this.showInfluenceArea);
 
-        nbt.putInt("restrictBlockBreakingAreaDimensionsX", this.restrictBlockBreakingAreaDimensions.getX());
-        nbt.putInt("restrictBlockBreakingAreaDimensionsY", this.restrictBlockBreakingAreaDimensions.getY());
-        nbt.putInt("restrictBlockBreakingAreaDimensionsZ", this.restrictBlockBreakingAreaDimensions.getZ());
+        nbt.putInt("influenceAreaDimensionsX", this.influenceAreaDimensions.getX());
+        nbt.putInt("influenceAreaDimensionsY", this.influenceAreaDimensions.getY());
+        nbt.putInt("influenceAreaDimensionsZ", this.influenceAreaDimensions.getZ());
 
-        nbt.putInt("restrictBlockBreakingAreaPositionOffsetX", this.restrictBlockBreakingAreaPositionOffset.getX());
-        nbt.putInt("restrictBlockBreakingAreaPositionOffsetY", this.restrictBlockBreakingAreaPositionOffset.getY());
-        nbt.putInt("restrictBlockBreakingAreaPositionOffsetZ", this.restrictBlockBreakingAreaPositionOffset.getZ());
+        nbt.putInt("influenceAreaPositionOffsetX", this.influenceAreaPositionOffset.getX());
+        nbt.putInt("influenceAreaPositionOffsetY", this.influenceAreaPositionOffset.getY());
+        nbt.putInt("influenceAreaPositionOffsetZ", this.influenceAreaPositionOffset.getZ());
 
-        nbt.putInt("ownerMode", ownerMode);
+        nbt.putString("ownerMode", this.ownerMode.asString());
 
         nbt.putInt("triggeredBlockPositionOffsetX", this.triggeredBlockPositionOffset.getX());
         nbt.putInt("triggeredBlockPositionOffsetY", this.triggeredBlockPositionOffset.getY());
@@ -113,19 +115,19 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
             this.guestList.add(nbt.getString("guestListEntry" + i));
         }
 
-        this.showRestrictBlockBreakingArea = nbt.getBoolean("showRestrictBlockBreakingArea");
+        this.showInfluenceArea = nbt.getBoolean("showInfluenceArea");
 
-        int i = MathHelper.clamp(nbt.getInt("restrictBlockBreakingAreaDimensionsX"), 0, 48);
-        int j = MathHelper.clamp(nbt.getInt("restrictBlockBreakingAreaDimensionsY"), 0, 48);
-        int k = MathHelper.clamp(nbt.getInt("restrictBlockBreakingAreaDimensionsZ"), 0, 48);
-        this.restrictBlockBreakingAreaDimensions = new Vec3i(i, j, k);
+        int i = MathHelper.clamp(nbt.getInt("influenceAreaDimensionsX"), 0, 48);
+        int j = MathHelper.clamp(nbt.getInt("influenceAreaDimensionsY"), 0, 48);
+        int k = MathHelper.clamp(nbt.getInt("influenceAreaDimensionsZ"), 0, 48);
+        this.influenceAreaDimensions = new Vec3i(i, j, k);
 
-        int l = MathHelper.clamp(nbt.getInt("restrictBlockBreakingAreaPositionOffsetX"), -48, 48);
-        int m = MathHelper.clamp(nbt.getInt("restrictBlockBreakingAreaPositionOffsetY"), -48, 48);
-        int n = MathHelper.clamp(nbt.getInt("restrictBlockBreakingAreaPositionOffsetZ"), -48, 48);
-        this.restrictBlockBreakingAreaPositionOffset = new BlockPos(l, m, n);
+        int l = MathHelper.clamp(nbt.getInt("influenceAreaPositionOffsetX"), -48, 48);
+        int m = MathHelper.clamp(nbt.getInt("influenceAreaPositionOffsetY"), -48, 48);
+        int n = MathHelper.clamp(nbt.getInt("influenceAreaPositionOffsetZ"), -48, 48);
+        this.influenceAreaPositionOffset = new BlockPos(l, m, n);
 
-        this.ownerMode = nbt.getInt("ownerMode");
+        this.ownerMode = HousingBlockBlockEntity.OwnerMode.byName(nbt.getString("ownerMode")).orElseGet(() -> OwnerMode.DIMENSION_OWNER);
 
         int o = MathHelper.clamp(nbt.getInt("triggeredBlockPositionOffsetX"), -48, 48);
         int p = MathHelper.clamp(nbt.getInt("triggeredBlockPositionOffsetY"), -48, 48);
@@ -155,7 +157,7 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
     public static void tick(World world, BlockPos pos, BlockState state, HousingBlockBlockEntity blockEntity) {
         if (world.getTime() % 20L == 0L) {
             if (blockEntity.hasWorld() && !blockEntity.isOwnerSet) {
-                if (Objects.equals(blockEntity.owner, "") && blockEntity.ownerMode == 0) {
+                if (Objects.equals(blockEntity.owner, "") && blockEntity.ownerMode == OwnerMode.DIMENSION_OWNER) {
                     blockEntity.owner = initOwner(blockEntity.world);
                     BetterAdventureModeCore.LOGGER.info(blockEntity.owner);
                     blockEntity.isOwnerSet = true;
@@ -163,12 +165,12 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
             }
 
             Box box = new Box(
-                    blockEntity.pos.getX() + blockEntity.restrictBlockBreakingAreaPositionOffset.getX(),
-                    blockEntity.pos.getY() + blockEntity.restrictBlockBreakingAreaPositionOffset.getY(),
-                    blockEntity.pos.getZ() + blockEntity.restrictBlockBreakingAreaPositionOffset.getZ(),
-                    blockEntity.pos.getX() + blockEntity.restrictBlockBreakingAreaPositionOffset.getX() + blockEntity.restrictBlockBreakingAreaDimensions.getX(),
-                    blockEntity.pos.getY() + blockEntity.restrictBlockBreakingAreaPositionOffset.getY() + blockEntity.restrictBlockBreakingAreaDimensions.getY(),
-                    blockEntity.pos.getZ() + blockEntity.restrictBlockBreakingAreaPositionOffset.getZ() + blockEntity.restrictBlockBreakingAreaDimensions.getZ()
+                    blockEntity.pos.getX() + blockEntity.influenceAreaPositionOffset.getX(),
+                    blockEntity.pos.getY() + blockEntity.influenceAreaPositionOffset.getY(),
+                    blockEntity.pos.getZ() + blockEntity.influenceAreaPositionOffset.getZ(),
+                    blockEntity.pos.getX() + blockEntity.influenceAreaPositionOffset.getX() + blockEntity.influenceAreaDimensions.getX(),
+                    blockEntity.pos.getY() + blockEntity.influenceAreaPositionOffset.getY() + blockEntity.influenceAreaDimensions.getY(),
+                    blockEntity.pos.getZ() + blockEntity.influenceAreaPositionOffset.getZ() + blockEntity.influenceAreaDimensions.getZ()
             );
             List<PlayerEntity> list = world.getNonSpectatingEntities(PlayerEntity.class, box);
             Iterator var11 = list.iterator();
@@ -193,6 +195,10 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
                 ComponentsRegistry.CURRENT_HOUSING_BLOCK_POS.get(playerEntity).setValue(blockEntity.pos);
             }
         }
+    }
+
+    public MutablePair<BlockPos, MutablePair<Double, Double>> getTargetEntrance() {
+        return new MutablePair<>(this.entrance.getLeft().add(this.getPos().getX(), this.getPos().getY(), this.getPos().getZ())/*new BlockPos(this.entrance.getLeft().getX() + this.getPos().getX(), this.entrance.getLeft().getY() + this.getPos().getY(), this.entrance.getLeft().getZ() + this.getPos().getZ())*/, this.entrance.getRight());
     }
 
     public String getOwner() {
@@ -231,33 +237,33 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
         return true;
     }
 
-    public boolean getShowRestrictBlockBreakingArea() {
-        return this.showRestrictBlockBreakingArea;
+    public boolean getShowInfluenceArea() {
+        return this.showInfluenceArea;
     }
 
     // TODO check if input is valid
-    public boolean setShowRestrictBlockBreakingArea(boolean showRestrictBlockBreakingArea) {
-        this.showRestrictBlockBreakingArea = showRestrictBlockBreakingArea;
+    public boolean setShowInfluenceArea(boolean showInfluenceArea) {
+        this.showInfluenceArea = showInfluenceArea;
         return true;
     }
 
-    public Vec3i getRestrictBlockBreakingAreaDimensions() {
-        return this.restrictBlockBreakingAreaDimensions;
+    public Vec3i getInfluenceAreaDimensions() {
+        return this.influenceAreaDimensions;
     }
 
     // TODO check if input is valid
-    public boolean setRestrictBlockBreakingAreaDimensions(Vec3i restrictBlockBreakingAreaDimensions) {
-        this.restrictBlockBreakingAreaDimensions = restrictBlockBreakingAreaDimensions;
+    public boolean setInfluenceAreaDimensions(Vec3i influenceAreaDimensions) {
+        this.influenceAreaDimensions = influenceAreaDimensions;
         return true;
     }
 
     public BlockPos getRestrictBlockBreakingAreaPositionOffset() {
-        return this.restrictBlockBreakingAreaPositionOffset;
+        return this.influenceAreaPositionOffset;
     }
 
     // TODO check if input is valid
-    public boolean setRestrictBlockBreakingAreaPositionOffset(BlockPos restrictBlockBreakingAreaPositionOffset) {
-        this.restrictBlockBreakingAreaPositionOffset = restrictBlockBreakingAreaPositionOffset;
+    public boolean setRestrictBlockBreakingAreaPositionOffset(BlockPos influenceAreaPositionOffset) {
+        this.influenceAreaPositionOffset = influenceAreaPositionOffset;
         return true;
     }
 
@@ -271,12 +277,12 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
         return true;
     }
 
-    public int getOwnerMode() {
+    public HousingBlockBlockEntity.OwnerMode getOwnerMode() {
         return this.ownerMode;
     }
 
     // TODO check if input is valid
-    public boolean setOwnerMode(int ownerMode) {
+    public boolean setOwnerMode(HousingBlockBlockEntity.OwnerMode ownerMode) {
         this.ownerMode = ownerMode;
         return true;
     }
@@ -297,13 +303,17 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
     private static String initOwner(World world) {
         if (world != null) {
             String worldRegistryKey = world.getRegistryKey().getValue().getPath();
+            BetterAdventureModeCore.LOGGER.info("initOwner worldRegistryKey: " + worldRegistryKey);
             String[] parts = worldRegistryKey.split("_");
             if (world.getServer() != null) {
                 String uuidString = parts[0];
+                BetterAdventureModeCore.LOGGER.info("initOwner uuidString: " + uuidString);
                 if (UUIDUtilities.isStringValidUUID(uuidString)) {
                     PlayerEntity playerEntity = world.getServer().getPlayerManager().getPlayer(UUID.fromString(uuidString));
                     if (playerEntity != null) {
-                        return playerEntity.getName().getString();
+                        String ownerName = playerEntity.getName().getString();
+                        BetterAdventureModeCore.LOGGER.info("initOwner ownerName: " + ownerName);
+                        return ownerName;
                     }
                 }
             }
@@ -311,13 +321,13 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
         return "";
     }
 
-    public boolean restrictBlockBreakingAreaContains(BlockPos pos) {
-        return (double)(pos.getX() + 1) > (this.pos.getX() + this.restrictBlockBreakingAreaPositionOffset.getX())
-                && (double)pos.getX() < (this.pos.getX() + this.restrictBlockBreakingAreaPositionOffset.getX() + this.restrictBlockBreakingAreaDimensions.getX())
-                && (double)(pos.getY() + 1) > (this.pos.getY() + this.restrictBlockBreakingAreaPositionOffset.getY())
-                && (double)pos.getY() < (this.pos.getY() + this.restrictBlockBreakingAreaPositionOffset.getY() + this.restrictBlockBreakingAreaDimensions.getY())
-                && (double)(pos.getZ() + 1) > (this.pos.getZ() + this.restrictBlockBreakingAreaPositionOffset.getZ())
-                && (double)pos.getZ() < (this.pos.getZ() + this.restrictBlockBreakingAreaPositionOffset.getZ() + this.restrictBlockBreakingAreaDimensions.getZ());
+    public boolean influenceAreaContains(BlockPos pos) {
+        return (double)(pos.getX() + 1) > (this.pos.getX() + this.influenceAreaPositionOffset.getX())
+                && (double)pos.getX() < (this.pos.getX() + this.influenceAreaPositionOffset.getX() + this.influenceAreaDimensions.getX())
+                && (double)(pos.getY() + 1) > (this.pos.getY() + this.influenceAreaPositionOffset.getY())
+                && (double)pos.getY() < (this.pos.getY() + this.influenceAreaPositionOffset.getY() + this.influenceAreaDimensions.getY())
+                && (double)(pos.getZ() + 1) > (this.pos.getZ() + this.influenceAreaPositionOffset.getZ())
+                && (double)pos.getZ() < (this.pos.getZ() + this.influenceAreaPositionOffset.getZ() + this.influenceAreaDimensions.getZ());
     }
 
     public void trigger() {
@@ -335,22 +345,50 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
             if (state.get(RotatedBlockWithEntity.ROTATED) != this.rotated) {
                 BlockRotation blockRotation = BlockRotationUtils.calculateRotationFromDifferentRotatedStates(state.get(RotatedBlockWithEntity.ROTATED), this.rotated);
                 this.triggeredBlockPositionOffset = BlockRotationUtils.rotateOffsetBlockPos(this.triggeredBlockPositionOffset, blockRotation);
-                this.restrictBlockBreakingAreaPositionOffset = BlockRotationUtils.rotateOffsetBlockPos(this.restrictBlockBreakingAreaPositionOffset, blockRotation);
-                this.restrictBlockBreakingAreaDimensions = BlockRotationUtils.rotateOffsetVec3i(this.restrictBlockBreakingAreaDimensions, blockRotation);
+                this.influenceAreaPositionOffset = BlockRotationUtils.rotateOffsetBlockPos(this.influenceAreaPositionOffset, blockRotation);
+                this.influenceAreaDimensions = BlockRotationUtils.rotateOffsetVec3i(this.influenceAreaDimensions, blockRotation);
+                this.entrance = BlockRotationUtils.rotateEntrance(this.entrance, blockRotation);
                 this.rotated = state.get(RotatedBlockWithEntity.ROTATED);
             }
             if (state.get(RotatedBlockWithEntity.X_MIRRORED) != this.x_mirrored) {
                 this.triggeredBlockPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.triggeredBlockPositionOffset, BlockMirror.FRONT_BACK);
-                this.restrictBlockBreakingAreaPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.restrictBlockBreakingAreaPositionOffset, BlockMirror.FRONT_BACK);
-                this.restrictBlockBreakingAreaDimensions = BlockRotationUtils.mirrorOffsetVec3i(this.restrictBlockBreakingAreaDimensions, BlockMirror.FRONT_BACK);
+                this.influenceAreaPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.influenceAreaPositionOffset, BlockMirror.FRONT_BACK);
+                this.influenceAreaDimensions = BlockRotationUtils.mirrorOffsetVec3i(this.influenceAreaDimensions, BlockMirror.FRONT_BACK);
+                this.entrance = BlockRotationUtils.mirrorEntrance(this.entrance, BlockMirror.FRONT_BACK);
                 this.x_mirrored = state.get(RotatedBlockWithEntity.X_MIRRORED);
             }
             if (state.get(RotatedBlockWithEntity.Z_MIRRORED) != this.z_mirrored) {
                 this.triggeredBlockPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.triggeredBlockPositionOffset, BlockMirror.LEFT_RIGHT);
-                this.restrictBlockBreakingAreaPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.restrictBlockBreakingAreaPositionOffset, BlockMirror.LEFT_RIGHT);
-                this.restrictBlockBreakingAreaDimensions = BlockRotationUtils.mirrorOffsetVec3i(this.restrictBlockBreakingAreaDimensions, BlockMirror.LEFT_RIGHT);
+                this.influenceAreaPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.influenceAreaPositionOffset, BlockMirror.LEFT_RIGHT);
+                this.influenceAreaDimensions = BlockRotationUtils.mirrorOffsetVec3i(this.influenceAreaDimensions, BlockMirror.LEFT_RIGHT);
+                this.entrance = BlockRotationUtils.mirrorEntrance(this.entrance, BlockMirror.LEFT_RIGHT);
                 this.z_mirrored = state.get(RotatedBlockWithEntity.Z_MIRRORED);
             }
+        }
+    }
+
+    public static enum OwnerMode implements StringIdentifiable
+    {
+        DIMENSION_OWNER("dimension_owner"),
+        INTERACTION("interaction");
+
+        private final String name;
+
+        private OwnerMode(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String asString() {
+            return this.name;
+        }
+
+        public static Optional<HousingBlockBlockEntity.OwnerMode> byName(String name) {
+            return Arrays.stream(HousingBlockBlockEntity.OwnerMode.values()).filter(ownerMode -> ownerMode.asString().equals(name)).findFirst();
+        }
+
+        public Text asText() {
+            return Text.translatable("gui.housing_block.ownerMode." + this.name);
         }
     }
 }

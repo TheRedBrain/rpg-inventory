@@ -5,5 +5,8 @@
   "displayName": "player_dimensions.player_dungeons.test_dungeon",
   "unlockAdvancement": "minecraft:story/mine_diamond",
   "showLockedDungeon": true,
-  "showUnlockAdvancement": true
+  "showUnlockAdvancement": true,
+  "side_entrances": {
+    "side_entrance": "player_dimensions.player_dungeons.test_dungeon.side_entrance"
+  }
 }

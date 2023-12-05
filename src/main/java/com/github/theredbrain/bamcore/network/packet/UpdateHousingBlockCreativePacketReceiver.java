@@ -32,7 +32,7 @@ public class UpdateHousingBlockCreativePacketReceiver implements ServerPlayNetwo
         double entrancePitch = packet.entrancePitch;
         BlockPos triggeredBlockPositionOffset = packet.triggeredBlockPositionOffset;
 
-        int ownerMode = packet.ownerMode;
+        HousingBlockBlockEntity.OwnerMode ownerMode = packet.ownerMode;
 
         World world = player.getWorld();
 
@@ -43,11 +43,11 @@ public class UpdateHousingBlockCreativePacketReceiver implements ServerPlayNetwo
 
         if (blockEntity instanceof HousingBlockBlockEntity housingBlockBlockEntity) {
 
-            if (!housingBlockBlockEntity.setShowRestrictBlockBreakingArea(showRestrictBlockBreakingArea)) {
+            if (!housingBlockBlockEntity.setShowInfluenceArea(showRestrictBlockBreakingArea)) {
                 player.sendMessage(Text.translatable("housing_block.showRestrictBlockBreakingArea.invalid"), false);
                 updateSuccessful = false;
             }
-            if (!housingBlockBlockEntity.setRestrictBlockBreakingAreaDimensions(restrictBlockBreakingAreaDimensions)) {
+            if (!housingBlockBlockEntity.setInfluenceAreaDimensions(restrictBlockBreakingAreaDimensions)) {
                 player.sendMessage(Text.translatable("housing_block.restrictBlockBreakingAreaDimensions.invalid"), false);
                 updateSuccessful = false;
             }

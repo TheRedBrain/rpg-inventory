@@ -12,22 +12,30 @@ import com.github.theredbrain.bamcore.registry.PlayerHousesRegistry;
 import com.github.theredbrain.bamcore.world.DimensionsManager;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.MutablePair;
 
 public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetworking.PlayPacketHandler<TeleportFromTeleporterBlockPacket> {
     @Override
-    public void receive(TeleportFromTeleporterBlockPacket packet, ServerPlayerEntity player, PacketSender responseSender) {
+    public void receive(TeleportFromTeleporterBlockPacket packet, ServerPlayerEntity serverPlayerEntity, PacketSender responseSender) {
 
         BlockPos teleportBlockPosition = packet.teleportBlockPosition;
+
+        String accessPositionDimension = packet.accessPositionDimension;
+        BlockPos accessPositionOffset = packet.accessPositionOffset;
+        boolean setAccessPosition = packet.setAccessPosition;
 
         TeleporterBlockBlockEntity.TeleportationMode teleportationMode = packet.teleportationMode;
 
@@ -41,121 +49,186 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
         String targetLocation = packet.targetLocation;
         String targetLocationEntrance = packet.targetLocationEntrance;
 //            BetterAdventureModCore.LOGGER.info("outgoingTeleportDimension: " + outgoingTeleportDimension);
-//            player.sendMessage(Text.literal("server received teleportFromTeleporterBlockPacket"), false);
+//            serverPlayerEntity.sendMessage(Text.literal("server received teleportFromTeleporterBlockPacket"), false);
 
 //            BlockPos indirectTeleportTargetPosition = null;
 //            double indirectYaw = 1000.0;
 //            double indirectPitch = 1000.0;
 //            String targetDimensionName;
 //            RegistryKey<World> dimensionregistryKey;
-        ServerWorld serverWorld = player.getServerWorld();
-        MinecraftServer server = player.server;
+        ServerWorld serverWorld = serverPlayerEntity.getServerWorld();
+        MinecraftServer server = serverPlayerEntity.server;
 //            Identifier targetDimensionId;
 
-        ServerPlayerEntity serverPlayerEntity = server.getPlayerManager().getPlayer(player.getUuid());
-
-        ServerWorld targetWorld = serverWorld;
-        BlockPos targetPos = new BlockPos(0, 0, 0);
+        ServerWorld targetWorld = null;
+        BlockPos targetPos = null;
         double targetYaw = 0.0;
         double targetPitch = 0.0;
-        if (serverPlayerEntity != null) {
-            targetPos = serverPlayerEntity.getBlockPos();
-            targetYaw = serverPlayerEntity.getYaw();
-            targetPitch = serverPlayerEntity.getPitch();
-        }
-//            boolean useDynamicDimensionFallback = false;
+        BlockState testBlock = null;
         if (teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DIRECT) {
-            if (serverPlayerEntity != null) {
-                serverPlayerEntity.teleport(serverWorld, teleportBlockPosition.getX() + directTeleportPositionOffset.getX() + 0.5, teleportBlockPosition.getY() + directTeleportPositionOffset.getY(), teleportBlockPosition.getZ() + directTeleportPositionOffset.getZ() + 0.5, (float) directTeleportOrientationYaw, (float) directTeleportOrientationPitch);
-            }
-            return;
+            targetWorld = serverWorld;
+            targetPos = new BlockPos(teleportBlockPosition.getX() + directTeleportPositionOffset.getX(), teleportBlockPosition.getY() + directTeleportPositionOffset.getY(), teleportBlockPosition.getZ() + directTeleportPositionOffset.getZ());
+            targetYaw = directTeleportOrientationYaw;
+            targetPitch = directTeleportOrientationPitch;
         } else if (teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.SAVED_LOCATIONS) {
-            Pair<Pair<String, BlockPos>, Boolean> housing_access_pos = ComponentsRegistry.HOUSING_ACCESS_POS.get(player).getValue();
+            Pair<Pair<String, BlockPos>, Boolean> housing_access_pos = ComponentsRegistry.HOUSING_ACCESS_POS.get(serverPlayerEntity).getValue();
             if (locationType == TeleporterBlockBlockEntity.LocationType.DIMENSION_ACCESS_POSITION && housing_access_pos.getRight()) {
                 targetWorld = server.getWorld(RegistryKey.of(RegistryKeys.WORLD, new Identifier(housing_access_pos.getLeft().getLeft())));
                 targetPos = housing_access_pos.getLeft().getRight();
-            } else if (locationType == TeleporterBlockBlockEntity.LocationType.PLAYER_SPAWN && serverPlayerEntity != null) {
+                if (targetWorld != null && targetPos != null) {
+                    ComponentsRegistry.HOUSING_ACCESS_POS.get(serverPlayerEntity).deactivate();
+                }
+            } else if (locationType == TeleporterBlockBlockEntity.LocationType.PLAYER_SPAWN) {
                 targetWorld = server.getWorld(serverPlayerEntity.getSpawnPointDimension());
                 targetPos = serverPlayerEntity.getSpawnPointPosition();
             } else {
                 targetWorld = server.getOverworld();
                 targetPos = server.getOverworld().getSpawnPos();
             }
-            if (serverPlayerEntity != null && targetPos != null) {
-                serverPlayerEntity.teleport(targetWorld, targetPos.getX(), targetPos.getY(), targetPos.getZ(), 0.0F, 0.0F);
-            }
-            return;
         } else if (teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DUNGEONS) {
             ServerPlayerEntity targetDimensionOwner = server.getPlayerManager().getPlayer(targetDimensionOwnerName);
-            if (targetDimensionOwner == null) {
-                targetDimensionOwner = serverPlayerEntity;
-            }
-            Identifier targetDimensionId = new Identifier(ComponentsRegistry.PLAYER_SPECIFIC_DIMENSION_IDS.get(targetDimensionOwner).getValue("dungeon_dimension"));
-            RegistryKey<World> dimensionregistryKey = RegistryKey.of(RegistryKeys.WORLD, targetDimensionId);
-            targetWorld = server.getWorld(dimensionregistryKey);
 
-            if (targetWorld == null) {
-                DimensionsManager.addAndSaveDynamicDimension(targetDimensionId, server, true);
-                dimensionregistryKey = RegistryKey.of(RegistryKeys.WORLD, targetDimensionId);
+            if (targetDimensionOwner != null) {
+                BetterAdventureModeCore.LOGGER.info("targetDimensionOwner: " + targetDimensionOwner);
+                Identifier targetDimensionId = Identifier.tryParse(ComponentsRegistry.PLAYER_SPECIFIC_DIMENSION_IDS.get(targetDimensionOwner).getValue("dungeon_dimension"));
+                BetterAdventureModeCore.LOGGER.info("targetDimensionId: " + targetDimensionId);
+                RegistryKey<World> dimensionregistryKey = RegistryKey.of(RegistryKeys.WORLD, targetDimensionId);
                 targetWorld = server.getWorld(dimensionregistryKey);
+
+                if (targetWorld == null) {
+                    DimensionsManager.addAndSaveDynamicDimension(targetDimensionId, server, true);
+                    dimensionregistryKey = RegistryKey.of(RegistryKeys.WORLD, targetDimensionId);
+                    targetWorld = server.getWorld(dimensionregistryKey);
 //                    if (targetDimensionOwner != null) {
-                ComponentsRegistry.PLAYER_SPECIFIC_DIMENSION_IDS.get(targetDimensionOwner).setStatus("dungeon_dimension", true);
+                    ComponentsRegistry.PLAYER_SPECIFIC_DIMENSION_IDS.get(targetDimensionOwner).setStatus("dungeon_dimension", true);
 //                    } else {
 //                        // this should not happen, as targetDimensionOwner should be coming from a list of existing players
-//                        ComponentsRegistry.PLAYER_SPECIFIC_DIMENSION_IDS.get(player).setStatus("housing_dimension", true);
+//                        ComponentsRegistry.PLAYER_SPECIFIC_DIMENSION_IDS.get(serverPlayerEntity).setStatus("housing_dimension", true);
 //                    }
-            }
+                }
 
-            PlayerDungeon dungeon = PlayerDungeonsRegistry.getDungeon(Identifier.tryParse(targetLocation));
+                PlayerDungeon playerDungeon = PlayerDungeonsRegistry.getDungeon(Identifier.tryParse(targetLocation));
 
-//            BetterAdventureModeCore.LOGGER.info("dungeon: " + dungeon.toString());
-            if (targetWorld != null && dungeon != null && targetWorld.getBlockEntity(dungeon.controlBlockPos()) instanceof DungeonControlBlockEntity dungeonControlBlock) {
-//                    MutablePair<BlockPos, MutablePair<Double, Double>> sideEntrance = !Objects.equals(targetLocationEntrance, "") ? dungeonControlBlock.getSideEntrances().get(targetLocationEntrance) : null;
-//                    BlockPos targetPos;
-//                    if (sideEntrance != null) {
-//                        targetPos = sideEntrance.getLeft();
-//                        targetYaw = sideEntrance.getRight().getLeft();
-//                        targetPitch = sideEntrance.getRight().getRight();
-//                    } else {
-                MutablePair<BlockPos, MutablePair<Double, Double>> mainEntrance = dungeonControlBlock.getMainEntrance();
-                targetPos = mainEntrance.getLeft();
-                targetYaw = mainEntrance.getRight().getLeft();
-                targetPitch = mainEntrance.getRight().getRight();
-//                    }
+                BetterAdventureModeCore.LOGGER.info("playerDungeon: " + playerDungeon);
+                if (targetWorld != null && playerDungeon != null && targetWorld.getBlockEntity(playerDungeon.controlBlockPos()) instanceof DungeonControlBlockEntity dungeonControlBlock) {
+                    MutablePair<BlockPos, MutablePair<Double, Double>> targetEntrance = dungeonControlBlock.getTargetEntrance(targetLocationEntrance);
+                    targetPos = targetEntrance.getLeft();
+                    targetYaw = targetEntrance.getRight().getLeft();
+                    targetPitch = targetEntrance.getRight().getRight();
+                }
             }
         } else if (teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.HOUSING) {
             ServerPlayerEntity targetDimensionOwner = server.getPlayerManager().getPlayer(targetDimensionOwnerName);
-            if (targetDimensionOwner == null) {
-                targetDimensionOwner = serverPlayerEntity;
-            }
-            Identifier targetDimensionId = new Identifier(ComponentsRegistry.PLAYER_SPECIFIC_DIMENSION_IDS.get(targetDimensionOwner).getValue("housing_dimension"));
-            RegistryKey<World> dimensionregistryKey = RegistryKey.of(RegistryKeys.WORLD, targetDimensionId);
-            targetWorld = server.getWorld(dimensionregistryKey);
 
-            if (targetWorld == null) {
-                DimensionsManager.addAndSaveDynamicDimension(targetDimensionId, server, false);
-                dimensionregistryKey = RegistryKey.of(RegistryKeys.WORLD, targetDimensionId);
+            if (targetDimensionOwner != null) {
+                BetterAdventureModeCore.LOGGER.info("targetDimensionOwner: " + targetDimensionOwner);
+                Identifier targetDimensionId = Identifier.tryParse(ComponentsRegistry.PLAYER_SPECIFIC_DIMENSION_IDS.get(targetDimensionOwner).getValue("housing_dimension"));
+                BetterAdventureModeCore.LOGGER.info("targetDimensionId: " + targetDimensionId);
+                RegistryKey<World> dimensionregistryKey = RegistryKey.of(RegistryKeys.WORLD, targetDimensionId);
                 targetWorld = server.getWorld(dimensionregistryKey);
+
+                if (targetWorld == null) {
+                    DimensionsManager.addAndSaveDynamicDimension(targetDimensionId, server, false);
+                    dimensionregistryKey = RegistryKey.of(RegistryKeys.WORLD, targetDimensionId);
+                    targetWorld = server.getWorld(dimensionregistryKey);
 //                    if (targetDimensionOwner != null) {
-                ComponentsRegistry.PLAYER_SPECIFIC_DIMENSION_IDS.get(targetDimensionOwner).setStatus("housing_dimension", true);
+                    ComponentsRegistry.PLAYER_SPECIFIC_DIMENSION_IDS.get(targetDimensionOwner).setStatus("housing_dimension", true);
 //                    } else {
 //                        // this should not happen, as targetDimensionOwner should be coming from a list of existing players
-//                        ComponentsRegistry.PLAYER_SPECIFIC_DIMENSION_IDS.get(player).setStatus("housing_dimension", true);
+//                        ComponentsRegistry.PLAYER_SPECIFIC_DIMENSION_IDS.get(serverPlayerEntity).setStatus("housing_dimension", true);
 //                    }
-            }
+                }
 
-            PlayerHouse playerHouse = PlayerHousesRegistry.getHouse(Identifier.tryParse(targetLocation));
-            if (targetWorld != null && playerHouse != null && targetWorld.getBlockEntity(playerHouse.housingBlockPos()) instanceof HousingBlockBlockEntity housingBlock) {
-                MutablePair<BlockPos, MutablePair<Double, Double>> entrance = housingBlock.getEntrance();
-                targetPos = entrance.getLeft();
-                targetYaw = entrance.getRight().getLeft();
-                targetPitch = entrance.getRight().getRight();
+                PlayerHouse playerHouse = PlayerHousesRegistry.getHouse(Identifier.tryParse(targetLocation));
+                BetterAdventureModeCore.LOGGER.info("playerHouse: " + playerHouse);
+                if (targetWorld != null && playerHouse != null) {
+//                    if (targetWorld.getBlockEntity(playerHouse.housingBlockPos()) instanceof HousingBlockBlockEntity housingBlock) {
+//                    }
+//                    BetterAdventureModeCore.LOGGER.info("targetWorld biome: " + server.getWorld(RegistryKey.of(RegistryKeys.WORLD, new Identifier("the_nether"))).getBlockState(playerHouse.housingBlockPos()) + " at " + playerHouse.housingBlockPos());
+//                    BetterAdventureModeCore.LOGGER.info("targetWorld biome: " + targetWorld.getBiome(playerHouse.housingBlockPos()) + " at " + playerHouse.housingBlockPos());
+//                    BetterAdventureModeCore.LOGGER.info("targetWorld getStructureReferences: " + targetWorld.getStructureAccessor().getStructureReferences(playerHouse.housingBlockPos()) + " at " + playerHouse.housingBlockPos());
+//                    BetterAdventureModeCore.LOGGER.info("targetWorld hasStructureReferences at " + playerHouse.housingBlockPos() + ": " + targetWorld.getStructureAccessor().hasStructureReferences(playerHouse.housingBlockPos()));
+//                    BetterAdventureModeCore.LOGGER.info("before client loaded chunk blockState: " + targetWorld.getBlockState(playerHouse.housingBlockPos()) + " at " + playerHouse.housingBlockPos());
+                    BlockEntity blockEntity = targetWorld.getBlockEntity(playerHouse.housingBlockPos());
+                    if (!(blockEntity instanceof HousingBlockBlockEntity)) {
+
+                        BetterAdventureModeCore.LOGGER.info("before client loaded chunk blockState: " + targetWorld.getBlockState(playerHouse.housingBlockPos()) + " at " + playerHouse.housingBlockPos());
+//                        BetterAdventureModeCore.LOGGER.info("overworld blockState: " + server.getWorld(RegistryKey.of(RegistryKeys.WORLD, new Identifier("the_nether"))).getBlockState(playerHouse.housingBlockPos()) + " at " + playerHouse.housingBlockPos());
+
+//                        // client chunk load
+//                        ChunkLoader chunkLoader = new ChunkLoader(
+//                                new DimensionalChunkPos(
+//                                        dimensionregistryKey,
+//                                        targetWorld.getChunk(playerHouse.housingBlockPos()).getPos()//,//targetDungeonChunkX, // chunk x
+////                                        targetDungeonChunkZ // chunk z
+//                                ),
+//                                2 // radius in chunks
+//                        );
+//                        PortalAPI.addChunkLoaderForPlayer(serverPlayerEntity, chunkLoader);
+
+                        ChunkPos targetDungeonChunkPos = targetWorld.getChunk(playerHouse.housingBlockPos()).getPos();
+//                        // force load chunks
+////                        String placeStructureCommand = "execute as " + serverPlayerEntity.getName().getString() + " in " + targetDimensionName + " run place structure " + targetDungeonStructureIdentifier + " " + targetDungeonStructureStartPosition.getX() + " " + targetDungeonStructureStartPosition.getY() + " " + targetDungeonStructureStartPosition.getZ();
+                        String forceLoadAddCommand = "execute in " + targetWorld.getRegistryKey().getValue() + " run forceload add " + (targetDungeonChunkPos.x - 1) + " " + (targetDungeonChunkPos.z - 1) + " " + (targetDungeonChunkPos.x + 1) + " " + (targetDungeonChunkPos.z + 2);
+                        BetterAdventureModeCore.LOGGER.info("forceload add command: " + forceLoadAddCommand);
+                        server.getCommandManager().executeWithPrefix(server.getCommandSource(), forceLoadAddCommand);
+//
+//
+////                        // place structure
+//////                        String placeStructureCommand = "execute as " + serverPlayerEntity.getName().getString() + " in " + targetDimensionName + " run place structure " + targetDungeonStructureIdentifier + " " + targetDungeonStructureStartPosition.getX() + " " + targetDungeonStructureStartPosition.getY() + " " + targetDungeonStructureStartPosition.getZ();
+                        String placeStructureCommand = "execute in " + targetWorld.getRegistryKey().getValue() + " run place structure " + playerHouse.getStructureIdentifier() + " " + playerHouse.housingBlockPos().getX() + " " + playerHouse.housingBlockPos().getY() + " " + playerHouse.housingBlockPos().getZ();
+                        BetterAdventureModeCore.LOGGER.info("place structure command: " + placeStructureCommand);
+                        server.getCommandManager().executeWithPrefix(server.getCommandSource(), placeStructureCommand);
+//
+                        BetterAdventureModeCore.LOGGER.info("client loaded chunk blockState: " + targetWorld.getBlockState(playerHouse.housingBlockPos()));
+
+//                        // force load chunks
+////                        String placeStructureCommand = "execute as " + serverPlayerEntity.getName().getString() + " in " + targetDimensionName + " run place structure " + targetDungeonStructureIdentifier + " " + targetDungeonStructureStartPosition.getX() + " " + targetDungeonStructureStartPosition.getY() + " " + targetDungeonStructureStartPosition.getZ();
+                        String forceLoadRemoveAllCommand = "execute in " + targetWorld.getRegistryKey().getValue() + " run forceload remove " + (targetDungeonChunkPos.x - 1) + " " + (targetDungeonChunkPos.z - 1) + " " + (targetDungeonChunkPos.x + 1) + " " + (targetDungeonChunkPos.z + 2);
+                        BetterAdventureModeCore.LOGGER.info("forceload remove all command: " + forceLoadRemoveAllCommand);
+                        server.getCommandManager().executeWithPrefix(server.getCommandSource(), forceLoadRemoveAllCommand);
+
+//                        // client chunk unload
+//                        PortalAPI.removeChunkLoaderForPlayer(serverPlayerEntity, chunkLoader);
+
+                        BetterAdventureModeCore.LOGGER.info("client unloaded chunk blockState: " + targetWorld.getBlockState(playerHouse.housingBlockPos()));
+
+                        BetterAdventureModeCore.LOGGER.info("before client loaded chunk blockState: " + targetWorld.getBlockState(playerHouse.housingBlockPos()) + " at " + playerHouse.housingBlockPos());
+                        blockEntity = targetWorld.getBlockEntity(playerHouse.housingBlockPos());
+                    }
+                    BetterAdventureModeCore.LOGGER.info("blockState: " + targetWorld.getBlockState(playerHouse.housingBlockPos()) + " at " + playerHouse.housingBlockPos());
+                    if (blockEntity instanceof HousingBlockBlockEntity housingBlock) {
+//                        incomingTeleportPositionOffset = teleporterBlockBlockEntity.getIncomingTeleportPositionOffset();
+//                        indirectTeleportTargetPosition = teleporterBlockBlockEntity.getPos().add(incomingTeleportPositionOffset);
+//                        indirectYaw = teleporterBlockBlockEntity.getIncomingTeleportPositionYaw();
+//                        indirectPitch = teleporterBlockBlockEntity.getIncomingTeleportPositionPitch();
+                        MutablePair<BlockPos, MutablePair<Double, Double>> entrance = housingBlock.getTargetEntrance();
+                        targetPos = entrance.getLeft();
+                        targetYaw = entrance.getRight().getLeft();
+                        targetPitch = entrance.getRight().getRight();
+
+                        if (setAccessPosition && Identifier.isValid(accessPositionDimension)) {
+                            ComponentsRegistry.HOUSING_ACCESS_POS.get(serverPlayerEntity).setValue(new Pair<>(new Pair<>(accessPositionDimension, teleportBlockPosition.add(accessPositionOffset.getX(), accessPositionOffset.getY(), accessPositionOffset.getZ())), true));
+                        }
+                    }
+                }
             }
         }
 
-        BetterAdventureModeCore.LOGGER.info("targetWorld: " + targetWorld.getRegistryKey().getValue().getPath());
-        if (serverPlayerEntity != null) {
-            serverPlayerEntity.teleport(targetWorld, targetPos.getX(), targetPos.getY(), targetPos.getZ(), (float) targetYaw, (float) targetPitch);
+//        BetterAdventureModeCore.LOGGER.info("targetWorld: " + targetWorld.getRegistryKey().getValue().getPath());
+        if (targetWorld != null && targetPos != null) {
+
+//            serverPlayerEntity.teleport(targetWorld, targetPos.getX(), targetPos.getY(), targetPos.getZ(), (float) targetYaw, (float) targetPitch);
+            serverPlayerEntity.sendMessage(Text.of("Teleport to world: " + targetWorld + " at position: " + targetPos.getX() + ", " + targetPos.getY() + ", " + targetPos.getZ() + ", with yaw: " + targetYaw + " and pitch: " + targetPitch));
+            // TODO send S2C packet which removes PortalResistanceEffect and setScreen(null)
+        } else {
+            serverPlayerEntity.sendMessage(Text.of("Teleport failed"));
+            if (targetWorld == null) {
+                serverPlayerEntity.sendMessage(Text.of("targetWorld == null"));
+            }
+            if (targetPos == null) {
+                serverPlayerEntity.sendMessage(Text.of("targetPos == null"));
+            }
         }
 
 //            // static dimension mode, always target specified dimension
@@ -165,16 +238,16 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
 //                dimensionregistryKey = RegistryKey.of(RegistryKeys.WORLD, targetDimensionId);
 //                serverWorld = server.getWorld(dimensionregistryKey);
 //
-//                // dynamic dimension mode, use specified string to get dimension from player
+//                // dynamic dimension mode, use specified string to get dimension from serverPlayerEntity
 //                ServerPlayerEntity targetDimensionOwner = server.getPlayerManager().getPlayer(targetDimensionOwnerName);
 //                if (targetDimensionOwner != null) {
 //                    targetDimensionName = ComponentsRegistry.PLAYER_SPECIFIC_DIMENSION_IDS.get(targetDimensionOwner).getValue(outgoingTeleportDimension);
 ////                    BetterAdventureModCore.LOGGER.info(outgoingTeleportDimension + " of " + targetDimensionOwner.getName().getString() + ": " + ComponentsRegistry.PLAYER_SPECIFIC_DIMENSION_IDS.get(targetDimensionOwner).getValue(outgoingTeleportDimension) + " is loaded:" + ComponentsRegistry.PLAYER_SPECIFIC_DIMENSION_IDS.get(targetDimensionOwner).getStatus(outgoingTeleportDimension));
 //                } else {
 //                    // this should not happen, as targetDimensionOwner should be coming from a list of existing players
-//                    targetDimensionName = ComponentsRegistry.PLAYER_SPECIFIC_DIMENSION_IDS.get(player).getValue(outgoingTeleportDimension);
+//                    targetDimensionName = ComponentsRegistry.PLAYER_SPECIFIC_DIMENSION_IDS.get(serverPlayerEntity).getValue(outgoingTeleportDimension);
 ////                    BetterAdventureModCore.LOGGER.info("This should not have happened");
-////                    BetterAdventureModCore.LOGGER.info(outgoingTeleportDimension + " of " + player.getName().getString() + ": " + ComponentsRegistry.PLAYER_SPECIFIC_DIMENSION_IDS.get(player).getValue(outgoingTeleportDimension) + " is loaded:" + ComponentsRegistry.PLAYER_SPECIFIC_DIMENSION_IDS.get(player).getStatus(outgoingTeleportDimension));
+////                    BetterAdventureModCore.LOGGER.info(outgoingTeleportDimension + " of " + serverPlayerEntity.getName().getString() + ": " + ComponentsRegistry.PLAYER_SPECIFIC_DIMENSION_IDS.get(serverPlayerEntity).getValue(outgoingTeleportDimension) + " is loaded:" + ComponentsRegistry.PLAYER_SPECIFIC_DIMENSION_IDS.get(serverPlayerEntity).getStatus(outgoingTeleportDimension));
 //                }
 //                targetDimensionId = new Identifier(targetDimensionName);
 //
@@ -196,7 +269,7 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
 //                        ComponentsRegistry.PLAYER_SPECIFIC_DIMENSION_IDS.get(targetDimensionOwner).setStatus(outgoingTeleportDimension, true);
 //                    } else {
 //                        // this should not happen, as targetDimensionOwner should be coming from a list of existing players
-//                        ComponentsRegistry.PLAYER_SPECIFIC_DIMENSION_IDS.get(player).setStatus(outgoingTeleportDimension, true);
+//                        ComponentsRegistry.PLAYER_SPECIFIC_DIMENSION_IDS.get(serverPlayerEntity).setStatus(outgoingTeleportDimension, true);
 //                    }
 //                }
 //
@@ -218,29 +291,29 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
 ////                                ),
 ////                                2 // radius in chunks
 ////                        );
-////                        PortalAPI.addChunkLoaderForPlayer(player, chunkLoader);
+////                        PortalAPI.addChunkLoaderForPlayer(serverPlayerEntity, chunkLoader);
 //
 //                        // force load chunks
-////                        String placeStructureCommand = "execute as " + player.getName().getString() + " in " + targetDimensionName + " run place structure " + targetDungeonStructureIdentifier + " " + targetDungeonStructureStartPosition.getX() + " " + targetDungeonStructureStartPosition.getY() + " " + targetDungeonStructureStartPosition.getZ();
+////                        String placeStructureCommand = "execute as " + serverPlayerEntity.getName().getString() + " in " + targetDimensionName + " run place structure " + targetDungeonStructureIdentifier + " " + targetDungeonStructureStartPosition.getX() + " " + targetDungeonStructureStartPosition.getY() + " " + targetDungeonStructureStartPosition.getZ();
 //                        String forceLoadAddCommand = "execute in " + targetDimensionName + " run forceload add " + (targetDungeonChunkX - 1) + " " + (targetDungeonChunkZ - 1) + " " + (targetDungeonChunkX + 1) + " " + (targetDungeonChunkZ + 2);
 ////                        BetterAdventureModCore.LOGGER.info("forceload add command: " + forceLoadAddCommand);
 //                        server.getCommandManager().executeWithPrefix(server.getCommandSource(), forceLoadAddCommand);
 //
 //
 //                        // place structure
-////                        String placeStructureCommand = "execute as " + player.getName().getString() + " in " + targetDimensionName + " run place structure " + targetDungeonStructureIdentifier + " " + targetDungeonStructureStartPosition.getX() + " " + targetDungeonStructureStartPosition.getY() + " " + targetDungeonStructureStartPosition.getZ();
+////                        String placeStructureCommand = "execute as " + serverPlayerEntity.getName().getString() + " in " + targetDimensionName + " run place structure " + targetDungeonStructureIdentifier + " " + targetDungeonStructureStartPosition.getX() + " " + targetDungeonStructureStartPosition.getY() + " " + targetDungeonStructureStartPosition.getZ();
 //                        String placeStructureCommand = "execute in " + targetDimensionName + " run place structure " + targetDungeonStructureIdentifier + " " + targetDungeonStructureStartPosition.getX() + " " + targetDungeonStructureStartPosition.getY() + " " + targetDungeonStructureStartPosition.getZ();
 ////                        BetterAdventureModCore.LOGGER.info("place structure command: " + placeStructureCommand);
 //                        server.getCommandManager().executeWithPrefix(server.getCommandSource(), placeStructureCommand);
 //
 //                        // force load chunks
-////                        String placeStructureCommand = "execute as " + player.getName().getString() + " in " + targetDimensionName + " run place structure " + targetDungeonStructureIdentifier + " " + targetDungeonStructureStartPosition.getX() + " " + targetDungeonStructureStartPosition.getY() + " " + targetDungeonStructureStartPosition.getZ();
+////                        String placeStructureCommand = "execute as " + serverPlayerEntity.getName().getString() + " in " + targetDimensionName + " run place structure " + targetDungeonStructureIdentifier + " " + targetDungeonStructureStartPosition.getX() + " " + targetDungeonStructureStartPosition.getY() + " " + targetDungeonStructureStartPosition.getZ();
 //                        String forceLoadRemoveAllCommand = "execute in " + targetDimensionName + " run forceload remove " + (targetDungeonChunkX - 1) + " " + (targetDungeonChunkZ - 1) + " " + (targetDungeonChunkX + 1) + " " + (targetDungeonChunkZ + 2);
 ////                        BetterAdventureModCore.LOGGER.info("forceload remove all command: " + forceLoadRemoveAllCommand);
 //                        server.getCommandManager().executeWithPrefix(server.getCommandSource(), forceLoadRemoveAllCommand);
 //
 ////                        // client chunk unload
-////                        PortalAPI.removeChunkLoaderForPlayer(player, chunkLoader);
+////                        PortalAPI.removeChunkLoaderForPlayer(serverPlayerEntity, chunkLoader);
 //
 //                        blockEntity = serverWorld.getBlockEntity(outgoingTeleportTeleporterPosition);
 //                    }
@@ -255,12 +328,12 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
 //            String command = "";
 //            if (indirectTeleportTargetPosition != null && indirectYaw != 1000.0 && indirectPitch != 1000.0) {
 ////                BetterAdventureModCore.LOGGER.info("indirect teleport");
-//                command = "/execute as " + player.getName().getString() + " in " + targetDimensionName + " run teleport " + player.getName().getString() + " " + indirectTeleportTargetPosition.getX() + " " + indirectTeleportTargetPosition.getY() + " " + indirectTeleportTargetPosition.getZ() + " " + indirectYaw + " " + indirectPitch;
-////                command = "/execute in " + outgoingTeleportDimension + " run teleport " + player.getName() + " " + indirectTeleportTargetPosition.getX() + " " + indirectTeleportTargetPosition.getY() + " " + indirectTeleportTargetPosition.getZ() + " " + indirectYaw + " " + indirectPitch;
+//                command = "/execute as " + serverPlayerEntity.getName().getString() + " in " + targetDimensionName + " run teleport " + serverPlayerEntity.getName().getString() + " " + indirectTeleportTargetPosition.getX() + " " + indirectTeleportTargetPosition.getY() + " " + indirectTeleportTargetPosition.getZ() + " " + indirectYaw + " " + indirectPitch;
+////                command = "/execute in " + outgoingTeleportDimension + " run teleport " + serverPlayerEntity.getName() + " " + indirectTeleportTargetPosition.getX() + " " + indirectTeleportTargetPosition.getY() + " " + indirectTeleportTargetPosition.getZ() + " " + indirectYaw + " " + indirectPitch;
 //            } else {
 ////                BetterAdventureModCore.LOGGER.info("direct teleport");
-//                command = "execute as " + player.getName().getString() + " in " + targetDimensionName + " run teleport " + player.getName().getString() + " " + directTeleportTargetPosition.getX() + " " + directTeleportTargetPosition.getY() + " " + directTeleportTargetPosition.getZ() + " " + outgoingTeleportPositionYaw + " " + outgoingTeleportPositionPitch;
-////                command = "execute in " + outgoingTeleportDimension + " run teleport " + player.getName().getString() + " " + directTeleportTargetPosition.getX() + " " + directTeleportTargetPosition.getY() + " " + directTeleportTargetPosition.getZ() + " " + outgoingTeleportPositionYaw + " " + outgoingTeleportPositionPitch;
+//                command = "execute as " + serverPlayerEntity.getName().getString() + " in " + targetDimensionName + " run teleport " + serverPlayerEntity.getName().getString() + " " + directTeleportTargetPosition.getX() + " " + directTeleportTargetPosition.getY() + " " + directTeleportTargetPosition.getZ() + " " + outgoingTeleportPositionYaw + " " + outgoingTeleportPositionPitch;
+////                command = "execute in " + outgoingTeleportDimension + " run teleport " + serverPlayerEntity.getName().getString() + " " + directTeleportTargetPosition.getX() + " " + directTeleportTargetPosition.getY() + " " + directTeleportTargetPosition.getZ() + " " + outgoingTeleportPositionYaw + " " + outgoingTeleportPositionPitch;
 //            }
 ////            BetterAdventureModCore.LOGGER.info("teleport command: " + command);
 //            server.getCommandManager().executeWithPrefix(server.getCommandSource(), command);

@@ -38,7 +38,7 @@
     }
   },
   "start_height": {
-    "absolute": 0
+    "absolute": 120
   },
   "start_jigsaw_name": "bamcore:housing_dungeon_anchor",
   "start_pool": "bamcore:housing/dungeons/dungeon_entrances",

@@ -9,15 +9,17 @@ public final class PlayerHouse {
     private final int housingBlockPosX;
     private final int housingBlockPosY;
     private final int housingBlockPosZ;
+    private final String structureIdentifier;
     private final String displayName;
     private final String unlockAdvancement;
     private final boolean showLockedHouse;
     private final boolean showUnlockAdvancement;
 
-    public PlayerHouse(int housingBlockPosX, int housingBlockPosY, int housingBlockPosZ, String unlockAdvancement, String displayName, boolean showLockedHouse, boolean showUnlockAdvancement) {
+    public PlayerHouse(int housingBlockPosX, int housingBlockPosY, int housingBlockPosZ, String unlockAdvancement, String structureIdentifier, String displayName, boolean showLockedHouse, boolean showUnlockAdvancement) {
         this.housingBlockPosX = housingBlockPosX;
         this.housingBlockPosY = housingBlockPosY;
         this.housingBlockPosZ = housingBlockPosZ;
+        this.structureIdentifier = structureIdentifier;
         this.displayName = displayName;
         this.unlockAdvancement = unlockAdvancement;
         this.showLockedHouse = showLockedHouse;
@@ -26,6 +28,10 @@ public final class PlayerHouse {
 
     public BlockPos housingBlockPos() {
         return new BlockPos(this.housingBlockPosX, this.housingBlockPosY, this.housingBlockPosZ);
+    }
+
+    public String getStructureIdentifier() {
+        return this.structureIdentifier;
     }
 
     public String getDisplayName() {
@@ -52,6 +58,7 @@ public final class PlayerHouse {
         return this.housingBlockPosX == that.housingBlockPosX
                 && this.housingBlockPosY == that.housingBlockPosY
                 && this.housingBlockPosZ == that.housingBlockPosZ
+                && Objects.equals(this.structureIdentifier, that.structureIdentifier)
                 && Objects.equals(this.displayName, that.displayName)
                 && Objects.equals(this.unlockAdvancement, that.unlockAdvancement)
                 && this.showLockedHouse == that.showLockedHouse
@@ -60,15 +67,16 @@ public final class PlayerHouse {
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.housingBlockPosX, this.housingBlockPosY, this.housingBlockPosZ, this.displayName, this.unlockAdvancement, this.showLockedHouse, this.showUnlockAdvancement);
+        return Objects.hash(this.housingBlockPosX, this.housingBlockPosY, this.housingBlockPosZ, this.structureIdentifier, this.displayName, this.unlockAdvancement, this.showLockedHouse, this.showUnlockAdvancement);
     }
 
     @Override
     public String toString() {
         return "PlayerHouse[" +
-                "controlBlockPosX=" + this.housingBlockPosX + ", " +
-                "controlBlockPosY=" + this.housingBlockPosY + ", " +
-                "controlBlockPosZ=" + this.housingBlockPosZ + ", " +
+                "housingBlockPosX=" + this.housingBlockPosX + ", " +
+                "housingBlockPosY=" + this.housingBlockPosY + ", " +
+                "housingBlockPosZ=" + this.housingBlockPosZ + ", " +
+                "structureIdentifier=" + this.structureIdentifier + ", " +
                 "displayName=" + this.displayName + ", " +
                 "unlockAdvancement=" + this.unlockAdvancement + ", " +
                 "showLockedHouse=" + this.showLockedHouse + ", " +

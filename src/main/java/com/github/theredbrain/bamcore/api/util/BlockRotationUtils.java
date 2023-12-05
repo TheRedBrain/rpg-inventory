@@ -134,4 +134,12 @@ public class BlockRotationUtils {
             return offsetPosition;
         }
     }
+
+    public static MutablePair<BlockPos, MutablePair<Double, Double>> rotateEntrance(MutablePair<BlockPos, MutablePair<Double, Double>> entrance, BlockRotation rotation) {
+        return new MutablePair<>(BlockRotationUtils.rotateOffsetBlockPos(entrance.getLeft(), rotation), new MutablePair<>(BlockRotationUtils.rotateYaw(entrance.getRight().getLeft(), rotation), entrance.getRight().getRight()));
+    }
+
+    public static MutablePair<BlockPos, MutablePair<Double, Double>> mirrorEntrance(MutablePair<BlockPos, MutablePair<Double, Double>> entrance, BlockMirror mirror) {
+        return new MutablePair<>(BlockRotationUtils.mirrorOffsetBlockPos(entrance.getLeft(), mirror), new MutablePair<>(BlockRotationUtils.mirrorYaw(entrance.getRight().getLeft(), mirror), entrance.getRight().getRight()));
+    }
 }

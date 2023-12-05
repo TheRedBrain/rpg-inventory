@@ -26,11 +26,13 @@ public class UpdateTeleporterBlockPacketReceiver implements ServerPlayNetworking
         BlockPos teleportBlockPosition = packet.teleportBlockPosition;
 
         boolean showActivationArea = packet.showActivationArea;
+        boolean showAdventureScreen = packet.showAdventureScreen;
 
         Vec3i activationAreaDimensions = packet.activationAreaDimensions;
         BlockPos activationAreaPositionOffset = packet.activationAreaPositionOffset;
+        BlockPos accessPositionOffset = packet.accessPositionOffset;
 
-        boolean showAdventureScreen = packet.showAdventureScreen;
+        boolean setAccessPosition = packet.setAccessPosition;
 
         TeleporterBlockBlockEntity.TeleportationMode teleportationMode = packet.teleportationMode;
 
@@ -38,7 +40,7 @@ public class UpdateTeleporterBlockPacketReceiver implements ServerPlayNetworking
         double directTeleportOrientationYaw = packet.directTeleportOrientationYaw;
         double directTeleportOrientationPitch = packet.directTeleportOrientationPitch;
 
-        TeleporterBlockBlockEntity.LocationType specificLocationType = packet.locationType;
+        TeleporterBlockBlockEntity.LocationType locationType = packet.locationType;
 
         List<Pair<String, String>> dungeonLocationsList = packet.dungeonLocationsList;
         List<String> housingLocationsList = packet.housingLocationsList;
@@ -60,6 +62,10 @@ public class UpdateTeleporterBlockPacketReceiver implements ServerPlayNetworking
         BlockState blockState = world.getBlockState(teleportBlockPosition);
 
         if (blockEntity instanceof TeleporterBlockBlockEntity teleporterBlockBlockEntity) {
+            if (!teleporterBlockBlockEntity.setShowAdventureScreen(showAdventureScreen)) {
+                player.sendMessage(Text.translatable("teleporter_block.showAdventureScreen.invalid"), false);
+                updateSuccessful = false;
+            }
             if (!teleporterBlockBlockEntity.setShowActivationArea(showActivationArea)) {
                 player.sendMessage(Text.translatable("teleporter_block.showActivationArea.invalid"), false);
                 updateSuccessful = false;
@@ -72,8 +78,12 @@ public class UpdateTeleporterBlockPacketReceiver implements ServerPlayNetworking
                 player.sendMessage(Text.translatable("teleporter_block.activationAreaPositionOffset.invalid"), false);
                 updateSuccessful = false;
             }
-            if (!teleporterBlockBlockEntity.setShowAdventureScreen(showAdventureScreen)) {
-                player.sendMessage(Text.translatable("teleporter_block.showAdventureScreen.invalid"), false);
+            if (!teleporterBlockBlockEntity.setAccessPositionOffset(accessPositionOffset)) {
+                player.sendMessage(Text.translatable("teleporter_block.accessPositionOffset.invalid"), false);
+                updateSuccessful = false;
+            }
+            if (!teleporterBlockBlockEntity.setSetAccessPosition(setAccessPosition)) {
+                player.sendMessage(Text.translatable("teleporter_block.setAccessPosition.invalid"), false);
                 updateSuccessful = false;
             }
             if (!teleporterBlockBlockEntity.setTeleportationMode(teleportationMode)) {
@@ -94,7 +104,7 @@ public class UpdateTeleporterBlockPacketReceiver implements ServerPlayNetworking
                     updateSuccessful = false;
                 }
             } else if (teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.SAVED_LOCATIONS) {
-                if (!teleporterBlockBlockEntity.setLocationType(specificLocationType)) {
+                if (!teleporterBlockBlockEntity.setLocationType(locationType)) {
                     player.sendMessage(Text.translatable("teleporter_block.specificLocationType.invalid"), false);
                     updateSuccessful = false;
                 }

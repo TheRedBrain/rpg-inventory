@@ -6,13 +6,17 @@ import com.github.theredbrain.bamcore.registry.EntityRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
 import org.apache.commons.lang3.tuple.MutablePair;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class DungeonControlBlockEntity extends RotatedBlockEntity {
     private MutablePair<BlockPos, MutablePair<Double, Double>> mainEntrance = new MutablePair<>(new BlockPos(0, 1, 0), new MutablePair<>(0.0, 0.0));
-//    private HashMap<String, MutablePair<BlockPos, MutablePair<Double, Double>>> sideEntrances = new HashMap<>(Map.of());
+    private HashMap<String, MutablePair<BlockPos, MutablePair<Double, Double>>> sideEntrances = new HashMap<>(Map.of());
 //    private BlockPos triggeredBlockPositionOffset = new BlockPos(0, 1, 0);
     public DungeonControlBlockEntity(BlockPos pos, BlockState state) {
         super(EntityRegistry.DUNGEON_CONTROL_BLOCK_ENTITY, pos, state);
@@ -31,8 +35,8 @@ public class DungeonControlBlockEntity extends RotatedBlockEntity {
 //        nbt.putInt("sideEntrancesSize", sideEntrancesSize);
 //        for (int i = 0; i < sideEntrancesSize; i++) {
 //
-//            Set test;
-//            String key = this.sideEntrances.keySet().get(i).getLeft()
+////            Set test;
+//            String key = this.sideEntrances.keySet().get(i).getLeft();
 //            nbt.putInt("sideEntrance_" + i + "_X", this.sideEntrances.get(i).getLeft().getX());
 //            nbt.putInt("sideEntrance_" + i + "_Y", this.sideEntrances.get(i).getLeft().getY());
 //            nbt.putInt("sideEntrance_" + i + "_Z", this.sideEntrances.get(i).getLeft().getZ());
@@ -103,14 +107,25 @@ public class DungeonControlBlockEntity extends RotatedBlockEntity {
         return true;
     }
 
-//    public HashMap<String, MutablePair<BlockPos, MutablePair<Double, Double>>> getSideEntrances() {
-//        return sideEntrances;
-//    }
-//
-//    public boolean setSideEntrances(HashMap<String, MutablePair<BlockPos, MutablePair<Double, Double>>> sideEntrances) {
-//        this.sideEntrances = sideEntrances;
-//        return true;
-//    }
+    public MutablePair<BlockPos, MutablePair<Double, Double>> getTargetEntrance(String entrance) {
+        MutablePair<BlockPos, MutablePair<Double, Double>> targetEntrance;
+        if (!entrance.equals("") && sideEntrances.containsKey(entrance)) {
+            MutablePair<BlockPos, MutablePair<Double, Double>> targetEntranceOffset = this.sideEntrances.get(entrance);
+            targetEntrance = new MutablePair<>(new BlockPos(targetEntranceOffset.getLeft().getX() + this.getPos().getX(), targetEntranceOffset.getLeft().getY() + this.getPos().getY(), targetEntranceOffset.getLeft().getZ() + this.getPos().getZ()), targetEntranceOffset.getRight());
+        } else {
+            targetEntrance = new MutablePair<>(new BlockPos(this.mainEntrance.getLeft().getX() + this.getPos().getX(), this.mainEntrance.getLeft().getY() + this.getPos().getY(), this.mainEntrance.getLeft().getZ() + this.getPos().getZ()), this.mainEntrance.getRight());
+        }
+        return targetEntrance;
+    }
+
+    public HashMap<String, MutablePair<BlockPos, MutablePair<Double, Double>>> getSideEntrances() {
+        return sideEntrances;
+    }
+
+    public boolean setSideEntrances(HashMap<String, MutablePair<BlockPos, MutablePair<Double, Double>>> sideEntrances) {
+        this.sideEntrances = sideEntrances;
+        return true;
+    }
 
 //    public void trigger() {
 //        if (this.world != null) {
@@ -127,17 +142,19 @@ public class DungeonControlBlockEntity extends RotatedBlockEntity {
             if (state.get(RotatedBlockWithEntity.ROTATED) != this.rotated) {
                 BlockRotation blockRotation = BlockRotationUtils.calculateRotationFromDifferentRotatedStates(state.get(RotatedBlockWithEntity.ROTATED), this.rotated);
 //                this.triggeredBlockPositionOffset = BlockRotationUtils.rotateOffsetBlockPos(this.triggeredBlockPositionOffset, blockRotation);
-
+                this.mainEntrance = BlockRotationUtils.rotateEntrance(this.mainEntrance, blockRotation);
                 this.rotated = state.get(RotatedBlockWithEntity.ROTATED);
             }
             if (state.get(RotatedBlockWithEntity.X_MIRRORED) != this.x_mirrored) {
 //                this.triggeredBlockPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.triggeredBlockPositionOffset, BlockMirror.FRONT_BACK);
 
+                this.mainEntrance = BlockRotationUtils.mirrorEntrance(this.mainEntrance, BlockMirror.FRONT_BACK);
                 this.x_mirrored = state.get(RotatedBlockWithEntity.X_MIRRORED);
             }
             if (state.get(RotatedBlockWithEntity.Z_MIRRORED) != this.z_mirrored) {
 //                this.triggeredBlockPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.triggeredBlockPositionOffset, BlockMirror.LEFT_RIGHT);
 
+                this.mainEntrance = BlockRotationUtils.mirrorEntrance(this.mainEntrance, BlockMirror.LEFT_RIGHT);
                 this.z_mirrored = state.get(RotatedBlockWithEntity.Z_MIRRORED);
             }
         }

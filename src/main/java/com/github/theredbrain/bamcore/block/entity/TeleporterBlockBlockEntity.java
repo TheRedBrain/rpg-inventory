@@ -39,11 +39,13 @@ import java.util.Optional;
 
 public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements ExtendedScreenHandlerFactory, Inventory {
 
+    private boolean showAdventureScreen = true; //
     private boolean showActivationArea = false;
     private Vec3i activationAreaDimensions = Vec3i.ZERO;
     private BlockPos activationAreaPositionOffset = new BlockPos(0, 1, 0);
+    private BlockPos accessPositionOffset = new BlockPos(0, 0, 0);
 
-    private boolean showAdventureScreen = true; //
+    private boolean setAccessPosition = false; //
 
     private TeleportationMode teleportationMode = TeleportationMode.DIRECT;
 
@@ -78,6 +80,9 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
     @Override
     protected void writeNbt(NbtCompound nbt) {
         nbt.putString("teleporterName", this.teleporterName);
+
+        nbt.putBoolean("showAdventureScreen", this.showAdventureScreen);
+
         nbt.putBoolean("showActivationArea", this.showActivationArea);
 
         nbt.putInt("activationAreaDimensionsX", this.activationAreaDimensions.getX());
@@ -88,7 +93,11 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
         nbt.putInt("activationAreaPositionOffsetY", this.activationAreaPositionOffset.getY());
         nbt.putInt("activationAreaPositionOffsetZ", this.activationAreaPositionOffset.getZ());
 
-        nbt.putBoolean("showAdventureScreen", this.showAdventureScreen);
+        nbt.putInt("accessPositionOffsetX", this.accessPositionOffset.getX());
+        nbt.putInt("accessPositionOffsetY", this.accessPositionOffset.getY());
+        nbt.putInt("accessPositionOffsetZ", this.accessPositionOffset.getZ());
+
+        nbt.putBoolean("setAccessPosition", this.setAccessPosition);
 
         nbt.putString("teleportationMode", this.teleportationMode.asString());
 
@@ -128,6 +137,9 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
     @Override
     public void readNbt(NbtCompound nbt) {
         this.teleporterName = nbt.getString("teleporterName");
+
+        this.showAdventureScreen = nbt.getBoolean("showAdventureScreen");
+
         this.showActivationArea = nbt.getBoolean("showActivationArea");
 
         int i = MathHelper.clamp(nbt.getInt("activationAreaDimensionsX"), 0, 48);
@@ -140,7 +152,12 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
         int n = MathHelper.clamp(nbt.getInt("activationAreaPositionOffsetZ"), -48, 48);
         this.activationAreaPositionOffset = new BlockPos(l, m, n);
 
-        this.showAdventureScreen = nbt.getBoolean("showAdventureScreen");
+        int q = MathHelper.clamp(nbt.getInt("accessPositionOffsetX"), -48, 48);
+        int r = MathHelper.clamp(nbt.getInt("accessPositionOffsetY"), -48, 48);
+        int s = MathHelper.clamp(nbt.getInt("accessPositionOffsetZ"), -48, 48);
+        this.accessPositionOffset = new BlockPos(q, r, s);
+
+        this.setAccessPosition = nbt.getBoolean("setAccessPosition");
 
         this.teleportationMode = TeleportationMode.byName(nbt.getString("teleportationMode")).orElseGet(() -> TeleportationMode.DIRECT);
 
@@ -227,6 +244,20 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
         return true;
     }
 
+    /**
+     * Determines whether a pop-up window is shown where the player can confirm or deny the teleport.
+     * Has an effect only in some modes
+     */
+    public boolean getShowAdventureScreen() {
+        return showAdventureScreen;
+    }
+
+    // TODO check if input is valid
+    public boolean setShowAdventureScreen(boolean showAdventureScreen) {
+        this.showAdventureScreen = showAdventureScreen;
+        return true;
+    }
+
     public boolean getShowActivationArea() {
         return showActivationArea;
     }
@@ -257,17 +288,27 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
         return true;
     }
 
-    /**
-     * Determines whether a pop-up window is shown where the player can confirm or deny the teleport.
-     * Has an effect only in some modes
-     */
-    public boolean getShowAdventureScreen() {
-        return showAdventureScreen;
+    public BlockPos getAccessPositionOffset() {
+        return accessPositionOffset;
     }
 
     // TODO check if input is valid
-    public boolean setShowAdventureScreen(boolean showAdventureScreen) {
-        this.showAdventureScreen = showAdventureScreen;
+    public boolean setAccessPositionOffset(BlockPos accessPositionOffset) {
+        this.accessPositionOffset = accessPositionOffset;
+        return true;
+    }
+
+    /**
+     * Determines whether the access position of the player should be updated.
+     * Has an effect only in some modes
+     */
+    public boolean getSetAccessPosition() {
+        return setAccessPosition;
+    }
+
+    // TODO check if input is valid
+    public boolean setSetAccessPosition(boolean setAccessPosition) {
+        this.setAccessPosition = setAccessPosition;
         return true;
     }
 
@@ -498,6 +539,7 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
             if (state.get(RotatedBlockWithEntity.ROTATED) != this.rotated) {
                 BlockRotation blockRotation = BlockRotationUtils.calculateRotationFromDifferentRotatedStates(state.get(RotatedBlockWithEntity.ROTATED), this.rotated);
                 this.activationAreaPositionOffset = BlockRotationUtils.rotateOffsetBlockPos(this.activationAreaPositionOffset, blockRotation);
+                this.accessPositionOffset = BlockRotationUtils.rotateOffsetBlockPos(this.accessPositionOffset, blockRotation);
                 this.directTeleportPositionOffset = BlockRotationUtils.rotateOffsetBlockPos(this.directTeleportPositionOffset, blockRotation);
 
                 this.directTeleportOrientationYaw = BlockRotationUtils.rotateYaw(this.directTeleportOrientationYaw, blockRotation);
@@ -507,6 +549,7 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
             }
             if (state.get(RotatedBlockWithEntity.X_MIRRORED) != this.x_mirrored) {
                 this.activationAreaPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.activationAreaPositionOffset, BlockMirror.FRONT_BACK);
+                this.accessPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.accessPositionOffset, BlockMirror.FRONT_BACK);
                 this.directTeleportPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.directTeleportPositionOffset, BlockMirror.FRONT_BACK);
 
                 this.directTeleportOrientationYaw = BlockRotationUtils.mirrorYaw(this.directTeleportOrientationYaw, BlockMirror.FRONT_BACK);
@@ -516,6 +559,7 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
             }
             if (state.get(RotatedBlockWithEntity.Z_MIRRORED) != this.z_mirrored) {
                 this.activationAreaPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.activationAreaPositionOffset, BlockMirror.LEFT_RIGHT);
+                this.accessPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.accessPositionOffset, BlockMirror.LEFT_RIGHT);
                 this.directTeleportPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.directTeleportPositionOffset, BlockMirror.LEFT_RIGHT);
 
                 this.directTeleportOrientationYaw = BlockRotationUtils.mirrorYaw(this.directTeleportOrientationYaw, BlockMirror.LEFT_RIGHT);

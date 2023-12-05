@@ -21,10 +21,12 @@ public class UpdateTeleporterBlockPacket implements FabricPacket {
     public final BlockPos teleportBlockPosition;
 
     public final boolean showActivationArea;
+    public final boolean showAdventureScreen;
     public final Vec3i activationAreaDimensions;
     public final BlockPos activationAreaPositionOffset;
+    public final BlockPos accessPositionOffset;
 
-    public final boolean showAdventureScreen;
+    public final boolean setAccessPosition;
 
     public final TeleporterBlockBlockEntity.TeleportationMode teleportationMode;
 
@@ -46,15 +48,18 @@ public class UpdateTeleporterBlockPacket implements FabricPacket {
     public final String teleportButtonLabel;
     public final String cancelTeleportButtonLabel;
 
-    public UpdateTeleporterBlockPacket(BlockPos teleportBlockPosition, boolean showActivationArea, Vec3i activationAreaDimensions, BlockPos activationAreaPositionOffset, boolean showAdventureScreen, String teleportationMode, BlockPos directTeleportPositionOffset, double directTeleportOrientationYaw, double directTeleportOrientationPitch, String locationType, List<Pair<String, String>> dungeonLocationsList, List<String> housingLocationsList, boolean consumeKeyItemStack, String teleporterName, String currentTargetOwnerLabel, String currentTargetIdentifierLabel, String currentTargetEntranceLabel, String teleportButtonLabel, String cancelTeleportButtonLabel) {
+    public UpdateTeleporterBlockPacket(BlockPos teleportBlockPosition, boolean showActivationArea, boolean showAdventureScreen, Vec3i activationAreaDimensions, BlockPos activationAreaPositionOffset, BlockPos accessPositionOffset, boolean setAccessPosition, String teleportationMode, BlockPos directTeleportPositionOffset, double directTeleportOrientationYaw, double directTeleportOrientationPitch, String locationType, List<Pair<String, String>> dungeonLocationsList, List<String> housingLocationsList, boolean consumeKeyItemStack, String teleporterName, String currentTargetOwnerLabel, String currentTargetIdentifierLabel, String currentTargetEntranceLabel, String teleportButtonLabel, String cancelTeleportButtonLabel) {
         this.teleportBlockPosition = teleportBlockPosition;
 
         this.showActivationArea = showActivationArea;
+        this.showAdventureScreen = showAdventureScreen;
 
         this.activationAreaDimensions = activationAreaDimensions;
         this.activationAreaPositionOffset = activationAreaPositionOffset;
+        this.accessPositionOffset = accessPositionOffset;
 
-        this.showAdventureScreen = showAdventureScreen;
+        this.setAccessPosition = setAccessPosition;
+
         this.teleportationMode = TeleporterBlockBlockEntity.TeleportationMode.byName(teleportationMode).orElseGet(() -> TeleporterBlockBlockEntity.TeleportationMode.DIRECT);
         this.directTeleportPositionOffset = directTeleportPositionOffset;
         this.directTeleportOrientationYaw = directTeleportOrientationYaw;
@@ -79,11 +84,13 @@ public class UpdateTeleporterBlockPacket implements FabricPacket {
         this(
                 buf.readBlockPos(),
                 buf.readBoolean(),
+                buf.readBoolean(),
                 new Vec3i(
                         buf.readInt(),
                         buf.readInt(),
                         buf.readInt()
                 ),
+                buf.readBlockPos(),
                 buf.readBlockPos(),
                 buf.readBoolean(),
                 buf.readString(),
@@ -112,12 +119,15 @@ public class UpdateTeleporterBlockPacket implements FabricPacket {
 
         buf.writeBoolean(this.showActivationArea);
 
+        buf.writeBoolean(this.showAdventureScreen);
+
         buf.writeInt(this.activationAreaDimensions.getX());
         buf.writeInt(this.activationAreaDimensions.getY());
         buf.writeInt(this.activationAreaDimensions.getZ());
         buf.writeBlockPos(this.activationAreaPositionOffset);
+        buf.writeBlockPos(this.accessPositionOffset);
 
-        buf.writeBoolean(this.showAdventureScreen);
+        buf.writeBoolean(this.setAccessPosition);
 
         buf.writeString(this.teleportationMode.asString());
 

@@ -791,4 +791,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     public void bamcore$openChunkLoaderBlockScreen(ChunkLoaderBlockBlockEntity chunkLoaderBlock) {
     }
 
+    @Override
+    public void bamcore$openUseRelayBlockScreen(UseRelayBlockEntity useRelayBlock) {
+    }
+
 }
