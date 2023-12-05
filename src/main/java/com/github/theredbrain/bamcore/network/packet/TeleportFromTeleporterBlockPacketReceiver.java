@@ -167,11 +167,14 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
 //                        PortalAPI.addChunkLoaderForPlayer(serverPlayerEntity, chunkLoader);
 
                         ChunkPos targetDungeonChunkPos = targetWorld.getChunk(playerHouse.housingBlockPos()).getPos();
+                        BlockPos blockPos = playerHouse.housingBlockPos();
 //                        // force load chunks
 ////                        String placeStructureCommand = "execute as " + serverPlayerEntity.getName().getString() + " in " + targetDimensionName + " run place structure " + targetDungeonStructureIdentifier + " " + targetDungeonStructureStartPosition.getX() + " " + targetDungeonStructureStartPosition.getY() + " " + targetDungeonStructureStartPosition.getZ();
-                        String forceLoadAddCommand = "execute in " + targetWorld.getRegistryKey().getValue() + " run forceload add " + (targetDungeonChunkPos.x - 1) + " " + (targetDungeonChunkPos.z - 1) + " " + (targetDungeonChunkPos.x + 1) + " " + (targetDungeonChunkPos.z + 2);
+                        String forceLoadAddCommand = "execute in " + targetWorld.getRegistryKey().getValue() + " run forceload add " + (blockPos.getX() - 16) + " " + (blockPos.getZ() - 16) + " " + (blockPos.getX() + 31) + " " + (blockPos.getZ() + 31);
                         BetterAdventureModeCore.LOGGER.info("forceload add command: " + forceLoadAddCommand);
                         server.getCommandManager().executeWithPrefix(server.getCommandSource(), forceLoadAddCommand);
+
+                        server.getCommandManager().executeWithPrefix(server.getCommandSource(), "forceload query");
 //
 //
 ////                        // place structure
@@ -184,7 +187,7 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
 
 //                        // force load chunks
 ////                        String placeStructureCommand = "execute as " + serverPlayerEntity.getName().getString() + " in " + targetDimensionName + " run place structure " + targetDungeonStructureIdentifier + " " + targetDungeonStructureStartPosition.getX() + " " + targetDungeonStructureStartPosition.getY() + " " + targetDungeonStructureStartPosition.getZ();
-                        String forceLoadRemoveAllCommand = "execute in " + targetWorld.getRegistryKey().getValue() + " run forceload remove " + (targetDungeonChunkPos.x - 1) + " " + (targetDungeonChunkPos.z - 1) + " " + (targetDungeonChunkPos.x + 1) + " " + (targetDungeonChunkPos.z + 2);
+                        String forceLoadRemoveAllCommand = "execute in " + targetWorld.getRegistryKey().getValue() + " run forceload remove " + (blockPos.getX() - 16) + " " + (blockPos.getZ() - 16) + " " + (blockPos.getX() + 31) + " " + (blockPos.getZ() + 31);
                         BetterAdventureModeCore.LOGGER.info("forceload remove all command: " + forceLoadRemoveAllCommand);
                         server.getCommandManager().executeWithPrefix(server.getCommandSource(), forceLoadRemoveAllCommand);
 
@@ -218,8 +221,8 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
 //        BetterAdventureModeCore.LOGGER.info("targetWorld: " + targetWorld.getRegistryKey().getValue().getPath());
         if (targetWorld != null && targetPos != null) {
 
-//            serverPlayerEntity.teleport(targetWorld, targetPos.getX(), targetPos.getY(), targetPos.getZ(), (float) targetYaw, (float) targetPitch);
-            serverPlayerEntity.sendMessage(Text.of("Teleport to world: " + targetWorld + " at position: " + targetPos.getX() + ", " + targetPos.getY() + ", " + targetPos.getZ() + ", with yaw: " + targetYaw + " and pitch: " + targetPitch));
+            serverPlayerEntity.teleport(targetWorld, (targetPos.getX() + 0.5), (targetPos.getY() + 0.5), (targetPos.getZ() + 0.5), (float) targetYaw, (float) targetPitch);
+            serverPlayerEntity.sendMessage(Text.of("Teleport to world: " + targetWorld + " at position: " + (targetPos.getX() + 0.5) + ", " + (targetPos.getY() + 0.5) + ", " + (targetPos.getZ() + 0.5) + ", with yaw: " + targetYaw + " and pitch: " + targetPitch));
             // TODO send S2C packet which removes PortalResistanceEffect and setScreen(null)
         } else {
             serverPlayerEntity.sendMessage(Text.of("Teleport failed"));

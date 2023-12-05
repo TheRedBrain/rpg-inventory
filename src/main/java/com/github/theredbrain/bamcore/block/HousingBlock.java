@@ -33,6 +33,7 @@ public class HousingBlock extends RotatedBlockWithEntity {
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
         return validateTicker(type, EntityRegistry.HOUSING_BLOCK_ENTITY, HousingBlockBlockEntity::tick);
     }
+
     @Override
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.MODEL;
