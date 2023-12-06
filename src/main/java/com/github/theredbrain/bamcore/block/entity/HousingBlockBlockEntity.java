@@ -28,24 +28,25 @@ import org.apache.commons.lang3.tuple.MutablePair;
 import java.util.*;
 
 public class HousingBlockBlockEntity extends RotatedBlockEntity {
-    private String owner = "";
-    private boolean isOwnerSet = false;
+    private String ownerUuid = "";
+    private boolean isOwnerSet;
     private List<String> coOwnerList = new ArrayList<>(List.of());
     private List<String> trustedList = new ArrayList<>(List.of());
     private List<String> guestList = new ArrayList<>(List.of());
     private boolean showInfluenceArea = false;
     private Vec3i influenceAreaDimensions = Vec3i.ZERO;
     private BlockPos influenceAreaPositionOffset = new BlockPos(0, 1, 0);
-    private HousingBlockBlockEntity.OwnerMode ownerMode = OwnerMode.DIMENSION_OWNER; // 0: dimension owner, 1: first interaction
+    private HousingBlockBlockEntity.OwnerMode ownerMode = OwnerMode.DIMENSION_OWNER;
     private BlockPos triggeredBlockPositionOffset = new BlockPos(0, 1, 0);
     private MutablePair<BlockPos, MutablePair<Double, Double>> entrance = new MutablePair<>(new BlockPos(0, 1, 0), new MutablePair<>(0.0, 0.0));
     public HousingBlockBlockEntity(BlockPos pos, BlockState state) {
         super(EntityRegistry.HOUSING_BLOCK_ENTITY, pos, state);
+        this.isOwnerSet = false;
     }
 
     @Override
     protected void writeNbt(NbtCompound nbt) {
-        nbt.putString("ownerUuid", this.owner);
+        nbt.putString("ownerUuid", this.ownerUuid);
         nbt.putBoolean("isOwnerSet", isOwnerSet);
 
         int coOwnerListSize = coOwnerList.size();
@@ -93,7 +94,7 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
 
     @Override
     public void readNbt(NbtCompound nbt) {
-        this.owner = nbt.getString("ownerUuid");
+        this.ownerUuid = nbt.getString("ownerUuid");
         this.isOwnerSet = nbt.getBoolean("isOwnerSet");
 
         this.coOwnerList = new ArrayList<>(List.of());
@@ -156,10 +157,10 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
 
     public static void tick(World world, BlockPos pos, BlockState state, HousingBlockBlockEntity blockEntity) {
         if (world.getTime() % 20L == 0L) {
-            if (blockEntity.hasWorld() && !blockEntity.isOwnerSet) {
-                if (Objects.equals(blockEntity.owner, "") && blockEntity.ownerMode == OwnerMode.DIMENSION_OWNER) {
-                    blockEntity.owner = initOwner(blockEntity.world);
-                    BetterAdventureModeCore.LOGGER.info(blockEntity.owner);
+            if (blockEntity.hasWorld() && !blockEntity.isOwnerSet && blockEntity.ownerMode == OwnerMode.DIMENSION_OWNER) {
+                blockEntity.ownerUuid = initOwner(blockEntity.world);
+                if (UUIDUtilities.isStringValidUUID(blockEntity.ownerUuid)) {
+                    BetterAdventureModeCore.LOGGER.info(blockEntity.ownerUuid);
                     blockEntity.isOwnerSet = true;
                 }
             }
@@ -181,16 +182,16 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
 
                 String playerName = playerEntity.getName().getString();
                 String playerUuid = playerEntity.getUuidAsString();
-                if (Objects.equals(playerUuid, blockEntity.getOwner())/* || playerEntity.isCreative()*/) {
-                    playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.HOUSING_OWNER_EFFECT, 100, 0, true, false, true));
+                if (Objects.equals(playerUuid, blockEntity.getOwnerUuid())) {
+                    playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.HOUSING_OWNER_EFFECT, 100, 0, true, false, true)); // TODO housing effects should show no icon
                 } else if (blockEntity.getCoOwnerList().contains(playerName)) {
-                    playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.HOUSING_CO_OWNER_EFFECT, 100, 0, true, false, true));
+                    playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.HOUSING_CO_OWNER_EFFECT, 100, 0, true, false, true)); // TODO housing effects should show no icon
                 } else if (blockEntity.getTrustedList().contains(playerName)) {
-                    playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.HOUSING_TRUSTED_EFFECT, 100, 0, true, false, true));
+                    playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.HOUSING_TRUSTED_EFFECT, 100, 0, true, false, true)); // TODO housing effects should show no icon
                 } else if (blockEntity.getGuestList().contains(playerName)) {
-                    playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.HOUSING_GUEST_EFFECT, 100, 0, true, false, true));
+                    playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.HOUSING_GUEST_EFFECT, 100, 0, true, false, true)); // TODO housing effects should show no icon
                 } else {
-                    playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.HOUSING_STRANGER_EFFECT, 100, 0, true, false, true));
+                    playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.HOUSING_STRANGER_EFFECT, 100, 0, true, false, true)); // TODO housing effects should show no icon
                 }
                 ComponentsRegistry.CURRENT_HOUSING_BLOCK_POS.get(playerEntity).setValue(blockEntity.pos);
             }
@@ -201,13 +202,20 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
         return new MutablePair<>(this.entrance.getLeft().add(this.getPos().getX(), this.getPos().getY(), this.getPos().getZ())/*new BlockPos(this.entrance.getLeft().getX() + this.getPos().getX(), this.entrance.getLeft().getY() + this.getPos().getY(), this.entrance.getLeft().getZ() + this.getPos().getZ())*/, this.entrance.getRight());
     }
 
-    public String getOwner() {
-        return this.owner;
+    public String getOwnerUuid() {
+        return this.ownerUuid;
     }
 
-    public boolean setOwner(String owner) {
-        this.owner = owner;
-        return true;
+    public boolean setOwnerUuid(String ownerUuid) {
+        if (ownerUuid.equals("")) {
+            this.ownerUuid = ownerUuid;
+            return true;
+        }
+        if (UUIDUtilities.isStringValidUUID(ownerUuid)) {
+            this.ownerUuid = ownerUuid;
+            return true;
+        }
+        return false;
     }
 
     public List<String> getCoOwnerList() {
@@ -241,7 +249,6 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
         return this.showInfluenceArea;
     }
 
-    // TODO check if input is valid
     public boolean setShowInfluenceArea(boolean showInfluenceArea) {
         this.showInfluenceArea = showInfluenceArea;
         return true;
@@ -281,7 +288,6 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
         return this.ownerMode;
     }
 
-    // TODO check if input is valid
     public boolean setOwnerMode(HousingBlockBlockEntity.OwnerMode ownerMode) {
         this.ownerMode = ownerMode;
         return true;
@@ -296,6 +302,10 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
         return true;
     }
 
+    public boolean isOwnerSet() {
+        return this.isOwnerSet;
+    }
+
     public void setIsOwnerSet(boolean isOwnerSet) {
         this.isOwnerSet = isOwnerSet;
     }
@@ -303,19 +313,10 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
     private static String initOwner(World world) {
         if (world != null) {
             String worldRegistryKey = world.getRegistryKey().getValue().getPath();
-            BetterAdventureModeCore.LOGGER.info("initOwner worldRegistryKey: " + worldRegistryKey);
             String[] parts = worldRegistryKey.split("_");
-            if (world.getServer() != null) {
-                String uuidString = parts[0];
-                BetterAdventureModeCore.LOGGER.info("initOwner uuidString: " + uuidString);
-                if (UUIDUtilities.isStringValidUUID(uuidString)) {
-                    PlayerEntity playerEntity = world.getServer().getPlayerManager().getPlayer(UUID.fromString(uuidString));
-                    if (playerEntity != null) {
-                        String ownerName = playerEntity.getName().getString();
-                        BetterAdventureModeCore.LOGGER.info("initOwner ownerName: " + ownerName);
-                        return ownerName;
-                    }
-                }
+            String uuidString = parts[0];
+            if (UUIDUtilities.isStringValidUUID(uuidString)) {
+                return uuidString;
             }
         }
         return "";
@@ -345,22 +346,25 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
             if (state.get(RotatedBlockWithEntity.ROTATED) != this.rotated) {
                 BlockRotation blockRotation = BlockRotationUtils.calculateRotationFromDifferentRotatedStates(state.get(RotatedBlockWithEntity.ROTATED), this.rotated);
                 this.triggeredBlockPositionOffset = BlockRotationUtils.rotateOffsetBlockPos(this.triggeredBlockPositionOffset, blockRotation);
-                this.influenceAreaPositionOffset = BlockRotationUtils.rotateOffsetBlockPos(this.influenceAreaPositionOffset, blockRotation);
-                this.influenceAreaDimensions = BlockRotationUtils.rotateOffsetVec3i(this.influenceAreaDimensions, blockRotation);
+                MutablePair<BlockPos, Vec3i> offsetArea = BlockRotationUtils.rotateOffsetArea(this.influenceAreaPositionOffset, this.influenceAreaDimensions, blockRotation);
+                this.influenceAreaPositionOffset = offsetArea.getLeft();
+                this.influenceAreaDimensions = offsetArea.getRight();
                 this.entrance = BlockRotationUtils.rotateEntrance(this.entrance, blockRotation);
                 this.rotated = state.get(RotatedBlockWithEntity.ROTATED);
             }
             if (state.get(RotatedBlockWithEntity.X_MIRRORED) != this.x_mirrored) {
                 this.triggeredBlockPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.triggeredBlockPositionOffset, BlockMirror.FRONT_BACK);
-                this.influenceAreaPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.influenceAreaPositionOffset, BlockMirror.FRONT_BACK);
-                this.influenceAreaDimensions = BlockRotationUtils.mirrorOffsetVec3i(this.influenceAreaDimensions, BlockMirror.FRONT_BACK);
+                MutablePair<BlockPos, Vec3i> offsetArea = BlockRotationUtils.mirrorOffsetArea(this.influenceAreaPositionOffset, this.influenceAreaDimensions, BlockMirror.FRONT_BACK);
+                this.influenceAreaPositionOffset = offsetArea.getLeft();
+                this.influenceAreaDimensions = offsetArea.getRight();
                 this.entrance = BlockRotationUtils.mirrorEntrance(this.entrance, BlockMirror.FRONT_BACK);
                 this.x_mirrored = state.get(RotatedBlockWithEntity.X_MIRRORED);
             }
             if (state.get(RotatedBlockWithEntity.Z_MIRRORED) != this.z_mirrored) {
                 this.triggeredBlockPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.triggeredBlockPositionOffset, BlockMirror.LEFT_RIGHT);
-                this.influenceAreaPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.influenceAreaPositionOffset, BlockMirror.LEFT_RIGHT);
-                this.influenceAreaDimensions = BlockRotationUtils.mirrorOffsetVec3i(this.influenceAreaDimensions, BlockMirror.LEFT_RIGHT);
+                MutablePair<BlockPos, Vec3i> offsetArea = BlockRotationUtils.mirrorOffsetArea(this.influenceAreaPositionOffset, this.influenceAreaDimensions, BlockMirror.LEFT_RIGHT);
+                this.influenceAreaPositionOffset = offsetArea.getLeft();
+                this.influenceAreaDimensions = offsetArea.getRight();
                 this.entrance = BlockRotationUtils.mirrorEntrance(this.entrance, BlockMirror.LEFT_RIGHT);
                 this.z_mirrored = state.get(RotatedBlockWithEntity.Z_MIRRORED);
             }

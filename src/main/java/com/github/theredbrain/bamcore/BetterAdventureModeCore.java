@@ -51,4 +51,19 @@ public class BetterAdventureModeCore implements ModInitializer {
 		return new Identifier(MOD_ID, path);
 	}
 
+	public static void info(String message) {
+		LOGGER.info("[bamcore] [info]: " + message);
+	}
+
+	public static void warn(String message) {
+		LOGGER.warn("[bamcore] [warn]: " + message);
+	}
+
+	public static void debug(String message) {
+		LOGGER.debug("[bamcore] [debug]: " + message);
+	}
+
+	public static void error(String message) {
+		LOGGER.error("[bamcore] [error]: " + message);
+	}
 }

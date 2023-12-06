@@ -31,11 +31,9 @@ public class SetHousingBlockOwnerPacketReceiver implements ServerPlayNetworking.
 
         if (blockEntity instanceof HousingBlockBlockEntity housingBlockBlockEntity) {
 
-            if (!housingBlockBlockEntity.setOwner(owner)) {
+            if (!housingBlockBlockEntity.setOwnerUuid(owner)) {
                 player.sendMessage(Text.translatable("housing_block.owner.invalid"), false);
                 updateSuccessful = false;
-            } else if (Objects.equals(owner, "")) {
-                housingBlockBlockEntity.setIsOwnerSet(false);
             }
             if (updateSuccessful) {
                 if (Objects.equals(owner, "")) {

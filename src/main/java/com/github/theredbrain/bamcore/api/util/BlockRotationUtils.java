@@ -142,4 +142,33 @@ public class BlockRotationUtils {
     public static MutablePair<BlockPos, MutablePair<Double, Double>> mirrorEntrance(MutablePair<BlockPos, MutablePair<Double, Double>> entrance, BlockMirror mirror) {
         return new MutablePair<>(BlockRotationUtils.mirrorOffsetBlockPos(entrance.getLeft(), mirror), new MutablePair<>(BlockRotationUtils.mirrorYaw(entrance.getRight().getLeft(), mirror), entrance.getRight().getRight()));
     }
+
+    public static MutablePair<BlockPos, Vec3i> rotateOffsetArea(BlockPos positionOffset, Vec3i areaDimensions, BlockRotation rotation) {
+        if (rotation == BlockRotation.CLOCKWISE_90) {
+            Vec3i newAreaDimensions = new Vec3i(areaDimensions.getZ(), areaDimensions.getY(), areaDimensions.getX());
+            BlockPos newPositionOffset = new BlockPos(-(positionOffset.getZ()) - newAreaDimensions.getX() + 1, positionOffset.getY(), positionOffset.getX());
+            return MutablePair.of(newPositionOffset, newAreaDimensions);
+        } else if (rotation == BlockRotation.CLOCKWISE_180) {
+            BlockPos newPositionOffset = new BlockPos(-(positionOffset.getX()) - areaDimensions.getX() + 1, positionOffset.getY(), -(positionOffset.getZ()) - areaDimensions.getZ() + 1);
+            return MutablePair.of(newPositionOffset, areaDimensions);
+        } else if (rotation == BlockRotation.COUNTERCLOCKWISE_90) {
+            Vec3i newAreaDimensions = new Vec3i(areaDimensions.getZ(), areaDimensions.getY(), areaDimensions.getX());
+            BlockPos newPositionOffset = new BlockPos(positionOffset.getZ(), positionOffset.getY(), -(positionOffset.getX()) - newAreaDimensions.getZ() + 1);
+            return MutablePair.of(newPositionOffset, newAreaDimensions);
+        } else {
+            return MutablePair.of(positionOffset, areaDimensions);
+        }
+    }
+
+    public static MutablePair<BlockPos, Vec3i> mirrorOffsetArea(BlockPos positionOffset, Vec3i areaDimensions, BlockMirror mirror) {
+        if (mirror == BlockMirror.FRONT_BACK) {
+            BlockPos newPositionOffset = new BlockPos(-(positionOffset.getX()) - areaDimensions.getX() + 1, positionOffset.getY(), positionOffset.getZ());
+            return MutablePair.of(newPositionOffset, areaDimensions);
+        } else if (mirror == BlockMirror.LEFT_RIGHT) {
+            BlockPos newPositionOffset = new BlockPos(positionOffset.getX(), positionOffset.getY(), -(positionOffset.getZ()) - areaDimensions.getZ() + 1);
+            return MutablePair.of(newPositionOffset, areaDimensions);
+        } else {
+            return MutablePair.of(positionOffset, areaDimensions);
+        }
+    }
 }

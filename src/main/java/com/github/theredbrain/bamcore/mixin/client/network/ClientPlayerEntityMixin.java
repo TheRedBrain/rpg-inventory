@@ -12,6 +12,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -22,6 +23,8 @@ import org.spongepowered.asm.mixin.Shadow;
 public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity implements DuckPlayerEntityMixin {
 
     @Shadow @Final protected MinecraftClient client;
+
+    @Shadow public abstract void sendMessage(Text message, boolean overlay);
 
     public ClientPlayerEntityMixin(ClientWorld world, GameProfile profile) {
         super(world, profile);
@@ -54,8 +57,11 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
             currentPermissionLevel = 3;
         } else if (this.hasStatusEffect(StatusEffectsRegistry.HOUSING_STRANGER_EFFECT) && housingBlockBlockEntity != null) {
             currentPermissionLevel = 4;
-        } else {
+        } else if (this.isCreative()) {
             currentPermissionLevel = 5;
+        } else {
+            this.sendMessage(Text.translatable("gui.housing_screen.not_in_a_house"), true);
+            return;
         }
         this.client.setScreen(new HousingScreen(housingBlockBlockEntity, currentPermissionLevel, this.isCreative()));
     }

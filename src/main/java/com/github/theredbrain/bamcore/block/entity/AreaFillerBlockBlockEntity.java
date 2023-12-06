@@ -16,6 +16,7 @@ import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
+import org.apache.commons.lang3.tuple.MutablePair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -155,20 +156,23 @@ public class AreaFillerBlockBlockEntity extends RotatedBlockEntity implements Tr
             if (state.get(RotatedBlockWithEntity.ROTATED) != this.rotated) {
                 BlockRotation blockRotation = BlockRotationUtils.calculateRotationFromDifferentRotatedStates(state.get(RotatedBlockWithEntity.ROTATED), this.rotated);
                 this.triggeredBlockPositionOffset = BlockRotationUtils.rotateOffsetBlockPos(this.triggeredBlockPositionOffset, blockRotation);
-                this.filledAreaPositionOffset = BlockRotationUtils.rotateOffsetBlockPos(this.filledAreaPositionOffset, blockRotation);
-                this.filledAreaDimensions = BlockRotationUtils.rotateOffsetVec3i(this.filledAreaDimensions, blockRotation);
+                MutablePair<BlockPos, Vec3i> offsetArea = BlockRotationUtils.rotateOffsetArea(this.filledAreaPositionOffset, this.filledAreaDimensions, blockRotation);
+                this.filledAreaPositionOffset = offsetArea.getLeft();
+                this.filledAreaDimensions = offsetArea.getRight();
                 this.rotated = state.get(RotatedBlockWithEntity.ROTATED);
             }
             if (state.get(RotatedBlockWithEntity.X_MIRRORED) != this.x_mirrored) {
                 this.triggeredBlockPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.triggeredBlockPositionOffset, BlockMirror.FRONT_BACK);
-                this.filledAreaPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.filledAreaPositionOffset, BlockMirror.FRONT_BACK);
-                this.filledAreaDimensions = BlockRotationUtils.mirrorOffsetVec3i(this.filledAreaDimensions, BlockMirror.FRONT_BACK);
+                MutablePair<BlockPos, Vec3i> offsetArea = BlockRotationUtils.mirrorOffsetArea(this.filledAreaPositionOffset, this.filledAreaDimensions, BlockMirror.FRONT_BACK);
+                this.filledAreaPositionOffset = offsetArea.getLeft();
+                this.filledAreaDimensions = offsetArea.getRight();
                 this.x_mirrored = state.get(RotatedBlockWithEntity.X_MIRRORED);
             }
             if (state.get(RotatedBlockWithEntity.Z_MIRRORED) != this.z_mirrored) {
                 this.triggeredBlockPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.triggeredBlockPositionOffset, BlockMirror.LEFT_RIGHT);
-                this.filledAreaPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.filledAreaPositionOffset, BlockMirror.LEFT_RIGHT);
-                this.filledAreaDimensions = BlockRotationUtils.mirrorOffsetVec3i(this.filledAreaDimensions, BlockMirror.LEFT_RIGHT);
+                MutablePair<BlockPos, Vec3i> offsetArea = BlockRotationUtils.mirrorOffsetArea(this.filledAreaPositionOffset, this.filledAreaDimensions, BlockMirror.LEFT_RIGHT);
+                this.filledAreaPositionOffset = offsetArea.getLeft();
+                this.filledAreaDimensions = offsetArea.getRight();
                 this.z_mirrored = state.get(RotatedBlockWithEntity.Z_MIRRORED);
             }
         }
