@@ -78,7 +78,7 @@ public class AdventureInventoryScreen extends HandledScreen<PlayerScreenHandler>
     }
 
     public void handledScreenTick() {
-        PlayerEntity player = this.handler.player();
+//        PlayerEntity player = this.handler.player();
 //        this.updateAttributeScreen(player);
 //        this.updateEffectsScreen(player);
         TrinketScreenManager.tick();
