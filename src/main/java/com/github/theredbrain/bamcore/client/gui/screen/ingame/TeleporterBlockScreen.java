@@ -130,7 +130,6 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
     // adventure mode
     private PlayerListEntry currentTargetOwner;
     private ButtonWidget openChooseTargetOwnerScreenButton;
-    private ButtonWidget confirmChooseTargetOwnerButton;
     private ButtonWidget cancelChooseTargetOwnerButton;
     private String currentTargetIdentifier;
     private String currentTargetDisplayName;
@@ -142,21 +141,16 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
     private ButtonWidget cancelChooseTargetIdentifierButton;
     private String currentTargetEntrance;
     private String currentTargetEntranceDisplayName;
-//    private ButtonWidget openChooseTargetEntranceScreenButton;
-//    private ButtonWidget confirmChooseTargetEntranceButton;
-//    private ButtonWidget cancelChooseTargetEntranceButton;
     private ButtonWidget teleportButton;
     private ButtonWidget cancelTeleportButton;
     private ButtonWidget openDungeonRegenerationScreenButton;
     private ButtonWidget confirmDungeonRegenerationButton;
     private ButtonWidget cancelDungeonRegenerationButton;
-//    private ButtonWidget updateCurrentTeleportationTargetEntryButton;
 
     private boolean showCreativeTab;
     private CreativeScreenPage creativeScreenPage;
     private boolean showChooseTargetOwnerScreen;
     private boolean showChooseTargetIdentifierScreen;
-//    private boolean showChooseTargetEntranceScreen;
     private boolean showRegenerationConfirmScreen;
     private boolean showActivationArea;
     private boolean showAdventureScreen;
@@ -189,7 +183,6 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
     private boolean visibleHousingLocationsListMouseClicked = false;
 
     private boolean isTeleportButtonActive = true;
-    //    private Identifier currentUnlockAdvancement;
     private boolean showCurrentUnlockAdvancement;
     private boolean isCurrentLocationUnlocked;
     private Advancement currentUnlockAdvancement;
@@ -258,21 +251,6 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
         this.updateWidgets();
     }
 
-//    private void openChooseCurrentTargetEntranceScreen() {
-//        this.showChooseTargetEntranceScreen = true;
-//        this.updateWidgets();
-//    }
-
-//    private void confirmChooseCurrentTargetEntrance() {
-//        this.showChooseTargetEntranceScreen = false;
-//        this.updateWidgets();
-//    }
-
-//    private void cancelChooseCurrentTargetEntrance() {
-//        this.showChooseTargetEntranceScreen = false;
-//        this.updateWidgets();
-//    }
-
     private void openDungeonRegenerationConfirmScreen() {
         this.showRegenerationConfirmScreen = true;
         this.updateWidgets();
@@ -280,8 +258,6 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
 
     private void confirmDungeonRegeneration() {
         if (this.tryDungeonRegeneration()) {
-//            component(OverlayContainer.class, "dungeonRegenerationConfirmScreen").remove();
-//            this.buildAdventureModeScreen();
             this.showRegenerationConfirmScreen = false;
             this.updateWidgets();
         }
@@ -291,28 +267,6 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
         this.showRegenerationConfirmScreen = false;
         this.updateWidgets();
     }
-
-//    private void updateCurrentTeleportationTargetEntry(PlayerListEntry clientPlayer, PlayerListEntry newTeleportationTargetPlayer) {
-
-//        component(FlowLayout.class, "currentTeleportationTargetEntryContainer").clearChildren();
-//
-//        component(FlowLayout.class, "currentTeleportationTargetEntryContainer").children(List.of(
-//                Components.texture(newTeleportationTargetPlayer.getSkinTextures().texture(), 8, 8, 8, 8, 64, 64)
-//                        .sizing(Sizing.fixed(16), Sizing.fixed(16)),
-//                Components.label(Text.of(newTeleportationTargetPlayer.getProfile().getName()))
-//                        .shadow(true)
-//                        .color(Color.ofArgb(0xFFFFFF))
-//                        .margins(Insets.of(1, 1, 1, 1))
-//                        .sizing(Sizing.content(), Sizing.content())
-//                        .id("currentTeleportationTargetEntryLabel")
-//        ));
-
-//        if (clientPlayer != newTeleportationTargetPlayer) {
-//            component(ButtonComponent.class, "regenerateDungeonButton").active = false;
-//        } else {
-//            component(ButtonComponent.class, "regenerateDungeonButton").active = ComponentsRegistry.PLAYER_SPECIFIC_DIMENSION_IDS.get(this.client.getServer().getPlayerManager().getPlayer(clientPlayer.getProfile().getId())).getStatus(this.teleporterBlock.getOutgoingTeleportDimension());
-//        }
-//    }
 
     private void done() {
         if (this.updateTeleporterBlock()) {
@@ -449,7 +403,6 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
         //region adventure screen
 
         this.openChooseTargetOwnerScreenButton = this.addDrawableChild(ButtonWidget.builder(EDIT_BUTTON_LABEL_TEXT, button -> this.openChooseCurrentTargetOwnerScreen()).dimensions(this.x + this.backgroundWidth - 57, this.y + 33, 50, 20).build());
-//        this.confirmChooseCurrentTargetOwnerButton = this.addDrawableChild(ButtonWidget.builder(CONFIRM_BUTTON_LABEL_TEXT, button -> this.confirmChooseCurrentTargetOwner()).dimensions(this.x + 7, this.y + this.backgroundHeight - 27, 100, 20).build());
         this.cancelChooseTargetOwnerButton = this.addDrawableChild(ButtonWidget.builder(CANCEL_BUTTON_LABEL_TEXT, button -> this.cancelChooseCurrentTargetOwner()).dimensions(this.x + 7, this.y + this.backgroundHeight - 27, this.backgroundWidth - 14, 20).build());
 
         this.openChooseTargetIdentifierScreenButton = this.addDrawableChild(ButtonWidget.builder(EDIT_BUTTON_LABEL_TEXT, button -> this.openChooseTargetIdentifierScreen()).dimensions(this.x + this.backgroundWidth - 57, this.y + 77, 50, 20).build());
@@ -459,18 +412,9 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
         this.confirmChooseTargetIdentifier3Button = this.addDrawableChild(ButtonWidget.builder(CHOOSE_BUTTON_LABEL_TEXT, button -> this.chooseTargetIdentifier(3)).dimensions(this.x + this.backgroundWidth - 57, this.y + 92, 50, 20).build());
         this.cancelChooseTargetIdentifierButton = this.addDrawableChild(ButtonWidget.builder(CANCEL_BUTTON_LABEL_TEXT, button -> this.cancelChooseTargetLocation()).dimensions(this.x + 7, this.y + this.backgroundHeight - 27, this.backgroundWidth - 14, 20).build());
 
-//        this.openChooseTargetEntranceScreenButton = this.addDrawableChild(ButtonWidget.builder(EDIT_BUTTON_LABEL_TEXT, button -> this.openChooseCurrentTargetEntranceScreen()).dimensions(this.x + this.backgroundWidth - 57, this.y + 107, 50, 20).build());
-//        this.confirmChooseCurrentTargetEntranceButton = this.addDrawableChild(ButtonWidget.builder(CONFIRM_BUTTON_LABEL_TEXT, button -> this.confirmChooseCurrentTargetEntrance()).dimensions(this.x + 7, this.y + this.backgroundHeight - 27, 100, 20).build());
-//        this.cancelChooseTargetEntranceButton = this.addDrawableChild(ButtonWidget.builder(CANCEL_BUTTON_LABEL_TEXT, button -> this.cancelChooseCurrentTargetEntrance()).dimensions(this.x + 7, this.y + this.backgroundHeight - 27, this.backgroundWidth - 14, 20).build());
-
         this.teleportButton = this.addDrawableChild(ButtonWidget.builder(Text.translatable(this.teleporterBlock.getTeleportButtonLabel()), button -> this.teleport()).dimensions(this.x + 7, this.y + this.backgroundHeight - 27, 100, 20).build());
         this.cancelTeleportButton = this.addDrawableChild(ButtonWidget.builder(Text.translatable(this.teleporterBlock.getCancelTeleportButtonLabel()), button -> this.cancelTeleport()).dimensions(this.x + this.backgroundWidth - 107, this.y + this.backgroundHeight - 27, 100, 20).build());
 
-//        if (this.teleporterBlock.getTeleportationMode() == TeleporterBlockBlockEntity.TeleportationMode.DUNGEONS || this.teleporterBlock.getTeleportationMode() == TeleporterBlockBlockEntity.TeleportationMode.HOUSING) {
-//            this.cancelTeleportButton.setPosition(this.x + this.backgroundWidth - 107, this.y + this.backgroundHeight - 27);
-//            this.teleportButton.setWidth(100);
-//            this.cancelTeleportButton.setWidth(100);
-//        }
         //endregion adventure screen
 
         //region creative screen
@@ -673,20 +617,15 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
     private void updateWidgets() {
 
         this.openChooseTargetOwnerScreenButton.visible = false;
-//        this.confirmChooseCurrentTargetOwnerButton.visible = false;
+        // TODO
         this.cancelChooseTargetOwnerButton.visible = false;
 
         this.openChooseTargetIdentifierScreenButton.visible = false;
-//        this.confirmChooseCurrentTargetIdentifierButton.visible = false;
         this.confirmChooseTargetIdentifier0Button.visible = false;
         this.confirmChooseTargetIdentifier1Button.visible = false;
         this.confirmChooseTargetIdentifier2Button.visible = false;
         this.confirmChooseTargetIdentifier3Button.visible = false;
         this.cancelChooseTargetIdentifierButton.visible = false;
-
-//        this.openChooseTargetEntranceScreenButton.visible = false;
-//        this.confirmChooseCurrentTargetEntranceButton.visible = false;
-//        this.cancelChooseTargetEntranceButton.visible = false;
 
         this.teleportButton.visible = false;
         this.cancelTeleportButton.visible = false;
@@ -841,12 +780,11 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
 
             if (showChooseTargetOwnerScreen) {
 
-//                this.confirmChooseCurrentTargetOwnerButton.visible = true;
+                // TODO
                 this.cancelChooseTargetOwnerButton.visible = true;
 
             } else if (showChooseTargetIdentifierScreen) {
 
-//                this.confirmChooseCurrentTargetIdentifierButton.visible = true;
                 int index = 0;
                 if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DUNGEONS) {
                     for (int i = 0; i < Math.min(4, this.visibleDungeonLocationsList.size()); i++) {
@@ -878,11 +816,6 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
 
                 this.cancelChooseTargetIdentifierButton.visible = true;
 
-//            } else if (showChooseTargetEntranceScreen) {
-
-//                this.confirmChooseCurrentTargetEntranceButton.visible = true;
-//                this.cancelChooseTargetEntranceButton.visible = true;
-
             } else if (showRegenerationConfirmScreen) {
 
                 this.confirmDungeonRegenerationButton.visible = true;
@@ -893,9 +826,6 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
                 if (!(this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DIRECT || this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.SAVED_LOCATIONS)) {
                     this.openChooseTargetIdentifierScreenButton.visible = true;
                     this.openChooseTargetOwnerScreenButton.visible = true;
-//                    if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DUNGEONS) {
-//                        this.openChooseTargetEntranceScreenButton.visible = true;
-//                    }
                 }
 
                 this.teleportButton.visible = true;
@@ -1248,27 +1178,22 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
                     this.newHousingLocationIdentifierField.render(context, mouseX, mouseY, delta);
                 }
             } else if (this.creativeScreenPage == CreativeScreenPage.ADVENTURE_SCREEN_CUSTOMIZATION) {
-//                context.drawTextWithShadow(this.textRenderer, TELEPORTER_NAME_FIELD_LABEL_TEXT, this.width / 2 - 153, 50, 0xA0A0A0);
+
                 this.teleporterNameField.render(context, mouseX, mouseY, delta);
 
                 if (!(this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DIRECT || this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.SAVED_LOCATIONS)) {
 
-//                    context.drawTextWithShadow(this.textRenderer, TARGET_OWNER_FIELD_LABEL_TEXT, this.width / 2 - 153, 74, 0xA0A0A0);
                     this.currentTargetOwnerLabelField.render(context, mouseX, mouseY, delta);
-//                    context.drawTextWithShadow(this.textRenderer, TARGET_IDENTIFIER_FIELD_LABEL_TEXT, this.width / 2 - 153, 98, 0xA0A0A0);
                     this.currentTargetIdentifierLabelField.render(context, mouseX, mouseY, delta);
 
                     if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DUNGEONS) {
 
-//                        context.drawTextWithShadow(this.textRenderer, TARGET_ENTRANCE_FIELD_LABEL_TEXT, this.width / 2 - 153, 122, 0xA0A0A0);
                         this.currentTargetEntranceLabelField.render(context, mouseX, mouseY, delta);
 
                     }
                 }
 
-//                context.drawTextWithShadow(this.textRenderer, TELEPORT_BUTTON_LABEL_TEXT, this.width / 2 - 153, 146, 0xA0A0A0);
                 this.teleportButtonLabelField.render(context, mouseX, mouseY, delta);
-//                context.drawTextWithShadow(this.textRenderer, CANCEL_TELEPORT_BUTTON_LABEL_TEXT, this.width / 2 - 153, 170, 0xA0A0A0);
                 this.cancelTeleportButtonLabelField.render(context, mouseX, mouseY, delta);
             }
         } else {
@@ -1303,8 +1228,6 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
 
                 }
 
-//            } else if (this.showChooseTargetEntranceScreen) {
-
             } else if (this.showRegenerationConfirmScreen) {
 
             } else {
@@ -1336,9 +1259,6 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
                                 context.drawText(this.textRenderer, Text.translatable(this.currentTargetDisplayName), this.x + 8, this.y + 83, 0x404040, false);
 
                             }
-//                            context.drawText(this.textRenderer, Text.translatable(this.teleporterBlock.getCurrentTargetEntranceLabel()), this.x + 8, this.y + 94, 0x404040, false);
-//
-//                            context.drawText(this.textRenderer, "Current Target Location Entrance", this.x + 8, this.y + 113, 0x404040, false);
 
                         } else if (mode == TeleporterBlockBlockEntity.TeleportationMode.HOUSING) {
 

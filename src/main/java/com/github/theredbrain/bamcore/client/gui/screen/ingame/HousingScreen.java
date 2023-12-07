@@ -2,6 +2,7 @@ package com.github.theredbrain.bamcore.client.gui.screen.ingame;
 
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.block.entity.HousingBlockBlockEntity;
+import com.github.theredbrain.bamcore.block.entity.TeleporterBlockBlockEntity;
 import com.github.theredbrain.bamcore.network.packet.*;
 import com.github.theredbrain.bamcore.registry.ComponentsRegistry;
 import com.github.theredbrain.bamcore.registry.StatusEffectsRegistry;
@@ -25,6 +26,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
@@ -71,12 +73,11 @@ public class HousingScreen extends Screen {
     private static final Text ENTRANCE_ORIENTATION_LABEL_TEXT = Text.translatable("gui.housing_screen.entrance_orientation_label");
     private static final Text RESET_OWNER_BUTTON_LABEL_TEXT = Text.translatable("gui.housing_block.reset_owner_button_label");
     private static final Text TRIGGERED_BLOCK_POSITION_OFFSET_LABEL_TEXT = Text.translatable("gui.triggered_block.triggeredBlockPositionOffset");
-    public static final Identifier INVENTORY_TABS_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/big_tabs.png");
-    public static final Identifier INVENTORY_NO_TOP_TEXTURE = BetterAdventureModeCore.identifier("panel/default_no_top");
-    public static final Identifier INVENTORY_ONLY_TOP_TEXTURE = BetterAdventureModeCore.identifier("panel/default_only_top");
     public static final Identifier BACKGROUND_218_215_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/generic_218_215_background.png");
     public static final Identifier BACKGROUND_218_95_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/generic_218_95_background.png");
     public static final Identifier BACKGROUND_218_71_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/generic_218_71_background.png");
+    private static final Identifier PLAYER_LISTS_SCROLLER_BACKGROUND_TEXTURE = BetterAdventureModeCore.identifier("container/housing_screen/player_lists_scroller_background");
+    private static final Identifier SCROLLER_TEXTURE = BetterAdventureModeCore.identifier("container/scroller");
     @Nullable
     private final HousingBlockBlockEntity housingBlockBlockEntity;
 
@@ -88,7 +89,6 @@ public class HousingScreen extends Screen {
     private ButtonWidget closeResetHouseScreenButton;
 
     private ButtonWidget toggleAdventureBuildingEffectButton;
-//    private ButtonWidget editHouseSettingsButton;
     private ButtonWidget unclaimHouseButton;
     private ButtonWidget claimHouseButton;
     
@@ -99,7 +99,8 @@ public class HousingScreen extends Screen {
     private ButtonWidget removeCoOwnerListEntryButton1;
     private ButtonWidget removeCoOwnerListEntryButton2;
     private ButtonWidget removeCoOwnerListEntryButton3;
-    
+    private ButtonWidget removeCoOwnerListEntryButton4;
+
     private ButtonWidget openTrustedPersonsListScreenButton;
     private TextFieldWidget newTrustedPersonField;
     private ButtonWidget addNewTrustedPersonButton;
@@ -107,7 +108,8 @@ public class HousingScreen extends Screen {
     private ButtonWidget removeTrustedPersonListEntryButton1;
     private ButtonWidget removeTrustedPersonListEntryButton2;
     private ButtonWidget removeTrustedPersonListEntryButton3;
-    
+    private ButtonWidget removeTrustedPersonListEntryButton4;
+
     private ButtonWidget openGuestListScreenButton;
     private TextFieldWidget newGuestField;
     private ButtonWidget addNewGuestButton;
@@ -115,10 +117,10 @@ public class HousingScreen extends Screen {
     private ButtonWidget removeGuestListEntryButton1;
     private ButtonWidget removeGuestListEntryButton2;
     private ButtonWidget removeGuestListEntryButton3;
-    
+    private ButtonWidget removeGuestListEntryButton4;
+
     private ButtonWidget closeListEditScreensButton;
 
-//    private ButtonWidget saveAdventureButton;
     private ButtonWidget closeAdventureScreenButton;
     //endregion adventure widgets
     //region creative widgets
@@ -154,12 +156,14 @@ public class HousingScreen extends Screen {
     private boolean showCoOwnerListScreen = false;
     private boolean showTrustedListScreen = false;
     private boolean showGuestListScreen = false;
-    private int currentTab = 0;
     private int backgroundWidth;
     private int backgroundHeight;
     private int x;
     private int y;
-    private HousingBlockBlockEntity.OwnerMode ownerMode = HousingBlockBlockEntity.OwnerMode.DIMENSION_OWNER; // 0: dimension owner, 1: first interaction
+    private int scrollPosition = 0;
+    private float scrollAmount = 0.0f;
+    private boolean mouseClicked = false;
+    private HousingBlockBlockEntity.OwnerMode ownerMode = HousingBlockBlockEntity.OwnerMode.DIMENSION_OWNER;
 
     public HousingScreen(@Nullable HousingBlockBlockEntity housingBlockBlockEntity, int currentPermissionLevel, boolean showCreativeTab) {
         super(NarratorManager.EMPTY);
@@ -187,6 +191,8 @@ public class HousingScreen extends Screen {
         } else if (listType == 2) {
             this.showGuestListScreen = true;
         }
+        this.scrollPosition = 0;
+        this.scrollAmount = 0.0f;
         this.updateWidgets();
     }
 
@@ -194,6 +200,8 @@ public class HousingScreen extends Screen {
         this.showCoOwnerListScreen = false;
         this.showTrustedListScreen = false;
         this.showGuestListScreen = false;
+        this.scrollPosition = 0;
+        this.scrollAmount = 0.0f;
         this.updateHousingBlockAdventure();
         this.updateWidgets();
     }
@@ -206,6 +214,8 @@ public class HousingScreen extends Screen {
         } else if (listType == 2) {
             this.guestList.add(newEntry);
         }
+        this.scrollPosition = 0;
+        this.scrollAmount = 0.0f;
         this.updateWidgets();
     }
 
@@ -217,6 +227,8 @@ public class HousingScreen extends Screen {
         } else if (listType == 2) {
             this.guestList.remove(index);
         }
+        this.scrollPosition = 0;
+        this.scrollAmount = 0.0f;
         this.updateWidgets();
     }
 
@@ -230,448 +242,13 @@ public class HousingScreen extends Screen {
         this.close();
     }
 
-    private void leaveCurrentHouse() { // TODO use a packet?
-//        if (this.client != null && this.client.player != null && this.client.getServer() != null) {
-//            PlayerEntity playerEntity = this.client.player;
-//            Pair<Pair<String, BlockPos>, Boolean> housingAccessPos = ComponentsRegistry.HOUSING_ACCESS_POS.get(playerEntity).getValue();
-//            if (housingAccessPos.getRight()) {
-//                BlockPos blockPos = housingAccessPos.getLeft().getRight();
-//                playerEntity.teleport(this.client.getServer().getWorld(RegistryKey.of(RegistryKeys.WORLD, new Identifier(housingAccessPos.getLeft().getLeft()))), blockPos.getX(), blockPos.getX(), blockPos.getX(), Set.of(), playerEntity.getYaw(), playerEntity.getPitch());
-//                ComponentsRegistry.HOUSING_ACCESS_POS.get(playerEntity).deactivate();
-//            }
-//        }
+    private void leaveCurrentHouse() {
         ClientPlayNetworking.send(new LeaveHouseFromHousingScreenPacket());
         this.close();
     }
-/*
-
-    @Override
-    protected @NotNull OwoUIAdapter<FlowLayout> createAdapter() {
-        return OwoUIAdapter.create(this, Containers::verticalFlow);
-    }
-
-    @Override
-    protected void build(FlowLayout rootComponent) {
-        rootComponent
-                .surface(Surface.VANILLA_TRANSLUCENT)
-                .horizontalAlignment(HorizontalAlignment.CENTER)
-                .verticalAlignment(VerticalAlignment.CENTER)
-                .id("root");
-        if (this.showCreativeTab && this.housingBlockBlockEntity != null) {
-            Vec3i restrictBlockBreakingAreaDimensions = this.housingBlockBlockEntity.getInfluenceAreaDimensions();
-            BlockPos restrictBlockBreakingAreaPositionOffset = this.housingBlockBlockEntity.getRestrictBlockBreakingAreaPositionOffset();
-            MutablePair<BlockPos, MutablePair<Double, Double>> entranceBlockPositionOffset = this.housingBlockBlockEntity.getEntrance();
-            BlockPos triggeredBlockPositionOffset = this.housingBlockBlockEntity.getTriggeredBlockPositionOffset();
-            rootComponent.children(List.of(
-                    Containers.verticalFlow(Sizing.fixed(250), Sizing.fixed(166))
-                            .children(List.of(
-                                    // toggle debug mode
-                                    Components.button(this.showInfluenceArea ? Text.translatable("gui.housing_block.toggleShowRestrictBlockBreakingAreaButton.on")
-                                                            : Text.translatable("gui.housing_block.toggleShowRestrictBlockBreakingAreaButton.off")
-                                                    , button -> this.toggleShowRestrictBlockBreakingArea())
-                                            .sizing(Sizing.fill(100), Sizing.fixed(20))
-                                            .tooltip(this.showInfluenceArea ? Text.translatable("gui.housing_block.toggleShowRestrictBlockBreakingAreaButton.on.tooltip")
-                                                    : Text.translatable("gui.housing_block.toggleShowRestrictBlockBreakingAreaButton.off.tooltip"))
-                                            .id("toggleShowRestrictBlockBreakingAreaButton"),
-
-                                    // activation area
-                                    Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
-                                            .children(List.of(
-                                                    Components.textBox(Sizing.fill(32), Integer.toString(restrictBlockBreakingAreaDimensions.getX()))
-                                                            .tooltip(Text.translatable("gui.housing_block.restrictBlockBreakingAreaDimensionsX.tooltip"))
-                                                            .margins(Insets.of(1, 1, 1, 1))
-                                                            .id("restrictBlockBreakingAreaDimensionsX"),
-                                                    Components.textBox(Sizing.fill(32), Integer.toString(restrictBlockBreakingAreaDimensions.getY()))
-                                                            .tooltip(Text.translatable("gui.housing_block.restrictBlockBreakingAreaDimensionsY.tooltip"))
-                                                            .margins(Insets.of(1, 1, 1, 1))
-                                                            .id("restrictBlockBreakingAreaDimensionsY"),
-                                                    Components.textBox(Sizing.fill(32), Integer.toString(restrictBlockBreakingAreaDimensions.getZ()))
-                                                            .tooltip(Text.translatable("gui.housing_block.restrictBlockBreakingAreaDimensionsZ.tooltip"))
-                                                            .margins(Insets.of(1, 1, 1, 1))
-                                                            .id("restrictBlockBreakingAreaDimensionsZ")
-                                            ))
-                                            .verticalAlignment(VerticalAlignment.CENTER)
-                                            .horizontalAlignment(HorizontalAlignment.CENTER),
-                                    Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
-                                            .children(List.of(
-                                                    Components.textBox(Sizing.fill(32), Integer.toString(restrictBlockBreakingAreaPositionOffset.getX()))
-                                                            .tooltip(Text.translatable("gui.housing_block.restrictBlockBreakingAreaPositionOffsetX.tooltip"))
-                                                            .margins(Insets.of(1, 1, 1, 1))
-                                                            .id("restrictBlockBreakingAreaPositionOffsetX"),
-                                                    Components.textBox(Sizing.fill(32), Integer.toString(restrictBlockBreakingAreaPositionOffset.getY()))
-                                                            .tooltip(Text.translatable("gui.housing_block.restrictBlockBreakingAreaPositionOffsetY.tooltip"))
-                                                            .margins(Insets.of(1, 1, 1, 1))
-                                                            .id("restrictBlockBreakingAreaPositionOffsetY"),
-                                                    Components.textBox(Sizing.fill(32), Integer.toString(restrictBlockBreakingAreaPositionOffset.getZ()))
-                                                            .tooltip(Text.translatable("gui.housing_block.restrictBlockBreakingAreaPositionOffsetZ.tooltip"))
-                                                            .margins(Insets.of(1, 1, 1, 1))
-                                                            .id("restrictBlockBreakingAreaPositionOffsetZ")
-                                            ))
-                                            .verticalAlignment(VerticalAlignment.CENTER)
-                                            .horizontalAlignment(HorizontalAlignment.CENTER),
-
-                                    // entrance
-                                    Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
-                                            .children(List.of(
-                                                    Components.textBox(Sizing.fill(32), Integer.toString(entranceBlockPositionOffset.getLeft().getX()))
-                                                            .tooltip(Text.translatable("gui.housing_block.entrancePositionOffsetX.tooltip"))
-                                                            .margins(Insets.of(1, 1, 1, 1))
-                                                            .id("entrancePositionOffsetX"),
-                                                    Components.textBox(Sizing.fill(32), Integer.toString(entranceBlockPositionOffset.getLeft().getY()))
-                                                            .tooltip(Text.translatable("gui.housing_block.entrancePositionOffsetY.tooltip"))
-                                                            .margins(Insets.of(1, 1, 1, 1))
-                                                            .id("entrancePositionOffsetY"),
-                                                    Components.textBox(Sizing.fill(32), Integer.toString(entranceBlockPositionOffset.getLeft().getZ()))
-                                                            .tooltip(Text.translatable("gui.housing_block.entrancePositionOffsetZ.tooltip"))
-                                                            .margins(Insets.of(1, 1, 1, 1))
-                                                            .id("entrancePositionOffsetZ")
-                                            ))
-                                            .verticalAlignment(VerticalAlignment.CENTER)
-                                            .horizontalAlignment(HorizontalAlignment.CENTER),
-                                    Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
-                                            .children(List.of(
-                                                    Components.textBox(Sizing.fill(50), Double.toString(entranceBlockPositionOffset.getRight().getRight()))
-                                                            .tooltip(Text.translatable("gui.housing_block.entranceYaw.tooltip"))
-                                                            .margins(Insets.of(1, 1, 1, 1))
-                                                            .id("entranceYaw"),
-                                                    Components.textBox(Sizing.fill(50), Double.toString(entranceBlockPositionOffset.getRight().getRight()))
-                                                            .tooltip(Text.translatable("gui.housing_block.entrancePitch.tooltip"))
-                                                            .margins(Insets.of(1, 1, 1, 1))
-                                                            .id("entrancePitch")
-                                            ))
-                                            .verticalAlignment(VerticalAlignment.CENTER)
-                                            .horizontalAlignment(HorizontalAlignment.CENTER),
-
-                                    // triggered block
-                                    Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
-                                            .children(List.of(
-                                                    Components.textBox(Sizing.fill(32), Integer.toString(triggeredBlockPositionOffset.getX()))
-                                                            .tooltip(Text.translatable("gui.housing_block.triggeredBlockPositionOffsetX.tooltip"))
-                                                            .margins(Insets.of(1, 1, 1, 1))
-                                                            .id("triggeredBlockPositionOffsetX"),
-                                                    Components.textBox(Sizing.fill(32), Integer.toString(triggeredBlockPositionOffset.getY()))
-                                                            .tooltip(Text.translatable("gui.housing_block.triggeredBlockPositionOffsetY.tooltip"))
-                                                            .margins(Insets.of(1, 1, 1, 1))
-                                                            .id("triggeredBlockPositionOffsetY"),
-                                                    Components.textBox(Sizing.fill(32), Integer.toString(triggeredBlockPositionOffset.getZ()))
-                                                            .tooltip(Text.translatable("gui.housing_block.triggeredBlockPositionOffsetZ.tooltip"))
-                                                            .margins(Insets.of(1, 1, 1, 1))
-                                                            .id("triggeredBlockPositionOffsetZ")
-                                            ))
-                                            .verticalAlignment(VerticalAlignment.CENTER)
-                                            .horizontalAlignment(HorizontalAlignment.CENTER),
-
-                                    Components.button(this.ownerMode == 0 ? Text.translatable("gui.housing_block.toggleOwnerModeButton_0")
-                                                            : Text.translatable("gui.housing_block.toggleOwnerModeButton_1")
-                                                    , button -> this.toggleOwnerMode())
-                                            .sizing(Sizing.fill(100), Sizing.fixed(20))
-                                            .tooltip(this.ownerMode == 0 ? Text.translatable("gui.housing_block.toggleOwnerModeButton_0.tooltip")
-                                                    : Text.translatable("gui.housing_block.toggleOwnerModeButton_1.tooltip"))
-                                            .id("toggleOwnerModeButton"),
-
-                                    Components.button(Text.translatable("gui.housing_block.resetOwnerButton")
-                                                    , button -> this.trySetHouseOwner(false))
-                                            .sizing(Sizing.fill(100), Sizing.fixed(20))
-                                            .tooltip(Text.translatable("gui.housing_block.resetOwnerButton.tooltip"))
-                                            .id("resetOwnerButton"),
-
-                                    // save/close buttons
-                                    Containers.horizontalFlow(Sizing.fill(30), Sizing.content())
-                                            .children(List.of(
-                                                    Components.button(Text.translatable("gui.save"), button -> this.saveCreative())
-                                                            .sizing(Sizing.fill(49), Sizing.fixed(20))
-                                                            .id("saveCreativeButton"),
-                                                    Components.button(ScreenTexts.CANCEL, button -> this.cancel())
-                                                            .sizing(Sizing.fill(49), Sizing.fixed(20))
-                                                            .id("cancelButton")
-                                            ))
-                                            .margins(Insets.of(1, 1, 1, 1))
-                                            .verticalAlignment(VerticalAlignment.CENTER)
-                                            .horizontalAlignment(HorizontalAlignment.CENTER)
-                            ))
-                            .padding(Insets.of(7, 7, 7, 7))
-                            .surface(ExtendedSurface.customPanel(INVENTORY_NO_TOP_TEXTURE))
-            ));
-        } else {
-            rootComponent.children(List.of(
-                    Containers.horizontalFlow(Sizing.fixed(250), Sizing.content())
-                            .children(List.of(
-                                    new CustomButtonComponent(Text.translatable("gui.housing_screen.tabHousesList.button"), button -> this.updateTabContent(0))
-                                            .renderer(CustomButtonComponent.Renderer.texture(INVENTORY_TABS_TEXTURE, 0, 0, 256, 256))
-                                            .textShadow(false)
-                                            .activeTextColor(0x000000)
-                                            .inactiveTextColor(0x000000)
-                                            .sizing(Sizing.fixed(125), Sizing.fixed(32))
-                                            .id("tabHousesListButton"),
-                                    new CustomButtonComponent(Text.translatable("gui.housing_screen.tabCurrentHouse.button"), button -> this.updateTabContent(1))
-                                            .renderer(CustomButtonComponent.Renderer.texture(INVENTORY_TABS_TEXTURE, 125, 0, 256, 256))
-                                            .textShadow(false)
-                                            .activeTextColor(0x000000)
-                                            .inactiveTextColor(0x000000)
-                                            .sizing(Sizing.fixed(125), Sizing.fixed(32))
-                                            .id("tabCurrentHouseButton")
-                            ))
-                            .horizontalAlignment(HorizontalAlignment.CENTER)
-                            .verticalAlignment(VerticalAlignment.CENTER)
-                            .surface(ExtendedSurface.customPanel(INVENTORY_ONLY_TOP_TEXTURE))
-                            .id("tabs_container"),
-                    Containers.verticalFlow(Sizing.fixed(250), Sizing.fixed(166))
-                            .children(List.of(
-                                    Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
-                                            .child(Components.label(this.title)
-                                                    .color(Color.ofArgb(Colors.BLACK))
-                                                    .margins(Insets.of(0, 4, 0, 0))),
-                                    Containers.verticalFlow(Sizing.content(), Sizing.content())
-                                            .padding(Insets.of(0, 0, 0, 0))
-                                            .horizontalAlignment(HorizontalAlignment.CENTER)
-                                            .verticalAlignment(VerticalAlignment.CENTER)
-                                            .id("tab_content_container")
-                            ))
-                            .padding(Insets.of(0, 7, 7, 7))
-                            .surface(ExtendedSurface.customPanel(INVENTORY_NO_TOP_TEXTURE))
-            ));
-
-            this.updateTabContent(this.currentTab);
-        }
-    }
-
-    private void updateTabContent(int tab) {
-        this.component(FlowLayout.class, "tab_content_container").clearChildren();
-        if (tab == 1) {
-            this.currentTab = tab;
-            this.component(CustomButtonComponent.class, "tabHousesListButton").active(true);
-            this.component(CustomButtonComponent.class, "tabCurrentHouseButton").active(false);
-
-            // build content container
-            this.component(FlowLayout.class, "tab_content_container")
-                    .children(List.of(
-                            Containers.horizontalFlow(Sizing.content(), Sizing.content())
-                                    .id("tab_current_house_title_container"),
-                            Containers.verticalFlow(Sizing.content(), Sizing.content())
-                                    .horizontalAlignment(HorizontalAlignment.CENTER)
-                                    .verticalAlignment(VerticalAlignment.CENTER)
-                                    .id("tab_current_house_content_container")
-                    ));
-
-            // title
-            if (this.currentPermissionLevel == 0) {
-                this.component(FlowLayout.class, "tab_current_house_title_container")
-                        .child(Components.label(Text.translatable("gui.housing_screen.tabCurrentHouse.title.owner"))
-                                .color(Color.ofArgb(Colors.BLACK)));
-                this.component(FlowLayout.class, "tab_current_house_content_container")
-                        .children(List.of(
-                                Components.button(this.client.player.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT)
-                                                ? Text.translatable("gui.housing_screen.tabCurrentHouse.toggleAdventureBuildingEffectButton.off") : Text.translatable("gui.housing_screen.tabCurrentHouse.toggleAdventureBuildingEffectButton.on"), button -> this.toggleAdventureBuildingEffect())
-                                        .sizing(Sizing.content(), Sizing.content())
-                                        .id("toggleAdventureBuildingEffectButton"),
-                                Components.button(Text.translatable("gui.housing_screen.tabCurrentHouse.editHousingButton"), button -> this.updateTabContent(2))
-                                        .sizing(Sizing.content(), Sizing.content())
-                                        .id("editHousingButton"),
-                                Components.button(Text.translatable("gui.housing_screen.tabCurrentHouse.unclaimHouseButton"), button -> this.trySetHouseOwner(false))
-                                        .sizing(Sizing.content(), Sizing.content())
-                                        .id("unclaimHouseButton")
-                        ));
-            } else if (this.currentPermissionLevel == 1) {
-                this.component(FlowLayout.class, "tab_current_house_title_container")
-                        .child(Components.label(Text.translatable("gui.housing_screen.tabCurrentHouse.title.co_owner"))
-                                .color(Color.ofArgb(Colors.BLACK)));
-                this.component(FlowLayout.class, "tab_current_house_content_container")
-                        .children(List.of(
-                                Components.button(this.client.player.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT) ? Text.translatable("gui.housing_screen.tabCurrentHouse.toggleAdventureBuildingEffectButton.off") : Text.translatable("gui.housing_screen.tabCurrentHouse.toggleAdventureBuildingEffectButton.on"), button -> this.toggleAdventureBuildingEffect())
-                                        .sizing(Sizing.content(), Sizing.content())
-                                        .id("toggleAdventureBuildingEffectButton")
-                        ));
-            } else if (this.currentPermissionLevel == 2) {
-                this.component(FlowLayout.class, "tab_current_house_title_container")
-                        .child(Components.label(Text.translatable("gui.housing_screen.tabCurrentHouse.title.trusted"))
-                                .color(Color.ofArgb(Colors.BLACK)));
-            } else if (this.currentPermissionLevel == 3) {
-                this.component(FlowLayout.class, "tab_current_house_title_container")
-                        .child(Components.label(Text.translatable("gui.housing_screen.tabCurrentHouse.title.guest"))
-                                .color(Color.ofArgb(Colors.BLACK)));
-            } else {
-                this.component(FlowLayout.class, "tab_current_house_title_container")
-                        .child(Components.label(Text.translatable("gui.housing_screen.tabCurrentHouse.title.stranger"))
-                                .color(Color.ofArgb(Colors.BLACK)));
-                if (this.ownerMode == 1 && Objects.equals(this.housingBlockBlockEntity.getOwner(), "")) {
-                    this.component(FlowLayout.class, "tab_current_house_content_container")
-                            .child(
-                                    Components.button(Text.translatable("gui.housing_screen.tabCurrentHouse.claimHouseButton"), button -> this.trySetHouseOwner(true))
-                                            .sizing(Sizing.content(), Sizing.content())
-                                            .id("claimHouseButton")
-                            );
-                }
-            }
-
-            // content
-            this.component(FlowLayout.class, "tab_current_house_content_container")
-                    .children(List.of(
-                            Components.button(Text.translatable("gui.housing_screen.tabCurrentHouse.leaveCurrentHouseButton"), button -> this.leaveCurrentHouse())
-                                    .sizing(Sizing.content(), Sizing.content())
-                                    .id("leaveCurrentHouseButton"),
-                            Containers.horizontalFlow(Sizing.content(), Sizing.content())
-                                    .children(List.of(
-                                            Components.button(ScreenTexts.CANCEL, button -> this.cancel())
-                                                    .sizing(Sizing.content(), Sizing.content())
-                                                    .id("cancelButton")
-                                    ))
-                                    .padding(Insets.of(0, 0, 0, 0))
-                                    .horizontalAlignment(HorizontalAlignment.CENTER)
-                                    .verticalAlignment(VerticalAlignment.CENTER)
-                    ));
-        } else if (tab == 2 && this.currentPermissionLevel == 0 && this.housingBlockBlockEntity != null) {
-            this.currentTab = tab;
-            this.component(CustomButtonComponent.class, "tabHousesListButton").active(true);
-            this.component(CustomButtonComponent.class, "tabCurrentHouseButton").active(true);
-
-            // build content container
-            this.component(FlowLayout.class, "tab_content_container")
-                    .children(List.of(
-                            Containers.horizontalFlow(Sizing.content(), Sizing.content())
-                                    .id("tab_edit_house_title_container"),
-                            Containers.verticalFlow(Sizing.content(), Sizing.content())
-                                    .horizontalAlignment(HorizontalAlignment.CENTER)
-                                    .verticalAlignment(VerticalAlignment.CENTER)
-                                    .id("tab_edit_house_content_container")
-                    ));
-
-            // title
-            this.component(FlowLayout.class, "tab_edit_house_title_container")
-                    .child(Components.label(Text.translatable("gui.housing_screen.tabEditHouse.title"))
-                            .color(Color.ofArgb(Colors.BLACK)));
-
-            // content
-            this.component(FlowLayout.class, "tab_edit_house_content_container")
-                    .children(List.of(
-                            Containers.verticalScroll(Sizing.fixed(236), Sizing.fixed(100),
-                                            Containers.verticalFlow(Sizing.fixed(222), Sizing.content())
-                                                    .children(List.of(
-                                                            Containers.verticalFlow(Sizing.content(), Sizing.content())
-                                                                    .children(List.of(
-                                                                            Components.label(Text.translatable("gui.housing_screen.tabEditHouse.coOwnerList.title")).color(Color.BLACK),
-                                                                            Containers.verticalFlow(Sizing.content(), Sizing.content())
-                                                                                    .id("coOwnerListContent"),
-                                                                            Containers.horizontalFlow(Sizing.content(), Sizing.content())
-                                                                                    .children(List.of(
-                                                                                            Components.textBox(Sizing.fill(60), "New Co-Owner"),
-                                                                                            Components.button(Text.translatable("gui.housing_screen.tabEditHouse.addEntry"), this::addEntry)
-                                                                                    ))
-                                                                    )),
-                                                            Containers.verticalFlow(Sizing.content(), Sizing.content())
-                                                                    .children(List.of(
-                                                                            Components.label(Text.translatable("gui.housing_screen.tabEditHouse.trustedList.title")).color(Color.BLACK),
-                                                                            Containers.verticalFlow(Sizing.content(), Sizing.content())
-                                                                                    .id("trustedListContent"),
-                                                                            Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
-                                                                                    .children(List.of(
-                                                                                            Components.textBox(Sizing.fill(55), "New Trusted Person"),
-                                                                                            Components.button(Text.translatable("gui.housing_screen.tabEditHouse.addEntry"), this::addEntry)
-                                                                                    ))
-                                                                                    .horizontalAlignment(HorizontalAlignment.RIGHT)
-                                                                                    .verticalAlignment(VerticalAlignment.CENTER)
-                                                                    )),
-                                                            Containers.verticalFlow(Sizing.content(), Sizing.content())
-                                                                    .children(List.of(
-                                                                            Components.label(Text.translatable("gui.housing_screen.tabEditHouse.guestList.title")).color(Color.BLACK),
-                                                                            Containers.verticalFlow(Sizing.content(), Sizing.content())
-                                                                                    .id("guestListContent"),
-                                                                            Containers.horizontalFlow(Sizing.content(), Sizing.content())
-                                                                                    .children(List.of(
-                                                                                            Components.textBox(Sizing.fill(55), "New Guest"),
-                                                                                            Components.button(Text.translatable("gui.housing_screen.tabEditHouse.addEntry"), this::addEntry)
-                                                                                    ))
-                                                                    )),
-                                                            Components.button(ScreenTexts.CANCEL, button -> this.updateTabContent(1))
-                                                                    .sizing(Sizing.content(), Sizing.content())
-                                                                    .id("cancelEditHousingButton"),
-                                                            Components.button(Text.translatable("gui.housing_screen.tabEditHouse.resetHouse"), button -> this.resetHouse())
-                                                    ))
-                                    )
-                                    .scrollbar(ScrollContainer.Scrollbar.vanilla())
-                                    .scrollbarThiccness(14)
-                                    .scrollStep(18)
-                                    .fixedScrollbarLength(17)
-                                    .allowOverflow(false),
-                            Containers.horizontalFlow(Sizing.content(), Sizing.content())
-                                    .children(List.of(
-                                            Components.button(Text.translatable("gui.save"), button -> this.saveAdventure())
-                                                    .sizing(Sizing.content(), Sizing.content())
-                                                    .id("updateHousingBlockButton"),
-                                            Components.button(ScreenTexts.CANCEL, button -> this.updateTabContent(1))
-                                                    .sizing(Sizing.content(), Sizing.content())
-                                                    .id("cancelEditHousingButton")
-                                    ))
-                                    .id("tab_edit_house_close_buttons_container")
-                    ));
-
-            // populate co owner list
-            for (String coOwner : this.housingBlockBlockEntity.getCoOwnerList()) {
-                this.component(FlowLayout.class, "coOwnerListContent").child(
-                        Containers.horizontalFlow(Sizing.content(), Sizing.content())
-                                .children(List.of(
-                                        Containers.verticalFlow(Sizing.content(), Sizing.content())
-                                                .child(
-                                                        Components.label(Text.literal(coOwner))
-                                                ),
-                                        Components.button(Text.translatable("gui.delete"), this::deleteEntry)
-                                ))
-                );
-            }
-
-            // populate trusted list
-            for (String trusted : this.housingBlockBlockEntity.getTrustedList()) {
-                this.component(FlowLayout.class, "trustedListContent").child(
-                        Containers.horizontalFlow(Sizing.content(), Sizing.content())
-                                .children(List.of(
-                                        Containers.verticalFlow(Sizing.content(), Sizing.content())
-                                                .child(
-                                                        Components.label(Text.literal(trusted))
-                                                ),
-                                        Components.button(Text.translatable("gui.delete"), this::deleteEntry)
-                                ))
-                );
-            }
-
-            // populate guest list
-            for (String guest : this.housingBlockBlockEntity.getGuestList()) {
-                this.component(FlowLayout.class, "guestListContent").child(
-                        Containers.horizontalFlow(Sizing.content(), Sizing.content())
-                                .children(List.of(
-                                        Containers.verticalFlow(Sizing.content(), Sizing.content())
-                                                .child(
-                                                        Components.label(Text.literal(guest))
-                                                ),
-                                        Components.button(Text.translatable("gui.delete"), this::deleteEntry)
-                                ))
-                );
-            }
-
-        } else {
-            this.currentTab = 0;
-            this.component(CustomButtonComponent.class, "tabHousesListButton").active(false);
-            this.component(CustomButtonComponent.class, "tabCurrentHouseButton").active(this.currentPermissionLevel <= 4);
-            this.component(FlowLayout.class, "tab_content_container")
-                    .children(List.of(
-                            Containers.horizontalFlow(Sizing.content(), Sizing.content())
-                                    .child(Components.label(Text.translatable("gui.housing_screen.tabHousesList.title"))
-                                            .color(Color.ofArgb(Colors.BLACK))
-                                            .margins(Insets.of(0, 4, 0, 0)))
-                    ));
-        }
-    }
-*/
 
     @Override
     protected void init() {
-//        if (this.client != null && this.client.world != null) {
-//            BlockEntity blockEntity = this.client.world.getBlockEntity(this.handler.getBlockPos());
-//            if (blockEntity instanceof TeleporterBlockBlockEntity) {
-//                this.teleporterBlock = (TeleporterBlockBlockEntity) blockEntity;
-//            }
-//            if (this.client.player != null) {
-//                this.currentTargetOwner = this.client.player.networkHandler.getPlayerListEntry(this.client.player.getUuid());
-//            }
-//        }
         this.coOwnerList.clear();
         this.trustedPersonsList.clear();
         this.guestList.clear();
@@ -703,21 +280,6 @@ public class HousingScreen extends Screen {
             this.x = (this.width - this.backgroundWidth) / 2;
             this.y = (this.height - this.backgroundHeight) / 2;
         }
-//        this.currentTargetIdentifier = "";
-//        this.currentTargetDisplayName = "";
-//        this.currentTargetEntrance = "";
-//        this.currentTargetEntranceDisplayName = "";
-//        if (!this.showCreativeTab) {
-//            this.backgroundWidth = 218;
-//            if (this.teleporterBlock.getTeleportationMode() == TeleporterBlockBlockEntity.TeleportationMode.DUNGEONS) {
-//                this.backgroundHeight = 158;
-//            } else if (this.teleporterBlock.getTeleportationMode() == TeleporterBlockBlockEntity.TeleportationMode.HOUSING) {
-//                this.backgroundHeight = 158;
-//            } else {
-//                this.backgroundHeight = 47;
-//            }
-//            this.thisMethodHandlesTheAdvancementStuffTODORename(true);
-//        }
         super.init();
         //region adventure screen
 
@@ -728,6 +290,7 @@ public class HousingScreen extends Screen {
         this.removeCoOwnerListEntryButton1 = this.addDrawableChild(ButtonWidget.builder(REMOVE_LIST_ENTRY_BUTTON_LABEL_TEXT, button -> this.removeEntryFromList(1, 0)).dimensions(this.x + this.backgroundWidth - 57, this.y + 57, 50, 20).build());
         this.removeCoOwnerListEntryButton2 = this.addDrawableChild(ButtonWidget.builder(REMOVE_LIST_ENTRY_BUTTON_LABEL_TEXT, button -> this.removeEntryFromList(2, 0)).dimensions(this.x + this.backgroundWidth - 57, this.y + 81, 50, 20).build());
         this.removeCoOwnerListEntryButton3 = this.addDrawableChild(ButtonWidget.builder(REMOVE_LIST_ENTRY_BUTTON_LABEL_TEXT, button -> this.removeEntryFromList(3, 0)).dimensions(this.x + this.backgroundWidth - 57, this.y + 105, 50, 20).build());
+        this.removeCoOwnerListEntryButton4 = this.addDrawableChild(ButtonWidget.builder(REMOVE_LIST_ENTRY_BUTTON_LABEL_TEXT, button -> this.removeEntryFromList(4, 0)).dimensions(this.x + this.backgroundWidth - 57, this.y + 129, 50, 20).build());
         this.newCoOwnerField = new TextFieldWidget(this.textRenderer, this.x + 7, this.y + this.backgroundHeight - 27 - 24, this.backgroundWidth - 57 - 7 - 4, 20, Text.empty());
         this.newCoOwnerField.setMaxLength(128);
         this.newCoOwnerField.setPlaceholder(NEW_CO_OWNER_FIELD_PLACEHOLDER_TEXT);
@@ -738,6 +301,7 @@ public class HousingScreen extends Screen {
         this.removeTrustedPersonListEntryButton1 = this.addDrawableChild(ButtonWidget.builder(REMOVE_LIST_ENTRY_BUTTON_LABEL_TEXT, button -> this.removeEntryFromList(1, 1)).dimensions(this.x + this.backgroundWidth - 57, this.y + 57, 50, 20).build());
         this.removeTrustedPersonListEntryButton2 = this.addDrawableChild(ButtonWidget.builder(REMOVE_LIST_ENTRY_BUTTON_LABEL_TEXT, button -> this.removeEntryFromList(2, 1)).dimensions(this.x + this.backgroundWidth - 57, this.y + 81, 50, 20).build());
         this.removeTrustedPersonListEntryButton3 = this.addDrawableChild(ButtonWidget.builder(REMOVE_LIST_ENTRY_BUTTON_LABEL_TEXT, button -> this.removeEntryFromList(3, 1)).dimensions(this.x + this.backgroundWidth - 57, this.y + 105, 50, 20).build());
+        this.removeTrustedPersonListEntryButton4 = this.addDrawableChild(ButtonWidget.builder(REMOVE_LIST_ENTRY_BUTTON_LABEL_TEXT, button -> this.removeEntryFromList(4, 1)).dimensions(this.x + this.backgroundWidth - 57, this.y + 129, 50, 20).build());
         this.newTrustedPersonField = new TextFieldWidget(this.textRenderer, this.x + 7, this.y + this.backgroundHeight - 27 - 24, this.backgroundWidth - 57 - 7 - 4, 20, Text.empty());
         this.newTrustedPersonField.setMaxLength(128);
         this.newTrustedPersonField.setPlaceholder(NEW_TRUSTED_PERSON_FIELD_PLACEHOLDER_TEXT);
@@ -748,6 +312,7 @@ public class HousingScreen extends Screen {
         this.removeGuestListEntryButton1 = this.addDrawableChild(ButtonWidget.builder(REMOVE_LIST_ENTRY_BUTTON_LABEL_TEXT, button -> this.removeEntryFromList(1, 2)).dimensions(this.x + this.backgroundWidth - 57, this.y + 57, 50, 20).build());
         this.removeGuestListEntryButton2 = this.addDrawableChild(ButtonWidget.builder(REMOVE_LIST_ENTRY_BUTTON_LABEL_TEXT, button -> this.removeEntryFromList(2, 2)).dimensions(this.x + this.backgroundWidth - 57, this.y + 81, 50, 20).build());
         this.removeGuestListEntryButton3 = this.addDrawableChild(ButtonWidget.builder(REMOVE_LIST_ENTRY_BUTTON_LABEL_TEXT, button -> this.removeEntryFromList(3, 2)).dimensions(this.x + this.backgroundWidth - 57, this.y + 105, 50, 20).build());
+        this.removeGuestListEntryButton4 = this.addDrawableChild(ButtonWidget.builder(REMOVE_LIST_ENTRY_BUTTON_LABEL_TEXT, button -> this.removeEntryFromList(4, 2)).dimensions(this.x + this.backgroundWidth - 57, this.y + 129, 50, 20).build());
         this.newGuestField = new TextFieldWidget(this.textRenderer, this.x + 7, this.y + this.backgroundHeight - 27 - 24, this.backgroundWidth - 57 - 7 - 4, 20, Text.empty());
         this.newGuestField.setMaxLength(128);
         this.newGuestField.setPlaceholder(NEW_GUEST_FIELD_PLACEHOLDER_TEXT);
@@ -768,7 +333,6 @@ public class HousingScreen extends Screen {
 
         this.openResetHouseScreenButton = this.addDrawableChild(ButtonWidget.builder(OPEN_RESET_HOUSE_SCREEN_BUTTON_LABEL_TEXT, button -> this.openResetHouseScreen()).dimensions(this.x + 7, this.y + 116, this.backgroundWidth - 14, 20).build());
 
-        //        this.editHouseSettingsButton = this.addDrawableChild(ButtonWidget.builder(OPEN_GUEST_LIST_BUTTON_LABEL_TEXT, button -> this.openGuestListScreen()).dimensions(this.width / 2 - 4 - 150, 210, 300, 20).build());
         this.unclaimHouseButton = this.addDrawableChild(ButtonWidget.builder(UNCLAIM_HOUSE_BUTTON_LABEL_TEXT, button -> this.trySetHouseOwner(false)).dimensions(this.x + 7, this.y + this.backgroundHeight - 27 - 48, this.backgroundWidth - 14, 20).build());
         this.claimHouseButton = this.addDrawableChild(ButtonWidget.builder(CLAIM_HOUSE_BUTTON_LABEL_TEXT, button -> this.trySetHouseOwner(true)).dimensions(this.x + 7, this.y + this.backgroundHeight - 27 - 48, this.backgroundWidth - 14, 20).build());
 
@@ -820,13 +384,6 @@ public class HousingScreen extends Screen {
         this.restrictBlockBreakingAreaPositionOffsetZField.setText(Integer.toString(this.housingBlockBlockEntity != null ? this.housingBlockBlockEntity.getRestrictBlockBreakingAreaPositionOffset().getZ() : 0));
         this.addSelectableChild(this.restrictBlockBreakingAreaPositionOffsetZField);
 
-//        this.showActivationArea = this.teleporterBlock.getShowActivationArea();
-//        i = this.textRenderer.getWidth(SHOW_ADVENTURE_SCREEN_LABEL_TEXT) + 10;
-//        this.showAdventureScreenButton = this.addDrawableChild(CyclingButtonWidget.onOffBuilder(/*Text.translatable(""), Text.translatable("")*/).initially(this.showAdventureScreen).omitKeyText().build(this.width / 2 - 152 + i, 140, 300 - i, 20, SHOW_ADVENTURE_SCREEN_LABEL_TEXT, (button, showAdventureScreen) -> {
-//            this.showAdventureScreen = showAdventureScreen;
-//        }));
-
-
         // --- entrance page ---
 
         this.entrancePositionOffsetXField = new TextFieldWidget(this.textRenderer, this.width / 2 - 154, 80, 100, 20, Text.empty());
@@ -873,7 +430,6 @@ public class HousingScreen extends Screen {
 
         // --- owner page ---
 
-//        i = this.textRenderer.getWidth(OWNER_MODE_LABEL_TEXT) + 10;
         this.toggleOwnerModeButton = this.addDrawableChild(CyclingButtonWidget.builder(HousingBlockBlockEntity.OwnerMode::asText).values((HousingBlockBlockEntity.OwnerMode[])HousingBlockBlockEntity.OwnerMode.values()).initially(this.ownerMode).omitKeyText().build(this.width / 2 - 153, 70, 300, 20, Text.empty(), (button, ownerMode) -> {
             this.ownerMode = ownerMode;
         }));
@@ -883,11 +439,6 @@ public class HousingScreen extends Screen {
         this.saveCreativeButton = this.addDrawableChild(ButtonWidget.builder(ScreenTexts.DONE, button -> this.saveCreative()).dimensions(this.width / 2 - 4 - 150, 210, 150, 20).build());
         this.cancelCreativeButton = this.addDrawableChild(ButtonWidget.builder(ScreenTexts.CANCEL, button -> this.cancel()).dimensions(this.width / 2 + 4, 210, 150, 20).build());
 
-        //        this.consumeKeyItemStack = this.teleporterBlock.getConsumeKeyItemStack();
-//        i = this.textRenderer.getWidth(CONSUME_KEY_ITEMSTACK_LABEL_TEXT) + 10;
-//        this.consumeKeyItemStackButton = this.addDrawableChild(CyclingButtonWidget.onOffBuilder(Text.translatable(""), Text.translatable("")).initially(this.consumeKeyItemStack).omitKeyText().build(this.width / 2 - 152 + i, 215, 300 - i, 20, CONSUME_KEY_ITEMSTACK_LABEL_TEXT, (button, consumeKeyItemStack) -> {
-//            this.consumeKeyItemStack = consumeKeyItemStack;
-//        }));
         //endregion creative screen
         this.updateWidgets();
     }
@@ -902,7 +453,6 @@ public class HousingScreen extends Screen {
         this.closeResetHouseScreenButton.visible = false;
 
         this.toggleAdventureBuildingEffectButton.visible = false;
-//        this.editHouseSettingsButton.visible = false;
         this.unclaimHouseButton.visible = false;
         this.claimHouseButton.visible = false;
 
@@ -913,6 +463,7 @@ public class HousingScreen extends Screen {
         this.removeCoOwnerListEntryButton1.visible = false;
         this.removeCoOwnerListEntryButton2.visible = false;
         this.removeCoOwnerListEntryButton3.visible = false;
+        this.removeCoOwnerListEntryButton4.visible = false;
 
         this.openTrustedPersonsListScreenButton.visible = false;
         this.newTrustedPersonField.setVisible(false);
@@ -921,6 +472,7 @@ public class HousingScreen extends Screen {
         this.removeTrustedPersonListEntryButton1.visible = false;
         this.removeTrustedPersonListEntryButton2.visible = false;
         this.removeTrustedPersonListEntryButton3.visible = false;
+        this.removeTrustedPersonListEntryButton4.visible = false;
 
         this.openGuestListScreenButton.visible = false;
         this.newGuestField.setVisible(false);
@@ -929,10 +481,10 @@ public class HousingScreen extends Screen {
         this.removeGuestListEntryButton1.visible = false;
         this.removeGuestListEntryButton2.visible = false;
         this.removeGuestListEntryButton3.visible = false;
+        this.removeGuestListEntryButton4.visible = false;
 
         this.closeListEditScreensButton.visible = false;
 
-//        this.saveAdventureButton.visible = false;
         this.closeAdventureScreenButton.visible = false;
         //endregion adventure widgets
         
@@ -1005,10 +557,22 @@ public class HousingScreen extends Screen {
 
                 this.newCoOwnerField.setVisible(true);
                 this.addNewCoOwnerButton.visible = true;
-                this.removeCoOwnerListEntryButton0.visible = true;
-                this.removeCoOwnerListEntryButton1.visible = true;
-                this.removeCoOwnerListEntryButton2.visible = true;
-                this.removeCoOwnerListEntryButton3.visible = true;
+                
+                int index = 0;
+                for (int i = 0; i < Math.min(5, this.coOwnerList.size()); i++) {
+                    if (index == 0) {
+                        this.removeCoOwnerListEntryButton0.visible = true;
+                    } else if (index == 1) {
+                        this.removeCoOwnerListEntryButton1.visible = true;
+                    } else if (index == 2) {
+                        this.removeCoOwnerListEntryButton2.visible = true;
+                    } else if (index == 3) {
+                        this.removeCoOwnerListEntryButton3.visible = true;
+                    } else if (index == 4) {
+                        this.removeCoOwnerListEntryButton4.visible = true;
+                    }
+                    index++;
+                }
 
                 this.closeListEditScreensButton.visible = true;
 
@@ -1016,10 +580,21 @@ public class HousingScreen extends Screen {
 
                 this.newTrustedPersonField.setVisible(true);
                 this.addNewTrustedPersonButton.visible = true;
-                this.removeTrustedPersonListEntryButton0.visible = true;
-                this.removeTrustedPersonListEntryButton1.visible = true;
-                this.removeTrustedPersonListEntryButton2.visible = true;
-                this.removeTrustedPersonListEntryButton3.visible = true;
+                int index = 0;
+                for (int i = 0; i < Math.min(5, this.coOwnerList.size()); i++) {
+                    if (index == 0) {
+                        this.removeTrustedPersonListEntryButton0.visible = true;
+                    } else if (index == 1) {
+                        this.removeTrustedPersonListEntryButton1.visible = true;
+                    } else if (index == 2) {
+                        this.removeTrustedPersonListEntryButton2.visible = true;
+                    } else if (index == 3) {
+                        this.removeTrustedPersonListEntryButton3.visible = true;
+                    } else if (index == 4) {
+                        this.removeTrustedPersonListEntryButton4.visible = true;
+                    }
+                    index++;
+                }
 
                 this.closeListEditScreensButton.visible = true;
 
@@ -1027,10 +602,22 @@ public class HousingScreen extends Screen {
 
                 this.newGuestField.setVisible(true);
                 this.addNewGuestButton.visible = true;
-                this.removeGuestListEntryButton0.visible = true;
-                this.removeGuestListEntryButton1.visible = true;
-                this.removeGuestListEntryButton2.visible = true;
-                this.removeGuestListEntryButton3.visible = true;
+
+                int index = 0;
+                for (int i = 0; i < Math.min(5, this.coOwnerList.size()); i++) {
+                    if (index == 0) {
+                        this.removeGuestListEntryButton0.visible = true;
+                    } else if (index == 1) {
+                        this.removeGuestListEntryButton1.visible = true;
+                    } else if (index == 2) {
+                        this.removeGuestListEntryButton2.visible = true;
+                    } else if (index == 3) {
+                        this.removeGuestListEntryButton3.visible = true;
+                    } else if (index == 4) {
+                        this.removeGuestListEntryButton4.visible = true;
+                    }
+                    index++;
+                }
 
                 this.closeListEditScreensButton.visible = true;
 
@@ -1076,176 +663,137 @@ public class HousingScreen extends Screen {
 
     @Override
     public void resize(MinecraftClient client, int width, int height) {
-        // TODO
-//        String string = this.targetField.getText();
-//        String string1 = this.poolField.getText();
-//        String string2 = this.triggeredBlockPositionOffsetXField.getText();
-//        String string3 = this.triggeredBlockPositionOffsetYField.getText();
-//        String string4 = this.triggeredBlockPositionOffsetZField.getText();
-//        JigsawBlockEntity.Joint joint = this.joint;
+        List<String> list = this.coOwnerList;
+        List<String> list1 = this.trustedPersonsList;
+        List<String> list2 = this.guestList;
+        boolean bool = this.showInfluenceArea;
+        HousingBlockBlockEntity.OwnerMode var = this.ownerMode;
+        int number = this.scrollPosition;
+        float number1 =  this.scrollAmount;
+        String string = this.newCoOwnerField.getText();
+        String string1 = this.newTrustedPersonField.getText();
+        String string2 = this.newGuestField.getText();
+        String string3 = this.restrictBlockBreakingAreaDimensionsXField.getText();
+        String string4 = this.restrictBlockBreakingAreaDimensionsYField.getText();
+        String string5 = this.restrictBlockBreakingAreaDimensionsZField.getText();
+        String string6 = this.restrictBlockBreakingAreaPositionOffsetXField.getText();
+        String string7 = this.restrictBlockBreakingAreaPositionOffsetYField.getText();
+        String string8 = this.restrictBlockBreakingAreaPositionOffsetZField.getText();
+        String string9 = this.entrancePositionOffsetXField.getText();
+        String string10 = this.entrancePositionOffsetYField.getText();
+        String string11 = this.entrancePositionOffsetZField.getText();
+        String string12 = this.entranceOrientationYawField.getText();
+        String string13 = this.entranceOrientationPitchField.getText();
+        String string14 = this.triggeredBlockPositionOffsetXField.getText();
+        String string15 = this.triggeredBlockPositionOffsetYField.getText();
+        String string16 = this.triggeredBlockPositionOffsetZField.getText();
         this.init(client, width, height);
-//        this.targetField.setText(string);
-//        this.poolField.setText(string1);
-//        this.triggeredBlockPositionOffsetXField.setText(string2);
-//        this.triggeredBlockPositionOffsetYField.setText(string3);
-//        this.triggeredBlockPositionOffsetZField.setText(string4);
-//        this.joint = joint;
-//        this.jointRotationButton.setValue(joint);
+        this.coOwnerList = list;
+        this.trustedPersonsList = list1;
+        this.guestList = list2;
+        this.showInfluenceArea = bool;
+        this.ownerMode = var;
+        this.scrollPosition = number;
+        this.scrollAmount = number1;
+        this.newCoOwnerField.setText(string);
+        this.newTrustedPersonField.setText(string1);
+        this.newGuestField.setText(string2);
+        this.restrictBlockBreakingAreaDimensionsXField.setText(string3);
+        this.restrictBlockBreakingAreaDimensionsYField.setText(string4);
+        this.restrictBlockBreakingAreaDimensionsZField.setText(string5);
+        this.restrictBlockBreakingAreaPositionOffsetXField.setText(string6);
+        this.restrictBlockBreakingAreaPositionOffsetYField.setText(string7);
+        this.restrictBlockBreakingAreaPositionOffsetZField.setText(string8);
+        this.entrancePositionOffsetXField.setText(string9);
+        this.entrancePositionOffsetYField.setText(string10);
+        this.entrancePositionOffsetZField.setText(string11);
+        this.entranceOrientationYawField.setText(string12);
+        this.entranceOrientationPitchField.setText(string13);
+        this.triggeredBlockPositionOffsetXField.setText(string14);
+        this.triggeredBlockPositionOffsetYField.setText(string15);
+        this.triggeredBlockPositionOffsetZField.setText(string16);
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        // TODO
-//        this.creativeDungeonsLocationsListMouseClicked = false;
-//        this.creativeHousingLocationsListMouseClicked = false;
-//        this.teamListMouseClicked = false;
-//        this.visibleDungeonsLocationsListMouseClicked = false;
-//        this.visibleHousingLocationsListMouseClicked = false;
-//        int i;
-//        int j;
-//        if (this.showCreativeTab
-//                && this.creativeScreenPage == TeleporterBlockScreen.CreativeScreenPage.TELEPORTATION_MODE
-//                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DUNGEONS
-//                && this.dungeonLocationsList.size() > 3) {
-//            i = this.width / 2 - 152;
-//            j = 71;
-//            if (mouseX >= (double)i && mouseX < (double)(i + 6) && mouseY >= (double)j && mouseY < (double)(j + 68)) {
-//                this.creativeDungeonsLocationsListMouseClicked = true;
-//            }
-//        }
-//        if (this.showCreativeTab
-//                && this.creativeScreenPage == TeleporterBlockScreen.CreativeScreenPage.TELEPORTATION_MODE
-//                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.HOUSING
-//                && this.housingLocationsList.size() > 4) {
-//            i = this.width / 2 - 152;
-//            j = 71;
-//            if (mouseX >= (double)i && mouseX < (double)(i + 6) && mouseY >= (double)j && mouseY < (double)(j + 93)) {
-//                this.creativeHousingLocationsListMouseClicked = true;
-//            }
-//        }
-//        // TODO team list
-//        if (this.showChooseTargetOwnerScreen) {
-//            i = this.x - 13;
-//            j = this.y + 134;
-//            if (mouseX >= (double)i && mouseX < (double)(i + 6) && mouseY >= (double)j && mouseY < (double)(j + 30)) {
-//                this.teamListMouseClicked = true;
-//            }
-//        }
-//        if (!this.showCreativeTab
-//                && this.showChooseTargetIdentifierScreen
-//                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DUNGEONS
-//                && this.visibleDungeonLocationsList.size() > 4) {
-//            i = this.x + 8;
-//            j = this.y + 21;
-//            if (mouseX >= (double)i && mouseX < (double)(i + 6) && mouseY >= (double)j && mouseY < (double)(j + 90)) {
-//                this.visibleDungeonsLocationsListMouseClicked = true;
-//            }
-//        }
-//        if (!this.showCreativeTab
-//                && this.showChooseTargetIdentifierScreen
-//                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.HOUSING
-//                && this.visibleHousingLocationsList.size() > 4) {
-//            i = this.x + 8;
-//            j = this.y + 21;
-//            if (mouseX >= (double)i && mouseX < (double)(i + 6) && mouseY >= (double)j && mouseY < (double)(j + 90)) {
-//                this.visibleHousingLocationsListMouseClicked = true;
-//            }
-//        }
+        this.mouseClicked = false;
+        if (!this.showCreativeTab
+                && ((this.showCoOwnerListScreen && this.coOwnerList.size() > 5)
+                || (this.showTrustedListScreen && this.coOwnerList.size() > 5)
+                || (this.showGuestListScreen && this.coOwnerList.size() > 5))) {
+            int i = this.x + 8;
+            int j = this.y + 34;
+            if (mouseX >= (double)i && mouseX < (double)(i + 6) && mouseY >= (double)j && mouseY < (double)(j + 115)) {
+                this.mouseClicked = true;
+            }
+        }
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-//        if (this.showCreativeTab
-//                && this.creativeScreenPage == TeleporterBlockScreen.CreativeScreenPage.TELEPORTATION_MODE
-//                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DUNGEONS
-//                && this.dungeonLocationsList.size() > 3
-//                && this.creativeDungeonsLocationsListMouseClicked) {
-//            int i = this.dungeonLocationsList.size() - 3;
-//            float f = (float)deltaY / (float)i;
-//            this.creativeDungeonsLocationsListScrollAmount = MathHelper.clamp(this.creativeDungeonsLocationsListScrollAmount + f, 0.0f, 1.0f);
-//            this.creativeDungeonsLocationsListScrollPosition = (int)((double)(this.creativeDungeonsLocationsListScrollAmount * (float)i));
-//        }
-//        if (this.showCreativeTab
-//                && this.creativeScreenPage == TeleporterBlockScreen.CreativeScreenPage.TELEPORTATION_MODE
-//                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.HOUSING
-//                && this.housingLocationsList.size() > 4
-//                && this.creativeHousingLocationsListMouseClicked) {
-//            int i = this.housingLocationsList.size() - 4;
-//            float f = (float)deltaY / (float)i;
-//            this.creativeHousingLocationsListScrollAmount = MathHelper.clamp(this.creativeHousingLocationsListScrollAmount + f, 0.0f, 1.0f);
-//            this.creativeHousingLocationsListScrollPosition = (int)((double)(this.creativeHousingLocationsListScrollAmount * (float)i));
-//        }
-//        // TODO team list
-//        if (!this.showCreativeTab
-//                && this.showChooseTargetIdentifierScreen
-//                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DUNGEONS
-//                && this.visibleDungeonLocationsList.size() > 4
-//                && this.visibleDungeonsLocationsListMouseClicked) {
-//            int i = this.visibleDungeonLocationsList.size() - 4;
-//            float f = (float)deltaY / (float)i;
-//            this.visibleDungeonsLocationsListScrollAmount = MathHelper.clamp(this.visibleDungeonsLocationsListScrollAmount + f, 0.0f, 1.0f);
-//            this.visibleDungeonsLocationsListScrollPosition = (int)((double)(this.visibleDungeonsLocationsListScrollAmount * (float)i));
-//        }
-//        if (!this.showCreativeTab
-//                && this.showChooseTargetIdentifierScreen
-//                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.HOUSING
-//                && this.visibleHousingLocationsList.size() > 4
-//                && this.visibleHousingLocationsListMouseClicked) {
-//            int i = this.visibleHousingLocationsList.size() - 4;
-//            float f = (float)deltaY / (float)i;
-//            this.visibleHousingLocationsListScrollAmount = MathHelper.clamp(this.visibleHousingLocationsListScrollAmount + f, 0.0f, 1.0f);
-//            this.visibleHousingLocationsListScrollPosition = (int)((double)(this.visibleHousingLocationsListScrollAmount * (float)i));
-//        }
+        if (!this.showCreativeTab
+                && this.showCoOwnerListScreen
+                && this.coOwnerList.size() > 5
+                && this.mouseClicked) {
+            int i = this.coOwnerList.size() - 5;
+            float f = (float)deltaY / (float)i;
+            this.scrollAmount = MathHelper.clamp(this.scrollAmount + f, 0.0f, 1.0f);
+            this.scrollPosition = (int)((double)(this.scrollAmount * (float)i));
+        }
+        if (!this.showCreativeTab
+                && this.showTrustedListScreen
+                && this.trustedPersonsList.size() > 5
+                && this.mouseClicked) {
+            int i = this.trustedPersonsList.size() - 5;
+            float f = (float)deltaY / (float)i;
+            this.scrollAmount = MathHelper.clamp(this.scrollAmount + f, 0.0f, 1.0f);
+            this.scrollPosition = (int)((double)(this.scrollAmount * (float)i));
+        }
+        if (!this.showCreativeTab
+                && this.showGuestListScreen
+                && this.guestList.size() > 5
+                && this.mouseClicked) {
+            int i = this.guestList.size() - 5;
+            float f = (float)deltaY / (float)i;
+            this.scrollAmount = MathHelper.clamp(this.scrollAmount + f, 0.0f, 1.0f);
+            this.scrollPosition = (int)((double)(this.scrollAmount * (float)i));
+        }
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
-        // TODO
-//        if (this.showCreativeTab
-//                && this.creativeScreenPage == TeleporterBlockScreen.CreativeScreenPage.TELEPORTATION_MODE
-//                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DUNGEONS
-//                && this.dungeonLocationsList.size() > 3
-//                && mouseX >= (double)(this.width / 2 - 152) && mouseX <= (double)(this.width / 2 + 50)
-//                && mouseY >= 70 && mouseY <= 140) {
-//            int i = this.dungeonLocationsList.size() - 3;
-//            float f = (float)verticalAmount / (float)i;
-//            this.creativeDungeonsLocationsListScrollAmount = MathHelper.clamp(this.creativeDungeonsLocationsListScrollAmount - f, 0.0f, 1.0f);
-//            this.creativeDungeonsLocationsListScrollPosition = (int)((double)(this.creativeDungeonsLocationsListScrollAmount * (float)i));
-//        }
-//        if (this.showCreativeTab
-//                && this.creativeScreenPage == TeleporterBlockScreen.CreativeScreenPage.TELEPORTATION_MODE
-//                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.HOUSING
-//                && this.housingLocationsList.size() > 4
-//                && mouseX >= (double)(this.width / 2 - 152) && mouseX <= (double)(this.width / 2 + 50)
-//                && mouseY >= 70 && mouseY <= 165) {
-//            int i = this.housingLocationsList.size() - 4;
-//            float f = (float)verticalAmount / (float)i;
-//            this.creativeHousingLocationsListScrollAmount = MathHelper.clamp(this.creativeHousingLocationsListScrollAmount - f, 0.0f, 1.0f);
-//            this.creativeHousingLocationsListScrollPosition = (int)((double)(this.creativeHousingLocationsListScrollAmount * (float)i));
-//        }
-//        // TODO team list
-//        if (!this.showCreativeTab
-//                && this.showChooseTargetIdentifierScreen
-//                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DUNGEONS
-//                && this.visibleDungeonLocationsList.size() > 4
-//                && mouseX >= this.x + 7 && mouseX <= this.x + this.backgroundWidth - 61 && mouseY >= this.y + 20 && mouseY <= this.y + 112) {
-//            int i = this.visibleDungeonLocationsList.size() - 4;
-//            float f = (float)verticalAmount / (float)i;
-//            this.visibleDungeonsLocationsListScrollAmount = MathHelper.clamp(this.visibleDungeonsLocationsListScrollAmount - f, 0.0f, 1.0f);
-//            this.visibleDungeonsLocationsListScrollPosition = (int)((double)(this.visibleDungeonsLocationsListScrollAmount * (float)i));
-//        }
-//        if (!this.showCreativeTab
-//                && this.showChooseTargetIdentifierScreen
-//                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.HOUSING
-//                && this.visibleHousingLocationsList.size() > 4
-//                && mouseX >= this.x + 7 && mouseX <= this.x + this.backgroundWidth - 61 && mouseY >= this.y + 20 && mouseY <= this.y + 112) {
-//            int i = this.visibleHousingLocationsList.size() - 4;
-//            float f = (float)verticalAmount / (float)i;
-//            this.visibleHousingLocationsListScrollAmount = MathHelper.clamp(this.visibleHousingLocationsListScrollAmount - f, 0.0f, 1.0f);
-//            this.visibleHousingLocationsListScrollPosition = (int)((double)(this.visibleHousingLocationsListScrollAmount * (float)i));
-//        }
+        if (!this.showCreativeTab
+                && this.showCoOwnerListScreen
+                && this.coOwnerList.size() > 5
+                && mouseX >= (double)(this.x + 7) && mouseX <= (double)(this.x + this.backgroundWidth - 61)
+                && mouseY >= 34 && mouseY <= 148) {
+            int i = this.coOwnerList.size() - 5;
+            float f = (float)verticalAmount / (float)i;
+            this.scrollAmount = MathHelper.clamp(this.scrollAmount - f, 0.0f, 1.0f);
+            this.scrollPosition = (int)((double)(this.scrollAmount * (float)i));
+        }
+        if (!this.showCreativeTab
+                && this.showTrustedListScreen
+                && this.trustedPersonsList.size() > 5
+                && mouseX >= (double)(this.x + 7) && mouseX <= (double)(this.x + this.backgroundWidth - 61)
+                && mouseY >= 34 && mouseY <= 148) {
+            int i = this.trustedPersonsList.size() - 5;
+            float f = (float)verticalAmount / (float)i;
+            this.scrollAmount = MathHelper.clamp(this.scrollAmount - f, 0.0f, 1.0f);
+            this.scrollPosition = (int)((double)(this.scrollAmount * (float)i));
+        }
+        if (!this.showCreativeTab
+                && this.showGuestListScreen
+                && this.guestList.size() > 5
+                && mouseX >= (double)(this.x + 7) && mouseX <= (double)(this.x + this.backgroundWidth - 61)
+                && mouseY >= 34 && mouseY <= 148) {
+            int i = this.guestList.size() - 5;
+            float f = (float)verticalAmount / (float)i;
+            this.scrollAmount = MathHelper.clamp(this.scrollAmount - f, 0.0f, 1.0f);
+            this.scrollPosition = (int)((double)(this.scrollAmount * (float)i));
+        }
         return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
     }
 
@@ -1263,7 +811,6 @@ public class HousingScreen extends Screen {
         super.render(context, mouseX, mouseY, delta);
         if (this.showCreativeTab) {
             if (this.creativeScreenPage == CreativeScreenPage.INFLUENCE) {
-//                context.drawTextWithShadow(this.textRenderer, SHOW_INFLUENCE_AREA_LABEL_TEXT, this.width / 2 - 153, 51, 0xA0A0A0);
                 context.drawTextWithShadow(this.textRenderer, INFLUENCE_AREA_DIMENSIONS_LABEL_TEXT, this.width / 2 - 153, 70, 0xA0A0A0);
                 this.restrictBlockBreakingAreaDimensionsXField.render(context, mouseX, mouseY, delta);
                 this.restrictBlockBreakingAreaDimensionsYField.render(context, mouseX, mouseY, delta);
@@ -1272,89 +819,60 @@ public class HousingScreen extends Screen {
                 this.restrictBlockBreakingAreaPositionOffsetXField.render(context, mouseX, mouseY, delta);
                 this.restrictBlockBreakingAreaPositionOffsetYField.render(context, mouseX, mouseY, delta);
                 this.restrictBlockBreakingAreaPositionOffsetZField.render(context, mouseX, mouseY, delta);
-//                context.drawTextWithShadow(this.textRenderer, ACCESS_POSITION_OFFET_LABEL_TEXT, this.width / 2 - 153, 140, 0xA0A0A0);
-//                this.accessPositionOffsetXField.render(context, mouseX, mouseY, delta);
-//                this.accessPositionOffsetYField.render(context, mouseX, mouseY, delta);
-//                this.accessPositionOffsetZField.render(context, mouseX, mouseY, delta);
-//                context.drawTextWithShadow(this.textRenderer, SET_ACCESS_POSITION_LABEL_TEXT, this.width / 2 - 153, 181, 0xA0A0A0);
             } else if (this.creativeScreenPage == CreativeScreenPage.ENTRANCE) {
-//                context.drawTextWithShadow(this.textRenderer, TELEPORTATION_MODE_LABEL_TEXT, this.width / 2 - 153, 51, 0xA0A0A0);
-//                if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DIRECT) {
-                    context.drawTextWithShadow(this.textRenderer, ENTRANCE_POSITION_OFFET_LABEL_TEXT, this.width / 2 - 153, 70, 0xA0A0A0);
-                    this.entrancePositionOffsetXField.render(context, mouseX, mouseY, delta);
-                    this.entrancePositionOffsetYField.render(context, mouseX, mouseY, delta);
-                    this.entrancePositionOffsetZField.render(context, mouseX, mouseY, delta);
-                    context.drawTextWithShadow(this.textRenderer, ENTRANCE_ORIENTATION_LABEL_TEXT, this.width / 2 - 153, 105, 0xA0A0A0);
-                    this.entranceOrientationYawField.render(context, mouseX, mouseY, delta);
-                    this.entranceOrientationPitchField.render(context, mouseX, mouseY, delta);
-//                } else if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.SAVED_LOCATIONS) {
-//                    context.drawTextWithShadow(this.textRenderer, LOCATION_TYPE_LABEL_TEXT, this.width / 2 - 153, 76, 0xA0A0A0);
-//                } else if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DUNGEONS) {
-//                    for (int i = this.creativeDungeonsLocationsListScrollPosition; i < Math.min(this.creativeDungeonsLocationsListScrollPosition + 3, this.dungeonLocationsList.size()); i++) {
-//                        String text = this.dungeonLocationsList.get(i).getLeft();
-//                        if (!this.dungeonLocationsList.get(i).getRight().equals("")) {
-//                            text = this.dungeonLocationsList.get(i).getLeft() + ", " + this.dungeonLocationsList.get(i).getRight();
-//                        }
-//                        context.drawTextWithShadow(this.textRenderer, text, this.width / 2 - 141, 76 + ((i - this.creativeDungeonsLocationsListScrollPosition) * 25), 0xA0A0A0);
-//                    }
-//                    if (this.dungeonLocationsList.size() > 3) {
-//                        context.drawGuiTexture(CREATIVE_DUNGEONS_SCROLLER_BACKGROUND_TEXTURE, this.width / 2 - 153, 70, 8, 70);
-//                        int k = (int)(61.0f * this.creativeDungeonsLocationsListScrollAmount);
-//                        context.drawGuiTexture(SCROLLER_TEXTURE, this.width / 2 - 152, 70 + 1 + k, 6, 7);
-//                    }
-//                    this.newDungeonLocationIdentifierField.render(context, mouseX, mouseY, delta);
-//                    this.newDungeonLocationEntranceField.render(context, mouseX, mouseY, delta);
-//                } else if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.HOUSING) {
-//                    for (int i = this.creativeHousingLocationsListScrollPosition; i < Math.min(this.creativeHousingLocationsListScrollPosition + 4, this.housingLocationsList.size()); i++) {
-//                        context.drawTextWithShadow(this.textRenderer, this.housingLocationsList.get(i), this.width / 2 - 141, 76 + ((i - this.creativeHousingLocationsListScrollPosition) * 25), 0xA0A0A0);
-//                    }
-//                    if (this.housingLocationsList.size() > 4) {
-//                        context.drawGuiTexture(CREATIVE_HOUSING_SCROLLER_BACKGROUND_TEXTURE, this.width / 2 - 153, 70, 8, 95);
-//                        int k = (int)(86.0f * this.creativeHousingLocationsListScrollAmount);
-//                        context.drawGuiTexture(SCROLLER_TEXTURE, this.width / 2 - 152, 70 + 1 + k, 6, 7);
-//                    }
-//                    this.newHousingLocationIdentifierField.render(context, mouseX, mouseY, delta);
-//                }
+                context.drawTextWithShadow(this.textRenderer, ENTRANCE_POSITION_OFFET_LABEL_TEXT, this.width / 2 - 153, 70, 0xA0A0A0);
+                this.entrancePositionOffsetXField.render(context, mouseX, mouseY, delta);
+                this.entrancePositionOffsetYField.render(context, mouseX, mouseY, delta);
+                this.entrancePositionOffsetZField.render(context, mouseX, mouseY, delta);
+                context.drawTextWithShadow(this.textRenderer, ENTRANCE_ORIENTATION_LABEL_TEXT, this.width / 2 - 153, 105, 0xA0A0A0);
+                this.entranceOrientationYawField.render(context, mouseX, mouseY, delta);
+                this.entranceOrientationPitchField.render(context, mouseX, mouseY, delta);
             } else if (this.creativeScreenPage == CreativeScreenPage.TRIGGERED_BLOCK) {
-//                context.drawTextWithShadow(this.textRenderer, TELEPORTER_NAME_FIELD_LABEL_TEXT, this.width / 2 - 153, 50, 0xA0A0A0);
-//                this.teleporterNameField.render(context, mouseX, mouseY, delta);
-//
-//                if (!(this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DIRECT || this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.SAVED_LOCATIONS)) {
-
-                    context.drawTextWithShadow(this.textRenderer, TRIGGERED_BLOCK_POSITION_OFFSET_LABEL_TEXT, this.width / 2 - 153, 70, 0xA0A0A0);
-                    this.triggeredBlockPositionOffsetXField.render(context, mouseX, mouseY, delta);
-                    this.triggeredBlockPositionOffsetYField.render(context, mouseX, mouseY, delta);
-                    this.triggeredBlockPositionOffsetZField.render(context, mouseX, mouseY, delta);
-//                    context.drawTextWithShadow(this.textRenderer, TARGET_IDENTIFIER_FIELD_LABEL_TEXT, this.width / 2 - 153, 98, 0xA0A0A0);
-//                    this.currentTargetIdentifierLabelField.render(context, mouseX, mouseY, delta);
-
-//                    if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DUNGEONS) {
-//
-////                        context.drawTextWithShadow(this.textRenderer, TARGET_ENTRANCE_FIELD_LABEL_TEXT, this.width / 2 - 153, 122, 0xA0A0A0);
-//                        this.currentTargetEntranceLabelField.render(context, mouseX, mouseY, delta);
-//
-//                    }
-//                }
-
-//                context.drawTextWithShadow(this.textRenderer, TELEPORT_BUTTON_LABEL_TEXT, this.width / 2 - 153, 146, 0xA0A0A0);
-//                this.teleportButtonLabelField.render(context, mouseX, mouseY, delta);
-////                context.drawTextWithShadow(this.textRenderer, CANCEL_TELEPORT_BUTTON_LABEL_TEXT, this.width / 2 - 153, 170, 0xA0A0A0);
-//                this.cancelTeleportButtonLabelField.render(context, mouseX, mouseY, delta);
+                context.drawTextWithShadow(this.textRenderer, TRIGGERED_BLOCK_POSITION_OFFSET_LABEL_TEXT, this.width / 2 - 153, 70, 0xA0A0A0);
+                this.triggeredBlockPositionOffsetXField.render(context, mouseX, mouseY, delta);
+                this.triggeredBlockPositionOffsetYField.render(context, mouseX, mouseY, delta);
+                this.triggeredBlockPositionOffsetZField.render(context, mouseX, mouseY, delta);
             }
         } else {
-//            context.drawTextWithShadow(this.textRenderer, OWNER_MODE_LABEL_TEXT, this.width / 2 - 153, 74, 0xA0A0A0);
             if (this.showResetHouseScreen) {
             } else if (this.showCoOwnerListScreen) {
                 context.drawText(this.textRenderer, TITLE_CO_OWNER_LIST_LABEL_TEXT, this.x + 8, this.y + 7, 0x404040, false);
                 context.drawText(this.textRenderer, TITLE_CO_OWNER_LIST_DESCRIPTION_LABEL_TEXT, this.x + 8, this.y + 20, 0x404040, false);
+                for (int i = this.scrollPosition; i < Math.min(this.scrollPosition + 5, this.coOwnerList.size()); i++) {
+                    String text = this.coOwnerList.get(i);
+                    context.drawText(this.textRenderer, text, this.x + 19, this.y + 39 + ((i - this.scrollPosition) * 24), 0x404040, false);
+                }
+                if (this.coOwnerList.size() > 5) {
+                    context.drawGuiTexture(PLAYER_LISTS_SCROLLER_BACKGROUND_TEXTURE, this.x + 7, this.y + 33, 8, 116);
+                    int k = (int)(107.0f * this.scrollAmount);
+                    context.drawGuiTexture(SCROLLER_TEXTURE, this.x + 8, this.y + 33 + 1 + k, 6, 7);
+                }
                 this.newCoOwnerField.render(context, mouseX, mouseY, delta);
             } else if (this.showTrustedListScreen) {
                 context.drawText(this.textRenderer, TITLE_TRUSTED_LIST_LABEL_TEXT, this.x + 8, this.y + 7, 0x404040, false);
                 context.drawText(this.textRenderer, TITLE_TRUSTED_LIST_DESCRIPTION_LABEL_TEXT, this.x + 8, this.y + 20, 0x404040, false);
+                for (int i = this.scrollPosition; i < Math.min(this.scrollPosition + 5, this.trustedPersonsList.size()); i++) {
+                    String text = this.trustedPersonsList.get(i);
+                    context.drawText(this.textRenderer, text, this.x + 19, this.y + 39 + ((i - this.scrollPosition) * 24), 0x404040, false);
+                }
+                if (this.trustedPersonsList.size() > 5) {
+                    context.drawGuiTexture(PLAYER_LISTS_SCROLLER_BACKGROUND_TEXTURE, this.x + 7, this.y + 33, 8, 116);
+                    int k = (int)(107.0f * this.scrollAmount);
+                    context.drawGuiTexture(SCROLLER_TEXTURE, this.x + 8, this.y + 33 + 1 + k, 6, 7);
+                }
                 this.newTrustedPersonField.render(context, mouseX, mouseY, delta);
             } else if (this.showGuestListScreen) {
                 context.drawText(this.textRenderer, TITLE_GUEST_LIST_LABEL_TEXT, this.x + 8, this.y + 7, 0x404040, false);
                 context.drawText(this.textRenderer, TITLE_GUEST_LIST_DESCRIPTION_LABEL_TEXT, this.x + 8, this.y + 20, 0x404040, false);
+                for (int i = this.scrollPosition; i < Math.min(this.scrollPosition + 5, this.guestList.size()); i++) {
+                    String text = this.guestList.get(i);
+                    context.drawText(this.textRenderer, text, this.x + 19, this.y + 39 + ((i - this.scrollPosition) * 24), 0x404040, false);
+                }
+                if (this.guestList.size() > 5) {
+                    context.drawGuiTexture(PLAYER_LISTS_SCROLLER_BACKGROUND_TEXTURE, this.x + 7, this.y + 33, 8, 116);
+                    int k = (int)(107.0f * this.scrollAmount);
+                    context.drawGuiTexture(SCROLLER_TEXTURE, this.x + 8, this.y + 33 + 1 + k, 6, 7);
+                }
                 this.newGuestField.render(context, mouseX, mouseY, delta);
             } else {
                 if (this.currentPermissionLevel == 0) {
@@ -1369,84 +887,7 @@ public class HousingScreen extends Screen {
                     context.drawText(this.textRenderer, TITLE_STRANGER_LABEL_TEXT, this.x + 8, this.y + 7, 0x404040, false);
                 }
             }
-
-//            TeleporterBlockBlockEntity.TeleportationMode mode = this.teleporterBlock.getTeleportationMode();
-//
-//            if (this.showChooseTargetOwnerScreen) {
-//
-//            } else if (this.showChooseTargetIdentifierScreen) {
-//
-//                if (mode == TeleporterBlockBlockEntity.TeleportationMode.DUNGEONS) {
-//
-//                    for (int i = this.visibleDungeonsLocationsListScrollPosition; i < Math.min(this.visibleDungeonsLocationsListScrollPosition + 4, this.visibleDungeonLocationsList.size()); i++) {
-//                        context.drawText(this.textRenderer, this.visibleDungeonLocationsList.get(i).getLeft(), this.x + 19, this.y + 26 + ((i - this.visibleDungeonsLocationsListScrollPosition) * 24), 0x404040, false);
-//                    }
-//                    if (this.visibleDungeonLocationsList.size() > 4) {
-//                        context.drawGuiTexture(CREATIVE_HOUSING_SCROLLER_BACKGROUND_TEXTURE, this.x + 7, this.y + 20, 8, 92);
-//                        int k = (int) (83.0f * this.visibleDungeonsLocationsListScrollAmount);
-//                        context.drawGuiTexture(SCROLLER_TEXTURE, this.x + 8, this.y + 20 + 1 + k, 6, 7);
-//                    }
-//
-//                } else {
-//
-//                    for (int i = this.visibleHousingLocationsListScrollPosition; i < Math.min(this.visibleHousingLocationsListScrollPosition + 4, this.visibleHousingLocationsList.size()); i++) {
-//                        context.drawText(this.textRenderer, this.visibleHousingLocationsList.get(i), this.x + 19, this.y + 26 + ((i - this.visibleHousingLocationsListScrollPosition) * 24), 0x404040, false);
-//                    }
-//                    if (this.visibleHousingLocationsList.size() > 4) {
-//                        context.drawGuiTexture(CREATIVE_HOUSING_SCROLLER_BACKGROUND_TEXTURE, this.x + 7, this.y + 20, 8, 92);
-//                        int k = (int) (83.0f * this.visibleHousingLocationsListScrollAmount);
-//                        context.drawGuiTexture(SCROLLER_TEXTURE, this.x + 8, this.y + 20 + 1 + k, 6, 7);
-//                    }
-//
-//                }
-//
-////            } else if (this.showChooseTargetEntranceScreen) {
-//
-//            } else if (this.showRegenerationConfirmScreen) {
-//
-//            } else {
-//
-//                Text teleporterName = Text.translatable(this.teleporterBlock.getTeleporterName());
-//                int teleporterNameOffset = this.backgroundWidth / 2 - this.textRenderer.getWidth(teleporterName) / 2;
-//                if (this.currentTargetOwner != null) {
-//
-//                    context.drawText(this.textRenderer, teleporterName, this.x + teleporterNameOffset, this.y + 7, 0x404040, false);
-//
-//                    if (!(mode == TeleporterBlockBlockEntity.TeleportationMode.DIRECT || mode == TeleporterBlockBlockEntity.TeleportationMode.SAVED_LOCATIONS)) {
-//
-//                        context.drawText(this.textRenderer, Text.translatable(this.teleporterBlock.getCurrentTargetOwnerLabel()), this.x + 8, this.y + 20, 0x404040, false);
-//
-//                        context.drawTexture(currentTargetOwner.getSkinTextures().texture(), this.x + 7, this.y + 39, 8, 8, 8, 8, 8, 8, 64, 64);
-//                        context.drawText(this.textRenderer, currentTargetOwner.getProfile().getName(), this.x + 19, this.y + 39, 0x404040, false);
-//
-//                        context.drawText(this.textRenderer, Text.translatable(this.teleporterBlock.getCurrentTargetIdentifierLabel()), this.x + 8, this.y + 57, 0x404040, false);
-//
-//                        if (mode == TeleporterBlockBlockEntity.TeleportationMode.DUNGEONS) {
-//
-//                            if (!Objects.equals(this.currentTargetEntrance, "")) {
-//
-//                                context.drawText(this.textRenderer, Text.translatable(this.currentTargetEntranceDisplayName), this.x + 8, this.y + 76, 0x404040, false);
-//                                context.drawText(this.textRenderer, Text.translatable(this.currentTargetDisplayName), this.x + 8, this.y + 89, 0x404040, false);
-//
-//                            } else {
-//
-//                                context.drawText(this.textRenderer, Text.translatable(this.currentTargetDisplayName), this.x + 8, this.y + 83, 0x404040, false);
-//
-//                            }
-////                            context.drawText(this.textRenderer, Text.translatable(this.teleporterBlock.getCurrentTargetEntranceLabel()), this.x + 8, this.y + 94, 0x404040, false);
-////
-////                            context.drawText(this.textRenderer, "Current Target Location Entrance", this.x + 8, this.y + 113, 0x404040, false);
-//
-//                        } else if (mode == TeleporterBlockBlockEntity.TeleportationMode.HOUSING) {
-//
-//                            context.drawText(this.textRenderer, Text.translatable(this.currentTargetDisplayName), this.x + 8, this.y + 83, 0x404040, false);
-//
-//                        }
-//                    }
-//                }
-//            }
         }
-//        context.drawTextWithShadow(this.textRenderer, CONSUME_KEY_ITEMSTACK_LABEL_TEXT, this.width / 2 - 153, 221, 0x404040);
     }
 
     @Override
@@ -1472,10 +913,6 @@ public class HousingScreen extends Screen {
             }
         }
     }
-//
-//    @Override
-//    protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
-//    }
 
     private boolean updateHousingBlockCreative() {
         BlockPos housingBlockPos = new BlockPos(0, 0, 0);
@@ -1512,32 +949,17 @@ public class HousingScreen extends Screen {
         return true;
     }
 
-    private boolean updateHousingBlockAdventure() {
+    private void updateHousingBlockAdventure() {
         if (this.housingBlockBlockEntity != null) {
-//            List<String> coOwnerList = new ArrayList<>();
-//            for (int i = 0; i < component(FlowLayout.class, "coOwnerListContent").children().size(); i++) {
-//                coOwnerList.add((((TextBoxComponent) (((FlowLayout) component(FlowLayout.class, "coOwnerListContent").children().get(i)).children().get(0))).getText()));
-//            }
-//
-//            List<String> trustedList = new ArrayList<>();
-//            for (int i = 0; i < component(FlowLayout.class, "trustedListContent").children().size(); i++) {
-//                trustedList.add(((TextBoxComponent) (((FlowLayout) component(FlowLayout.class, "trustedListContent").children().get(i)).children().get(0))).getText());
-//            }
-//
-//            List<String> guestList = new ArrayList<>();
-//            for (int i = 0; i < component(FlowLayout.class, "guestListContent").children().size(); i++) {
-//                guestList.add(((TextBoxComponent) (((FlowLayout) component(FlowLayout.class, "guestListContent").children().get(i)).children().get(0))).getText());
-//            }
-
+            BetterAdventureModeCore.info("this.housingBlockBlockEntity != null");
             ClientPlayNetworking.send(new UpdateHousingBlockAdventurePacket(
                     this.housingBlockBlockEntity.getPos(),
                     this.coOwnerList,
                     this.trustedPersonsList,
                     this.guestList
             ));
-            return true;
         }
-        return false;
+        BetterAdventureModeCore.info("this.housingBlockBlockEntity == null");
     }
 
     private int parseInt(String string) {
@@ -1569,33 +991,8 @@ public class HousingScreen extends Screen {
         this.close();
     }
 
-//    private void deleteEntry(ButtonComponent buttonComponent) {
-//        if (buttonComponent.parent() != null) {
-//            buttonComponent.parent().remove();
-//        }
-//    }
-
-//    private void addEntry(ButtonComponent buttonComponent) {
-//        if (buttonComponent.parent() != null) {
-//            FlowLayout buttonContainer = (FlowLayout) buttonComponent.parent();
-//            if (buttonContainer.parent() != null) {
-//                String newEntryString = ((TextBoxComponent) buttonContainer.children().get(0)).getText();
-//                ((FlowLayout) ((FlowLayout) buttonContainer.parent()).children().get(1)).child(
-//                        Containers.horizontalFlow(Sizing.content(), Sizing.content())
-//                                .children(List.of(
-//                                        Containers.verticalFlow(Sizing.content(), Sizing.content())
-//                                                .child(
-//                                                        Components.label(Text.literal(newEntryString))
-//                                                ),
-//                                        Components.button(Text.translatable("gui.delete"), this::deleteEntry)
-//                                ))
-//                );
-//            }
-//        }
-//    }
-
     private void resetHouse() {
-        if (this.housingBlockBlockEntity != null/* && this.housingBlockBlockEntity.getOwnerMode() == HousingBlockBlockEntity.OwnerMode.INTERACTION*/) {
+        if (this.housingBlockBlockEntity != null) {
             ClientPlayNetworking.send(new ResetHouseHousingBlockPacket(
                     this.housingBlockBlockEntity.getPos()
             ));
