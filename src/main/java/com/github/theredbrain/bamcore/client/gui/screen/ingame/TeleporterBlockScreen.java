@@ -75,9 +75,9 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
     private static final Text CONSUME_KEY_ITEMSTACK_LABEL_TEXT = Text.translatable("gui.teleporter_block.consume_key_itemstack_label");
     private static final Text WIP_LABEL_TEXT = Text.translatable("wip");
     private static final Text EDIT_TELEPORTER_TITLE = Text.translatable("gui.edit_teleporter_title");
-    private static final Identifier CREATIVE_DUNGEONS_SCROLLER_BACKGROUND_TEXTURE = BetterAdventureModeCore.identifier("container/teleporter_screen/creative_dungeons_scroller_background");
-    private static final Identifier CREATIVE_HOUSING_SCROLLER_BACKGROUND_TEXTURE = BetterAdventureModeCore.identifier("container/teleporter_screen/creative_housing_scroller_background");
-    private static final Identifier SCROLLER_TEXTURE = BetterAdventureModeCore.identifier("container/scroller");
+    private static final Identifier CREATIVE_DUNGEONS_SCROLLER_BACKGROUND_TEXTURE = BetterAdventureModeCore.identifier("scroll_bar/scroll_bar_background_8_70");
+    private static final Identifier CREATIVE_HOUSING_SCROLLER_BACKGROUND_TEXTURE = BetterAdventureModeCore.identifier("scroll_bar/scroll_bar_background_8_95");
+    private static final Identifier SCROLLER_TEXTURE = BetterAdventureModeCore.identifier("scroll_bar/scroller_vertical_6_7");
     public static final Identifier ADVENTURE_TELEPORTER_SCREEN_BACKGROUND_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/adventure_teleporter_screen.png");
     public static final Identifier CREATIVE_TELEPORTER_SCREEN_BACKGROUND_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/creative_teleporter_screen.png");
     public static final Identifier TELEPORTER_SCREEN_UTILITY_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/teleporter_screen_util.png");
@@ -357,12 +357,12 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
 
     private void removeLocationFromLocationList(int index, boolean isDungeon) {
         if (isDungeon) {
-            if (index < this.dungeonLocationsList.size()) {
-                this.dungeonLocationsList.remove(index);
+            if (index + this.visibleDungeonsLocationsListScrollPosition < this.dungeonLocationsList.size()) {
+                this.dungeonLocationsList.remove(index + this.visibleDungeonsLocationsListScrollPosition);
             }
         } else {
-            if (index < this.housingLocationsList.size()) {
-                this.housingLocationsList.remove(index);
+            if (index + this.visibleHousingLocationsListScrollPosition < this.housingLocationsList.size()) {
+                this.housingLocationsList.remove(index + this.visibleHousingLocationsListScrollPosition);
             }
         }
         this.updateWidgets();

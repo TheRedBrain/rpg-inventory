@@ -7,6 +7,8 @@
 	"gui.edit": "Edit",
 	"gui.choose": "Choose",
 	"gui.save": "Save",
+	"gui.add": "Add",
+	"gui.remove": "Remove",
 	"gui.delete": "Delete",
 	"gui.edit_teleporter_title": "Edit Teleporter",
 	"gui.adventureInventory": "Inventory",
@@ -93,9 +95,6 @@
 	"gui.housing_screen.tabEditHouse.addEntry": "Add player",
 
 	"gui.delay_trigger_block.triggeredBlockTriggerDelay": "Trigger Delay in ticks",
-
-	"gui.relay_trigger_block.deleteTriggeredBlockEntryButton": "Delete",
-	"gui.relay_trigger_block.addTriggeredBlockEntryButton": "Add Entry",
 
 	"gui.teleporter_block.regeneration_confirm_screen.title": "Do you want to regenerate this dungeon?",
 	"gui.teleporter_block.confirmDungeonRegenerationButton": "Yes",
@@ -195,10 +194,11 @@
 	"gui.teleporter_block.cancelTeleportButtonLabel.tooltip": "Label of right Button in Adventure GUI",
 
 
+	"gui.triggered_block.newTriggeredBlockPositionOffset": "New Triggered Block Position Offset",
 	"gui.triggered_block.triggeredBlockPositionOffset": "Triggered Block Position Offset",
-	"gui.triggered_block.triggeredBlockPositionOffsetX.tooltip": "Triggered Block Position Offset: X",
-	"gui.triggered_block.triggeredBlockPositionOffsetY.tooltip": "Triggered Block Position Offset: Y",
-	"gui.triggered_block.triggeredBlockPositionOffsetZ.tooltip": "Triggered Block Position Offset: Z",
+	"gui.triggered_block.triggeredBlockPositionOffsetX.placeholder": "X",
+	"gui.triggered_block.triggeredBlockPositionOffsetY.placeholder": "Y",
+	"gui.triggered_block.triggeredBlockPositionOffsetZ.placeholder": "Z",
 
 	"block.bamcore.area_filler_block": "Area Filler Block",
 	"block.bamcore.redstone_trigger_block": "Redstone Trigger Block",

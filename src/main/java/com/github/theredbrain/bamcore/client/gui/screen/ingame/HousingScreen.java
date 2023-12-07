@@ -220,12 +220,12 @@ public class HousingScreen extends Screen {
     }
 
     private void removeEntryFromList(int index, int listType) {
-        if (listType == 0) {
-            this.coOwnerList.remove(index);
-        } else if (listType == 1) {
-            this.trustedPersonsList.remove(index);
-        } else if (listType == 2) {
-            this.guestList.remove(index);
+        if (listType == 0 && index + this.scrollPosition < this.coOwnerList.size()) {
+            this.coOwnerList.remove(index + this.scrollPosition);
+        } else if (listType == 1 && index + this.scrollPosition < this.trustedPersonsList.size()) {
+            this.trustedPersonsList.remove(index + this.scrollPosition);
+        } else if (listType == 2 && index + this.scrollPosition < this.guestList.size()) {
+            this.guestList.remove(index + this.scrollPosition);
         }
         this.scrollPosition = 0;
         this.scrollAmount = 0.0f;
@@ -663,9 +663,9 @@ public class HousingScreen extends Screen {
 
     @Override
     public void resize(MinecraftClient client, int width, int height) {
-        List<String> list = this.coOwnerList;
-        List<String> list1 = this.trustedPersonsList;
-        List<String> list2 = this.guestList;
+        List<String> list = new ArrayList<>(this.coOwnerList);
+        List<String> list1 = new ArrayList<>(this.trustedPersonsList);
+        List<String> list2 = new ArrayList<>(this.guestList);
         boolean bool = this.showInfluenceArea;
         HousingBlockBlockEntity.OwnerMode var = this.ownerMode;
         int number = this.scrollPosition;
@@ -688,9 +688,12 @@ public class HousingScreen extends Screen {
         String string15 = this.triggeredBlockPositionOffsetYField.getText();
         String string16 = this.triggeredBlockPositionOffsetZField.getText();
         this.init(client, width, height);
-        this.coOwnerList = list;
-        this.trustedPersonsList = list1;
-        this.guestList = list2;
+        this.coOwnerList.clear();
+        this.trustedPersonsList.clear();
+        this.guestList.clear();
+        this.coOwnerList.addAll(list);
+        this.trustedPersonsList.addAll(list1);
+        this.guestList.addAll(list2);
         this.showInfluenceArea = bool;
         this.ownerMode = var;
         this.scrollPosition = number;
@@ -712,6 +715,7 @@ public class HousingScreen extends Screen {
         this.triggeredBlockPositionOffsetXField.setText(string14);
         this.triggeredBlockPositionOffsetYField.setText(string15);
         this.triggeredBlockPositionOffsetZField.setText(string16);
+        this.updateWidgets();
     }
 
     @Override
@@ -897,6 +901,7 @@ public class HousingScreen extends Screen {
 
     @Override
     public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
+        super.renderBackground(context, mouseX, mouseY, delta);
         this.drawBackground(context, delta, mouseX, mouseY);
     }
 

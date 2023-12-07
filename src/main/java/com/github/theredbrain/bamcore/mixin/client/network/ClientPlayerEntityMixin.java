@@ -72,11 +72,6 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
     }
 
     @Override
-    public void bamcore$openAreaFillerBlockScreen(AreaFillerBlockBlockEntity areaFillerBlock) {
-        this.client.setScreen(new AreaFillerBlockScreen(areaFillerBlock));
-    }
-
-    @Override
     public void bamcore$openRedstoneTriggerBlockScreen(RedstoneTriggerBlockBlockEntity redstoneTriggerBlock) {
         this.client.setScreen(new RedstoneTriggerBlockScreen(redstoneTriggerBlock));
     }
@@ -89,11 +84,6 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
     @Override
     public void bamcore$openDelayTriggerBlockScreen(DelayTriggerBlockBlockEntity delayTriggerBlock) {
         this.client.setScreen(new DelayTriggerBlockScreen(delayTriggerBlock));
-    }
-
-    @Override
-    public void bamcore$openChunkLoaderBlockScreen(ChunkLoaderBlockBlockEntity chunkLoaderBlock) {
-        this.client.setScreen(new ChunkLoaderBlockScreen(chunkLoaderBlock));
     }
 
     @Override

@@ -28,9 +28,6 @@ public class EntityRegistry {
     public static final BlockEntityType<JigsawPlacerBlockBlockEntity> STRUCTURE_PLACER_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
             BetterAdventureModeCore.identifier("structure_placer_block"),
             FabricBlockEntityTypeBuilder.create(JigsawPlacerBlockBlockEntity::new, BlockRegistry.JIGSAW_PLACER_BLOCK).build());
-    public static final BlockEntityType<AreaFillerBlockBlockEntity> AREA_FILLER_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
-            BetterAdventureModeCore.identifier("area_filler_block"),
-            FabricBlockEntityTypeBuilder.create(AreaFillerBlockBlockEntity::new, BlockRegistry.AREA_FILLER_BLOCK).build());
     public static final BlockEntityType<RedstoneTriggerBlockBlockEntity> REDSTONE_TRIGGER_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
             BetterAdventureModeCore.identifier("redstone_trigger_block"),
             FabricBlockEntityTypeBuilder.create(RedstoneTriggerBlockBlockEntity::new, BlockRegistry.REDSTONE_TRIGGER_BLOCK).build());
@@ -40,9 +37,6 @@ public class EntityRegistry {
     public static final BlockEntityType<DelayTriggerBlockBlockEntity> DELAY_TRIGGER_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
             BetterAdventureModeCore.identifier("delay_trigger_block"),
             FabricBlockEntityTypeBuilder.create(DelayTriggerBlockBlockEntity::new, BlockRegistry.DELAY_TRIGGER_BLOCK).build());
-    public static final BlockEntityType<ChunkLoaderBlockBlockEntity> CHUNK_LOADER_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
-            BetterAdventureModeCore.identifier("chunk_loader_block"),
-            FabricBlockEntityTypeBuilder.create(ChunkLoaderBlockBlockEntity::new, BlockRegistry.CHUNK_LOADER_BLOCK).build());
     public static final BlockEntityType<UseRelayBlockEntity> USE_RELAY_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
             BetterAdventureModeCore.identifier("use_relay_block"),
             FabricBlockEntityTypeBuilder.create(UseRelayBlockEntity::new,

@@ -30,10 +30,8 @@ public interface DuckPlayerEntityMixin {
 
     void bamcore$openHousingScreen();
     void bamcore$openJigsawPlacerBlockScreen(JigsawPlacerBlockBlockEntity jigsawPlacerBlock);
-    void bamcore$openAreaFillerBlockScreen(AreaFillerBlockBlockEntity areaFillerBlock);
     void bamcore$openRedstoneTriggerBlockScreen(RedstoneTriggerBlockBlockEntity redstoneTriggerBlock);
     void bamcore$openRelayTriggerBlockScreen(RelayTriggerBlockBlockEntity relayTriggerBlock);
     void bamcore$openDelayTriggerBlockScreen(DelayTriggerBlockBlockEntity delayTriggerBlock);
-    void bamcore$openChunkLoaderBlockScreen(ChunkLoaderBlockBlockEntity chunkLoaderBlock);
     void bamcore$openUseRelayBlockScreen(UseRelayBlockEntity useRelayBlock);
 }

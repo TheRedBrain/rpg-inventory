@@ -772,10 +772,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     }
 
     @Override
-    public void bamcore$openAreaFillerBlockScreen(AreaFillerBlockBlockEntity areaFillerBlock) {
-    }
-
-    @Override
     public void bamcore$openRedstoneTriggerBlockScreen(RedstoneTriggerBlockBlockEntity redstoneTriggerBlock) {
     }
 
@@ -785,10 +781,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
     @Override
     public void bamcore$openDelayTriggerBlockScreen(DelayTriggerBlockBlockEntity delayTriggerBlock) {
-    }
-
-    @Override
-    public void bamcore$openChunkLoaderBlockScreen(ChunkLoaderBlockBlockEntity chunkLoaderBlock) {
     }
 
     @Override
