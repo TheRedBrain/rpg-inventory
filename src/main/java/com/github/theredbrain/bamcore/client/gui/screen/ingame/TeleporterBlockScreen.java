@@ -611,6 +611,12 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
 //            this.consumeKeyItemStack = consumeKeyItemStack;
 //        }));
         //endregion creative screen
+
+        if (!this.showCreativeTab) {
+            this.setInitialFocus(this.teleportButton);
+        } else {
+            this.setInitialFocus(this.creativeScreenPageButton);
+        }
         this.updateWidgets();
     }
     

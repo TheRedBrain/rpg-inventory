@@ -16,6 +16,12 @@ public class EntityRegistry {
     //endregion Content Blocks
 
     //region Operator Blocks
+    public static final BlockEntityType<MimicBlockEntity> MIMIC_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
+            BetterAdventureModeCore.identifier("mimic_block"),
+            FabricBlockEntityTypeBuilder.create(MimicBlockEntity::new, BlockRegistry.MIMIC_BLOCK).build());
+    public static final BlockEntityType<TriggeredSpawnerBlockEntity> TRIGGERED_SPAWNER_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
+            BetterAdventureModeCore.identifier("triggered_spawner_block"),
+            FabricBlockEntityTypeBuilder.create(TriggeredSpawnerBlockEntity::new, BlockRegistry.TRIGGERED_SPAWNER_BLOCK).build());
     public static final BlockEntityType<DungeonControlBlockEntity> DUNGEON_CONTROL_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
             BetterAdventureModeCore.identifier("dungeon_control_block"),
             FabricBlockEntityTypeBuilder.create(DungeonControlBlockEntity::new, BlockRegistry.DUNGEON_CONTROL_BLOCK).build());
@@ -34,6 +40,9 @@ public class EntityRegistry {
     public static final BlockEntityType<RelayTriggerBlockBlockEntity> RELAY_TRIGGER_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
             BetterAdventureModeCore.identifier("relay_trigger_block"),
             FabricBlockEntityTypeBuilder.create(RelayTriggerBlockBlockEntity::new, BlockRegistry.RELAY_TRIGGER_BLOCK).build());
+    public static final BlockEntityType<ResetTriggerBlockEntity> RESET_TRIGGER_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
+            BetterAdventureModeCore.identifier("reset_trigger_block"),
+            FabricBlockEntityTypeBuilder.create(ResetTriggerBlockEntity::new, BlockRegistry.RESET_TRIGGER_BLOCK).build());
     public static final BlockEntityType<DelayTriggerBlockBlockEntity> DELAY_TRIGGER_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
             BetterAdventureModeCore.identifier("delay_trigger_block"),
             FabricBlockEntityTypeBuilder.create(DelayTriggerBlockBlockEntity::new, BlockRegistry.DELAY_TRIGGER_BLOCK).build());

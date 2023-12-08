@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "bamcore:block/mimic_fallback_block"
+    }
+  }
+}

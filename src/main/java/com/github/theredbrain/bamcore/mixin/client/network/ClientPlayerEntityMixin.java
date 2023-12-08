@@ -82,6 +82,11 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
     }
 
     @Override
+    public void bamcore$openResetTriggerBlockScreen(ResetTriggerBlockEntity resetTriggerBlock) {
+        this.client.setScreen(new ResetTriggerBlockScreen(resetTriggerBlock));
+    }
+
+    @Override
     public void bamcore$openDelayTriggerBlockScreen(DelayTriggerBlockBlockEntity delayTriggerBlock) {
         this.client.setScreen(new DelayTriggerBlockScreen(delayTriggerBlock));
     }
@@ -89,5 +94,15 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
     @Override
     public void bamcore$openUseRelayBlockScreen(UseRelayBlockEntity useRelayBlock) {
         this.client.setScreen(new UseRelayBlockScreen(useRelayBlock));
+    }
+
+    @Override
+    public void bamcore$openTriggeredSpawnerBlockScreen(TriggeredSpawnerBlockEntity triggeredSpawnerBlock) {
+        this.client.setScreen(new TriggeredSpawnerBlockScreen(triggeredSpawnerBlock));
+    }
+
+    @Override
+    public void bamcore$openMimicBlockScreen(MimicBlockEntity mimicBlock) {
+        this.client.setScreen(new MimicBlockScreen(mimicBlock));
     }
 }

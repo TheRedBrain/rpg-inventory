@@ -193,6 +193,13 @@
 	"gui.teleporter_block.teleportButtonLabel.tooltip": "Label of left Button in Adventure GUI",
 	"gui.teleporter_block.cancelTeleportButtonLabel.tooltip": "Label of right Button in Adventure GUI",
 
+	"gui.triggered_spawner_block.spawning_mode_label": "Spawning Mode",
+	"gui.triggered_spawner_block.entity_spawn_position_offset_label": "Entity Spawn Position Offset",
+	"gui.triggered_spawner_block.entity_spawn_orientation_label": "Entity Spawn Orientation",
+	"gui.triggered_spawner_block.entity_type_label": "Entity Type Identifier",
+
+	"gui.triggered_spawner_block.spawning_mode.continuous": "Continuous",
+	"gui.triggered_spawner_block.spawning_mode.triggered": "Triggered",
 
 	"gui.triggered_block.newTriggeredBlockPositionOffset": "New Triggered Block Position Offset",
 	"gui.triggered_block.triggeredBlockPositionOffset": "Triggered Block Position Offset",

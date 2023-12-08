@@ -3,6 +3,7 @@ package com.github.theredbrain.bamcore;
 import com.github.theredbrain.bamcore.client.gui.screen.ingame.TeleporterBlockScreen;
 import com.github.theredbrain.bamcore.client.network.packet.BetterAdventureModeCoreClientPacket;
 import com.github.theredbrain.bamcore.client.render.block.entity.HousingBlockBlockEntityRenderer;
+import com.github.theredbrain.bamcore.client.render.block.entity.MimicBlockEntityRenderer;
 import com.github.theredbrain.bamcore.client.render.block.entity.TeleporterBlockBlockEntityRenderer;
 import com.github.theredbrain.bamcore.config.ClientConfig;
 import com.github.theredbrain.bamcore.config.ClientConfigWrapper;
@@ -88,6 +89,7 @@ public class BetterAdventureModeCoreClient implements ClientModInitializer {
 
     private void registerBlockEntityRenderer() {
         BlockEntityRendererFactories.register(EntityRegistry.HOUSING_BLOCK_ENTITY, HousingBlockBlockEntityRenderer::new);
+        BlockEntityRendererFactories.register(EntityRegistry.MIMIC_BLOCK_ENTITY, MimicBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(EntityRegistry.TELEPORTER_BLOCK_ENTITY, TeleporterBlockBlockEntityRenderer::new);
     }
 

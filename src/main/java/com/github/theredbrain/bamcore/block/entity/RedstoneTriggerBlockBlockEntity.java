@@ -1,12 +1,9 @@
 package com.github.theredbrain.bamcore.block.entity;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.api.util.BlockRotationUtils;
-import com.github.theredbrain.bamcore.block.RedstoneTriggerBlock;
 import com.github.theredbrain.bamcore.block.RotatedBlockWithEntity;
 import com.github.theredbrain.bamcore.block.Triggerable;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
-import com.github.theredbrain.bamcore.registry.BlockRegistry;
 import com.github.theredbrain.bamcore.registry.EntityRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -37,10 +34,10 @@ public class RedstoneTriggerBlockBlockEntity extends RotatedBlockEntity {
     @Override
     public void readNbt(NbtCompound nbt) {
 
-        int l = MathHelper.clamp(nbt.getInt("triggeredBlockPositionOffsetX"), -48, 48);
-        int m = MathHelper.clamp(nbt.getInt("triggeredBlockPositionOffsetY"), -48, 48);
-        int n = MathHelper.clamp(nbt.getInt("triggeredBlockPositionOffsetZ"), -48, 48);
-        this.triggeredBlockPositionOffset = new BlockPos(l, m, n);
+        int x = MathHelper.clamp(nbt.getInt("triggeredBlockPositionOffsetX"), -48, 48);
+        int y = MathHelper.clamp(nbt.getInt("triggeredBlockPositionOffsetY"), -48, 48);
+        int z = MathHelper.clamp(nbt.getInt("triggeredBlockPositionOffsetZ"), -48, 48);
+        this.triggeredBlockPositionOffset = new BlockPos(x, y, z);
 
         super.readNbt(nbt);
     }
@@ -65,7 +62,7 @@ public class RedstoneTriggerBlockBlockEntity extends RotatedBlockEntity {
     }
 
     public BlockPos getTriggeredBlockPositionOffset() {
-        return triggeredBlockPositionOffset;
+        return this.triggeredBlockPositionOffset;
     }
 
     // TODO check if input is valid
