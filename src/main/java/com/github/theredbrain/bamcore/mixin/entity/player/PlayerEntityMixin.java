@@ -799,4 +799,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     public void bamcore$openMimicBlockScreen(MimicBlockEntity mimicBlock) {
     }
 
+    @Override
+    public void bamcore$openLocationControlBlockScreen(LocationControlBlockEntity locationControlBlock) {
+    }
 }

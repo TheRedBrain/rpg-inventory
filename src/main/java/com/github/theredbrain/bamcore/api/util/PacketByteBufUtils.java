@@ -3,6 +3,7 @@ package com.github.theredbrain.bamcore.api.util;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
+import org.apache.commons.lang3.tuple.MutablePair;
 
 public class PacketByteBufUtils {
 
@@ -18,6 +19,23 @@ public class PacketByteBufUtils {
         public void accept(PacketByteBuf packetByteBuf, Pair<String, String> stringStringPair) {
             packetByteBuf.writeString(stringStringPair.getLeft());
             packetByteBuf.writeString(stringStringPair.getRight());
+        }
+    }
+
+    public static class PairStringPairBlockPosPairDoubleDoubleListReader implements PacketByteBuf.PacketReader<MutablePair<String, MutablePair<BlockPos, MutablePair<Double, Double>>>> {
+        @Override
+        public MutablePair<String, MutablePair<BlockPos, MutablePair<Double, Double>>> apply(PacketByteBuf packetByteBuf) {
+            return new MutablePair<>(packetByteBuf.readString(), new MutablePair<>(packetByteBuf.readBlockPos(), new MutablePair<>(packetByteBuf.readDouble(), packetByteBuf.readDouble())));
+        }
+    }
+
+    public static class PairStringPairBlockPosPairDoubleDoubleListWriter implements PacketByteBuf.PacketWriter<MutablePair<String, MutablePair<BlockPos, MutablePair<Double, Double>>>> {
+        @Override
+        public void accept(PacketByteBuf packetByteBuf, MutablePair<String, MutablePair<BlockPos, MutablePair<Double, Double>>> pairStringPairBlockPosPairDoubleDouble) {
+            packetByteBuf.writeString(pairStringPairBlockPosPairDoubleDouble.getLeft());
+            packetByteBuf.writeBlockPos(pairStringPairBlockPosPairDoubleDouble.getRight().getLeft());
+            packetByteBuf.writeDouble(pairStringPairBlockPosPairDoubleDouble.getRight().getRight().getLeft());
+            packetByteBuf.writeDouble(pairStringPairBlockPosPairDoubleDouble.getRight().getRight().getRight());
         }
     }
 

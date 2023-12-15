@@ -193,6 +193,17 @@
 	"gui.teleporter_block.teleportButtonLabel.tooltip": "Label of left Button in Adventure GUI",
 	"gui.teleporter_block.cancelTeleportButtonLabel.tooltip": "Label of right Button in Adventure GUI",
 
+	"gui.location_controller_block.main_entrance.position_offset": "New Entrance Position",
+	"gui.location_controller_block.main_entrance.orientation": "Yaw/Pitch",
+
+	"gui.location_controller_block.new_side_entrance.position_offset": "New Entrance Position",
+	"gui.location_controller_block.new_side_entrance.name": "Name",
+	"gui.location_controller_block.new_side_entrance.orientation": "Yaw/Pitch",
+
+	"gui.location_controller_block.screenPage.main_entrance": "Main Entrance",
+	"gui.location_controller_block.screenPage.side_entrances": "Side Entrances",
+	"gui.location_controller_block.screenPage.triggered_block": "Triggered Block",
+
 	"gui.triggered_spawner_block.spawning_mode_label": "Spawning Mode",
 	"gui.triggered_spawner_block.entity_spawn_position_offset_label": "Entity Spawn Position Offset",
 	"gui.triggered_spawner_block.entity_spawn_orientation_label": "Entity Spawn Orientation",

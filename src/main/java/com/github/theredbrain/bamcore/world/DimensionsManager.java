@@ -14,10 +14,8 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeKeys;
 import net.minecraft.world.dimension.DimensionOptions;
 import net.minecraft.world.dimension.DimensionTypes;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.chunk.FlatChunkGenerator;
 import net.minecraft.world.gen.chunk.FlatChunkGeneratorConfig;
 import net.minecraft.world.gen.chunk.FlatChunkGeneratorLayer;
@@ -34,24 +32,14 @@ public class DimensionsManager {
     public static void init() {
         LifecycleHack.markNamespaceStable("bamcore");
         DimensionTemplate.registerDimensionTemplate(
-                "housing", HOUSING_DIMENSION_TEMPLATE
-        );
-        DimensionTemplate.registerDimensionTemplate(
-                "dungeon", DUNGEON_DIMENSION_TEMPLATE
+                "player_locations", PLAYER_LOCATIONS_DIMENSION_TEMPLATE
         );
     }
 
-    /**
-     * @param bluePrintType true: dungeon, false: housing
-     */
-    public static void addAndSaveDynamicDimension(Identifier dimensionId, MinecraftServer server, boolean bluePrintType) {
+    public static void addAndSaveDynamicDimension(Identifier dimensionId, MinecraftServer server) {
         // may throw exception here
 
-        if (bluePrintType) {
-            DynamicDimensionsImpl.addDimensionDynamically(server, dimensionId, DUNGEON_DIMENSION_TEMPLATE.createLevelStem(server));
-        } else {
-            DynamicDimensionsImpl.addDimensionDynamically(server, dimensionId, HOUSING_DIMENSION_TEMPLATE.createLevelStem(server));
-        }
+        DynamicDimensionsImpl.addDimensionDynamically(server, dimensionId, PLAYER_LOCATIONS_DIMENSION_TEMPLATE.createLevelStem(server));
     }
 
     public static void removeDynamicPlayerDimension(ServerPlayerEntity player, MinecraftServer server) {
@@ -66,38 +54,14 @@ public class DimensionsManager {
         }
     }
 
-    public static final DimensionTemplate HOUSING_DIMENSION_TEMPLATE = new DimensionTemplate(
+    public static final DimensionTemplate PLAYER_LOCATIONS_DIMENSION_TEMPLATE = new DimensionTemplate(
             DimensionTypes.OVERWORLD,
             (server, dimTypeHolder) -> {
                 DynamicRegistryManager.Immutable registryAccess = server.getRegistryManager();
 
                 Registry<Biome> biomeRegistry = registryAccess.get(RegistryKeys.BIOME);
 
-                RegistryEntry.Reference<Biome> biomeReference = biomeRegistry.entryOf(RegistryKey.of(RegistryKeys.BIOME, BetterAdventureModeCore.identifier("housing_biome")));
-
-                FlatChunkGeneratorConfig flatChunkGeneratorConfig =
-                        new FlatChunkGeneratorConfig(
-                                Optional.of(RegistryEntryList.of()),
-                                biomeReference,
-                                List.of()
-                        );
-                flatChunkGeneratorConfig.getLayers().add(new FlatChunkGeneratorLayer(1, Blocks.AIR));
-                flatChunkGeneratorConfig.updateLayerBlocks();
-
-                FlatChunkGenerator chunkGenerator = new FlatChunkGenerator(flatChunkGeneratorConfig);
-
-                return new DimensionOptions(dimTypeHolder, chunkGenerator);
-            }
-    );
-
-    public static final DimensionTemplate DUNGEON_DIMENSION_TEMPLATE = new DimensionTemplate(
-            DimensionTypes.OVERWORLD,
-            (server, dimTypeHolder) -> {
-                DynamicRegistryManager.Immutable registryAccess = server.getRegistryManager();
-
-                Registry<Biome> biomeRegistry = registryAccess.get(RegistryKeys.BIOME);
-
-                RegistryEntry.Reference<Biome> biomeReference = biomeRegistry.entryOf(RegistryKey.of(RegistryKeys.BIOME, BetterAdventureModeCore.identifier("dungeon_biome")));
+                RegistryEntry.Reference<Biome> biomeReference = biomeRegistry.entryOf(RegistryKey.of(RegistryKeys.BIOME, BetterAdventureModeCore.identifier("player_locations_biome")));
 
                 FlatChunkGeneratorConfig flatChunkGeneratorConfig =
                         new FlatChunkGeneratorConfig(

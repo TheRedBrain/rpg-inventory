@@ -30,9 +30,8 @@
   "custom": {
     "cardinal-components": [
       "bamcore:last_logout_time",
-      "bamcore:player_specific_dimension_ids",
       "bamcore:current_housing_block_pos",
-      "bamcore:housing_access_pos"
+      "bamcore:player_location_access_pos"
     ]
   },
   "mixins": [

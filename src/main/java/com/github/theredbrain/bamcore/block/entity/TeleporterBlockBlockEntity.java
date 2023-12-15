@@ -56,10 +56,10 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
     private double directTeleportOrientationPitch = 0.0;
 
     // specific location mode
-    private LocationType locationType = LocationType.WORLD_SPAWN;
+    private SpawnPointType spawnPointType = SpawnPointType.WORLD_SPAWN;
 
     // dungeon mode
-    private List<Pair<String, String>> dungeonLocationsList = new ArrayList<>(List.of());
+    private List<Pair<String, String>> locationsList = new ArrayList<>(List.of());
 
     // player house mode
     private List<String> housingLocationsList = new ArrayList<>(List.of());
@@ -108,19 +108,13 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
         nbt.putDouble("directTeleportPositionOffsetYaw", this.directTeleportOrientationYaw);
         nbt.putDouble("directTeleportPositionOffsetPitch", this.directTeleportOrientationPitch);
 
-        nbt.putString("locationType", this.locationType.asString());
+        nbt.putString("locationType", this.spawnPointType.asString());
 
-        nbt.putInt("dungeonLocationsListSize", this.dungeonLocationsList.size());
+        nbt.putInt("locationsListSize", this.locationsList.size());
 
-        for (int i = 0; i < this.dungeonLocationsList.size(); i++) {
-            nbt.putString("dungeonLocationsListIdentifier_" + i, this.dungeonLocationsList.get(i).getLeft());
-            nbt.putString("dungeonLocationsListEntrance_" + i, this.dungeonLocationsList.get(i).getRight());
-        }
-
-        nbt.putInt("housingLocationsListSize", this.housingLocationsList.size());
-
-        for (int i = 0; i < this.housingLocationsList.size(); i++) {
-            nbt.putString("housingLocationsListIdentifier_" + i, this.housingLocationsList.get(i));
+        for (int i = 0; i < this.locationsList.size(); i++) {
+            nbt.putString("locationsListIdentifier_" + i, this.locationsList.get(i).getLeft());
+            nbt.putString("locationsListEntrance_" + i, this.locationsList.get(i).getRight());
         }
 
         nbt.putBoolean("consumeKeyItemStack", this.consumeKeyItemStack);
@@ -170,18 +164,12 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
         this.directTeleportOrientationYaw = nbt.getDouble("directTeleportPositionOffsetYaw");
         this.directTeleportOrientationPitch = nbt.getDouble("directTeleportPositionOffsetPitch");
 
-        this.locationType = LocationType.byName(nbt.getString("locationType")).orElseGet(() -> LocationType.WORLD_SPAWN);
+        this.spawnPointType = SpawnPointType.byName(nbt.getString("locationType")).orElseGet(() -> SpawnPointType.WORLD_SPAWN);
 
-        int dungeonLocationsListSize = nbt.getInt("dungeonLocationsListSize");
-        this.dungeonLocationsList.clear();
-        for (int p = 0; p < dungeonLocationsListSize; p++) {
-            this.dungeonLocationsList.add(new Pair<>(nbt.getString("dungeonLocationsListIdentifier_" + p), nbt.getString("dungeonLocationsListEntrance_" + p)));
-        }
-
-        int housingLocationsListSize = nbt.getInt("housingLocationsListSize");
-        this.housingLocationsList.clear();
-        for (int p = 0; p < housingLocationsListSize; p++) {
-            this.housingLocationsList.add(nbt.getString("housingLocationsListIdentifier_" + p));
+        int locationsListSize = nbt.getInt("locationsListSize");
+        this.locationsList.clear();
+        for (int p = 0; p < locationsListSize; p++) {
+            this.locationsList.add(new Pair<>(nbt.getString("locationsListIdentifier_" + p), nbt.getString("locationsListEntrance_" + p)));
         }
 
         this.consumeKeyItemStack = nbt.getBoolean("consumeKeyItemStack");
@@ -353,33 +341,23 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
         return true;
     }
 
-    public LocationType getLocationType() {
-        return locationType;
+    public SpawnPointType getLocationType() {
+        return spawnPointType;
     }
 
     // TODO check if input is valid
-    public boolean setLocationType(LocationType locationType) {
-        this.locationType = locationType;
+    public boolean setLocationType(SpawnPointType spawnPointType) {
+        this.spawnPointType = spawnPointType;
         return true;
     }
 
-    public List<Pair<String, String>> getDungeonLocationsList() {
-        return this.dungeonLocationsList;
+    public List<Pair<String, String>> getLocationsList() {
+        return this.locationsList;
     }
 
     // TODO check if input is valid
-    public boolean setDungeonLocationsList(List<Pair<String, String>> dungeonLocationsList) {
-        this.dungeonLocationsList = dungeonLocationsList;
-        return true;
-    }
-
-    public List<String> getHousingLocationsList() {
-        return this.housingLocationsList;
-    }
-
-    // TODO check if input is valid
-    public boolean setHousingLocationsList(List<String> housingLocationsList) {
-        this.housingLocationsList = housingLocationsList;
+    public boolean setLocationsList(List<Pair<String, String>> dungeonLocationsList) {
+        this.locationsList = dungeonLocationsList;
         return true;
     }
 
@@ -580,9 +558,8 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
     public static enum TeleportationMode implements StringIdentifiable
     {
         DIRECT("direct"),
-        SAVED_LOCATIONS("saved_locations"),
-        DUNGEONS("dungeons"),
-        HOUSING("housing");
+        SPAWN_POINTS("spawn_points"),
+        LOCATIONS("locations");
 
         private final String name;
 
@@ -604,15 +581,15 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
         }
     }
 
-    public static enum LocationType implements StringIdentifiable
+    public static enum SpawnPointType implements StringIdentifiable
     {
         WORLD_SPAWN("world_spawn"),
         PLAYER_SPAWN("player_spawn"),
-        DIMENSION_ACCESS_POSITION("dimension_access_position");
+        PLAYER_LOCATION_ACCESS_POSITION("player_location_access_position");
 
         private final String name;
 
-        private LocationType(String name) {
+        private SpawnPointType(String name) {
             this.name = name;
         }
 
@@ -621,12 +598,12 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
             return this.name;
         }
 
-        public static Optional<LocationType> byName(String name) {
-            return Arrays.stream(LocationType.values()).filter(locationType -> locationType.asString().equals(name)).findFirst();
+        public static Optional<SpawnPointType> byName(String name) {
+            return Arrays.stream(SpawnPointType.values()).filter(spawnPointType -> spawnPointType.asString().equals(name)).findFirst();
         }
 
         public Text asText() {
-            return Text.translatable("gui.teleporter_block.locationType." + this.name);
+            return Text.translatable("gui.teleporter_block.spawn_point_type." + this.name);
         }
     }
 }

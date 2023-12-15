@@ -1,0 +1,11 @@
+{
+  "controlBlockPosX": -112,
+  "controlBlockPosY": -63,
+  "controlBlockPosZ": -112,
+  "structureIdentifier": "bamcore:player_locations/house_1",
+  "displayName": "player_dimensions.player_houses.house_1",
+  "unlockAdvancement": "minecraft:story/smelt_iron",
+  "showLockedLocation": true,
+  "showUnlockAdvancement": true,
+  "showLockAdvancement": false
+}

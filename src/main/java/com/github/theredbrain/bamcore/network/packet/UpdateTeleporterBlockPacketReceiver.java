@@ -40,10 +40,9 @@ public class UpdateTeleporterBlockPacketReceiver implements ServerPlayNetworking
         double directTeleportOrientationYaw = packet.directTeleportOrientationYaw;
         double directTeleportOrientationPitch = packet.directTeleportOrientationPitch;
 
-        TeleporterBlockBlockEntity.LocationType locationType = packet.locationType;
+        TeleporterBlockBlockEntity.SpawnPointType spawnPointType = packet.spawnPointType;
 
-        List<Pair<String, String>> dungeonLocationsList = packet.dungeonLocationsList;
-        List<String> housingLocationsList = packet.housingLocationsList;
+        List<Pair<String, String>> locationsList = packet.locationsList;
 
         boolean consumeKeyItemStack = packet.consumeKeyItemStack;
 
@@ -103,19 +102,14 @@ public class UpdateTeleporterBlockPacketReceiver implements ServerPlayNetworking
                     player.sendMessage(Text.translatable("teleporter_block.directTeleportOrientationPitch.invalid"), false);
                     updateSuccessful = false;
                 }
-            } else if (teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.SAVED_LOCATIONS) {
-                if (!teleporterBlockBlockEntity.setLocationType(locationType)) {
+            } else if (teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.SPAWN_POINTS) {
+                if (!teleporterBlockBlockEntity.setLocationType(spawnPointType)) {
                     player.sendMessage(Text.translatable("teleporter_block.specificLocationType.invalid"), false);
                     updateSuccessful = false;
                 }
-            } else if (teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DUNGEONS) {
-                if (!teleporterBlockBlockEntity.setDungeonLocationsList(dungeonLocationsList)) {
-                    player.sendMessage(Text.translatable("teleporter_block.dungeonLocationsList.invalid"), false);
-                    updateSuccessful = false;
-                }
-            } else if (teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.HOUSING) {
-                if (!teleporterBlockBlockEntity.setHousingLocationsList(housingLocationsList)) {
-                    player.sendMessage(Text.translatable("teleporter_block.housingLocationsList.invalid"), false);
+            } else if (teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS) {
+                if (!teleporterBlockBlockEntity.setLocationsList(locationsList)) {
+                    player.sendMessage(Text.translatable("teleporter_block.locationsList.invalid"), false);
                     updateSuccessful = false;
                 }
             }

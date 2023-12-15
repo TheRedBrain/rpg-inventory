@@ -25,7 +25,7 @@ public class TeleportFromTeleporterBlockPacket implements FabricPacket {
     public final double directTeleportOrientationYaw;
     public final double directTeleportOrientationPitch;
 
-    public final TeleporterBlockBlockEntity.LocationType locationType;
+    public final TeleporterBlockBlockEntity.SpawnPointType spawnPointType;
 
     public final String targetDimensionOwnerName;
     public final String targetLocation;
@@ -40,7 +40,7 @@ public class TeleportFromTeleporterBlockPacket implements FabricPacket {
         this.directTeleportPositionOffset = directTeleportPositionOffset;
         this.directTeleportOrientationYaw = directTeleportOrientationYaw;
         this.directTeleportOrientationPitch = directTeleportOrientationPitch;
-        this.locationType = TeleporterBlockBlockEntity.LocationType.byName(locationType).orElseGet(() -> TeleporterBlockBlockEntity.LocationType.WORLD_SPAWN);
+        this.spawnPointType = TeleporterBlockBlockEntity.SpawnPointType.byName(locationType).orElseGet(() -> TeleporterBlockBlockEntity.SpawnPointType.WORLD_SPAWN);
         this.targetDimensionOwnerName = targetDimensionOwnerName;
         this.targetLocation = targetLocation;
         this.targetLocationEntrance = targetLocationEntrance;
@@ -63,7 +63,7 @@ public class TeleportFromTeleporterBlockPacket implements FabricPacket {
         buf.writeBlockPos(this.directTeleportPositionOffset);
         buf.writeDouble(this.directTeleportOrientationYaw);
         buf.writeDouble(this.directTeleportOrientationPitch);
-        buf.writeString(this.locationType.asString());
+        buf.writeString(this.spawnPointType.asString());
         buf.writeString(this.targetDimensionOwnerName);
         buf.writeString(this.targetLocation);
         buf.writeString(this.targetLocationEntrance);

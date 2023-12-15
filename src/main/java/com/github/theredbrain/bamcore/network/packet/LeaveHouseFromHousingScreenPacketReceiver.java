@@ -21,12 +21,12 @@ public class LeaveHouseFromHousingScreenPacketReceiver implements ServerPlayNetw
         MinecraftServer server = serverPlayerEntity.server;
         ServerWorld targetWorld = null;
         BlockPos targetPos = null;
-        Pair<Pair<String, BlockPos>, Boolean> housing_access_pos = ComponentsRegistry.HOUSING_ACCESS_POS.get(serverPlayerEntity).getValue();
+        Pair<Pair<String, BlockPos>, Boolean> housing_access_pos = ComponentsRegistry.PLAYER_LOCATION_ACCESS_POS.get(serverPlayerEntity).getValue();
         if (housing_access_pos.getRight()) {
             targetWorld = server.getWorld(RegistryKey.of(RegistryKeys.WORLD, new Identifier(housing_access_pos.getLeft().getLeft())));
             targetPos = housing_access_pos.getLeft().getRight();
             if (targetWorld != null && targetPos != null) {
-                ComponentsRegistry.HOUSING_ACCESS_POS.get(serverPlayerEntity).deactivate();
+                ComponentsRegistry.PLAYER_LOCATION_ACCESS_POS.get(serverPlayerEntity).deactivate();
             }
         } else {
             targetWorld = server.getWorld(serverPlayerEntity.getSpawnPointDimension());

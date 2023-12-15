@@ -105,4 +105,9 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
     public void bamcore$openMimicBlockScreen(MimicBlockEntity mimicBlock) {
         this.client.setScreen(new MimicBlockScreen(mimicBlock));
     }
+
+    @Override
+    public void bamcore$openLocationControlBlockScreen(LocationControlBlockEntity locationControlBlock) {
+        this.client.setScreen(new LocationControlBlockScreen(locationControlBlock));
+    }
 }

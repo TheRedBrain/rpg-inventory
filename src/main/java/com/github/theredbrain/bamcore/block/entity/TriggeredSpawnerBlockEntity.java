@@ -1,5 +1,6 @@
 package com.github.theredbrain.bamcore.block.entity;
 
+import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.api.util.BlockRotationUtils;
 import com.github.theredbrain.bamcore.block.Resetable;
 import com.github.theredbrain.bamcore.block.RotatedBlockWithEntity;
@@ -104,6 +105,7 @@ public class TriggeredSpawnerBlockEntity extends RotatedBlockEntity implements T
         return true;
     }
 
+    //region getter/setter
     public BlockPos getEntitySpawnPositionOffset() {
         return this.entitySpawnPositionOffset;
     }
@@ -160,6 +162,7 @@ public class TriggeredSpawnerBlockEntity extends RotatedBlockEntity implements T
         }
         return false;
     }
+    //endregion getter/setter
 
     @Override
     protected void onRotate(BlockState state) {
@@ -221,14 +224,13 @@ public class TriggeredSpawnerBlockEntity extends RotatedBlockEntity implements T
             if (!serverWorld.isSpaceEmpty(optional.get().createSimpleBoundingBox(d, e, f))) return false;
             BlockPos blockPos = BlockPos.ofFloored(d, e, f);
             Entity entity2 = EntityType.loadEntityWithPassengers(this.entityTypeCompound, world, entity -> {
-                entity.refreshPositionAndAngles(d, e, f, (float) this.entitySpawnOrientationYaw, (float) this.entitySpawnOrientationPitch);
+                entity.refreshPositionAndAngles(d, e, f, entity.getYaw(), entity.getPitch());
                 return entity;
             });
             if (entity2 == null) {
                 return false;
             }
-
-            entity2.refreshPositionAndAngles(d, e, f, (float) this.entitySpawnOrientationYaw, (float) this.entitySpawnOrientationPitch);
+            entity2.refreshPositionAndAngles(entity2.getX(), entity2.getY(), entity2.getZ(), 0.0f, 0.0f);
             if (entity2 instanceof MobEntity) {
                 if (this.entityTypeCompound.contains("id", NbtElement.STRING_TYPE)) {
                     ((MobEntity)entity2).initialize(serverWorld, serverWorld.getLocalDifficulty(entity2.getBlockPos()), SpawnReason.SPAWNER, null, null);

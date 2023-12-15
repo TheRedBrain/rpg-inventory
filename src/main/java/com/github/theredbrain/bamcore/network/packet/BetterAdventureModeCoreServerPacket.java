@@ -12,8 +12,8 @@ public class BetterAdventureModeCoreServerPacket {
 //    public static final Identifier SHEATHED_WEAPONS_PACKET = RPGMod.identifier("sheathed_weapons"); // TODO if weapon sheathing is not visible in multiplayer
 
     public static final Identifier SYNC_CONFIG = BetterAdventureModeCore.identifier("sync_config");
-    public static final Identifier SYNC_PLAYER_HOUSES = BetterAdventureModeCore.identifier("sync_player_houses");
-    public static final Identifier SYNC_PLAYER_DUNGEONS = BetterAdventureModeCore.identifier("sync_player_dungeons");
+//    public static final Identifier SYNC_PLAYER_HOUSES = BetterAdventureModeCore.identifier("sync_player_houses");
+    public static final Identifier SYNC_PLAYER_LOCATIONS = BetterAdventureModeCore.identifier("sync_player_locations");
 
     public static void init() {
         ServerPlayNetworking.registerGlobalReceiver(SwapHandItemsPacket.TYPE, new SwapHandItemsPacketReceiver());
@@ -58,6 +58,8 @@ public class BetterAdventureModeCoreServerPacket {
         ServerPlayNetworking.registerGlobalReceiver(UpdateMimicBlockPacket.TYPE, new UpdateMimicBlockPacketReceiver());
 
         ServerPlayNetworking.registerGlobalReceiver(UpdateTriggeredSpawnerBlockPacket.TYPE, new UpdateTriggeredSpawnerBlockPacketReceiver());
+
+        ServerPlayNetworking.registerGlobalReceiver(UpdateLocationControlBlockPacket.TYPE, new UpdateLocationControlBlockPacketReceiver());
 
 //        ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.REGENERATE_DIMENSION_FROM_TELEPORTER_BLOCK, new RegenerateDimensionFromTeleporterBlockPacketReceiver());
     }

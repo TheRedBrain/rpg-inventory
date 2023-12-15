@@ -22,9 +22,9 @@ public class EntityRegistry {
     public static final BlockEntityType<TriggeredSpawnerBlockEntity> TRIGGERED_SPAWNER_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
             BetterAdventureModeCore.identifier("triggered_spawner_block"),
             FabricBlockEntityTypeBuilder.create(TriggeredSpawnerBlockEntity::new, BlockRegistry.TRIGGERED_SPAWNER_BLOCK).build());
-    public static final BlockEntityType<DungeonControlBlockEntity> DUNGEON_CONTROL_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
-            BetterAdventureModeCore.identifier("dungeon_control_block"),
-            FabricBlockEntityTypeBuilder.create(DungeonControlBlockEntity::new, BlockRegistry.DUNGEON_CONTROL_BLOCK).build());
+    public static final BlockEntityType<LocationControlBlockEntity> LOCATION_CONTROL_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
+            BetterAdventureModeCore.identifier("location_control_block"),
+            FabricBlockEntityTypeBuilder.create(LocationControlBlockEntity::new, BlockRegistry.LOCATION_CONTROL_BLOCK).build());
     public static final BlockEntityType<HousingBlockBlockEntity> HOUSING_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
             BetterAdventureModeCore.identifier("housing_block"),
             FabricBlockEntityTypeBuilder.create(HousingBlockBlockEntity::new, BlockRegistry.HOUSING_BLOCK).build());

@@ -37,4 +37,5 @@ public interface DuckPlayerEntityMixin {
     void bamcore$openUseRelayBlockScreen(UseRelayBlockEntity useRelayBlock);
     void bamcore$openTriggeredSpawnerBlockScreen(TriggeredSpawnerBlockEntity triggeredSpawnerBlock);
     void bamcore$openMimicBlockScreen(MimicBlockEntity mimicBlock);
+    void bamcore$openLocationControlBlockScreen(LocationControlBlockEntity locationControlBlock);
 }

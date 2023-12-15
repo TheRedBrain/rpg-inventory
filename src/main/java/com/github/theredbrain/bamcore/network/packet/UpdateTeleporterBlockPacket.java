@@ -34,10 +34,9 @@ public class UpdateTeleporterBlockPacket implements FabricPacket {
     public final double directTeleportOrientationYaw;
     public final double directTeleportOrientationPitch;
 
-    public final TeleporterBlockBlockEntity.LocationType locationType;
+    public final TeleporterBlockBlockEntity.SpawnPointType spawnPointType;
 
-    public final List<Pair<String, String>> dungeonLocationsList;
-    public final List<String> housingLocationsList;
+    public final List<Pair<String, String>> locationsList;
 
     public final boolean consumeKeyItemStack;
 
@@ -48,7 +47,7 @@ public class UpdateTeleporterBlockPacket implements FabricPacket {
     public final String teleportButtonLabel;
     public final String cancelTeleportButtonLabel;
 
-    public UpdateTeleporterBlockPacket(BlockPos teleportBlockPosition, boolean showActivationArea, boolean showAdventureScreen, Vec3i activationAreaDimensions, BlockPos activationAreaPositionOffset, BlockPos accessPositionOffset, boolean setAccessPosition, String teleportationMode, BlockPos directTeleportPositionOffset, double directTeleportOrientationYaw, double directTeleportOrientationPitch, String locationType, List<Pair<String, String>> dungeonLocationsList, List<String> housingLocationsList, boolean consumeKeyItemStack, String teleporterName, String currentTargetOwnerLabel, String currentTargetIdentifierLabel, String currentTargetEntranceLabel, String teleportButtonLabel, String cancelTeleportButtonLabel) {
+    public UpdateTeleporterBlockPacket(BlockPos teleportBlockPosition, boolean showActivationArea, boolean showAdventureScreen, Vec3i activationAreaDimensions, BlockPos activationAreaPositionOffset, BlockPos accessPositionOffset, boolean setAccessPosition, String teleportationMode, BlockPos directTeleportPositionOffset, double directTeleportOrientationYaw, double directTeleportOrientationPitch, String locationType, List<Pair<String, String>> locationsList, boolean consumeKeyItemStack, String teleporterName, String currentTargetOwnerLabel, String currentTargetIdentifierLabel, String currentTargetEntranceLabel, String teleportButtonLabel, String cancelTeleportButtonLabel) {
         this.teleportBlockPosition = teleportBlockPosition;
 
         this.showActivationArea = showActivationArea;
@@ -65,10 +64,9 @@ public class UpdateTeleporterBlockPacket implements FabricPacket {
         this.directTeleportOrientationYaw = directTeleportOrientationYaw;
         this.directTeleportOrientationPitch = directTeleportOrientationPitch;
 
-        this.locationType = TeleporterBlockBlockEntity.LocationType.byName(locationType).orElseGet(() -> TeleporterBlockBlockEntity.LocationType.WORLD_SPAWN);
+        this.spawnPointType = TeleporterBlockBlockEntity.SpawnPointType.byName(locationType).orElseGet(() -> TeleporterBlockBlockEntity.SpawnPointType.WORLD_SPAWN);
 
-        this.dungeonLocationsList = dungeonLocationsList;
-        this.housingLocationsList = housingLocationsList;
+        this.locationsList = locationsList;
 
         this.consumeKeyItemStack = consumeKeyItemStack;
 
@@ -99,7 +97,6 @@ public class UpdateTeleporterBlockPacket implements FabricPacket {
                 buf.readDouble(),
                 buf.readString(),
                 buf.readList(new PacketByteBufUtils.PairStringStringListReader()),
-                buf.readList(new PacketByteBufUtils.StringListReader()),
                 buf.readBoolean(),
                 buf.readString(),
                 buf.readString(),
@@ -135,10 +132,9 @@ public class UpdateTeleporterBlockPacket implements FabricPacket {
         buf.writeDouble(this.directTeleportOrientationYaw);
         buf.writeDouble(this.directTeleportOrientationPitch);
 
-        buf.writeString(this.locationType.asString());
+        buf.writeString(this.spawnPointType.asString());
 
-        buf.writeCollection(this.dungeonLocationsList, new PacketByteBufUtils.PairStringStringListWriter());
-        buf.writeCollection(this.housingLocationsList, new PacketByteBufUtils.StringListWriter());
+        buf.writeCollection(this.locationsList, new PacketByteBufUtils.PairStringStringListWriter());
 
         buf.writeBoolean(this.consumeKeyItemStack);
 

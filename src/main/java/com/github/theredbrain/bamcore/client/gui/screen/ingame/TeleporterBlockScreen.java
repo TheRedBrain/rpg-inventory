@@ -1,14 +1,12 @@
 package com.github.theredbrain.bamcore.client.gui.screen.ingame;
 
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
-import com.github.theredbrain.bamcore.api.dimensions.PlayerDungeon;
-import com.github.theredbrain.bamcore.api.dimensions.PlayerHouse;
+import com.github.theredbrain.bamcore.api.dimensions.PlayerLocation;
 import com.github.theredbrain.bamcore.block.entity.TeleporterBlockBlockEntity;
 import com.github.theredbrain.bamcore.network.packet.AddStatusEffectPacket;
 import com.github.theredbrain.bamcore.network.packet.TeleportFromTeleporterBlockPacket;
 import com.github.theredbrain.bamcore.network.packet.UpdateTeleporterBlockPacket;
-import com.github.theredbrain.bamcore.registry.PlayerDungeonsRegistry;
-import com.github.theredbrain.bamcore.registry.PlayerHousesRegistry;
+import com.github.theredbrain.bamcore.registry.PlayerLocationsRegistry;
 import com.github.theredbrain.bamcore.registry.StatusEffectsRegistry;
 import com.github.theredbrain.bamcore.screen.DuckSlotMixin;
 import com.github.theredbrain.bamcore.screen.TeleporterBlockScreenHandler;
@@ -59,7 +57,7 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
     private static final Text TELEPORTATION_MODE_LABEL_TEXT = Text.translatable("gui.teleporter_block.teleportation_mode_label");
     private static final Text DIRECT_TELEPORT_POSITION_OFFET_LABEL_TEXT = Text.translatable("gui.teleporter_block.direct_teleport_position_offset_label");
     private static final Text DIRECT_TELEPORT_ORIENTATION_LABEL_TEXT = Text.translatable("gui.teleporter_block.direct_teleport_orientation_label");
-    private static final Text LOCATION_TYPE_LABEL_TEXT = Text.translatable("gui.teleporter_block.location_type_label");
+    private static final Text SPAWN_POINT_TYPE_LABEL_TEXT = Text.translatable("gui.teleporter_block.spawn_point_type_label");
     private static final Text ADD_NEW_LOCATION_BUTTON_LABEL_TEXT = Text.translatable("gui.teleporter_block.add_new_location_button_label");
     private static final Text REMOVE_LOCATION_BUTTON_LABEL_TEXT = Text.translatable("gui.teleporter_block.remove_location_button_label");
     private static final Text EDIT_BUTTON_LABEL_TEXT = Text.translatable("gui.edit");
@@ -75,7 +73,7 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
     private static final Text CONSUME_KEY_ITEMSTACK_LABEL_TEXT = Text.translatable("gui.teleporter_block.consume_key_itemstack_label");
     private static final Text WIP_LABEL_TEXT = Text.translatable("wip");
     private static final Text EDIT_TELEPORTER_TITLE = Text.translatable("gui.edit_teleporter_title");
-    private static final Identifier CREATIVE_DUNGEONS_SCROLLER_BACKGROUND_TEXTURE = BetterAdventureModeCore.identifier("scroll_bar/scroll_bar_background_8_70");
+    private static final Identifier SCROLL_BAR_BACKGROUND_8_70_TEXTURE = BetterAdventureModeCore.identifier("scroll_bar/scroll_bar_background_8_70");
     private static final Identifier CREATIVE_HOUSING_SCROLLER_BACKGROUND_TEXTURE = BetterAdventureModeCore.identifier("scroll_bar/scroll_bar_background_8_95");
     private static final Identifier SCROLLER_TEXTURE = BetterAdventureModeCore.identifier("scroll_bar/scroller_vertical_6_7");
     public static final Identifier ADVENTURE_TELEPORTER_SCREEN_BACKGROUND_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/adventure_teleporter_screen.png");
@@ -104,19 +102,13 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
     private TextFieldWidget directTeleportPositionOffsetZField;
     private TextFieldWidget directTeleportOrientationYawField;
     private TextFieldWidget directTeleportOrientationPitchField;
-    private CyclingButtonWidget<TeleporterBlockBlockEntity.LocationType> locationTypeButton;
-    private ButtonWidget removeDungeonLocationButton0;
-    private ButtonWidget removeDungeonLocationButton1;
-    private ButtonWidget removeDungeonLocationButton2;
-    private TextFieldWidget newDungeonLocationIdentifierField;
-    private TextFieldWidget newDungeonLocationEntranceField;
-    private ButtonWidget addNewDungeonLocationButton;
-    private ButtonWidget removeHousingLocationButton0;
-    private ButtonWidget removeHousingLocationButton1;
-    private ButtonWidget removeHousingLocationButton2;
-    private ButtonWidget removeHousingLocationButton3;
-    private TextFieldWidget newHousingLocationIdentifierField;
-    private ButtonWidget addNewHousingLocationButton;
+    private CyclingButtonWidget<TeleporterBlockBlockEntity.SpawnPointType> spawnPointTypeButton;
+    private ButtonWidget removeLocationButton0;
+    private ButtonWidget removeLocationButton1;
+    private ButtonWidget removeLocationButton2;
+    private TextFieldWidget newLocationIdentifierField;
+    private TextFieldWidget newLocationEntranceField;
+    private ButtonWidget addNewLocationButton;
 //    private CyclingButtonWidget<Boolean> consumeKeyItemStackButton;
     private TextFieldWidget teleporterNameField;
     private TextFieldWidget currentTargetOwnerLabelField;
@@ -157,43 +149,26 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
     private boolean setAccessPosition;
 
     private TeleporterBlockBlockEntity.TeleportationMode teleportationMode;
-    private TeleporterBlockBlockEntity.LocationType locationType;
+    private TeleporterBlockBlockEntity.SpawnPointType spawnPointType;
 
-    List<Pair<String, String>> dungeonLocationsList = new ArrayList<>();
-    List<Pair<String, String>> visibleDungeonLocationsList = new ArrayList<>();
-    List<Pair<String, String>> unlockedDungeonLocationsList = new ArrayList<>();
-    List<String> housingLocationsList = new ArrayList<>();
-    List<String> visibleHousingLocationsList = new ArrayList<>();
-    List<String> unlockedHousingLocationsList = new ArrayList<>();
+    List<Pair<String, String>> locationsList = new ArrayList<>();
+    List<Pair<String, String>> visibleLocationsList = new ArrayList<>();
+    List<Pair<String, String>> unlockedLocationsList = new ArrayList<>();
 //    private boolean consumeKeyItemStack;
-    private int creativeDungeonsLocationsListScrollPosition = 0;
-    private int creativeHousingLocationsListScrollPosition = 0;
+    private int creativeLocationsListScrollPosition = 0;
     private int teamListScrollPosition = 0;
-    private int visibleDungeonsLocationsListScrollPosition = 0;
-    private int visibleHousingLocationsListScrollPosition = 0;
-    private float creativeDungeonsLocationsListScrollAmount = 0.0f;
-    private float creativeHousingLocationsListScrollAmount = 0.0f;
+    private int visibleLocationsListScrollPosition = 0;
+    private float creativeLocationsListScrollAmount = 0.0f;
     private float teamListScrollAmount = 0.0f;
-    private float visibleDungeonsLocationsListScrollAmount = 0.0f;
-    private float visibleHousingLocationsListScrollAmount = 0.0f;
-    private boolean creativeDungeonsLocationsListMouseClicked = false;
-    private boolean creativeHousingLocationsListMouseClicked = false;
+    private float visibleLocationsListScrollAmount = 0.0f;
+    private boolean creativeLocationsListMouseClicked = false;
     private boolean teamListMouseClicked = false;
-    private boolean visibleDungeonsLocationsListMouseClicked = false;
-    private boolean visibleHousingLocationsListMouseClicked = false;
+    private boolean visibleLocationsListMouseClicked = false;
 
     private boolean isTeleportButtonActive = true;
     private boolean showCurrentUnlockAdvancement;
     private boolean isCurrentLocationUnlocked;
     private Advancement currentUnlockAdvancement;
-    /*
-    creative side
-    -creativeDungeonsLocationsList
-    -creativeHousingLocationsList
-    adventure side
-    -teamList
-    -visibleLocationList
-     */
 
     public TeleporterBlockScreen(TeleporterBlockScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
@@ -235,12 +210,12 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
     }
 
     private void chooseTargetIdentifier(int index) {
-        if (teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DUNGEONS) {
-            this.currentTargetIdentifier = this.visibleDungeonLocationsList.get(this.visibleDungeonsLocationsListScrollPosition + index).getLeft();
-            this.currentTargetEntrance = this.visibleDungeonLocationsList.get(this.visibleDungeonsLocationsListScrollPosition + index).getRight();
-        } else if (teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.HOUSING) {
-            this.currentTargetIdentifier = this.visibleHousingLocationsList.get(this.visibleHousingLocationsListScrollPosition + index);
-        }
+//        if (teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS) {
+            this.currentTargetIdentifier = this.visibleLocationsList.get(this.visibleLocationsListScrollPosition + index).getLeft();
+            this.currentTargetEntrance = this.visibleLocationsList.get(this.visibleLocationsListScrollPosition + index).getRight();
+//        } else if (teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.HOUSING) {
+//            this.currentTargetIdentifier = this.visibleHousingLocationsList.get(this.visibleHousingLocationsListScrollPosition + index);
+//        }
         this.showChooseTargetIdentifierScreen = false;
         this.thisMethodHandlesTheAdvancementStuffTODORename(false);
         this.updateWidgets();
@@ -279,7 +254,7 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
         this.teleporterBlock.setShowAdventureScreen(this.showAdventureScreen);
         this.teleporterBlock.setSetAccessPosition(this.setAccessPosition);
         this.teleporterBlock.setTeleportationMode(this.teleportationMode);
-        this.teleporterBlock.setLocationType(this.locationType);
+        this.teleporterBlock.setLocationType(this.spawnPointType);
 //        this.teleporterBlock.setConsumeKeyItemStack(this.consumeKeyItemStack);
         this.close();
     }
@@ -290,34 +265,26 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
         super.close();
     }
 
-    private void addDungeonToDungeonsList(String identifier, String entrance) {
+    private void addLocationToList(String identifier, String entrance) {
         BetterAdventureModeCore.LOGGER.info(identifier);
         Text message = Text.literal("");
         if (Identifier.isValid(identifier)) {
-            PlayerDungeon playerDungeon = PlayerDungeonsRegistry.getDungeon(Identifier.tryParse(identifier));
-            if (playerDungeon != null) {
-                if (!playerDungeon.hasEntrance(entrance)) {
+            PlayerLocation playerLocation = PlayerLocationsRegistry.getLocation(Identifier.tryParse(identifier));
+            if (playerLocation != null) {
+                if (!playerLocation.hasEntrance(entrance)) {
                     entrance = "";
                 }
                 boolean bl = false;
-                for (Pair<String, String> dungeon : this.dungeonLocationsList) {
-                    if (dungeon.getLeft().equals(identifier)) {
-                        if (playerDungeon.hasSideEntrances()) {
-                            if (dungeon.getRight().equals(entrance)) {
-                                bl = true;
-                                break;
-                            }
-                        } else {
-                            bl = true;
-                            break;
-                        }
+                for (Pair<String, String> location : this.locationsList) {
+                    if (location.getLeft().equals(identifier) && location.getRight().equals(entrance)) {
+                        bl = true;
+                        break;
                     }
                 }
                 if (bl) {
                     message = Text.translatable("gui.teleporter_block.location_already_in_list");
                 } else {
-                    BetterAdventureModeCore.LOGGER.info(playerDungeon.toString());
-                    this.dungeonLocationsList.add(new Pair<>(identifier, entrance));
+                    this.locationsList.add(new Pair<>(identifier, entrance));
                 }
             } else {
                 message = Text.translatable("gui.teleporter_block.location_not_found");
@@ -331,39 +298,9 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
         this.updateWidgets();
     }
 
-    private void addHouseToHousesList(String identifier) {
-        BetterAdventureModeCore.LOGGER.info(identifier);
-        Text message = Text.literal("");
-        if (Identifier.isValid(identifier)) {
-            PlayerHouse playerHouse = PlayerHousesRegistry.getHouse(Identifier.tryParse(identifier));
-            if (playerHouse != null) {
-                if (!this.housingLocationsList.contains(identifier)) {
-                    BetterAdventureModeCore.LOGGER.info(playerHouse.toString());
-                    this.housingLocationsList.add(identifier);
-                } else {
-                    message = Text.translatable("gui.teleporter_block.location_already_in_list");
-                }
-            } else {
-                message = Text.translatable("gui.teleporter_block.location_not_found");
-            }
-        } else {
-            message = Text.translatable("gui.invalid_identifier");
-        }
-        if (this.client != null && this.client.player != null && !message.getString().equals("")) {
-            this.client.player.sendMessage(message);
-        }
-        this.updateWidgets();
-    }
-
-    private void removeLocationFromLocationList(int index, boolean isDungeon) {
-        if (isDungeon) {
-            if (index + this.visibleDungeonsLocationsListScrollPosition < this.dungeonLocationsList.size()) {
-                this.dungeonLocationsList.remove(index + this.visibleDungeonsLocationsListScrollPosition);
-            }
-        } else {
-            if (index + this.visibleHousingLocationsListScrollPosition < this.housingLocationsList.size()) {
-                this.housingLocationsList.remove(index + this.visibleHousingLocationsListScrollPosition);
-            }
+    private void removeLocationFromLocationList(int index) {
+        if (index + this.visibleLocationsListScrollPosition < this.locationsList.size()) {
+            this.locationsList.remove(index + this.visibleLocationsListScrollPosition);
         }
         this.updateWidgets();
     }
@@ -379,20 +316,15 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
                 this.currentTargetOwner = this.client.player.networkHandler.getPlayerListEntry(this.client.player.getUuid());
             }
         }
-        this.dungeonLocationsList.clear();
-        this.housingLocationsList.clear();
-        this.dungeonLocationsList.addAll(this.teleporterBlock.getDungeonLocationsList());
-        this.housingLocationsList.addAll(this.teleporterBlock.getHousingLocationsList());
+        this.locationsList.clear();
+        this.locationsList.addAll(this.teleporterBlock.getLocationsList());
         this.currentTargetIdentifier = "";
         this.currentTargetDisplayName = "";
         this.currentTargetEntrance = "";
         this.currentTargetEntranceDisplayName = "";
         if (!this.showCreativeTab) {
             this.backgroundWidth = 218;
-            if (this.teleporterBlock.getTeleportationMode() == TeleporterBlockBlockEntity.TeleportationMode.DUNGEONS) {
-                this.backgroundHeight = 158;
-                this.thisMethodHandlesTheAdvancementStuffTODORename(true);
-            } else if (this.teleporterBlock.getTeleportationMode() == TeleporterBlockBlockEntity.TeleportationMode.HOUSING) {
+            if (this.teleporterBlock.getTeleportationMode() == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS) {
                 this.backgroundHeight = 158;
                 this.thisMethodHandlesTheAdvancementStuffTODORename(true);
             } else {
@@ -525,44 +457,29 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
 
         // teleportation mode: saved_locations
         
-        this.locationType = this.teleporterBlock.getLocationType();
-        i = this.textRenderer.getWidth(LOCATION_TYPE_LABEL_TEXT) + 10;
-        this.locationTypeButton = this.addDrawableChild(CyclingButtonWidget.builder(TeleporterBlockBlockEntity.LocationType::asText).values((TeleporterBlockBlockEntity.LocationType[])TeleporterBlockBlockEntity.LocationType.values()).initially(this.locationType).omitKeyText().build(this.width / 2 - 152 + i, 70, 300 - i, 20, LOCATION_TYPE_LABEL_TEXT, (button, locationType) -> {
-            this.locationType = locationType;
+        this.spawnPointType = this.teleporterBlock.getLocationType();
+        i = this.textRenderer.getWidth(SPAWN_POINT_TYPE_LABEL_TEXT) + 10;
+        this.spawnPointTypeButton = this.addDrawableChild(CyclingButtonWidget.builder(TeleporterBlockBlockEntity.SpawnPointType::asText).values((TeleporterBlockBlockEntity.SpawnPointType[]) TeleporterBlockBlockEntity.SpawnPointType.values()).initially(this.spawnPointType).omitKeyText().build(this.width / 2 - 152 + i, 70, 300 - i, 20, SPAWN_POINT_TYPE_LABEL_TEXT, (button, locationType) -> {
+            this.spawnPointType = locationType;
         }));
 
         // teleportation mode: dungeons
 
-        this.removeDungeonLocationButton0 = this.addDrawableChild(ButtonWidget.builder(REMOVE_LOCATION_BUTTON_LABEL_TEXT, button -> this.removeLocationFromLocationList(0, true)).dimensions(this.width / 2 + 54, 70, 100, 20).build());
-        this.removeDungeonLocationButton1 = this.addDrawableChild(ButtonWidget.builder(REMOVE_LOCATION_BUTTON_LABEL_TEXT, button -> this.removeLocationFromLocationList(1, true)).dimensions(this.width / 2 + 54, 95, 100, 20).build());
-        this.removeDungeonLocationButton2 = this.addDrawableChild(ButtonWidget.builder(REMOVE_LOCATION_BUTTON_LABEL_TEXT, button -> this.removeLocationFromLocationList(2, true)).dimensions(this.width / 2 + 54, 120, 100, 20).build());
+        this.removeLocationButton0 = this.addDrawableChild(ButtonWidget.builder(REMOVE_LOCATION_BUTTON_LABEL_TEXT, button -> this.removeLocationFromLocationList(0)).dimensions(this.width / 2 + 54, 70, 100, 20).build());
+        this.removeLocationButton1 = this.addDrawableChild(ButtonWidget.builder(REMOVE_LOCATION_BUTTON_LABEL_TEXT, button -> this.removeLocationFromLocationList(1)).dimensions(this.width / 2 + 54, 95, 100, 20).build());
+        this.removeLocationButton2 = this.addDrawableChild(ButtonWidget.builder(REMOVE_LOCATION_BUTTON_LABEL_TEXT, button -> this.removeLocationFromLocationList(2)).dimensions(this.width / 2 + 54, 120, 100, 20).build());
 
-        this.newDungeonLocationIdentifierField = new TextFieldWidget(this.textRenderer, this.width / 2 - 4 - 150, 160, 150, 20, Text.literal(""));
-        this.newDungeonLocationIdentifierField.setMaxLength(128);
-        this.newDungeonLocationIdentifierField.setPlaceholder(Text.translatable("gui.teleporter_block.target_identifier_field.place_holder"));
-        this.addSelectableChild(this.newDungeonLocationIdentifierField);
+        this.newLocationIdentifierField = new TextFieldWidget(this.textRenderer, this.width / 2 - 4 - 150, 160, 150, 20, Text.literal(""));
+        this.newLocationIdentifierField.setMaxLength(128);
+        this.newLocationIdentifierField.setPlaceholder(Text.translatable("gui.teleporter_block.target_identifier_field.place_holder"));
+        this.addSelectableChild(this.newLocationIdentifierField);
 
-        this.newDungeonLocationEntranceField = new TextFieldWidget(this.textRenderer, this.width / 2 + 4, 160, 150, 20, Text.literal(""));
-        this.newDungeonLocationEntranceField.setMaxLength(128);
-        this.newDungeonLocationEntranceField.setPlaceholder(Text.translatable("gui.teleporter_block.target_entrance_field.place_holder"));
-        this.addSelectableChild(this.newDungeonLocationEntranceField);
+        this.newLocationEntranceField = new TextFieldWidget(this.textRenderer, this.width / 2 + 4, 160, 150, 20, Text.literal(""));
+        this.newLocationEntranceField.setMaxLength(128);
+        this.newLocationEntranceField.setPlaceholder(Text.translatable("gui.teleporter_block.target_entrance_field.place_holder"));
+        this.addSelectableChild(this.newLocationEntranceField);
 
-        this.addNewDungeonLocationButton = this.addDrawableChild(ButtonWidget.builder(ADD_NEW_LOCATION_BUTTON_LABEL_TEXT, button -> this.addDungeonToDungeonsList(this.newDungeonLocationIdentifierField.getText(), this.newDungeonLocationEntranceField.getText())).dimensions(this.width / 2 - 154, 185, 300, 20).build());
-
-        // teleportation mode: housing
-
-        this.removeHousingLocationButton0 = this.addDrawableChild(ButtonWidget.builder(REMOVE_LOCATION_BUTTON_LABEL_TEXT, button -> this.removeLocationFromLocationList(0, false)).dimensions(this.width / 2 + 54, 70, 100, 20).build());
-        this.removeHousingLocationButton1 = this.addDrawableChild(ButtonWidget.builder(REMOVE_LOCATION_BUTTON_LABEL_TEXT, button -> this.removeLocationFromLocationList(1, false)).dimensions(this.width / 2 + 54, 95, 100, 20).build());
-        this.removeHousingLocationButton2 = this.addDrawableChild(ButtonWidget.builder(REMOVE_LOCATION_BUTTON_LABEL_TEXT, button -> this.removeLocationFromLocationList(2, false)).dimensions(this.width / 2 + 54, 120, 100, 20).build());
-        this.removeHousingLocationButton3 = this.addDrawableChild(ButtonWidget.builder(REMOVE_LOCATION_BUTTON_LABEL_TEXT, button -> this.removeLocationFromLocationList(3, false)).dimensions(this.width / 2 + 54, 145, 100, 20).build());
-
-        this.newHousingLocationIdentifierField = new TextFieldWidget(this.textRenderer, this.width / 2 - 4 - 150, 185, 150, 20, Text.literal("new location identifier"));
-        this.newHousingLocationIdentifierField.setMaxLength(128);
-        this.newHousingLocationIdentifierField.setPlaceholder(Text.translatable("gui.teleporter_block.target_identifier_field.place_holder"));
-        this.addSelectableChild(this.newHousingLocationIdentifierField);
-
-        this.addNewHousingLocationButton = this.addDrawableChild(ButtonWidget.builder(ADD_NEW_LOCATION_BUTTON_LABEL_TEXT, button -> this.addHouseToHousesList(this.newHousingLocationIdentifierField.getText())).dimensions(this.width / 2  + 4, 185, 150, 20).build());
-
+        this.addNewLocationButton = this.addDrawableChild(ButtonWidget.builder(ADD_NEW_LOCATION_BUTTON_LABEL_TEXT, button -> this.addLocationToList(this.newLocationIdentifierField.getText(), this.newLocationEntranceField.getText())).dimensions(this.width / 2 - 154, 185, 300, 20).build());
 
         // --- adventure screen customization page ---
 
@@ -659,23 +576,15 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
         this.directTeleportOrientationYawField.setVisible(false);
         this.directTeleportOrientationPitchField.setVisible(false);
 
-        this.locationTypeButton.visible = false;
+        this.spawnPointTypeButton.visible = false;
 
-        this.removeDungeonLocationButton0.visible = false;
-        this.removeDungeonLocationButton1.visible = false;
-        this.removeDungeonLocationButton2.visible = false;
+        this.removeLocationButton0.visible = false;
+        this.removeLocationButton1.visible = false;
+        this.removeLocationButton2.visible = false;
 
-        this.newDungeonLocationIdentifierField.setVisible(false);
-        this.newDungeonLocationEntranceField.setVisible(false);
-        this.addNewDungeonLocationButton.visible = false;
-
-        this.removeHousingLocationButton0.visible = false;
-        this.removeHousingLocationButton1.visible = false;
-        this.removeHousingLocationButton2.visible = false;
-        this.removeHousingLocationButton3.visible = false;
-
-        this.newHousingLocationIdentifierField.setVisible(false);
-        this.addNewHousingLocationButton.visible = false;
+        this.newLocationIdentifierField.setVisible(false);
+        this.newLocationEntranceField.setVisible(false);
+        this.addNewLocationButton.visible = false;
 
         this.teleporterNameField.setVisible(false);
         this.currentTargetOwnerLabelField.setVisible(false);
@@ -721,46 +630,27 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
                     this.directTeleportOrientationYawField.setVisible(true);
                     this.directTeleportOrientationPitchField.setVisible(true);
 
-                } else if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.SAVED_LOCATIONS) {
+                } else if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.SPAWN_POINTS) {
 
-                    this.locationTypeButton.visible = true;
+                    this.spawnPointTypeButton.visible = true;
 
-                } else if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DUNGEONS) {
+                } else if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS) {
 
                     int index = 0;
-                    for (int i = 0; i < Math.min(3, this.dungeonLocationsList.size()); i++) {
+                    for (int i = 0; i < Math.min(3, this.locationsList.size()); i++) {
                         if (index == 0) {
-                            this.removeDungeonLocationButton0.visible = true;
+                            this.removeLocationButton0.visible = true;
                         } else if (index == 1) {
-                            this.removeDungeonLocationButton1.visible = true;
+                            this.removeLocationButton1.visible = true;
                         } else if (index == 2) {
-                            this.removeDungeonLocationButton2.visible = true;
+                            this.removeLocationButton2.visible = true;
                         }
                         index++;
                     }
 
-                    this.newDungeonLocationIdentifierField.setVisible(true);
-                    this.newDungeonLocationEntranceField.setVisible(true);
-                    this.addNewDungeonLocationButton.visible = true;
-
-                } else if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.HOUSING) {
-
-                    int index = 0;
-                    for (int i = 0; i < Math.min(4, this.housingLocationsList.size()); i++) {
-                        if (index == 0) {
-                            this.removeHousingLocationButton0.visible = true;
-                        } else if (index == 1) {
-                            this.removeHousingLocationButton1.visible = true;
-                        } else if (index == 2) {
-                            this.removeHousingLocationButton2.visible = true;
-                        } else if (index == 3) {
-                            this.removeHousingLocationButton3.visible = true;
-                        }
-                        index++;
-                    }
-
-                    this.newHousingLocationIdentifierField.setVisible(true);
-                    this.addNewHousingLocationButton.visible = true;
+                    this.newLocationIdentifierField.setVisible(true);
+                    this.newLocationEntranceField.setVisible(true);
+                    this.addNewLocationButton.visible = true;
 
                 }
             } else if (this.creativeScreenPage == CreativeScreenPage.ADVENTURE_SCREEN_CUSTOMIZATION) {
@@ -769,10 +659,10 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
                 this.teleportButtonLabelField.setVisible(true);
                 this.cancelTeleportButtonLabelField.setVisible(true);
 
-                if (!(this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DIRECT || this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.SAVED_LOCATIONS)) {
+                if (!(this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DIRECT || this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.SPAWN_POINTS)) {
                     this.currentTargetOwnerLabelField.setVisible(true);
                     this.currentTargetIdentifierLabelField.setVisible(true);
-                    if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DUNGEONS) {
+                    if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS) {
                         this.currentTargetEntranceLabelField.setVisible(true);
                     }
                 }
@@ -792,32 +682,17 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
             } else if (showChooseTargetIdentifierScreen) {
 
                 int index = 0;
-                if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DUNGEONS) {
-                    for (int i = 0; i < Math.min(4, this.visibleDungeonLocationsList.size()); i++) {
-                        if (index == 0) {
-                            this.confirmChooseTargetIdentifier0Button.visible = true;
-                        } else if (index == 1) {
-                            this.confirmChooseTargetIdentifier1Button.visible = true;
-                        } else if (index == 2) {
-                            this.confirmChooseTargetIdentifier2Button.visible = true;
-                        } else if (index == 3) {
-                            this.confirmChooseTargetIdentifier3Button.visible = true;
-                        }
-                        index++;
+                for (int i = 0; i < Math.min(4, this.visibleLocationsList.size()); i++) {
+                    if (index == 0) {
+                        this.confirmChooseTargetIdentifier0Button.visible = true;
+                    } else if (index == 1) {
+                        this.confirmChooseTargetIdentifier1Button.visible = true;
+                    } else if (index == 2) {
+                        this.confirmChooseTargetIdentifier2Button.visible = true;
+                    } else if (index == 3) {
+                        this.confirmChooseTargetIdentifier3Button.visible = true;
                     }
-                } else {
-                    for (int i = 0; i < Math.min(4, this.visibleHousingLocationsList.size()); i++) {
-                        if (index == 0) {
-                            this.confirmChooseTargetIdentifier0Button.visible = true;
-                        } else if (index == 1) {
-                            this.confirmChooseTargetIdentifier1Button.visible = true;
-                        } else if (index == 2) {
-                            this.confirmChooseTargetIdentifier2Button.visible = true;
-                        } else if (index == 3) {
-                            this.confirmChooseTargetIdentifier3Button.visible = true;
-                        }
-                        index++;
-                    }
+                    index++;
                 }
 
                 this.cancelChooseTargetIdentifierButton.visible = true;
@@ -829,7 +704,7 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
 
             } else {
 
-                if (!(this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DIRECT || this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.SAVED_LOCATIONS)) {
+                if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS) {
                     this.openChooseTargetIdentifierScreenButton.visible = true;
                     this.openChooseTargetOwnerScreenButton.visible = true;
                 }
@@ -859,77 +734,42 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
         boolean showLockedLocation;
 
         if (shouldInit) {
-            if (this.teleporterBlock.getTeleportationMode() == TeleporterBlockBlockEntity.TeleportationMode.DUNGEONS) {
-                for (int i = 0; i < this.dungeonLocationsList.size(); i++) {
-                    PlayerDungeon playerDungeon = PlayerDungeonsRegistry.getDungeon(new Identifier(this.dungeonLocationsList.get(i).getLeft()));
-                    unlockAdvancementIdentifier = playerDungeon.unlockAdvancement();
-                    showLockedLocation = playerDungeon.showLockedDungeon();
+            if (this.teleporterBlock.getTeleportationMode() == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS) {
+                for (int i = 0; i < this.locationsList.size(); i++) {
+                    PlayerLocation playerLocation = PlayerLocationsRegistry.getLocation(new Identifier(this.locationsList.get(i).getLeft()));
+                    unlockAdvancementIdentifier = playerLocation.unlockAdvancement();
+                    showLockedLocation = playerLocation.showLockedDungeon();
 
                     if (serverAdvancementLoader != null) {
                         AdvancementEntry advancementEntry = serverAdvancementLoader.get(unlockAdvancementIdentifier);
                         if (serverPlayerEntity != null && advancementEntry != null) {
                             if (serverPlayerEntity.getAdvancementTracker().getProgress(advancementEntry).isDone()) {
-                                this.unlockedDungeonLocationsList.add(this.dungeonLocationsList.get(i));
-                                this.visibleDungeonLocationsList.add(this.dungeonLocationsList.get(i));
+                                this.unlockedLocationsList.add(this.locationsList.get(i));
+                                this.visibleLocationsList.add(this.locationsList.get(i));
                             } else if (showLockedLocation) {
-                                this.visibleDungeonLocationsList.add(this.dungeonLocationsList.get(i));
+                                this.visibleLocationsList.add(this.locationsList.get(i));
                             }
                         }
                     }
                 }
-                if (!this.visibleDungeonLocationsList.isEmpty()) {
-                    this.currentTargetIdentifier = this.visibleDungeonLocationsList.get(0).getLeft();
-                    this.currentTargetEntrance = this.visibleDungeonLocationsList.get(0).getRight();
-                }
-            } else if (this.teleporterBlock.getTeleportationMode() == TeleporterBlockBlockEntity.TeleportationMode.HOUSING) {
-                for (int i = 0; i < this.housingLocationsList.size(); i++) {
-                    PlayerHouse playerHouse = PlayerHousesRegistry.getHouse(new Identifier(this.housingLocationsList.get(i)));
-                    unlockAdvancementIdentifier = playerHouse.unlockAdvancement();
-                    showLockedLocation = playerHouse.showLockedHouse();
-
-                    if (serverAdvancementLoader != null) {
-                        AdvancementEntry advancementEntry = serverAdvancementLoader.get(unlockAdvancementIdentifier);
-                        if (serverPlayerEntity != null && advancementEntry != null) {
-                            if (serverPlayerEntity.getAdvancementTracker().getProgress(advancementEntry).isDone()) {
-                                this.unlockedHousingLocationsList.add(this.housingLocationsList.get(i));
-                                this.visibleHousingLocationsList.add(this.housingLocationsList.get(i));
-                            } else if (showLockedLocation) {
-                                this.visibleHousingLocationsList.add(this.housingLocationsList.get(i));
-                            }
-                        }
-                    }
-                }
-                if (!this.visibleHousingLocationsList.isEmpty()) {
-                    this.currentTargetIdentifier = this.visibleHousingLocationsList.get(0);
+                if (!this.visibleLocationsList.isEmpty()) {
+                    this.currentTargetIdentifier = this.visibleLocationsList.get(0).getLeft();
+                    this.currentTargetEntrance = this.visibleLocationsList.get(0).getRight();
                 }
             }
         }
 
-        if (this.teleporterBlock.getTeleportationMode() == TeleporterBlockBlockEntity.TeleportationMode.DUNGEONS) {
-            PlayerDungeon playerDungeon = PlayerDungeonsRegistry.getDungeon(Identifier.tryParse(this.currentTargetIdentifier));
-            if (playerDungeon != null) {
-                unlockAdvancementIdentifier = playerDungeon.unlockAdvancement();
-                this.showCurrentUnlockAdvancement = playerDungeon.showUnlockAdvancement();
-                this.currentTargetDisplayName = playerDungeon.getDisplayName();
-                this.currentTargetEntranceDisplayName = playerDungeon.getEntranceDisplayName(this.currentTargetEntrance);
-                for (Pair<String, String> dungeonLocation : this.unlockedDungeonLocationsList) {
-                    if (Objects.equals(dungeonLocation.getLeft(), this.currentTargetIdentifier)) {
-                        this.isCurrentLocationUnlocked = true;
-                    }
-                }
-            }
-        } else if (this.teleporterBlock.getTeleportationMode() == TeleporterBlockBlockEntity.TeleportationMode.HOUSING) {
-            PlayerHouse playerHouse = PlayerHousesRegistry.getHouse(Identifier.tryParse(this.currentTargetIdentifier));
-            if (playerHouse != null) {
-                unlockAdvancementIdentifier = playerHouse.unlockAdvancement();
-                this.showCurrentUnlockAdvancement = playerHouse.showUnlockAdvancement();
-                this.currentTargetDisplayName = playerHouse.getDisplayName();
-                this.currentTargetEntranceDisplayName = "";
-                for (String housingLocation : this.unlockedHousingLocationsList) {
-                    if (Objects.equals(housingLocation, this.currentTargetIdentifier)) {
-                        this.isCurrentLocationUnlocked = true;
-                    }
-                }
+        PlayerLocation playerLocation = PlayerLocationsRegistry.getLocation(Identifier.tryParse(this.currentTargetIdentifier));
+        if (playerLocation != null) {
+            unlockAdvancementIdentifier = playerLocation.unlockAdvancement();
+            this.showCurrentUnlockAdvancement = playerLocation.showUnlockAdvancement();
+            this.currentTargetDisplayName = playerLocation.getDisplayName();
+            this.currentTargetEntranceDisplayName = playerLocation.getEntranceDisplayName(this.currentTargetEntrance);
+        }
+
+        for (Pair<String, String> dungeonLocation : this.unlockedLocationsList) {
+            if (Objects.equals(dungeonLocation.getLeft(), this.currentTargetIdentifier)) {
+                this.isCurrentLocationUnlocked = true;
             }
         }
         if (serverAdvancementLoader != null && unlockAdvancementIdentifier != null) {
@@ -965,31 +805,19 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         // TODO
-        this.creativeDungeonsLocationsListMouseClicked = false;
-        this.creativeHousingLocationsListMouseClicked = false;
+        this.creativeLocationsListMouseClicked = false;
         this.teamListMouseClicked = false;
-        this.visibleDungeonsLocationsListMouseClicked = false;
-        this.visibleHousingLocationsListMouseClicked = false;
+        this.visibleLocationsListMouseClicked = false;
         int i;
         int j;
         if (this.showCreativeTab
                 && this.creativeScreenPage == CreativeScreenPage.TELEPORTATION_MODE
-                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DUNGEONS
-                && this.dungeonLocationsList.size() > 3) {
+                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS
+                && this.locationsList.size() > 3) {
             i = this.width / 2 - 152;
             j = 71;
             if (mouseX >= (double)i && mouseX < (double)(i + 6) && mouseY >= (double)j && mouseY < (double)(j + 68)) {
-                this.creativeDungeonsLocationsListMouseClicked = true;
-            }
-        }
-        if (this.showCreativeTab
-                && this.creativeScreenPage == CreativeScreenPage.TELEPORTATION_MODE
-                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.HOUSING
-                && this.housingLocationsList.size() > 4) {
-            i = this.width / 2 - 152;
-            j = 71;
-            if (mouseX >= (double)i && mouseX < (double)(i + 6) && mouseY >= (double)j && mouseY < (double)(j + 93)) {
-                this.creativeHousingLocationsListMouseClicked = true;
+                this.creativeLocationsListMouseClicked = true;
             }
         }
         // TODO team list
@@ -1002,22 +830,12 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
         }
         if (!this.showCreativeTab
                 && this.showChooseTargetIdentifierScreen
-                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DUNGEONS
-                && this.visibleDungeonLocationsList.size() > 4) {
+                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS
+                && this.visibleLocationsList.size() > 4) {
             i = this.x + 8;
             j = this.y + 21;
             if (mouseX >= (double)i && mouseX < (double)(i + 6) && mouseY >= (double)j && mouseY < (double)(j + 90)) {
-                this.visibleDungeonsLocationsListMouseClicked = true;
-            }
-        }
-        if (!this.showCreativeTab
-                && this.showChooseTargetIdentifierScreen
-                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.HOUSING
-                && this.visibleHousingLocationsList.size() > 4) {
-            i = this.x + 8;
-            j = this.y + 21;
-            if (mouseX >= (double)i && mouseX < (double)(i + 6) && mouseY >= (double)j && mouseY < (double)(j + 90)) {
-                this.visibleHousingLocationsListMouseClicked = true;
+                this.visibleLocationsListMouseClicked = true;
             }
         }
         return super.mouseClicked(mouseX, mouseY, button);
@@ -1027,44 +845,24 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         if (this.showCreativeTab
                 && this.creativeScreenPage == CreativeScreenPage.TELEPORTATION_MODE
-                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DUNGEONS
-                && this.dungeonLocationsList.size() > 3
-                && this.creativeDungeonsLocationsListMouseClicked) {
-            int i = this.dungeonLocationsList.size() - 3;
+                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS
+                && this.locationsList.size() > 3
+                && this.creativeLocationsListMouseClicked) {
+            int i = this.locationsList.size() - 3;
             float f = (float)deltaY / (float)i;
-            this.creativeDungeonsLocationsListScrollAmount = MathHelper.clamp(this.creativeDungeonsLocationsListScrollAmount + f, 0.0f, 1.0f);
-            this.creativeDungeonsLocationsListScrollPosition = (int)((double)(this.creativeDungeonsLocationsListScrollAmount * (float)i));
-        }
-        if (this.showCreativeTab
-                && this.creativeScreenPage == CreativeScreenPage.TELEPORTATION_MODE
-                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.HOUSING
-                && this.housingLocationsList.size() > 4
-                && this.creativeHousingLocationsListMouseClicked) {
-            int i = this.housingLocationsList.size() - 4;
-            float f = (float)deltaY / (float)i;
-            this.creativeHousingLocationsListScrollAmount = MathHelper.clamp(this.creativeHousingLocationsListScrollAmount + f, 0.0f, 1.0f);
-            this.creativeHousingLocationsListScrollPosition = (int)((double)(this.creativeHousingLocationsListScrollAmount * (float)i));
+            this.creativeLocationsListScrollAmount = MathHelper.clamp(this.creativeLocationsListScrollAmount + f, 0.0f, 1.0f);
+            this.creativeLocationsListScrollPosition = (int)((double)(this.creativeLocationsListScrollAmount * (float)i));
         }
         // TODO team list
         if (!this.showCreativeTab
                 && this.showChooseTargetIdentifierScreen
-                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DUNGEONS
-                && this.visibleDungeonLocationsList.size() > 4
-                && this.visibleDungeonsLocationsListMouseClicked) {
-            int i = this.visibleDungeonLocationsList.size() - 4;
+                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS
+                && this.visibleLocationsList.size() > 4
+                && this.visibleLocationsListMouseClicked) {
+            int i = this.visibleLocationsList.size() - 4;
             float f = (float)deltaY / (float)i;
-            this.visibleDungeonsLocationsListScrollAmount = MathHelper.clamp(this.visibleDungeonsLocationsListScrollAmount + f, 0.0f, 1.0f);
-            this.visibleDungeonsLocationsListScrollPosition = (int)((double)(this.visibleDungeonsLocationsListScrollAmount * (float)i));
-        }
-        if (!this.showCreativeTab
-                && this.showChooseTargetIdentifierScreen
-                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.HOUSING
-                && this.visibleHousingLocationsList.size() > 4
-                && this.visibleHousingLocationsListMouseClicked) {
-            int i = this.visibleHousingLocationsList.size() - 4;
-            float f = (float)deltaY / (float)i;
-            this.visibleHousingLocationsListScrollAmount = MathHelper.clamp(this.visibleHousingLocationsListScrollAmount + f, 0.0f, 1.0f);
-            this.visibleHousingLocationsListScrollPosition = (int)((double)(this.visibleHousingLocationsListScrollAmount * (float)i));
+            this.visibleLocationsListScrollAmount = MathHelper.clamp(this.visibleLocationsListScrollAmount + f, 0.0f, 1.0f);
+            this.visibleLocationsListScrollPosition = (int)((double)(this.visibleLocationsListScrollAmount * (float)i));
         }
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }
@@ -1074,46 +872,25 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
         // TODO
         if (this.showCreativeTab
                 && this.creativeScreenPage == CreativeScreenPage.TELEPORTATION_MODE
-                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DUNGEONS
-                && this.dungeonLocationsList.size() > 3
+                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS
+                && this.locationsList.size() > 3
                 && mouseX >= (double)(this.width / 2 - 152) && mouseX <= (double)(this.width / 2 + 50)
                 && mouseY >= 70 && mouseY <= 140) {
-            int i = this.dungeonLocationsList.size() - 3;
+            int i = this.locationsList.size() - 3;
             float f = (float)verticalAmount / (float)i;
-            this.creativeDungeonsLocationsListScrollAmount = MathHelper.clamp(this.creativeDungeonsLocationsListScrollAmount - f, 0.0f, 1.0f);
-            this.creativeDungeonsLocationsListScrollPosition = (int)((double)(this.creativeDungeonsLocationsListScrollAmount * (float)i));
-        }
-        if (this.showCreativeTab
-                && this.creativeScreenPage == CreativeScreenPage.TELEPORTATION_MODE
-                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.HOUSING
-                && this.housingLocationsList.size() > 4
-                && mouseX >= (double)(this.width / 2 - 152) && mouseX <= (double)(this.width / 2 + 50)
-                && mouseY >= 70 && mouseY <= 165) {
-            int i = this.housingLocationsList.size() - 4;
-            float f = (float)verticalAmount / (float)i;
-            this.creativeHousingLocationsListScrollAmount = MathHelper.clamp(this.creativeHousingLocationsListScrollAmount - f, 0.0f, 1.0f);
-            this.creativeHousingLocationsListScrollPosition = (int)((double)(this.creativeHousingLocationsListScrollAmount * (float)i));
+            this.creativeLocationsListScrollAmount = MathHelper.clamp(this.creativeLocationsListScrollAmount - f, 0.0f, 1.0f);
+            this.creativeLocationsListScrollPosition = (int)((double)(this.creativeLocationsListScrollAmount * (float)i));
         }
         // TODO team list
         if (!this.showCreativeTab
                 && this.showChooseTargetIdentifierScreen
-                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DUNGEONS
-                && this.visibleDungeonLocationsList.size() > 4
+                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS
+                && this.visibleLocationsList.size() > 4
                 && mouseX >= this.x + 7 && mouseX <= this.x + this.backgroundWidth - 61 && mouseY >= this.y + 20 && mouseY <= this.y + 112) {
-            int i = this.visibleDungeonLocationsList.size() - 4;
+            int i = this.visibleLocationsList.size() - 4;
             float f = (float)verticalAmount / (float)i;
-            this.visibleDungeonsLocationsListScrollAmount = MathHelper.clamp(this.visibleDungeonsLocationsListScrollAmount - f, 0.0f, 1.0f);
-            this.visibleDungeonsLocationsListScrollPosition = (int)((double)(this.visibleDungeonsLocationsListScrollAmount * (float)i));
-        }
-        if (!this.showCreativeTab
-                && this.showChooseTargetIdentifierScreen
-                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.HOUSING
-                && this.visibleHousingLocationsList.size() > 4
-                && mouseX >= this.x + 7 && mouseX <= this.x + this.backgroundWidth - 61 && mouseY >= this.y + 20 && mouseY <= this.y + 112) {
-            int i = this.visibleHousingLocationsList.size() - 4;
-            float f = (float)verticalAmount / (float)i;
-            this.visibleHousingLocationsListScrollAmount = MathHelper.clamp(this.visibleHousingLocationsListScrollAmount - f, 0.0f, 1.0f);
-            this.visibleHousingLocationsListScrollPosition = (int)((double)(this.visibleHousingLocationsListScrollAmount * (float)i));
+            this.visibleLocationsListScrollAmount = MathHelper.clamp(this.visibleLocationsListScrollAmount - f, 0.0f, 1.0f);
+            this.visibleLocationsListScrollPosition = (int)((double)(this.visibleLocationsListScrollAmount * (float)i));
         }
         return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
     }
@@ -1155,44 +932,34 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
                     context.drawTextWithShadow(this.textRenderer, DIRECT_TELEPORT_ORIENTATION_LABEL_TEXT, this.width / 2 - 153, 105, 0xA0A0A0);
                     this.directTeleportOrientationYawField.render(context, mouseX, mouseY, delta);
                     this.directTeleportOrientationPitchField.render(context, mouseX, mouseY, delta);
-                } else if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.SAVED_LOCATIONS) {
-                    context.drawTextWithShadow(this.textRenderer, LOCATION_TYPE_LABEL_TEXT, this.width / 2 - 153, 76, 0xA0A0A0);
-                } else if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DUNGEONS) {
-                    for (int i = this.creativeDungeonsLocationsListScrollPosition; i < Math.min(this.creativeDungeonsLocationsListScrollPosition + 3, this.dungeonLocationsList.size()); i++) {
-                        String text = this.dungeonLocationsList.get(i).getLeft();
-                        if (!this.dungeonLocationsList.get(i).getRight().equals("")) {
-                            text = this.dungeonLocationsList.get(i).getLeft() + ", " + this.dungeonLocationsList.get(i).getRight();
+                } else if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.SPAWN_POINTS) {
+                    context.drawTextWithShadow(this.textRenderer, SPAWN_POINT_TYPE_LABEL_TEXT, this.width / 2 - 153, 76, 0xA0A0A0);
+                } else if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS) {
+                    for (int i = this.creativeLocationsListScrollPosition; i < Math.min(this.creativeLocationsListScrollPosition + 3, this.locationsList.size()); i++) {
+                        String text = this.locationsList.get(i).getLeft();
+                        if (!this.locationsList.get(i).getRight().equals("")) {
+                            text = this.locationsList.get(i).getLeft() + ", " + this.locationsList.get(i).getRight();
                         }
-                        context.drawTextWithShadow(this.textRenderer, text, this.width / 2 - 141, 76 + ((i - this.creativeDungeonsLocationsListScrollPosition) * 25), 0xA0A0A0);
+                        context.drawTextWithShadow(this.textRenderer, text, this.width / 2 - 141, 76 + ((i - this.creativeLocationsListScrollPosition) * 25), 0xA0A0A0);
                     }
-                    if (this.dungeonLocationsList.size() > 3) {
-                        context.drawGuiTexture(CREATIVE_DUNGEONS_SCROLLER_BACKGROUND_TEXTURE, this.width / 2 - 153, 70, 8, 70);
-                        int k = (int)(61.0f * this.creativeDungeonsLocationsListScrollAmount);
+                    if (this.locationsList.size() > 3) {
+                        context.drawGuiTexture(SCROLL_BAR_BACKGROUND_8_70_TEXTURE, this.width / 2 - 153, 70, 8, 70);
+                        int k = (int)(61.0f * this.creativeLocationsListScrollAmount);
                         context.drawGuiTexture(SCROLLER_TEXTURE, this.width / 2 - 152, 70 + 1 + k, 6, 7);
                     }
-                    this.newDungeonLocationIdentifierField.render(context, mouseX, mouseY, delta);
-                    this.newDungeonLocationEntranceField.render(context, mouseX, mouseY, delta);
-                } else if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.HOUSING) {
-                    for (int i = this.creativeHousingLocationsListScrollPosition; i < Math.min(this.creativeHousingLocationsListScrollPosition + 4, this.housingLocationsList.size()); i++) {
-                        context.drawTextWithShadow(this.textRenderer, this.housingLocationsList.get(i), this.width / 2 - 141, 76 + ((i - this.creativeHousingLocationsListScrollPosition) * 25), 0xA0A0A0);
-                    }
-                    if (this.housingLocationsList.size() > 4) {
-                        context.drawGuiTexture(CREATIVE_HOUSING_SCROLLER_BACKGROUND_TEXTURE, this.width / 2 - 153, 70, 8, 95);
-                        int k = (int)(86.0f * this.creativeHousingLocationsListScrollAmount);
-                        context.drawGuiTexture(SCROLLER_TEXTURE, this.width / 2 - 152, 70 + 1 + k, 6, 7);
-                    }
-                    this.newHousingLocationIdentifierField.render(context, mouseX, mouseY, delta);
+                    this.newLocationIdentifierField.render(context, mouseX, mouseY, delta);
+                    this.newLocationEntranceField.render(context, mouseX, mouseY, delta);
                 }
             } else if (this.creativeScreenPage == CreativeScreenPage.ADVENTURE_SCREEN_CUSTOMIZATION) {
 
                 this.teleporterNameField.render(context, mouseX, mouseY, delta);
 
-                if (!(this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DIRECT || this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.SAVED_LOCATIONS)) {
+                if (!(this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DIRECT || this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.SPAWN_POINTS)) {
 
                     this.currentTargetOwnerLabelField.render(context, mouseX, mouseY, delta);
                     this.currentTargetIdentifierLabelField.render(context, mouseX, mouseY, delta);
 
-                    if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DUNGEONS) {
+                    if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS) {
 
                         this.currentTargetEntranceLabelField.render(context, mouseX, mouseY, delta);
 
@@ -1210,28 +977,13 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
 
             } else if (this.showChooseTargetIdentifierScreen) {
 
-                if (mode == TeleporterBlockBlockEntity.TeleportationMode.DUNGEONS) {
-
-                    for (int i = this.visibleDungeonsLocationsListScrollPosition; i < Math.min(this.visibleDungeonsLocationsListScrollPosition + 4, this.visibleDungeonLocationsList.size()); i++) {
-                        context.drawText(this.textRenderer, this.visibleDungeonLocationsList.get(i).getLeft(), this.x + 19, this.y + 26 + ((i - this.visibleDungeonsLocationsListScrollPosition) * 24), 0x404040, false);
-                    }
-                    if (this.visibleDungeonLocationsList.size() > 4) {
-                        context.drawGuiTexture(CREATIVE_HOUSING_SCROLLER_BACKGROUND_TEXTURE, this.x + 7, this.y + 20, 8, 92);
-                        int k = (int) (83.0f * this.visibleDungeonsLocationsListScrollAmount);
-                        context.drawGuiTexture(SCROLLER_TEXTURE, this.x + 8, this.y + 20 + 1 + k, 6, 7);
-                    }
-
-                } else {
-
-                    for (int i = this.visibleHousingLocationsListScrollPosition; i < Math.min(this.visibleHousingLocationsListScrollPosition + 4, this.visibleHousingLocationsList.size()); i++) {
-                        context.drawText(this.textRenderer, this.visibleHousingLocationsList.get(i), this.x + 19, this.y + 26 + ((i - this.visibleHousingLocationsListScrollPosition) * 24), 0x404040, false);
-                    }
-                    if (this.visibleHousingLocationsList.size() > 4) {
-                        context.drawGuiTexture(CREATIVE_HOUSING_SCROLLER_BACKGROUND_TEXTURE, this.x + 7, this.y + 20, 8, 92);
-                        int k = (int) (83.0f * this.visibleHousingLocationsListScrollAmount);
-                        context.drawGuiTexture(SCROLLER_TEXTURE, this.x + 8, this.y + 20 + 1 + k, 6, 7);
-                    }
-
+                for (int i = this.visibleLocationsListScrollPosition; i < Math.min(this.visibleLocationsListScrollPosition + 4, this.visibleLocationsList.size()); i++) {
+                    context.drawText(this.textRenderer, this.visibleLocationsList.get(i).getLeft(), this.x + 19, this.y + 26 + ((i - this.visibleLocationsListScrollPosition) * 24), 0x404040, false);
+                }
+                if (this.visibleLocationsList.size() > 4) {
+                    context.drawGuiTexture(CREATIVE_HOUSING_SCROLLER_BACKGROUND_TEXTURE, this.x + 7, this.y + 20, 8, 92);
+                    int k = (int) (83.0f * this.visibleLocationsListScrollAmount);
+                    context.drawGuiTexture(SCROLLER_TEXTURE, this.x + 8, this.y + 20 + 1 + k, 6, 7);
                 }
 
             } else if (this.showRegenerationConfirmScreen) {
@@ -1244,7 +996,7 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
 
                     context.drawText(this.textRenderer, teleporterName, this.x + teleporterNameOffset, this.y + 7, 0x404040, false);
 
-                    if (!(mode == TeleporterBlockBlockEntity.TeleportationMode.DIRECT || mode == TeleporterBlockBlockEntity.TeleportationMode.SAVED_LOCATIONS)) {
+                    if (!(mode == TeleporterBlockBlockEntity.TeleportationMode.DIRECT || mode == TeleporterBlockBlockEntity.TeleportationMode.SPAWN_POINTS)) {
 
                         context.drawText(this.textRenderer, Text.translatable(this.teleporterBlock.getCurrentTargetOwnerLabel()), this.x + 8, this.y + 20, 0x404040, false);
 
@@ -1253,7 +1005,7 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
 
                         context.drawText(this.textRenderer, Text.translatable(this.teleporterBlock.getCurrentTargetIdentifierLabel()), this.x + 8, this.y + 57, 0x404040, false);
 
-                        if (mode == TeleporterBlockBlockEntity.TeleportationMode.DUNGEONS) {
+                        if (mode == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS) {
 
                             if (!Objects.equals(this.currentTargetEntrance, "")) {
 
@@ -1266,10 +1018,6 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
 
                             }
 
-                        } else if (mode == TeleporterBlockBlockEntity.TeleportationMode.HOUSING) {
-
-                            context.drawText(this.textRenderer, Text.translatable(this.currentTargetDisplayName), this.x + 8, this.y + 83, 0x404040, false);
-
                         }
                     }
                 }
@@ -1278,56 +1026,6 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
 //        context.drawTextWithShadow(this.textRenderer, CONSUME_KEY_ITEMSTACK_LABEL_TEXT, this.width / 2 - 153, 221, 0x404040);
     }
 
-    //            PlayerListEntry currentPlayer = this.client.player.networkHandler.getPlayerListEntry(this.client.player.getUuid());
-//
-//            if (currentPlayer != null) {
-//
-//                component(FlowLayout.class, "currentPlayerTargetEntryContainer").children(List.of(
-//                        Components.texture(currentPlayer.getSkinTextures().texture(), 8, 8, 8, 8, 64, 64)
-//                                .sizing(Sizing.fixed(16), Sizing.fixed(16)),
-//                        Components.label(Text.of(currentPlayer.getProfile().getName()))
-//                                .shadow(true)
-//                                .color(Color.ofArgb(0xFFFFFF))
-//                                .margins(Insets.of(1, 1, 1, 1))
-//                                .sizing(Sizing.content(), Sizing.content())
-//                                .id("currentTeleportationTargetEntryLabel"),
-//                        Components.button(Text.translatable("gui.teleporter_block.updateCurrentTeleportationTargetEntryButton"), button -> this.updateCurrentTeleportationTargetEntry(currentPlayer, currentPlayer))
-//                                .sizing(Sizing.fill(50), Sizing.content())
-//                                .id("updateCurrentTeleportationTargetEntryButton")
-//                ));
-//
-//                Team currentPlayerTeam = currentPlayer.getScoreboardTeam();
-//
-//                if (currentPlayerTeam != null) {
-//                    PlayerListEntry teamPlayer;
-//                    for (String player : currentPlayerTeam.getPlayerList()) {
-//                        teamPlayer = this.client.player.networkHandler.getPlayerListEntry(player);
-//                        if (teamPlayer != null && currentPlayer != teamPlayer) {
-////                            RPGMod.LOGGER.info(player);
-//                            PlayerListEntry finalTeamPlayer = teamPlayer;
-//                            component(CollapsibleContainer.class, "currentTeamTargetEntries")
-//                                    .child(Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
-//                                            .children(List.of(
-//                                                    Components.texture(teamPlayer.getSkinTextures().texture(), 8, 8, 8, 8, 64, 64)
-//                                                            .sizing(Sizing.fixed(16), Sizing.fixed(16)),
-//                                                    Components.label(Text.of(teamPlayer.getProfile().getName()))
-//                                                            .shadow(true)
-//                                                            .color(Color.ofArgb(0xFFFFFF))
-//                                                            .margins(Insets.of(1, 1, 1, 1))
-//                                                            .sizing(Sizing.fill(25), Sizing.content())
-//                                                            .id("currentTeleportationTargetEntryLabel"),
-//                                                    Components.button(Text.translatable("gui.teleporter_block.updateCurrentTeleportationTargetEntryButton"), button -> this.updateCurrentTeleportationTargetEntry(currentPlayer, finalTeamPlayer))
-//                                                            .sizing(Sizing.fill(50), Sizing.content())
-//                                                            .id("updateCurrentTeleportationTargetEntryButton")
-//                                            ))
-//                                            .verticalAlignment(VerticalAlignment.CENTER)
-//                                            .horizontalAlignment(HorizontalAlignment.CENTER));
-//                        }
-//                    }
-//                }
-//                this.updateCurrentTeleportationTargetEntry(currentPlayer, currentPlayer);
-//            }
-//        }
     @Override
     protected void drawForeground(DrawContext context, int mouseX, int mouseY) {}
 
@@ -1336,10 +1034,8 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
         if (!this.showCreativeTab) {
             int i = this.x;
             int j = this.y;
-            if (this.teleporterBlock.getTeleportationMode() == TeleporterBlockBlockEntity.TeleportationMode.DUNGEONS) {
-                context.drawTexture(BetterAdventureModeCore.identifier("textures/gui/container/adventure_teleporter_dungeon_screen.png"), i, j, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
-            } else if (this.teleporterBlock.getTeleportationMode() == TeleporterBlockBlockEntity.TeleportationMode.HOUSING) {
-                context.drawTexture(BetterAdventureModeCore.identifier("textures/gui/container/adventure_teleporter_dungeon_screen.png"), i, j, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
+            if (this.teleporterBlock.getTeleportationMode() == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS) {
+                context.drawTexture(BetterAdventureModeCore.identifier("textures/gui/container/adventure_teleporter_locations_screen.png"), i, j, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
             } else {
                 context.drawTexture(BetterAdventureModeCore.identifier("textures/gui/container/adventure_teleporter_screen.png"), i, j, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
             }
@@ -1390,23 +1086,18 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
             directTeleportPositionOffsetYaw = 0.0;
             directTeleportPositionOffsetPitch = 0.0;
         }
-        TeleporterBlockBlockEntity.LocationType locationType;
-        if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.SAVED_LOCATIONS) {
+        TeleporterBlockBlockEntity.SpawnPointType spawnPointType;
+        if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.SPAWN_POINTS) {
 
-            locationType = this.locationType;
+            spawnPointType = this.spawnPointType;
 
         } else {
-            locationType = TeleporterBlockBlockEntity.LocationType.WORLD_SPAWN;
+            spawnPointType = TeleporterBlockBlockEntity.SpawnPointType.WORLD_SPAWN;
         }
 
-        List<Pair<String, String>> dungeonLocationsList = new ArrayList<Pair<String, String>>();
-        if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DUNGEONS) {
-            dungeonLocationsList = this.dungeonLocationsList;
-        }
-
-        List<String> housingLocationsList = new ArrayList<>();
-        if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.HOUSING) {
-            housingLocationsList = this.housingLocationsList;
+        List<Pair<String, String>> locationsList = new ArrayList<Pair<String, String>>();
+        if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS) {
+            locationsList = this.locationsList;
         }
 
         ClientPlayNetworking.send(new UpdateTeleporterBlockPacket(
@@ -1433,9 +1124,8 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
                 directTeleportPositionOffset,
                 directTeleportPositionOffsetYaw,
                 directTeleportPositionOffsetPitch,
-                locationType.asString(),
-                dungeonLocationsList,
-                housingLocationsList,
+                spawnPointType.asString(),
+                locationsList,
                 false/*this.consumeKeyItemStack*/,
                 this.teleporterNameField.getText(),
                 this.currentTargetOwnerLabelField.getText(),
@@ -1470,7 +1160,6 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
         if (this.teleporterBlock.getWorld() != null) {
             currentWorld = this.teleporterBlock.getWorld().getRegistryKey().getValue().toString();
         }
-        boolean bl = this.teleporterBlock.getTeleportationMode() == TeleporterBlockBlockEntity.TeleportationMode.DUNGEONS || this.teleporterBlock.getTeleportationMode() == TeleporterBlockBlockEntity.TeleportationMode.HOUSING;
         ClientPlayNetworking.send(new TeleportFromTeleporterBlockPacket(
                 this.teleporterBlock.getPos(),
                 currentWorld,
