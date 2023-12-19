@@ -61,8 +61,8 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
     // dungeon mode
     private List<Pair<String, String>> locationsList = new ArrayList<>(List.of());
 
-    // player house mode
-    private List<String> housingLocationsList = new ArrayList<>(List.of());
+//    // player house mode
+//    private List<String> housingLocationsList = new ArrayList<>(List.of());
 
     private boolean consumeKeyItemStack = false;
     private DefaultedList<ItemStack> requiredKeyItemStack = DefaultedList.ofSize(1, ItemStack.EMPTY);
@@ -559,7 +559,7 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
     {
         DIRECT("direct"),
         SPAWN_POINTS("spawn_points"),
-        LOCATIONS("locations");
+        PLAYER_LOCATIONS("player_locations");
 
         private final String name;
 
@@ -577,7 +577,7 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
         }
 
         public Text asText() {
-            return Text.translatable("gui.teleporter_block.teleportationMode." + this.name);
+            return Text.translatable("gui.teleporter_block.teleportation_mode." + this.name);
         }
     }
 

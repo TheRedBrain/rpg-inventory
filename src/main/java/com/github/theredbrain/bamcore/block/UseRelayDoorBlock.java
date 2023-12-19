@@ -1,6 +1,7 @@
 package com.github.theredbrain.bamcore.block;
 
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.api.util.BlockRotationUtils;
 import com.github.theredbrain.bamcore.block.entity.UseRelayBlockEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -216,15 +217,17 @@ public class UseRelayDoorBlock extends RotatedBlockWithEntity {
 
     @Override
     public BlockState rotate(BlockState state, BlockRotation rotation) {
-        return (BlockState)state.with(FACING, rotation.rotate(state.get(FACING)));
+        return super.rotate(state, rotation).with(FACING, BlockRotationUtils.calculateNewHorizontalFacingBlockState(state.get(FACING), rotation));
     }
 
     @Override
     public BlockState mirror(BlockState state, BlockMirror mirror) {
-        if (mirror == BlockMirror.NONE) {
-            return state;
+        if (mirror == BlockMirror.FRONT_BACK) {
+            return super.mirror(state, mirror).with(FACING, BlockRotationUtils.calculateNewHorizontalFacingBlockState(state.get(FACING), mirror.getRotation(state.get(FACING)))).cycle(HINGE);
+        } else if (mirror == BlockMirror.LEFT_RIGHT) {
+            return super.mirror(state, mirror).with(FACING, BlockRotationUtils.calculateNewHorizontalFacingBlockState(state.get(FACING), mirror.getRotation(state.get(FACING)))).cycle(HINGE);
         }
-        return (BlockState)state.rotate(mirror.getRotation(state.get(FACING))).cycle(HINGE);
+        return state;
     }
 
     /**

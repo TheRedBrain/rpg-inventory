@@ -2,8 +2,8 @@ package com.github.theredbrain.bamcore.registry;
 
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.BetterAdventureModeCoreClient;
-import com.github.theredbrain.bamcore.api.json_files_backend.PlayerLocation;
-import com.github.theredbrain.bamcore.api.json_files_backend.PlayerLocationHelper;
+import com.github.theredbrain.bamcore.api.json_files_backend.Dialogue;
+import com.github.theredbrain.bamcore.api.json_files_backend.DialogueHelper;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
@@ -20,58 +20,58 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PlayerLocationsRegistry {
+public class DialoguesRegistry {
 
-    static Map<Identifier, PlayerLocation> registeredPlayerLocations = new HashMap<>();
+    static Map<Identifier, Dialogue> registeredDialogues = new HashMap<>();
 
-    public static void register(Identifier itemId, PlayerLocation playerLocation) {
-        registeredPlayerLocations.put(itemId, playerLocation);
+    public static void register(Identifier itemId, Dialogue playerLocation) {
+        registeredDialogues.put(itemId, playerLocation);
     }
 
-    public static PlayerLocation getLocation(Identifier locationId) {
-        return registeredPlayerLocations.get(locationId);
+    public static Dialogue getDialogue(Identifier dialogueId) {
+        return registeredDialogues.get(dialogueId);
     }
 
     public static void init() {
         ServerLifecycleEvents.SERVER_STARTED.register((minecraftServer) -> {
-            loadLocations(minecraftServer.getResourceManager());
+            loadDialogues(minecraftServer.getResourceManager());
             encodeRegistry();
         });
     }
 
-    private static void loadLocations(ResourceManager resourceManager) {
+    private static void loadDialogues(ResourceManager resourceManager) {
         var gson = new Gson();
-        Map<Identifier, PlayerLocation> registeredPlayerLocations = new HashMap();
+        Map<Identifier, Dialogue> registeredDialogues = new HashMap();
         // Reading all attribute files
-        for (var entry : resourceManager.findResources("player_locations", fileName -> fileName.getPath().endsWith(".json")).entrySet()) {
+        for (var entry : resourceManager.findResources("dialogues", fileName -> fileName.getPath().endsWith(".json")).entrySet()) {
             var identifier = entry.getKey();
             var resource = entry.getValue();
             try {
                 // System.out.println("Checking resource: " + identifier);
                 JsonReader reader = new JsonReader(new InputStreamReader(resource.getInputStream()));
-                PlayerLocation playerLocation = PlayerLocationHelper.decode(reader);
+                Dialogue playerLocation = DialogueHelper.decode(reader);
                 var id = identifier
-                        .toString().replace("player_locations/", "");
+                        .toString().replace("dialogues/", "");
                 id = id.substring(0, id.lastIndexOf('.'));
-                registeredPlayerLocations.put(new Identifier(id), playerLocation);
+                registeredDialogues.put(new Identifier(id), playerLocation);
             } catch (Exception e) {
                 System.err.println("Failed to parse: " + identifier);
                 e.printStackTrace();
             }
         }
-        PlayerLocationsRegistry.registeredPlayerLocations = registeredPlayerLocations;
+        DialoguesRegistry.registeredDialogues = registeredDialogues;
     }
 
     // NETWORK SYNC
 
-    private static PacketByteBuf encodedRegisteredPlayerLocations = PacketByteBufs.create();
+    private static PacketByteBuf encodedRegisteredDialogues = PacketByteBufs.create();
 
     public static void encodeRegistry() {
         PacketByteBuf buffer = PacketByteBufs.create();
         var gson = new Gson();
-        var json = gson.toJson(registeredPlayerLocations);
+        var json = gson.toJson(registeredDialogues);
         if (BetterAdventureModeCoreClient.clientConfig.show_debug_log) {
-            BetterAdventureModeCore.LOGGER.info("Player Locations registry loaded: " + json);
+            BetterAdventureModeCore.LOGGER.info("Dialogues registry loaded: " + json);
         }
 
         List<String> chunks = new ArrayList<>();
@@ -86,10 +86,10 @@ public class PlayerLocationsRegistry {
         }
 
         if (BetterAdventureModeCoreClient.clientConfig.show_debug_log) {
-            BetterAdventureModeCore.LOGGER.info("Encoded Player Locations registry size (with package overhead): " + buffer.readableBytes()
+            BetterAdventureModeCore.LOGGER.info("Encoded Dialogues registry size (with package overhead): " + buffer.readableBytes()
                     + " bytes (in " + chunks.size() + " string chunks with the size of " + chunkSize + ")");
         }
-        encodedRegisteredPlayerLocations = buffer;
+        encodedRegisteredDialogues = buffer;
     }
 
     public static void decodeRegistry(PacketByteBuf buffer) {
@@ -99,20 +99,20 @@ public class PlayerLocationsRegistry {
             json = json.concat(buffer.readString());
         }
         if (BetterAdventureModeCoreClient.clientConfig.show_debug_log) {
-            BetterAdventureModeCore.LOGGER.info("Decoded Player Locations registry in " + chunkCount + " string chunks");
-            BetterAdventureModeCore.LOGGER.info("Player Locations registry received: " + json);
+            BetterAdventureModeCore.LOGGER.info("Decoded Dialogues registry in " + chunkCount + " string chunks");
+            BetterAdventureModeCore.LOGGER.info("Dialogues registry received: " + json);
         }
         var gson = new Gson();
-        Type mapType = new TypeToken<Map<String, PlayerLocation>>() {}.getType();
-        Map<String, PlayerLocation> readRegisteredPlayerLocations = gson.fromJson(json, mapType);
-        Map<Identifier, PlayerLocation> newRegisteredPlayerLocations = new HashMap();
-        readRegisteredPlayerLocations.forEach((key, value) -> {
-            newRegisteredPlayerLocations.put(new Identifier(key), value);
+        Type mapType = new TypeToken<Map<String, Dialogue>>() {}.getType();
+        Map<String, Dialogue> readRegisteredDialogues = gson.fromJson(json, mapType);
+        Map<Identifier, Dialogue> newRegisteredDialogues = new HashMap();
+        readRegisteredDialogues.forEach((key, value) -> {
+            newRegisteredDialogues.put(new Identifier(key), value);
         });
-        registeredPlayerLocations = newRegisteredPlayerLocations;
+        registeredDialogues = newRegisteredDialogues;
     }
 
     public static PacketByteBuf getEncodedRegistry() {
-        return encodedRegisteredPlayerLocations;
+        return encodedRegisteredDialogues;
     }
 }

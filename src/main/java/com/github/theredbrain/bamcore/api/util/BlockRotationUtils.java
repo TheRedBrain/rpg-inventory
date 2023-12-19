@@ -3,6 +3,7 @@ package com.github.theredbrain.bamcore.api.util;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
 import org.apache.commons.lang3.tuple.MutablePair;
 
@@ -17,6 +18,18 @@ public class BlockRotationUtils {
             return (currentStateValue + 3) % 4;
         } else {
             return currentStateValue;
+        }
+    }
+
+    public static Direction calculateNewHorizontalFacingBlockState(Direction currentState, BlockRotation rotation) {
+        if (rotation == BlockRotation.CLOCKWISE_90) {
+            return currentState.rotateYClockwise();
+        } else if (rotation == BlockRotation.CLOCKWISE_180){
+            return currentState.getOpposite();
+        } else if (rotation == BlockRotation.COUNTERCLOCKWISE_90){
+            return currentState.rotateYCounterclockwise();
+        } else {
+            return currentState;
         }
     }
 

@@ -10,6 +10,8 @@
 	"gui.add": "Add",
 	"gui.remove": "Remove",
 	"gui.delete": "Delete",
+	"gui.list_entry.add": "Add new entry",
+	"gui.list_entry.remove": "Remove entry",
 	"gui.edit_teleporter_title": "Edit Teleporter",
 	"gui.adventureInventory": "Inventory",
 	"gui.adventureInventory.equipmentSlots": "Equipment",
@@ -130,11 +132,17 @@
 	"gui.teleporter_block.activation_area_dimensions_label": "Activation Area Dimensions",
 	"gui.teleporter_block.activation_area_position_offset_label": "Activation Area Offset",
 	"gui.teleporter_block.set_access_position_label": "Set Access Position on Teleport",
+
 	"gui.teleporter_block.teleportation_mode_label": "Teleportation Mode",
-	"gui.teleporter_block.teleportationMode.direct": "Direct",
-	"gui.teleporter_block.teleportationMode.saved_locations": "Saved Location",
-	"gui.teleporter_block.teleportationMode.dungeons": "Dungeons",
-	"gui.teleporter_block.teleportationMode.housing": "Housing",
+	"gui.teleporter_block.teleportation_mode.direct": "Direct",
+	"gui.teleporter_block.teleportation_mode.spawn_points": "Spawn Points",
+	"gui.teleporter_block.teleportation_mode.player_locations": "Player Locations",
+
+	"gui.teleporter_block.spawn_point_type_label": "Spawn Point Type",
+	"gui.teleporter_block.spawn_point_type.world_spawn": "World Spawn",
+	"gui.teleporter_block.spawn_point_type.player_spawn": "Player Spawn",
+	"gui.teleporter_block.spawn_point_type.player_location_access_position": "Player Location Access Position",
+
 	"gui.teleporter_block.direct_teleport_position_offset_label": "Teleportation Target Position Offset",
 	"gui.teleporter_block.direct_teleport_orientation_label": "Teleportation Target Orientation",
 	"gui.teleporter_block.location_type_label": "Location Type",
@@ -265,6 +273,30 @@
 	"player_dimensions.player_houses.house_3": "House 3",
 	"player_dimensions.player_houses.house_4": "House 4",
 	"player_dimensions.player_houses.test_house": "Test House",
+
+	"dialogue.bamcore.empty_line": "",
+
+	"dialogue.bamcore.hello_world.dialogue_text.line_1": "Very looooooooooooooooooong text line",
+	"dialogue.bamcore.hello_world.dialogue_text.line_6": "No line should be looooonger than this",
+
+	"dialogue.bamcore.choose_color.dialogue_text.line_1": "           Color Picker           ",
+	"dialogue.bamcore.choose_color.dialogue_text.line_2": "Choose a color.",
+	"dialogue.bamcore.choose_color.dialogue_text.line_3": "",
+	"dialogue.bamcore.choose_color.dialogue_text.line_4": "You will be teleported to the",
+	"dialogue.bamcore.choose_color.dialogue_text.line_5": "corresponding wool block.",
+
+	"dialogue.bamcore.choose_color.answer_text.1": "Green",
+	"dialogue.bamcore.choose_color.answer_text.2": "Yellow",
+	"dialogue.bamcore.choose_color.answer_text.3": "Red",
+	"dialogue.bamcore.choose_color.answer_text.4": "Blue",
+	"dialogue.bamcore.choose_color.answer_text.5": "Exit Dungeon",
+	"dialogue.bamcore.choose_color.answer_text.6": "Cancel",
+
+	"dialogue.bamcore.choose_color_cancel.dialogue_text.line_3": "Do you really want to",
+	"dialogue.bamcore.choose_color_cancel.dialogue_text.line_4": "not pick a color?",
+
+	"dialogue.bamcore.choose_color_cancel.answer_text.1": "Yes",
+	"dialogue.bamcore.choose_color_cancel.answer_text.2": "No",
 
 	"trinkets.slot.belts.belt": "Belt",
 	"trinkets.slot.gloves.gloves": "Glove",

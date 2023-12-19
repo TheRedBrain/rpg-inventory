@@ -4,6 +4,7 @@ import com.github.theredbrain.bamcore.api.block.AbstractSetSpawnBlock;
 import com.github.theredbrain.bamcore.api.item.BetterAdventureMode_BasicShieldItem;
 import com.github.theredbrain.bamcore.api.item.BetterAdventureMode_BasicWeaponItem;
 import com.github.theredbrain.bamcore.api.effect.FoodStatusEffect;
+import com.github.theredbrain.bamcore.api.json_files_backend.Dialogue;
 import com.github.theredbrain.bamcore.block.entity.*;
 import com.github.theredbrain.bamcore.entity.DamageUtility;
 import com.github.theredbrain.bamcore.entity.DuckLivingEntityMixin;
@@ -48,6 +49,7 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -801,5 +803,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
     @Override
     public void bamcore$openLocationControlBlockScreen(LocationControlBlockEntity locationControlBlock) {
+    }
+
+    @Override
+    public void bamcore$openDialogueScreen(DialogueBlockEntity dialogueBlockEntity, @Nullable Dialogue dialogue) {
     }
 }

@@ -1,8 +1,10 @@
 package com.github.theredbrain.bamcore.entity.player;
 
+import com.github.theredbrain.bamcore.api.json_files_backend.Dialogue;
 import com.github.theredbrain.bamcore.block.entity.*;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 public interface DuckPlayerEntityMixin {
 
@@ -38,4 +40,5 @@ public interface DuckPlayerEntityMixin {
     void bamcore$openTriggeredSpawnerBlockScreen(TriggeredSpawnerBlockEntity triggeredSpawnerBlock);
     void bamcore$openMimicBlockScreen(MimicBlockEntity mimicBlock);
     void bamcore$openLocationControlBlockScreen(LocationControlBlockEntity locationControlBlock);
+    void bamcore$openDialogueScreen(DialogueBlockEntity dialogueBlockEntity, @Nullable Dialogue dialogue);
 }

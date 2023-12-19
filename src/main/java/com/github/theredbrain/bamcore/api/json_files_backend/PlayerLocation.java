@@ -1,4 +1,4 @@
-package com.github.theredbrain.bamcore.api.dimensions;
+package com.github.theredbrain.bamcore.api.json_files_backend;
 
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;

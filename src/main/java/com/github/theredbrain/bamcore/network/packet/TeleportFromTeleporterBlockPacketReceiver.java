@@ -2,7 +2,7 @@ package com.github.theredbrain.bamcore.network.packet;
 
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.BetterAdventureModeCoreClient;
-import com.github.theredbrain.bamcore.api.dimensions.PlayerLocation;
+import com.github.theredbrain.bamcore.api.json_files_backend.PlayerLocation;
 import com.github.theredbrain.bamcore.block.entity.LocationControlBlockEntity;
 import com.github.theredbrain.bamcore.block.entity.TeleporterBlockBlockEntity;
 import com.github.theredbrain.bamcore.registry.ComponentsRegistry;
@@ -79,9 +79,9 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
 //            ServerPlayerEntity targetDimensionOwner = server.getPlayerManager().getPlayer(targetDimensionOwnerName);
 //
 //            if (targetDimensionOwner != null) {
-//                BetterAdventureModeCore.LOGGER.info("targetDimensionOwner: " + targetDimensionOwner);
+//                BetterAdventureModeCore.info("targetDimensionOwner: " + targetDimensionOwner);
 //                Identifier targetDimensionId = Identifier.tryParse(targetDimensionOwner.getUuidAsString()/*ComponentsRegistry.PLAYER_SPECIFIC_DIMENSION_IDS.get(targetDimensionOwner).getValue("dungeon_dimension")*/);
-//                BetterAdventureModeCore.LOGGER.info("targetDimensionId: " + targetDimensionId);
+//                BetterAdventureModeCore.info("targetDimensionId: " + targetDimensionId);
 //                RegistryKey<World> dimensionregistryKey = RegistryKey.of(RegistryKeys.WORLD, targetDimensionId);
 //                targetWorld = server.getWorld(dimensionregistryKey);
 //
@@ -99,7 +99,7 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
 //
 //                PlayerLocation playerLocation = PlayerLocationsRegistry.getLocation(Identifier.tryParse(targetLocation));
 //
-//                BetterAdventureModeCore.LOGGER.info("playerDungeon: " + playerLocation);
+//                BetterAdventureModeCore.info("playerDungeon: " + playerLocation);
 //                if (targetWorld != null && playerLocation != null && targetWorld.getBlockEntity(playerLocation.controlBlockPos()) instanceof LocationControlBlockEntity locationControlBlock) {
 //                    MutablePair<BlockPos, MutablePair<Double, Double>> targetEntrance = locationControlBlock.getTargetEntrance(targetLocationEntrance);
 //                    targetPos = targetEntrance.getLeft();
@@ -107,11 +107,13 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
 //                    targetPitch = targetEntrance.getRight().getRight();
 //                }
 //            }
-        } else if (teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS) {
+        } else if (teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.PLAYER_LOCATIONS) {
             ServerPlayerEntity targetDimensionOwner = server.getPlayerManager().getPlayer(targetDimensionOwnerName);
 
+            BetterAdventureModeCore.info("targetLocation: " + targetLocation);
+
             if (targetDimensionOwner != null) {
-                BetterAdventureModeCore.LOGGER.info("targetDimensionOwner: " + targetDimensionOwner);
+                BetterAdventureModeCore.info("targetDimensionOwner: " + targetDimensionOwner);
 //                Identifier targetDimensionId = null;
 //                String[] strings = targetLocation.split("/", 2);
 //                if (strings[0].equals("player_dungeons")) {
@@ -119,7 +121,7 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
 //                } else if (strings[0].equals("player_houses")) {
 //                    targetDimensionId = Identifier.tryParse(ComponentsRegistry.PLAYER_SPECIFIC_DIMENSION_IDS.get(targetDimensionOwner).getValue("housing_dimension"));
 //                }
-                BetterAdventureModeCore.LOGGER.info("targetDimensionId: " + targetDimensionId);
+                BetterAdventureModeCore.info("targetDimensionId: " + targetDimensionId);
                 RegistryKey<World> dimensionregistryKey = RegistryKey.of(RegistryKeys.WORLD, targetDimensionId);
                 targetWorld = server.getWorld(dimensionregistryKey);
 

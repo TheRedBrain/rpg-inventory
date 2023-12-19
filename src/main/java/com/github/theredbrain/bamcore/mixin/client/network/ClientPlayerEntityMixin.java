@@ -1,5 +1,6 @@
 package com.github.theredbrain.bamcore.mixin.client.network;
 
+import com.github.theredbrain.bamcore.api.json_files_backend.Dialogue;
 import com.github.theredbrain.bamcore.block.entity.*;
 import com.github.theredbrain.bamcore.client.gui.screen.ingame.*;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
@@ -13,6 +14,7 @@ import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.text.Text;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -109,5 +111,10 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
     @Override
     public void bamcore$openLocationControlBlockScreen(LocationControlBlockEntity locationControlBlock) {
         this.client.setScreen(new LocationControlBlockScreen(locationControlBlock));
+    }
+
+    @Override
+    public void bamcore$openDialogueScreen(DialogueBlockEntity dialogueBlockEntity, @Nullable Dialogue dialogue) {
+        this.client.setScreen(new DialogueBlockScreen(dialogueBlockEntity, dialogue, this.isCreativeLevelTwoOp()));
     }
 }

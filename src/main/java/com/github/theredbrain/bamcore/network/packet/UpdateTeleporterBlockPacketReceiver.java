@@ -107,7 +107,7 @@ public class UpdateTeleporterBlockPacketReceiver implements ServerPlayNetworking
                     player.sendMessage(Text.translatable("teleporter_block.specificLocationType.invalid"), false);
                     updateSuccessful = false;
                 }
-            } else if (teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS) {
+            } else if (teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.PLAYER_LOCATIONS) {
                 if (!teleporterBlockBlockEntity.setLocationsList(locationsList)) {
                     player.sendMessage(Text.translatable("teleporter_block.locationsList.invalid"), false);
                     updateSuccessful = false;

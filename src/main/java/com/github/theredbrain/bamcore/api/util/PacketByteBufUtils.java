@@ -55,6 +55,39 @@ public class PacketByteBufUtils {
         }
     }
 
+    public static class PairStringBlockPosListReader implements PacketByteBuf.PacketReader<MutablePair<String, BlockPos>> {
+        @Override
+        public MutablePair<String, BlockPos> apply(PacketByteBuf packetByteBuf) {
+            return new MutablePair<>(packetByteBuf.readString(), new BlockPos(packetByteBuf.readInt(), packetByteBuf.readInt(), packetByteBuf.readInt()));
+        }
+    }
+
+    public static class PairStringBlockPosListWriter implements PacketByteBuf.PacketWriter<MutablePair<String, BlockPos>> {
+        @Override
+        public void accept(PacketByteBuf packetByteBuf, MutablePair<String, BlockPos> pairStringBlockPos) {
+            packetByteBuf.writeString(pairStringBlockPos.getLeft());
+            packetByteBuf.writeInt(pairStringBlockPos.getRight().getX());
+            packetByteBuf.writeInt(pairStringBlockPos.getRight().getY());
+            packetByteBuf.writeInt(pairStringBlockPos.getRight().getZ());
+        }
+    }
+
+    public static class PairStringPairStringStringListReader implements PacketByteBuf.PacketReader<MutablePair<String, MutablePair<String, String>>> {
+        @Override
+        public MutablePair<String, MutablePair<String, String>> apply(PacketByteBuf packetByteBuf) {
+            return new MutablePair<>(packetByteBuf.readString(), new MutablePair<>(packetByteBuf.readString(), packetByteBuf.readString()));
+        }
+    }
+
+    public static class PairStringPairStringStringListWriter implements PacketByteBuf.PacketWriter<MutablePair<String, MutablePair<String, String>>> {
+        @Override
+        public void accept(PacketByteBuf packetByteBuf, MutablePair<String, MutablePair<String, String>> pairStringPairStringString) {
+            packetByteBuf.writeString(pairStringPairStringString.getLeft());
+            packetByteBuf.writeString(pairStringPairStringString.getRight().getLeft());
+            packetByteBuf.writeString(pairStringPairStringString.getRight().getRight());
+        }
+    }
+
     public static class StringListReader implements PacketByteBuf.PacketReader<String> {
         @Override
         public String apply(PacketByteBuf packetByteBuf) {

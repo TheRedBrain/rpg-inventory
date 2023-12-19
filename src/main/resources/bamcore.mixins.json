@@ -34,6 +34,7 @@
     "client.gui.screen.ingame.CreativeInventoryScreenMixin",
     "client.gui.screen.ingame.InventoryScreenMixin",
     "client.network.AbstractClientPlayerEntityMixin",
+    "client.network.ClientAdvancementManagerMixin",
     "client.network.ClientPlayerEntityMixin",
     "client.network.ClientPlayerInteractionManagerMixin",
     "client.render.entity.PlayerEntityRendererMixin",
