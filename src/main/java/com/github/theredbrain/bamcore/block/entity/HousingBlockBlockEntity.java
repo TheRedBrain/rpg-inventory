@@ -38,7 +38,6 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
     private BlockPos influenceAreaPositionOffset = new BlockPos(0, 1, 0);
     private HousingBlockBlockEntity.OwnerMode ownerMode = OwnerMode.DIMENSION_OWNER;
     private BlockPos triggeredBlockPositionOffset = new BlockPos(0, 1, 0);
-    private MutablePair<BlockPos, MutablePair<Double, Double>> entrance = new MutablePair<>(new BlockPos(0, 1, 0), new MutablePair<>(0.0, 0.0));
     public HousingBlockBlockEntity(BlockPos pos, BlockState state) {
         super(EntityRegistry.HOUSING_BLOCK_ENTITY, pos, state);
         this.isOwnerSet = false;
@@ -82,12 +81,6 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
         nbt.putInt("triggeredBlockPositionOffsetX", this.triggeredBlockPositionOffset.getX());
         nbt.putInt("triggeredBlockPositionOffsetY", this.triggeredBlockPositionOffset.getY());
         nbt.putInt("triggeredBlockPositionOffsetZ", this.triggeredBlockPositionOffset.getZ());
-
-        nbt.putInt("entrance_X", this.entrance.getLeft().getX());
-        nbt.putInt("entrance_Y", this.entrance.getLeft().getY());
-        nbt.putInt("entrance_Z", this.entrance.getLeft().getZ());
-        nbt.putDouble("entrance_Yaw", this.entrance.getRight().getLeft());
-        nbt.putDouble("entrance_Pitch", this.entrance.getRight().getRight());
 
         super.writeNbt(nbt);
     }
@@ -134,14 +127,6 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
         int p = MathHelper.clamp(nbt.getInt("triggeredBlockPositionOffsetY"), -48, 48);
         int q = MathHelper.clamp(nbt.getInt("triggeredBlockPositionOffsetZ"), -48, 48);
         this.triggeredBlockPositionOffset = new BlockPos(o, p, q);
-
-        int entrance_X = nbt.getInt("entrance_X");
-        int entrance_Y = nbt.getInt("entrance_Y");
-        int entrance_Z = nbt.getInt("entrance_Z");
-        this.entrance.setLeft(new BlockPos(entrance_X, entrance_Y, entrance_Z));
-        double entrance_Yaw = nbt.getDouble("entrance_Yaw");
-        double entrance_Pitch = nbt.getDouble("entrance_Pitch");
-        this.entrance.setRight(new MutablePair<>(entrance_Yaw, entrance_Pitch));
 
         super.readNbt(nbt);
     }
@@ -196,10 +181,6 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
                 ComponentsRegistry.CURRENT_HOUSING_BLOCK_POS.get(playerEntity).setValue(blockEntity.pos);
             }
         }
-    }
-
-    public MutablePair<BlockPos, MutablePair<Double, Double>> getTargetEntrance() {
-        return new MutablePair<>(this.entrance.getLeft().add(this.getPos().getX(), this.getPos().getY(), this.getPos().getZ())/*new BlockPos(this.entrance.getLeft().getX() + this.getPos().getX(), this.entrance.getLeft().getY() + this.getPos().getY(), this.entrance.getLeft().getZ() + this.getPos().getZ())*/, this.entrance.getRight());
     }
 
     public String getOwnerUuid() {
@@ -293,15 +274,6 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
         return true;
     }
 
-    public MutablePair<BlockPos, MutablePair<Double, Double>> getEntrance() {
-        return entrance;
-    }
-
-    public boolean setEntrance(MutablePair<BlockPos, MutablePair<Double, Double>> entrance) {
-        this.entrance = entrance;
-        return true;
-    }
-
     public boolean isOwnerSet() {
         return this.isOwnerSet;
     }
@@ -349,7 +321,6 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
                 MutablePair<BlockPos, Vec3i> offsetArea = BlockRotationUtils.rotateOffsetArea(this.influenceAreaPositionOffset, this.influenceAreaDimensions, blockRotation);
                 this.influenceAreaPositionOffset = offsetArea.getLeft();
                 this.influenceAreaDimensions = offsetArea.getRight();
-                this.entrance = BlockRotationUtils.rotateEntrance(this.entrance, blockRotation);
                 this.rotated = state.get(RotatedBlockWithEntity.ROTATED);
             }
             if (state.get(RotatedBlockWithEntity.X_MIRRORED) != this.x_mirrored) {
@@ -357,7 +328,6 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
                 MutablePair<BlockPos, Vec3i> offsetArea = BlockRotationUtils.mirrorOffsetArea(this.influenceAreaPositionOffset, this.influenceAreaDimensions, BlockMirror.FRONT_BACK);
                 this.influenceAreaPositionOffset = offsetArea.getLeft();
                 this.influenceAreaDimensions = offsetArea.getRight();
-                this.entrance = BlockRotationUtils.mirrorEntrance(this.entrance, BlockMirror.FRONT_BACK);
                 this.x_mirrored = state.get(RotatedBlockWithEntity.X_MIRRORED);
             }
             if (state.get(RotatedBlockWithEntity.Z_MIRRORED) != this.z_mirrored) {
@@ -365,7 +335,6 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
                 MutablePair<BlockPos, Vec3i> offsetArea = BlockRotationUtils.mirrorOffsetArea(this.influenceAreaPositionOffset, this.influenceAreaDimensions, BlockMirror.LEFT_RIGHT);
                 this.influenceAreaPositionOffset = offsetArea.getLeft();
                 this.influenceAreaDimensions = offsetArea.getRight();
-                this.entrance = BlockRotationUtils.mirrorEntrance(this.entrance, BlockMirror.LEFT_RIGHT);
                 this.z_mirrored = state.get(RotatedBlockWithEntity.Z_MIRRORED);
             }
         }

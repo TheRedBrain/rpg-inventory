@@ -18,20 +18,14 @@ public class UpdateHousingBlockCreativePacket implements FabricPacket {
     public final boolean showRestrictBlockBreakingArea;
     public final Vec3i restrictBlockBreakingAreaDimensions;
     public final BlockPos restrictBlockBreakingAreaPositionOffset;
-    public final BlockPos entrancePositionOffset;
-    public final double entranceYaw;
-    public final double entrancePitch;
     public final BlockPos triggeredBlockPositionOffset;
     public final HousingBlockBlockEntity.OwnerMode ownerMode;
 
-    public UpdateHousingBlockCreativePacket(BlockPos housingBlockPosition, boolean showRestrictBlockBreakingArea, Vec3i restrictBlockBreakingAreaDimensions, BlockPos restrictBlockBreakingAreaPositionOffset, BlockPos entrancePositionOffset, double entranceYaw, double entrancePitch, BlockPos triggeredBlockPositionOffset, String ownerMode) {
+    public UpdateHousingBlockCreativePacket(BlockPos housingBlockPosition, boolean showRestrictBlockBreakingArea, Vec3i restrictBlockBreakingAreaDimensions, BlockPos restrictBlockBreakingAreaPositionOffset, BlockPos triggeredBlockPositionOffset, String ownerMode) {
         this.housingBlockPosition = housingBlockPosition;
         this.showRestrictBlockBreakingArea = showRestrictBlockBreakingArea;
         this.restrictBlockBreakingAreaDimensions = restrictBlockBreakingAreaDimensions;
         this.restrictBlockBreakingAreaPositionOffset = restrictBlockBreakingAreaPositionOffset;
-        this.entrancePositionOffset = entrancePositionOffset;
-        this.entranceYaw = entranceYaw;
-        this.entrancePitch = entrancePitch;
         this.triggeredBlockPositionOffset = triggeredBlockPositionOffset;
         this.ownerMode = HousingBlockBlockEntity.OwnerMode.byName(ownerMode).orElseGet(() -> HousingBlockBlockEntity.OwnerMode.DIMENSION_OWNER);
     }
@@ -46,9 +40,6 @@ public class UpdateHousingBlockCreativePacket implements FabricPacket {
                         buf.readInt()
                 ),
                 buf.readBlockPos(),
-                buf.readBlockPos(),
-                buf.readDouble(),
-                buf.readDouble(),
                 buf.readBlockPos(),
                 buf.readString()
         );
@@ -65,9 +56,6 @@ public class UpdateHousingBlockCreativePacket implements FabricPacket {
         buf.writeInt(this.restrictBlockBreakingAreaDimensions.getY());
         buf.writeInt(this.restrictBlockBreakingAreaDimensions.getZ());
         buf.writeBlockPos(this.restrictBlockBreakingAreaPositionOffset);
-        buf.writeBlockPos(this.entrancePositionOffset);
-        buf.writeDouble(this.entranceYaw);
-        buf.writeDouble(this.entrancePitch);
         buf.writeBlockPos(this.triggeredBlockPositionOffset);
         buf.writeString(this.ownerMode.asString());
     }

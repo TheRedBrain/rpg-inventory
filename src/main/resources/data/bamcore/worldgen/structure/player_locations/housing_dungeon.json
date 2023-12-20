@@ -38,7 +38,7 @@
     }
   },
   "start_height": {
-    "absolute": -63
+    "absolute": -30
   },
   "start_jigsaw_name": "bamcore:player_location_anchor",
   "start_pool": "bamcore:player_locations/dungeons/dungeon_entrances",

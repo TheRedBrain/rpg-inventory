@@ -2,9 +2,7 @@ package com.github.theredbrain.bamcore.client.gui.screen.ingame;
 
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.block.entity.HousingBlockBlockEntity;
-import com.github.theredbrain.bamcore.block.entity.TeleporterBlockBlockEntity;
 import com.github.theredbrain.bamcore.network.packet.*;
-import com.github.theredbrain.bamcore.registry.ComponentsRegistry;
 import com.github.theredbrain.bamcore.registry.StatusEffectsRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -16,14 +14,10 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.CyclingButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.NarratorManager;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Pair;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -69,8 +63,6 @@ public class HousingScreen extends Screen {
     private static final Text SHOW_INFLUENCE_AREA_LABEL_TEXT = Text.translatable("gui.housing_screen.show_influence_area_label");
     private static final Text INFLUENCE_AREA_DIMENSIONS_LABEL_TEXT = Text.translatable("gui.housing_screen.influence_area_dimensions_label");
     private static final Text INFLUENCE_AREA_POSITION_OFFET_LABEL_TEXT = Text.translatable("gui.housing_screen.influence_area_position_offset_label");
-    private static final Text ENTRANCE_POSITION_OFFET_LABEL_TEXT = Text.translatable("gui.housing_screen.entrance_position_offset_label");
-    private static final Text ENTRANCE_ORIENTATION_LABEL_TEXT = Text.translatable("gui.housing_screen.entrance_orientation_label");
     private static final Text RESET_OWNER_BUTTON_LABEL_TEXT = Text.translatable("gui.housing_block.reset_owner_button_label");
     private static final Text TRIGGERED_BLOCK_POSITION_OFFSET_LABEL_TEXT = Text.translatable("gui.triggered_block.triggeredBlockPositionOffset");
     public static final Identifier BACKGROUND_218_215_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/generic_218_215_background.png");
@@ -132,11 +124,6 @@ public class HousingScreen extends Screen {
     private TextFieldWidget restrictBlockBreakingAreaPositionOffsetXField;
     private TextFieldWidget restrictBlockBreakingAreaPositionOffsetYField;
     private TextFieldWidget restrictBlockBreakingAreaPositionOffsetZField;
-    private TextFieldWidget entrancePositionOffsetXField;
-    private TextFieldWidget entrancePositionOffsetYField;
-    private TextFieldWidget entrancePositionOffsetZField;
-    private TextFieldWidget entranceOrientationYawField;
-    private TextFieldWidget entranceOrientationPitchField;
     private TextFieldWidget triggeredBlockPositionOffsetXField;
     private TextFieldWidget triggeredBlockPositionOffsetYField;
     private TextFieldWidget triggeredBlockPositionOffsetZField;
@@ -384,33 +371,6 @@ public class HousingScreen extends Screen {
         this.restrictBlockBreakingAreaPositionOffsetZField.setText(Integer.toString(this.housingBlockBlockEntity != null ? this.housingBlockBlockEntity.getRestrictBlockBreakingAreaPositionOffset().getZ() : 0));
         this.addSelectableChild(this.restrictBlockBreakingAreaPositionOffsetZField);
 
-        // --- entrance page ---
-
-        this.entrancePositionOffsetXField = new TextFieldWidget(this.textRenderer, this.width / 2 - 154, 80, 100, 20, Text.empty());
-        this.entrancePositionOffsetXField.setMaxLength(128);
-        this.entrancePositionOffsetXField.setText(Integer.toString(this.housingBlockBlockEntity != null ? this.housingBlockBlockEntity.getEntrance().getLeft().getX() : 0));
-        this.addSelectableChild(this.entrancePositionOffsetXField);
-
-        this.entrancePositionOffsetYField = new TextFieldWidget(this.textRenderer, this.width / 2 - 50, 80, 100, 20, Text.empty());
-        this.entrancePositionOffsetYField.setMaxLength(128);
-        this.entrancePositionOffsetYField.setText(Integer.toString(this.housingBlockBlockEntity != null ? this.housingBlockBlockEntity.getEntrance().getLeft().getY() : 0));
-        this.addSelectableChild(this.entrancePositionOffsetYField);
-
-        this.entrancePositionOffsetZField = new TextFieldWidget(this.textRenderer, this.width / 2 + 54, 80, 100, 20, Text.empty());
-        this.entrancePositionOffsetZField.setMaxLength(128);
-        this.entrancePositionOffsetZField.setText(Integer.toString(this.housingBlockBlockEntity != null ? this.housingBlockBlockEntity.getEntrance().getLeft().getZ() : 0));
-        this.addSelectableChild(this.entrancePositionOffsetZField);
-
-        this.entranceOrientationYawField = new TextFieldWidget(this.textRenderer, this.width / 2 - 154, 115, 100, 20, Text.empty());
-        this.entranceOrientationYawField.setMaxLength(128);
-        this.entranceOrientationYawField.setText(Double.toString(this.housingBlockBlockEntity != null ? this.housingBlockBlockEntity.getEntrance().getRight().getLeft() : 0));
-        this.addSelectableChild(this.entranceOrientationYawField);
-
-        this.entranceOrientationPitchField = new TextFieldWidget(this.textRenderer, this.width / 2 - 50, 115, 100, 20, Text.empty());
-        this.entranceOrientationPitchField.setMaxLength(128);
-        this.entranceOrientationPitchField.setText(Double.toString(this.housingBlockBlockEntity != null ? this.housingBlockBlockEntity.getEntrance().getRight().getRight() : 0));
-        this.addSelectableChild(this.entranceOrientationPitchField);
-
         // --- triggered block page ---
 
         this.triggeredBlockPositionOffsetXField = new TextFieldWidget(this.textRenderer, this.width / 2 - 154, 80, 100, 20, Text.empty());
@@ -498,13 +458,7 @@ public class HousingScreen extends Screen {
         this.restrictBlockBreakingAreaPositionOffsetXField.setVisible(false);
         this.restrictBlockBreakingAreaPositionOffsetYField.setVisible(false);
         this.restrictBlockBreakingAreaPositionOffsetZField.setVisible(false);
-        
-        this.entrancePositionOffsetXField.setVisible(false);
-        this.entrancePositionOffsetYField.setVisible(false);
-        this.entrancePositionOffsetZField.setVisible(false);
-        this.entranceOrientationYawField.setVisible(false);
-        this.entranceOrientationPitchField.setVisible(false);
-        
+
         this.triggeredBlockPositionOffsetXField.setVisible(false);
         this.triggeredBlockPositionOffsetYField.setVisible(false);
         this.triggeredBlockPositionOffsetZField.setVisible(false);
@@ -527,14 +481,6 @@ public class HousingScreen extends Screen {
                 this.restrictBlockBreakingAreaPositionOffsetXField.setVisible(true);
                 this.restrictBlockBreakingAreaPositionOffsetYField.setVisible(true);
                 this.restrictBlockBreakingAreaPositionOffsetZField.setVisible(true);
-
-            } else if (this.creativeScreenPage == CreativeScreenPage.ENTRANCE) {
-
-                this.entrancePositionOffsetXField.setVisible(true);
-                this.entrancePositionOffsetYField.setVisible(true);
-                this.entrancePositionOffsetZField.setVisible(true);
-                this.entranceOrientationYawField.setVisible(true);
-                this.entranceOrientationPitchField.setVisible(true);
 
             } else if (this.creativeScreenPage == CreativeScreenPage.TRIGGERED_BLOCK) {
 
@@ -679,14 +625,9 @@ public class HousingScreen extends Screen {
         String string6 = this.restrictBlockBreakingAreaPositionOffsetXField.getText();
         String string7 = this.restrictBlockBreakingAreaPositionOffsetYField.getText();
         String string8 = this.restrictBlockBreakingAreaPositionOffsetZField.getText();
-        String string9 = this.entrancePositionOffsetXField.getText();
-        String string10 = this.entrancePositionOffsetYField.getText();
-        String string11 = this.entrancePositionOffsetZField.getText();
-        String string12 = this.entranceOrientationYawField.getText();
-        String string13 = this.entranceOrientationPitchField.getText();
-        String string14 = this.triggeredBlockPositionOffsetXField.getText();
-        String string15 = this.triggeredBlockPositionOffsetYField.getText();
-        String string16 = this.triggeredBlockPositionOffsetZField.getText();
+        String string9 = this.triggeredBlockPositionOffsetXField.getText();
+        String string10 = this.triggeredBlockPositionOffsetYField.getText();
+        String string11 = this.triggeredBlockPositionOffsetZField.getText();
         this.init(client, width, height);
         this.coOwnerList.clear();
         this.trustedPersonsList.clear();
@@ -707,14 +648,9 @@ public class HousingScreen extends Screen {
         this.restrictBlockBreakingAreaPositionOffsetXField.setText(string6);
         this.restrictBlockBreakingAreaPositionOffsetYField.setText(string7);
         this.restrictBlockBreakingAreaPositionOffsetZField.setText(string8);
-        this.entrancePositionOffsetXField.setText(string9);
-        this.entrancePositionOffsetYField.setText(string10);
-        this.entrancePositionOffsetZField.setText(string11);
-        this.entranceOrientationYawField.setText(string12);
-        this.entranceOrientationPitchField.setText(string13);
-        this.triggeredBlockPositionOffsetXField.setText(string14);
-        this.triggeredBlockPositionOffsetYField.setText(string15);
-        this.triggeredBlockPositionOffsetZField.setText(string16);
+        this.triggeredBlockPositionOffsetXField.setText(string9);
+        this.triggeredBlockPositionOffsetYField.setText(string10);
+        this.triggeredBlockPositionOffsetZField.setText(string11);
         this.updateWidgets();
     }
 
@@ -823,14 +759,6 @@ public class HousingScreen extends Screen {
                 this.restrictBlockBreakingAreaPositionOffsetXField.render(context, mouseX, mouseY, delta);
                 this.restrictBlockBreakingAreaPositionOffsetYField.render(context, mouseX, mouseY, delta);
                 this.restrictBlockBreakingAreaPositionOffsetZField.render(context, mouseX, mouseY, delta);
-            } else if (this.creativeScreenPage == CreativeScreenPage.ENTRANCE) {
-                context.drawTextWithShadow(this.textRenderer, ENTRANCE_POSITION_OFFET_LABEL_TEXT, this.width / 2 - 153, 70, 0xA0A0A0);
-                this.entrancePositionOffsetXField.render(context, mouseX, mouseY, delta);
-                this.entrancePositionOffsetYField.render(context, mouseX, mouseY, delta);
-                this.entrancePositionOffsetZField.render(context, mouseX, mouseY, delta);
-                context.drawTextWithShadow(this.textRenderer, ENTRANCE_ORIENTATION_LABEL_TEXT, this.width / 2 - 153, 105, 0xA0A0A0);
-                this.entranceOrientationYawField.render(context, mouseX, mouseY, delta);
-                this.entranceOrientationPitchField.render(context, mouseX, mouseY, delta);
             } else if (this.creativeScreenPage == CreativeScreenPage.TRIGGERED_BLOCK) {
                 context.drawTextWithShadow(this.textRenderer, TRIGGERED_BLOCK_POSITION_OFFSET_LABEL_TEXT, this.width / 2 - 153, 70, 0xA0A0A0);
                 this.triggeredBlockPositionOffsetXField.render(context, mouseX, mouseY, delta);
@@ -938,13 +866,6 @@ public class HousingScreen extends Screen {
                         this.parseInt(this.restrictBlockBreakingAreaPositionOffsetZField.getText())
                 ),
                 new BlockPos(
-                        this.parseInt(this.entrancePositionOffsetXField.getText()),
-                        this.parseInt(this.entrancePositionOffsetYField.getText()),
-                        this.parseInt(this.entrancePositionOffsetZField.getText())
-                ),
-                this.parseDouble(this.entranceOrientationYawField.getText()),
-                this.parseDouble(this.entranceOrientationPitchField.getText()),
-                new BlockPos(
                         this.parseInt(this.triggeredBlockPositionOffsetXField.getText()),
                         this.parseInt(this.triggeredBlockPositionOffsetYField.getText()),
                         this.parseInt(this.triggeredBlockPositionOffsetZField.getText())
@@ -1018,7 +939,6 @@ public class HousingScreen extends Screen {
     public static enum CreativeScreenPage implements StringIdentifiable
     {
         INFLUENCE("influence"),
-        ENTRANCE("entrance"),
         TRIGGERED_BLOCK("triggered_block"),
         OWNER("owner");
 

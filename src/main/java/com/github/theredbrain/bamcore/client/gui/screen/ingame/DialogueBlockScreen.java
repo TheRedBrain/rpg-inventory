@@ -172,8 +172,8 @@ public class DialogueBlockScreen extends Screen {
                 if (!unlockAdvancementIdentifier.equals("")) {
                     unlockAdvancementEntry = advancementHandler.get(Identifier.tryParse(unlockAdvancementIdentifier));
                 }
-                if ((lockAdvancementIdentifier.equals("") || (lockAdvancementEntry != null && !((DuckClientAdvancementManagerMixin)advancementHandler.getManager()).bamcore$getAdvancementProgress(lockAdvancementEntry).isDone()/* && !serverPlayerEntity.getAdvancementTracker().getProgress(lockAdvancementEntry).isDone()*/)) &&
-                    (unlockAdvancementIdentifier.equals("") || (unlockAdvancementEntry != null && ((DuckClientAdvancementManagerMixin)advancementHandler.getManager()).bamcore$getAdvancementProgress(unlockAdvancementEntry).isDone()/*&& serverPlayerEntity.getAdvancementTracker().getProgress(unlockAdvancementEntry).isDone()*/))) {
+                if ((lockAdvancementIdentifier.equals("") || (lockAdvancementEntry != null && !((DuckClientAdvancementManagerMixin)advancementHandler.getManager()).bamcore$getAdvancementProgress(lockAdvancementEntry).isDone())) &&
+                    (unlockAdvancementIdentifier.equals("") || (unlockAdvancementEntry != null && ((DuckClientAdvancementManagerMixin)advancementHandler.getManager()).bamcore$getAdvancementProgress(unlockAdvancementEntry).isDone()))) {
                     this.unlockedAnswersList.add(answer);
                     this.visibleAnswersList.add(answer);
                 } else if (showLockedAnswer) {

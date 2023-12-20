@@ -14,13 +14,13 @@ public final class PlayerLocation {
     private final String structureIdentifier;
     private final String displayName;
     private final String unlockAdvancement;
-    private final @Nullable String lockAdvancement;
+    private final String lockAdvancement;
     private final boolean showLockedLocation;
     private final boolean showUnlockAdvancement;
     private final boolean showLockAdvancement;
     private final @Nullable Map<String, String> side_entrances;
 
-    public PlayerLocation(int controlBlockPosX, int controlBlockPosY, int controlBlockPosZ, String structureIdentifier, String unlockAdvancement, @Nullable String lockAdvancement, String displayName, boolean showLockedLocation, boolean showUnlockAdvancement, boolean showLockAdvancement, @Nullable Map<String, String> side_entrances) {
+    public PlayerLocation(int controlBlockPosX, int controlBlockPosY, int controlBlockPosZ, String structureIdentifier, String unlockAdvancement, String lockAdvancement, String displayName, boolean showLockedLocation, boolean showUnlockAdvancement, boolean showLockAdvancement, @Nullable Map<String, String> side_entrances) {
         this.controlBlockPosX = controlBlockPosX;
         this.controlBlockPosY = controlBlockPosY;
         this.controlBlockPosZ = controlBlockPosZ;
@@ -46,16 +46,20 @@ public final class PlayerLocation {
         return this.displayName;
     }
 
-    public Identifier unlockAdvancement() {
-        return new Identifier(this.unlockAdvancement);
+    public String unlockAdvancement() {
+//        return new Identifier(this.unlockAdvancement);
+        if (Identifier.isValid(this.unlockAdvancement)) {
+            return this.unlockAdvancement;
+        }
+        return "";
     }
 
-    @Nullable
-    public Identifier lockAdvancement() {
-        if (this.lockAdvancement != null) {
-            return new Identifier(this.lockAdvancement);
+    public String lockAdvancement() {
+//        return new Identifier(this.lockAdvancement);
+        if (Identifier.isValid(this.lockAdvancement)) {
+            return this.lockAdvancement;
         }
-        return null;
+        return "";
     }
 
     public boolean showLockedDungeon() {
@@ -67,10 +71,7 @@ public final class PlayerLocation {
     }
 
     public boolean showLockAdvancement() {
-        if (this.lockAdvancement != null) {
-            return this.showLockAdvancement;
-        }
-        return false;
+        return this.showLockAdvancement;
     }
 
     public boolean hasEntrance(String entrance) {
@@ -103,6 +104,7 @@ public final class PlayerLocation {
                 && Objects.equals(this.structureIdentifier, that.structureIdentifier)
                 && Objects.equals(this.displayName, that.displayName)
                 && Objects.equals(this.unlockAdvancement, that.unlockAdvancement)
+                && Objects.equals(this.lockAdvancement, that.lockAdvancement)
                 && this.showLockedLocation == that.showLockedLocation
                 && this.showUnlockAdvancement == that.showUnlockAdvancement
                 && this.showLockAdvancement == that.showLockAdvancement;
@@ -110,7 +112,7 @@ public final class PlayerLocation {
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.controlBlockPosX, this.controlBlockPosY, this.controlBlockPosZ, this.structureIdentifier, this.displayName, this.unlockAdvancement, this.showLockedLocation, this.showUnlockAdvancement, this.showLockAdvancement);
+        return Objects.hash(this.controlBlockPosX, this.controlBlockPosY, this.controlBlockPosZ, this.structureIdentifier, this.displayName, this.unlockAdvancement, this.lockAdvancement, this.showLockedLocation, this.showUnlockAdvancement, this.showLockAdvancement);
     }
 
     @Override
@@ -122,6 +124,7 @@ public final class PlayerLocation {
                 "structureIdentifier=" + this.structureIdentifier + ", " +
                 "displayName=" + this.displayName + ", " +
                 "unlockAdvancement=" + this.unlockAdvancement + ", " +
+                "lockAdvancement=" + this.lockAdvancement + ", " +
                 "showLockedDungeon=" + this.showLockedLocation + ", " +
                 "showUnlockAdvancement=" + this.showUnlockAdvancement + ", " +
                 "showLockAdvancement=" + this.showLockAdvancement + "]";
