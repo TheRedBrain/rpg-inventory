@@ -67,6 +67,11 @@ public final class Dialogue {
         private final @Nullable String grantedAdvancement;
 
         /**
+         * if grantedAdvancement is valid identifier for an advancement, grants that advancement
+         */
+        private final @Nullable String criterionName;
+
+        /**
          * if lootTable is valid identifier for a loot_table, generates that loot_table and offerOrDrop it to the player
          */
         private final @Nullable String lootTable;
@@ -76,13 +81,14 @@ public final class Dialogue {
          */
         private final @Nullable String usedBlock;
 
-        public Answer(String answerText, String responseDialogue, String lockAdvancement, String unlockAdvancement, boolean showLockedAnswer, @Nullable String grantedAdvancement, @Nullable String lootTable, @Nullable String usedBlock) {
+        public Answer(String answerText, String responseDialogue, String lockAdvancement, String unlockAdvancement, boolean showLockedAnswer, @Nullable String grantedAdvancement, @Nullable String criterionName, @Nullable String lootTable, @Nullable String usedBlock) {
             this.answerText = answerText;
             this.responseDialogue = responseDialogue;
             this.lockAdvancement = lockAdvancement;
             this.unlockAdvancement = unlockAdvancement;
             this.showLockedAnswer = showLockedAnswer;
             this.grantedAdvancement = grantedAdvancement;
+            this.criterionName = criterionName;
             this.lootTable = lootTable;
             this.usedBlock = usedBlock;
         }
@@ -122,6 +128,11 @@ public final class Dialogue {
                 return new Identifier(this.grantedAdvancement);
             }
             return null;
+        }
+
+        @Nullable
+        public String getCriterionName() {
+            return this.criterionName;
         }
 
         @Nullable

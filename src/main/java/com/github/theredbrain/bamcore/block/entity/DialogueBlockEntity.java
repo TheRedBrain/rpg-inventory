@@ -5,6 +5,8 @@ import com.github.theredbrain.bamcore.api.util.BlockRotationUtils;
 import com.github.theredbrain.bamcore.block.RotatedBlockWithEntity;
 import com.github.theredbrain.bamcore.client.network.DuckClientAdvancementManagerMixin;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
+import com.github.theredbrain.bamcore.network.packet.DialogueGiveItemsFromLootTablePacket;
+import com.github.theredbrain.bamcore.network.packet.DialogueGrantAdvancementPacket;
 import com.github.theredbrain.bamcore.network.packet.UseBlockViaDialoguePacket;
 import com.github.theredbrain.bamcore.registry.DialoguesRegistry;
 import com.github.theredbrain.bamcore.registry.EntityRegistry;
@@ -146,6 +148,21 @@ public class DialogueBlockEntity extends RotatedBlockEntity {
                     new BlockHitResult(player.getPos(), Direction.UP, this.dialogueUsedBlocks.get(key).add(this.pos), false)
             ));
         }
+    }
+
+    public void dialogueGiveItemsFromLootTable(PlayerEntity player, Identifier lootTableIdentifier) {
+        ClientPlayNetworking.send(new DialogueGiveItemsFromLootTablePacket(
+                player.getUuid(),
+                lootTableIdentifier
+        ));
+    }
+
+    public void dialogueGrantAdvancement(PlayerEntity player, Identifier advancementIdentifier, String criterionName) {
+        ClientPlayNetworking.send(new DialogueGrantAdvancementPacket(
+                player.getUuid(),
+                advancementIdentifier,
+                criterionName
+        ));
     }
 
     public HashMap<String, BlockPos> getDialogueUsedBlocks() {

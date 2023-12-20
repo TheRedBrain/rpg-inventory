@@ -11,15 +11,16 @@
       "responseDialogue": "",
       "lockAdvancement": "",
       "unlockAdvancement": "",
-      "showLockedAnswer": true
+      "showLockedAnswer": true,
+      "grantedAdvancement": "minecraft:adventure/voluntary_exile",
+      "criterionName": "voluntary_exile"
     },
     {
       "answerText": "dialogue.bamcore.choose_color_cancel.answer_text.2",
       "responseDialogue": "bamcore:choose_color",
       "lockAdvancement": "",
       "unlockAdvancement": "",
-      "showLockedAnswer": true,
-      "grantedAdvancement": "minecraft:adventure/voluntary_exile"
+      "showLockedAnswer": true
     }
   ],
   "lockAdvancement": "",

@@ -18,15 +18,7 @@ import net.minecraft.client.gui.widget.CyclingButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.network.ClientAdvancementManager;
 import net.minecraft.client.util.NarratorManager;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.context.LootContextParameterSet;
-import net.minecraft.loot.context.LootContextParameters;
-import net.minecraft.loot.context.LootContextTypes;
 import net.minecraft.screen.ScreenTexts;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.StringIdentifiable;
@@ -116,38 +108,16 @@ public class DialogueBlockScreen extends Screen {
             Dialogue.Answer currentAnswer = this.visibleAnswersList.get(index + this.answersScrollPosition);
             
             // loot_table
-            // TODO rewrite to a packet
             Identifier lootTableIdentifier = currentAnswer.getLootTable();
-            if (lootTableIdentifier != null && this.client != null && this.client.player != null && this.client.player.getServer() != null) {
-                ServerPlayerEntity serverPlayerEntity = this.client.player.getServer().getPlayerManager().getPlayer(this.client.player.getUuid());
-                if (serverPlayerEntity != null) {
-                    LootContextParameterSet lootContextParameterSet = new LootContextParameterSet.Builder(serverPlayerEntity.getServerWorld()).add(LootContextParameters.THIS_ENTITY, serverPlayerEntity).add(LootContextParameters.ORIGIN, serverPlayerEntity.getPos()).build(LootContextTypes.ADVANCEMENT_REWARD);
-                    boolean bl = false;
-                    for (ItemStack itemStack : serverPlayerEntity.server.getLootManager().getLootTable(lootTableIdentifier).generateLoot(lootContextParameterSet)) {
-                        if (serverPlayerEntity.giveItemStack(itemStack)) {
-                            serverPlayerEntity.getWorld().playSound(null, serverPlayerEntity.getX(), serverPlayerEntity.getY(), serverPlayerEntity.getZ(), SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2f, ((serverPlayerEntity.getRandom().nextFloat() - serverPlayerEntity.getRandom().nextFloat()) * 0.7f + 1.0f) * 2.0f);
-                            bl = true;
-                            continue;
-                        }
-                        ItemEntity itemEntity = serverPlayerEntity.dropItem(itemStack, false);
-                        if (itemEntity == null) continue;
-                        itemEntity.resetPickupDelay();
-                        itemEntity.setOwner(serverPlayerEntity.getUuid());
-                    }
-                    if (bl) {
-                        serverPlayerEntity.currentScreenHandler.sendContentUpdates();
-                    }
-                }
+            if (lootTableIdentifier != null && this.client != null && this.client.player != null) {
+                this.dialogueBlockEntity.dialogueGiveItemsFromLootTable(this.client.player, lootTableIdentifier);
             }
             
             // advancement
             Identifier advancementIdentifier = currentAnswer.getGrantedAdvancement();
-            if (advancementIdentifier != null && this.client != null && this.client.player != null) {
-                ClientAdvancementManager advancementHandler = this.client.player.networkHandler.getAdvancementHandler();
-                AdvancementEntry advancementEntry = advancementHandler.get(advancementIdentifier);
-                if (advancementEntry != null) {
-                    advancementHandler.getManager().addAll(List.of(advancementEntry));
-                }
+            String criterionName = currentAnswer.getCriterionName();
+            if (advancementIdentifier != null && criterionName != null && this.client != null && this.client.player != null) {
+                this.dialogueBlockEntity.dialogueGrantAdvancement(this.client.player, advancementIdentifier, criterionName);
             }
 
             String responseDialogueIdentifier = currentAnswer.getResponseDialogue();

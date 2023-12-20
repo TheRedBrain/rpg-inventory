@@ -65,6 +65,10 @@ public class BetterAdventureModeCoreServerPacket {
 
         ServerPlayNetworking.registerGlobalReceiver(UseBlockViaDialoguePacket.TYPE, new UseBlockViaDialoguePacketReceiver());
 
+        ServerPlayNetworking.registerGlobalReceiver(DialogueGrantAdvancementPacket.TYPE, new DialogueGrantAdvancementPacketReceiver());
+
+        ServerPlayNetworking.registerGlobalReceiver(DialogueGiveItemsFromLootTablePacket.TYPE, new DialogueGiveItemsFromLootTablePacketReceiver());
+
 //        ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.REGENERATE_DIMENSION_FROM_TELEPORTER_BLOCK, new RegenerateDimensionFromTeleporterBlockPacketReceiver());
     }
 }
