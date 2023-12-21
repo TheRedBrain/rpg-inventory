@@ -10,6 +10,7 @@
     "entity.DamageUtilMixin",
     "entity.LivingEntityMixin",
     "entity.damage.DamageSourcesMixin",
+    "entity.mob.MobEntityMixin",
     "entity.player.HungerManagerMixin",
     "entity.player.PlayerEntityMixin",
     "entity.player.PlayerInventoryMixin",

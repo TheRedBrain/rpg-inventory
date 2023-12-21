@@ -28,8 +28,8 @@ public class TriggeredSpawnerBlockScreen extends Screen {
     private TextFieldWidget entitySpawnPositionOffsetXField;
     private TextFieldWidget entitySpawnPositionOffsetYField;
     private TextFieldWidget entitySpawnPositionOffsetZField;
-    private TextFieldWidget entitySpawnOrientationYawField;
-    private TextFieldWidget entitySpawnOrientationPitchField;
+//    private TextFieldWidget entitySpawnOrientationYawField;
+//    private TextFieldWidget entitySpawnOrientationPitchField;
 
     private TriggeredSpawnerBlockEntity.SpawningMode spawningMode;
 
@@ -59,12 +59,12 @@ public class TriggeredSpawnerBlockScreen extends Screen {
         this.entitySpawnPositionOffsetZField.setText(Integer.toString(this.triggeredSpawnerBlock.getEntitySpawnPositionOffset().getZ()));
         this.addSelectableChild(this.entitySpawnPositionOffsetZField);
 
-        this.entitySpawnOrientationYawField = new TextFieldWidget(this.textRenderer, this.width / 2 - 154, 105, 150, 20, Text.translatable(""));
-        this.entitySpawnOrientationYawField.setText(Double.toString(this.triggeredSpawnerBlock.getEntitySpawnOrientationYaw()));
-        this.addSelectableChild(this.entitySpawnOrientationYawField);
-        this.entitySpawnOrientationPitchField = new TextFieldWidget(this.textRenderer, this.width / 2 + 4, 105, 150, 20, Text.translatable(""));
-        this.entitySpawnOrientationPitchField.setText(Double.toString(this.triggeredSpawnerBlock.getEntitySpawnOrientationPitch()));
-        this.addSelectableChild(this.entitySpawnOrientationPitchField);
+//        this.entitySpawnOrientationYawField = new TextFieldWidget(this.textRenderer, this.width / 2 - 154, 105, 150, 20, Text.translatable(""));
+//        this.entitySpawnOrientationYawField.setText(Double.toString(this.triggeredSpawnerBlock.getEntitySpawnOrientationYaw()));
+//        this.addSelectableChild(this.entitySpawnOrientationYawField);
+//        this.entitySpawnOrientationPitchField = new TextFieldWidget(this.textRenderer, this.width / 2 + 4, 105, 150, 20, Text.translatable(""));
+//        this.entitySpawnOrientationPitchField.setText(Double.toString(this.triggeredSpawnerBlock.getEntitySpawnOrientationPitch()));
+//        this.addSelectableChild(this.entitySpawnOrientationPitchField);
 
         this.spawningMode = this.triggeredSpawnerBlock.getSpawningMode();
         int i = this.textRenderer.getWidth(SPAWNING_MODE_LABEL_TEXT) + 10;
@@ -87,17 +87,17 @@ public class TriggeredSpawnerBlockScreen extends Screen {
         String string = this.entitySpawnPositionOffsetXField.getText();
         String string1 = this.entitySpawnPositionOffsetYField.getText();
         String string2 = this.entitySpawnPositionOffsetZField.getText();
-        String string3 = this.entitySpawnOrientationYawField.getText();
-        String string4 = this.entitySpawnOrientationPitchField.getText();
+//        String string3 = this.entitySpawnOrientationYawField.getText();
+//        String string4 = this.entitySpawnOrientationPitchField.getText();
         String string5 = this.spawningMode.asString();
         String string6 = this.entityTypeIdField.getText();
         this.init(client, width, height);
         this.entitySpawnPositionOffsetXField.setText(string);
         this.entitySpawnPositionOffsetYField.setText(string1);
         this.entitySpawnPositionOffsetZField.setText(string2);
-        this.entitySpawnOrientationYawField.setText(string3);
-        this.entitySpawnOrientationPitchField.setText(string4);
-        this.spawningMode = TriggeredSpawnerBlockEntity.SpawningMode.byName(string5).orElseGet(() -> TriggeredSpawnerBlockEntity.SpawningMode.TRIGGERED);
+//        this.entitySpawnOrientationYawField.setText(string3);
+//        this.entitySpawnOrientationPitchField.setText(string4);
+        this.spawningMode = TriggeredSpawnerBlockEntity.SpawningMode.byName(string5).orElseGet(() -> TriggeredSpawnerBlockEntity.SpawningMode.ONCE);
         this.entityTypeIdField.setText(string6);
     }
 
@@ -119,8 +119,8 @@ public class TriggeredSpawnerBlockScreen extends Screen {
                                 this.parseInt(this.entitySpawnPositionOffsetYField.getText()),
                                 this.parseInt(this.entitySpawnPositionOffsetZField.getText())
                         ),
-                        this.parseDouble(this.entitySpawnOrientationYawField.getText()),
-                        this.parseDouble(this.entitySpawnOrientationPitchField.getText()),
+//                        this.parseDouble(this.entitySpawnOrientationYawField.getText()),
+//                        this.parseDouble(this.entitySpawnOrientationPitchField.getText()),
                         this.spawningMode.asString(),
                         this.entityTypeIdField.getText()
                 )
@@ -138,8 +138,8 @@ public class TriggeredSpawnerBlockScreen extends Screen {
         this.entitySpawnPositionOffsetZField.render(context, mouseX, mouseY, delta);
 
         context.drawTextWithShadow(this.textRenderer, ENTITY_SPAWN_ORIENTATION_LABEL_TEXT, this.width / 2 - 153, 95, 0xA0A0A0);
-        this.entitySpawnOrientationYawField.render(context, mouseX, mouseY, delta);
-        this.entitySpawnOrientationPitchField.render(context, mouseX, mouseY, delta);
+//        this.entitySpawnOrientationYawField.render(context, mouseX, mouseY, delta);
+//        this.entitySpawnOrientationPitchField.render(context, mouseX, mouseY, delta);
 
         context.drawTextWithShadow(this.textRenderer, SPAWNING_MODE_LABEL_TEXT, this.width / 2 - 153, 136, 0xA0A0A0);
 

@@ -23,9 +23,9 @@ public class UpdateTriggeredSpawnerBlockPacketReceiver implements ServerPlayNetw
 
         BlockPos entitySpawnPositionOffset = packet.entitySpawnPositionOffset;
 
-        double entitySpawnOrientationYaw = packet.entitySpawnOrientationYaw;
-
-        double entitySpawnOrientationPitch = packet.entitySpawnOrientationPitch;
+//        double entitySpawnOrientationYaw = packet.entitySpawnOrientationYaw;
+//
+//        double entitySpawnOrientationPitch = packet.entitySpawnOrientationPitch;
 
         TriggeredSpawnerBlockEntity.SpawningMode spawningMode = packet.spawningMode;
 
@@ -43,14 +43,14 @@ public class UpdateTriggeredSpawnerBlockPacketReceiver implements ServerPlayNetw
                 player.sendMessage(Text.translatable("triggered_spawner_block.entitySpawnPositionOffset.invalid"), false);
                 updateSuccessful = false;
             }
-            if (!triggeredSpawnerBlockEntity.setEntitySpawnOrientationYaw(entitySpawnOrientationYaw)) {
-                player.sendMessage(Text.translatable("triggered_spawner_block.entitySpawnOrientationYaw.invalid"), false);
-                updateSuccessful = false;
-            }
-            if (!triggeredSpawnerBlockEntity.setEntitySpawnOrientationPitch(entitySpawnOrientationPitch)) {
-                player.sendMessage(Text.translatable("triggered_spawner_block.entitySpawnOrientationPitch.invalid"), false);
-                updateSuccessful = false;
-            }
+//            if (!triggeredSpawnerBlockEntity.setEntitySpawnOrientationYaw(entitySpawnOrientationYaw)) {
+//                player.sendMessage(Text.translatable("triggered_spawner_block.entitySpawnOrientationYaw.invalid"), false);
+//                updateSuccessful = false;
+//            }
+//            if (!triggeredSpawnerBlockEntity.setEntitySpawnOrientationPitch(entitySpawnOrientationPitch)) {
+//                player.sendMessage(Text.translatable("triggered_spawner_block.entitySpawnOrientationPitch.invalid"), false);
+//                updateSuccessful = false;
+//            }
             if (!triggeredSpawnerBlockEntity.setSpawningMode(spawningMode)) {
                 player.sendMessage(Text.translatable("triggered_spawner_block.spawningMode.invalid"), false);
                 updateSuccessful = false;

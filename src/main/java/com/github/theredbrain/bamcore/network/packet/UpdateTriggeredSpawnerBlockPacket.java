@@ -15,21 +15,21 @@ public class UpdateTriggeredSpawnerBlockPacket implements FabricPacket {
 
     public final BlockPos triggeredSpawnerBlockPosition;
     public final BlockPos entitySpawnPositionOffset;
-    public final double entitySpawnOrientationYaw;
-    public final double entitySpawnOrientationPitch;
+//    public final double entitySpawnOrientationYaw;
+//    public final double entitySpawnOrientationPitch;
     public final TriggeredSpawnerBlockEntity.SpawningMode spawningMode;
     public final String entityTypeId;
 
 
-    public UpdateTriggeredSpawnerBlockPacket(BlockPos triggeredSpawnerBlockPosition, BlockPos entitySpawnPositionOffset, double entitySpawnOrientationYaw, double entitySpawnOrientationPitch, String spawningMode, String entityTypeId) {
+    public UpdateTriggeredSpawnerBlockPacket(BlockPos triggeredSpawnerBlockPosition, BlockPos entitySpawnPositionOffset/*, double entitySpawnOrientationYaw, double entitySpawnOrientationPitch*/, String spawningMode, String entityTypeId) {
         this.triggeredSpawnerBlockPosition = triggeredSpawnerBlockPosition;
 
         this.entitySpawnPositionOffset = entitySpawnPositionOffset;
 
-        this.entitySpawnOrientationYaw = entitySpawnOrientationYaw;
-        this.entitySpawnOrientationPitch = entitySpawnOrientationPitch;
+//        this.entitySpawnOrientationYaw = entitySpawnOrientationYaw;
+//        this.entitySpawnOrientationPitch = entitySpawnOrientationPitch;
 
-        this.spawningMode = TriggeredSpawnerBlockEntity.SpawningMode.byName(spawningMode).orElseGet(() -> TriggeredSpawnerBlockEntity.SpawningMode.TRIGGERED);
+        this.spawningMode = TriggeredSpawnerBlockEntity.SpawningMode.byName(spawningMode).orElseGet(() -> TriggeredSpawnerBlockEntity.SpawningMode.ONCE);
 
         this.entityTypeId = entityTypeId;
     }
@@ -38,8 +38,8 @@ public class UpdateTriggeredSpawnerBlockPacket implements FabricPacket {
         this(
                 buf.readBlockPos(),
                 buf.readBlockPos(),
-                buf.readDouble(),
-                buf.readDouble(),
+//                buf.readDouble(),
+//                buf.readDouble(),
                 buf.readString(),
                 buf.readString()
         );
@@ -53,8 +53,8 @@ public class UpdateTriggeredSpawnerBlockPacket implements FabricPacket {
         buf.writeBlockPos(this.triggeredSpawnerBlockPosition);
         buf.writeBlockPos(this.entitySpawnPositionOffset);
 
-        buf.writeDouble(this.entitySpawnOrientationYaw);
-        buf.writeDouble(this.entitySpawnOrientationPitch);
+//        buf.writeDouble(this.entitySpawnOrientationYaw);
+//        buf.writeDouble(this.entitySpawnOrientationPitch);
 
         buf.writeString(this.spawningMode.asString());
 
