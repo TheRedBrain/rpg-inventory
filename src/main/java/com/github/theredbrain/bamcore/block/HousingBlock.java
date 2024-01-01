@@ -4,6 +4,7 @@ import com.github.theredbrain.bamcore.block.entity.HousingBlockBlockEntity;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.bamcore.registry.ComponentsRegistry;
 import com.github.theredbrain.bamcore.registry.EntityRegistry;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -20,6 +21,11 @@ import org.jetbrains.annotations.Nullable;
 public class HousingBlock extends RotatedBlockWithEntity {
     public HousingBlock(Settings settings) {
         super(settings);
+    }
+
+    // TODO Block Codecs
+    public MapCodec<HousingBlock> getCodec() {
+        return null;
     }
 
     @Nullable

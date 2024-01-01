@@ -3,6 +3,7 @@ package com.github.theredbrain.bamcore.block;
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.api.util.BlockRotationUtils;
 import com.github.theredbrain.bamcore.block.entity.UseRelayBlockEntity;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.BlockHalf;
@@ -44,6 +45,11 @@ protected static final VoxelShape EAST_SHAPE = Block.createCuboidShape(0.0, 0.0,
     public UseRelayTrapdoorBlock(Settings settings) {
         super(settings);
         this.setDefaultState((BlockState)((BlockState)((BlockState)((BlockState)((BlockState)((BlockState)this.stateManager.getDefaultState()).with(FACING, Direction.NORTH)).with(OPEN, false)).with(HALF, BlockHalf.BOTTOM))).with(WATERLOGGED, false));
+    }
+
+    // TODO Block Codecs
+    public MapCodec<UseRelayTrapdoorBlock> getCodec() {
+        return null;
     }
 
     @Nullable

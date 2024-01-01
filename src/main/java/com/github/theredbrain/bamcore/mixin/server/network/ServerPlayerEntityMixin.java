@@ -5,6 +5,7 @@ import com.github.theredbrain.bamcore.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.bamcore.network.event.PlayerDeathCallback;
 import com.github.theredbrain.bamcore.network.packet.BetterAdventureModeCoreServerPacket;
 import com.github.theredbrain.bamcore.registry.GameRulesRegistry;
+import com.github.theredbrain.bamcore.registry.StatusEffectsRegistry;
 import com.mojang.authlib.GameProfile;
 import com.mojang.datafixers.util.Either;
 import io.netty.buffer.Unpooled;
@@ -18,6 +19,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.network.ServerPlayerInteractionManager;
@@ -141,6 +143,69 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Du
             }
         } else {
             return Either.left(PlayerEntity.SleepFailureReason.OTHER_PROBLEM);
+        }
+    }
+
+    /**
+     * @author TheRedBrain
+     * @reason
+     */
+    @Overwrite
+    public void increaseTravelMotionStats(double dx, double dy, double dz) {
+        if (!this.hasVehicle()) {
+            int i;
+            if (this.isSwimming()) {
+                i = Math.round((float)Math.sqrt(dx * dx + dy * dy + dz * dz) * 100.0F);
+                if (i > 0) {
+                    this.increaseStat(Stats.SWIM_ONE_CM, i);
+//                    this.addExhaustion(0.01F * (float)i * 0.01F);
+                    ((DuckPlayerEntityMixin)this).bamcore$addStamina(-0.2F);
+                }
+            } else if (this.isSubmergedIn(FluidTags.WATER)) {
+                i = Math.round((float)Math.sqrt(dx * dx + dy * dy + dz * dz) * 100.0F);
+                if (i > 0) {
+                    this.increaseStat(Stats.WALK_UNDER_WATER_ONE_CM, i);
+//                    this.addExhaustion(0.01F * (float)i * 0.01F);
+                    ((DuckPlayerEntityMixin)this).bamcore$addStamina(-0.4F);
+                }
+            } else if (this.isTouchingWater()) {
+                i = Math.round((float)Math.sqrt(dx * dx + dz * dz) * 100.0F);
+                if (i > 0) {
+                    this.increaseStat(Stats.WALK_ON_WATER_ONE_CM, i);
+//                    this.addExhaustion(0.01F * (float)i * 0.01F);
+                    ((DuckPlayerEntityMixin)this).bamcore$addStamina(-0.1F);
+                }
+            } else if (this.isClimbing()) {
+                if (dy > 0.0) {
+                    this.increaseStat(Stats.CLIMB_ONE_CM, (int)Math.round(dy * 100.0));
+                    ((DuckPlayerEntityMixin)this).bamcore$addStamina(this.hasStatusEffect(StatusEffectsRegistry.OVERBURDENED_EFFECT) ? -4 : -1);
+                }
+            } else if (this.isOnGround()) {
+                i = Math.round((float)Math.sqrt(dx * dx + dz * dz) * 100.0F);
+                if (i > 0) {
+                    if (this.isSprinting()) {
+                        this.increaseStat(Stats.SPRINT_ONE_CM, i);
+//                        this.addExhaustion(0.1F * (float)i * 0.01F);
+                        ((DuckPlayerEntityMixin)this).bamcore$addStamina(-0.1F);
+                    } else if (this.isInSneakingPose()) {
+                        this.increaseStat(Stats.CROUCH_ONE_CM, i);
+//                        this.addExhaustion(0.0F * (float)i * 0.01F);
+//                        ((DuckPlayerEntityMixin)this).bamcore$addStamina(-2);
+                    } else {
+                        this.increaseStat(Stats.WALK_ONE_CM, i);
+//                        this.addExhaustion(0.0F * (float)i * 0.01F);
+                    }
+                }
+            } else if (this.isFallFlying()) {
+                i = Math.round((float)Math.sqrt(dx * dx + dy * dy + dz * dz) * 100.0F);
+                this.increaseStat(Stats.AVIATE_ONE_CM, i);
+            } else {
+                i = Math.round((float)Math.sqrt(dx * dx + dz * dz) * 100.0F);
+                if (i > 25) {
+                    this.increaseStat(Stats.FLY_ONE_CM, i);
+                }
+            }
+
         }
     }
 

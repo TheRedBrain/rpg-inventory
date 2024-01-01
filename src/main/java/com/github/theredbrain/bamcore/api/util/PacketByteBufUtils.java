@@ -11,12 +11,7 @@ public class PacketByteBufUtils {
     public static class PairStringEntityAttributeModifierListReader implements PacketByteBuf.PacketReader<MutablePair<String, EntityAttributeModifier>> {
         @Override
         public MutablePair<String, EntityAttributeModifier> apply(PacketByteBuf packetByteBuf) {
-            return new MutablePair<>(packetByteBuf.readString(), new EntityAttributeModifier(
-                    packetByteBuf.readUuid(),
-                    packetByteBuf.readString(),
-                    packetByteBuf.readDouble(),
-                    EntityAttributeModifier.Operation.fromId(packetByteBuf.readInt())
-            ));
+            return new MutablePair<>(packetByteBuf.readString(), EntityAttributeModifier.fromNbt(packetByteBuf.readNbt()));
         }
     }
 
@@ -24,10 +19,11 @@ public class PacketByteBufUtils {
         @Override
         public void accept(PacketByteBuf packetByteBuf, MutablePair<String, EntityAttributeModifier> stringEntityAttributeModifierPair) {
             packetByteBuf.writeString(stringEntityAttributeModifierPair.getLeft());
-            packetByteBuf.writeUuid(stringEntityAttributeModifierPair.getRight().getId());
-            packetByteBuf.writeString(stringEntityAttributeModifierPair.getRight().getName());
-            packetByteBuf.writeDouble(stringEntityAttributeModifierPair.getRight().getValue());
-            packetByteBuf.writeInt(stringEntityAttributeModifierPair.getRight().getOperation().getId());
+//            packetByteBuf.writeUuid(stringEntityAttributeModifierPair.getRight().getId());
+            packetByteBuf.writeNbt(stringEntityAttributeModifierPair.getRight().toNbt());
+//            packetByteBuf.writeString(stringEntityAttributeModifierPair.getRight().);
+//            packetByteBuf.writeDouble(stringEntityAttributeModifierPair.getRight().getValue());
+//            packetByteBuf.writeInt(stringEntityAttributeModifierPair.getRight().getOperation().getId());
         }
     }
 

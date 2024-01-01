@@ -1,6 +1,7 @@
 package com.github.theredbrain.bamcore.block;
 
 import com.github.theredbrain.bamcore.block.entity.ResetTriggerBlockEntity;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -16,6 +17,11 @@ public class ResetTriggerBlock extends RotatedBlockWithEntity {
 
     public ResetTriggerBlock(Settings settings) {
         super(settings);
+    }
+
+    // TODO Block Codecs
+    public MapCodec<ResetTriggerBlock> getCodec() {
+        return null;
     }
 
     @Nullable

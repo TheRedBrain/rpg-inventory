@@ -1,6 +1,7 @@
 package com.github.theredbrain.bamcore.block;
 
 import com.github.theredbrain.bamcore.block.entity.DialogueBlockEntity;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -16,6 +17,11 @@ public class DialogueBlock extends RotatedBlockWithEntity {
 
     public DialogueBlock(Settings settings) {
         super(settings);
+    }
+
+    // TODO Block Codecs
+    public MapCodec<DialogueBlock> getCodec() {
+        return null;
     }
 
     @Nullable

@@ -25,10 +25,7 @@ import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Pair;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.jetbrains.annotations.Nullable;
@@ -208,8 +205,8 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
         if (state.isOf(BlockRegistry.TELEPORTER_BLOCK) && world.getBlockEntity(pos) != null && world.getBlockEntity(pos).getType() == blockEntity.getType()) {
             BlockPos activationAreaPositionOffset = blockEntity.getActivationAreaPositionOffset();
             Vec3i activationAreaDimensions = blockEntity.getActivationAreaDimensions();
-            BlockPos activationAreaStart = new BlockPos(pos.getX() + activationAreaPositionOffset.getX(), pos.getY() + activationAreaPositionOffset.getY(), pos.getZ() + activationAreaPositionOffset.getZ());
-            BlockPos activationAreaEnd = new BlockPos(activationAreaStart.getX() + activationAreaDimensions.getX(), activationAreaStart.getY() + activationAreaDimensions.getY(), activationAreaStart.getZ() + activationAreaDimensions.getZ());
+            Vec3d activationAreaStart = new Vec3d(pos.getX() + activationAreaPositionOffset.getX(), pos.getY() + activationAreaPositionOffset.getY(), pos.getZ() + activationAreaPositionOffset.getZ());
+            Vec3d activationAreaEnd = new Vec3d(activationAreaStart.getX() + activationAreaDimensions.getX(), activationAreaStart.getY() + activationAreaDimensions.getY(), activationAreaStart.getZ() + activationAreaDimensions.getZ());
             Box activationArea = new Box(activationAreaStart, activationAreaEnd);
             List<PlayerEntity> list = world.getNonSpectatingEntities(PlayerEntity.class, activationArea);
             for (PlayerEntity playerEntity : list) {

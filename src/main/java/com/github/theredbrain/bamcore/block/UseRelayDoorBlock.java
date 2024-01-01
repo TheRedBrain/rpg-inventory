@@ -3,6 +3,7 @@ package com.github.theredbrain.bamcore.block;
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.api.util.BlockRotationUtils;
 import com.github.theredbrain.bamcore.block.entity.UseRelayBlockEntity;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.DoorHinge;
@@ -43,6 +44,11 @@ public class UseRelayDoorBlock extends RotatedBlockWithEntity {
     public UseRelayDoorBlock(Settings settings) {
         super(settings);
         this.setDefaultState((BlockState)((BlockState)((BlockState)((BlockState)((BlockState)((BlockState)this.stateManager.getDefaultState()).with(FACING, Direction.NORTH)).with(OPEN, false)).with(HINGE, DoorHinge.LEFT))).with(HALF, DoubleBlockHalf.LOWER));
+    }
+
+    // TODO Block Codecs
+    public MapCodec<UseRelayDoorBlock> getCodec() {
+        return null;
     }
 
     @Nullable
@@ -98,11 +104,11 @@ public class UseRelayDoorBlock extends RotatedBlockWithEntity {
     }
 
     @Override
-    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+    public BlockState onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         if (!world.isClient && player.isCreative()) {
             onBreakInCreative(world, pos, state, player);
         }
-        super.onBreak(world, pos, state, player);
+        return super.onBreak(world, pos, state, player);
     }
 
     @Override
@@ -230,21 +236,35 @@ public class UseRelayDoorBlock extends RotatedBlockWithEntity {
         return state;
     }
 
-    /**
-     * Destroys a bottom half of a tall double block (such as a plant or a door)
-     * without dropping an item when broken in creative.
-     *
-     * @see Block#onBreak(World, BlockPos, BlockState, PlayerEntity)
-     */
+//    /**
+//     * Destroys a bottom half of a tall double block (such as a plant or a door)
+//     * without dropping an item when broken in creative.
+//     *
+//     * @see Block#onBreak(World, BlockPos, BlockState, PlayerEntity)
+//     */
+//    protected static void onBreakInCreative(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+//        BlockPos blockPos;
+//        BlockState blockState;
+//        DoubleBlockHalf doubleBlockHalf = state.get(HALF);
+//        if (doubleBlockHalf == DoubleBlockHalf.UPPER && (blockState = world.getBlockState(blockPos = pos.down())).isOf(state.getBlock()) && blockState.get(HALF) == DoubleBlockHalf.LOWER) {
+//            BlockState blockState2 = blockState.getFluidState().isOf(Fluids.WATER) ? Blocks.WATER.getDefaultState() : Blocks.AIR.getDefaultState();
+//            world.setBlockState(blockPos, blockState2, Block.NOTIFY_ALL | Block.SKIP_DROPS);
+//            world.syncWorldEvent(player, WorldEvents.BLOCK_BROKEN, blockPos, Block.getRawIdFromState(blockState));
+//        }
+//    }
+
     protected static void onBreakInCreative(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        BlockPos blockPos;
-        BlockState blockState;
-        DoubleBlockHalf doubleBlockHalf = state.get(HALF);
-        if (doubleBlockHalf == DoubleBlockHalf.UPPER && (blockState = world.getBlockState(blockPos = pos.down())).isOf(state.getBlock()) && blockState.get(HALF) == DoubleBlockHalf.LOWER) {
-            BlockState blockState2 = blockState.getFluidState().isOf(Fluids.WATER) ? Blocks.WATER.getDefaultState() : Blocks.AIR.getDefaultState();
-            world.setBlockState(blockPos, blockState2, Block.NOTIFY_ALL | Block.SKIP_DROPS);
-            world.syncWorldEvent(player, WorldEvents.BLOCK_BROKEN, blockPos, Block.getRawIdFromState(blockState));
+        DoubleBlockHalf doubleBlockHalf = (DoubleBlockHalf)state.get(HALF);
+        if (doubleBlockHalf == DoubleBlockHalf.UPPER) {
+            BlockPos blockPos = pos.down();
+            BlockState blockState = world.getBlockState(blockPos);
+            if (blockState.isOf(state.getBlock()) && blockState.get(HALF) == DoubleBlockHalf.LOWER) {
+                BlockState blockState2 = blockState.getFluidState().isOf(Fluids.WATER) ? Blocks.WATER.getDefaultState() : Blocks.AIR.getDefaultState();
+                world.setBlockState(blockPos, blockState2, 35);
+                world.syncWorldEvent(player, 2001, blockPos, Block.getRawIdFromState(blockState));
+            }
         }
+
     }
 
 }

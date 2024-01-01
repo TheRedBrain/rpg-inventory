@@ -1,18 +1,14 @@
 package com.github.theredbrain.bamcore.entity.mob;
 
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
-import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.util.AzureLibUtil;
+import mod.azure.azurelib.common.api.common.animatable.GeoEntity;
+import mod.azure.azurelib.common.internal.common.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.common.internal.common.core.animation.AnimatableManager;
+import mod.azure.azurelib.common.internal.common.util.AzureLibUtil;
 import net.minecraft.entity.*;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.passive.CatVariant;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
-import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;

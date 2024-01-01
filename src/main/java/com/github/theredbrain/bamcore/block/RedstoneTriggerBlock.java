@@ -1,6 +1,7 @@
 package com.github.theredbrain.bamcore.block;
 
 import com.github.theredbrain.bamcore.block.entity.RedstoneTriggerBlockBlockEntity;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -23,6 +24,11 @@ public class RedstoneTriggerBlock extends RotatedBlockWithEntity {
     public RedstoneTriggerBlock(Settings settings) {
         super(settings);
         this.setDefaultState(this.stateManager.getDefaultState().with(TRIGGERED, false));
+    }
+
+    // TODO Block Codecs
+    public MapCodec<RedstoneTriggerBlock> getCodec() {
+        return null;
     }
 
     @Override

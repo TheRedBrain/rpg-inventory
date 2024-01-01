@@ -1,5 +1,6 @@
 package com.github.theredbrain.bamcore.api.block;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
@@ -21,6 +22,11 @@ public class InteractiveAdventurePlantBlock extends AbstractInteractiveAdventure
     public InteractiveAdventurePlantBlock(int plant_size, @Nullable Block cloakedBlock, @Nullable Identifier cloakAdvancementIdentifier, @Nullable TagKey<Item> requiredTools, boolean requiresTools, int respawnModifier, Settings settings) {
         super(cloakedBlock, cloakAdvancementIdentifier, requiredTools, requiresTools, respawnModifier, settings);
         this.plant_size = plant_size;
+    }
+
+    // TODO Block Codecs
+    public MapCodec<InteractiveAdventurePlantBlock> getCodec() {
+        return null;
     }
 
     @Override

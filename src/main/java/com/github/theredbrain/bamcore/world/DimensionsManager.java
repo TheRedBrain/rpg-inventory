@@ -19,10 +19,9 @@ import net.minecraft.world.dimension.DimensionTypes;
 import net.minecraft.world.gen.chunk.FlatChunkGenerator;
 import net.minecraft.world.gen.chunk.FlatChunkGeneratorConfig;
 import net.minecraft.world.gen.chunk.FlatChunkGeneratorLayer;
-import qouteall.q_misc_util.LifecycleHack;
-import qouteall.q_misc_util.api.DimensionAPI;
-import qouteall.q_misc_util.dimension.DimensionTemplate;
-import qouteall.q_misc_util.dimension.DynamicDimensionsImpl;
+import qouteall.dimlib.DimensionTemplate;
+import qouteall.dimlib.DynamicDimensionsImpl;
+import qouteall.dimlib.api.DimensionAPI;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,8 +29,9 @@ import java.util.Optional;
 public class DimensionsManager {
 
     public static void init() {
-        LifecycleHack.markNamespaceStable("bamcore");
-        DimensionTemplate.registerDimensionTemplate(
+//        LifecycleHack.markNamespaceStable("bamcore");
+        DimensionAPI.suppressExperimentalWarningForNamespace("bamcore");
+        DimensionAPI.registerDimensionTemplate(
                 "player_locations", PLAYER_LOCATIONS_DIMENSION_TEMPLATE
         );
     }
@@ -39,20 +39,20 @@ public class DimensionsManager {
     public static void addAndSaveDynamicDimension(Identifier dimensionId, MinecraftServer server) {
         // may throw exception here
 
-        DynamicDimensionsImpl.addDimensionDynamically(server, dimensionId, PLAYER_LOCATIONS_DIMENSION_TEMPLATE.createLevelStem(server));
+        DimensionAPI.addDimensionDynamically(server, dimensionId, PLAYER_LOCATIONS_DIMENSION_TEMPLATE.createLevelStem(server));
     }
 
-    public static void removeDynamicPlayerDimension(ServerPlayerEntity player, MinecraftServer server) {
-        // may throw exception here
-
-        Identifier dimId = BetterAdventureModeCore.identifier(player.getUuid().toString() + "_dungeons");
-        RegistryKey<World> registryKey = RegistryKey.of(RegistryKeys.WORLD, dimId);
-        ServerWorld serverWorld = server.getWorld(registryKey);
-
-        if (serverWorld != null) {
-            DimensionAPI.removeDimensionDynamically(serverWorld);
-        }
-    }
+//    public static void removeDynamicPlayerDimension(ServerPlayerEntity player, MinecraftServer server) {
+//        // may throw exception here
+//
+//        Identifier dimId = BetterAdventureModeCore.identifier(player.getUuid().toString() + "_dungeons");
+//        RegistryKey<World> registryKey = RegistryKey.of(RegistryKeys.WORLD, dimId);
+//        ServerWorld serverWorld = server.getWorld(registryKey);
+//
+//        if (serverWorld != null) {
+//            DimensionAPI.removeDimensionDynamically(serverWorld);
+//        }
+//    }
 
     public static final DimensionTemplate PLAYER_LOCATIONS_DIMENSION_TEMPLATE = new DimensionTemplate(
             DimensionTypes.OVERWORLD,

@@ -2,6 +2,7 @@ package com.github.theredbrain.bamcore.block;
 
 import com.github.theredbrain.bamcore.block.entity.DelayTriggerBlockBlockEntity;
 import com.github.theredbrain.bamcore.registry.EntityRegistry;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
@@ -20,6 +21,11 @@ public class DelayTriggerBlock extends RotatedBlockWithEntity {
 
     public DelayTriggerBlock(Settings settings) {
         super(settings);
+    }
+
+    // TODO Block Codecs
+    public MapCodec<DelayTriggerBlock> getCodec() {
+        return null;
     }
 
     @Nullable

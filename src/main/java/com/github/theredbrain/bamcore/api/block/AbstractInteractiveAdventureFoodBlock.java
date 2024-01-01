@@ -1,6 +1,8 @@
 package com.github.theredbrain.bamcore.api.block;
 
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
+import com.mojang.serialization.MapCodec;
+import net.minecraft.block.AbstractSignBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
@@ -26,6 +28,8 @@ public abstract class AbstractInteractiveAdventureFoodBlock extends AbstractInte
         super(cloakedBlock, cloakAdvancementIdentifier, null, false, respawnModifier, settings);
         this.statusEffectInstance = statusEffectInstance;
     }
+
+    protected abstract MapCodec<? extends AbstractInteractiveAdventureFoodBlock> getCodec();
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {

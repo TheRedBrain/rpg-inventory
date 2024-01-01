@@ -536,7 +536,7 @@ public class TriggeredSpawnerBlockScreen extends Screen {
                 for (int i = this.scrollPosition; i < Math.min(this.scrollPosition + 3, this.entityAttributeModifiersList.size()); i++) {
                     EntityAttributeModifier entityAttributeModifier = this.entityAttributeModifiersList.get(i).getRight();
 
-                    context.drawTextWithShadow(this.textRenderer, this.entityAttributeModifiersList.get(i).getLeft() + ": " + entityAttributeModifier.getName(), this.width / 2 - 141, 46 + ((i - this.scrollPosition) * 34), 0xA0A0A0);
+                    context.drawTextWithShadow(this.textRenderer, this.entityAttributeModifiersList.get(i).getLeft() + ": ", this.width / 2 - 141, 46 + ((i - this.scrollPosition) * 34), 0xA0A0A0);
                     context.drawTextWithShadow(this.textRenderer, entityAttributeModifier.getValue() + ", " + entityAttributeModifier.getOperation(), this.width / 2 - 141, 59 + ((i - this.scrollPosition) * 34), 0xA0A0A0);
                 }
                 if (this.entityAttributeModifiersList.size() > 3) {

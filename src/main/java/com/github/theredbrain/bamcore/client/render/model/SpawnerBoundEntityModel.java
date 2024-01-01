@@ -1,7 +1,7 @@
 package com.github.theredbrain.bamcore.client.render.model;
 
 import com.github.theredbrain.bamcore.entity.mob.SpawnerBoundEntity;
-import mod.azure.azurelib.model.GeoModel;
+import mod.azure.azurelib.common.api.client.model.GeoModel;
 import net.minecraft.util.Identifier;
 
 public class SpawnerBoundEntityModel extends GeoModel<SpawnerBoundEntity> {

@@ -1,6 +1,8 @@
 package com.github.theredbrain.bamcore.block;
 
 import com.github.theredbrain.bamcore.api.util.BlockRotationUtils;
+import com.mojang.serialization.MapCodec;
+import net.minecraft.block.AbstractSignBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
@@ -18,6 +20,8 @@ public abstract class RotatedBlockWithEntity extends BlockWithEntity {
         super(settings);
         this.setDefaultState(this.stateManager.getDefaultState().with(ROTATED, 0).with(X_MIRRORED, false).with(Z_MIRRORED, false));
     }
+
+    protected abstract MapCodec<? extends RotatedBlockWithEntity> getCodec();
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {

@@ -2,6 +2,7 @@ package com.github.theredbrain.bamcore.block;
 
 import com.github.theredbrain.bamcore.block.entity.LocationControlBlockEntity;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -16,6 +17,11 @@ import org.jetbrains.annotations.Nullable;
 public class LocationControlBlock extends RotatedBlockWithEntity {
     public LocationControlBlock(Settings settings) {
         super(settings);
+    }
+
+    // TODO Block Codecs
+    public MapCodec<LocationControlBlock> getCodec() {
+        return null;
     }
 
     @Nullable

@@ -4,6 +4,8 @@ import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.api.util.BetterAdventureModCoreItemUtils;
 //import de.dafuqs.revelationary.api.advancements.AdvancementHelper;
 //import de.dafuqs.revelationary.api.revelations.RevelationAware;
+import com.mojang.serialization.MapCodec;
+import net.minecraft.block.AbstractSignBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -57,6 +59,8 @@ public abstract class AbstractInteractiveAdventureBlock extends Block/* implemen
 //            RevelationAware.register(this);
 //        }
     }
+
+    protected abstract MapCodec<? extends AbstractInteractiveAdventureBlock> getCodec();
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {

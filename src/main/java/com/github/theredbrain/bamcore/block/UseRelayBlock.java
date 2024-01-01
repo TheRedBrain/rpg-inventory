@@ -2,6 +2,7 @@ package com.github.theredbrain.bamcore.block;
 
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.block.entity.UseRelayBlockEntity;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -17,6 +18,11 @@ public class UseRelayBlock extends RotatedBlockWithEntity {
 
     public UseRelayBlock(Settings settings) {
         super(settings);
+    }
+
+    // TODO Block Codecs
+    public MapCodec<UseRelayBlock> getCodec() {
+        return null;
     }
 
     @Nullable

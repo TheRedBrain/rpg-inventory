@@ -1,8 +1,10 @@
 package com.github.theredbrain.bamcore.block;
 
 import com.github.theredbrain.bamcore.api.block.AbstractSetSpawnBlock;
+import com.github.theredbrain.bamcore.api.block.InteractiveAdventurePlantBlock;
 import com.github.theredbrain.bamcore.block.entity.BonfireBlockBlockEntity;
 import com.github.theredbrain.bamcore.registry.EntityRegistry;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
@@ -24,6 +26,11 @@ public class BonfireBlock extends AbstractSetSpawnBlock implements BlockEntityPr
     protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 7.0, 16.0);
     public BonfireBlock(Settings settings) {
         super(null, SoundEvents.ITEM_FIRECHARGE_USE, SoundEvents.BLOCK_RESPAWN_ANCHOR_SET_SPAWN, true, false, settings);
+    }
+
+    // TODO Block Codecs
+    public MapCodec<BonfireBlock> getCodec() {
+        return null;
     }
 
     @Nullable

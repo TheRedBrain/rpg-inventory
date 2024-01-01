@@ -8,7 +8,7 @@ import com.github.theredbrain.bamcore.network.event.PlayerFirstJoinCallback;
 import com.github.theredbrain.bamcore.network.event.PlayerJoinCallback;
 import com.github.theredbrain.bamcore.network.packet.AttackStaminaCostPacket;
 import com.github.theredbrain.bamcore.network.packet.BetterAdventureModeCoreServerPacket;
-import net.bettercombat.api.client.BetterCombatClientEvents;
+//import net.bettercombat.api.client.BetterCombatClientEvents;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -43,10 +43,11 @@ public class EventsRegistry {
     @Environment(EnvType.CLIENT)
     public static void initializeClientEvents() {
 
-        BetterCombatClientEvents.ATTACK_START.register((clientPlayerEntity, attackHand) -> {
-            ClientPlayNetworking.send(new AttackStaminaCostPacket(
-                    attackHand.itemStack()
-            ));
-        });
+//        // TODO BetterCombat 1.20.4
+//        BetterCombatClientEvents.ATTACK_START.register((clientPlayerEntity, attackHand) -> {
+//            ClientPlayNetworking.send(new AttackStaminaCostPacket(
+//                    attackHand.itemStack()
+//            ));
+//        });
     }
 }

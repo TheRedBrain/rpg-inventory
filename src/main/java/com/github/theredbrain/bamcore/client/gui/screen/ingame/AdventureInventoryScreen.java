@@ -314,7 +314,7 @@ public class AdventureInventoryScreen extends HandledScreen<PlayerScreenHandler>
         if (statusEffectInstance.isInfinite()) {
             return List.of(getStatusEffectName(statusEffectInstance), getStatusEffectDescription(statusEffectInstance));
         }
-        return List.of(getStatusEffectName(statusEffectInstance), StatusEffectUtil.getDurationText(statusEffectInstance, 1.0f), getStatusEffectDescription(statusEffectInstance));
+        return List.of(getStatusEffectName(statusEffectInstance), StatusEffectUtil.getDurationText(statusEffectInstance, 1.0f, this.client.world.getTickManager().getTickRate()), getStatusEffectDescription(statusEffectInstance));
     }
 
     private Text getStatusEffectName(StatusEffectInstance statusEffectInstance) {

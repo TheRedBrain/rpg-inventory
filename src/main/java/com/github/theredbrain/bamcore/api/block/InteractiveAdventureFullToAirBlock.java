@@ -1,7 +1,9 @@
 package com.github.theredbrain.bamcore.api.block;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.HangingSignBlock;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.item.Item;
@@ -17,6 +19,11 @@ public class InteractiveAdventureFullToAirBlock extends AbstractInteractiveAdven
     // fake walls
     public InteractiveAdventureFullToAirBlock(@Nullable Block cloakedBlock, @Nullable Identifier cloakAdvancementIdentifier, @Nullable TagKey<Item> requiredTools, boolean requiresTools, int respawnModifier, Settings settings) {
         super(cloakedBlock, cloakAdvancementIdentifier, requiredTools, requiresTools, respawnModifier, settings);
+    }
+
+    // TODO Block Codecs
+    public MapCodec<InteractiveAdventureFullToAirBlock> getCodec() {
+        return null;
     }
 
     @Override

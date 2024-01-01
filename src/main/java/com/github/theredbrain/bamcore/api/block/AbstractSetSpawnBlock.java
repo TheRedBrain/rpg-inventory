@@ -2,6 +2,8 @@ package com.github.theredbrain.bamcore.api.block;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.UnmodifiableIterator;
+import com.mojang.serialization.MapCodec;
+import net.minecraft.block.AbstractSignBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Dismounting;
@@ -58,6 +60,8 @@ public abstract class AbstractSetSpawnBlock extends Block {
         this.requiresActivation = requiresActivation;
         this.setDefaultState(this.getStateManager().getDefaultState().with(ACTIVE, !this.requiresActivation).with(FACING, Direction.NORTH));
     }
+
+    protected abstract MapCodec<? extends AbstractSetSpawnBlock> getCodec();
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {

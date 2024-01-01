@@ -4,7 +4,6 @@
   "package": "com.github.theredbrain.bamcore.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "bettercombat.PlayerAttackHelperMixin",
     "block.RespawnAnchorBlockMixin",
     "enchantment.EnchantmentHelperMixin",
     "entity.DamageUtilMixin",

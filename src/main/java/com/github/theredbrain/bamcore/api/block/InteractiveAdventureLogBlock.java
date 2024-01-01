@@ -1,5 +1,6 @@
 package com.github.theredbrain.bamcore.api.block;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
@@ -27,6 +28,11 @@ public class InteractiveAdventureLogBlock extends AbstractInteractiveAdventureBl
     public InteractiveAdventureLogBlock(@Nullable Block cloakedBlock, @Nullable Identifier cloakAdvancementIdentifier, @Nullable TagKey<Item> requiredTools, boolean requiresTools, int respawnModifier, Settings settings) {
         super(cloakedBlock, cloakAdvancementIdentifier, requiredTools, requiresTools, respawnModifier, settings);
         this.setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH));
+    }
+
+    // TODO Block Codecs
+    public MapCodec<InteractiveAdventureLogBlock> getCodec() {
+        return null;
     }
 
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {

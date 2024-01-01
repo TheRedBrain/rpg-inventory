@@ -1,6 +1,7 @@
 package com.github.theredbrain.bamcore.block;
 
 import com.github.theredbrain.bamcore.block.entity.RelayTriggerBlockBlockEntity;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
@@ -17,6 +18,11 @@ public class RelayTriggerBlock extends RotatedBlockWithEntity {
 
     public RelayTriggerBlock(Settings settings) {
         super(settings);
+    }
+
+    // TODO Block Codecs
+    public MapCodec<RelayTriggerBlock> getCodec() {
+        return null;
     }
 
     @Nullable

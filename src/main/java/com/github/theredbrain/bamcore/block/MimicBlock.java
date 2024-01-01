@@ -2,6 +2,7 @@ package com.github.theredbrain.bamcore.block;
 
 import com.github.theredbrain.bamcore.block.entity.MimicBlockEntity;
 import com.github.theredbrain.bamcore.registry.BlockRegistry;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.ai.pathing.NavigationType;
@@ -25,6 +26,11 @@ public class MimicBlock extends RotatedBlockWithEntity {
     public MimicBlock(Settings settings) {
         super(settings);
         this.setDefaultState(this.stateManager.getDefaultState().with(TRIGGERED, false));
+    }
+
+    // TODO Block Codecs
+    public MapCodec<MimicBlock> getCodec() {
+        return null;
     }
 
     @Override

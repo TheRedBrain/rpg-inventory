@@ -1,6 +1,7 @@
 package com.github.theredbrain.bamcore.block;
 
 import com.github.theredbrain.bamcore.block.entity.TriggeredSpawnerBlockEntity;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -16,6 +17,11 @@ public class TriggeredSpawnerBlock extends RotatedBlockWithEntity {
 
     public TriggeredSpawnerBlock(Settings settings) {
         super(settings);
+    }
+
+    // TODO Block Codecs
+    public MapCodec<TriggeredSpawnerBlock> getCodec() {
+        return null;
     }
 
     @Nullable
