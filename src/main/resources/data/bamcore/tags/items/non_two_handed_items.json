@@ -1,8 +1,5 @@
 {
   "values": [
-    "bamcore:default_empty_hand_weapon",
-    "bamcore:elemental_fire_wand",
-    "bamcore:elemental_ice_wand",
-    "bamcore:test_wand"
+    "bamcore:default_empty_hand_weapon"
   ]
 }

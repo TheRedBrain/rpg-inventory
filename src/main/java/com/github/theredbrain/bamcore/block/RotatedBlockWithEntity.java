@@ -27,6 +27,7 @@ public abstract class RotatedBlockWithEntity extends BlockWithEntity {
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(ROTATED, X_MIRRORED, Z_MIRRORED);
     }
+
     @Override
     public BlockState rotate(BlockState state, BlockRotation rotation) {
         return state.with(RotatedBlockWithEntity.ROTATED, BlockRotationUtils.calculateNewRotatedBlockState(state.get(RotatedBlockWithEntity.ROTATED), rotation));
@@ -41,5 +42,4 @@ public abstract class RotatedBlockWithEntity extends BlockWithEntity {
         }
         return state;
     }
-
 }

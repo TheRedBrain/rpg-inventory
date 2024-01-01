@@ -11,9 +11,15 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import me.shedaniel.autoconfig.serializer.PartitioningSerializer;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.ModContainer;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static net.fabricmc.fabric.api.resource.ResourceManagerHelper.registerBuiltinResourcePack;
 
 public class BetterAdventureModeCore implements ModInitializer {
 	public static final String MOD_ID = "bamcore";
@@ -46,6 +52,11 @@ public class BetterAdventureModeCore implements ModInitializer {
 		StatusEffectsRegistry.registerEffects();
 		GameRulesRegistry.init();
 		PredicateRegistry.init();
+	}
+
+	static {
+		ModContainer modContainer = FabricLoader.getInstance().getModContainer(MOD_ID).get();
+		registerBuiltinResourcePack(new Identifier(MOD_ID, "better_adventure_mode_spell_engine_compat"), modContainer, Text.translatable("redbrainstweaks.builtin_resource_packs.better_adventure_mode_spell_engine_compat"), ResourcePackActivationType.NORMAL);
 	}
 
 	public static Identifier identifier(String path) {

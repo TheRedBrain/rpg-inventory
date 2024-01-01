@@ -20,8 +20,6 @@
     "bamcore:diamond_sword",
     "bamcore:golden_sword",
     "bamcore:netherite_sword",
-    "bamcore:test_sword",
-    "bamcore:elemental_fire_wand",
-    "bamcore:elemental_ice_wand"
+    "bamcore:test_sword"
   ]
 }

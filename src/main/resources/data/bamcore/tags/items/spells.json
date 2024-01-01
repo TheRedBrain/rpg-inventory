@@ -1,12 +1,4 @@
 {
   "values": [
-    "bamcore:fireball_spell_book",
-    "bamcore:dragons_breath_spell_book",
-    "bamcore:ring_of_fire_spell_book",
-    "bamcore:frost_shards_spell_book",
-    "bamcore:glacier_spell_book",
-    "bamcore:cold_snap_spell_book",
-    "bamcore:lightning_strike_spell_book",
-    "bamcore:water_spray_spell_book"
   ]
 }
