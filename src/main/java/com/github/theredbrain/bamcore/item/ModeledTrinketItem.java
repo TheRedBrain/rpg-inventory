@@ -1,10 +1,10 @@
 package com.github.theredbrain.bamcore.item;
 
 import dev.emi.trinkets.api.TrinketItem;
-import mod.azure.azurelibarmor.animatable.GeoItem;
-import mod.azure.azurelibarmor.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelibarmor.core.animation.AnimatableManager;
-import mod.azure.azurelibarmor.util.AzureLibUtil;
+import mod.azure.azurelib.animatable.GeoItem;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.util.AzureLibUtil;
 import net.minecraft.util.Identifier;
 
 import java.util.function.Supplier;

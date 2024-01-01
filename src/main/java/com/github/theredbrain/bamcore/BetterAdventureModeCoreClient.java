@@ -5,6 +5,7 @@ import com.github.theredbrain.bamcore.client.network.packet.BetterAdventureModeC
 import com.github.theredbrain.bamcore.client.render.block.entity.HousingBlockBlockEntityRenderer;
 import com.github.theredbrain.bamcore.client.render.block.entity.MimicBlockEntityRenderer;
 import com.github.theredbrain.bamcore.client.render.block.entity.TeleporterBlockBlockEntityRenderer;
+import com.github.theredbrain.bamcore.client.render.renderer.SpawnerBoundEntityRenderer;
 import com.github.theredbrain.bamcore.config.ClientConfig;
 import com.github.theredbrain.bamcore.config.ClientConfigWrapper;
 import com.github.theredbrain.bamcore.registry.*;
@@ -14,6 +15,7 @@ import me.shedaniel.autoconfig.serializer.PartitioningSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.render.RenderLayer;
@@ -43,6 +45,7 @@ public class BetterAdventureModeCoreClient implements ClientModInitializer {
         registerTransparency();
         registerSpellModels();
         registerBlockEntityRenderer();
+        registerEntityRenderer();
         registerScreens();
         registerModelPredicateProviders();
         registerColors();
@@ -91,6 +94,10 @@ public class BetterAdventureModeCoreClient implements ClientModInitializer {
         BlockEntityRendererFactories.register(EntityRegistry.HOUSING_BLOCK_ENTITY, HousingBlockBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(EntityRegistry.MIMIC_BLOCK_ENTITY, MimicBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(EntityRegistry.TELEPORTER_BLOCK_ENTITY, TeleporterBlockBlockEntityRenderer::new);
+    }
+
+    private void registerEntityRenderer() {
+        EntityRendererRegistry.register(EntityRegistry.SPAWNER_BOUND_ENTITY, SpawnerBoundEntityRenderer::new);
     }
 
     private void registerScreens() {

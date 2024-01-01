@@ -45,6 +45,6 @@
     "java": ">=17",
     "bettercombat": ">=1.7.2+1.19.4-fabric",
     "trinkets": ">=3.7.1",
-    "azurelibarmor": ">=1.0.3"
+    "azurelib": ">=1.0.3"
   }
 }

@@ -2,7 +2,7 @@ package com.github.theredbrain.bamcore.client.render.model;
 
 import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.api.item.ArmorTrinketItem;
-import mod.azure.azurelibarmor.model.GeoModel;
+import mod.azure.azurelib.model.GeoModel;
 import net.minecraft.util.Identifier;
 
 public class ArmorTrinketModel extends GeoModel<ArmorTrinketItem> {

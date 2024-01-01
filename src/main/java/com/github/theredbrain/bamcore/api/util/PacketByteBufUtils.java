@@ -1,11 +1,35 @@
 package com.github.theredbrain.bamcore.api.util;
 
+import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
 import org.apache.commons.lang3.tuple.MutablePair;
 
 public class PacketByteBufUtils {
+
+    public static class PairStringEntityAttributeModifierListReader implements PacketByteBuf.PacketReader<MutablePair<String, EntityAttributeModifier>> {
+        @Override
+        public MutablePair<String, EntityAttributeModifier> apply(PacketByteBuf packetByteBuf) {
+            return new MutablePair<>(packetByteBuf.readString(), new EntityAttributeModifier(
+                    packetByteBuf.readUuid(),
+                    packetByteBuf.readString(),
+                    packetByteBuf.readDouble(),
+                    EntityAttributeModifier.Operation.fromId(packetByteBuf.readInt())
+            ));
+        }
+    }
+
+    public static class PairStringEntityAttributeModifierListWriter implements PacketByteBuf.PacketWriter<MutablePair<String, EntityAttributeModifier>> {
+        @Override
+        public void accept(PacketByteBuf packetByteBuf, MutablePair<String, EntityAttributeModifier> stringEntityAttributeModifierPair) {
+            packetByteBuf.writeString(stringEntityAttributeModifierPair.getLeft());
+            packetByteBuf.writeUuid(stringEntityAttributeModifierPair.getRight().getId());
+            packetByteBuf.writeString(stringEntityAttributeModifierPair.getRight().getName());
+            packetByteBuf.writeDouble(stringEntityAttributeModifierPair.getRight().getValue());
+            packetByteBuf.writeInt(stringEntityAttributeModifierPair.getRight().getOperation().getId());
+        }
+    }
 
     public static class PairStringStringListReader implements PacketByteBuf.PacketReader<Pair<String, String>> {
         @Override

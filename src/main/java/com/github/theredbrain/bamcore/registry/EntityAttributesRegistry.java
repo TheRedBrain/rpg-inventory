@@ -1,5 +1,7 @@
 package com.github.theredbrain.bamcore.registry;
 
+import com.github.theredbrain.bamcore.entity.mob.SpawnerBoundEntity;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.entity.attribute.ClampedEntityAttribute;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.registry.Registries;
@@ -30,5 +32,10 @@ public class EntityAttributesRegistry {
         Registry.register(Registries.ATTRIBUTE, "generic.max_magic_shield", MAX_MAGIC_SHIELD);
         Registry.register(Registries.ATTRIBUTE, "generic.max_poise", MAX_POISE);
         Registry.register(Registries.ATTRIBUTE, "generic.active_spell_slot_amount", ACTIVE_SPELL_SLOT_AMOUNT);
+    }
+
+    public static void registerEntityAttributes() {
+
+        FabricDefaultAttributeRegistry.register(EntityRegistry.SPAWNER_BOUND_ENTITY, SpawnerBoundEntity.createMobAttributes());
     }
 }

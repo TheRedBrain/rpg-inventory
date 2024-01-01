@@ -1,10 +1,10 @@
 package com.github.theredbrain.bamcore.azurelib;
 
 import com.github.theredbrain.bamcore.client.render.renderer.ModeledTrinketRenderer;
-import mod.azure.azurelibarmor.cache.object.BakedGeoModel;
-import mod.azure.azurelibarmor.event.GeoRenderEvent;
-import mod.azure.azurelibarmor.renderer.GeoRenderer;
-import mod.azure.azurelibarmor.renderer.layer.GeoRenderLayer;
+import mod.azure.azurelib.cache.object.BakedGeoModel;
+import mod.azure.azurelib.event.GeoRenderEvent;
+import mod.azure.azurelib.renderer.GeoRenderer;
+import mod.azure.azurelib.renderer.layer.GeoRenderLayer;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.client.render.VertexConsumerProvider;

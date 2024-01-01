@@ -33,9 +33,10 @@ public class BetterAdventureModeCore implements ModInitializer {
 
 		// Registry
 		BlockRegistry.init();
-		EntityAttributesRegistry.registerAttributes();
-		DimensionsManager.init();
 		EntityRegistry.init();
+		EntityAttributesRegistry.registerAttributes();
+		EntityAttributesRegistry.registerEntityAttributes();
+		DimensionsManager.init();
 		EventsRegistry.initializeEvents();
 		DialoguesRegistry.init();
 		PlayerLocationsRegistry.init();

@@ -10,6 +10,7 @@
 	"gui.add": "Add",
 	"gui.remove": "Remove",
 	"gui.delete": "Delete",
+	"gui.close": "Close",
 	"gui.list_entry.add": "Add new entry",
 	"gui.list_entry.remove": "Remove entry",
 	"gui.edit_teleporter_title": "Edit Teleporter",
@@ -212,19 +213,44 @@
 	"gui.location_controller_block.screenPage.side_entrances": "Side Entrances",
 	"gui.location_controller_block.screenPage.triggered_block": "Triggered Block",
 
-	"gui.triggered_spawner_block.spawning_mode_label": "Spawning Mode",
-	"gui.triggered_spawner_block.entity_spawn_position_offset_label": "Entity Spawn Position Offset",
-	"gui.triggered_spawner_block.entity_spawn_orientation_label": "Entity Spawn Orientation",
-	"gui.triggered_spawner_block.entity_type_label": "Entity Type Identifier",
+	"gui.triggered_spawner_block.spawner_bound_entity_name_field_label": "Name",
+	"gui.triggered_spawner_block.spawner_bound_entity_model_identifier_field_label": "Model Identifier",
+	"gui.triggered_spawner_block.spawner_bound_entity_texture_identifier_field_label": "Texture Identifier",
+	"gui.triggered_spawner_block.spawner_bound_entity_animations_identifier_field_label": "Animations Identifier",
+	"gui.triggered_spawner_block.spawner_bound_entity_bounding_box_height_field_label": "Bounding Box Height",
+	"gui.triggered_spawner_block.spawner_bound_entity_bounding_box_width_field_label": "Bounding Box Width",
+	"gui.triggered_spawner_block.spawner_bound_entity_loot_table_identifier_field_label": "Loot Table Identifier",
 
+	"gui.triggered_spawner_block.spawning_mode_label": "Spawning Mode",
+	"gui.triggered_spawner_block.entity_mode_label": "Entity Mode",
+	"gui.triggered_spawner_block.entity_spawn_position_offset_label": "Entity Spawn Position Offset",
+	"gui.triggered_spawner_block.entity_type_label": "Entity Type Identifier",
+	"gui.triggered_spawner_block.open_spawner_bound_entity_config_screen_button_label": "Open Spawner Bound Entity Config",
+
+	"gui.triggered_spawner_block.creativeScreenPage.misc": "Misc",
+	"gui.triggered_spawner_block.creativeScreenPage.entity_attribute_modifier": "Entity Attribute Modifiers",
+	"gui.triggered_spawner_block.creativeScreenPage.triggered_block": "Triggered Block",
+
+	"gui.triggered_spawner_block.spawning_mode.once": "Once",
 	"gui.triggered_spawner_block.spawning_mode.continuous": "Continuous",
-	"gui.triggered_spawner_block.spawning_mode.triggered": "Triggered",
+	"gui.triggered_spawner_block.spawning_mode.bound": "Bound",
+
+	"gui.triggered_spawner_block.entity_mode.identifier": "Identifier",
+	"gui.triggered_spawner_block.entity_mode.spawner_bound_entity": "Spawner Bound Entity",
+
+	"gui.triggered_spawner_block.new_entity_attribute_modifier_identifier_label": "Attribute Identifier",
+	"gui.triggered_spawner_block.new_entity_attribute_modifier_name_label": "Name",
+	"gui.triggered_spawner_block.new_entity_attribute_modifier_value_label": "Value",
 
 	"gui.triggered_block.newTriggeredBlockPositionOffset": "New Triggered Block Position Offset",
 	"gui.triggered_block.triggeredBlockPositionOffset": "Triggered Block Position Offset",
 	"gui.triggered_block.triggeredBlockPositionOffsetX.placeholder": "X",
 	"gui.triggered_block.triggeredBlockPositionOffsetY.placeholder": "Y",
 	"gui.triggered_block.triggeredBlockPositionOffsetZ.placeholder": "Z",
+
+	"gui.entity_attribute_modifier.operation.addition": "Addition",
+	"gui.entity_attribute_modifier.operation.multiply_base": "Multiply Base",
+	"gui.entity_attribute_modifier.operation.multiply_total": "Multiply Total",
 
 	"block.bamcore.area_filler_block": "Area Filler Block",
 	"block.bamcore.redstone_trigger_block": "Redstone Trigger Block",

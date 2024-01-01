@@ -1,7 +1,7 @@
 package com.github.theredbrain.bamcore.azurelib;
 
-import mod.azure.azurelibarmor.animatable.GeoItem;
-import mod.azure.azurelibarmor.animatable.client.RenderProvider;
+import mod.azure.azurelib.animatable.GeoItem;
+import mod.azure.azurelib.animatable.client.RenderProvider;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.entity.LivingEntity;

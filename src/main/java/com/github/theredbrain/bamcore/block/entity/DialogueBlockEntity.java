@@ -44,7 +44,7 @@ public class DialogueBlockEntity extends RotatedBlockEntity {
         nbt.putInt("dialogueUsedBlocksKeysSize", dialogueUsedBlocksKeys.size());
         for (int i = 0; i < dialogueUsedBlocksKeys.size(); i++) {
             String key = dialogueUsedBlocksKeys.get(i);
-            nbt.putString("dialogueUsedBlocks_key" + i, key);
+            nbt.putString("dialogueUsedBlocks_key_" + i, key);
             nbt.putInt("dialogueUsedBlocks_entry_X_" + i, this.dialogueUsedBlocks.get(key).getX());
             nbt.putInt("dialogueUsedBlocks_entry_Y_" + i, this.dialogueUsedBlocks.get(key).getY());
             nbt.putInt("dialogueUsedBlocks_entry_Z_" + i, this.dialogueUsedBlocks.get(key).getZ());
@@ -65,7 +65,7 @@ public class DialogueBlockEntity extends RotatedBlockEntity {
         this.dialogueUsedBlocks.clear();
         int dialogueUsedBlocksKeysSize = nbt.getInt("dialogueUsedBlocksKeysSize");
         for (int i = 0; i < dialogueUsedBlocksKeysSize; i++) {
-            this.dialogueUsedBlocks.put(nbt.getString("dialogueUsedBlocks_key" + i), new BlockPos(
+            this.dialogueUsedBlocks.put(nbt.getString("dialogueUsedBlocks_key_" + i), new BlockPos(
                     MathHelper.clamp(nbt.getInt("dialogueUsedBlocks_entry_X_" + i), -48, 48),
                     MathHelper.clamp(nbt.getInt("dialogueUsedBlocks_entry_Y_" + i), -48, 48),
                     MathHelper.clamp(nbt.getInt("dialogueUsedBlocks_entry_Z_" + i), -48, 48)
