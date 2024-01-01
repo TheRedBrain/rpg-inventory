@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "bamcore",
-  "version": "0.0.1.52",
+  "version": "0.0.1.53",
 
   "name": "Better Adventure Mode - Core",
   "description": "This mod adds mechanics which allow for a more RPG styled gameplay.",
