@@ -179,11 +179,9 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
     }
 
     //region button callbacks
-    private void teleport() {
-        if (this.tryTeleport()) {
-            this.close();
-        }
-    }
+//    private void teleport() {
+//        this.tryTeleport();
+//    }
 
     private void cancelTeleport() {
         this.close();
@@ -241,9 +239,8 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
     }
 
     private void done() {
-        if (this.updateTeleporterBlock()) {
-            this.close();
-        }
+        this.updateTeleporterBlock();
+        this.close();
     }
 
     private void cancel() {
@@ -1082,7 +1079,7 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
         optional.ifPresent(text -> context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines((StringVisitable)text, 115), mouseX, mouseY));
     }
 
-    private boolean updateTeleporterBlock() {
+    private void updateTeleporterBlock() {
 
         BlockPos directTeleportPositionOffset;
         double directTeleportPositionOffsetYaw;
@@ -1149,7 +1146,6 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
                 this.teleportButtonLabelField.getText(),
                 this.cancelTeleportButtonLabelField.getText()
         ));
-        return true;
     }
 
     private boolean tryDungeonRegeneration() {
@@ -1170,7 +1166,7 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
         return true;
     }
 
-    private boolean tryTeleport() {
+    private void teleport() {
         String currentWorld = "";
         if (this.teleporterBlock.getWorld() != null) {
             currentWorld = this.teleporterBlock.getWorld().getRegistryKey().getValue().toString();
@@ -1189,7 +1185,6 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
                 this.currentTargetIdentifier,
                 this.currentTargetEntrance)
         );
-        return true;
     }
 
     private void givePortalResistanceEffect() {

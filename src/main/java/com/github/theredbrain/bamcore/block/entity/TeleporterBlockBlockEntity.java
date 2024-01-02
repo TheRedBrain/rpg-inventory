@@ -37,6 +37,8 @@ import java.util.Optional;
 
 public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements ExtendedScreenHandlerFactory, Inventory {
 
+    private boolean calculateActivationBox = true;
+    private Box activationArea = null;
     private boolean showAdventureScreen = true; //
     private boolean showActivationArea = false;
     private Vec3i activationAreaDimensions = Vec3i.ZERO;
@@ -123,6 +125,13 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
         nbt.putString("teleportButtonLabel", this.teleportButtonLabel);
         nbt.putString("cancelTeleportButtonLabel", this.cancelTeleportButtonLabel);
 
+        nbt.putDouble("activationAreaMinX", this.activationArea.minX);
+        nbt.putDouble("activationAreaMaxX", this.activationArea.maxX);
+        nbt.putDouble("activationAreaMinY", this.activationArea.minY);
+        nbt.putDouble("activationAreaMaxY", this.activationArea.maxY);
+        nbt.putDouble("activationAreaMinZ", this.activationArea.minZ);
+        nbt.putDouble("activationAreaMaxZ", this.activationArea.maxZ);
+
         super.writeNbt(nbt);
     }
 
@@ -179,6 +188,9 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
         this.teleportButtonLabel = nbt.getString("teleportButtonLabel");
         this.cancelTeleportButtonLabel = nbt.getString("cancelTeleportButtonLabel");
 
+        this.activationArea = new Box(nbt.getDouble("activationAreaMinX"), nbt.getDouble("activationAreaMinY"), nbt.getDouble("activationAreaMinZ"), nbt.getDouble("activationAreaMaxX"), nbt.getDouble("activationAreaMaxY"), nbt.getDouble("activationAreaMaxZ"));
+        this.calculateActivationBox = true;
+
         super.readNbt(nbt);
     }
 
@@ -193,9 +205,9 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
 
     public static void tick(World world, BlockPos pos, BlockState state, TeleporterBlockBlockEntity blockEntity) {
 
-        if (!world.isClient && world.getTime() % 20L == 0L) {
+//        if (!world.isClient && world.getTime() % 20L == 0L) {
             TeleporterBlockBlockEntity.tryOpenScreenRemotely(world, pos, state, blockEntity);
-        }
+//        }
     }
 
     private static void tryOpenScreenRemotely(World world, BlockPos pos, BlockState state, TeleporterBlockBlockEntity blockEntity) {
@@ -203,14 +215,17 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
             return;
         }
         if (state.isOf(BlockRegistry.TELEPORTER_BLOCK) && world.getBlockEntity(pos) != null && world.getBlockEntity(pos).getType() == blockEntity.getType()) {
-            BlockPos activationAreaPositionOffset = blockEntity.getActivationAreaPositionOffset();
-            Vec3i activationAreaDimensions = blockEntity.getActivationAreaDimensions();
-            Vec3d activationAreaStart = new Vec3d(pos.getX() + activationAreaPositionOffset.getX(), pos.getY() + activationAreaPositionOffset.getY(), pos.getZ() + activationAreaPositionOffset.getZ());
-            Vec3d activationAreaEnd = new Vec3d(activationAreaStart.getX() + activationAreaDimensions.getX(), activationAreaStart.getY() + activationAreaDimensions.getY(), activationAreaStart.getZ() + activationAreaDimensions.getZ());
-            Box activationArea = new Box(activationAreaStart, activationAreaEnd);
-            List<PlayerEntity> list = world.getNonSpectatingEntities(PlayerEntity.class, activationArea);
+            if (blockEntity.calculateActivationBox || blockEntity.activationArea == null) {
+                BlockPos activationAreaPositionOffset = blockEntity.getActivationAreaPositionOffset();
+                Vec3i activationAreaDimensions = blockEntity.getActivationAreaDimensions();
+                Vec3d activationAreaStart = new Vec3d(pos.getX() + activationAreaPositionOffset.getX(), pos.getY() + activationAreaPositionOffset.getY(), pos.getZ() + activationAreaPositionOffset.getZ());
+                Vec3d activationAreaEnd = new Vec3d(activationAreaStart.getX() + activationAreaDimensions.getX(), activationAreaStart.getY() + activationAreaDimensions.getY(), activationAreaStart.getZ() + activationAreaDimensions.getZ());
+                blockEntity.activationArea = new Box(activationAreaStart, activationAreaEnd);
+                blockEntity.calculateActivationBox = false;
+            }
+            List<PlayerEntity> list = world.getNonSpectatingEntities(PlayerEntity.class, blockEntity.activationArea);
             for (PlayerEntity playerEntity : list) {
-                if (!playerEntity.hasStatusEffect(StatusEffectsRegistry.PORTAL_RESISTANCE_EFFECT)) {
+                if (!playerEntity.hasStatusEffect(StatusEffectsRegistry.PORTAL_RESISTANCE_EFFECT) && !playerEntity.isCreative()) {
                     // prevents continuous opening of a screen
                     playerEntity.setStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.PORTAL_RESISTANCE_EFFECT, -1), playerEntity);
                     playerEntity.openHandledScreen(state.createScreenHandlerFactory(world, pos));
@@ -261,6 +276,7 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
     // TODO check if input is valid
     public boolean setActivationAreaDimensions(Vec3i activationAreaDimensions) {
         this.activationAreaDimensions = activationAreaDimensions;
+        this.calculateActivationBox = true;
         return true;
     }
 
@@ -271,6 +287,7 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
     // TODO check if input is valid
     public boolean setActivationAreaPositionOffset(BlockPos activationAreaPositionOffset) {
         this.activationAreaPositionOffset = activationAreaPositionOffset;
+        this.calculateActivationBox = true;
         return true;
     }
 
@@ -552,8 +569,7 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
         }
     }
 
-    public static enum TeleportationMode implements StringIdentifiable
-    {
+    public static enum TeleportationMode implements StringIdentifiable {
         DIRECT("direct"),
         SPAWN_POINTS("spawn_points"),
         PLAYER_LOCATIONS("player_locations");
@@ -578,8 +594,7 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
         }
     }
 
-    public static enum SpawnPointType implements StringIdentifiable
-    {
+    public static enum SpawnPointType implements StringIdentifiable {
         WORLD_SPAWN("world_spawn"),
         PLAYER_SPAWN("player_spawn"),
         PLAYER_LOCATION_ACCESS_POSITION("player_location_access_position");
