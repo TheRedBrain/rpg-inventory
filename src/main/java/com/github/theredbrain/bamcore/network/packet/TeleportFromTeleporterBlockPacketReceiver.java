@@ -71,9 +71,11 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
             } else if (spawnPointType == TeleporterBlockBlockEntity.SpawnPointType.PLAYER_SPAWN) {
                 targetWorld = server.getWorld(serverPlayerEntity.getSpawnPointDimension());
                 targetPos = serverPlayerEntity.getSpawnPointPosition();
+                targetYaw = serverPlayerEntity.getSpawnAngle();
             } else {
                 targetWorld = server.getOverworld();
                 targetPos = server.getOverworld().getSpawnPos();
+                targetYaw = server.getOverworld().getSpawnAngle();
             }
         } else if (teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.PLAYER_LOCATIONS) {
             ServerPlayerEntity targetDimensionOwner = server.getPlayerManager().getPlayer(targetDimensionOwnerName);

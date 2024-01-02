@@ -24,7 +24,8 @@
     "server.network.ServerPlayerEntityMixin",
     "server.network.ServerPlayerInteractionManagerMixin",
     "server.network.ServerPlayNetworkHandlerMixin",
-    "trinkets.SurvivalTrinketSlotMixin"
+    "trinkets.SurvivalTrinketSlotMixin",
+    "world.WorldMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -115,8 +115,8 @@ dependencies {
 	// Mixin Extras
 //	include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:${project.mixin_extras_version}")))
 
-	// Tiny Config
-	implementation include("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}")
+//	// Tiny Config
+//	implementation include("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}")
 
 //	// Revelationary
 //	modImplementation "maven.modrinth:Revelationary:${project.revelationary_version}"
