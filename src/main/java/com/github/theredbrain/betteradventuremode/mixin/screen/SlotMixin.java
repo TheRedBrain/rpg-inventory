@@ -3,6 +3,7 @@ package com.github.theredbrain.betteradventuremode.mixin.screen;
 import com.github.theredbrain.betteradventuremode.screen.DuckSlotMixin;
 import net.minecraft.screen.slot.Slot;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -11,6 +12,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Slot.class)
 public class SlotMixin implements DuckSlotMixin {
 
+    @Shadow public int x;
+
+    @Shadow public int y;
+
+    public void betteradventuremode$setX(int x) {
+        this.x = x;
+    }
+    public void betteradventuremode$setY(int y) {
+        this.y = y;
+    }
     @Unique
     private boolean betteradventuremode$disabledOverride = false;
 

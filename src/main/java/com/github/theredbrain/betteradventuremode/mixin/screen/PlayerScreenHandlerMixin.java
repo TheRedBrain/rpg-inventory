@@ -69,11 +69,13 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
         if (BetterAdventureMode.serverConfig.use_adventure_inventory_screen) {
             for (int i = 0; i < 3; ++i) {
                 for (int j = 0; j < 9; ++j) {
-                    this.slots.get(j + (i + 1) * 9).y = 146 + i * 18;
+//                    this.slots.get(j + (i + 1) * 9).y = 146 + i * 18;
+                    ((DuckSlotMixin)this.slots.get(j + (i + 1) * 9)).betteradventuremode$setY(146 + i * 18);
                 }
             }
             for (int i = 0; i < 9; ++i) {
-                this.slots.get(i + 36).y = 204;
+//                this.slots.get(i + 36).y = 204;
+                ((DuckSlotMixin)this.slots.get(i + 36)).betteradventuremode$setY(204);
             }
         }
 
