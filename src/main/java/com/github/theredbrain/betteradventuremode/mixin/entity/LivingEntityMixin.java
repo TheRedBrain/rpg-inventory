@@ -408,15 +408,15 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
 
 //        BetterAdventureModeCore.LOGGER.info("try apply stagger");
         // apply stagger
-        if (source.isIn(Tags.STAGGERS) && !(this.getStaggerLimitMultiplier() == -1 || this.hasStatusEffect(StatusEffectsRegistry.STAGGERED))) {
+        if (source.isIn(Tags.STAGGERS) && !(this.betteradventuremode$getStaggerLimitMultiplier() == -1 || this.hasStatusEffect(StatusEffectsRegistry.STAGGERED))) {
             float appliedStagger = (float) (amount * DamageUtility.getStaggerDamageMultiplierForDamageType(source));
 //            BetterAdventureModeCore.LOGGER.info("appliedStagger: " + appliedStagger);
-            this.bamcore$addPoise(appliedStagger);
+            this.betteradventuremode$addPoise(appliedStagger);
 //            BetterAdventureModeCore.LOGGER.info("this.bamcore$getPoise(): " + this.bamcore$getPoise());
 //            BetterAdventureModeCore.LOGGER.info("this.getMaxHealth() * this.getStaggerLimitMultiplier(): " + this.getMaxHealth() * this.getStaggerLimitMultiplier());
-            if (this.bamcore$getPoise() >= this.getMaxHealth() * this.getStaggerLimitMultiplier()) {
+            if (this.betteradventuremode$getPoise() >= this.getMaxHealth() * this.betteradventuremode$getStaggerLimitMultiplier()) {
 //                BetterAdventureModeCore.LOGGER.info(getEntityName() + " was staggered");
-                this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.STAGGERED, this.getStaggerDuration(), 0, false, false, true));
+                this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.STAGGERED, this.betteradventuremode$getStaggerDuration(), 0, false, false, true));
             }
         }
 
@@ -440,24 +440,24 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
 
     @Inject(method = "tick", at = @At("TAIL"))
     public void bamcore$tick(CallbackInfo ci) {
-        if (this.bamcore$getPoise() > 0) {
-            this.bamcore$addPoise((float) -(this.getMaxHealth() * this.getStaggerLimitMultiplier() * 0.01));
+        if (this.betteradventuremode$getPoise() > 0) {
+            this.betteradventuremode$addPoise((float) -(this.getMaxHealth() * this.betteradventuremode$getStaggerLimitMultiplier() * 0.01));
         }
     }
 
     @Override
-    public void bamcore$addPoise(float amount) {
-        float f = this.bamcore$getPoise();
-        this.bamcore$setPoise(f + amount);
+    public void betteradventuremode$addPoise(float amount) {
+        float f = this.betteradventuremode$getPoise();
+        this.betteradventuremode$setPoise(f + amount);
     }
 
     @Override
-    public float bamcore$getPoise() {
+    public float betteradventuremode$getPoise() {
         return this.dataTracker.get(POISE);
     }
 
     @Override
-    public void bamcore$setPoise(float poise) {
+    public void betteradventuremode$setPoise(float poise) {
         this.dataTracker.set(POISE, MathHelper.clamp(poise, 0, this.getMaxHealth()));
     }
 
@@ -465,12 +465,12 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
      * Returns the duration of the Staggered status effect when applied to this entity
      */
     @Override
-    public int getStaggerDuration() {
+    public int betteradventuremode$getStaggerDuration() {
         return 20;
     }
 
     @Override
-    public double getStaggerLimitMultiplier() {
+    public double betteradventuremode$getStaggerLimitMultiplier() {
         return 0.5;
     }
 }

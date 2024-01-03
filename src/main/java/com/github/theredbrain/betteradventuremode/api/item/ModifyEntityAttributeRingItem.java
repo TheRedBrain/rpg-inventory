@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.api.item;
 
-import com.github.theredbrain.betteradventuremode.api.util.BetterAdventureModCoreAttributeModifierUUIDs;
+import com.github.theredbrain.betteradventuremode.api.util.AttributeModifierUUIDs;
 import com.google.common.collect.Multimap;
 import dev.emi.trinkets.api.SlotReference;
 import net.minecraft.entity.LivingEntity;
@@ -34,12 +34,12 @@ public class ModifyEntityAttributeRingItem extends AccessoryTrinketItem {
         switch (slot.inventory().getSlotType().getGroup()) {
             case "rings_1":
                 map.put(this.attribute,
-                        new EntityAttributeModifier(UUID.fromString(BetterAdventureModCoreAttributeModifierUUIDs.RING_SLOT_1),
+                        new EntityAttributeModifier(UUID.fromString(AttributeModifierUUIDs.RING_SLOT_1),
                                 this.modifierName, this.amount, this.operation));
                 break;
             case "rings_2":
                 map.put(this.attribute,
-                        new EntityAttributeModifier(UUID.fromString(BetterAdventureModCoreAttributeModifierUUIDs.RING_SLOT_2),
+                        new EntityAttributeModifier(UUID.fromString(AttributeModifierUUIDs.RING_SLOT_2),
                                 this.modifierName, this.amount, this.operation));
                 break;
         }

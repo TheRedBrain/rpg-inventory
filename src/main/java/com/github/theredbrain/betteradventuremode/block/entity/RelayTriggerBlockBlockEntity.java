@@ -65,7 +65,7 @@ public class RelayTriggerBlockBlockEntity extends RotatedBlockEntity implements 
             return false;
         }
         if (player.getEntityWorld().isClient) {
-            ((DuckPlayerEntityMixin)player).bamcore$openRelayTriggerBlockScreen(this);
+            ((DuckPlayerEntityMixin)player).betteradventuremode$openRelayTriggerBlockScreen(this);
         }
         return true;
     }

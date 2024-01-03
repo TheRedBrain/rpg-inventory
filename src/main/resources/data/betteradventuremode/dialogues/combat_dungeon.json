@@ -1,0 +1,28 @@
+{
+  "dialogueTextList": [
+    "dialogue.betteradventuremode.combat_dungeon.dialogue_text.line_1",
+    "",
+    "dialogue.betteradventuremode.combat_dungeon.dialogue_text.line_3"
+  ],
+  "answerList": [
+    {
+      "answerText": "dialogue.betteradventuremode.combat_dungeon.answer_text.1",
+      "responseDialogue": "",
+      "lockAdvancement": "",
+      "unlockAdvancement": "",
+      "showLockedAnswer": true,
+      "usedBlock": "teleporter",
+      "triggeredBlock": "spawners"
+    },
+    {
+      "answerText": "dialogue.betteradventuremode.combat_dungeon.answer_text.2",
+      "responseDialogue": "",
+      "lockAdvancement": "",
+      "unlockAdvancement": "",
+      "showLockedAnswer": true
+    }
+  ],
+  "lockAdvancement": "",
+  "unlockAdvancement": "",
+  "cancellable": true
+}

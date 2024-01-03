@@ -27,7 +27,7 @@ public abstract class AbstractInteractiveAdventureFoodBlock extends AbstractInte
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!world.isClient() && state.isOf(this) && state.get(AbstractInteractiveAdventureBlock.INTACT) && ((DuckPlayerEntityMixin)player).bamcore$tryEatAdventureFood(this.statusEffectInstance)) {
+        if (!world.isClient() && state.isOf(this) && state.get(AbstractInteractiveAdventureBlock.INTACT) && ((DuckPlayerEntityMixin)player).betteradventuremode$tryEatAdventureFood(this.statusEffectInstance)) {
             player.addStatusEffect(new StatusEffectInstance(this.statusEffectInstance));
             world.setBlockState(pos, state.with(INTACT, false));
             return ActionResult.CONSUME;

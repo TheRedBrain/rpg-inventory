@@ -18,8 +18,8 @@ public class EventsRegistry {
             if (server.getGameRules().getBoolean(GameRulesRegistry.TELEPORT_TO_SPAWN_ON_LOGIN)) {
                 server.getPlayerManager().respawnPlayer(player, true);
             }
-            ((DuckPlayerInventoryMixin)player.getInventory()).bamcore$setEmptyMainHand(ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON.getDefaultStack());
-            ((DuckPlayerInventoryMixin)player.getInventory()).bamcore$setEmptyOffHand(ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON.getDefaultStack());
+            ((DuckPlayerInventoryMixin)player.getInventory()).betteradventuremode$setEmptyMainHand(ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON.getDefaultStack());
+            ((DuckPlayerInventoryMixin)player.getInventory()).betteradventuremode$setEmptyOffHand(ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON.getDefaultStack());
         });
         PlayerDeathCallback.EVENT.register((player, server, source) -> {
             if (server.getGameRules().getBoolean(GameRulesRegistry.RESET_ADVANCEMENTS_ON_DEATH)) {

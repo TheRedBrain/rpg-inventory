@@ -73,10 +73,10 @@ public abstract class InGameHudMixin {
     private void bamcore$renderHotbar(float tickDelta, DrawContext context, CallbackInfo ci) {
         PlayerEntity playerEntity = this.getCameraPlayer();
         if (playerEntity != null) {
-            ItemStack itemStackMainHand = ((DuckPlayerInventoryMixin)playerEntity.getInventory()).bamcore$getMainHand();
-            ItemStack itemStackOffHand = ((DuckPlayerInventoryMixin)playerEntity.getInventory()).bamcore$getOffHand();
-            ItemStack itemStackAlternativeMainHand = ((DuckPlayerInventoryMixin)playerEntity.getInventory()).bamcore$getAlternativeMainHand();
-            ItemStack itemStackAlternativeOffHand = ((DuckPlayerInventoryMixin)playerEntity.getInventory()).bamcore$getAlternativeOffHand();
+            ItemStack itemStackMainHand = ((DuckPlayerInventoryMixin)playerEntity.getInventory()).betteradventuremode$getMainHand();
+            ItemStack itemStackOffHand = ((DuckPlayerInventoryMixin)playerEntity.getInventory()).betteradventuremode$getOffHand();
+            ItemStack itemStackAlternativeMainHand = ((DuckPlayerInventoryMixin)playerEntity.getInventory()).betteradventuremode$getAlternativeMainHand();
+            ItemStack itemStackAlternativeOffHand = ((DuckPlayerInventoryMixin)playerEntity.getInventory()).betteradventuremode$getAlternativeOffHand();
             Arm arm = playerEntity.getMainArm().getOpposite();
             int i = this.scaledWidth / 2;
 
@@ -147,7 +147,7 @@ public abstract class InGameHudMixin {
     @Inject(method = "renderExperienceBar", at = @At("HEAD"), cancellable = true)
     public void bamcore$renderExperienceBar(DrawContext context, int x, CallbackInfo ci) {
         PlayerEntity playerEntity = this.getCameraPlayer();
-        if (playerEntity != null && ((DuckPlayerEntityMixin)playerEntity).bamcore$isAdventure()) {
+        if (playerEntity != null && ((DuckPlayerEntityMixin)playerEntity).betteradventuremode$isAdventure()) {
             ci.cancel();
         }
     }
@@ -159,15 +159,15 @@ public abstract class InGameHudMixin {
     @Inject(method = "renderStatusBars", at = @At("HEAD"), cancellable = true)
     private void bamcore$renderStatusBars(DrawContext context, CallbackInfo ci) {
         PlayerEntity playerEntity = this.getCameraPlayer();
-        if (playerEntity != null && ((DuckPlayerEntityMixin)playerEntity).bamcore$isAdventure()) {
+        if (playerEntity != null && ((DuckPlayerEntityMixin)playerEntity).betteradventuremode$isAdventure()) {
             int health = MathHelper.ceil(playerEntity.getHealth());
             int maxHealth = MathHelper.ceil(playerEntity.getMaxHealth());
-            int stamina = MathHelper.ceil(((DuckPlayerEntityMixin)playerEntity).bamcore$getStamina());
-            int maxStamina = MathHelper.ceil(((DuckPlayerEntityMixin)playerEntity).bamcore$getMaxStamina());
-            int mana = MathHelper.ceil(((DuckPlayerEntityMixin)playerEntity).bamcore$getMana());
-            int maxMana = MathHelper.ceil(((DuckPlayerEntityMixin)playerEntity).bamcore$getMaxMana());
-            int poise = MathHelper.ceil(((DuckLivingEntityMixin) playerEntity).bamcore$getPoise());
-            double poiseLimitMultiplier = ((DuckLivingEntityMixin) playerEntity).getStaggerLimitMultiplier();
+            int stamina = MathHelper.ceil(((DuckPlayerEntityMixin)playerEntity).betteradventuremode$getStamina());
+            int maxStamina = MathHelper.ceil(((DuckPlayerEntityMixin)playerEntity).betteradventuremode$getMaxStamina());
+            int mana = MathHelper.ceil(((DuckPlayerEntityMixin)playerEntity).betteradventuremode$getMana());
+            int maxMana = MathHelper.ceil(((DuckPlayerEntityMixin)playerEntity).betteradventuremode$getMaxMana());
+            int poise = MathHelper.ceil(((DuckLivingEntityMixin) playerEntity).betteradventuremode$getPoise());
+            double poiseLimitMultiplier = ((DuckLivingEntityMixin) playerEntity).betteradventuremode$getStaggerLimitMultiplier();
 
             int attributeBarX = this.scaledWidth / 2 - 91;
             int attributeBarY = this.scaledHeight - 32 + 2;

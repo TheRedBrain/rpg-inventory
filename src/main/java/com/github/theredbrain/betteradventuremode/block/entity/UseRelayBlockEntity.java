@@ -53,7 +53,7 @@ public class UseRelayBlockEntity extends RotatedBlockEntity {
             return false;
         }
         if (player.getEntityWorld().isClient) {
-            ((DuckPlayerEntityMixin)player).bamcore$openUseRelayBlockScreen(this);
+            ((DuckPlayerEntityMixin)player).betteradventuremode$openUseRelayBlockScreen(this);
         }
         return true;
     }

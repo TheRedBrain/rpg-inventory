@@ -42,7 +42,6 @@ public class FixedRotationStructurePoolBasedGenerator extends StructurePoolBased
         ChunkRandom chunkRandom = context.random(); // generates always same jigsaw combination in the same chunk/position
         chunkRandom.setSeed(Random.create().nextLong()); // this randomizes the jigsaw generation even in the same chunk/position
         Registry<StructurePool> registry = dynamicRegistryManager.get(RegistryKeys.TEMPLATE_POOL);
-//        BlockRotation blockRotation = BlockRotation.random(chunkRandom);
         StructurePool structurePool2 = (StructurePool)structurePool.getKey().flatMap((registryKey) -> {
             return registry.getOrEmpty(aliasLookup.lookup(registryKey));
         }).orElse((StructurePool)structurePool.value());
@@ -54,8 +53,6 @@ public class FixedRotationStructurePoolBasedGenerator extends StructurePoolBased
             if (id.isPresent()) {
                 Identifier identifier = (Identifier)id.get();
                 Optional<BlockPos> optional = FixedRotationStructurePoolBasedGenerator.findStartingJigsawPos(structurePoolElement, identifier, pos, blockRotation, structureTemplateManager, chunkRandom);
-
-//                Optional<BlockPos> optional = findStartingJigsawPos(structurePoolElement, identifier, pos, blockRotation, structureTemplateManager, chunkRandom);
                 if (optional.isEmpty()) {
                     BetterAdventureMode.LOGGER.error("No starting jigsaw {} found in start pool {}", identifier, structurePool.getKey().map((key) -> {
                         return key.getValue().toString();
@@ -97,54 +94,6 @@ public class FixedRotationStructurePoolBasedGenerator extends StructurePoolBased
             }));
         }
     }
-//
-//    public static Optional<Structure.StructurePosition> generate(Structure.Context context, RegistryEntry<StructurePool> structurePool, Optional<Identifier> id, int size, BlockPos pos, boolean useExpansionHack, Optional<Heightmap.Type> projectStartToHeightmap, int maxDistanceFromCenter, BlockRotation blockRotation) {
-//        BlockPos blockPos;
-//        DynamicRegistryManager dynamicRegistryManager = context.dynamicRegistryManager();
-//        ChunkGenerator chunkGenerator = context.chunkGenerator();
-//        StructureTemplateManager structureTemplateManager = context.structureTemplateManager();
-//        HeightLimitView heightLimitView = context.world();
-//        ChunkRandom chunkRandom = context.random(); // generates always same jigsaw combination in the same chunk/position
-//        chunkRandom.setSeed(Random.create().nextLong()); // this randomizes the jigsaw generation even in the same chunk/position
-//        Registry<StructurePool> registry = dynamicRegistryManager.get(RegistryKeys.TEMPLATE_POOL);
-//        StructurePool structurePool2 = structurePool.value();
-//        StructurePoolElement structurePoolElement = structurePool2.getRandomElement(chunkRandom);
-//        if (structurePoolElement == EmptyPoolElement.INSTANCE) {
-//            return Optional.empty();
-//        }
-//        if (id.isPresent()) {
-//            Identifier identifier = id.get();
-//            Optional<BlockPos> optional = FixedRotationStructurePoolBasedGenerator.findStartingJigsawPos(structurePoolElement, identifier, pos, blockRotation, structureTemplateManager, chunkRandom);
-//            if (optional.isEmpty()) {
-//                BetterAdventureModeCore.LOGGER.error("No starting jigsaw {} found in start pool {}", (Object)identifier, (Object)structurePool.getKey().map(key -> key.getValue().toString()).orElse("<unregistered>"));
-//                return Optional.empty();
-//            }
-//            blockPos = optional.get();
-//        } else {
-//            blockPos = pos;
-//        }
-//        BlockPos vec3i = blockPos.subtract(pos);
-//        BlockPos blockPos2 = pos.subtract(vec3i);
-//        PoolStructurePiece poolStructurePiece = new PoolStructurePiece(structureTemplateManager, structurePoolElement, blockPos2, structurePoolElement.getGroundLevelDelta(), blockRotation, structurePoolElement.getBoundingBox(structureTemplateManager, blockPos2, blockRotation));
-//        BlockBox blockBox = poolStructurePiece.getBoundingBox();
-//        int i = (blockBox.getMaxX() + blockBox.getMinX()) / 2;
-//        int j = (blockBox.getMaxZ() + blockBox.getMinZ()) / 2;
-//        int k = projectStartToHeightmap.isPresent() ? pos.getY() + chunkGenerator.getHeightOnGround(i, j, projectStartToHeightmap.get(), heightLimitView, context.noiseConfig()) : blockPos2.getY();
-//        int l = blockBox.getMinY() + poolStructurePiece.getGroundLevelDelta();
-//        poolStructurePiece.translate(0, k - l, 0);
-//        int m = k + vec3i.getY();
-//        return Optional.of(new Structure.StructurePosition(new BlockPos(i, m, j), collector -> {
-//            ArrayList<PoolStructurePiece> list = Lists.newArrayList();
-//            list.add(poolStructurePiece);
-//            if (size <= 0) {
-//                return;
-//            }
-//            Box box = new Box(i - maxDistanceFromCenter, m - maxDistanceFromCenter, j - maxDistanceFromCenter, i + maxDistanceFromCenter + 1, m + maxDistanceFromCenter + 1, j + maxDistanceFromCenter + 1);
-//            VoxelShape voxelShape = VoxelShapes.combineAndSimplify(VoxelShapes.cuboid(box), VoxelShapes.cuboid(Box.from(blockBox)), BooleanBiFunction.ONLY_FIRST);
-//            StructurePoolBasedGenerator.generate(context.noiseConfig(), size, useExpansionHack, chunkGenerator, structureTemplateManager, heightLimitView, chunkRandom, registry, poolStructurePiece, list, voxelShape);
-//            list.forEach(collector::addPiece);
-//        }));
-//    }
 
     public static boolean generate(ServerWorld world, RegistryEntry<StructurePool> structurePool, Identifier id, int size, BlockPos pos, boolean keepJigsaws, BlockRotation blockRotation) {
         ChunkGenerator chunkGenerator = world.getChunkManager().getChunkGenerator();

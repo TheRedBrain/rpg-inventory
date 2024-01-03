@@ -25,13 +25,13 @@ public class EntityTrackerEntryMixin {
     public void bam$startTrackingAdditionalHandSlots(ServerPlayerEntity serverPlayer, CallbackInfo info) {
         if (this.entity instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) entity;
-            if (!((DuckPlayerInventoryMixin)serverPlayer.getInventory()).bamcore$getMainHand().isEmpty() || !((DuckPlayerInventoryMixin)serverPlayer.getInventory()).bamcore$getAlternativeMainHand().isEmpty()) {
+            if (!((DuckPlayerInventoryMixin)serverPlayer.getInventory()).betteradventuremode$getMainHand().isEmpty() || !((DuckPlayerInventoryMixin)serverPlayer.getInventory()).betteradventuremode$getAlternativeMainHand().isEmpty()) {
                 PacketByteBuf data = new PacketByteBuf(Unpooled.buffer());
                 data.writeInt(serverPlayer.getId());
                 data.writeBoolean(true);
                 ServerPlayNetworking.send((ServerPlayerEntity) player, ServerPacketRegistry.SWAPPED_HAND_ITEMS_PACKET, data);
             }
-            if (!((DuckPlayerInventoryMixin)serverPlayer.getInventory()).bamcore$getOffHand().isEmpty() || !((DuckPlayerInventoryMixin)serverPlayer.getInventory()).bamcore$getAlternativeOffHand().isEmpty()) {
+            if (!((DuckPlayerInventoryMixin)serverPlayer.getInventory()).betteradventuremode$getOffHand().isEmpty() || !((DuckPlayerInventoryMixin)serverPlayer.getInventory()).betteradventuremode$getAlternativeOffHand().isEmpty()) {
                 PacketByteBuf data = new PacketByteBuf(Unpooled.buffer());
                 data.writeInt(serverPlayer.getId());
                 data.writeBoolean(false);

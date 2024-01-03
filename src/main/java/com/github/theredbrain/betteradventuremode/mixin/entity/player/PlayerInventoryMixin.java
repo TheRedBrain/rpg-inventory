@@ -3,7 +3,7 @@ package com.github.theredbrain.betteradventuremode.mixin.entity.player;
 import com.github.theredbrain.betteradventuremode.api.item.ArmorTrinketItem;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerInventoryMixin;
-import com.github.theredbrain.betteradventuremode.api.util.BetterAdventureModCoreItemUtils;
+import com.github.theredbrain.betteradventuremode.api.util.ItemUtils;
 import com.github.theredbrain.betteradventuremode.registry.StatusEffectsRegistry;
 import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketsApi;
@@ -50,24 +50,24 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
     @Inject(method = "getMainHandStack", at = @At("HEAD"), cancellable = true)
     public void bamcore$getMainHandStack(CallbackInfoReturnable<ItemStack> cir) {
         if (!player.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT) && !player.isCreative()) {
-            ItemStack emptyMainHandStack = bamcore$getEmptyMainHand();
-            ItemStack mainHandStack = bamcore$getMainHand();
+            ItemStack emptyMainHandStack = betteradventuremode$getEmptyMainHand();
+            ItemStack mainHandStack = betteradventuremode$getMainHand();
             // TODO think about this more, it seems off
             if (!player.hasStatusEffect(StatusEffectsRegistry.WEAPONS_SHEATHED_EFFECT)) {
-                cir.setReturnValue(BetterAdventureModCoreItemUtils.isUsable(mainHandStack) ? mainHandStack : emptyMainHandStack);
+                cir.setReturnValue(ItemUtils.isUsable(mainHandStack) ? mainHandStack : emptyMainHandStack);
                 cir.cancel();
             }
         }
     }
 
     @Override
-    public ItemStack bamcore$getOffHandStack() {
+    public ItemStack betteradventuremode$getOffHandStack() {
         if (!player.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT) && !player.isCreative()) {
-            ItemStack emptyOffHandStack = bamcore$getEmptyOffHand();
-            ItemStack offHandStack = bamcore$getOffHand();
+            ItemStack emptyOffHandStack = betteradventuremode$getEmptyOffHand();
+            ItemStack offHandStack = betteradventuremode$getOffHand();
             // TODO think about this more, it seems off
             if (!player.hasStatusEffect(StatusEffectsRegistry.WEAPONS_SHEATHED_EFFECT) && !player.hasStatusEffect(StatusEffectsRegistry.TWO_HANDED_EFFECT)) {
-                return BetterAdventureModCoreItemUtils.isUsable(offHandStack) ? offHandStack : emptyOffHandStack;
+                return ItemUtils.isUsable(offHandStack) ? offHandStack : emptyOffHandStack;
             }
         }
         return ItemStack.EMPTY;
@@ -80,7 +80,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
      */
     @Overwrite
     public int getEmptySlot() {
-        for (int i = ((DuckPlayerEntityMixin)this.player).bamcore$isAdventure() && !this.player.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT) ? 9 : 0; i < this.main.size(); ++i) {
+        for (int i = ((DuckPlayerEntityMixin)this.player).betteradventuremode$isAdventure() && !this.player.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT) ? 9 : 0; i < this.main.size(); ++i) {
             if (!this.main.get(i).isEmpty()) continue;
             return i;
         }
@@ -98,7 +98,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
             return this.selectedSlot;
         }
 
-        for (int i = ((DuckPlayerEntityMixin)this.player).bamcore$isAdventure() && !this.player.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT) ? 9 : 0; i < this.main.size(); ++i) {
+        for (int i = ((DuckPlayerEntityMixin)this.player).betteradventuremode$isAdventure() && !this.player.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT) ? 9 : 0; i < this.main.size(); ++i) {
             if (!this.canStackAddMore(this.main.get(i), stack)) continue;
             return i;
         }
@@ -112,13 +112,13 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
     @Overwrite
     public ItemStack getArmorStack(int slot) {
         if (slot == 0) {
-            return this.bamcore$getFeetStack();
+            return this.betteradventuremode$getFeetStack();
         } else if (slot == 1) {
-            return this.bamcore$getLegsStack();
+            return this.betteradventuremode$getLegsStack();
         } else if (slot == 2) {
-            return this.bamcore$getChestStack();
+            return this.betteradventuremode$getChestStack();
         } else if (slot == 3) {
-            return this.bamcore$getHeadStack();
+            return this.betteradventuremode$getHeadStack();
         } else {
             return ItemStack.EMPTY;
         }
@@ -140,13 +140,13 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         float finalAmount = amount;
         TrinketsApi.getTrinketComponent(player).ifPresent(trinkets ->
                 trinkets.forEach((slotReference, itemStack) -> {
-                    if ((!(damageSource.isIn(DamageTypeTags.IS_FIRE)) || itemStack.getItem().isFireproof()) && itemStack.getItem() instanceof ArmorTrinketItem && BetterAdventureModCoreItemUtils.isUsable(itemStack)) {
+                    if ((!(damageSource.isIn(DamageTypeTags.IS_FIRE)) || itemStack.getItem().isFireproof()) && itemStack.getItem() instanceof ArmorTrinketItem && ItemUtils.isUsable(itemStack)) {
                         itemStack.damage((int) finalAmount, this.player, player -> TrinketsApi.onTrinketBroken(itemStack, slotReference, player));
                     }
                 }));
     }
 
-    public ItemStack bamcore$getMainHand() {
+    public ItemStack betteradventuremode$getMainHand() {
         ItemStack mainHandStack = this.main.get(this.selectedSlot); // TODO think about this more, it seems off
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
@@ -159,8 +159,8 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         return mainHandStack;
     }
 
-    public ItemStack bamcore$setMainHand(ItemStack itemStack) {
-        ItemStack oldStack = bamcore$getMainHand();
+    public ItemStack betteradventuremode$setMainHand(ItemStack itemStack) {
+        ItemStack oldStack = betteradventuremode$getMainHand();
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
             if (trinkets.get().getInventory().get("main_hand") != null) {
@@ -172,7 +172,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         return oldStack;
     }
 
-    public ItemStack bamcore$getOffHand() {
+    public ItemStack betteradventuremode$getOffHand() {
         ItemStack offHandStack = this.offHand.get(0); // TODO think about this more, it seems off
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
@@ -185,8 +185,8 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         return offHandStack;
     }
 
-    public ItemStack bamcore$setOffHand(ItemStack itemStack) {
-        ItemStack oldStack = bamcore$getOffHand();
+    public ItemStack betteradventuremode$setOffHand(ItemStack itemStack) {
+        ItemStack oldStack = betteradventuremode$getOffHand();
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
             if (trinkets.get().getInventory().get("off_hand") != null) {
@@ -198,7 +198,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         return oldStack;
     }
 
-    public ItemStack bamcore$getAlternativeMainHand() {
+    public ItemStack betteradventuremode$getAlternativeMainHand() {
         ItemStack alternativeMainHandStack = ItemStack.EMPTY;
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
@@ -211,8 +211,8 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         return alternativeMainHandStack;
     }
 
-    public ItemStack bamcore$setAlternativeMainHand(ItemStack itemStack) {
-        ItemStack oldStack = bamcore$getAlternativeMainHand();
+    public ItemStack betteradventuremode$setAlternativeMainHand(ItemStack itemStack) {
+        ItemStack oldStack = betteradventuremode$getAlternativeMainHand();
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
             if (trinkets.get().getInventory().get("alternative_main_hand") != null) {
@@ -224,7 +224,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         return oldStack;
     }
 
-    public ItemStack bamcore$getAlternativeOffHand() {
+    public ItemStack betteradventuremode$getAlternativeOffHand() {
         ItemStack alternativeOffHandStack = ItemStack.EMPTY;
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
@@ -237,8 +237,8 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         return alternativeOffHandStack;
     }
 
-    public ItemStack bamcore$setAlternativeOffHand(ItemStack itemStack) {
-        ItemStack oldStack = bamcore$getAlternativeOffHand();
+    public ItemStack betteradventuremode$setAlternativeOffHand(ItemStack itemStack) {
+        ItemStack oldStack = betteradventuremode$getAlternativeOffHand();
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
             if (trinkets.get().getInventory().get("alternative_off_hand") != null) {
@@ -250,7 +250,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         return oldStack;
     }
 
-    public ItemStack bamcore$getEmptyMainHand() {
+    public ItemStack betteradventuremode$getEmptyMainHand() {
         ItemStack emptyMainHandStack = ItemStack.EMPTY;
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
@@ -263,8 +263,8 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         return emptyMainHandStack;
     }
 
-    public ItemStack bamcore$setEmptyMainHand(ItemStack itemStack) {
-        ItemStack oldStack = bamcore$getEmptyMainHand();
+    public ItemStack betteradventuremode$setEmptyMainHand(ItemStack itemStack) {
+        ItemStack oldStack = betteradventuremode$getEmptyMainHand();
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
             if (trinkets.get().getInventory().get("empty_main_hand") != null) {
@@ -276,7 +276,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         return oldStack;
     }
 
-    public ItemStack bamcore$getEmptyOffHand() {
+    public ItemStack betteradventuremode$getEmptyOffHand() {
         ItemStack emptyOffHandStack = ItemStack.EMPTY;
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
@@ -289,8 +289,8 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         return emptyOffHandStack;
     }
 
-    public ItemStack bamcore$setEmptyOffHand(ItemStack itemStack) {
-        ItemStack oldStack = bamcore$getEmptyOffHand();
+    public ItemStack betteradventuremode$setEmptyOffHand(ItemStack itemStack) {
+        ItemStack oldStack = betteradventuremode$getEmptyOffHand();
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
             if (trinkets.get().getInventory().get("empty_off_hand") != null) {
@@ -302,7 +302,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         return oldStack;
     }
 
-    public ItemStack bamcore$getHeadStack() {
+    public ItemStack betteradventuremode$getHeadStack() {
         ItemStack headStack = ItemStack.EMPTY;
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
@@ -315,8 +315,8 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         return headStack;
     }
 
-    public ItemStack bamcore$setHeadStack(ItemStack itemStack) {
-        ItemStack oldStack = bamcore$getHeadStack();
+    public ItemStack betteradventuremode$setHeadStack(ItemStack itemStack) {
+        ItemStack oldStack = betteradventuremode$getHeadStack();
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
             if (trinkets.get().getInventory().get("helmets") != null) {
@@ -328,7 +328,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         return oldStack;
     }
 
-    public ItemStack bamcore$getChestStack() {
+    public ItemStack betteradventuremode$getChestStack() {
         ItemStack chestStack = ItemStack.EMPTY;
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
@@ -341,8 +341,8 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         return chestStack;
     }
 
-    public ItemStack bamcore$setChestStack(ItemStack itemStack) {
-        ItemStack oldStack = bamcore$getChestStack();
+    public ItemStack betteradventuremode$setChestStack(ItemStack itemStack) {
+        ItemStack oldStack = betteradventuremode$getChestStack();
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
             if (trinkets.get().getInventory().get("chest_plates") != null) {
@@ -354,7 +354,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         return oldStack;
     }
 
-    public ItemStack bamcore$getLegsStack() {
+    public ItemStack betteradventuremode$getLegsStack() {
         ItemStack legsStack = ItemStack.EMPTY;
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
@@ -367,8 +367,8 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         return legsStack;
     }
 
-    public ItemStack bamcore$setLegsStack(ItemStack itemStack) {
-        ItemStack oldStack = bamcore$getLegsStack();
+    public ItemStack betteradventuremode$setLegsStack(ItemStack itemStack) {
+        ItemStack oldStack = betteradventuremode$getLegsStack();
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
             if (trinkets.get().getInventory().get("leggings") != null) {
@@ -380,7 +380,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         return oldStack;
     }
 
-    public ItemStack bamcore$getFeetStack() {
+    public ItemStack betteradventuremode$getFeetStack() {
         ItemStack feetStack = ItemStack.EMPTY;
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
@@ -393,8 +393,8 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         return feetStack;
     }
 
-    public ItemStack bamcore$setFeetStack(ItemStack itemStack) {
-        ItemStack oldStack = bamcore$getFeetStack();
+    public ItemStack betteradventuremode$setFeetStack(ItemStack itemStack) {
+        ItemStack oldStack = betteradventuremode$getFeetStack();
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
             if (trinkets.get().getInventory().get("boots") != null) {
@@ -406,7 +406,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         return oldStack;
     }
 
-    public ItemStack bamcore$getGlovesStack() {
+    public ItemStack betteradventuremode$getGlovesStack() {
         ItemStack glovesStack = ItemStack.EMPTY;
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
@@ -419,8 +419,8 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         return glovesStack;
     }
 
-    public ItemStack bamcore$setGlovesStack(ItemStack itemStack) {
-        ItemStack oldStack = bamcore$getFeetStack();
+    public ItemStack betteradventuremode$setGlovesStack(ItemStack itemStack) {
+        ItemStack oldStack = betteradventuremode$getFeetStack();
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
             if (trinkets.get().getInventory().get("boots") != null) {
@@ -432,7 +432,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         return oldStack;
     }
 
-    public ItemStack bamcore$getShouldersStack() {
+    public ItemStack betteradventuremode$getShouldersStack() {
         ItemStack shouldersStack = ItemStack.EMPTY;
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
@@ -445,8 +445,8 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         return shouldersStack;
     }
 
-    public ItemStack bamcore$setShouldersStack(ItemStack itemStack) {
-        ItemStack oldStack = bamcore$getFeetStack();
+    public ItemStack betteradventuremode$setShouldersStack(ItemStack itemStack) {
+        ItemStack oldStack = betteradventuremode$getFeetStack();
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
             if (trinkets.get().getInventory().get("boots") != null) {
@@ -458,7 +458,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         return oldStack;
     }
 
-    public ItemStack bamcore$getRing1Stack() {
+    public ItemStack betteradventuremode$getRing1Stack() {
         ItemStack rings1Stack = ItemStack.EMPTY;
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
@@ -471,8 +471,8 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         return rings1Stack;
     }
 
-    public ItemStack bamcore$setRing1Stack(ItemStack itemStack) {
-        ItemStack oldStack = bamcore$getFeetStack();
+    public ItemStack betteradventuremode$setRing1Stack(ItemStack itemStack) {
+        ItemStack oldStack = betteradventuremode$getFeetStack();
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
             if (trinkets.get().getInventory().get("rings_1") != null) {
@@ -484,7 +484,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         return oldStack;
     }
 
-    public ItemStack bamcore$getRing2Stack() {
+    public ItemStack betteradventuremode$getRing2Stack() {
         ItemStack rings2Stack = ItemStack.EMPTY;
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
@@ -497,8 +497,8 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         return rings2Stack;
     }
 
-    public ItemStack bamcore$setRing2Stack(ItemStack itemStack) {
-        ItemStack oldStack = bamcore$getFeetStack();
+    public ItemStack betteradventuremode$setRing2Stack(ItemStack itemStack) {
+        ItemStack oldStack = betteradventuremode$getFeetStack();
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
             if (trinkets.get().getInventory().get("rings_2") != null) {
@@ -510,7 +510,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         return oldStack;
     }
 
-    public ItemStack bamcore$getBeltStack() {
+    public ItemStack betteradventuremode$getBeltStack() {
         ItemStack beltsStack = ItemStack.EMPTY;
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
@@ -523,8 +523,8 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         return beltsStack;
     }
 
-    public ItemStack bamcore$setBeltStack(ItemStack itemStack) {
-        ItemStack oldStack = bamcore$getFeetStack();
+    public ItemStack betteradventuremode$setBeltStack(ItemStack itemStack) {
+        ItemStack oldStack = betteradventuremode$getFeetStack();
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
             if (trinkets.get().getInventory().get("belts") != null) {
@@ -536,7 +536,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         return oldStack;
     }
 
-    public ItemStack bamcore$getNecklaceStack() {
+    public ItemStack betteradventuremode$getNecklaceStack() {
         ItemStack necklacesStack = ItemStack.EMPTY;
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
@@ -549,8 +549,8 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         return necklacesStack;
     }
 
-    public ItemStack bamcore$setNecklaceStack(ItemStack itemStack) {
-        ItemStack oldStack = bamcore$getFeetStack();
+    public ItemStack betteradventuremode$setNecklaceStack(ItemStack itemStack) {
+        ItemStack oldStack = betteradventuremode$getFeetStack();
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
             if (trinkets.get().getInventory().get("necklaces") != null) {
@@ -563,7 +563,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
     }
 
 
-    public ItemStack bamcore$getSpellSlotStack(int spellSlotNumber) {
+    public ItemStack betteradventuremode$getSpellSlotStack(int spellSlotNumber) {
         ItemStack spellSlotStack = ItemStack.EMPTY;
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
@@ -576,8 +576,8 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         return spellSlotStack;
     }
 
-    public ItemStack bamcore$setSpellSlotStack(ItemStack itemStack, int spellSlotNumber) {
-        ItemStack oldStack = bamcore$getFeetStack();
+    public ItemStack betteradventuremode$setSpellSlotStack(ItemStack itemStack, int spellSlotNumber) {
+        ItemStack oldStack = betteradventuremode$getFeetStack();
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
             if (trinkets.get().getInventory().get("spell_slot_" + spellSlotNumber) != null) {
@@ -589,7 +589,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         return oldStack;
     }
 
-    public List<ItemStack> getArmorTrinkets() {
-        return List.of(this.bamcore$getFeetStack(), this.bamcore$getLegsStack(), this.bamcore$getGlovesStack(), this.bamcore$getChestStack(), this.bamcore$getShouldersStack(), this.bamcore$getHeadStack());
+    public List<ItemStack> betteradventuremode$getArmorTrinkets() {
+        return List.of(this.betteradventuremode$getFeetStack(), this.betteradventuremode$getLegsStack(), this.betteradventuremode$getGlovesStack(), this.betteradventuremode$getChestStack(), this.betteradventuremode$getShouldersStack(), this.betteradventuremode$getHeadStack());
     }
 }

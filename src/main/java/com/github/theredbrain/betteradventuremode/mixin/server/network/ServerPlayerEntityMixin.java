@@ -76,16 +76,16 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Du
     @Inject(method = "tick", at = @At("TAIL"))
     public void bamcore$tick(CallbackInfo ci) {
         if (!this.getWorld().isClient) {
-            if (!ItemStack.areItemsEqual(mainHandSlotStack, ((DuckPlayerInventoryMixin)this.getInventory()).bamcore$getMainHand()) || !ItemStack.areItemsEqual(alternateMainHandSlotStack, ((DuckPlayerInventoryMixin)this.getInventory()).bamcore$getAlternativeMainHand())) {
+            if (!ItemStack.areItemsEqual(mainHandSlotStack, ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getMainHand()) || !ItemStack.areItemsEqual(alternateMainHandSlotStack, ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getAlternativeMainHand())) {
                 bamcore$sendChangedHandSlotsPacket(true);
             }
-            mainHandSlotStack = ((DuckPlayerInventoryMixin)this.getInventory()).bamcore$getMainHand();
-            alternateMainHandSlotStack = ((DuckPlayerInventoryMixin)this.getInventory()).bamcore$getAlternativeMainHand();
-            if (!ItemStack.areItemsEqual(offHandSlotStack, ((DuckPlayerInventoryMixin)this.getInventory()).bamcore$getOffHand()) || !ItemStack.areItemsEqual(alternateOffHandSlotStack, ((DuckPlayerInventoryMixin)this.getInventory()).bamcore$getAlternativeOffHand())) {
+            mainHandSlotStack = ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getMainHand();
+            alternateMainHandSlotStack = ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getAlternativeMainHand();
+            if (!ItemStack.areItemsEqual(offHandSlotStack, ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getOffHand()) || !ItemStack.areItemsEqual(alternateOffHandSlotStack, ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getAlternativeOffHand())) {
                 bamcore$sendChangedHandSlotsPacket(false);
             }
-            offHandSlotStack = ((DuckPlayerInventoryMixin)this.getInventory()).bamcore$getOffHand();
-            alternateOffHandSlotStack = ((DuckPlayerInventoryMixin)this.getInventory()).bamcore$getAlternativeOffHand();
+            offHandSlotStack = ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getOffHand();
+            alternateOffHandSlotStack = ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getAlternativeOffHand();
         }
     }
 
@@ -160,26 +160,26 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Du
                 if (i > 0) {
                     this.increaseStat(Stats.SWIM_ONE_CM, i);
 //                    this.addExhaustion(0.01F * (float)i * 0.01F);
-                    ((DuckPlayerEntityMixin)this).bamcore$addStamina(-0.2F);
+                    ((DuckPlayerEntityMixin)this).betteradventuremode$addStamina(-0.2F);
                 }
             } else if (this.isSubmergedIn(FluidTags.WATER)) {
                 i = Math.round((float)Math.sqrt(dx * dx + dy * dy + dz * dz) * 100.0F);
                 if (i > 0) {
                     this.increaseStat(Stats.WALK_UNDER_WATER_ONE_CM, i);
 //                    this.addExhaustion(0.01F * (float)i * 0.01F);
-                    ((DuckPlayerEntityMixin)this).bamcore$addStamina(-0.4F);
+                    ((DuckPlayerEntityMixin)this).betteradventuremode$addStamina(-0.4F);
                 }
             } else if (this.isTouchingWater()) {
                 i = Math.round((float)Math.sqrt(dx * dx + dz * dz) * 100.0F);
                 if (i > 0) {
                     this.increaseStat(Stats.WALK_ON_WATER_ONE_CM, i);
 //                    this.addExhaustion(0.01F * (float)i * 0.01F);
-                    ((DuckPlayerEntityMixin)this).bamcore$addStamina(-0.1F);
+                    ((DuckPlayerEntityMixin)this).betteradventuremode$addStamina(-0.1F);
                 }
             } else if (this.isClimbing()) {
                 if (dy > 0.0) {
                     this.increaseStat(Stats.CLIMB_ONE_CM, (int)Math.round(dy * 100.0));
-                    ((DuckPlayerEntityMixin)this).bamcore$addStamina(this.hasStatusEffect(StatusEffectsRegistry.OVERBURDENED_EFFECT) ? -4 : -1);
+                    ((DuckPlayerEntityMixin)this).betteradventuremode$addStamina(this.hasStatusEffect(StatusEffectsRegistry.OVERBURDENED_EFFECT) ? -4 : -1);
                 }
             } else if (this.isOnGround()) {
                 i = Math.round((float)Math.sqrt(dx * dx + dz * dz) * 100.0F);
@@ -187,7 +187,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Du
                     if (this.isSprinting()) {
                         this.increaseStat(Stats.SPRINT_ONE_CM, i);
 //                        this.addExhaustion(0.1F * (float)i * 0.01F);
-                        ((DuckPlayerEntityMixin)this).bamcore$addStamina(-0.1F);
+                        ((DuckPlayerEntityMixin)this).betteradventuremode$addStamina(-0.1F);
                     } else if (this.isInSneakingPose()) {
                         this.increaseStat(Stats.CROUCH_ONE_CM, i);
 //                        this.addExhaustion(0.0F * (float)i * 0.01F);
@@ -211,7 +211,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Du
     }
 
     @Override
-    public boolean bamcore$isAdventure() {
+    public boolean betteradventuremode$isAdventure() {
         return this.interactionManager.getGameMode() == GameMode.ADVENTURE;
     }
 

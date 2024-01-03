@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "bamcore",
+  "id": "betteradventuremode",
   "version": "0.0.1.53",
 
   "name": "Better Adventure Mode",
@@ -9,11 +9,11 @@
     "TheRedBrain"
   ],
   "contact": {
-    "sources": "https://github.com/TheRedBrain/better_adventure_mode_core"
+    "sources": "https://github.com/TheRedBrain/better_adventure_mode"
   },
 
   "license": "MIT",
-  "icon": "assets/bamcore/icon.png",
+  "icon": "assets/betteradventuremode/icon.png",
 
   "environment": "*",
   "entrypoints": {
@@ -29,13 +29,13 @@
   },
   "custom": {
     "cardinal-components": [
-      "bamcore:last_logout_time",
-      "bamcore:current_housing_block_pos",
-      "bamcore:player_location_access_pos"
+      "betteradventuremode:last_logout_time",
+      "betteradventuremode:current_housing_block_pos",
+      "betteradventuremode:player_location_access_pos"
     ]
   },
   "mixins": [
-    "bamcore.mixins.json"
+    "betteradventuremode.mixins.json"
   ],
 
   "depends": {

@@ -594,7 +594,7 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
         this.cancelButton.visible = false;
 
         for (Slot slot : this.handler.slots) {
-            ((DuckSlotMixin)slot).bamcore$setDisabledOverride(true);
+            ((DuckSlotMixin)slot).betteradventuremode$setDisabledOverride(true);
         }
 
         if (this.showCreativeTab) {
@@ -744,8 +744,8 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
                         if (!unlockAdvancementIdentifier.equals("")) {
                             unlockAdvancementEntry = advancementHandler.get(Identifier.tryParse(unlockAdvancementIdentifier));
                         }
-                        if ((lockAdvancementIdentifier.equals("") || (lockAdvancementEntry != null && !((DuckClientAdvancementManagerMixin)advancementHandler).bamcore$getAdvancementProgress(lockAdvancementEntry).isDone())) &&
-                            (unlockAdvancementIdentifier.equals("") || (unlockAdvancementEntry != null && ((DuckClientAdvancementManagerMixin)advancementHandler).bamcore$getAdvancementProgress(unlockAdvancementEntry).isDone()))) {
+                        if ((lockAdvancementIdentifier.equals("") || (lockAdvancementEntry != null && !((DuckClientAdvancementManagerMixin)advancementHandler).betteradventuremode$getAdvancementProgress(lockAdvancementEntry).isDone())) &&
+                            (unlockAdvancementIdentifier.equals("") || (unlockAdvancementEntry != null && ((DuckClientAdvancementManagerMixin)advancementHandler).betteradventuremode$getAdvancementProgress(unlockAdvancementEntry).isDone()))) {
                             this.unlockedLocationsList.add(stringStringPair);
                             this.visibleLocationsList.add(stringStringPair);
                         } else if (showLockedLocation) {
@@ -789,8 +789,8 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
                 if (unlockAdvancementEntry != null) {
                     this.currentUnlockAdvancement = unlockAdvancementEntry.value();
                 }
-                this.isTeleportButtonActive = (lockAdvancementIdentifier.equals("") || (lockAdvancementEntry != null && !(((DuckClientAdvancementManagerMixin) advancementHandler).bamcore$getAdvancementProgress(lockAdvancementEntry).isDone()))) &&
-                        (unlockAdvancementIdentifier.equals("") || (unlockAdvancementEntry != null && ((DuckClientAdvancementManagerMixin) advancementHandler).bamcore$getAdvancementProgress(unlockAdvancementEntry).isDone()));
+                this.isTeleportButtonActive = (lockAdvancementIdentifier.equals("") || (lockAdvancementEntry != null && !(((DuckClientAdvancementManagerMixin) advancementHandler).betteradventuremode$getAdvancementProgress(lockAdvancementEntry).isDone()))) &&
+                        (unlockAdvancementIdentifier.equals("") || (unlockAdvancementEntry != null && ((DuckClientAdvancementManagerMixin) advancementHandler).betteradventuremode$getAdvancementProgress(unlockAdvancementEntry).isDone()));
             }
         }
     }

@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "betteradventuremode:block/delay_trigger_block"
+    }
+  }
+}

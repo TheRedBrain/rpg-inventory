@@ -66,7 +66,7 @@ public class ResetTriggerBlockEntity extends RotatedBlockEntity implements Trigg
             return false;
         }
         if (player.getEntityWorld().isClient) {
-            ((DuckPlayerEntityMixin)player).bamcore$openResetTriggerBlockScreen(this);
+            ((DuckPlayerEntityMixin)player).betteradventuremode$openResetTriggerBlockScreen(this);
         }
         return true;
     }

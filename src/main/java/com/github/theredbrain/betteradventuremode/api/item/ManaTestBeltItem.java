@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.api.item;
 
-import com.github.theredbrain.betteradventuremode.api.util.BetterAdventureModCoreAttributeModifierUUIDs;
+import com.github.theredbrain.betteradventuremode.api.util.AttributeModifierUUIDs;
 import com.github.theredbrain.betteradventuremode.registry.EntityAttributesRegistry;
 import com.google.common.collect.Multimap;
 import dev.emi.trinkets.api.SlotReference;
@@ -20,10 +20,10 @@ public class ManaTestBeltItem extends TrinketItem {
     public Multimap<EntityAttribute, EntityAttributeModifier> getModifiers(ItemStack stack, SlotReference slot, LivingEntity entity, UUID uuid) {
         Multimap<EntityAttribute, EntityAttributeModifier> map = super.getModifiers(stack, slot, entity, uuid);
         map.put(EntityAttributesRegistry.MAX_MANA,
-                new EntityAttributeModifier(UUID.fromString(BetterAdventureModCoreAttributeModifierUUIDs.BELT_SLOT),
+                new EntityAttributeModifier(UUID.fromString(AttributeModifierUUIDs.BELT_SLOT),
                         "max_mana", 20.0, EntityAttributeModifier.Operation.ADDITION));
         map.put(EntityAttributesRegistry.MANA_REGENERATION,
-                new EntityAttributeModifier(UUID.fromString(BetterAdventureModCoreAttributeModifierUUIDs.BELT_SLOT),
+                new EntityAttributeModifier(UUID.fromString(AttributeModifierUUIDs.BELT_SLOT),
                         "mana_regeneration", 2.0, EntityAttributeModifier.Operation.ADDITION));
         return map;
     }

@@ -1,7 +1,7 @@
 package com.github.theredbrain.betteradventuremode.api.block;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
-import com.github.theredbrain.betteradventuremode.api.util.BetterAdventureModCoreItemUtils;
+import com.github.theredbrain.betteradventuremode.api.util.ItemUtils;
 //import de.dafuqs.revelationary.api.advancements.AdvancementHelper;
 //import de.dafuqs.revelationary.api.revelations.RevelationAware;
 import com.mojang.serialization.MapCodec;
@@ -68,7 +68,7 @@ public abstract class AbstractInteractiveAdventureBlock extends Block/* implemen
         if (!world.isClient() && (this.cloakAdvancementIdentifier == null/* || AdvancementHelper.hasAdvancement(player, this.getCloakAdvancementIdentifier())*/)) {
             if (state.isOf(this)
                     && (!this.requiresTools
-                        || (tool.isIn(this.requiredTools) && tool.getItem() instanceof ToolItem && (BetterAdventureModCoreItemUtils.isUsable(tool) && hand == Hand.MAIN_HAND) || (tool.isIn(this.requiredTools) && !(tool.getItem() instanceof ToolItem) && hand == Hand.MAIN_HAND)))) {
+                        || (tool.isIn(this.requiredTools) && tool.getItem() instanceof ToolItem && (ItemUtils.isUsable(tool) && hand == Hand.MAIN_HAND) || (tool.isIn(this.requiredTools) && !(tool.getItem() instanceof ToolItem) && hand == Hand.MAIN_HAND)))) {
 
                 if (state.get(AbstractInteractiveAdventureBlock.INTACT)) {
                     BetterAdventureMode.LOGGER.info("should drop stuff");

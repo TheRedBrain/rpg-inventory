@@ -83,7 +83,7 @@ public class JigsawPlacerBlockBlockEntity extends RotatedBlockEntity implements 
             return false;
         }
         if (player.getEntityWorld().isClient) {
-            ((DuckPlayerEntityMixin)player).bamcore$openJigsawPlacerBlockScreen(this);
+            ((DuckPlayerEntityMixin)player).betteradventuremode$openJigsawPlacerBlockScreen(this);
         }
         return true;
     }

@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.client.render.renderer;
 
-import com.github.theredbrain.betteradventuremode.api.item.BetterAdventureMode_BasicWeaponItem;
+import com.github.theredbrain.betteradventuremode.api.item.BasicWeaponItem;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.betteradventuremode.registry.StatusEffectsRegistry;
 import net.fabricmc.api.EnvType;
@@ -35,7 +35,7 @@ public class SheathedMainHandItemFeatureRenderer extends HeldItemFeatureRenderer
     @Override
     public void render(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, AbstractClientPlayerEntity abstractClientPlayerEntity, float f, float g, float h, float j, float k, float l) {
 
-        ItemStack mainHandStack = ((DuckPlayerInventoryMixin) ((PlayerEntity) abstractClientPlayerEntity).getInventory()).bamcore$getMainHand();
+        ItemStack mainHandStack = ((DuckPlayerInventoryMixin) ((PlayerEntity) abstractClientPlayerEntity).getInventory()).betteradventuremode$getMainHand();
 
 
         if (!mainHandStack.isEmpty() && ((PlayerEntity) abstractClientPlayerEntity).hasStatusEffect(StatusEffectsRegistry.WEAPONS_SHEATHED_EFFECT)) {
@@ -44,7 +44,7 @@ public class SheathedMainHandItemFeatureRenderer extends HeldItemFeatureRenderer
             modelPart.rotate(matrixStack);
             Item mainHandStackItem = mainHandStack.getItem();
 
-            if (mainHandStackItem instanceof SwordItem || mainHandStackItem instanceof BetterAdventureMode_BasicWeaponItem) {
+            if (mainHandStackItem instanceof SwordItem || mainHandStackItem instanceof BasicWeaponItem) {
                 matrixStack.translate(-0.3D, 0.05D, 0.16D);
                 if (abstractClientPlayerEntity.hasStackEquipped(EquipmentSlot.CHEST)) {
 //                    matrixStack.translate(0.05F, 0.0F, 0.0F);

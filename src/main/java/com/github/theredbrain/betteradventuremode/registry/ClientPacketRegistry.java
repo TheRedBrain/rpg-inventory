@@ -22,15 +22,15 @@ public class ClientPacketRegistry {
                     ItemStack itemStack;
                     if (player != null && player != client.player) {
                         if (mainHand) {
-                            alternativeItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).bamcore$getAlternativeMainHand().copy();
-                            itemStack = ((DuckPlayerInventoryMixin) player.getInventory()).bamcore$getMainHand().copy();
-                            ((DuckPlayerInventoryMixin) player.getInventory()).bamcore$setAlternativeMainHand(itemStack);
-                            ((DuckPlayerInventoryMixin) player.getInventory()).bamcore$setMainHand(alternativeItemStack);
+                            alternativeItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).betteradventuremode$getAlternativeMainHand().copy();
+                            itemStack = ((DuckPlayerInventoryMixin) player.getInventory()).betteradventuremode$getMainHand().copy();
+                            ((DuckPlayerInventoryMixin) player.getInventory()).betteradventuremode$setAlternativeMainHand(itemStack);
+                            ((DuckPlayerInventoryMixin) player.getInventory()).betteradventuremode$setMainHand(alternativeItemStack);
                         } else {
-                            alternativeItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).bamcore$getAlternativeOffHand().copy();
-                            itemStack = ((DuckPlayerInventoryMixin) player.getInventory()).bamcore$getOffHand().copy();
-                            ((DuckPlayerInventoryMixin) player.getInventory()).bamcore$setAlternativeOffHand(itemStack);
-                            ((DuckPlayerInventoryMixin) player.getInventory()).bamcore$setOffHand(alternativeItemStack);
+                            alternativeItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).betteradventuremode$getAlternativeOffHand().copy();
+                            itemStack = ((DuckPlayerInventoryMixin) player.getInventory()).betteradventuremode$getOffHand().copy();
+                            ((DuckPlayerInventoryMixin) player.getInventory()).betteradventuremode$setAlternativeOffHand(itemStack);
+                            ((DuckPlayerInventoryMixin) player.getInventory()).betteradventuremode$setOffHand(alternativeItemStack);
                         }
                     }
                 }

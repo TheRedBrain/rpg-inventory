@@ -72,7 +72,7 @@ public class MimicBlockEntity extends RotatedBlockEntity implements Triggerable,
             return false;
         }
         if (player.getEntityWorld().isClient) {
-            ((DuckPlayerEntityMixin)player).bamcore$openMimicBlockScreen(this);
+            ((DuckPlayerEntityMixin)player).betteradventuremode$openMimicBlockScreen(this);
         }
         return true;
     }

@@ -37,7 +37,7 @@ public abstract class SurvivalTrinketSlotMixin extends Slot {
     public void bamcore$canInsert(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         LivingEntity livingEntity = trinketInventory.getComponent().getEntity();
         boolean bl = false;
-        if (livingEntity instanceof PlayerEntity playerEntity && !((DuckPlayerEntityMixin) playerEntity).bamcore$isAdventure()) {
+        if (livingEntity instanceof PlayerEntity playerEntity && !((DuckPlayerEntityMixin) playerEntity).betteradventuremode$isAdventure()) {
             bl = true;
         }
         boolean bl2 = true;
@@ -56,7 +56,7 @@ public abstract class SurvivalTrinketSlotMixin extends Slot {
         if (player.getServer() != null) {
             bl = player.getServer().getGameRules().getBoolean(GameRulesRegistry.REQUIRE_CIVILISATION_EFFECT_TO_CHANGE_GEAR_IN_ADVENTURE_MODE);
         }
-        cir.setReturnValue(cir.getReturnValue() && (player.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT) || !bl || !((DuckPlayerEntityMixin) player).bamcore$isAdventure()));
+        cir.setReturnValue(cir.getReturnValue() && (player.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT) || !bl || !((DuckPlayerEntityMixin) player).betteradventuremode$isAdventure()));
     }
 
     /**

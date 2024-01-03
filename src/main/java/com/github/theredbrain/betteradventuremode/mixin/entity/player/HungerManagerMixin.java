@@ -41,7 +41,7 @@ public class HungerManagerMixin implements DuckHungerManagerMixin {
      */
     @Overwrite
     public void update(PlayerEntity player) {
-        this.encumbrance = (double) ((DuckPlayerEntityMixin)player).bamcore$getEquipmentWeight() / Math.max(1, ((DuckPlayerEntityMixin)player).bamcore$getMaxEquipmentWeight());
+        this.encumbrance = (double) ((DuckPlayerEntityMixin)player).betteradventuremode$getEquipmentWeight() / Math.max(1, ((DuckPlayerEntityMixin)player).betteradventuremode$getMaxEquipmentWeight());
         boolean isMoving = this.prevPosX != player.getX() || this.prevPosY != player.getY() || this.prevPosZ != player.getZ();
         boolean isBlocking = player.isBlocking();
         boolean isSprinting = player.isSprinting();
@@ -53,18 +53,18 @@ public class HungerManagerMixin implements DuckHungerManagerMixin {
         this.staminaTickTimer++;
         this.manaTickTimer++;
 
-        if (isOverBurdened() && !player.hasStatusEffect(StatusEffectsRegistry.OVERBURDENED_EFFECT)) {
+        if (betteradventuremode$isOverBurdened() && !player.hasStatusEffect(StatusEffectsRegistry.OVERBURDENED_EFFECT)) {
             player.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.OVERBURDENED_EFFECT, -1, 0, false, false, true));
-        } else if (!isOverBurdened() && player.hasStatusEffect(StatusEffectsRegistry.OVERBURDENED_EFFECT)) {
+        } else if (!betteradventuremode$isOverBurdened() && player.hasStatusEffect(StatusEffectsRegistry.OVERBURDENED_EFFECT)) {
             player.removeStatusEffect(StatusEffectsRegistry.OVERBURDENED_EFFECT);
         }
 
         int healthTickThreshold = 20;
         if (this.healthTickTimer >= healthTickThreshold) {
             if (player.getHealth() < player.getMaxHealth()) {
-                float passiveRegeneration = ((DuckPlayerEntityMixin)player).bamcore$getHealthRegeneration();
+                float passiveRegeneration = ((DuckPlayerEntityMixin)player).betteradventuremode$getHealthRegeneration();
                 double civilisationEffectHealthMultiplier = isInCivilization ? 5 : 1;
-                double carryWeightHealthMultiplier = isOverBurdened() ? 0.75 : 1;
+                double carryWeightHealthMultiplier = betteradventuremode$isOverBurdened() ? 0.75 : 1;
                 // regenerate health
                 player.heal((float) (passiveRegeneration * carryWeightHealthMultiplier * civilisationEffectHealthMultiplier));
             } else if (player.getHealth() > player.getMaxHealth()) {
@@ -75,11 +75,11 @@ public class HungerManagerMixin implements DuckHungerManagerMixin {
         }
 
         int staminaRegenerationDelayThreshold = 60;
-        if (((DuckPlayerEntityMixin)player).bamcore$getStamina() <= 0 && this.delayStaminaRegeneration) {
+        if (((DuckPlayerEntityMixin)player).betteradventuremode$getStamina() <= 0 && this.delayStaminaRegeneration) {
             this.staminaRegenerationDelayTimer = 0;
             this.delayStaminaRegeneration = false;
         }
-        if (((DuckPlayerEntityMixin)player).bamcore$getStamina() > 0 && !this.delayStaminaRegeneration) {
+        if (((DuckPlayerEntityMixin)player).betteradventuremode$getStamina() > 0 && !this.delayStaminaRegeneration) {
             this.delayStaminaRegeneration = true;
         }
         if (this.staminaRegenerationDelayTimer <= staminaRegenerationDelayThreshold) {
@@ -88,17 +88,17 @@ public class HungerManagerMixin implements DuckHungerManagerMixin {
 
         int staminaTickThreshold = 20;
         if (this.staminaTickTimer >= staminaTickThreshold && staminaRegenerationDelayTimer >= staminaRegenerationDelayThreshold) {
-            if (((DuckPlayerEntityMixin)player).bamcore$getStamina() < ((DuckPlayerEntityMixin)player).bamcore$getMaxStamina()) {
-                float passiveRegeneration = ((DuckPlayerEntityMixin)player).bamcore$getStaminaRegeneration();
+            if (((DuckPlayerEntityMixin)player).betteradventuremode$getStamina() < ((DuckPlayerEntityMixin)player).betteradventuremode$getMaxStamina()) {
+                float passiveRegeneration = ((DuckPlayerEntityMixin)player).betteradventuremode$getStaminaRegeneration();
                 double isMovingStaminaRegenerationMultiplier = isSprinting ? 0 : isMoving ? 0.5 : 1;
                 double isBlockingStaminaRegenerationMultiplier = isBlocking ? 0.5 : 1;
                 double equipmentWeightStaminaRegenerationMultiplier = this.encumbrance <= 0.5 ? 1 : this.encumbrance <= 1 ? 0.75 : 0.5;
                 double civilisationEffectStaminaRegenerationMultiplier = isInCivilization ? 5 : 1;
                 // regenerate stamina
-                ((DuckPlayerEntityMixin)player).bamcore$addStamina((float) (passiveRegeneration * isMovingStaminaRegenerationMultiplier * isBlockingStaminaRegenerationMultiplier * equipmentWeightStaminaRegenerationMultiplier * civilisationEffectStaminaRegenerationMultiplier));
-            } else if (((DuckPlayerEntityMixin)player).bamcore$getStamina() > ((DuckPlayerEntityMixin)player).bamcore$getMaxStamina()) {
+                ((DuckPlayerEntityMixin)player).betteradventuremode$addStamina((float) (passiveRegeneration * isMovingStaminaRegenerationMultiplier * isBlockingStaminaRegenerationMultiplier * equipmentWeightStaminaRegenerationMultiplier * civilisationEffectStaminaRegenerationMultiplier));
+            } else if (((DuckPlayerEntityMixin)player).betteradventuremode$getStamina() > ((DuckPlayerEntityMixin)player).betteradventuremode$getMaxStamina()) {
                 // cap stamina to max stamina
-                ((DuckPlayerEntityMixin)player).bamcore$setStamina(((DuckPlayerEntityMixin)player).bamcore$getMaxStamina());
+                ((DuckPlayerEntityMixin)player).betteradventuremode$setStamina(((DuckPlayerEntityMixin)player).betteradventuremode$getMaxStamina());
             }
             // TODO regenerate poise
             this.staminaTickTimer = 0;
@@ -106,17 +106,17 @@ public class HungerManagerMixin implements DuckHungerManagerMixin {
 
         int manaTickThreshold = 20;
         if (this.manaTickTimer >= manaTickThreshold) {
-            if (((DuckPlayerEntityMixin)player).bamcore$getMana() < ((DuckPlayerEntityMixin)player).bamcore$getMaxMana()) {
-                float passiveRegeneration = ((DuckPlayerEntityMixin)player).bamcore$getManaRegeneration();
+            if (((DuckPlayerEntityMixin)player).betteradventuremode$getMana() < ((DuckPlayerEntityMixin)player).betteradventuremode$getMaxMana()) {
+                float passiveRegeneration = ((DuckPlayerEntityMixin)player).betteradventuremode$getManaRegeneration();
                 double civilisationEffectManaRegenerationMultiplier = isInCivilization ? 10 : 1;
                 double manaRegenerationEffectMultiplier = player.hasStatusEffect(StatusEffectsRegistry.MANA_REGENERATION_EFFECT) ? (player.getStatusEffect(StatusEffectsRegistry.MANA_REGENERATION_EFFECT).getAmplifier() > 0 ? 1 : 0.5) : 0.5;
                 // regenerate mana
                 if (player.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT) || player.hasStatusEffect(StatusEffectsRegistry.MANA_REGENERATION_EFFECT)) {
-                    ((DuckPlayerEntityMixin) player).bamcore$addMana((float) (passiveRegeneration * civilisationEffectManaRegenerationMultiplier * manaRegenerationEffectMultiplier));
+                    ((DuckPlayerEntityMixin) player).betteradventuremode$addMana((float) (passiveRegeneration * civilisationEffectManaRegenerationMultiplier * manaRegenerationEffectMultiplier));
                 }
-            } else if (((DuckPlayerEntityMixin)player).bamcore$getMana() > ((DuckPlayerEntityMixin)player).bamcore$getMaxMana()) {
+            } else if (((DuckPlayerEntityMixin)player).betteradventuremode$getMana() > ((DuckPlayerEntityMixin)player).betteradventuremode$getMaxMana()) {
                 // cap mana to max mana
-                ((DuckPlayerEntityMixin)player).bamcore$setMana(((DuckPlayerEntityMixin)player).bamcore$getMaxMana());
+                ((DuckPlayerEntityMixin)player).betteradventuremode$setMana(((DuckPlayerEntityMixin)player).betteradventuremode$getMaxMana());
             }
             this.manaTickTimer = 0;
         }
@@ -177,43 +177,43 @@ public class HungerManagerMixin implements DuckHungerManagerMixin {
         nbt.putDouble("encumbrance", this.encumbrance);
     }
 
-    public int getHealthTickTimer() {
+    public int betteradventuremode$getHealthTickTimer() {
         return healthTickTimer;
     }
 
-    public void setHealthTickTimer(int healthTickTimer) {
+    public void betteradventuremode$setHealthTickTimer(int healthTickTimer) {
         this.healthTickTimer = healthTickTimer;
     }
 
-    public int getManaTickTimer() {
+    public int betteradventuremode$getManaTickTimer() {
         return manaTickTimer;
     }
 
-    public void setManaTickTimer(int manaTickTimer) {
+    public void betteradventuremode$setManaTickTimer(int manaTickTimer) {
         this.manaTickTimer = manaTickTimer;
     }
 
-    public int getStaminaTickTimer() {
+    public int betteradventuremode$getStaminaTickTimer() {
         return staminaTickTimer;
     }
 
-    public void setStaminaTickTimer(int staminaTickTimer) {
+    public void betteradventuremode$setStaminaTickTimer(int staminaTickTimer) {
         this.staminaTickTimer = staminaTickTimer;
     }
 
-    public int getStaminaRegenerationDelayTimer() {
+    public int betteradventuremode$getStaminaRegenerationDelayTimer() {
         return staminaRegenerationDelayTimer;
     }
 
-    public void setStaminaRegenerationDelayTimer(int staminaRegenerationDelayTimer) {
+    public void betteradventuremode$setStaminaRegenerationDelayTimer(int staminaRegenerationDelayTimer) {
         this.staminaRegenerationDelayTimer = staminaRegenerationDelayTimer;
     }
 
-    public boolean isOverBurdened() {
+    public boolean betteradventuremode$isOverBurdened() {
         return this.encumbrance > 1;
     }
 
-    public double getEncumbrance() {
+    public double betteradventuremode$getEncumbrance() {
         return encumbrance;
     }
 }

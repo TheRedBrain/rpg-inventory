@@ -124,7 +124,7 @@ public class DialogueBlockEntity extends RotatedBlockEntity {
 
     public boolean openScreen(PlayerEntity player) {
         if (player.getEntityWorld().isClient) {
-            ((DuckPlayerEntityMixin)player).bamcore$openDialogueScreen(this, getStartingDialogue(player, this));
+            ((DuckPlayerEntityMixin)player).betteradventuremode$openDialogueScreen(this, getStartingDialogue(player, this));
         }
         return true;
     }
@@ -155,7 +155,7 @@ public class DialogueBlockEntity extends RotatedBlockEntity {
                 if (!unlockAdvancement.equals("")) {
                     unlockAdvancementEntry = advancementHandler.get(Identifier.tryParse(unlockAdvancement));
                 }
-                if ((lockAdvancement.equals("") || (lockAdvancementEntry != null && !((DuckClientAdvancementManagerMixin)advancementHandler.getManager()).bamcore$getAdvancementProgress(lockAdvancementEntry).isDone())) && (unlockAdvancement.equals("") || (unlockAdvancementEntry != null && ((DuckClientAdvancementManagerMixin)advancementHandler.getManager()).bamcore$getAdvancementProgress(unlockAdvancementEntry).isDone()))) {
+                if ((lockAdvancement.equals("") || (lockAdvancementEntry != null && !((DuckClientAdvancementManagerMixin)advancementHandler.getManager()).betteradventuremode$getAdvancementProgress(lockAdvancementEntry).isDone())) && (unlockAdvancement.equals("") || (unlockAdvancementEntry != null && ((DuckClientAdvancementManagerMixin)advancementHandler.getManager()).betteradventuremode$getAdvancementProgress(unlockAdvancementEntry).isDone()))) {
                     startingDialogue = DialoguesRegistry.getDialogue(Identifier.tryParse(dialogueEntry.getLeft()));
                     if (startingDialogue != null) {
                         break;

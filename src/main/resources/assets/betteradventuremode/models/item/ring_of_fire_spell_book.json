@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "betteradventuremode:item/ring_of_fire_spell_book"
+  }
+}

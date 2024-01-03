@@ -39,11 +39,11 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
      */
     @Overwrite
     private boolean canSprint() {
-        return this.hasVehicle() || this.bamcore$getStamina() > 0 || this.getAbilities().allowFlying;
+        return this.hasVehicle() || this.betteradventuremode$getStamina() > 0 || this.getAbilities().allowFlying;
     }
 
     @Override
-    public void bamcore$openHousingScreen() {
+    public void betteradventuremode$openHousingScreen() {
         HousingBlockBlockEntity housingBlockBlockEntity = null;
         if (this.client.getServer() != null && this.client.world != null && this.client.world.getBlockEntity(ComponentsRegistry.CURRENT_HOUSING_BLOCK_POS.get(this).getValue()) instanceof HousingBlockBlockEntity housingBlockBlockEntity1) {
             housingBlockBlockEntity = housingBlockBlockEntity1;
@@ -69,57 +69,57 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
     }
 
     @Override
-    public void bamcore$openJigsawPlacerBlockScreen(JigsawPlacerBlockBlockEntity jigsawPlacerBlock) {
+    public void betteradventuremode$openJigsawPlacerBlockScreen(JigsawPlacerBlockBlockEntity jigsawPlacerBlock) {
         this.client.setScreen(new JigsawPlacerBlockScreen(jigsawPlacerBlock));
     }
 
     @Override
-    public void bamcore$openRedstoneTriggerBlockScreen(RedstoneTriggerBlockBlockEntity redstoneTriggerBlock) {
+    public void betteradventuremode$openRedstoneTriggerBlockScreen(RedstoneTriggerBlockBlockEntity redstoneTriggerBlock) {
         this.client.setScreen(new RedstoneTriggerBlockScreen(redstoneTriggerBlock));
     }
 
     @Override
-    public void bamcore$openRelayTriggerBlockScreen(RelayTriggerBlockBlockEntity relayTriggerBlock) {
+    public void betteradventuremode$openRelayTriggerBlockScreen(RelayTriggerBlockBlockEntity relayTriggerBlock) {
         this.client.setScreen(new RelayTriggerBlockScreen(relayTriggerBlock));
     }
 
     @Override
-    public void bamcore$openTriggeredCounterBlockScreen(TriggeredCounterBlockEntity triggeredCounterBlock) {
+    public void betteradventuremode$openTriggeredCounterBlockScreen(TriggeredCounterBlockEntity triggeredCounterBlock) {
         this.client.setScreen(new TriggeredCounterBlockScreen(triggeredCounterBlock));
     }
 
     @Override
-    public void bamcore$openResetTriggerBlockScreen(ResetTriggerBlockEntity resetTriggerBlock) {
+    public void betteradventuremode$openResetTriggerBlockScreen(ResetTriggerBlockEntity resetTriggerBlock) {
         this.client.setScreen(new ResetTriggerBlockScreen(resetTriggerBlock));
     }
 
     @Override
-    public void bamcore$openDelayTriggerBlockScreen(DelayTriggerBlockBlockEntity delayTriggerBlock) {
+    public void betteradventuremode$openDelayTriggerBlockScreen(DelayTriggerBlockBlockEntity delayTriggerBlock) {
         this.client.setScreen(new DelayTriggerBlockScreen(delayTriggerBlock));
     }
 
     @Override
-    public void bamcore$openUseRelayBlockScreen(UseRelayBlockEntity useRelayBlock) {
+    public void betteradventuremode$openUseRelayBlockScreen(UseRelayBlockEntity useRelayBlock) {
         this.client.setScreen(new UseRelayBlockScreen(useRelayBlock));
     }
 
     @Override
-    public void bamcore$openTriggeredSpawnerBlockScreen(TriggeredSpawnerBlockEntity triggeredSpawnerBlock) {
+    public void betteradventuremode$openTriggeredSpawnerBlockScreen(TriggeredSpawnerBlockEntity triggeredSpawnerBlock) {
         this.client.setScreen(new TriggeredSpawnerBlockScreen(triggeredSpawnerBlock));
     }
 
     @Override
-    public void bamcore$openMimicBlockScreen(MimicBlockEntity mimicBlock) {
+    public void betteradventuremode$openMimicBlockScreen(MimicBlockEntity mimicBlock) {
         this.client.setScreen(new MimicBlockScreen(mimicBlock));
     }
 
     @Override
-    public void bamcore$openLocationControlBlockScreen(LocationControlBlockEntity locationControlBlock) {
+    public void betteradventuremode$openLocationControlBlockScreen(LocationControlBlockEntity locationControlBlock) {
         this.client.setScreen(new LocationControlBlockScreen(locationControlBlock));
     }
 
     @Override
-    public void bamcore$openDialogueScreen(DialogueBlockEntity dialogueBlockEntity, @Nullable Dialogue dialogue) {
+    public void betteradventuremode$openDialogueScreen(DialogueBlockEntity dialogueBlockEntity, @Nullable Dialogue dialogue) {
         this.client.setScreen(new DialogueBlockScreen(dialogueBlockEntity, dialogue, this.isCreativeLevelTwoOp()));
     }
 }

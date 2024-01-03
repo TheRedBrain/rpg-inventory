@@ -26,16 +26,6 @@ public class LongComponent implements ILongComponent, PlayerComponent {
 
     @Override
     public void writeToNbt(NbtCompound tag) {
-//        Set<String> tagKeys = tag.getKeys();
-//        for (String key : tagKeys) {
-//            tag.putString(key, "");
-//        }
-//        if (!value.isEmpty()) {
-//            Set<String> valuesKeys = value.keySet();
-//            for (String key : valuesKeys) {
         tag.putLong("value", this.value);
-//                tag.putBoolean(key + "_status", value.get(key).getRight());
-//            }
-//        }
     }
 }

@@ -4,5 +4,5 @@ import net.minecraft.advancement.AdvancementEntry;
 import net.minecraft.advancement.AdvancementProgress;
 
 public interface DuckClientAdvancementManagerMixin {
-    AdvancementProgress bamcore$getAdvancementProgress(AdvancementEntry advancementEntry);
+    AdvancementProgress betteradventuremode$getAdvancementProgress(AdvancementEntry advancementEntry);
 }

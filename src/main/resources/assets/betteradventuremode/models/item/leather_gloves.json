@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "betteradventuremode:item/leather_gloves",
+    "layer1": "betteradventuremode:item/leather_gloves_overlay"
+  }
+}

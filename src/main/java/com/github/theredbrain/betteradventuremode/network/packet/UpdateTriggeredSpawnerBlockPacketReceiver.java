@@ -50,7 +50,7 @@ public class UpdateTriggeredSpawnerBlockPacketReceiver implements ServerPlayNetw
         if (entityMode == TriggeredSpawnerBlockEntity.EntityMode.IDENTIFIER) {
             entityTypeId = packet.entityTypeId;
         } else if (entityMode == TriggeredSpawnerBlockEntity.EntityMode.SPAWNER_BOUND_ENTITY) {
-            entityTypeId = "bamcore:spawner_bound_entity";
+            entityTypeId = "betteradventuremode:spawner_bound_entity";
         }
 
         List<MutablePair<String, EntityAttributeModifier>> entityAttributeModifiersList = packet.entityAttributeModifiersList;

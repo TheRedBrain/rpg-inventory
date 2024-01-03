@@ -51,7 +51,7 @@ public class HousingBlock extends RotatedBlockWithEntity {
         if (blockEntity instanceof HousingBlockBlockEntity housingBlockBlockEntity && player.isCreative()) {
             ComponentsRegistry.CURRENT_HOUSING_BLOCK_POS.get(player).setValue(housingBlockBlockEntity.getPos());
             if (world.isClient) {
-                ((DuckPlayerEntityMixin) player).bamcore$openHousingScreen();
+                ((DuckPlayerEntityMixin) player).betteradventuremode$openHousingScreen();
                 return ActionResult.SUCCESS;
             }
         }

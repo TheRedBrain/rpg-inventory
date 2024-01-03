@@ -24,28 +24,28 @@ public class SwapHandItemsPacketReceiver implements ServerPlayNetworking.PlayPac
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
             if (mainHand) {
-                itemStack = ((DuckPlayerInventoryMixin)player.getInventory()).bamcore$getMainHand();
-                alternateItemStack = ((DuckPlayerInventoryMixin)player.getInventory()).bamcore$getAlternativeMainHand();
+                itemStack = ((DuckPlayerInventoryMixin)player.getInventory()).betteradventuremode$getMainHand();
+                alternateItemStack = ((DuckPlayerInventoryMixin)player.getInventory()).betteradventuremode$getAlternativeMainHand();
             } else {
-                itemStack = ((DuckPlayerInventoryMixin)player.getInventory()).bamcore$getOffHand();
-                alternateItemStack = ((DuckPlayerInventoryMixin)player.getInventory()).bamcore$getAlternativeOffHand();
+                itemStack = ((DuckPlayerInventoryMixin)player.getInventory()).betteradventuremode$getOffHand();
+                alternateItemStack = ((DuckPlayerInventoryMixin)player.getInventory()).betteradventuremode$getAlternativeOffHand();
             }
         }
 
         if (itemStack.isEmpty() && alternateItemStack.isEmpty()) {
             return;
         }
-        if (((DuckPlayerEntityMixin) player).bamcore$getStamina() <= 0) {
+        if (((DuckPlayerEntityMixin) player).betteradventuremode$getStamina() <= 0) {
             player.sendMessageToClient(Text.translatable("hud.message.staminaTooLow"), true);
             return;
         }
 
         if (mainHand) {
-            ((DuckPlayerInventoryMixin)player.getInventory()).bamcore$setMainHand(alternateItemStack);
-            ((DuckPlayerInventoryMixin)player.getInventory()).bamcore$setAlternativeMainHand(itemStack);
+            ((DuckPlayerInventoryMixin)player.getInventory()).betteradventuremode$setMainHand(alternateItemStack);
+            ((DuckPlayerInventoryMixin)player.getInventory()).betteradventuremode$setAlternativeMainHand(itemStack);
         } else {
-            ((DuckPlayerInventoryMixin)player.getInventory()).bamcore$setOffHand(alternateItemStack);
-            ((DuckPlayerInventoryMixin)player.getInventory()).bamcore$setAlternativeOffHand(itemStack);
+            ((DuckPlayerInventoryMixin)player.getInventory()).betteradventuremode$setOffHand(alternateItemStack);
+            ((DuckPlayerInventoryMixin)player.getInventory()).betteradventuremode$setAlternativeOffHand(itemStack);
         }
         // TODO play sounds
     }

@@ -26,7 +26,7 @@ public class AuraStatusEffect extends StatusEffect {
 
     public void applyUpdateEffect(LivingEntity entity, int amplifier) {
         World world = entity.getWorld();
-        if (entity instanceof PlayerEntity playerEntity && ((DuckPlayerEntityMixin)playerEntity).bamcore$getMana() <= 0) {
+        if (entity instanceof PlayerEntity playerEntity && ((DuckPlayerEntityMixin)playerEntity).betteradventuremode$getMana() <= 0) {
             entity.removeStatusEffect(this);
         }
         if (world.getTime() % 80L == 0L && !world.isClient) {

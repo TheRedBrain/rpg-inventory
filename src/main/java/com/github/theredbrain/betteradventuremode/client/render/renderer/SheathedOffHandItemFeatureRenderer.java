@@ -1,7 +1,7 @@
 package com.github.theredbrain.betteradventuremode.client.render.renderer;
 
-import com.github.theredbrain.betteradventuremode.api.item.BetterAdventureMode_BasicShieldItem;
-import com.github.theredbrain.betteradventuremode.api.item.BetterAdventureMode_BasicWeaponItem;
+import com.github.theredbrain.betteradventuremode.api.item.BasicShieldItem;
+import com.github.theredbrain.betteradventuremode.api.item.BasicWeaponItem;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.betteradventuremode.registry.StatusEffectsRegistry;
 import net.fabricmc.api.EnvType;
@@ -35,7 +35,7 @@ public class SheathedOffHandItemFeatureRenderer extends HeldItemFeatureRenderer<
     @Override
     public void render(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, AbstractClientPlayerEntity abstractClientPlayerEntity, float f, float g, float h, float j, float k, float l) {
 
-        ItemStack offHandStack = ((DuckPlayerInventoryMixin) ((PlayerEntity) abstractClientPlayerEntity).getInventory()).bamcore$getOffHand();
+        ItemStack offHandStack = ((DuckPlayerInventoryMixin) ((PlayerEntity) abstractClientPlayerEntity).getInventory()).betteradventuremode$getOffHand();
 
         if (!offHandStack.isEmpty() && (((PlayerEntity) abstractClientPlayerEntity).hasStatusEffect(StatusEffectsRegistry.WEAPONS_SHEATHED_EFFECT) || ((PlayerEntity) abstractClientPlayerEntity).hasStatusEffect(StatusEffectsRegistry.TWO_HANDED_EFFECT))) {
             matrixStack.push();
@@ -43,7 +43,7 @@ public class SheathedOffHandItemFeatureRenderer extends HeldItemFeatureRenderer<
             modelPart.rotate(matrixStack);
             Item offHandItem = offHandStack.getItem();
 
-            if (offHandItem instanceof SwordItem || offHandItem instanceof BetterAdventureMode_BasicWeaponItem) {
+            if (offHandItem instanceof SwordItem || offHandItem instanceof BasicWeaponItem) {
                 matrixStack.translate(0.2D, 0.0D, 0.15D);
                 if (abstractClientPlayerEntity.hasStackEquipped(EquipmentSlot.CHEST)) {
     //                    matrixStack.translate(0.05F, 0.0F, 0.0F);
@@ -57,7 +57,7 @@ public class SheathedOffHandItemFeatureRenderer extends HeldItemFeatureRenderer<
 //                }
 //                matrixStack.scale(1.0F, -1.0F, -1.0F);
                 heldItemRenderer.renderItem(abstractClientPlayerEntity, offHandStack, ModelTransformationMode.THIRD_PERSON_RIGHT_HAND, false, matrixStack, vertexConsumerProvider, i);
-            } else if (offHandItem instanceof ShieldItem || offHandItem instanceof BetterAdventureMode_BasicShieldItem) {
+            } else if (offHandItem instanceof ShieldItem || offHandItem instanceof BasicShieldItem) {
                 matrixStack.translate(0.2D, 0.4D, 0.0D);
                 if (abstractClientPlayerEntity.hasStackEquipped(EquipmentSlot.CHEST)) {
                     //                    matrixStack.translate(0.05F, 0.0F, 0.0F);

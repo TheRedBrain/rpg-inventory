@@ -2,23 +2,23 @@ package com.github.theredbrain.betteradventuremode.entity.player;
 
 public interface DuckHungerManagerMixin {
 
-    int getHealthTickTimer();
+    int betteradventuremode$getHealthTickTimer();
 
-    void setHealthTickTimer(int healthTickTimer);
+    void betteradventuremode$setHealthTickTimer(int healthTickTimer);
 
-    int getManaTickTimer();
+    int betteradventuremode$getManaTickTimer();
 
-    void setManaTickTimer(int manaTickTimer);
+    void betteradventuremode$setManaTickTimer(int manaTickTimer);
 
-    int getStaminaTickTimer();
+    int betteradventuremode$getStaminaTickTimer();
 
-    void setStaminaTickTimer(int staminaTickTimer);
+    void betteradventuremode$setStaminaTickTimer(int staminaTickTimer);
 
-    int getStaminaRegenerationDelayTimer();
+    int betteradventuremode$getStaminaRegenerationDelayTimer();
 
-    void setStaminaRegenerationDelayTimer(int staminaRegenerationDelayTimer);
+    void betteradventuremode$setStaminaRegenerationDelayTimer(int staminaRegenerationDelayTimer);
 
-    boolean isOverBurdened();
+    boolean betteradventuremode$isOverBurdened();
 
-    double getEncumbrance();
+    double betteradventuremode$getEncumbrance();
 }

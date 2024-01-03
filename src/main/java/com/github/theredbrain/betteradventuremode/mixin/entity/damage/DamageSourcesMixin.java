@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.mixin.entity.damage;
 
-import com.github.theredbrain.betteradventuremode.api.item.BetterAdventureMode_BasicWeaponItem;
+import com.github.theredbrain.betteradventuremode.api.item.BasicWeaponItem;
 import com.github.theredbrain.betteradventuremode.registry.StatusEffectsRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
@@ -27,8 +27,8 @@ public abstract class DamageSourcesMixin {
     @Overwrite
     public DamageSource playerAttack(PlayerEntity attacker) {
         ItemStack mainHandStack = attacker.getMainHandStack();
-        if (mainHandStack.getItem() instanceof BetterAdventureMode_BasicWeaponItem) {
-            return this.create(((BetterAdventureMode_BasicWeaponItem)mainHandStack.getItem()).getDamageTypeRegistryKey(attacker.hasStatusEffect(StatusEffectsRegistry.TWO_HANDED_EFFECT)), attacker);
+        if (mainHandStack.getItem() instanceof BasicWeaponItem) {
+            return this.create(((BasicWeaponItem)mainHandStack.getItem()).getDamageTypeRegistryKey(attacker.hasStatusEffect(StatusEffectsRegistry.TWO_HANDED_EFFECT)), attacker);
         }
         return this.create(DamageTypes.PLAYER_ATTACK, attacker);
     }

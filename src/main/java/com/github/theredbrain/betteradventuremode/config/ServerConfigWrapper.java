@@ -5,7 +5,7 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.autoconfig.serializer.PartitioningSerializer;
 
 @Config(
-        name = "bamcore"
+        name = "betteradventuremode"
 )
 public class ServerConfigWrapper extends PartitioningSerializer.GlobalData {
     @ConfigEntry.Category("server")

@@ -3,7 +3,7 @@ package com.github.theredbrain.betteradventuremode.registry;
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.api.effect.AuraStatusEffect;
 import com.github.theredbrain.betteradventuremode.api.effect.FoodStatusEffect;
-import com.github.theredbrain.betteradventuremode.api.util.BetterAdventureModCoreAttributeModifierUUIDs;
+import com.github.theredbrain.betteradventuremode.api.util.AttributeModifierUUIDs;
 import com.github.theredbrain.betteradventuremode.effect.*;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -19,8 +19,8 @@ public class StatusEffectsRegistry {
 
     //region Food Effects
     public static final StatusEffect SWEET_BERRIES_FOOD_EFFECT = new FoodStatusEffect()
-            .addAttributeModifier(EntityAttributes.GENERIC_MAX_HEALTH, BetterAdventureModCoreAttributeModifierUUIDs.SWEET_BERRY_FOOD_EFFECT, 30.0F, EntityAttributeModifier.Operation.ADDITION)
-            .addAttributeModifier(EntityAttributesRegistry.HEALTH_REGENERATION, BetterAdventureModCoreAttributeModifierUUIDs.SWEET_BERRY_FOOD_EFFECT, 2.0F, EntityAttributeModifier.Operation.ADDITION)
+            .addAttributeModifier(EntityAttributes.GENERIC_MAX_HEALTH, AttributeModifierUUIDs.SWEET_BERRY_FOOD_EFFECT, 30.0F, EntityAttributeModifier.Operation.ADDITION)
+            .addAttributeModifier(EntityAttributesRegistry.HEALTH_REGENERATION, AttributeModifierUUIDs.SWEET_BERRY_FOOD_EFFECT, 2.0F, EntityAttributeModifier.Operation.ADDITION)
 //            .addAttributeModifier(EntityAttributesRegistry.MAX_STAMINA, BetterAdventureModCoreAttributeModifierUUIDs.SWEET_BERRY_FOOD_EFFECT, 25.0F, EntityAttributeModifier.Operation.ADDITION)
 //            .addAttributeModifier(EntityAttributesRegistry.STAMINA_REGENERATION, BetterAdventureModCoreAttributeModifierUUIDs.SWEET_BERRY_FOOD_EFFECT, 1.0F, EntityAttributeModifier.Operation.ADDITION)
             ;
@@ -28,26 +28,26 @@ public class StatusEffectsRegistry {
     public static final StatusEffect BROWN_MUSHROOM_FOOD_EFFECT = new FoodStatusEffect()
 //            .addAttributeModifier(EntityAttributes.GENERIC_MAX_HEALTH, BetterAdventureModCoreAttributeModifierUUIDs.BROWN_MUSHROOM_FOOD_EFFECT, 10.0F, EntityAttributeModifier.Operation.ADDITION)
 //            .addAttributeModifier(EntityAttributesRegistry.BAM_HEALTH_REGENERATION, BetterAdventureModCoreAttributeModifierUUIDs.BROWN_MUSHROOM_FOOD_EFFECT, 1.0F, EntityAttributeModifier.Operation.ADDITION)
-            .addAttributeModifier(EntityAttributesRegistry.MAX_STAMINA, BetterAdventureModCoreAttributeModifierUUIDs.BROWN_MUSHROOM_FOOD_EFFECT, 30.0F, EntityAttributeModifier.Operation.ADDITION)
-            .addAttributeModifier(EntityAttributesRegistry.STAMINA_REGENERATION, BetterAdventureModCoreAttributeModifierUUIDs.BROWN_MUSHROOM_FOOD_EFFECT, 2.0F, EntityAttributeModifier.Operation.ADDITION);
+            .addAttributeModifier(EntityAttributesRegistry.MAX_STAMINA, AttributeModifierUUIDs.BROWN_MUSHROOM_FOOD_EFFECT, 30.0F, EntityAttributeModifier.Operation.ADDITION)
+            .addAttributeModifier(EntityAttributesRegistry.STAMINA_REGENERATION, AttributeModifierUUIDs.BROWN_MUSHROOM_FOOD_EFFECT, 2.0F, EntityAttributeModifier.Operation.ADDITION);
 
     public static final StatusEffect CHICKEN_MEAL_FOOD_EFFECT = new FoodStatusEffect()
-            .addAttributeModifier(EntityAttributes.GENERIC_MAX_HEALTH, BetterAdventureModCoreAttributeModifierUUIDs.CHICKEN_MEAL_FOOD_EFFECT, 60.0F, EntityAttributeModifier.Operation.ADDITION)
+            .addAttributeModifier(EntityAttributes.GENERIC_MAX_HEALTH, AttributeModifierUUIDs.CHICKEN_MEAL_FOOD_EFFECT, 60.0F, EntityAttributeModifier.Operation.ADDITION)
 //            .addAttributeModifier(EntityAttributesRegistry.BAM_HEALTH_REGENERATION, BetterAdventureModCoreAttributeModifierUUIDs.CHICKEN_MEAL_FOOD_EFFECT, 3.0F, EntityAttributeModifier.Operation.ADDITION)
-            .addAttributeModifier(EntityAttributesRegistry.MAX_STAMINA, BetterAdventureModCoreAttributeModifierUUIDs.CHICKEN_MEAL_FOOD_EFFECT, 50.0F, EntityAttributeModifier.Operation.ADDITION)
-            .addAttributeModifier(EntityAttributesRegistry.STAMINA_REGENERATION, BetterAdventureModCoreAttributeModifierUUIDs.CHICKEN_MEAL_FOOD_EFFECT, 3.0F, EntityAttributeModifier.Operation.ADDITION);
+            .addAttributeModifier(EntityAttributesRegistry.MAX_STAMINA, AttributeModifierUUIDs.CHICKEN_MEAL_FOOD_EFFECT, 50.0F, EntityAttributeModifier.Operation.ADDITION)
+            .addAttributeModifier(EntityAttributesRegistry.STAMINA_REGENERATION, AttributeModifierUUIDs.CHICKEN_MEAL_FOOD_EFFECT, 3.0F, EntityAttributeModifier.Operation.ADDITION);
 
     public static final StatusEffect RED_MUSHROOM_FOOD_EFFECT = new FoodStatusEffect()
-            .addAttributeModifier(EntityAttributes.GENERIC_MAX_HEALTH, BetterAdventureModCoreAttributeModifierUUIDs.RED_MUSHROOM_FOOD_EFFECT, 35.0F, EntityAttributeModifier.Operation.ADDITION)
-            .addAttributeModifier(EntityAttributesRegistry.MAX_STAMINA, BetterAdventureModCoreAttributeModifierUUIDs.RED_MUSHROOM_FOOD_EFFECT, 35.0F, EntityAttributeModifier.Operation.ADDITION)
-            .addAttributeModifier(EntityAttributesRegistry.MAX_MANA, BetterAdventureModCoreAttributeModifierUUIDs.RED_MUSHROOM_FOOD_EFFECT, 35.0F, EntityAttributeModifier.Operation.ADDITION);
+            .addAttributeModifier(EntityAttributes.GENERIC_MAX_HEALTH, AttributeModifierUUIDs.RED_MUSHROOM_FOOD_EFFECT, 35.0F, EntityAttributeModifier.Operation.ADDITION)
+            .addAttributeModifier(EntityAttributesRegistry.MAX_STAMINA, AttributeModifierUUIDs.RED_MUSHROOM_FOOD_EFFECT, 35.0F, EntityAttributeModifier.Operation.ADDITION)
+            .addAttributeModifier(EntityAttributesRegistry.MAX_MANA, AttributeModifierUUIDs.RED_MUSHROOM_FOOD_EFFECT, 35.0F, EntityAttributeModifier.Operation.ADDITION);
     public static final StatusEffect GLOW_BERRIES_FOOD_EFFECT = new FoodStatusEffect()
-            .addAttributeModifier(EntityAttributesRegistry.MAX_MANA, BetterAdventureModCoreAttributeModifierUUIDs.GLOW_BERRY_FOOD_EFFECT, 30.0F, EntityAttributeModifier.Operation.ADDITION)
-            .addAttributeModifier(EntityAttributesRegistry.MANA_REGENERATION, BetterAdventureModCoreAttributeModifierUUIDs.GLOW_BERRY_FOOD_EFFECT, 2.0F, EntityAttributeModifier.Operation.ADDITION);
+            .addAttributeModifier(EntityAttributesRegistry.MAX_MANA, AttributeModifierUUIDs.GLOW_BERRY_FOOD_EFFECT, 30.0F, EntityAttributeModifier.Operation.ADDITION)
+            .addAttributeModifier(EntityAttributesRegistry.MANA_REGENERATION, AttributeModifierUUIDs.GLOW_BERRY_FOOD_EFFECT, 2.0F, EntityAttributeModifier.Operation.ADDITION);
     //endregion Food Effects
     //region Aura Effects
     public static final StatusEffect HEALTH_REGENERATION_AURA_EFFECT = new AuraStatusEffect(StatusEffects.REGENERATION, true)
-            .addAttributeModifier(EntityAttributesRegistry.MAX_MANA, BetterAdventureModCoreAttributeModifierUUIDs.AURA_EFFECT, -0.25F, EntityAttributeModifier.Operation.MULTIPLY_TOTAL)
+            .addAttributeModifier(EntityAttributesRegistry.MAX_MANA, AttributeModifierUUIDs.AURA_EFFECT, -0.25F, EntityAttributeModifier.Operation.MULTIPLY_TOTAL)
             ;
 
     //endregion Aura Effects
@@ -66,7 +66,7 @@ public class StatusEffectsRegistry {
     public static final StatusEffect MANA_REGENERATION_EFFECT = new BeneficialStatusEffect();
     public static final StatusEffect NEED_EMPTY_OFFHAND_EFFECT = new NeutralStatusEffect();
     public static final StatusEffect NO_ATTACK_ITEMS_EFFECT = new NeutralStatusEffect();
-    public static final StatusEffect OVERBURDENED_EFFECT = new HarmfulStatusEffect().addAttributeModifier(EntityAttributes.GENERIC_MOVEMENT_SPEED, BetterAdventureModCoreAttributeModifierUUIDs.OVERBURDENED_EFFECT, -0.25, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
+    public static final StatusEffect OVERBURDENED_EFFECT = new HarmfulStatusEffect().addAttributeModifier(EntityAttributes.GENERIC_MOVEMENT_SPEED, AttributeModifierUUIDs.OVERBURDENED_EFFECT, -0.25, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
     public static final StatusEffect WEAPONS_SHEATHED_EFFECT = new NeutralStatusEffect();
     public static final StatusEffect TWO_HANDED_EFFECT = new NeutralStatusEffect();
     public static final StatusEffect PORTAL_RESISTANCE_EFFECT = new NeutralStatusEffect();
@@ -76,7 +76,7 @@ public class StatusEffectsRegistry {
     public static final StatusEffect FROZEN = new HarmfulStatusEffect();
     public static final StatusEffect WET = new HarmfulStatusEffect();
     public static final StatusEffect TEST_AURA_EFFECT = new AuraStatusEffect(StatusEffects.GLOWING, false)
-            .addAttributeModifier(EntityAttributesRegistry.MAX_MANA, BetterAdventureModCoreAttributeModifierUUIDs.AURA_EFFECT, -0.25F, EntityAttributeModifier.Operation.MULTIPLY_TOTAL)
+            .addAttributeModifier(EntityAttributesRegistry.MAX_MANA, AttributeModifierUUIDs.AURA_EFFECT, -0.25F, EntityAttributeModifier.Operation.MULTIPLY_TOTAL)
             ;
 
     public static void registerEffects() {

@@ -37,10 +37,6 @@ public class UpdateJigsawPlacerBlockPacketReceiver implements ServerPlayNetworki
         BlockState blockState = world.getBlockState(jigsawPlacerBlockPosition);
 
         if (blockEntity instanceof JigsawPlacerBlockBlockEntity jigsawPlacerBlockBlockEntity) {
-//                if (!jigsawPlacerBlockBlockEntity.setName(name)) {
-//                    player.sendMessage(Text.translatable("jigsaw_placer_block.name.invalid"), false);
-//                    updateSuccessful = false;
-//                }
             if (!jigsawPlacerBlockBlockEntity.setTarget(target)) {
                 player.sendMessage(Text.translatable("jigsaw_placer_block.target.invalid"), false);
                 updateSuccessful = false;

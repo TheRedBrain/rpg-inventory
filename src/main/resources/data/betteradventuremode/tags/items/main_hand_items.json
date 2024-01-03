@@ -1,0 +1,25 @@
+{
+  "values": [
+    "minecraft:bow",
+    "minecraft:crossbow",
+    "betteradventuremode:wooden_axe",
+    "betteradventuremode:stone_axe",
+    "betteradventuremode:iron_axe",
+    "betteradventuremode:diamond_axe",
+    "betteradventuremode:golden_axe",
+    "betteradventuremode:netherite_axe",
+    "betteradventuremode:wooden_pickaxe",
+    "betteradventuremode:stone_pickaxe",
+    "betteradventuremode:iron_pickaxe",
+    "betteradventuremode:diamond_pickaxe",
+    "betteradventuremode:golden_pickaxe",
+    "betteradventuremode:netherite_pickaxe",
+    "betteradventuremode:wooden_sword",
+    "betteradventuremode:stone_sword",
+    "betteradventuremode:iron_sword",
+    "betteradventuremode:diamond_sword",
+    "betteradventuremode:golden_sword",
+    "betteradventuremode:netherite_sword",
+    "betteradventuremode:test_sword"
+  ]
+}

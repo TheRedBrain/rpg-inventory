@@ -127,7 +127,7 @@ public class KeyBindingsRegistry {
     }
     public static void openHousingScreen(MinecraftClient client) {
         if (client.player != null) {
-            ((DuckPlayerEntityMixin)client.player).bamcore$openHousingScreen();
+            ((DuckPlayerEntityMixin)client.player).betteradventuremode$openHousingScreen();
         }
     }
 }

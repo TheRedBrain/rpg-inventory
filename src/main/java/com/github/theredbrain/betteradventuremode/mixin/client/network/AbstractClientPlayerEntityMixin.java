@@ -27,7 +27,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
     }
 
     @Override
-    public boolean bamcore$isAdventure() {
+    public boolean betteradventuremode$isAdventure() {
         PlayerListEntry playerListEntry = this.getPlayerListEntry();
         return playerListEntry != null && playerListEntry.getGameMode() == GameMode.ADVENTURE;
     }

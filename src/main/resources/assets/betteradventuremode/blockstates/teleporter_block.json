@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "betteradventuremode:block/teleporter_block"
+    }
+  }
+}

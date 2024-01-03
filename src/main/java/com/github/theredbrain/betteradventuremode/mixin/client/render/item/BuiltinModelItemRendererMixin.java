@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.mixin.client.render.item;
 
-import com.github.theredbrain.betteradventuremode.api.item.BetterAdventureMode_BasicShieldItem;
+import com.github.theredbrain.betteradventuremode.api.item.BasicShieldItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumer;
@@ -28,7 +28,7 @@ public class BuiltinModelItemRendererMixin {
 
     @Inject(method = "render", at = @At("TAIL"))
     public void render(ItemStack stack, ModelTransformationMode mode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, CallbackInfo ci) {
-        if (stack.getItem() instanceof BetterAdventureMode_BasicShieldItem) {
+        if (stack.getItem() instanceof BasicShieldItem) {
             matrices.push();
             matrices.scale(1.0f, -1.0f, -1.0f);
             SpriteIdentifier spriteIdentifier = ModelLoader.SHIELD_BASE_NO_PATTERN;

@@ -40,7 +40,7 @@ public class LocationControlBlock extends RotatedBlockWithEntity {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof LocationControlBlockEntity locationControlBlock && player.isCreative()) {
             if (world.isClient) {
-                ((DuckPlayerEntityMixin) player).bamcore$openLocationControlBlockScreen(locationControlBlock);
+                ((DuckPlayerEntityMixin) player).betteradventuremode$openLocationControlBlockScreen(locationControlBlock);
                 return ActionResult.SUCCESS;
             }
         }

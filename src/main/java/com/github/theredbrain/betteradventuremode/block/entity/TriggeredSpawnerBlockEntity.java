@@ -172,7 +172,7 @@ public class TriggeredSpawnerBlockEntity extends RotatedBlockEntity implements T
             return false;
         }
         if (player.getEntityWorld().isClient) {
-            ((DuckPlayerEntityMixin)player).bamcore$openTriggeredSpawnerBlockScreen(this);
+            ((DuckPlayerEntityMixin)player).betteradventuremode$openTriggeredSpawnerBlockScreen(this);
         }
         return true;
     }

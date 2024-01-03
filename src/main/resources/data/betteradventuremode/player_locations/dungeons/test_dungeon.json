@@ -1,0 +1,15 @@
+{
+  "controlBlockPosX": 64,
+  "controlBlockPosY": -30,
+  "controlBlockPosZ": 64,
+  "structureIdentifier": "betteradventuremode:player_locations/housing_dungeon",
+  "displayName": "player_dimensions.player_dungeons.test_dungeon",
+  "unlockAdvancement": "",
+  "lockAdvancement": "minecraft:story/mine_diamond",
+  "showLockedLocation": true,
+  "showUnlockAdvancement": true,
+  "showLockAdvancement": false,
+  "side_entrances": {
+    "side_entrance": "player_dimensions.player_dungeons.test_dungeon.side_entrance"
+  }
+}

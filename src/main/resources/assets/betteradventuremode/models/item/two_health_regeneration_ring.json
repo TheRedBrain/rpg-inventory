@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "betteradventuremode:item/two_health_regeneration_ring"
+  }
+}

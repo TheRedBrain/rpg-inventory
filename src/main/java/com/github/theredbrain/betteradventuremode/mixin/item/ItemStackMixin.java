@@ -1,8 +1,8 @@
 package com.github.theredbrain.betteradventuremode.mixin.item;
 
-import com.github.theredbrain.betteradventuremode.api.item.BetterAdventureMode_BasicWeaponItem;
-import com.github.theredbrain.betteradventuremode.api.item.BetterAdventureMode_BasicShieldItem;
-import com.github.theredbrain.betteradventuremode.api.util.BetterAdventureModCoreItemUtils;
+import com.github.theredbrain.betteradventuremode.api.item.BasicWeaponItem;
+import com.github.theredbrain.betteradventuremode.api.item.BasicShieldItem;
+import com.github.theredbrain.betteradventuremode.api.util.ItemUtils;
 import com.github.theredbrain.betteradventuremode.registry.StatusEffectsRegistry;
 import com.github.theredbrain.betteradventuremode.registry.Tags;
 import com.google.common.collect.*;
@@ -130,11 +130,11 @@ public abstract class ItemStackMixin {
      */
     @Inject(method = "getAttributeModifiers", at = @At("HEAD"), cancellable = true)
     public void bam$getAttributeModifiers(EquipmentSlot slot, CallbackInfoReturnable<Multimap<EntityAttribute, EntityAttributeModifier>> cir) {
-        if (this.getItem() instanceof BetterAdventureMode_BasicWeaponItem && !(BetterAdventureModCoreItemUtils.isUsable((ItemStack) (Object) this))) {
+        if (this.getItem() instanceof BasicWeaponItem && !(ItemUtils.isUsable((ItemStack) (Object) this))) {
             cir.setReturnValue(HashMultimap.create());
             cir.cancel();
         }
-        if (this.getItem() instanceof BetterAdventureMode_BasicShieldItem && !(BetterAdventureModCoreItemUtils.isUsable((ItemStack) (Object) this))) {
+        if (this.getItem() instanceof BasicShieldItem && !(ItemUtils.isUsable((ItemStack) (Object) this))) {
             cir.setReturnValue(HashMultimap.create());
             cir.cancel();
         }

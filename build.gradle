@@ -69,7 +69,7 @@ loom {
 //			sourceSet sourceSets.client
 //		}
 //	}
-	accessWidenerPath = file("src/main/resources/bamcore.accesswidener")
+	accessWidenerPath = file("src/main/resources/betteradventuremode.accesswidener")
 }
 
 dependencies {

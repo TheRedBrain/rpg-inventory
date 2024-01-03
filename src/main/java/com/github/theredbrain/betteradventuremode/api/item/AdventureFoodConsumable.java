@@ -24,7 +24,7 @@ public class AdventureFoodConsumable extends Item {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         if (this.isFood()) {
             ItemStack itemStack = user.getStackInHand(hand);
-            if (((DuckPlayerEntityMixin)user).bamcore$canConsumeItem(itemStack)) {
+            if (((DuckPlayerEntityMixin)user).betteradventuremode$canConsumeItem(itemStack)) {
                 user.setCurrentHand(hand);
                 return TypedActionResult.consume(itemStack);
             }

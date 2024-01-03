@@ -8,38 +8,38 @@ import org.jetbrains.annotations.Nullable;
 
 public interface DuckPlayerEntityMixin {
 
-    boolean bamcore$canConsumeItem(ItemStack itemStack);
-    boolean bamcore$tryEatAdventureFood(StatusEffectInstance statusEffectInstance);
+    boolean betteradventuremode$canConsumeItem(ItemStack itemStack);
+    boolean betteradventuremode$tryEatAdventureFood(StatusEffectInstance statusEffectInstance);
 
-    float bamcore$getMaxEquipmentWeight();
-    float bamcore$getEquipmentWeight();
+    float betteradventuremode$getMaxEquipmentWeight();
+    float betteradventuremode$getEquipmentWeight();
 
-    float bamcore$getHealthRegeneration();
+    float betteradventuremode$getHealthRegeneration();
 
-    float bamcore$getManaRegeneration();
-    float bamcore$getMaxMana();
-    void bamcore$addMana(float amount);
-    float bamcore$getMana();
-    void bamcore$setMana(float mana);
+    float betteradventuremode$getManaRegeneration();
+    float betteradventuremode$getMaxMana();
+    void betteradventuremode$addMana(float amount);
+    float betteradventuremode$getMana();
+    void betteradventuremode$setMana(float mana);
 
-    float bamcore$getStaminaRegeneration();
-    float bamcore$getMaxStamina();
-    void bamcore$addStamina(float amount);
-    float bamcore$getStamina();
-    void bamcore$setStamina(float mana);
+    float betteradventuremode$getStaminaRegeneration();
+    float betteradventuremode$getMaxStamina();
+    void betteradventuremode$addStamina(float amount);
+    float betteradventuremode$getStamina();
+    void betteradventuremode$setStamina(float mana);
 
-    boolean bamcore$isAdventure();
+    boolean betteradventuremode$isAdventure();
 
-    void bamcore$openHousingScreen();
-    void bamcore$openJigsawPlacerBlockScreen(JigsawPlacerBlockBlockEntity jigsawPlacerBlock);
-    void bamcore$openRedstoneTriggerBlockScreen(RedstoneTriggerBlockBlockEntity redstoneTriggerBlock);
-    void bamcore$openRelayTriggerBlockScreen(RelayTriggerBlockBlockEntity relayTriggerBlock);
-    void bamcore$openTriggeredCounterBlockScreen(TriggeredCounterBlockEntity triggeredCounterBlock);
-    void bamcore$openResetTriggerBlockScreen(ResetTriggerBlockEntity resetTriggerBlock);
-    void bamcore$openDelayTriggerBlockScreen(DelayTriggerBlockBlockEntity delayTriggerBlock);
-    void bamcore$openUseRelayBlockScreen(UseRelayBlockEntity useRelayBlock);
-    void bamcore$openTriggeredSpawnerBlockScreen(TriggeredSpawnerBlockEntity triggeredSpawnerBlock);
-    void bamcore$openMimicBlockScreen(MimicBlockEntity mimicBlock);
-    void bamcore$openLocationControlBlockScreen(LocationControlBlockEntity locationControlBlock);
-    void bamcore$openDialogueScreen(DialogueBlockEntity dialogueBlockEntity, @Nullable Dialogue dialogue);
+    void betteradventuremode$openHousingScreen();
+    void betteradventuremode$openJigsawPlacerBlockScreen(JigsawPlacerBlockBlockEntity jigsawPlacerBlock);
+    void betteradventuremode$openRedstoneTriggerBlockScreen(RedstoneTriggerBlockBlockEntity redstoneTriggerBlock);
+    void betteradventuremode$openRelayTriggerBlockScreen(RelayTriggerBlockBlockEntity relayTriggerBlock);
+    void betteradventuremode$openTriggeredCounterBlockScreen(TriggeredCounterBlockEntity triggeredCounterBlock);
+    void betteradventuremode$openResetTriggerBlockScreen(ResetTriggerBlockEntity resetTriggerBlock);
+    void betteradventuremode$openDelayTriggerBlockScreen(DelayTriggerBlockBlockEntity delayTriggerBlock);
+    void betteradventuremode$openUseRelayBlockScreen(UseRelayBlockEntity useRelayBlock);
+    void betteradventuremode$openTriggeredSpawnerBlockScreen(TriggeredSpawnerBlockEntity triggeredSpawnerBlock);
+    void betteradventuremode$openMimicBlockScreen(MimicBlockEntity mimicBlock);
+    void betteradventuremode$openLocationControlBlockScreen(LocationControlBlockEntity locationControlBlock);
+    void betteradventuremode$openDialogueScreen(DialogueBlockEntity dialogueBlockEntity, @Nullable Dialogue dialogue);
 }

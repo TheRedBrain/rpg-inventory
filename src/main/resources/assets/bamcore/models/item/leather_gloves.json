@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "bamcore:item/leather_gloves",
-    "layer1": "bamcore:item/leather_gloves_overlay"
-  }
-}

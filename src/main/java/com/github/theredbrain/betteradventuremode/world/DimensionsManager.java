@@ -25,8 +25,7 @@ import java.util.Optional;
 public class DimensionsManager {
 
     public static void init() {
-//        LifecycleHack.markNamespaceStable("bamcore");
-        DimensionAPI.suppressExperimentalWarningForNamespace("bamcore");
+        DimensionAPI.suppressExperimentalWarningForNamespace("betteradventuremode");
         DimensionAPI.registerDimensionTemplate(
                 "player_locations", PLAYER_LOCATIONS_DIMENSION_TEMPLATE
         );
@@ -37,18 +36,6 @@ public class DimensionsManager {
 
         DimensionAPI.addDimensionDynamically(server, dimensionId, PLAYER_LOCATIONS_DIMENSION_TEMPLATE.createLevelStem(server));
     }
-
-//    public static void removeDynamicPlayerDimension(ServerPlayerEntity player, MinecraftServer server) {
-//        // may throw exception here
-//
-//        Identifier dimId = BetterAdventureModeCore.identifier(player.getUuid().toString() + "_dungeons");
-//        RegistryKey<World> registryKey = RegistryKey.of(RegistryKeys.WORLD, dimId);
-//        ServerWorld serverWorld = server.getWorld(registryKey);
-//
-//        if (serverWorld != null) {
-//            DimensionAPI.removeDimensionDynamically(serverWorld);
-//        }
-//    }
 
     public static final DimensionTemplate PLAYER_LOCATIONS_DIMENSION_TEMPLATE = new DimensionTemplate(
             DimensionTypes.OVERWORLD,

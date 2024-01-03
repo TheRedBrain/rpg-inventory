@@ -56,7 +56,7 @@ public class RedstoneTriggerBlockBlockEntity extends RotatedBlockEntity {
             return false;
         }
         if (player.getEntityWorld().isClient) {
-            ((DuckPlayerEntityMixin)player).bamcore$openRedstoneTriggerBlockScreen(this);
+            ((DuckPlayerEntityMixin)player).betteradventuremode$openRedstoneTriggerBlockScreen(this);
         }
         return true;
     }

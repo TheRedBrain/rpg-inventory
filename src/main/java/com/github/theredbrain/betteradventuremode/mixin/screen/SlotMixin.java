@@ -15,12 +15,12 @@ public class SlotMixin implements DuckSlotMixin {
     private boolean bamcore$disabledOverride = false;
 
     @Override
-    public void bamcore$setDisabledOverride(boolean disabled) {
+    public void betteradventuremode$setDisabledOverride(boolean disabled) {
         this.bamcore$disabledOverride = disabled;
     }
 
     @Override
-    public boolean bamcore$getDisabledOverride() {
+    public boolean betteradventuremode$getDisabledOverride() {
         return this.bamcore$disabledOverride;
     }
 

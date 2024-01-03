@@ -15,7 +15,7 @@ public class ClientAdvancementManagerMixin implements DuckClientAdvancementManag
     @Shadow @Final private Map<AdvancementEntry, AdvancementProgress> advancementProgresses;
 
     @Override
-    public AdvancementProgress bamcore$getAdvancementProgress(AdvancementEntry advancementEntry) {
+    public AdvancementProgress betteradventuremode$getAdvancementProgress(AdvancementEntry advancementEntry) {
         return this.advancementProgresses.get(advancementEntry);
     }
 }

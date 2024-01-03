@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "betteradventuremode:block/mimic_fallback_block"
+    }
+  }
+}

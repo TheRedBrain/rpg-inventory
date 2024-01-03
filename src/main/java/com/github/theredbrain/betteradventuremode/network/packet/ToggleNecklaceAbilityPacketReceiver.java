@@ -35,7 +35,7 @@ public class ToggleNecklaceAbilityPacketReceiver implements ServerPlayNetworking
 
         if (necklaceItemStack == ItemStack.EMPTY) {
             player.sendMessageToClient(Text.translatable("hud.message.noNecklaceEquipped"), true);
-        } else if (((DuckPlayerEntityMixin) player).bamcore$getMana() > 0) {
+        } else if (((DuckPlayerEntityMixin) player).betteradventuremode$getMana() > 0) {
             if (necklaceItemStack.isIn(Tags.TELEPORT_HOME_NECKLACES)) {
                 // TODO options
                 //  - give a status effect

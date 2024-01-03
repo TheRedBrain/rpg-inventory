@@ -18,6 +18,8 @@ public class ClientConfig implements ConfigData {
     public int mana_bar_number_color = -6250336;
     @Comment("Additional debug log is shown in the console.")
     public boolean show_debug_log = true;
+    @Comment("Additional debug messages are shown in-game.")
+    public boolean show_debug_messages = true;
     public ClientConfig() {
 
     }

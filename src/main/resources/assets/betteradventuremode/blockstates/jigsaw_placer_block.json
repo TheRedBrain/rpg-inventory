@@ -1,0 +1,57 @@
+{
+  "variants": {
+    "orientation=down_east": {
+      "model": "betteradventuremode:block/jigsaw_placer_block",
+      "x": 90,
+      "y": 90
+    },
+    "orientation=down_north": {
+      "model": "betteradventuremode:block/jigsaw_placer_block",
+      "x": 90
+    },
+    "orientation=down_south": {
+      "model": "betteradventuremode:block/jigsaw_placer_block",
+      "x": 90,
+      "y": 180
+    },
+    "orientation=down_west": {
+      "model": "betteradventuremode:block/jigsaw_placer_block",
+      "x": 90,
+      "y": 270
+    },
+    "orientation=east_up": {
+      "model": "betteradventuremode:block/jigsaw_placer_block",
+      "y": 90
+    },
+    "orientation=north_up": {
+      "model": "betteradventuremode:block/jigsaw_placer_block"
+    },
+    "orientation=south_up": {
+      "model": "betteradventuremode:block/jigsaw_placer_block",
+      "y": 180
+    },
+    "orientation=up_east": {
+      "model": "betteradventuremode:block/jigsaw_placer_block",
+      "x": 270,
+      "y": 270
+    },
+    "orientation=up_north": {
+      "model": "betteradventuremode:block/jigsaw_placer_block",
+      "x": 270,
+      "y": 180
+    },
+    "orientation=up_south": {
+      "model": "betteradventuremode:block/jigsaw_placer_block",
+      "x": 270
+    },
+    "orientation=up_west": {
+      "model": "betteradventuremode:block/jigsaw_placer_block",
+      "x": 270,
+      "y": 90
+    },
+    "orientation=west_up": {
+      "model": "betteradventuremode:block/jigsaw_placer_block",
+      "y": 270
+    }
+  }
+}

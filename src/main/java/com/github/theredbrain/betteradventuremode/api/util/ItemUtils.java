@@ -1,0 +1,21 @@
+package com.github.theredbrain.betteradventuremode.api.util;
+
+import com.github.theredbrain.betteradventuremode.registry.Tags;
+import net.minecraft.item.ItemStack;
+//import net.spell_engine.api.spell.SpellContainer;
+
+public class ItemUtils {
+
+    /**
+     * {@return whether this item should provide its attribute modifiers and if should be rendered}
+     */
+    public static boolean isUsable(ItemStack stack) {
+        return stack.getDamage() < stack.getMaxDamage() - 1 || stack.isIn(Tags.EMPTY_HAND_WEAPONS);
+    }
+
+    // TODO SpellEngine 1.20.2
+//    public static SpellContainer setProxyPool(SpellContainer spellContainer, String proxyPool) {
+//        ((DuckSpellContainerMixin)spellContainer).setProxyPool(proxyPool);
+//        return spellContainer;
+//    }
+}

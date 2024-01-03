@@ -12,7 +12,7 @@ public class SheatheWeaponsPacketReceiver implements ServerPlayNetworking.PlayPa
     @Override
     public void receive(SheatheWeaponsPacket packet, ServerPlayerEntity player, PacketSender responseSender) {
 
-        if (((DuckPlayerEntityMixin) player).bamcore$getStamina() <= 0) {
+        if (((DuckPlayerEntityMixin) player).betteradventuremode$getStamina() <= 0) {
             player.sendMessageToClient(Text.translatable("hud.message.staminaTooLow"), true);
         } else {
             if (player.hasStatusEffect(StatusEffectsRegistry.WEAPONS_SHEATHED_EFFECT)) {

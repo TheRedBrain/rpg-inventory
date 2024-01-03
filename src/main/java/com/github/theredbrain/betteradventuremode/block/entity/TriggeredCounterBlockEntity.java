@@ -75,7 +75,7 @@ public class TriggeredCounterBlockEntity extends RotatedBlockEntity implements T
             return false;
         }
         if (player.getEntityWorld().isClient) {
-            ((DuckPlayerEntityMixin)player).bamcore$openTriggeredCounterBlockScreen(this);
+            ((DuckPlayerEntityMixin)player).betteradventuremode$openTriggeredCounterBlockScreen(this);
         }
         return true;
     }

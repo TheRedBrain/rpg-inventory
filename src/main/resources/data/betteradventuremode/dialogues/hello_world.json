@@ -1,0 +1,59 @@
+{
+  "dialogueTextList": [
+    "dialogue.betteradventuremode.hello_world.dialogue_text.line_1",
+    "dialogue.betteradventuremode.hello_world.dialogue_text.line_2",
+    "dialogue.betteradventuremode.hello_world.dialogue_text.line_3",
+    "dialogue.betteradventuremode.hello_world.dialogue_text.line_4",
+    "dialogue.betteradventuremode.hello_world.dialogue_text.line_5",
+    "dialogue.betteradventuremode.hello_world.dialogue_text.line_6",
+    "dialogue.betteradventuremode.hello_world.dialogue_text.line_7",
+    "dialogue.betteradventuremode.hello_world.dialogue_text.line_8"
+  ],
+  "answerList": [
+    {
+      "answerText": "dialogue.betteradventuremode.hello_world.answer_text_1",
+      "responseDialogue": "betteradventuremode:hello_world_2",
+      "lockAdvancement": "",
+      "unlockAdvancement": "",
+      "showLockedAnswer": true
+    },
+    {
+      "answerText": "dialogue.betteradventuremode.hello_world.answer_text_2",
+      "responseDialogue": "",
+      "lockAdvancement": "",
+      "unlockAdvancement": "",
+      "showLockedAnswer": true
+    },
+    {
+      "answerText": "dialogue.betteradventuremode.hello_world.answer_text_3",
+      "responseDialogue": "",
+      "lockAdvancement": "",
+      "unlockAdvancement": "",
+      "showLockedAnswer": true
+    },
+    {
+      "answerText": "dialogue.betteradventuremode.hello_world.answer_text_4",
+      "responseDialogue": "",
+      "lockAdvancement": "",
+      "unlockAdvancement": "",
+      "showLockedAnswer": true
+    },
+    {
+      "answerText": "dialogue.betteradventuremode.hello_world.answer_text_5",
+      "responseDialogue": "",
+      "lockAdvancement": "",
+      "unlockAdvancement": "",
+      "showLockedAnswer": true
+    },
+    {
+      "answerText": "dialogue.betteradventuremode.hello_world.answer_text_6",
+      "responseDialogue": "",
+      "lockAdvancement": "",
+      "unlockAdvancement": "",
+      "showLockedAnswer": true
+    }
+  ],
+  "lockAdvancement": "",
+  "unlockAdvancement": "",
+  "cancellable": true
+}

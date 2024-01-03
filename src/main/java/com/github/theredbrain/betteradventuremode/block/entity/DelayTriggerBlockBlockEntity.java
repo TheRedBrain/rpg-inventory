@@ -77,7 +77,7 @@ public class DelayTriggerBlockBlockEntity extends RotatedBlockEntity implements 
             return false;
         }
         if (player.getEntityWorld().isClient) {
-            ((DuckPlayerEntityMixin)player).bamcore$openDelayTriggerBlockScreen(this);
+            ((DuckPlayerEntityMixin)player).betteradventuremode$openDelayTriggerBlockScreen(this);
         }
         return true;
     }

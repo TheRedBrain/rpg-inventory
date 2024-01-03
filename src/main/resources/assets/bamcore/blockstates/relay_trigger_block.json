@@ -1,7 +1,0 @@
-{
-  "variants": {
-    "": {
-      "model": "bamcore:block/relay_trigger_block"
-    }
-  }
-}

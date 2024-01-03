@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.mixin.item;
 
-import com.github.theredbrain.betteradventuremode.api.util.BetterAdventureModCoreItemUtils;
+import com.github.theredbrain.betteradventuremode.api.util.ItemUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -20,7 +20,7 @@ public class MiningToolItemMixin {
      */
     @Overwrite
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        if (BetterAdventureModCoreItemUtils.isUsable(stack)) {
+        if (ItemUtils.isUsable(stack)) {
             stack.damage(1, attacker, e -> e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
             return true;
         }
@@ -33,7 +33,7 @@ public class MiningToolItemMixin {
      */
     @Overwrite
     public boolean postMine(ItemStack stack, World world, BlockState state, BlockPos pos, LivingEntity miner) {
-        if (BetterAdventureModCoreItemUtils.isUsable(stack) && !world.isClient && state.getHardness(world, pos) != 0.0f) {
+        if (ItemUtils.isUsable(stack) && !world.isClient && state.getHardness(world, pos) != 0.0f) {
             stack.damage(1, miner, e -> e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
             return true;
         }
