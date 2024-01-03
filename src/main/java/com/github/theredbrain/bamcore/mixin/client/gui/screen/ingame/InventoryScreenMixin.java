@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.mixin.client.gui.screen.ingame;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.BetterAdventureMode;
 import com.github.theredbrain.bamcore.client.gui.screen.ingame.AdventureInventoryScreen;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -24,7 +24,7 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
 
     @Inject(method = "handledScreenTick", at = @At("HEAD"), cancellable = true)
     public void bamcore$handledScreenTick(CallbackInfo ci) {
-        if (BetterAdventureModeCore.serverConfig.use_adventure_inventory_screen && this.client != null && this.client.player != null) {
+        if (BetterAdventureMode.serverConfig.use_adventure_inventory_screen && this.client != null && this.client.player != null) {
             this.client.setScreen(new AdventureInventoryScreen(this.client.player));
             ci.cancel();
         }
@@ -32,7 +32,7 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
 
     @Inject(method = "init", at = @At("HEAD"), cancellable = true)
     protected void init(CallbackInfo ci) {
-        if (BetterAdventureModeCore.serverConfig.use_adventure_inventory_screen && this.client != null && this.client.player != null) {
+        if (BetterAdventureMode.serverConfig.use_adventure_inventory_screen && this.client != null && this.client.player != null) {
             this.client.setScreen(new AdventureInventoryScreen(this.client.player));
             ci.cancel();
         }

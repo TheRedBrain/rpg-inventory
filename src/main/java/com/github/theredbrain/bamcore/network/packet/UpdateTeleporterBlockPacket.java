@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.network.packet;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.BetterAdventureMode;
 import com.github.theredbrain.bamcore.api.util.PacketByteBufUtils;
 import com.github.theredbrain.bamcore.block.entity.TeleporterBlockBlockEntity;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
@@ -14,7 +14,7 @@ import java.util.List;
 
 public class UpdateTeleporterBlockPacket implements FabricPacket {
     public static final PacketType<UpdateTeleporterBlockPacket> TYPE = PacketType.create(
-            BetterAdventureModeCore.identifier("update_teleporter_block"),
+            BetterAdventureMode.identifier("update_teleporter_block"),
             UpdateTeleporterBlockPacket::new
     );
 

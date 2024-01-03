@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.network.packet;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.BetterAdventureMode;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.minecraft.network.PacketByteBuf;
@@ -8,7 +8,7 @@ import net.minecraft.util.math.BlockPos;
 
 public class UpdateMimicBlockPacket implements FabricPacket {
     public static final PacketType<UpdateMimicBlockPacket> TYPE = PacketType.create(
-            BetterAdventureModeCore.identifier("update_mimic_block"),
+            BetterAdventureMode.identifier("update_mimic_block"),
             UpdateMimicBlockPacket::new
     );
 

@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.client.gui.screen.ingame;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.BetterAdventureMode;
 import com.github.theredbrain.bamcore.api.effect.FoodStatusEffect;
 import com.github.theredbrain.bamcore.registry.EntityAttributesRegistry;
 import com.github.theredbrain.bamcore.screen.DuckSlotMixin;
@@ -41,11 +41,11 @@ import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
 public class AdventureInventoryScreen extends HandledScreen<PlayerScreenHandler> implements TrinketScreen {
-    public static final Identifier ADVENTURE_INVENTORY_SIDES_BACKGROUND_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/adventure_inventory/adventure_inventory_sides_background.png");
-    private static final Identifier INVENTORY_SLOT_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/inventory_slot.png");
+    public static final Identifier ADVENTURE_INVENTORY_SIDES_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("textures/gui/container/adventure_inventory/adventure_inventory_sides_background.png");
+    private static final Identifier INVENTORY_SLOT_TEXTURE = BetterAdventureMode.identifier("textures/gui/container/inventory_slot.png");
     private static final Identifier EFFECT_BACKGROUND_SMALL_TEXTURE = new Identifier("container/inventory/effect_background_small");
-    private static final Identifier EFFECT_SCROLLER_BACKGROUND_TEXTURE = BetterAdventureModeCore.identifier("container/adventure_inventory/scroller_background");
-    private static final Identifier EFFECT_SCROLLER_TEXTURE = BetterAdventureModeCore.identifier("container/scroller");
+    private static final Identifier EFFECT_SCROLLER_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("container/adventure_inventory/scroller_background");
+    private static final Identifier EFFECT_SCROLLER_TEXTURE = BetterAdventureMode.identifier("container/scroller");
     private float mouseX;
     private float mouseY;
     private boolean showAttributeScreen = false;
@@ -203,7 +203,7 @@ public class AdventureInventoryScreen extends HandledScreen<PlayerScreenHandler>
             activeSpellSlotAmount = (int) this.client.player.getAttributeInstance(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT).getValue();
             updateEffectsLists(this.client.player);
         }
-        context.drawTexture(BetterAdventureModeCore.identifier("textures/gui/container/adventure_inventory/adventure_inventory_main_background_" + activeSpellSlotAmount + ".png"), i, j, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
+        context.drawTexture(BetterAdventureMode.identifier("textures/gui/container/adventure_inventory/adventure_inventory_main_background_" + activeSpellSlotAmount + ".png"), i, j, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
         if (this.oldEffectsListSize > 0) {
             context.drawTexture(ADVENTURE_INVENTORY_SIDES_BACKGROUND_TEXTURE, i - 130, j, 0, 0, 130, this.backgroundHeight, 130, this.backgroundHeight);
         }

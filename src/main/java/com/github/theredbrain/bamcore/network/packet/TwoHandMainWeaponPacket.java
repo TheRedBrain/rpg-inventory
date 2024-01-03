@@ -1,13 +1,13 @@
 package com.github.theredbrain.bamcore.network.packet;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.BetterAdventureMode;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.minecraft.network.PacketByteBuf;
 
 public class TwoHandMainWeaponPacket implements FabricPacket {
     public static final PacketType<TwoHandMainWeaponPacket> TYPE = PacketType.create(
-            BetterAdventureModeCore.identifier("two_hand_main_weapon"),
+            BetterAdventureMode.identifier("two_hand_main_weapon"),
             TwoHandMainWeaponPacket::new
     );
 

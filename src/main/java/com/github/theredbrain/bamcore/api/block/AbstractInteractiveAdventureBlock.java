@@ -1,15 +1,13 @@
 package com.github.theredbrain.bamcore.api.block;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.BetterAdventureMode;
 import com.github.theredbrain.bamcore.api.util.BetterAdventureModCoreItemUtils;
 //import de.dafuqs.revelationary.api.advancements.AdvancementHelper;
 //import de.dafuqs.revelationary.api.revelations.RevelationAware;
 import com.mojang.serialization.MapCodec;
-import net.minecraft.block.AbstractSignBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -24,16 +22,13 @@ import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Pair;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
 
 public abstract class AbstractInteractiveAdventureBlock extends Block/* implements RevelationAware*/ {
     public static final BooleanProperty INTACT;
@@ -76,7 +71,7 @@ public abstract class AbstractInteractiveAdventureBlock extends Block/* implemen
                         || (tool.isIn(this.requiredTools) && tool.getItem() instanceof ToolItem && (BetterAdventureModCoreItemUtils.isUsable(tool) && hand == Hand.MAIN_HAND) || (tool.isIn(this.requiredTools) && !(tool.getItem() instanceof ToolItem) && hand == Hand.MAIN_HAND)))) {
 
                 if (state.get(AbstractInteractiveAdventureBlock.INTACT)) {
-                    BetterAdventureModeCore.LOGGER.info("should drop stuff");
+                    BetterAdventureMode.LOGGER.info("should drop stuff");
                     // TODO drop lootTable on interaction
 //                    this.getLootTableId();
                     List<ItemStack> droppedStacks = Block.getDroppedStacks(state, (ServerWorld) world, pos, null, player, tool);

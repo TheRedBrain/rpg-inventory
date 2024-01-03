@@ -1,7 +1,7 @@
 package com.github.theredbrain.bamcore.mixin.client.gui.hud;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
-import com.github.theredbrain.bamcore.BetterAdventureModeCoreClient;
+import com.github.theredbrain.bamcore.BetterAdventureMode;
+import com.github.theredbrain.bamcore.BetterAdventureModeClient;
 import com.github.theredbrain.bamcore.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerInventoryMixin;
@@ -49,9 +49,9 @@ public abstract class InGameHudMixin {
     @Shadow public abstract TextRenderer getTextRenderer();
 
     @Unique
-    private static final Identifier HOTBAR_HAND_SLOTS_TEXTURE = BetterAdventureModeCore.identifier("hud/hotbar_hand_slots");
+    private static final Identifier HOTBAR_HAND_SLOTS_TEXTURE = BetterAdventureMode.identifier("hud/hotbar_hand_slots");
     @Unique
-    private static final Identifier HOTBAR_ALTERNATE_HAND_SLOTS_TEXTURE = BetterAdventureModeCore.identifier("hud/hotbar_alternate_hand_slots");
+    private static final Identifier HOTBAR_ALTERNATE_HAND_SLOTS_TEXTURE = BetterAdventureMode.identifier("hud/hotbar_alternate_hand_slots");
     @Unique
     private static final Identifier HEALTH_BAR_BACKGROUND_TEXTURE = new Identifier("boss_bar/red_background");
     @Unique
@@ -61,9 +61,9 @@ public abstract class InGameHudMixin {
     @Unique
     private static final Identifier MANA_BAR_PROGRESS_TEXTURE = new Identifier("boss_bar/blue_progress");
     @Unique
-    private static final Identifier STAGGER_BAR_BACKGROUND_TEXTURE = BetterAdventureModeCore.identifier("hud/stagger_bar_background");
+    private static final Identifier STAGGER_BAR_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("hud/stagger_bar_background");
     @Unique
-    private static final Identifier STAGGER_BAR_PROGRESS_TEXTURE = BetterAdventureModeCore.identifier("hud/stagger_bar_progress");
+    private static final Identifier STAGGER_BAR_PROGRESS_TEXTURE = BetterAdventureMode.identifier("hud/stagger_bar_progress");
     @Unique
     private static final Identifier STAMINA_BAR_BACKGROUND_TEXTURE = new Identifier("boss_bar/green_background");
     @Unique
@@ -183,7 +183,7 @@ public abstract class InGameHudMixin {
             if (normalizedHealthRatio > 0) {
                 context.drawGuiTexture(HEALTH_BAR_PROGRESS_TEXTURE, attributeBarX, attributeBarY, normalizedHealthRatio, 5);
             }
-            if (BetterAdventureModeCoreClient.clientConfig.show_resource_bar_numbers) {
+            if (BetterAdventureModeClient.clientConfig.show_resource_bar_numbers) {
                 this.client.getProfiler().swap("health_bar_number");
                 String string = "" + health;
                 attributeBarNumberX = (this.scaledWidth - this.getTextRenderer().getWidth(string)) / 2;
@@ -192,7 +192,7 @@ public abstract class InGameHudMixin {
                 context.drawText(this.getTextRenderer(), string, attributeBarNumberX - 1, attributeBarNumberY, 0, false);
                 context.drawText(this.getTextRenderer(), string, attributeBarNumberX, attributeBarNumberY + 1, 0, false);
                 context.drawText(this.getTextRenderer(), string, attributeBarNumberX, attributeBarNumberY - 1, 0, false);
-                context.drawText(this.getTextRenderer(), string, attributeBarNumberX, attributeBarNumberY, BetterAdventureModeCoreClient.clientConfig.health_bar_number_color, false);
+                context.drawText(this.getTextRenderer(), string, attributeBarNumberX, attributeBarNumberY, BetterAdventureModeClient.clientConfig.health_bar_number_color, false);
             }
 
             this.client.getProfiler().swap("stamina_bar");
@@ -200,7 +200,7 @@ public abstract class InGameHudMixin {
             if (normalizedStaminaRatio > 0) {
                 context.drawGuiTexture(STAMINA_BAR_PROGRESS_TEXTURE, attributeBarX, attributeBarY - 9, normalizedStaminaRatio, 5);
             }
-            if (BetterAdventureModeCoreClient.clientConfig.show_resource_bar_numbers) {
+            if (BetterAdventureModeClient.clientConfig.show_resource_bar_numbers) {
                 this.client.getProfiler().swap("stamina_bar_number");
                 String string = "" + stamina;
                 attributeBarNumberX = (this.scaledWidth - this.getTextRenderer().getWidth(string)) / 2;
@@ -209,7 +209,7 @@ public abstract class InGameHudMixin {
                 context.drawText(this.getTextRenderer(), string, attributeBarNumberX - 1, attributeBarNumberY, 0, false);
                 context.drawText(this.getTextRenderer(), string, attributeBarNumberX, attributeBarNumberY + 1, 0, false);
                 context.drawText(this.getTextRenderer(), string, attributeBarNumberX, attributeBarNumberY - 1, 0, false);
-                context.drawText(this.getTextRenderer(), string, attributeBarNumberX, attributeBarNumberY, BetterAdventureModeCoreClient.clientConfig.stamina_bar_number_color, false);
+                context.drawText(this.getTextRenderer(), string, attributeBarNumberX, attributeBarNumberY, BetterAdventureModeClient.clientConfig.stamina_bar_number_color, false);
             }
 
             if (maxMana > 0) {
@@ -218,7 +218,7 @@ public abstract class InGameHudMixin {
                 if (normalizedManaRatio > 0) {
                     context.drawGuiTexture(MANA_BAR_PROGRESS_TEXTURE, attributeBarX, attributeBarY - 18, normalizedManaRatio, 5);
                 }
-                if (BetterAdventureModeCoreClient.clientConfig.show_resource_bar_numbers) {
+                if (BetterAdventureModeClient.clientConfig.show_resource_bar_numbers) {
                     this.client.getProfiler().swap("mana_bar_number");
                     String string = "" + mana;
                     attributeBarNumberX = (this.scaledWidth - this.getTextRenderer().getWidth(string)) / 2;
@@ -227,7 +227,7 @@ public abstract class InGameHudMixin {
                     context.drawText(this.getTextRenderer(), string, attributeBarNumberX - 1, attributeBarNumberY, 0, false);
                     context.drawText(this.getTextRenderer(), string, attributeBarNumberX, attributeBarNumberY + 1, 0, false);
                     context.drawText(this.getTextRenderer(), string, attributeBarNumberX, attributeBarNumberY - 1, 0, false);
-                    context.drawText(this.getTextRenderer(), string, attributeBarNumberX, attributeBarNumberY, BetterAdventureModeCoreClient.clientConfig.mana_bar_number_color, true);
+                    context.drawText(this.getTextRenderer(), string, attributeBarNumberX, attributeBarNumberY, BetterAdventureModeClient.clientConfig.mana_bar_number_color, true);
                 }
             }
 

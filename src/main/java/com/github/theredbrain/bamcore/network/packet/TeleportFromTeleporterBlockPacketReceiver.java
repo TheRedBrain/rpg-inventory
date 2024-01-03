@@ -1,7 +1,6 @@
 package com.github.theredbrain.bamcore.network.packet;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
-import com.github.theredbrain.bamcore.BetterAdventureModeCoreClient;
+import com.github.theredbrain.bamcore.BetterAdventureModeClient;
 import com.github.theredbrain.bamcore.api.json_files_backend.PlayerLocation;
 import com.github.theredbrain.bamcore.block.entity.LocationControlBlockEntity;
 import com.github.theredbrain.bamcore.block.entity.TeleporterBlockBlockEntity;
@@ -152,12 +151,12 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
 
             serverPlayerEntity.fallDistance = 0;
             serverPlayerEntity.teleport(targetWorld, (targetPos.getX() + 0.5), (targetPos.getY() + 0.01), (targetPos.getZ() + 0.5), (float) targetYaw, (float) targetPitch);
-            if (BetterAdventureModeCoreClient.clientConfig.show_debug_log) {
+            if (BetterAdventureModeClient.clientConfig.show_debug_log) {
                 serverPlayerEntity.sendMessage(Text.of("Teleport to world: " + targetWorld.getRegistryKey().getValue() + " at position: " + (targetPos.getX() + 0.5) + ", " + (targetPos.getY() + 0.01) + ", " + (targetPos.getZ() + 0.5) + ", with yaw: " + targetYaw + " and pitch: " + targetPitch));
             }
             ClientPlayNetworking.send(new SuccessfulTeleportPacket());
         } else {
-            if (BetterAdventureModeCoreClient.clientConfig.show_debug_log) {
+            if (BetterAdventureModeClient.clientConfig.show_debug_log) {
                 serverPlayerEntity.sendMessage(Text.of("Teleport failed"));
                 if (targetWorld == null) {
                     serverPlayerEntity.sendMessage(Text.of("targetWorld == null"));

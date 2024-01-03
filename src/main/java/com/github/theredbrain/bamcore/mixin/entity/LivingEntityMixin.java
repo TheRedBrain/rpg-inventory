@@ -207,6 +207,7 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
         }));
     }
 
+    @Unique
     private void dropFromEntity(ItemStack stack) {
         ItemEntity entity = dropStack(stack);
         // Mimic player drop behavior for only players

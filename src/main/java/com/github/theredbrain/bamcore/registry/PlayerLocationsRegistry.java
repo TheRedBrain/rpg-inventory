@@ -1,7 +1,7 @@
 package com.github.theredbrain.bamcore.registry;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
-import com.github.theredbrain.bamcore.BetterAdventureModeCoreClient;
+import com.github.theredbrain.bamcore.BetterAdventureMode;
+import com.github.theredbrain.bamcore.BetterAdventureModeClient;
 import com.github.theredbrain.bamcore.api.json_files_backend.PlayerLocation;
 import com.github.theredbrain.bamcore.api.json_files_backend.PlayerLocationHelper;
 import com.google.common.reflect.TypeToken;
@@ -70,8 +70,8 @@ public class PlayerLocationsRegistry {
         PacketByteBuf buffer = PacketByteBufs.create();
         var gson = new Gson();
         var json = gson.toJson(registeredPlayerLocations);
-        if (BetterAdventureModeCoreClient.clientConfig.show_debug_log) {
-            BetterAdventureModeCore.LOGGER.info("Player Locations registry loaded: " + json);
+        if (BetterAdventureModeClient.clientConfig.show_debug_log) {
+            BetterAdventureMode.LOGGER.info("Player Locations registry loaded: " + json);
         }
 
         List<String> chunks = new ArrayList<>();
@@ -85,8 +85,8 @@ public class PlayerLocationsRegistry {
             buffer.writeString(chunk);
         }
 
-        if (BetterAdventureModeCoreClient.clientConfig.show_debug_log) {
-            BetterAdventureModeCore.LOGGER.info("Encoded Player Locations registry size (with package overhead): " + buffer.readableBytes()
+        if (BetterAdventureModeClient.clientConfig.show_debug_log) {
+            BetterAdventureMode.LOGGER.info("Encoded Player Locations registry size (with package overhead): " + buffer.readableBytes()
                     + " bytes (in " + chunks.size() + " string chunks with the size of " + chunkSize + ")");
         }
         encodedRegisteredPlayerLocations = buffer;
@@ -98,9 +98,9 @@ public class PlayerLocationsRegistry {
         for (int i = 0; i < chunkCount; ++i) {
             json = json.concat(buffer.readString());
         }
-        if (BetterAdventureModeCoreClient.clientConfig.show_debug_log) {
-            BetterAdventureModeCore.LOGGER.info("Decoded Player Locations registry in " + chunkCount + " string chunks");
-            BetterAdventureModeCore.LOGGER.info("Player Locations registry received: " + json);
+        if (BetterAdventureModeClient.clientConfig.show_debug_log) {
+            BetterAdventureMode.LOGGER.info("Decoded Player Locations registry in " + chunkCount + " string chunks");
+            BetterAdventureMode.LOGGER.info("Player Locations registry received: " + json);
         }
         var gson = new Gson();
         Type mapType = new TypeToken<Map<String, PlayerLocation>>() {}.getType();

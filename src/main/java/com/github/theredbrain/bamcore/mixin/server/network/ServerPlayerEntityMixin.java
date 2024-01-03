@@ -3,7 +3,7 @@ package com.github.theredbrain.bamcore.mixin.server.network;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.bamcore.network.event.PlayerDeathCallback;
-import com.github.theredbrain.bamcore.network.packet.BetterAdventureModeCoreServerPacket;
+import com.github.theredbrain.bamcore.registry.ServerPacketRegistry;
 import com.github.theredbrain.bamcore.registry.GameRulesRegistry;
 import com.github.theredbrain.bamcore.registry.StatusEffectsRegistry;
 import com.mojang.authlib.GameProfile;
@@ -100,6 +100,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Du
      * @author TheRedBrain
      * @reason
      */
+    @Overwrite
     public Either<SleepFailureReason, Unit> trySleep(BlockPos pos) {
         Direction direction = (Direction)this.getWorld().getBlockState(pos).get(HorizontalFacingBlock.FACING);
         if (!this.isSleeping() && this.isAlive()) {
@@ -214,11 +215,12 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Du
         return this.interactionManager.getGameMode() == GameMode.ADVENTURE;
     }
 
+    @Unique
     private void bamcore$sendChangedHandSlotsPacket(boolean mainHand) {
         Collection<ServerPlayerEntity> players = PlayerLookup.tracking((ServerWorld) this.getWorld(), this.getBlockPos());
         PacketByteBuf data = new PacketByteBuf(Unpooled.buffer());
         data.writeInt(this.getId());
         data.writeBoolean(mainHand);
-        players.forEach(player -> ServerPlayNetworking.send(player, BetterAdventureModeCoreServerPacket.SWAPPED_HAND_ITEMS_PACKET, data));
+        players.forEach(player -> ServerPlayNetworking.send(player, ServerPacketRegistry.SWAPPED_HAND_ITEMS_PACKET, data));
     }
 }

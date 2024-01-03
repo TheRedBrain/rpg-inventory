@@ -1,8 +1,6 @@
-package com.github.theredbrain.bamcore.client.network.packet;
+package com.github.theredbrain.bamcore.registry;
 
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerInventoryMixin;
-import com.github.theredbrain.bamcore.network.packet.BetterAdventureModeCoreServerPacket;
-import com.github.theredbrain.bamcore.registry.PlayerLocationsRegistry;
 //import net.bettercombat.api.MinecraftClient_BetterCombat;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -11,10 +9,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 
 @Environment(EnvType.CLIENT)
-public class BetterAdventureModeCoreClientPacket {
+public class ClientPacketRegistry {
 
     public static void init() {
-        ClientPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.SWAPPED_HAND_ITEMS_PACKET, (client, handler, buffer, responseSender) -> {
+        ClientPlayNetworking.registerGlobalReceiver(ServerPacketRegistry.SWAPPED_HAND_ITEMS_PACKET, (client, handler, buffer, responseSender) -> {
             int entityId = buffer.readInt();
             boolean mainHand = buffer.readBoolean();
             client.execute(() -> {
@@ -50,7 +48,7 @@ public class BetterAdventureModeCoreClientPacket {
 //                }
 //            });
 //        });
-        ClientPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.SYNC_PLAYER_LOCATIONS, (client, handler, buffer, responseSender) -> {
+        ClientPlayNetworking.registerGlobalReceiver(ServerPacketRegistry.SYNC_PLAYER_LOCATIONS, (client, handler, buffer, responseSender) -> {
             PlayerLocationsRegistry.decodeRegistry(buffer);
         });
     }

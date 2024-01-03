@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.registry;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.BetterAdventureMode;
 import com.github.theredbrain.bamcore.components.BlockPosComponent;
 import com.github.theredbrain.bamcore.components.LongComponent;
 import com.github.theredbrain.bamcore.components.PlayerLocationAccessPosComponent;
@@ -12,11 +12,11 @@ import dev.onyxstudios.cca.api.v3.entity.RespawnCopyStrategy;
 
 public final class ComponentsRegistry implements EntityComponentInitializer {
     public static final ComponentKey<LongComponent> LAST_LOGOUT_TIME =
-            ComponentRegistry.getOrCreate(BetterAdventureModeCore.identifier("last_logout_time"), LongComponent.class);
+            ComponentRegistry.getOrCreate(BetterAdventureMode.identifier("last_logout_time"), LongComponent.class);
     public static final ComponentKey<BlockPosComponent> CURRENT_HOUSING_BLOCK_POS =
-            ComponentRegistry.getOrCreate(BetterAdventureModeCore.identifier("current_housing_block_pos"), BlockPosComponent.class);
+            ComponentRegistry.getOrCreate(BetterAdventureMode.identifier("current_housing_block_pos"), BlockPosComponent.class);
     public static final ComponentKey<PlayerLocationAccessPosComponent> PLAYER_LOCATION_ACCESS_POS =
-            ComponentRegistry.getOrCreate(BetterAdventureModeCore.identifier("player_location_access_pos"), PlayerLocationAccessPosComponent.class);
+            ComponentRegistry.getOrCreate(BetterAdventureMode.identifier("player_location_access_pos"), PlayerLocationAccessPosComponent.class);
 
     @Override
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {

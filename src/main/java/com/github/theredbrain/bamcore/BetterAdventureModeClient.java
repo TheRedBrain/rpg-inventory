@@ -1,7 +1,7 @@
 package com.github.theredbrain.bamcore;
 
 import com.github.theredbrain.bamcore.client.gui.screen.ingame.TeleporterBlockScreen;
-import com.github.theredbrain.bamcore.client.network.packet.BetterAdventureModeCoreClientPacket;
+import com.github.theredbrain.bamcore.registry.ClientPacketRegistry;
 import com.github.theredbrain.bamcore.client.render.block.entity.HousingBlockBlockEntityRenderer;
 import com.github.theredbrain.bamcore.client.render.block.entity.MimicBlockEntityRenderer;
 import com.github.theredbrain.bamcore.client.render.block.entity.TeleporterBlockBlockEntityRenderer;
@@ -21,13 +21,11 @@ import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.item.DyeableItem;
-import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
 //import net.spell_engine.api.render.CustomModels;
 
-import java.util.List;
 
-public class BetterAdventureModeCoreClient implements ClientModInitializer {
+public class BetterAdventureModeClient implements ClientModInitializer {
 
     public static ClientConfig clientConfig;
 
@@ -38,7 +36,7 @@ public class BetterAdventureModeCoreClient implements ClientModInitializer {
         clientConfig = ((ClientConfigWrapper)AutoConfig.getConfigHolder(ClientConfigWrapper.class).getConfig()).client;
 
         // Packets
-        BetterAdventureModeCoreClientPacket.init();
+        ClientPacketRegistry.init();
 
         // Registry
         KeyBindingsRegistry.registerKeyBindings();

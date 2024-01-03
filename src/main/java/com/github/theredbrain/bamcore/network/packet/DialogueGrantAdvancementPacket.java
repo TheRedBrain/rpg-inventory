@@ -1,17 +1,16 @@
 package com.github.theredbrain.bamcore.network.packet;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.BetterAdventureMode;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.hit.BlockHitResult;
 
 import java.util.UUID;
 
 public class DialogueGrantAdvancementPacket implements FabricPacket {
     public static final PacketType<DialogueGrantAdvancementPacket> TYPE = PacketType.create(
-            BetterAdventureModeCore.identifier("dialogue_grant_advancement"),
+            BetterAdventureMode.identifier("dialogue_grant_advancement"),
             DialogueGrantAdvancementPacket::new
     );
 

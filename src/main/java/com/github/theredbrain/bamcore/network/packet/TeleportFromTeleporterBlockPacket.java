@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.network.packet;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.BetterAdventureMode;
 import com.github.theredbrain.bamcore.block.entity.TeleporterBlockBlockEntity;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
@@ -9,7 +9,7 @@ import net.minecraft.util.math.BlockPos;
 
 public class TeleportFromTeleporterBlockPacket implements FabricPacket {
     public static final PacketType<TeleportFromTeleporterBlockPacket> TYPE = PacketType.create(
-            BetterAdventureModeCore.identifier("teleport_from_teleporter_block"),
+            BetterAdventureMode.identifier("teleport_from_teleporter_block"),
             TeleportFromTeleporterBlockPacket::new
     );
 

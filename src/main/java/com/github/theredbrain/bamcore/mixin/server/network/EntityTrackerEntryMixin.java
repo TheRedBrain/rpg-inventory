@@ -1,7 +1,7 @@
 package com.github.theredbrain.bamcore.mixin.server.network;
 
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerInventoryMixin;
-import com.github.theredbrain.bamcore.network.packet.BetterAdventureModeCoreServerPacket;
+import com.github.theredbrain.bamcore.registry.ServerPacketRegistry;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
@@ -29,13 +29,13 @@ public class EntityTrackerEntryMixin {
                 PacketByteBuf data = new PacketByteBuf(Unpooled.buffer());
                 data.writeInt(serverPlayer.getId());
                 data.writeBoolean(true);
-                ServerPlayNetworking.send((ServerPlayerEntity) player, BetterAdventureModeCoreServerPacket.SWAPPED_HAND_ITEMS_PACKET, data);
+                ServerPlayNetworking.send((ServerPlayerEntity) player, ServerPacketRegistry.SWAPPED_HAND_ITEMS_PACKET, data);
             }
             if (!((DuckPlayerInventoryMixin)serverPlayer.getInventory()).bamcore$getOffHand().isEmpty() || !((DuckPlayerInventoryMixin)serverPlayer.getInventory()).bamcore$getAlternativeOffHand().isEmpty()) {
                 PacketByteBuf data = new PacketByteBuf(Unpooled.buffer());
                 data.writeInt(serverPlayer.getId());
                 data.writeBoolean(false);
-                ServerPlayNetworking.send((ServerPlayerEntity) player, BetterAdventureModeCoreServerPacket.SWAPPED_HAND_ITEMS_PACKET, data);
+                ServerPlayNetworking.send((ServerPlayerEntity) player, ServerPacketRegistry.SWAPPED_HAND_ITEMS_PACKET, data);
             }
         }
     }

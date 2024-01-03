@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.network.packet;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.BetterAdventureMode;
 import com.github.theredbrain.bamcore.api.util.PacketByteBufUtils;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
@@ -11,7 +11,7 @@ import java.util.List;
 
 public class UpdateResetTriggerBlockPacket implements FabricPacket {
     public static final PacketType<UpdateResetTriggerBlockPacket> TYPE = PacketType.create(
-            BetterAdventureModeCore.identifier("update_reset_trigger_block"),
+            BetterAdventureMode.identifier("update_reset_trigger_block"),
             UpdateResetTriggerBlockPacket::new
     );
 

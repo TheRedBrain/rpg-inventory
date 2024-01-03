@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.network.packet;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.BetterAdventureMode;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.minecraft.network.PacketByteBuf;
@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public class DialogueGiveItemsFromLootTablePacket implements FabricPacket {
     public static final PacketType<DialogueGiveItemsFromLootTablePacket> TYPE = PacketType.create(
-            BetterAdventureModeCore.identifier("dialogue_give_items_from_loot_table"),
+            BetterAdventureMode.identifier("dialogue_give_items_from_loot_table"),
             DialogueGiveItemsFromLootTablePacket::new
     );
 

@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.client.gui.screen.ingame;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.BetterAdventureMode;
 import com.github.theredbrain.bamcore.api.json_files_backend.PlayerLocation;
 import com.github.theredbrain.bamcore.block.entity.TeleporterBlockBlockEntity;
 import com.github.theredbrain.bamcore.client.network.DuckClientAdvancementManagerMixin;
@@ -72,12 +72,12 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
     private static final Text CONSUME_KEY_ITEMSTACK_LABEL_TEXT = Text.translatable("gui.teleporter_block.consume_key_itemstack_label");
     private static final Text WIP_LABEL_TEXT = Text.translatable("wip");
     private static final Text EDIT_TELEPORTER_TITLE = Text.translatable("gui.edit_teleporter_title");
-    private static final Identifier SCROLL_BAR_BACKGROUND_8_70_TEXTURE = BetterAdventureModeCore.identifier("scroll_bar/scroll_bar_background_8_70");
-    private static final Identifier CREATIVE_HOUSING_SCROLLER_BACKGROUND_TEXTURE = BetterAdventureModeCore.identifier("scroll_bar/scroll_bar_background_8_95");
-    private static final Identifier SCROLLER_TEXTURE = BetterAdventureModeCore.identifier("scroll_bar/scroller_vertical_6_7");
-    public static final Identifier ADVENTURE_TELEPORTER_SCREEN_BACKGROUND_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/adventure_teleporter_screen.png");
-    public static final Identifier CREATIVE_TELEPORTER_SCREEN_BACKGROUND_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/creative_teleporter_screen.png");
-    public static final Identifier TELEPORTER_SCREEN_UTILITY_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/teleporter_screen_util.png");
+    private static final Identifier SCROLL_BAR_BACKGROUND_8_70_TEXTURE = BetterAdventureMode.identifier("scroll_bar/scroll_bar_background_8_70");
+    private static final Identifier CREATIVE_HOUSING_SCROLLER_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("scroll_bar/scroll_bar_background_8_95");
+    private static final Identifier SCROLLER_TEXTURE = BetterAdventureMode.identifier("scroll_bar/scroller_vertical_6_7");
+    public static final Identifier ADVENTURE_TELEPORTER_SCREEN_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("textures/gui/container/adventure_teleporter_screen.png");
+    public static final Identifier CREATIVE_TELEPORTER_SCREEN_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("textures/gui/container/creative_teleporter_screen.png");
+    public static final Identifier TELEPORTER_SCREEN_UTILITY_TEXTURE = BetterAdventureMode.identifier("textures/gui/container/teleporter_screen_util.png");
     private final TeleporterBlockScreenHandler handler;
     private TeleporterBlockBlockEntity teleporterBlock;
 
@@ -260,7 +260,7 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
     }
 
     private void addLocationToList(String identifier, String entrance) {
-        BetterAdventureModeCore.LOGGER.info(identifier);
+        BetterAdventureMode.LOGGER.info(identifier);
         Text message = Text.literal("");
         if (Identifier.isValid(identifier)) {
             PlayerLocation playerLocation = PlayerLocationsRegistry.getLocation(Identifier.tryParse(identifier));
@@ -1047,9 +1047,9 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
             int i = this.x;
             int j = this.y;
             if (this.teleporterBlock.getTeleportationMode() == TeleporterBlockBlockEntity.TeleportationMode.PLAYER_LOCATIONS) {
-                context.drawTexture(BetterAdventureModeCore.identifier("textures/gui/container/adventure_teleporter_locations_screen.png"), i, j, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
+                context.drawTexture(BetterAdventureMode.identifier("textures/gui/container/adventure_teleporter_locations_screen.png"), i, j, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
             } else {
-                context.drawTexture(BetterAdventureModeCore.identifier("textures/gui/container/adventure_teleporter_screen.png"), i, j, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
+                context.drawTexture(BetterAdventureMode.identifier("textures/gui/container/adventure_teleporter_screen.png"), i, j, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
             }
         }
     }

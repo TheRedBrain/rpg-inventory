@@ -1,15 +1,14 @@
 package com.github.theredbrain.bamcore.network.packet;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.BetterAdventureMode;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Identifier;
 
 public class AttackStaminaCostPacket implements FabricPacket {
     public static final PacketType<AttackStaminaCostPacket> TYPE = PacketType.create(
-            BetterAdventureModeCore.identifier("attack_stamina_cost"),
+            BetterAdventureMode.identifier("attack_stamina_cost"),
             AttackStaminaCostPacket::new
     );
 

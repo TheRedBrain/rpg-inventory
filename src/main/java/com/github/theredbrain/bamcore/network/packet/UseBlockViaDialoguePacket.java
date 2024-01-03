@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.network.packet;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.BetterAdventureMode;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.minecraft.network.PacketByteBuf;
@@ -8,7 +8,7 @@ import net.minecraft.util.hit.BlockHitResult;
 
 public class UseBlockViaDialoguePacket implements FabricPacket {
     public static final PacketType<UseBlockViaDialoguePacket> TYPE = PacketType.create(
-            BetterAdventureModeCore.identifier("use_block_via_dialogue"),
+            BetterAdventureMode.identifier("use_block_via_dialogue"),
             UseBlockViaDialoguePacket::new
     );
 

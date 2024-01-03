@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.network.packet;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.BetterAdventureMode;
 import com.github.theredbrain.bamcore.block.entity.HousingBlockBlockEntity;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
@@ -10,7 +10,7 @@ import net.minecraft.util.math.Vec3i;
 
 public class UpdateHousingBlockCreativePacket implements FabricPacket {
     public static final PacketType<UpdateHousingBlockCreativePacket> TYPE = PacketType.create(
-            BetterAdventureModeCore.identifier("update_housing_block_creative"),
+            BetterAdventureMode.identifier("update_housing_block_creative"),
             UpdateHousingBlockCreativePacket::new
     );
 

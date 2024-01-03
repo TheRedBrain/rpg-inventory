@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.world;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.BetterAdventureMode;
 import net.minecraft.block.Blocks;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.Registry;
@@ -9,10 +9,7 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.entry.RegistryEntryList;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
-import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.dimension.DimensionOptions;
 import net.minecraft.world.dimension.DimensionTypes;
@@ -20,7 +17,6 @@ import net.minecraft.world.gen.chunk.FlatChunkGenerator;
 import net.minecraft.world.gen.chunk.FlatChunkGeneratorConfig;
 import net.minecraft.world.gen.chunk.FlatChunkGeneratorLayer;
 import qouteall.dimlib.DimensionTemplate;
-import qouteall.dimlib.DynamicDimensionsImpl;
 import qouteall.dimlib.api.DimensionAPI;
 
 import java.util.List;
@@ -61,7 +57,7 @@ public class DimensionsManager {
 
                 Registry<Biome> biomeRegistry = registryAccess.get(RegistryKeys.BIOME);
 
-                RegistryEntry.Reference<Biome> biomeReference = biomeRegistry.entryOf(RegistryKey.of(RegistryKeys.BIOME, BetterAdventureModeCore.identifier("player_locations_biome")));
+                RegistryEntry.Reference<Biome> biomeReference = biomeRegistry.entryOf(RegistryKey.of(RegistryKeys.BIOME, BetterAdventureMode.identifier("player_locations_biome")));
 
                 FlatChunkGeneratorConfig flatChunkGeneratorConfig =
                         new FlatChunkGeneratorConfig(

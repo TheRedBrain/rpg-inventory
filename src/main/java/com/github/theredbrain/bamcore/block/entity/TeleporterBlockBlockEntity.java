@@ -241,7 +241,6 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
         return teleporterName;
     }
 
-    // TODO check if input is valid
     public boolean setTeleporterName(String teleporterName) {
         this.teleporterName = teleporterName;
         return true;
@@ -255,7 +254,6 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
         return showAdventureScreen;
     }
 
-    // TODO check if input is valid
     public boolean setShowAdventureScreen(boolean showAdventureScreen) {
         this.showAdventureScreen = showAdventureScreen;
         return true;
@@ -265,7 +263,6 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
         return showActivationArea;
     }
 
-    // TODO check if input is valid
     public boolean setShowActivationArea(boolean showActivationArea) {
         this.showActivationArea = showActivationArea;
         return true;
@@ -321,7 +318,6 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
         return teleportationMode;
     }
 
-    // TODO check if input is valid
     public boolean setTeleportationMode(TeleportationMode teleportationMode) {
         this.teleportationMode = teleportationMode;
         return true;
@@ -361,7 +357,6 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
         return spawnPointType;
     }
 
-    // TODO check if input is valid
     public boolean setLocationType(SpawnPointType spawnPointType) {
         this.spawnPointType = spawnPointType;
         return true;
@@ -371,7 +366,6 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
         return this.locationsList;
     }
 
-    // TODO check if input is valid
     public boolean setLocationsList(List<Pair<String, String>> dungeonLocationsList) {
         this.locationsList = dungeonLocationsList;
         return true;
@@ -433,7 +427,6 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
         return this.teleportButtonLabel;
     }
 
-    // TODO check if input is valid
     public boolean setTeleportButtonLabel(String teleportButtonLabel) {
         this.teleportButtonLabel = teleportButtonLabel;
         return true;
@@ -443,7 +436,6 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
         return this.cancelTeleportButtonLabel;
     }
 
-    // TODO check if input is valid
     public boolean setCancelTeleportButtonLabel(String cancelTeleportButtonLabel) {
         this.cancelTeleportButtonLabel = cancelTeleportButtonLabel;
         return true;

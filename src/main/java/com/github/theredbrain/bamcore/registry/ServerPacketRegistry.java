@@ -1,19 +1,20 @@
-package com.github.theredbrain.bamcore.network.packet;
+package com.github.theredbrain.bamcore.registry;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.BetterAdventureMode;
+import com.github.theredbrain.bamcore.network.packet.*;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.util.Identifier;
 
-public class BetterAdventureModeCoreServerPacket {
+public class ServerPacketRegistry {
 
-    public static final Identifier SWAPPED_HAND_ITEMS_PACKET = BetterAdventureModeCore.identifier("swapped_hand_items");
-    public static final Identifier CANCEL_ATTACK_PACKET = BetterAdventureModeCore.identifier("attack_stamina_cost");
-    public static final Identifier ADD_STATUS_EFFECT_PACKET = BetterAdventureModeCore.identifier("add_status_effect");
+    public static final Identifier SWAPPED_HAND_ITEMS_PACKET = BetterAdventureMode.identifier("swapped_hand_items");
+    public static final Identifier CANCEL_ATTACK_PACKET = BetterAdventureMode.identifier("attack_stamina_cost");
+    public static final Identifier ADD_STATUS_EFFECT_PACKET = BetterAdventureMode.identifier("add_status_effect");
 //    public static final Identifier SHEATHED_WEAPONS_PACKET = RPGMod.identifier("sheathed_weapons"); // TODO if weapon sheathing is not visible in multiplayer
 
-    public static final Identifier SYNC_CONFIG = BetterAdventureModeCore.identifier("sync_config");
+    public static final Identifier SYNC_CONFIG = BetterAdventureMode.identifier("sync_config");
 //    public static final Identifier SYNC_PLAYER_HOUSES = BetterAdventureModeCore.identifier("sync_player_houses");
-    public static final Identifier SYNC_PLAYER_LOCATIONS = BetterAdventureModeCore.identifier("sync_player_locations");
+    public static final Identifier SYNC_PLAYER_LOCATIONS = BetterAdventureMode.identifier("sync_player_locations");
 
     public static void init() {
         ServerPlayNetworking.registerGlobalReceiver(SwapHandItemsPacket.TYPE, new SwapHandItemsPacketReceiver());
@@ -74,7 +75,5 @@ public class BetterAdventureModeCoreServerPacket {
         ServerPlayNetworking.registerGlobalReceiver(DialogueGrantAdvancementPacket.TYPE, new DialogueGrantAdvancementPacketReceiver());
 
         ServerPlayNetworking.registerGlobalReceiver(DialogueGiveItemsFromLootTablePacket.TYPE, new DialogueGiveItemsFromLootTablePacketReceiver());
-
-//        ServerPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.REGENERATE_DIMENSION_FROM_TELEPORTER_BLOCK, new RegenerateDimensionFromTeleporterBlockPacketReceiver());
     }
 }

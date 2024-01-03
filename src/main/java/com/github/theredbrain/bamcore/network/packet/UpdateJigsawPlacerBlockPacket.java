@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.network.packet;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.BetterAdventureMode;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.minecraft.block.entity.JigsawBlockEntity;
@@ -9,7 +9,7 @@ import net.minecraft.util.math.BlockPos;
 
 public class UpdateJigsawPlacerBlockPacket implements FabricPacket {
     public static final PacketType<UpdateJigsawPlacerBlockPacket> TYPE = PacketType.create(
-            BetterAdventureModeCore.identifier("update_jigsaw_placer_block"),
+            BetterAdventureMode.identifier("update_jigsaw_placer_block"),
             UpdateJigsawPlacerBlockPacket::new
     );
 

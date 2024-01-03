@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.registry;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.BetterAdventureMode;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -11,9 +11,9 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.text.Text;
 
 public class ItemGroupRegistry {
-    public static final RegistryKey<ItemGroup> BAM_BLOCK = RegistryKey.of(RegistryKeys.ITEM_GROUP, BetterAdventureModeCore.identifier("bam_block"));
-    public static final RegistryKey<ItemGroup> BAM_EQUIPMENT = RegistryKey.of(RegistryKeys.ITEM_GROUP, BetterAdventureModeCore.identifier("bam_equipment"));
-    public static final RegistryKey<ItemGroup> BAM_FOOD = RegistryKey.of(RegistryKeys.ITEM_GROUP, BetterAdventureModeCore.identifier("bam_food"));
+    public static final RegistryKey<ItemGroup> BAM_BLOCK = RegistryKey.of(RegistryKeys.ITEM_GROUP, BetterAdventureMode.identifier("bam_block"));
+    public static final RegistryKey<ItemGroup> BAM_EQUIPMENT = RegistryKey.of(RegistryKeys.ITEM_GROUP, BetterAdventureMode.identifier("bam_equipment"));
+    public static final RegistryKey<ItemGroup> BAM_FOOD = RegistryKey.of(RegistryKeys.ITEM_GROUP, BetterAdventureMode.identifier("bam_food"));
 
     public static void init() {
         Registry.register(Registries.ITEM_GROUP, BAM_BLOCK, FabricItemGroup.builder()

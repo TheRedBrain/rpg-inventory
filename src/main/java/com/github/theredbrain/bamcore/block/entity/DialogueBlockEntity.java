@@ -1,10 +1,8 @@
 package com.github.theredbrain.bamcore.block.entity;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.api.json_files_backend.Dialogue;
 import com.github.theredbrain.bamcore.api.util.BlockRotationUtils;
 import com.github.theredbrain.bamcore.block.RotatedBlockWithEntity;
-import com.github.theredbrain.bamcore.block.Triggerable;
 import com.github.theredbrain.bamcore.client.network.DuckClientAdvancementManagerMixin;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.bamcore.network.packet.DialogueGiveItemsFromLootTablePacket;
@@ -16,7 +14,6 @@ import com.github.theredbrain.bamcore.registry.EntityRegistry;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.advancement.AdvancementEntry;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.network.ClientAdvancementManager;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -38,6 +35,8 @@ public class DialogueBlockEntity extends RotatedBlockEntity {
 
     private HashMap<String, BlockPos> dialogueUsedBlocks = new HashMap<>();
     private HashMap<String, BlockPos> dialogueTriggeredBlocks = new HashMap<>();
+
+    // TODO convert to a map?
     private List<MutablePair<String, MutablePair<String, String>>> startingDialogueList = new ArrayList<>();
     public DialogueBlockEntity(BlockPos pos, BlockState state) {
         super(EntityRegistry.DIALOGUE_BLOCK_ENTITY, pos, state);
@@ -202,7 +201,6 @@ public class DialogueBlockEntity extends RotatedBlockEntity {
         return this.dialogueUsedBlocks;
     }
 
-    // TODO check if input is valid
     public boolean setDialogueUsedBlocks(HashMap<String, BlockPos> dialogueUsedBlocks) {
         this.dialogueUsedBlocks = dialogueUsedBlocks;
         return true;

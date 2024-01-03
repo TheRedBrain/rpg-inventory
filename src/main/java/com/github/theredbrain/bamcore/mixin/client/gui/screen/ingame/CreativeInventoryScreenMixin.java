@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.mixin.client.gui.screen.ingame;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.BetterAdventureMode;
 import dev.emi.trinkets.*;
 import dev.emi.trinkets.api.SlotGroup;
 import net.fabricmc.api.EnvType;
@@ -10,7 +10,6 @@ import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.util.math.Rect2i;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.*;
@@ -24,9 +23,9 @@ public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScre
 
     @Shadow private static ItemGroup selectedTab;
     @Unique
-    private static final Identifier TAB_ADVENTURE_INVENTORY_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/adventure_creative_inventory/tab_adventure_inventory.png");
+    private static final Identifier TAB_ADVENTURE_INVENTORY_TEXTURE = BetterAdventureMode.identifier("textures/gui/container/adventure_creative_inventory/tab_adventure_inventory.png");
     @Unique
-    private static final Identifier SPELL_SLOTS_BACKGROUND = BetterAdventureModeCore.identifier("textures/gui/container/adventure_creative_inventory/spell_slots_background.png");
+    private static final Identifier SPELL_SLOTS_BACKGROUND = BetterAdventureMode.identifier("textures/gui/container/adventure_creative_inventory/spell_slots_background.png");
 
     private CreativeInventoryScreenMixin() {
         super(null, null, null);
@@ -34,13 +33,13 @@ public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScre
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/TextFieldWidget;render(Lnet/minecraft/client/gui/DrawContext;IIF)V"), method = "drawBackground")
     private void drawAdventureInventoryBackground(DrawContext context, float delta, int mouseX, int mouseY, CallbackInfo ci) {
-        if (selectedTab.getType() == ItemGroup.Type.INVENTORY && BetterAdventureModeCore.serverConfig.use_adventure_inventory_screen) {
+        if (selectedTab.getType() == ItemGroup.Type.INVENTORY && BetterAdventureMode.serverConfig.use_adventure_inventory_screen) {
             context.drawTexture(TAB_ADVENTURE_INVENTORY_TEXTURE, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
         }
     }
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/InventoryScreen;drawEntity(Lnet/minecraft/client/gui/DrawContext;IIIIIFFFLnet/minecraft/entity/LivingEntity;)V"), method = "drawBackground", cancellable = true)
     private void moveDrawnPlayerEntity(DrawContext context, float delta, int mouseX, int mouseY, CallbackInfo ci) {
-        if (selectedTab.getType() == ItemGroup.Type.INVENTORY && BetterAdventureModeCore.serverConfig.use_adventure_inventory_screen) {
+        if (selectedTab.getType() == ItemGroup.Type.INVENTORY && BetterAdventureMode.serverConfig.use_adventure_inventory_screen) {
             InventoryScreen.drawEntity(context, this.x + 64, this.y + 6, this.x + 96, this.y + 49, 20, 0.0625F, (float)mouseX, (float)mouseY, this.client.player);
 //            InventoryScreen.drawEntity(context, this.x + 79, this.y + 45, 20, this.x + 88 - mouseX, this.y + 45 - 30 - mouseY, (LivingEntity)this.client.player);
             drawExtraGroups(context, this);
@@ -50,7 +49,7 @@ public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScre
 
     @Override
     public Rect2i trinkets$getGroupRect(SlotGroup group) {
-        if (BetterAdventureModeCore.serverConfig.use_adventure_inventory_screen) {
+        if (BetterAdventureMode.serverConfig.use_adventure_inventory_screen) {
             int order = group.getOrder();
             return switch (order) {
                 case 1 -> new Rect2i(26, 32, 17, 17);

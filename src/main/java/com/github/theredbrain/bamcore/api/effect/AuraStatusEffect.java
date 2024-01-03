@@ -16,10 +16,12 @@ import java.util.List;
 public class AuraStatusEffect extends StatusEffect {
 
     private final StatusEffect appliedStatusEffect;
+    private final boolean applyToSelf;
 
-    public AuraStatusEffect(StatusEffect appliedStatusEffect) {
+    public AuraStatusEffect(StatusEffect appliedStatusEffect, boolean applyToSelf) {
         super(StatusEffectCategory.BENEFICIAL, 3381504); // TODO better colour
         this.appliedStatusEffect = appliedStatusEffect;
+        this.applyToSelf = applyToSelf;
     }
 
     public void applyUpdateEffect(LivingEntity entity, int amplifier) {
@@ -36,6 +38,9 @@ public class AuraStatusEffect extends StatusEffect {
             LivingEntity livingEntity;
             while(var11.hasNext()) {
                 livingEntity = (LivingEntity)var11.next();
+                if (livingEntity == entity && !this.applyToSelf) {
+                    continue;
+                }
                 livingEntity.addStatusEffect(new StatusEffectInstance(this.appliedStatusEffect, 100, 0, true, true));
             }
         }

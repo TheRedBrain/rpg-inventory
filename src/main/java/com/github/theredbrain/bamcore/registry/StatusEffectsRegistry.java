@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.registry;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.BetterAdventureMode;
 import com.github.theredbrain.bamcore.api.effect.AuraStatusEffect;
 import com.github.theredbrain.bamcore.api.effect.FoodStatusEffect;
 import com.github.theredbrain.bamcore.api.util.BetterAdventureModCoreAttributeModifierUUIDs;
@@ -46,7 +46,7 @@ public class StatusEffectsRegistry {
             .addAttributeModifier(EntityAttributesRegistry.MANA_REGENERATION, BetterAdventureModCoreAttributeModifierUUIDs.GLOW_BERRY_FOOD_EFFECT, 2.0F, EntityAttributeModifier.Operation.ADDITION);
     //endregion Food Effects
     //region Aura Effects
-    public static final StatusEffect HEALTH_REGENERATION_AURA_EFFECT = new AuraStatusEffect(StatusEffects.REGENERATION)
+    public static final StatusEffect HEALTH_REGENERATION_AURA_EFFECT = new AuraStatusEffect(StatusEffects.REGENERATION, true)
             .addAttributeModifier(EntityAttributesRegistry.MAX_MANA, BetterAdventureModCoreAttributeModifierUUIDs.AURA_EFFECT, -0.25F, EntityAttributeModifier.Operation.MULTIPLY_TOTAL)
             ;
 
@@ -75,7 +75,7 @@ public class StatusEffectsRegistry {
     public static final StatusEffect CHILLED = new HarmfulStatusEffect();
     public static final StatusEffect FROZEN = new HarmfulStatusEffect();
     public static final StatusEffect WET = new HarmfulStatusEffect();
-    public static final StatusEffect TEST_AURA_EFFECT = new AuraStatusEffect(StatusEffects.GLOWING)
+    public static final StatusEffect TEST_AURA_EFFECT = new AuraStatusEffect(StatusEffects.GLOWING, false)
             .addAttributeModifier(EntityAttributesRegistry.MAX_MANA, BetterAdventureModCoreAttributeModifierUUIDs.AURA_EFFECT, -0.25F, EntityAttributeModifier.Operation.MULTIPLY_TOTAL)
             ;
 
@@ -101,40 +101,40 @@ public class StatusEffectsRegistry {
 
         // --- Registration ---
         // housing effects
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("housing_owner_effect"), HOUSING_OWNER_EFFECT);
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("housing_co_owner_effect"), HOUSING_CO_OWNER_EFFECT);
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("housing_trusted_effect"), HOUSING_TRUSTED_EFFECT);
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("housing_guest_effect"), HOUSING_GUEST_EFFECT);
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("housing_stranger_effect"), HOUSING_STRANGER_EFFECT);
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("edit_housing_resistance_effect"), EDIT_HOUSING_RESISTANCE_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("housing_owner_effect"), HOUSING_OWNER_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("housing_co_owner_effect"), HOUSING_CO_OWNER_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("housing_trusted_effect"), HOUSING_TRUSTED_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("housing_guest_effect"), HOUSING_GUEST_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("housing_stranger_effect"), HOUSING_STRANGER_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("edit_housing_resistance_effect"), EDIT_HOUSING_RESISTANCE_EFFECT);
         // utility effects
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("adventure_building_effect"), ADVENTURE_BUILDING_EFFECT);
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("civilisation_effect"), CIVILISATION_EFFECT);
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("need_empty_offhand_effect"), NEED_EMPTY_OFFHAND_EFFECT);
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("no_attack_items_effect"), NO_ATTACK_ITEMS_EFFECT);
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("weapons_sheathed_effect"), WEAPONS_SHEATHED_EFFECT);
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("two_handed_effect"), TWO_HANDED_EFFECT);
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("portal_resistance_effect"), PORTAL_RESISTANCE_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("adventure_building_effect"), ADVENTURE_BUILDING_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("civilisation_effect"), CIVILISATION_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("need_empty_offhand_effect"), NEED_EMPTY_OFFHAND_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("no_attack_items_effect"), NO_ATTACK_ITEMS_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("weapons_sheathed_effect"), WEAPONS_SHEATHED_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("two_handed_effect"), TWO_HANDED_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("portal_resistance_effect"), PORTAL_RESISTANCE_EFFECT);
 
 
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("overburdened_effect"), OVERBURDENED_EFFECT);
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("staggered"), STAGGERED);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("overburdened_effect"), OVERBURDENED_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("staggered"), STAGGERED);
 
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("burning"), BURNING);
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("chilled"), CHILLED);
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("frozen"), FROZEN);
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("wet"), WET);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("burning"), BURNING);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("chilled"), CHILLED);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("frozen"), FROZEN);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("wet"), WET);
 
         // food effects
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("sweet_berry_food_effect"), SWEET_BERRIES_FOOD_EFFECT);
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("brown_mushroom_food_effect"), BROWN_MUSHROOM_FOOD_EFFECT);
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("chicken_meal_food_effect"), CHICKEN_MEAL_FOOD_EFFECT);
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("red_mushroom_food_effect"), RED_MUSHROOM_FOOD_EFFECT);
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("glow_berry_food_effect"), GLOW_BERRIES_FOOD_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("sweet_berry_food_effect"), SWEET_BERRIES_FOOD_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("brown_mushroom_food_effect"), BROWN_MUSHROOM_FOOD_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("chicken_meal_food_effect"), CHICKEN_MEAL_FOOD_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("red_mushroom_food_effect"), RED_MUSHROOM_FOOD_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("glow_berry_food_effect"), GLOW_BERRIES_FOOD_EFFECT);
 
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("health_regeneration_aura_effect"), HEALTH_REGENERATION_AURA_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("health_regeneration_aura_effect"), HEALTH_REGENERATION_AURA_EFFECT);
 
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("test_aura_effect"), TEST_AURA_EFFECT);
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureModeCore.identifier("mana_regeneration_effect"), MANA_REGENERATION_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("test_aura_effect"), TEST_AURA_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("mana_regeneration_effect"), MANA_REGENERATION_EFFECT);
     }
 }

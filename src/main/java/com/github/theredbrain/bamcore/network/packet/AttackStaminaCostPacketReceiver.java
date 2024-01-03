@@ -2,6 +2,7 @@ package com.github.theredbrain.bamcore.network.packet;
 
 import com.github.theredbrain.bamcore.api.item.BetterAdventureMode_BasicWeaponItem;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
+import com.github.theredbrain.bamcore.registry.ServerPacketRegistry;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -19,7 +20,7 @@ public class AttackStaminaCostPacketReceiver implements ServerPlayNetworking.Pla
         if (((DuckPlayerEntityMixin) player).bamcore$getStamina() <= 0) {
             PacketByteBuf data = new PacketByteBuf(Unpooled.buffer());
             data.writeInt(player.getId());
-            ServerPlayNetworking.send(player, BetterAdventureModeCoreServerPacket.CANCEL_ATTACK_PACKET, data);
+            ServerPlayNetworking.send(player, ServerPacketRegistry.CANCEL_ATTACK_PACKET, data);
         } else {
             if (attackHandItemStack.getItem() instanceof BetterAdventureMode_BasicWeaponItem weaponItem) {
                 ((DuckPlayerEntityMixin) player).bamcore$addStamina(-(weaponItem.getStaminaCost()));

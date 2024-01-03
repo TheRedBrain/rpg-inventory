@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.network.packet;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCoreClient;
+import com.github.theredbrain.bamcore.BetterAdventureModeClient;
 import com.github.theredbrain.bamcore.registry.ComponentsRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -35,10 +35,10 @@ public class LeaveHouseFromHousingScreenPacketReceiver implements ServerPlayNetw
         if (targetWorld != null && targetPos != null) {
 
             serverPlayerEntity.teleport(targetWorld, (targetPos.getX() + 0.5), (targetPos.getY() + 0.5), (targetPos.getZ() + 0.5), (float) 0.0, (float) 0.0);
-            if (BetterAdventureModeCoreClient.clientConfig.show_debug_log) {
+            if (BetterAdventureModeClient.clientConfig.show_debug_log) {
                 serverPlayerEntity.sendMessage(Text.of("Teleport to world: " + targetWorld + " at position: " + (targetPos.getX() + 0.5) + ", " + (targetPos.getY() + 0.5) + ", " + (targetPos.getZ() + 0.5) + ", with yaw: " + 0.0 + " and pitch: " + 0.0));
             }
-        } else if (BetterAdventureModeCoreClient.clientConfig.show_debug_log) {
+        } else if (BetterAdventureModeClient.clientConfig.show_debug_log) {
             serverPlayerEntity.sendMessage(Text.of("Teleport failed"));
             if (targetWorld == null) {
                 serverPlayerEntity.sendMessage(Text.of("targetWorld == null"));

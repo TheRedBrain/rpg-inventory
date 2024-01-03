@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.network.packet;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.BetterAdventureMode;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.minecraft.network.PacketByteBuf;
@@ -8,7 +8,7 @@ import net.minecraft.util.math.BlockPos;
 
 public class SetHousingBlockOwnerPacket implements FabricPacket {
     public static final PacketType<SetHousingBlockOwnerPacket> TYPE = PacketType.create(
-            BetterAdventureModeCore.identifier("set_housing_block_owner"),
+            BetterAdventureMode.identifier("set_housing_block_owner"),
             SetHousingBlockOwnerPacket::new
     );
 

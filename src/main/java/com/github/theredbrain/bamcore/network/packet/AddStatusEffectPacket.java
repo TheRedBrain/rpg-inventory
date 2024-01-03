@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.network.packet;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.BetterAdventureMode;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.minecraft.network.PacketByteBuf;
@@ -8,7 +8,7 @@ import net.minecraft.util.Identifier;
 
 public class AddStatusEffectPacket implements FabricPacket {
     public static final PacketType<AddStatusEffectPacket> TYPE = PacketType.create(
-            BetterAdventureModeCore.identifier("add_status_effect"),
+            BetterAdventureMode.identifier("add_status_effect"),
             AddStatusEffectPacket::new
     );
 

@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.network.packet;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.BetterAdventureMode;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.minecraft.network.PacketByteBuf;
@@ -8,7 +8,7 @@ import net.minecraft.util.math.BlockPos;
 
 public class UpdateDelayTriggerBlockPacket implements FabricPacket {
     public static final PacketType<UpdateDelayTriggerBlockPacket> TYPE = PacketType.create(
-            BetterAdventureModeCore.identifier("update_delay_trigger_block"),
+            BetterAdventureMode.identifier("update_delay_trigger_block"),
             UpdateDelayTriggerBlockPacket::new
     );
 

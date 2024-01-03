@@ -1,6 +1,5 @@
 package com.github.theredbrain.bamcore.block;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.api.util.BlockRotationUtils;
 import com.github.theredbrain.bamcore.block.entity.UseRelayBlockEntity;
 import com.mojang.serialization.MapCodec;

@@ -85,7 +85,6 @@ public class TriggeredCounterBlockEntity extends RotatedBlockEntity implements T
         return triggeredBlocks;
     }
 
-    // TODO check if input is valid
     public boolean setTriggeredBlocks(HashMap<Integer, BlockPos> triggeredBlocks) {
         this.triggeredBlocks = triggeredBlocks;
         return true;

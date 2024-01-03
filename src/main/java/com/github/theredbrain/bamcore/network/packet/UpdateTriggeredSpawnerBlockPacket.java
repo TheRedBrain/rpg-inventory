@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.network.packet;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.BetterAdventureMode;
 import com.github.theredbrain.bamcore.api.util.PacketByteBufUtils;
 import com.github.theredbrain.bamcore.block.entity.TriggeredSpawnerBlockEntity;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
@@ -14,7 +14,7 @@ import java.util.List;
 
 public class UpdateTriggeredSpawnerBlockPacket implements FabricPacket {
     public static final PacketType<UpdateTriggeredSpawnerBlockPacket> TYPE = PacketType.create(
-            BetterAdventureModeCore.identifier("update_triggered_spawner_block"),
+            BetterAdventureMode.identifier("update_triggered_spawner_block"),
             UpdateTriggeredSpawnerBlockPacket::new
     );
 

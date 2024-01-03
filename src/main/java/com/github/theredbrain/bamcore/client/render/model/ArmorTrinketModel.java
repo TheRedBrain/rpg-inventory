@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.client.render.model;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.BetterAdventureMode;
 import com.github.theredbrain.bamcore.api.item.ArmorTrinketItem;
 import mod.azure.azurelib.common.api.client.model.GeoModel;
 import net.minecraft.util.Identifier;
@@ -15,12 +15,12 @@ public class ArmorTrinketModel extends GeoModel<ArmorTrinketItem> {
 
     @Override
     public Identifier getModelResource(ArmorTrinketItem animatable) {
-        return BetterAdventureModeCore.identifier("geo/item/" + assetSubpath.getPath() + ".geo.json");
+        return BetterAdventureMode.identifier("geo/item/" + assetSubpath.getPath() + ".geo.json");
     }
 
     @Override
     public Identifier getTextureResource(ArmorTrinketItem animatable) {
-        return BetterAdventureModeCore.identifier("textures/item/" + assetSubpath.getPath() + ".png");
+        return BetterAdventureMode.identifier("textures/item/" + assetSubpath.getPath() + ".png");
     }
 
     @Override

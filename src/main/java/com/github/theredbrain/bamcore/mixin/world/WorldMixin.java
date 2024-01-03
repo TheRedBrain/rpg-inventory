@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.mixin.world;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.BetterAdventureMode;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.Heightmap;
@@ -16,8 +16,6 @@ public abstract class WorldMixin implements WorldAccess  {
     @Shadow @Final protected MutableWorldProperties properties;
 
     @Shadow @Final public Random random;
-    @Unique
-    private int spawnPointIndex = 0;
 
     /**
      * @author TheRedBrain
@@ -25,12 +23,12 @@ public abstract class WorldMixin implements WorldAccess  {
      */
     @Overwrite
     public BlockPos getSpawnPos() {
-        if (BetterAdventureModeCore.serverConfig.use_predefined_position_for_world_spawn) {
-            List<Integer> worldSpawnXList = BetterAdventureModeCore.serverConfig.worldSpawnXList;
-            List<Integer> worldSpawnYList = BetterAdventureModeCore.serverConfig.worldSpawnYList;
-            List<Integer> worldSpawnZList = BetterAdventureModeCore.serverConfig.worldSpawnZList;
+        if (BetterAdventureMode.serverConfig.use_predefined_position_for_world_spawn) {
+            List<Integer> worldSpawnXList = BetterAdventureMode.serverConfig.worldSpawnXList;
+            List<Integer> worldSpawnYList = BetterAdventureMode.serverConfig.worldSpawnYList;
+            List<Integer> worldSpawnZList = BetterAdventureMode.serverConfig.worldSpawnZList;
             int listSize = worldSpawnXList.size();
-            spawnPointIndex = this.random.nextBetweenExclusive(0, listSize);
+            int spawnPointIndex = this.random.nextBetweenExclusive(0, listSize);
             if (spawnPointIndex < worldSpawnXList.size() && spawnPointIndex < worldSpawnYList.size() && spawnPointIndex < worldSpawnZList.size()) {
                 BlockPos pos = new BlockPos(worldSpawnXList.get(spawnPointIndex), worldSpawnYList.get(spawnPointIndex), worldSpawnZList.get(spawnPointIndex));
                 if (this.getWorldBorder().contains(pos)) {

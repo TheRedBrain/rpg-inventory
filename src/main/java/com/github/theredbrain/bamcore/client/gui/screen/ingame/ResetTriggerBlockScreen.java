@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.client.gui.screen.ingame;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.BetterAdventureMode;
 import com.github.theredbrain.bamcore.block.entity.ResetTriggerBlockEntity;
 import com.github.theredbrain.bamcore.network.packet.UpdateResetTriggerBlockPacket;
 import net.fabricmc.api.EnvType;
@@ -30,8 +30,8 @@ public class ResetTriggerBlockScreen extends Screen {
     private static final Text NEW_POSITION_Z_FIELD_PLACEHOLDER_TEXT = Text.translatable("gui.reset_block.resetBlockPositionOffsetZ.placeholder");
     private static final Text REMOVE_BUTTON_LABEL_TEXT = Text.translatable("gui.remove");
     private static final Text ADD_BUTTON_LABEL_TEXT = Text.translatable("gui.add");
-    private static final Identifier RESET_BLOCKS_LIST_SCROLLER_BACKGROUND_TEXTURE = BetterAdventureModeCore.identifier("scroll_bar/scroll_bar_background_8_116");
-    private static final Identifier SCROLLER_TEXTURE = BetterAdventureModeCore.identifier("scroll_bar/scroller_vertical_6_7");
+    private static final Identifier RESET_BLOCKS_LIST_SCROLLER_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("scroll_bar/scroll_bar_background_8_116");
+    private static final Identifier SCROLLER_TEXTURE = BetterAdventureMode.identifier("scroll_bar/scroller_vertical_6_7");
     private final ResetTriggerBlockEntity resetTriggerBlock;
     private ButtonWidget removeListEntryButton0;
     private ButtonWidget removeListEntryButton1;

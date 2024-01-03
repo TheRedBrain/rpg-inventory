@@ -1,13 +1,13 @@
 package com.github.theredbrain.bamcore.network.packet;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.BetterAdventureMode;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.minecraft.network.PacketByteBuf;
 
 public class SheatheWeaponsPacket implements FabricPacket {
     public static final PacketType<SheatheWeaponsPacket> TYPE = PacketType.create(
-            BetterAdventureModeCore.identifier("sheathe_weapons"),
+            BetterAdventureMode.identifier("sheathe_weapons"),
             SheatheWeaponsPacket::new
     );
 

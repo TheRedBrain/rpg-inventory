@@ -18,10 +18,10 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.github.theredbrain.bamcore.BetterAdventureModeCore"
+      "com.github.theredbrain.bamcore.BetterAdventureMode"
     ],
     "client": [
-      "com.github.theredbrain.bamcore.BetterAdventureModeCoreClient"
+      "com.github.theredbrain.bamcore.BetterAdventureModeClient"
     ],
     "cardinal-components-entity": [
       "com.github.theredbrain.bamcore.registry.ComponentsRegistry"

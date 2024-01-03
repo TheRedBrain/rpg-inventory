@@ -1,14 +1,13 @@
 package com.github.theredbrain.bamcore.network.packet;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.BetterAdventureMode;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 
 public class SuccessfulTeleportPacket implements FabricPacket {
     public static final PacketType<SuccessfulTeleportPacket> TYPE = PacketType.create(
-            BetterAdventureModeCore.identifier("successful_teleport"),
+            BetterAdventureMode.identifier("successful_teleport"),
             SuccessfulTeleportPacket::new
     );
 

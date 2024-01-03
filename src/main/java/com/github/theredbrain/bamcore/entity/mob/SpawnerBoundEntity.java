@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.entity.mob;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.BetterAdventureMode;
 import mod.azure.azurelib.common.api.common.animatable.GeoEntity;
 import mod.azure.azurelib.common.internal.common.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.common.internal.common.core.animation.AnimatableManager;
@@ -18,9 +18,9 @@ import org.jetbrains.annotations.Nullable;
 public class SpawnerBoundEntity extends MobEntity implements GeoEntity {
     private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
-    Identifier spawnerBoundEntityModelIdentifier = BetterAdventureModeCore.identifier("spawner_bound_entity/default_spawner_bound_entity");
-    Identifier spawnerBoundEntityTextureIdentifier = BetterAdventureModeCore.identifier("spawner_bound_entity/default_spawner_bound_entity");;
-    Identifier spawnerBoundEntityAnimationsIdentifier = BetterAdventureModeCore.identifier("spawner_bound_entity/default_spawner_bound_entity");;
+    Identifier spawnerBoundEntityModelIdentifier = BetterAdventureMode.identifier("spawner_bound_entity/default_spawner_bound_entity");
+    Identifier spawnerBoundEntityTextureIdentifier = BetterAdventureMode.identifier("spawner_bound_entity/default_spawner_bound_entity");;
+    Identifier spawnerBoundEntityAnimationsIdentifier = BetterAdventureMode.identifier("spawner_bound_entity/default_spawner_bound_entity");;
     double spawnerBoundEntityBoundingBoxHeight = 1.8;
     double spawnerBoundEntityBoundingBoxWidth = 0.8;
     double spawnerBoundEntityEyeHeight = 1.65;

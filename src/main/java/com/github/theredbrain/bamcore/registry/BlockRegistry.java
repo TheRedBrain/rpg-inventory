@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.registry;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.BetterAdventureMode;
 import com.github.theredbrain.bamcore.api.block.InteractiveAdventureFullToAirBlock;
 import com.github.theredbrain.bamcore.api.block.InteractiveAdventureLogBlock;
 import com.github.theredbrain.bamcore.api.block.InteractiveAdventurePlantBlock;
@@ -69,7 +69,7 @@ public class BlockRegistry {
     //region Operator Blocks
     public static final Block DIALOGUE_BLOCK = registerBlock("dialogue_block", new DialogueBlock(FabricBlockSettings.create().mapColor(MapColor.LIGHT_GRAY).requiresTool().strength(-1.0f, 3600000.0f).dropsNothing()), ItemGroups.OPERATOR);
     public static final Block MIMIC_BLOCK = registerBlock("mimic_block", new MimicBlock(FabricBlockSettings.create().mapColor(MapColor.LIGHT_GRAY).requiresTool().strength(-1.0f, 3600000.0f).dropsNothing()), ItemGroups.OPERATOR);
-    public static final Block MIMIC_FALLBACK_BLOCK = Registry.register(Registries.BLOCK, BetterAdventureModeCore.identifier("mimic_fallback_block"), new Block(FabricBlockSettings.create().mapColor(MapColor.LIGHT_GRAY).requiresTool().strength(-1.0f, 3600000.0f).dropsNothing()));
+    public static final Block MIMIC_FALLBACK_BLOCK = Registry.register(Registries.BLOCK, BetterAdventureMode.identifier("mimic_fallback_block"), new Block(FabricBlockSettings.create().mapColor(MapColor.LIGHT_GRAY).requiresTool().strength(-1.0f, 3600000.0f).dropsNothing()));
     public static final Block TRIGGERED_SPAWNER_BLOCK = registerBlock("triggered_spawner_block", new TriggeredSpawnerBlock(FabricBlockSettings.create().mapColor(MapColor.LIGHT_GRAY).requiresTool().strength(-1.0f, 3600000.0f).dropsNothing()), ItemGroups.OPERATOR);
     public static final Block LOCATION_CONTROL_BLOCK = registerBlock("location_control_block", new LocationControlBlock(FabricBlockSettings.create().mapColor(MapColor.LIGHT_GRAY).requiresTool().strength(-1.0f, 3600000.0f).dropsNothing()), ItemGroups.OPERATOR);
     public static final Block HOUSING_BLOCK = registerBlock("housing_block", new HousingBlock(FabricBlockSettings.create().mapColor(MapColor.LIGHT_GRAY).requiresTool().strength(-1.0f, 3600000.0f).dropsNothing()), ItemGroups.OPERATOR);
@@ -85,9 +85,9 @@ public class BlockRegistry {
 
     private static Block registerBlock(String name, Block block, @Nullable RegistryKey<ItemGroup> itemGroup) {
 
-        Registry.register(Registries.ITEM, BetterAdventureModeCore.identifier(name), new BlockItem(block, new FabricItemSettings()));
+        Registry.register(Registries.ITEM, BetterAdventureMode.identifier(name), new BlockItem(block, new FabricItemSettings()));
         ItemGroupEvents.modifyEntriesEvent(itemGroup).register(content -> content.add(block));
-        return Registry.register(Registries.BLOCK, BetterAdventureModeCore.identifier(name), block);
+        return Registry.register(Registries.BLOCK, BetterAdventureMode.identifier(name), block);
     }
 
     public static void init() {}

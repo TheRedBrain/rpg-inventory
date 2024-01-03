@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.client.gui.screen.ingame;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.BetterAdventureMode;
 import com.github.theredbrain.bamcore.block.entity.HousingBlockBlockEntity;
 import com.github.theredbrain.bamcore.network.packet.*;
 import com.github.theredbrain.bamcore.registry.StatusEffectsRegistry;
@@ -65,11 +65,11 @@ public class HousingScreen extends Screen {
     private static final Text INFLUENCE_AREA_POSITION_OFFET_LABEL_TEXT = Text.translatable("gui.housing_screen.influence_area_position_offset_label");
     private static final Text RESET_OWNER_BUTTON_LABEL_TEXT = Text.translatable("gui.housing_block.reset_owner_button_label");
     private static final Text TRIGGERED_BLOCK_POSITION_OFFSET_LABEL_TEXT = Text.translatable("gui.triggered_block.triggeredBlockPositionOffset");
-    public static final Identifier BACKGROUND_218_215_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/generic_218_215_background.png");
-    public static final Identifier BACKGROUND_218_95_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/generic_218_95_background.png");
-    public static final Identifier BACKGROUND_218_71_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/generic_218_71_background.png");
-    private static final Identifier PLAYER_LISTS_SCROLLER_BACKGROUND_TEXTURE = BetterAdventureModeCore.identifier("container/housing_screen/player_lists_scroller_background");
-    private static final Identifier SCROLLER_TEXTURE = BetterAdventureModeCore.identifier("container/scroller");
+    public static final Identifier BACKGROUND_218_215_TEXTURE = BetterAdventureMode.identifier("textures/gui/container/generic_218_215_background.png");
+    public static final Identifier BACKGROUND_218_95_TEXTURE = BetterAdventureMode.identifier("textures/gui/container/generic_218_95_background.png");
+    public static final Identifier BACKGROUND_218_71_TEXTURE = BetterAdventureMode.identifier("textures/gui/container/generic_218_71_background.png");
+    private static final Identifier PLAYER_LISTS_SCROLLER_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("container/housing_screen/player_lists_scroller_background");
+    private static final Identifier SCROLLER_TEXTURE = BetterAdventureMode.identifier("container/scroller");
     @Nullable
     private final HousingBlockBlockEntity housingBlockBlockEntity;
 

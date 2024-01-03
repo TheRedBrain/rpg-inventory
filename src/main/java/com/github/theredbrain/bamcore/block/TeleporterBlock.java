@@ -45,7 +45,6 @@ public class TeleporterBlock extends RotatedBlockWithEntity implements OperatorB
             return ActionResult.SUCCESS;
         }
         player.openHandledScreen(state.createScreenHandlerFactory(world, pos));
-//        player.incrementStat(Stats.INTERACT_WITH_CRAFTING_TABLE); // TODO stats
         return ActionResult.CONSUME;
     }
 

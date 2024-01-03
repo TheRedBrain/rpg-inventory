@@ -1,17 +1,11 @@
 package com.github.theredbrain.bamcore.registry;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
-import com.github.theredbrain.bamcore.BetterAdventureModeCoreClient;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.bamcore.network.event.PlayerDeathCallback;
-import com.github.theredbrain.bamcore.network.event.PlayerFirstJoinCallback;
 import com.github.theredbrain.bamcore.network.event.PlayerJoinCallback;
-import com.github.theredbrain.bamcore.network.packet.AttackStaminaCostPacket;
-import com.github.theredbrain.bamcore.network.packet.BetterAdventureModeCoreServerPacket;
 //import net.bettercombat.api.client.BetterCombatClientEvents;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 
 public class EventsRegistry {
@@ -36,7 +30,7 @@ public class EventsRegistry {
             }
         });
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-            sender.sendPacket(BetterAdventureModeCoreServerPacket.SYNC_PLAYER_LOCATIONS, PlayerLocationsRegistry.getEncodedRegistry());
+            sender.sendPacket(ServerPacketRegistry.SYNC_PLAYER_LOCATIONS, PlayerLocationsRegistry.getEncodedRegistry());
         });
     }
 

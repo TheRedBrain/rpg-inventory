@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.block.entity;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.BetterAdventureMode;
 import com.github.theredbrain.bamcore.api.util.BlockRotationUtils;
 import com.github.theredbrain.bamcore.block.Resetable;
 import com.github.theredbrain.bamcore.block.RotatedBlockWithEntity;
@@ -51,12 +51,12 @@ public class TriggeredSpawnerBlockEntity extends RotatedBlockEntity implements T
     private BlockPos triggeredBlockPositionOffset = new BlockPos(0, 1, 0);
     
     String spawnerBoundEntityName = "";
-    Identifier spawnerBoundEntityModelIdentifier = BetterAdventureModeCore.identifier("spawner_bound_entity/default_spawner_bound_entity");;
-    Identifier spawnerBoundEntityTextureIdentifier = BetterAdventureModeCore.identifier("spawner_bound_entity/default_spawner_bound_entity");;
-    Identifier spawnerBoundEntityAnimationsIdentifier = BetterAdventureModeCore.identifier("spawner_bound_entity/default_spawner_bound_entity");
+    Identifier spawnerBoundEntityModelIdentifier = BetterAdventureMode.identifier("spawner_bound_entity/default_spawner_bound_entity");;
+    Identifier spawnerBoundEntityTextureIdentifier = BetterAdventureMode.identifier("spawner_bound_entity/default_spawner_bound_entity");;
+    Identifier spawnerBoundEntityAnimationsIdentifier = BetterAdventureMode.identifier("spawner_bound_entity/default_spawner_bound_entity");
     double spawnerBoundEntityBoundingBoxHeight = 1.8;
     double spawnerBoundEntityBoundingBoxWidth = 0.8;
-    Identifier spawnerBoundEntityLootTableIdentifier = BetterAdventureModeCore.identifier("spawner_bound_entity/default_spawner_bound_entity");;
+    Identifier spawnerBoundEntityLootTableIdentifier = BetterAdventureMode.identifier("spawner_bound_entity/default_spawner_bound_entity");;
 
     private boolean triggered = false;
     private NbtCompound entityTypeCompound = new NbtCompound();
@@ -192,7 +192,6 @@ public class TriggeredSpawnerBlockEntity extends RotatedBlockEntity implements T
         return this.entityAttributeModifiers;
     }
 
-    // TODO check if input is valid
     public boolean setEntityAttributeModifiers(Multimap<EntityAttribute, EntityAttributeModifier> entityAttributeModifiers) {
         this.entityAttributeModifiers = entityAttributeModifiers;
         return true;

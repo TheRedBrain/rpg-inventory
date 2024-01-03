@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.client.gui.screen.ingame;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.BetterAdventureMode;
 import com.github.theredbrain.bamcore.api.json_files_backend.Dialogue;
 import com.github.theredbrain.bamcore.block.entity.DialogueBlockEntity;
 import com.github.theredbrain.bamcore.client.network.DuckClientAdvancementManagerMixin;
@@ -37,12 +37,12 @@ import java.util.Optional;
 public class DialogueBlockScreen extends Screen {
     private static final Text ADD_ENTRY_BUTTON_LABEL_TEXT = Text.translatable("gui.list_entry.add");
     private static final Text REMOVE_ENTRY_BUTTON_LABEL_TEXT = Text.translatable("gui.list_entry.remove");
-    public static final Identifier BACKGROUND_218_197_TEXTURE = BetterAdventureModeCore.identifier("textures/gui/container/generic_218_197_background.png");
-    private static final Identifier SCROLL_BAR_BACKGROUND_8_35_TEXTURE = BetterAdventureModeCore.identifier("scroll_bar/scroll_bar_background_8_35");
-    private static final Identifier SCROLL_BAR_BACKGROUND_8_87_TEXTURE = BetterAdventureModeCore.identifier("scroll_bar/scroll_bar_background_8_87");
-    private static final Identifier SCROLL_BAR_BACKGROUND_8_92_TEXTURE = BetterAdventureModeCore.identifier("scroll_bar/scroll_bar_background_8_92");
-    private static final Identifier SCROLL_BAR_BACKGROUND_8_96_TEXTURE = BetterAdventureModeCore.identifier("scroll_bar/scroll_bar_background_8_96");
-    private static final Identifier SCROLLER_VERTICAL_6_7_TEXTURE = BetterAdventureModeCore.identifier("scroll_bar/scroller_vertical_6_7");
+    public static final Identifier BACKGROUND_218_197_TEXTURE = BetterAdventureMode.identifier("textures/gui/container/generic_218_197_background.png");
+    private static final Identifier SCROLL_BAR_BACKGROUND_8_35_TEXTURE = BetterAdventureMode.identifier("scroll_bar/scroll_bar_background_8_35");
+    private static final Identifier SCROLL_BAR_BACKGROUND_8_87_TEXTURE = BetterAdventureMode.identifier("scroll_bar/scroll_bar_background_8_87");
+    private static final Identifier SCROLL_BAR_BACKGROUND_8_92_TEXTURE = BetterAdventureMode.identifier("scroll_bar/scroll_bar_background_8_92");
+    private static final Identifier SCROLL_BAR_BACKGROUND_8_96_TEXTURE = BetterAdventureMode.identifier("scroll_bar/scroll_bar_background_8_96");
+    private static final Identifier SCROLLER_VERTICAL_6_7_TEXTURE = BetterAdventureMode.identifier("scroll_bar/scroller_vertical_6_7");
     private final DialogueBlockEntity dialogueBlockEntity;
 
     //region adventure widgets
@@ -146,10 +146,10 @@ public class DialogueBlockScreen extends Screen {
             // trigger block
             String triggeredBlock = currentAnswer.getTriggeredBlock();
             if (triggeredBlock != null) {
-                BetterAdventureModeCore.info("triggeredBlock != null");
+                BetterAdventureMode.info("triggeredBlock != null");
                 for (MutablePair<String, BlockPos> entry : this.dialogueTriggeredBlocksList) {
                     if (entry.getLeft().equals(triggeredBlock)) {
-                        BetterAdventureModeCore.info("triggeredBlock: " + triggeredBlock);
+                        BetterAdventureMode.info("triggeredBlock: " + triggeredBlock);
                         this.dialogueBlockEntity.triggerBlock(triggeredBlock);
                         break;
                     }
@@ -159,7 +159,7 @@ public class DialogueBlockScreen extends Screen {
             // use block
             String usedBlock = currentAnswer.getUsedBlock();
             if (usedBlock != null) {
-                BetterAdventureModeCore.info("usedBlock != null");
+                BetterAdventureMode.info("usedBlock != null");
                 for (MutablePair<String, BlockPos> entry : this.dialogueUsedBlocksList) {
                     if (entry.getLeft().equals(usedBlock)) {
                         if (this.client != null && this.client.player != null) {

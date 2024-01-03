@@ -1,7 +1,7 @@
 package com.github.theredbrain.bamcore.registry;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
-import com.github.theredbrain.bamcore.BetterAdventureModeCoreClient;
+import com.github.theredbrain.bamcore.BetterAdventureMode;
+import com.github.theredbrain.bamcore.BetterAdventureModeClient;
 import com.github.theredbrain.bamcore.api.json_files_backend.Dialogue;
 import com.github.theredbrain.bamcore.api.json_files_backend.DialogueHelper;
 import com.google.common.reflect.TypeToken;
@@ -70,8 +70,8 @@ public class DialoguesRegistry {
         PacketByteBuf buffer = PacketByteBufs.create();
         var gson = new Gson();
         var json = gson.toJson(registeredDialogues);
-        if (BetterAdventureModeCoreClient.clientConfig.show_debug_log) {
-            BetterAdventureModeCore.LOGGER.info("Dialogues registry loaded: " + json);
+        if (BetterAdventureModeClient.clientConfig.show_debug_log) {
+            BetterAdventureMode.LOGGER.info("Dialogues registry loaded: " + json);
         }
 
         List<String> chunks = new ArrayList<>();
@@ -85,8 +85,8 @@ public class DialoguesRegistry {
             buffer.writeString(chunk);
         }
 
-        if (BetterAdventureModeCoreClient.clientConfig.show_debug_log) {
-            BetterAdventureModeCore.LOGGER.info("Encoded Dialogues registry size (with package overhead): " + buffer.readableBytes()
+        if (BetterAdventureModeClient.clientConfig.show_debug_log) {
+            BetterAdventureMode.LOGGER.info("Encoded Dialogues registry size (with package overhead): " + buffer.readableBytes()
                     + " bytes (in " + chunks.size() + " string chunks with the size of " + chunkSize + ")");
         }
         encodedRegisteredDialogues = buffer;
@@ -98,9 +98,9 @@ public class DialoguesRegistry {
         for (int i = 0; i < chunkCount; ++i) {
             json = json.concat(buffer.readString());
         }
-        if (BetterAdventureModeCoreClient.clientConfig.show_debug_log) {
-            BetterAdventureModeCore.LOGGER.info("Decoded Dialogues registry in " + chunkCount + " string chunks");
-            BetterAdventureModeCore.LOGGER.info("Dialogues registry received: " + json);
+        if (BetterAdventureModeClient.clientConfig.show_debug_log) {
+            BetterAdventureMode.LOGGER.info("Decoded Dialogues registry in " + chunkCount + " string chunks");
+            BetterAdventureMode.LOGGER.info("Dialogues registry received: " + json);
         }
         var gson = new Gson();
         Type mapType = new TypeToken<Map<String, Dialogue>>() {}.getType();

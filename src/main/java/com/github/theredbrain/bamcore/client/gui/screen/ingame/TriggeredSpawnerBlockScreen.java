@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.client.gui.screen.ingame;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.BetterAdventureMode;
 import com.github.theredbrain.bamcore.block.entity.TriggeredSpawnerBlockEntity;
 import com.github.theredbrain.bamcore.network.packet.UpdateTriggeredSpawnerBlockPacket;
 import com.google.common.collect.Maps;
@@ -51,8 +51,8 @@ public class TriggeredSpawnerBlockScreen extends Screen {
     private static final Text CLOSE_SPAWNER_BOUND_ENTITY_CONFIG_SCREEN_BUTTON_LABEL_TEXT = Text.translatable("gui.close");
     private static final Text TRIGGERED_BLOCK_POSITION_OFFSET_LABEL_TEXT = Text.translatable("gui.triggered_block.triggeredBlockPositionOffset");
 
-    private static final Identifier SCROLL_BAR_BACKGROUND_8_92_TEXTURE = BetterAdventureModeCore.identifier("scroll_bar/scroll_bar_background_8_92");
-    private static final Identifier SCROLLER_VERTICAL_6_7_TEXTURE = BetterAdventureModeCore.identifier("scroll_bar/scroller_vertical_6_7");
+    private static final Identifier SCROLL_BAR_BACKGROUND_8_92_TEXTURE = BetterAdventureMode.identifier("scroll_bar/scroll_bar_background_8_92");
+    private static final Identifier SCROLLER_VERTICAL_6_7_TEXTURE = BetterAdventureMode.identifier("scroll_bar/scroller_vertical_6_7");
 
     private final TriggeredSpawnerBlockEntity triggeredSpawnerBlock;
 

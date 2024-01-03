@@ -9,11 +9,13 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(ToolItem.class)
 public abstract class ToolItemMixin extends Item {
 
     @Nullable
+    @Unique
     private String translationKeyBroken;
 
     public ToolItemMixin(Settings settings) {
@@ -23,6 +25,7 @@ public abstract class ToolItemMixin extends Item {
     /**
      * Gets or creates the translation key of this item when it is not protecting.
      */
+    @Unique
     private String getOrCreateTranslationKeyBroken() {
         if (this.translationKeyBroken == null) {
             this.translationKeyBroken = Util.createTranslationKey("item", new Identifier(Registries.ITEM.getId(this).getNamespace() + ":" + Registries.ITEM.getId(this).getPath() + "_broken"));

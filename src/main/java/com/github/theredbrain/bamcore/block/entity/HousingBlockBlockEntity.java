@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.block.entity;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.BetterAdventureMode;
 import com.github.theredbrain.bamcore.api.util.BlockRotationUtils;
 import com.github.theredbrain.bamcore.api.util.UUIDUtilities;
 import com.github.theredbrain.bamcore.block.RotatedBlockWithEntity;
@@ -145,7 +145,7 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
             if (blockEntity.hasWorld() && !blockEntity.isOwnerSet && blockEntity.ownerMode == OwnerMode.DIMENSION_OWNER) {
                 blockEntity.ownerUuid = initOwner(blockEntity.world);
                 if (UUIDUtilities.isStringValidUUID(blockEntity.ownerUuid)) {
-                    BetterAdventureModeCore.LOGGER.info(blockEntity.ownerUuid);
+                    BetterAdventureMode.LOGGER.info(blockEntity.ownerUuid);
                     blockEntity.isOwnerSet = true;
                 }
             }

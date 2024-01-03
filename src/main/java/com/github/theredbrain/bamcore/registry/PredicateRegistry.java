@@ -1,6 +1,6 @@
 package com.github.theredbrain.bamcore.registry;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
+import com.github.theredbrain.bamcore.BetterAdventureMode;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import dev.emi.trinkets.api.TrinketsApi;
 import net.fabricmc.fabric.api.util.TriState;
@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class PredicateRegistry {
 
     static {
-        TrinketsApi.registerTrinketPredicate(BetterAdventureModeCore.identifier("rings_predicate"), (stack, ref, entity) -> {
+        TrinketsApi.registerTrinketPredicate(BetterAdventureMode.identifier("rings_predicate"), (stack, ref, entity) -> {
             // TODO
             String group = ref.inventory().getSlotType().getGroup();
 //            stack.isIn(Tags.SPELLS)
@@ -22,7 +22,7 @@ public class PredicateRegistry {
             }
             return TriState.FALSE;
         });
-        TrinketsApi.registerTrinketPredicate(BetterAdventureModeCore.identifier("spells_predicate"), (stack, ref, entity) -> {
+        TrinketsApi.registerTrinketPredicate(BetterAdventureMode.identifier("spells_predicate"), (stack, ref, entity) -> {
             // TODO
             String group = ref.inventory().getSlotType().getGroup();
 //            stack.isIn(Tags.SPELLS)
@@ -32,7 +32,7 @@ public class PredicateRegistry {
             }
             return TriState.FALSE;
         });
-        TrinketsApi.registerTrinketPredicate(BetterAdventureModeCore.identifier("mana_regeneration_items"), (stack, ref, entity) -> {
+        TrinketsApi.registerTrinketPredicate(BetterAdventureMode.identifier("mana_regeneration_items"), (stack, ref, entity) -> {
             AtomicBoolean bl = new AtomicBoolean(false);
             TrinketsApi.getTrinketComponent(entity).ifPresent(comp -> {
 
@@ -43,7 +43,7 @@ public class PredicateRegistry {
             }
             return TriState.FALSE;
         });
-        TrinketsApi.registerTrinketPredicate(BetterAdventureModeCore.identifier("can_change_equipment"), (stack, ref, entity) -> {
+        TrinketsApi.registerTrinketPredicate(BetterAdventureMode.identifier("can_change_equipment"), (stack, ref, entity) -> {
             if (entity.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT)
                     || entity instanceof PlayerEntity playerEntity && !((DuckPlayerEntityMixin) playerEntity).bamcore$isAdventure()
                     || entity.getServer() == null

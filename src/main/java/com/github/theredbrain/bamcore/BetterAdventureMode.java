@@ -1,10 +1,10 @@
 package com.github.theredbrain.bamcore;
 
+import com.github.theredbrain.bamcore.registry.ServerPacketRegistry;
 import com.github.theredbrain.bamcore.registry.EntityAttributesRegistry;
 import com.github.theredbrain.bamcore.registry.StatusEffectsRegistry;
 import com.github.theredbrain.bamcore.config.ServerConfig;
 import com.github.theredbrain.bamcore.config.ServerConfigWrapper;
-import com.github.theredbrain.bamcore.network.packet.BetterAdventureModeCoreServerPacket;
 import com.github.theredbrain.bamcore.registry.*;
 import com.github.theredbrain.bamcore.world.DimensionsManager;
 import me.shedaniel.autoconfig.AutoConfig;
@@ -21,8 +21,8 @@ import org.slf4j.LoggerFactory;
 
 import static net.fabricmc.fabric.api.resource.ResourceManagerHelper.registerBuiltinResourcePack;
 
-public class BetterAdventureModeCore implements ModInitializer {
-	public static final String MOD_ID = "bamcore";
+public class BetterAdventureMode implements ModInitializer {
+	public static final String MOD_ID = "betteradventuremode";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	public static ServerConfig serverConfig;
 
@@ -35,7 +35,7 @@ public class BetterAdventureModeCore implements ModInitializer {
 		serverConfig = ((ServerConfigWrapper)AutoConfig.getConfigHolder(ServerConfigWrapper.class).getConfig()).server;
 
 		// Packets
-		BetterAdventureModeCoreServerPacket.init();
+		ServerPacketRegistry.init();
 
 		// Registry
 		BlockRegistry.init();
@@ -56,7 +56,7 @@ public class BetterAdventureModeCore implements ModInitializer {
 
 	static {
 		ModContainer modContainer = FabricLoader.getInstance().getModContainer(MOD_ID).get();
-		registerBuiltinResourcePack(new Identifier(MOD_ID, "better_adventure_mode_spell_engine_compat"), modContainer, Text.translatable("redbrainstweaks.builtin_resource_packs.better_adventure_mode_spell_engine_compat"), ResourcePackActivationType.NORMAL);
+		registerBuiltinResourcePack(new Identifier(MOD_ID, "better_adventure_mode_spell_engine_compat"), modContainer, Text.translatable("betteradventuremode.builtin_resource_packs.better_adventure_mode_spell_engine_compat"), ResourcePackActivationType.NORMAL);
 	}
 
 	public static Identifier identifier(String path) {
@@ -64,18 +64,18 @@ public class BetterAdventureModeCore implements ModInitializer {
 	}
 
 	public static void info(String message) {
-		LOGGER.info("[bamcore] [info]: " + message);
+		LOGGER.info("[" + MOD_ID + "] [info]: " + message);
 	}
 
 	public static void warn(String message) {
-		LOGGER.warn("[bamcore] [warn]: " + message);
+		LOGGER.warn("[" + MOD_ID + "] [warn]: " + message);
 	}
 
 	public static void debug(String message) {
-		LOGGER.debug("[bamcore] [debug]: " + message);
+		LOGGER.debug("[" + MOD_ID + "] [debug]: " + message);
 	}
 
 	public static void error(String message) {
-		LOGGER.error("[bamcore] [error]: " + message);
+		LOGGER.error("[" + MOD_ID + "] [error]: " + message);
 	}
 }
