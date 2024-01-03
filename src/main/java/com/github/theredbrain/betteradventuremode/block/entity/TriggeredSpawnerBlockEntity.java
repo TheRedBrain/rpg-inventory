@@ -103,9 +103,13 @@ public class TriggeredSpawnerBlockEntity extends RotatedBlockEntity implements T
 
         nbt.putString("entityMode", this.entityMode.asString());
 
-        nbt.putBoolean("triggered", triggered);
+        nbt.putBoolean("triggered", this.triggered);
 
         nbt.put("EntityTypeCompound", this.entityTypeCompound);
+
+        if (this.boundEntityUuid != null) {
+            nbt.putUuid("boundEntityUuid", this.boundEntityUuid);
+        }
     }
 
     @Override
@@ -155,6 +159,10 @@ public class TriggeredSpawnerBlockEntity extends RotatedBlockEntity implements T
 
         if (nbt.contains("EntityTypeCompound", NbtElement.COMPOUND_TYPE)) {
             this.entityTypeCompound = nbt.getCompound("EntityTypeCompound");
+        }
+
+        if (nbt.containsUuid("boundEntityUuid")) {
+            this.boundEntityUuid = nbt.getUuid("boundEntityUuid");
         }
     }
 
@@ -370,6 +378,7 @@ public class TriggeredSpawnerBlockEntity extends RotatedBlockEntity implements T
             if (entity != null) {
                 entity.discard();
             }
+            this.boundEntityUuid = null;
         }
     }
 
@@ -472,9 +481,9 @@ public class TriggeredSpawnerBlockEntity extends RotatedBlockEntity implements T
             if (entity2 instanceof MobEntity) {
                 if (this.entityTypeCompound.contains("id", NbtElement.STRING_TYPE)) {
                     NbtCompound entityNbt = new NbtCompound();
-                    entityNbt.putInt("boundSpawnerBlockPosX", this.pos.getX());
-                    entityNbt.putInt("boundSpawnerBlockPosY", this.pos.getY());
-                    entityNbt.putInt("boundSpawnerBlockPosZ", this.pos.getZ());
+                    entityNbt.putInt("betteradventuremode$boundSpawnerBlockPosX", this.pos.getX());
+                    entityNbt.putInt("betteradventuremode$boundSpawnerBlockPosY", this.pos.getY());
+                    entityNbt.putInt("betteradventuremode$boundSpawnerBlockPosZ", this.pos.getZ());
                     if (entity2 instanceof SpawnerBoundEntity) {
                         entityNbt.putString("spawnerBoundEntityName", this.spawnerBoundEntityName);
                         if (this.spawnerBoundEntityModelIdentifier != null) {
