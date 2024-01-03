@@ -1,7 +1,6 @@
 package com.github.theredbrain.bamcore.block;
 
-import com.github.theredbrain.bamcore.BetterAdventureModeCore;
-import com.github.theredbrain.bamcore.block.entity.UseRelayBlockEntity;
+import com.github.theredbrain.bamcore.block.entity.TriggeredCounterBlockEntity;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -14,21 +13,21 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class UseRelayBlock extends RotatedBlockWithEntity {
+public class TriggeredCounterBlock extends RotatedBlockWithEntity {
 
-    public UseRelayBlock(Settings settings) {
+    public TriggeredCounterBlock(Settings settings) {
         super(settings);
     }
 
     // TODO Block Codecs
-    public MapCodec<UseRelayBlock> getCodec() {
+    public MapCodec<TriggeredCounterBlock> getCodec() {
         return null;
     }
 
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new UseRelayBlockEntity(pos, state);
+        return new TriggeredCounterBlockEntity(pos, state);
     }
 
     @Override
@@ -39,15 +38,8 @@ public class UseRelayBlock extends RotatedBlockWithEntity {
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof UseRelayBlockEntity useRelayBlockEntity) {
-            if (player.isCreativeLevelTwoOp()) {
-                return ((UseRelayBlockEntity) blockEntity).openScreen(player) ? ActionResult.success(world.isClient) : ActionResult.PASS;
-            } else {
-                BlockPos relayBlockPosOffset = useRelayBlockEntity.getRelayBlockPositionOffset();
-                BlockPos relayBlockPos = pos.add(relayBlockPosOffset.getX(), relayBlockPosOffset.getY(), relayBlockPosOffset.getZ());
-                BlockState relayBlockState = world.getBlockState(relayBlockPos);
-                return relayBlockState.getBlock().onUse(relayBlockState, world, relayBlockPos, player, hand, hit);
-            }
+        if (blockEntity instanceof TriggeredCounterBlockEntity) {
+            return ((TriggeredCounterBlockEntity)blockEntity).openScreen(player) ? ActionResult.success(world.isClient) : ActionResult.PASS;
         }
         return ActionResult.PASS;
     }

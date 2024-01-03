@@ -28,7 +28,7 @@ public class UpdateHousingBlockAdventurePacket implements FabricPacket {
     }
 
     public UpdateHousingBlockAdventurePacket(PacketByteBuf buf) {
-        this(buf.readBlockPos(), buf.readList(new PacketByteBufUtils.StringListReader()), buf.readList(new PacketByteBufUtils.StringListReader()), buf.readList(new PacketByteBufUtils.StringListReader()));
+        this(buf.readBlockPos(), buf.readList(new PacketByteBufUtils.StringReader()), buf.readList(new PacketByteBufUtils.StringReader()), buf.readList(new PacketByteBufUtils.StringReader()));
     }
     @Override
     public PacketType<?> getType() {
@@ -37,9 +37,9 @@ public class UpdateHousingBlockAdventurePacket implements FabricPacket {
     @Override
     public void write(PacketByteBuf buf) {
         buf.writeBlockPos(this.housingBlockPosition);
-        buf.writeCollection(this.coOwnerList, new PacketByteBufUtils.StringListWriter());
-        buf.writeCollection(this.trustedList, new PacketByteBufUtils.StringListWriter());
-        buf.writeCollection(this.guestList, new PacketByteBufUtils.StringListWriter());
+        buf.writeCollection(this.coOwnerList, new PacketByteBufUtils.StringWriter());
+        buf.writeCollection(this.trustedList, new PacketByteBufUtils.StringWriter());
+        buf.writeCollection(this.guestList, new PacketByteBufUtils.StringWriter());
     }
 
 }

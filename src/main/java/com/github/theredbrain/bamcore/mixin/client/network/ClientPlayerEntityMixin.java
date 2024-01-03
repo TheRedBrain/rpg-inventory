@@ -84,6 +84,11 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
     }
 
     @Override
+    public void bamcore$openTriggeredCounterBlockScreen(TriggeredCounterBlockEntity triggeredCounterBlock) {
+        this.client.setScreen(new TriggeredCounterBlockScreen(triggeredCounterBlock));
+    }
+
+    @Override
     public void bamcore$openResetTriggerBlockScreen(ResetTriggerBlockEntity resetTriggerBlock) {
         this.client.setScreen(new ResetTriggerBlockScreen(resetTriggerBlock));
     }

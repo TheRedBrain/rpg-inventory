@@ -96,7 +96,7 @@ public class UpdateTeleporterBlockPacket implements FabricPacket {
                 buf.readDouble(),
                 buf.readDouble(),
                 buf.readString(),
-                buf.readList(new PacketByteBufUtils.PairStringStringListReader()),
+                buf.readList(new PacketByteBufUtils.MutablePairStringStringReader()),
                 buf.readBoolean(),
                 buf.readString(),
                 buf.readString(),
@@ -134,7 +134,7 @@ public class UpdateTeleporterBlockPacket implements FabricPacket {
 
         buf.writeString(this.spawnPointType.asString());
 
-        buf.writeCollection(this.locationsList, new PacketByteBufUtils.PairStringStringListWriter());
+        buf.writeCollection(this.locationsList, new PacketByteBufUtils.MutablePairStringStringWriter());
 
         buf.writeBoolean(this.consumeKeyItemStack);
 

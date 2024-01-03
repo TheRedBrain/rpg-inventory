@@ -52,7 +52,6 @@ public abstract class ClientPlayerInteractionManagerMixin {
     @Inject(method = "breakBlock", at = @At("HEAD"), cancellable = true)
     public void bamcore$breakBlock(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
         if (this.gameMode == GameMode.ADVENTURE && this.client.player != null && this.client.player.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT)) {
-            BetterAdventureModeCore.LOGGER.info("bamcore$breakBlock");
             ClientWorld world = this.client.world;
             BlockState blockState = world.getBlockState(pos);
             Block block = blockState.getBlock();
@@ -96,9 +95,7 @@ public abstract class ClientPlayerInteractionManagerMixin {
             BlockPos housingBlockPos = ComponentsRegistry.CURRENT_HOUSING_BLOCK_POS.get(player).getValue();
             boolean bl = false;
             if (!Objects.equals(housingBlockPos, new BlockPos(0, 0, 0)) && this.client.world != null && this.client.world.getBlockEntity(housingBlockPos) instanceof HousingBlockBlockEntity housingBlockEntity) {
-                BetterAdventureModeCore.LOGGER.info("hitResult.getBlockPos().offset(hitResult.getSide()): " + hitResult.getBlockPos().offset(hitResult.getSide()));
                 bl = housingBlockEntity.influenceAreaContains(hitResult.getBlockPos().offset(hitResult.getSide()));
-                BetterAdventureModeCore.LOGGER.info("bl: " + bl);
             }
             if (!bl) {
                 cir.setReturnValue(ActionResult.FAIL);

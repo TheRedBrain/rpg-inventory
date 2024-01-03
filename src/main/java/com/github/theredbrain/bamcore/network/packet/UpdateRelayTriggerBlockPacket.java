@@ -25,7 +25,7 @@ public class UpdateRelayTriggerBlockPacket implements FabricPacket {
     }
 
     public UpdateRelayTriggerBlockPacket(PacketByteBuf buf) {
-        this(buf.readBlockPos(), buf.readList(new PacketByteBufUtils.BlockPosListReader()));
+        this(buf.readBlockPos(), buf.readList(new PacketByteBufUtils.BlockPosReader()));
     }
     @Override
     public PacketType<?> getType() {
@@ -34,7 +34,7 @@ public class UpdateRelayTriggerBlockPacket implements FabricPacket {
     @Override
     public void write(PacketByteBuf buf) {
         buf.writeBlockPos(this.relayTriggerBlockPosition);
-        buf.writeCollection(this.triggeredBlocks, new PacketByteBufUtils.BlockPosListWriter());
+        buf.writeCollection(this.triggeredBlocks, new PacketByteBufUtils.BlockPosWriter());
     }
 
 }

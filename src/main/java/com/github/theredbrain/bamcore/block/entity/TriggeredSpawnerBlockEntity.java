@@ -135,7 +135,6 @@ public class TriggeredSpawnerBlockEntity extends RotatedBlockEntity implements T
 
         this.entityAttributeModifiers.clear();
         int entityAttributeModifiersKeysSize = nbt.getInt("entityAttributeModifiersKeysSize");
-        BetterAdventureModeCore.info("entityAttributeModifiersKeysSize: " + entityAttributeModifiersKeysSize);
         for (int i = 0; i < entityAttributeModifiersKeysSize; i++) {
             Optional<EntityAttribute> optional = Registries.ATTRIBUTE
                     .getOrEmpty(Identifier.tryParse(nbt.getString("entityAttributeModifiers_key" + i)));
@@ -395,11 +394,6 @@ public class TriggeredSpawnerBlockEntity extends RotatedBlockEntity implements T
     public void onBoundEntityKilled() {
         if (this.world != null) {
             BlockEntity blockEntity = world.getBlockEntity(new BlockPos(this.pos.getX() + this.triggeredBlockPositionOffset.getX(), this.pos.getY() + this.triggeredBlockPositionOffset.getY(), this.pos.getZ() + this.triggeredBlockPositionOffset.getZ()));
-//            if (blockEntity != null) {
-//                BetterAdventureModeCore.info("blockEntity: " + blockEntity.getType().toString());
-//            } else {
-//                BetterAdventureModeCore.info("blockEntity == null");
-//            }
             if (blockEntity instanceof Triggerable triggerable) {
                 triggerable.trigger();
             }

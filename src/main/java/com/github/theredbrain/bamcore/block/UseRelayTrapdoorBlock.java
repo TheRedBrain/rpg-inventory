@@ -126,16 +126,12 @@ protected static final VoxelShape EAST_SHAPE = Block.createCuboidShape(0.0, 0.0,
                 }
                 return ((UseRelayBlockEntity) blockEntity).openScreen(player) ? ActionResult.success(world.isClient) : ActionResult.PASS;
             } else {
-                BetterAdventureModeCore.LOGGER.info("pos: " + pos);
-                BetterAdventureModeCore.LOGGER.info("pos: " + pos);
                 BlockPos relayBlockPosOffset = useRelayBlockEntity.getRelayBlockPositionOffset();
                 BlockPos relayBlockPos = pos.add(relayBlockPosOffset.getX(), relayBlockPosOffset.getY(), relayBlockPosOffset.getZ());
-                BetterAdventureModeCore.LOGGER.info("relayBlockPos: " + relayBlockPos);
                 BlockState relayBlockState = world.getBlockState(relayBlockPos);
                 if (relayBlockState.isOf(this)) {
                     return ActionResult.PASS;
                 }
-                BetterAdventureModeCore.LOGGER.info("relayBlockState.getBlock().getName(): " + relayBlockState.getBlock().getName());
                 return relayBlockState.getBlock().onUse(relayBlockState, world, relayBlockPos, player, hand, hit);
             }
         }

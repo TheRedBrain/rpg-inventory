@@ -33,6 +33,12 @@ public class UpdateDialogueBlockPacketReceiver implements ServerPlayNetworking.P
             dialogueUsedBlocksMap.put(usedBlock.getLeft(), usedBlock.getRight());
         }
 
+        List<MutablePair<String, BlockPos>> dialogueTriggeredBlocksList = packet.dialogueTriggeredBlocksList;
+        HashMap<String, BlockPos> dialogueTriggeredBlocksMap = new HashMap<>();
+        for (MutablePair<String, BlockPos> triggeredBlock : dialogueTriggeredBlocksList) {
+            dialogueTriggeredBlocksMap.put(triggeredBlock.getLeft(), triggeredBlock.getRight());
+        }
+
         List<MutablePair<String, MutablePair<String, String>>> startingDialogueList = new ArrayList<>(packet.startingDialogueList);
 
         World world = player.getWorld();
@@ -46,6 +52,10 @@ public class UpdateDialogueBlockPacketReceiver implements ServerPlayNetworking.P
 
             if (!dialogueBlockEntity.setDialogueUsedBlocks(dialogueUsedBlocksMap)) {
                 player.sendMessage(Text.translatable("dialogue_block.dialogueUsedBlocksList.invalid"), false);
+                updateSuccessful = false;
+            }
+            if (!dialogueBlockEntity.setDialogueTriggeredBlocks(dialogueTriggeredBlocksMap)) {
+                player.sendMessage(Text.translatable("dialogue_block.dialogueTriggeredBlocksList.invalid"), false);
                 updateSuccessful = false;
             }
             if (!dialogueBlockEntity.setStartingDialogueList(startingDialogueList)) {

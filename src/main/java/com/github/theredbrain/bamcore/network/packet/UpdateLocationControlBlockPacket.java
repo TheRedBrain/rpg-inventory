@@ -38,7 +38,7 @@ public class UpdateLocationControlBlockPacket implements FabricPacket {
                 buf.readBlockPos(),
                 buf.readDouble(),
                 buf.readDouble(),
-                buf.readList(new PacketByteBufUtils.PairStringPairBlockPosPairDoubleDoubleListReader()),
+                buf.readList(new PacketByteBufUtils.MutablePairStringMutablePairBlockPosMutablePairDoubleDoubleReader()),
                 buf.readBlockPos()
         );
     }
@@ -54,7 +54,7 @@ public class UpdateLocationControlBlockPacket implements FabricPacket {
         buf.writeBlockPos(this.mainEntrancePositionOffset);
         buf.writeDouble(this.mainEntranceYaw);
         buf.writeDouble(this.mainEntrancePitch);
-        buf.writeCollection(this.sideEntrancesList, new PacketByteBufUtils.PairStringPairBlockPosPairDoubleDoubleListWriter());
+        buf.writeCollection(this.sideEntrancesList, new PacketByteBufUtils.MutablePairStringMutablePairBlockPosMutablePairDoubleDoubleWriter());
         buf.writeBlockPos(this.triggeredBlockPositionOffset);
     }
 }

@@ -20,16 +20,24 @@ public class UpdateDialogueBlockPacket implements FabricPacket {
 
     public final List<MutablePair<String, BlockPos>> dialogueUsedBlocksList;
 
+    public final List<MutablePair<String, BlockPos>> dialogueTriggeredBlocksList;
+
     public final List<MutablePair<String, MutablePair<String, String>>> startingDialogueList;
 
-    public UpdateDialogueBlockPacket(BlockPos dialogueBlockPosition, List<MutablePair<String, BlockPos>> dialogueUsedBlocksList, List<MutablePair<String, MutablePair<String, String>>> startingDialogueList) {
+    public UpdateDialogueBlockPacket(BlockPos dialogueBlockPosition, List<MutablePair<String, BlockPos>> dialogueUsedBlocksList, List<MutablePair<String, BlockPos>> dialogueTriggeredBlocksList, List<MutablePair<String, MutablePair<String, String>>> startingDialogueList) {
         this.dialogueBlockPosition = dialogueBlockPosition;
         this.dialogueUsedBlocksList = dialogueUsedBlocksList;
+        this.dialogueTriggeredBlocksList = dialogueTriggeredBlocksList;
         this.startingDialogueList = startingDialogueList;
     }
 
     public UpdateDialogueBlockPacket(PacketByteBuf buf) {
-        this(buf.readBlockPos(), buf.readList(new PacketByteBufUtils.PairStringBlockPosListReader()), buf.readList(new PacketByteBufUtils.PairStringPairStringStringListReader()));
+        this(
+                buf.readBlockPos(),
+                buf.readList(new PacketByteBufUtils.MutablePairStringBlockPosReader()),
+                buf.readList(new PacketByteBufUtils.MutablePairStringBlockPosReader()),
+                buf.readList(new PacketByteBufUtils.MutablePairStringMutablePairStringStringReader())
+        );
     }
     @Override
     public PacketType<?> getType() {
@@ -38,8 +46,9 @@ public class UpdateDialogueBlockPacket implements FabricPacket {
     @Override
     public void write(PacketByteBuf buf) {
         buf.writeBlockPos(this.dialogueBlockPosition);
-        buf.writeCollection(this.dialogueUsedBlocksList, new PacketByteBufUtils.PairStringBlockPosListWriter());
-        buf.writeCollection(this.startingDialogueList, new PacketByteBufUtils.PairStringPairStringStringListWriter());
+        buf.writeCollection(this.dialogueUsedBlocksList, new PacketByteBufUtils.MutablePairStringBlockPosWriter());
+        buf.writeCollection(this.dialogueTriggeredBlocksList, new PacketByteBufUtils.MutablePairStringBlockPosWriter());
+        buf.writeCollection(this.startingDialogueList, new PacketByteBufUtils.MutablePairStringMutablePairStringStringWriter());
     }
 
 }

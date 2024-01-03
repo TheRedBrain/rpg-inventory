@@ -25,7 +25,7 @@ public class UpdateResetTriggerBlockPacket implements FabricPacket {
     }
 
     public UpdateResetTriggerBlockPacket(PacketByteBuf buf) {
-        this(buf.readBlockPos(), buf.readList(new PacketByteBufUtils.BlockPosListReader()));
+        this(buf.readBlockPos(), buf.readList(new PacketByteBufUtils.BlockPosReader()));
     }
     @Override
     public PacketType<?> getType() {
@@ -34,7 +34,7 @@ public class UpdateResetTriggerBlockPacket implements FabricPacket {
     @Override
     public void write(PacketByteBuf buf) {
         buf.writeBlockPos(this.resetTriggerBlockPosition);
-        buf.writeCollection(this.resetBlocks, new PacketByteBufUtils.BlockPosListWriter());
+        buf.writeCollection(this.resetBlocks, new PacketByteBufUtils.BlockPosWriter());
     }
 
 }

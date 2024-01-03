@@ -1,18 +1,22 @@
 package com.github.theredbrain.bamcore.block.entity;
 
+import com.github.theredbrain.bamcore.BetterAdventureModeCore;
 import com.github.theredbrain.bamcore.api.json_files_backend.Dialogue;
 import com.github.theredbrain.bamcore.api.util.BlockRotationUtils;
 import com.github.theredbrain.bamcore.block.RotatedBlockWithEntity;
+import com.github.theredbrain.bamcore.block.Triggerable;
 import com.github.theredbrain.bamcore.client.network.DuckClientAdvancementManagerMixin;
 import com.github.theredbrain.bamcore.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.bamcore.network.packet.DialogueGiveItemsFromLootTablePacket;
 import com.github.theredbrain.bamcore.network.packet.DialogueGrantAdvancementPacket;
+import com.github.theredbrain.bamcore.network.packet.TriggerBlockViaDialoguePacket;
 import com.github.theredbrain.bamcore.network.packet.UseBlockViaDialoguePacket;
 import com.github.theredbrain.bamcore.registry.DialoguesRegistry;
 import com.github.theredbrain.bamcore.registry.EntityRegistry;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.advancement.AdvancementEntry;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.network.ClientAdvancementManager;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -33,6 +37,7 @@ import java.util.*;
 public class DialogueBlockEntity extends RotatedBlockEntity {
 
     private HashMap<String, BlockPos> dialogueUsedBlocks = new HashMap<>();
+    private HashMap<String, BlockPos> dialogueTriggeredBlocks = new HashMap<>();
     private List<MutablePair<String, MutablePair<String, String>>> startingDialogueList = new ArrayList<>();
     public DialogueBlockEntity(BlockPos pos, BlockState state) {
         super(EntityRegistry.DIALOGUE_BLOCK_ENTITY, pos, state);
@@ -48,6 +53,16 @@ public class DialogueBlockEntity extends RotatedBlockEntity {
             nbt.putInt("dialogueUsedBlocks_entry_X_" + i, this.dialogueUsedBlocks.get(key).getX());
             nbt.putInt("dialogueUsedBlocks_entry_Y_" + i, this.dialogueUsedBlocks.get(key).getY());
             nbt.putInt("dialogueUsedBlocks_entry_Z_" + i, this.dialogueUsedBlocks.get(key).getZ());
+        }
+
+        List<String> dialogueTriggeredBlocksKeys = new ArrayList<>(this.dialogueTriggeredBlocks.keySet());
+        nbt.putInt("dialogueTriggeredBlocksKeysSize", dialogueTriggeredBlocksKeys.size());
+        for (int i = 0; i < dialogueTriggeredBlocksKeys.size(); i++) {
+            String key = dialogueTriggeredBlocksKeys.get(i);
+            nbt.putString("dialogueTriggeredBlocks_key_" + i, key);
+            nbt.putInt("dialogueTriggeredBlocks_entry_X_" + i, this.dialogueTriggeredBlocks.get(key).getX());
+            nbt.putInt("dialogueTriggeredBlocks_entry_Y_" + i, this.dialogueTriggeredBlocks.get(key).getY());
+            nbt.putInt("dialogueTriggeredBlocks_entry_Z_" + i, this.dialogueTriggeredBlocks.get(key).getZ());
         }
 
         nbt.putInt("startingDialogueListSize", this.startingDialogueList.size());
@@ -69,6 +84,16 @@ public class DialogueBlockEntity extends RotatedBlockEntity {
                     MathHelper.clamp(nbt.getInt("dialogueUsedBlocks_entry_X_" + i), -48, 48),
                     MathHelper.clamp(nbt.getInt("dialogueUsedBlocks_entry_Y_" + i), -48, 48),
                     MathHelper.clamp(nbt.getInt("dialogueUsedBlocks_entry_Z_" + i), -48, 48)
+            ));
+        }
+
+        this.dialogueTriggeredBlocks.clear();
+        int dialogueTriggeredBlocksKeysSize = nbt.getInt("dialogueTriggeredBlocksKeysSize");
+        for (int i = 0; i < dialogueTriggeredBlocksKeysSize; i++) {
+            this.dialogueTriggeredBlocks.put(nbt.getString("dialogueTriggeredBlocks_key_" + i), new BlockPos(
+                    MathHelper.clamp(nbt.getInt("dialogueTriggeredBlocks_entry_X_" + i), -48, 48),
+                    MathHelper.clamp(nbt.getInt("dialogueTriggeredBlocks_entry_Y_" + i), -48, 48),
+                    MathHelper.clamp(nbt.getInt("dialogueTriggeredBlocks_entry_Z_" + i), -48, 48)
             ));
         }
 
@@ -150,6 +175,14 @@ public class DialogueBlockEntity extends RotatedBlockEntity {
         }
     }
 
+    public void triggerBlock(String key) {
+        if (this.world != null && this.dialogueTriggeredBlocks.containsKey(key)) {
+            ClientPlayNetworking.send(new TriggerBlockViaDialoguePacket(
+                    this.dialogueTriggeredBlocks.get(key).add(this.pos)
+            ));
+        }
+    }
+
     public void dialogueGiveItemsFromLootTable(PlayerEntity player, Identifier lootTableIdentifier) {
         ClientPlayNetworking.send(new DialogueGiveItemsFromLootTablePacket(
                 player.getUuid(),
@@ -175,6 +208,16 @@ public class DialogueBlockEntity extends RotatedBlockEntity {
         return true;
     }
 
+    public HashMap<String, BlockPos> getDialogueTriggeredBlocks() {
+        return this.dialogueTriggeredBlocks;
+    }
+
+    // TODO check if input is valid
+    public boolean setDialogueTriggeredBlocks(HashMap<String, BlockPos> dialogueTriggeredBlocks) {
+        this.dialogueTriggeredBlocks = dialogueTriggeredBlocks;
+        return true;
+    }
+
     public List<MutablePair<String, MutablePair<String, String>>> getStartingDialogueList() {
         return this.startingDialogueList;
     }
@@ -195,6 +238,11 @@ public class DialogueBlockEntity extends RotatedBlockEntity {
                     BlockPos oldBlockPos = this.dialogueUsedBlocks.get(key);
                     this.dialogueUsedBlocks.put(key, BlockRotationUtils.rotateOffsetBlockPos(oldBlockPos, blockRotation));
                 }
+                keys = new ArrayList<>(this.dialogueTriggeredBlocks.keySet());
+                for (String key : keys) {
+                    BlockPos oldBlockPos = this.dialogueTriggeredBlocks.get(key);
+                    this.dialogueTriggeredBlocks.put(key, BlockRotationUtils.rotateOffsetBlockPos(oldBlockPos, blockRotation));
+                }
                 this.rotated = state.get(RotatedBlockWithEntity.ROTATED);
             }
             if (state.get(RotatedBlockWithEntity.X_MIRRORED) != this.x_mirrored) {
@@ -203,6 +251,11 @@ public class DialogueBlockEntity extends RotatedBlockEntity {
                     BlockPos oldBlockPos = this.dialogueUsedBlocks.get(key);
                     this.dialogueUsedBlocks.put(key, BlockRotationUtils.mirrorOffsetBlockPos(oldBlockPos, BlockMirror.FRONT_BACK));
                 }
+                keys = new ArrayList<>(this.dialogueTriggeredBlocks.keySet());
+                for (String key : keys) {
+                    BlockPos oldBlockPos = this.dialogueTriggeredBlocks.get(key);
+                    this.dialogueTriggeredBlocks.put(key, BlockRotationUtils.mirrorOffsetBlockPos(oldBlockPos, BlockMirror.FRONT_BACK));
+                }
                 this.x_mirrored = state.get(RotatedBlockWithEntity.X_MIRRORED);
             }
             if (state.get(RotatedBlockWithEntity.Z_MIRRORED) != this.z_mirrored) {
@@ -210,6 +263,11 @@ public class DialogueBlockEntity extends RotatedBlockEntity {
                 for (String key : keys) {
                     BlockPos oldBlockPos = this.dialogueUsedBlocks.get(key);
                     this.dialogueUsedBlocks.put(key, BlockRotationUtils.mirrorOffsetBlockPos(oldBlockPos, BlockMirror.LEFT_RIGHT));
+                }
+                keys = new ArrayList<>(this.dialogueTriggeredBlocks.keySet());
+                for (String key : keys) {
+                    BlockPos oldBlockPos = this.dialogueTriggeredBlocks.get(key);
+                    this.dialogueTriggeredBlocks.put(key, BlockRotationUtils.mirrorOffsetBlockPos(oldBlockPos, BlockMirror.LEFT_RIGHT));
                 }
                 this.z_mirrored = state.get(RotatedBlockWithEntity.Z_MIRRORED);
             }

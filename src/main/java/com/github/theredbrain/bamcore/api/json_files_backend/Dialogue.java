@@ -81,7 +81,12 @@ public final class Dialogue {
          */
         private final @Nullable String usedBlock;
 
-        public Answer(String answerText, String responseDialogue, String lockAdvancement, String unlockAdvancement, boolean showLockedAnswer, @Nullable String grantedAdvancement, @Nullable String criterionName, @Nullable String lootTable, @Nullable String usedBlock) {
+        /**
+         * if the current DialogueBlock has a BlockPos mapped under triggeredBlock, the block at that BlockPos is triggered
+         */
+        private final @Nullable String triggeredBlock;
+
+        public Answer(String answerText, String responseDialogue, String lockAdvancement, String unlockAdvancement, boolean showLockedAnswer, @Nullable String grantedAdvancement, @Nullable String criterionName, @Nullable String lootTable, @Nullable String usedBlock, @Nullable String triggeredBlock) {
             this.answerText = answerText;
             this.responseDialogue = responseDialogue;
             this.lockAdvancement = lockAdvancement;
@@ -91,6 +96,7 @@ public final class Dialogue {
             this.criterionName = criterionName;
             this.lootTable = lootTable;
             this.usedBlock = usedBlock;
+            this.triggeredBlock = triggeredBlock;
         }
 
         public String getAnswerText() {
@@ -145,10 +151,12 @@ public final class Dialogue {
 
         @Nullable
         public String getUsedBlock() {
-            if (this.usedBlock != null) {
-                return this.usedBlock;
-            }
-            return null;
+            return this.usedBlock;
+        }
+
+        @Nullable
+        public String getTriggeredBlock() {
+            return this.triggeredBlock;
         }
     }
 }

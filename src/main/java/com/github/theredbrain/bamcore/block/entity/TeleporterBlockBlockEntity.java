@@ -125,12 +125,14 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
         nbt.putString("teleportButtonLabel", this.teleportButtonLabel);
         nbt.putString("cancelTeleportButtonLabel", this.cancelTeleportButtonLabel);
 
-        nbt.putDouble("activationAreaMinX", this.activationArea.minX);
-        nbt.putDouble("activationAreaMaxX", this.activationArea.maxX);
-        nbt.putDouble("activationAreaMinY", this.activationArea.minY);
-        nbt.putDouble("activationAreaMaxY", this.activationArea.maxY);
-        nbt.putDouble("activationAreaMinZ", this.activationArea.minZ);
-        nbt.putDouble("activationAreaMaxZ", this.activationArea.maxZ);
+        if (this.activationArea != null) {
+            nbt.putDouble("activationAreaMinX", this.activationArea.minX);
+            nbt.putDouble("activationAreaMaxX", this.activationArea.maxX);
+            nbt.putDouble("activationAreaMinY", this.activationArea.minY);
+            nbt.putDouble("activationAreaMaxY", this.activationArea.maxY);
+            nbt.putDouble("activationAreaMinZ", this.activationArea.minZ);
+            nbt.putDouble("activationAreaMaxZ", this.activationArea.maxZ);
+        }
 
         super.writeNbt(nbt);
     }

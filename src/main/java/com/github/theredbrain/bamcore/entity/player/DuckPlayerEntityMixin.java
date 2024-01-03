@@ -34,6 +34,7 @@ public interface DuckPlayerEntityMixin {
     void bamcore$openJigsawPlacerBlockScreen(JigsawPlacerBlockBlockEntity jigsawPlacerBlock);
     void bamcore$openRedstoneTriggerBlockScreen(RedstoneTriggerBlockBlockEntity redstoneTriggerBlock);
     void bamcore$openRelayTriggerBlockScreen(RelayTriggerBlockBlockEntity relayTriggerBlock);
+    void bamcore$openTriggeredCounterBlockScreen(TriggeredCounterBlockEntity triggeredCounterBlock);
     void bamcore$openResetTriggerBlockScreen(ResetTriggerBlockEntity resetTriggerBlock);
     void bamcore$openDelayTriggerBlockScreen(DelayTriggerBlockBlockEntity delayTriggerBlock);
     void bamcore$openUseRelayBlockScreen(UseRelayBlockEntity useRelayBlock);

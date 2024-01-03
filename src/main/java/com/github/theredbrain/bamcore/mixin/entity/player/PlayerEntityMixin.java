@@ -782,6 +782,10 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     }
 
     @Override
+    public void bamcore$openTriggeredCounterBlockScreen(TriggeredCounterBlockEntity triggeredCounterBlock) {
+    }
+
+    @Override
     public void bamcore$openResetTriggerBlockScreen(ResetTriggerBlockEntity resetTriggerBlock) {
     }
 

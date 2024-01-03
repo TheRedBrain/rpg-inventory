@@ -877,7 +877,6 @@ public class HousingScreen extends Screen {
 
     private void updateHousingBlockAdventure() {
         if (this.housingBlockBlockEntity != null) {
-            BetterAdventureModeCore.info("this.housingBlockBlockEntity != null");
             ClientPlayNetworking.send(new UpdateHousingBlockAdventurePacket(
                     this.housingBlockBlockEntity.getPos(),
                     this.coOwnerList,
@@ -885,7 +884,6 @@ public class HousingScreen extends Screen {
                     this.guestList
             ));
         }
-        BetterAdventureModeCore.info("this.housingBlockBlockEntity == null");
     }
 
     private int parseInt(String string) {

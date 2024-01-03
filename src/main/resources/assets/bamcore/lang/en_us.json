@@ -97,7 +97,9 @@
 	"gui.housing_screen.tabEditHouse.guestList.title.tooltip": "Can interact with doors and food blocks",
 	"gui.housing_screen.tabEditHouse.addEntry": "Add player",
 
+
 	"gui.delay_trigger_block.triggeredBlockTriggerDelay": "Trigger Delay in ticks",
+
 
 	"gui.teleporter_block.regeneration_confirm_screen.title": "Do you want to regenerate this dungeon?",
 	"gui.teleporter_block.confirmDungeonRegenerationButton": "Yes",
@@ -126,6 +128,7 @@
 	"gui.teleporter_block.creativeScreenPage.activation": "Activation Settings",
 	"gui.teleporter_block.creativeScreenPage.teleportation_mode": "Teleportation Settings",
 	"gui.teleporter_block.creativeScreenPage.adventure_screen_customization": "Adventure Screen Settings",
+
 	"gui.teleporter_block.hide_adventure_screen_label": "Hide Adventure Screen",
 	"gui.teleporter_block.show_adventure_screen_label": "Show Adventure Screen",
 	"gui.teleporter_block.hide_activation_area_label": "Hide Activation Area",
@@ -153,7 +156,6 @@
 	"gui.teleporter_block.add_new_location_button_label": "Add new entry",
 	"gui.teleporter_block.remove_location_button_label": "Remove entry",
 	"gui.teleporter_block.consume_key_itemstack_label": "Consume Key Itemstack",
-
 
 	"gui.teleporter_block.toggleShowActivationAreaButton.on": "Show Activation Area: Yes",
 	"gui.teleporter_block.toggleShowActivationAreaButton.on.tooltip": "Enables Rendering the Outline of the Activation Area",
@@ -195,12 +197,12 @@
 	"gui.teleporter_block.outgoingTeleportPositionYaw.tooltip": "Outgoing Target Yaw",
 	"gui.teleporter_block.outgoingTeleportPositionPitch.tooltip": "Outgoing Target Pitch",
 
-
 	"gui.teleporter_block.requiredItemStackSlot.tooltip": "Item required for Teleportation",
 	"gui.teleporter_block.keyItemButton.yes": "Use Item: Yes",
 	"gui.teleporter_block.keyItemButton.no": "Use Item: No",
 	"gui.teleporter_block.teleportButtonLabel.tooltip": "Label of left Button in Adventure GUI",
 	"gui.teleporter_block.cancelTeleportButtonLabel.tooltip": "Label of right Button in Adventure GUI",
+
 
 	"gui.location_controller_block.main_entrance.position_offset": "New Entrance Position",
 	"gui.location_controller_block.main_entrance.orientation": "Yaw/Pitch",
@@ -212,6 +214,12 @@
 	"gui.location_controller_block.screenPage.main_entrance": "Main Entrance",
 	"gui.location_controller_block.screenPage.side_entrances": "Side Entrances",
 	"gui.location_controller_block.screenPage.triggered_block": "Triggered Block",
+
+
+	"gui.dialogue_screen.creativeScreenPage.dialogue_used_blocks": "Used Blocks",
+	"gui.dialogue_screen.creativeScreenPage.dialogue_triggered_blocks": "Triggered Blocks",
+	"gui.dialogue_screen.creativeScreenPage.starting_dialogues": "Starting Dialogues",
+
 
 	"gui.triggered_spawner_block.spawner_bound_entity_name_field_label": "Name",
 	"gui.triggered_spawner_block.spawner_bound_entity_model_identifier_field_label": "Model Identifier",
@@ -242,11 +250,13 @@
 	"gui.triggered_spawner_block.new_entity_attribute_modifier_name_label": "Name",
 	"gui.triggered_spawner_block.new_entity_attribute_modifier_value_label": "Value",
 
+
 	"gui.triggered_block.newTriggeredBlockPositionOffset": "New Triggered Block Position Offset",
 	"gui.triggered_block.triggeredBlockPositionOffset": "Triggered Block Position Offset",
 	"gui.triggered_block.triggeredBlockPositionOffsetX.placeholder": "X",
 	"gui.triggered_block.triggeredBlockPositionOffsetY.placeholder": "Y",
 	"gui.triggered_block.triggeredBlockPositionOffsetZ.placeholder": "Z",
+
 
 	"gui.entity_attribute_modifier.operation.addition": "Addition",
 	"gui.entity_attribute_modifier.operation.multiply_base": "Multiply Base",
@@ -320,9 +330,17 @@
 
 	"dialogue.bamcore.choose_color_cancel.dialogue_text.line_3": "Do you really want to",
 	"dialogue.bamcore.choose_color_cancel.dialogue_text.line_4": "not pick a color?",
-
 	"dialogue.bamcore.choose_color_cancel.answer_text.1": "Yes",
 	"dialogue.bamcore.choose_color_cancel.answer_text.2": "No",
+
+	"dialogue.bamcore.combat_dungeon.dialogue_text.line_1": "Combat Dungeon",
+	"dialogue.bamcore.combat_dungeon.dialogue_text.line_3": "Do you want to enter the dungeon?",
+	"dialogue.bamcore.combat_dungeon.answer_text.1": "Yes",
+	"dialogue.bamcore.combat_dungeon.answer_text.2": "No",
+
+	"dialogue.bamcore.combat_dungeon_exit.dialogue_text.line_3": "Do you want to leave the dungeon?",
+	"dialogue.bamcore.combat_dungeon_exit.answer_text.1": "Yes",
+	"dialogue.bamcore.combat_dungeon_exit.answer_text.2": "No",
 
 	"trinkets.slot.belts.belt": "Belt",
 	"trinkets.slot.gloves.gloves": "Glove",

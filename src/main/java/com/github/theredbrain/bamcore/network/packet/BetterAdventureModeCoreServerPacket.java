@@ -47,6 +47,8 @@ public class BetterAdventureModeCoreServerPacket {
 
         ServerPlayNetworking.registerGlobalReceiver(UpdateRelayTriggerBlockPacket.TYPE, new UpdateRelayTriggerBlockPacketReceiver());
 
+        ServerPlayNetworking.registerGlobalReceiver(UpdateTriggeredCounterBlockPacket.TYPE, new UpdateTriggeredCounterBlockPacketReceiver());
+
         ServerPlayNetworking.registerGlobalReceiver(UpdateResetTriggerBlockPacket.TYPE, new UpdateResetTriggerBlockPacketReceiver());
 
         ServerPlayNetworking.registerGlobalReceiver(UpdateDelayTriggerBlockPacket.TYPE, new UpdateDelayTriggerBlockPacketReceiver());
@@ -66,6 +68,8 @@ public class BetterAdventureModeCoreServerPacket {
         ServerPlayNetworking.registerGlobalReceiver(UpdateDialogueBlockPacket.TYPE, new UpdateDialogueBlockPacketReceiver());
 
         ServerPlayNetworking.registerGlobalReceiver(UseBlockViaDialoguePacket.TYPE, new UseBlockViaDialoguePacketReceiver());
+
+        ServerPlayNetworking.registerGlobalReceiver(TriggerBlockViaDialoguePacket.TYPE, new TriggerBlockViaDialoguePacketReceiver());
 
         ServerPlayNetworking.registerGlobalReceiver(DialogueGrantAdvancementPacket.TYPE, new DialogueGrantAdvancementPacketReceiver());
 

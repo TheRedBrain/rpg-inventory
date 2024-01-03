@@ -1,0 +1,28 @@
+{
+  "dialogueTextList": [
+    "",
+    "",
+    "dialogue.bamcore.combat_dungeon_exit.dialogue_text.line_3"
+  ],
+  "answerList": [
+    {
+      "answerText": "dialogue.bamcore.combat_dungeon_exit.answer_text.1",
+      "responseDialogue": "",
+      "lockAdvancement": "",
+      "unlockAdvancement": "",
+      "showLockedAnswer": true,
+      "usedBlock": "teleporter",
+      "triggeredBlock": "location_reset"
+    },
+    {
+      "answerText": "dialogue.bamcore.combat_dungeon_exit.answer_text.2",
+      "responseDialogue": "",
+      "lockAdvancement": "",
+      "unlockAdvancement": "",
+      "showLockedAnswer": true
+    }
+  ],
+  "lockAdvancement": "",
+  "unlockAdvancement": "",
+  "cancellable": true
+}

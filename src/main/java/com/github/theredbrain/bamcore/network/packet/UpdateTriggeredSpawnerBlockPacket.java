@@ -71,7 +71,7 @@ public class UpdateTriggeredSpawnerBlockPacket implements FabricPacket {
                 buf.readString(),
                 buf.readString(),
                 buf.readString(),
-                buf.readList(new PacketByteBufUtils.PairStringEntityAttributeModifierListReader()),
+                buf.readList(new PacketByteBufUtils.MutablePairStringEntityAttributeModifierReader()),
                 buf.readBlockPos()
         );
     }
@@ -98,7 +98,7 @@ public class UpdateTriggeredSpawnerBlockPacket implements FabricPacket {
 
         buf.writeString(this.entityTypeId);
 
-        buf.writeCollection(this.entityAttributeModifiersList, new PacketByteBufUtils.PairStringEntityAttributeModifierListWriter());
+        buf.writeCollection(this.entityAttributeModifiersList, new PacketByteBufUtils.MutablePairStringEntityAttributeModifierWriter());
 
         buf.writeBlockPos(this.triggeredBlockPositionOffset);
     }
