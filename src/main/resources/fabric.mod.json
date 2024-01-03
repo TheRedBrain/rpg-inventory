@@ -3,7 +3,7 @@
   "id": "bamcore",
   "version": "0.0.1.53",
 
-  "name": "Better Adventure Mode - Core",
+  "name": "Better Adventure Mode",
   "description": "This mod adds mechanics which allow for a more RPG styled gameplay.",
   "authors": [
     "TheRedBrain"
@@ -18,13 +18,13 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.github.theredbrain.bamcore.BetterAdventureMode"
+      "com.github.theredbrain.betteradventuremode.BetterAdventureMode"
     ],
     "client": [
-      "com.github.theredbrain.bamcore.BetterAdventureModeClient"
+      "com.github.theredbrain.betteradventuremode.BetterAdventureModeClient"
     ],
     "cardinal-components-entity": [
-      "com.github.theredbrain.bamcore.registry.ComponentsRegistry"
+      "com.github.theredbrain.betteradventuremode.registry.ComponentsRegistry"
     ]
   },
   "custom": {

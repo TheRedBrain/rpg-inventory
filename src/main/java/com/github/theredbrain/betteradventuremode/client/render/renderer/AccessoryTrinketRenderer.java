@@ -1,0 +1,11 @@
+package com.github.theredbrain.betteradventuremode.client.render.renderer;
+
+import com.github.theredbrain.betteradventuremode.api.item.AccessoryTrinketItem;
+import com.github.theredbrain.betteradventuremode.client.render.model.AccessoryTrinketModel;
+import net.minecraft.util.Identifier;
+
+public class AccessoryTrinketRenderer extends ModeledTrinketRenderer<AccessoryTrinketItem>{
+    public AccessoryTrinketRenderer(Identifier assetSubPath) {
+        super(new AccessoryTrinketModel(assetSubPath));
+    }
+}
