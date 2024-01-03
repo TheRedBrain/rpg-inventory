@@ -153,14 +153,14 @@ public class AdventureInventoryScreen extends HandledScreen<PlayerScreenHandler>
         }
         super.init();
 
-        for (int i = 0; i < 3; ++i) {
-            for (int j = 0; j < 9; ++j) {
-                this.handler.getSlot(j + (i + 1) * 9).y = 146 + i * 18;
-            }
-        }
-        for (int i = 0; i < 9; ++i) {
-            this.handler.getSlot(i + 36).y = 204;
-        }
+//        for (int i = 0; i < 3; ++i) {
+//            for (int j = 0; j < 9; ++j) {
+//                this.handler.getSlot(j + (i + 1) * 9).y = 146 + i * 18;
+//            }
+//        }
+//        for (int i = 0; i < 9; ++i) {
+//            this.handler.getSlot(i + 36).y = 204;
+//        }
 
         // disable vanilla crafting slots
         ((DuckSlotMixin)this.handler.slots.get(0)).betteradventuremode$setDisabledOverride(true);

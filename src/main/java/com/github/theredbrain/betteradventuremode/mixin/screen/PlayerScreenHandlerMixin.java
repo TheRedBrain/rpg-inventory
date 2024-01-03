@@ -3,6 +3,7 @@ package com.github.theredbrain.betteradventuremode.mixin.screen;
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.BetterAdventureModeClient;
 import com.github.theredbrain.betteradventuremode.registry.EntityAttributesRegistry;
+import com.github.theredbrain.betteradventuremode.screen.DuckSlotMixin;
 import com.google.common.collect.ImmutableList;
 import dev.emi.trinkets.Point;
 import dev.emi.trinkets.SurvivalTrinketSlot;
@@ -64,6 +65,33 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
     public void PlayerScreenHandler(PlayerInventory inventory, boolean onServer, PlayerEntity owner, CallbackInfo ci) {
         this.inventory = inventory;
         trinkets$updateTrinketSlots(true);
+
+        if (BetterAdventureMode.serverConfig.use_adventure_inventory_screen) {
+            for (int i = 0; i < 3; ++i) {
+                for (int j = 0; j < 9; ++j) {
+                    this.slots.get(j + (i + 1) * 9).y = 146 + i * 18;
+                }
+            }
+            for (int i = 0; i < 9; ++i) {
+                this.slots.get(i + 36).y = 204;
+            }
+        }
+
+        // disable vanilla crafting slots
+        ((DuckSlotMixin)this.slots.get(0)).betteradventuremode$setDisabledOverride(true);
+        ((DuckSlotMixin)this.slots.get(1)).betteradventuremode$setDisabledOverride(true);
+        ((DuckSlotMixin)this.slots.get(2)).betteradventuremode$setDisabledOverride(true);
+        ((DuckSlotMixin)this.slots.get(3)).betteradventuremode$setDisabledOverride(true);
+        ((DuckSlotMixin)this.slots.get(4)).betteradventuremode$setDisabledOverride(true);
+
+        // disable vanilla armor slots
+        ((DuckSlotMixin)this.slots.get(5)).betteradventuremode$setDisabledOverride(true);
+        ((DuckSlotMixin)this.slots.get(6)).betteradventuremode$setDisabledOverride(true);
+        ((DuckSlotMixin)this.slots.get(7)).betteradventuremode$setDisabledOverride(true);
+        ((DuckSlotMixin)this.slots.get(8)).betteradventuremode$setDisabledOverride(true);
+
+        // disable vanilla offhand slot
+        ((DuckSlotMixin)this.slots.get(45)).betteradventuremode$setDisabledOverride(true);
     }
 
     @Override
