@@ -70,7 +70,7 @@ public abstract class InGameHudMixin {
     private static final Identifier STAMINA_BAR_PROGRESS_TEXTURE = new Identifier("boss_bar/green_progress");
 
     @Inject(method = "renderHotbar", at = @At("HEAD"), cancellable = true)
-    private void bamcore$renderHotbar(float tickDelta, DrawContext context, CallbackInfo ci) {
+    private void betteradventuremode$renderHotbar(float tickDelta, DrawContext context, CallbackInfo ci) {
         PlayerEntity playerEntity = this.getCameraPlayer();
         if (playerEntity != null) {
             ItemStack itemStackMainHand = ((DuckPlayerInventoryMixin)playerEntity.getInventory()).betteradventuremode$getMainHand();
@@ -145,19 +145,15 @@ public abstract class InGameHudMixin {
     }
 
     @Inject(method = "renderExperienceBar", at = @At("HEAD"), cancellable = true)
-    public void bamcore$renderExperienceBar(DrawContext context, int x, CallbackInfo ci) {
+    public void betteradventuremode$renderExperienceBar(DrawContext context, int x, CallbackInfo ci) {
         PlayerEntity playerEntity = this.getCameraPlayer();
         if (playerEntity != null && ((DuckPlayerEntityMixin)playerEntity).betteradventuremode$isAdventure()) {
             ci.cancel();
         }
     }
 
-    /**
-     * @author TheRedBrain
-     * @reason
-     */
     @Inject(method = "renderStatusBars", at = @At("HEAD"), cancellable = true)
-    private void bamcore$renderStatusBars(DrawContext context, CallbackInfo ci) {
+    private void betteradventuremode$renderStatusBars(DrawContext context, CallbackInfo ci) {
         PlayerEntity playerEntity = this.getCameraPlayer();
         if (playerEntity != null && ((DuckPlayerEntityMixin)playerEntity).betteradventuremode$isAdventure()) {
             int health = MathHelper.ceil(playerEntity.getHealth());

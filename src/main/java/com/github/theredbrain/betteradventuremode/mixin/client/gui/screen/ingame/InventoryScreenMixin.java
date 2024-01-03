@@ -23,7 +23,7 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
     }
 
     @Inject(method = "handledScreenTick", at = @At("HEAD"), cancellable = true)
-    public void bamcore$handledScreenTick(CallbackInfo ci) {
+    public void betteradventuremode$handledScreenTick(CallbackInfo ci) {
         if (BetterAdventureMode.serverConfig.use_adventure_inventory_screen && this.client != null && this.client.player != null) {
             this.client.setScreen(new AdventureInventoryScreen(this.client.player));
             ci.cancel();
@@ -31,7 +31,7 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
     }
 
     @Inject(method = "init", at = @At("HEAD"), cancellable = true)
-    protected void init(CallbackInfo ci) {
+    protected void betteradventuremode$init(CallbackInfo ci) {
         if (BetterAdventureMode.serverConfig.use_adventure_inventory_screen && this.client != null && this.client.player != null) {
             this.client.setScreen(new AdventureInventoryScreen(this.client.player));
             ci.cancel();

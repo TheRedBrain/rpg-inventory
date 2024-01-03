@@ -34,7 +34,7 @@ public abstract class SurvivalTrinketSlotMixin extends Slot {
      * @author TheRedBrain
      */
     @Inject(method = "canInsert", at = @At("RETURN"), cancellable = true)
-    public void bamcore$canInsert(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
+    public void betteradventuremode$canInsert(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         LivingEntity livingEntity = trinketInventory.getComponent().getEntity();
         boolean bl = false;
         if (livingEntity instanceof PlayerEntity playerEntity && !((DuckPlayerEntityMixin) playerEntity).betteradventuremode$isAdventure()) {
@@ -51,7 +51,7 @@ public abstract class SurvivalTrinketSlotMixin extends Slot {
      * @author TheRedBrain
      */
     @Inject(method = "canTakeItems", at = @At("RETURN"), cancellable = true)
-    public void bamcore$canTakeItems(PlayerEntity player, CallbackInfoReturnable<Boolean> cir) {
+    public void betteradventuremode$canTakeItems(PlayerEntity player, CallbackInfoReturnable<Boolean> cir) {
         boolean bl = true;
         if (player.getServer() != null) {
             bl = player.getServer().getGameRules().getBoolean(GameRulesRegistry.REQUIRE_CIVILISATION_EFFECT_TO_CHANGE_GEAR_IN_ADVENTURE_MODE);
@@ -63,7 +63,7 @@ public abstract class SurvivalTrinketSlotMixin extends Slot {
      * @author TheRedBrain
      */
     @Inject(method = "isEnabled", at = @At("RETURN"), cancellable = true)
-    public void isEnabled(CallbackInfoReturnable<Boolean> cir) {
+    public void betteradventuremode$isEnabled(CallbackInfoReturnable<Boolean> cir) {
         cir.setReturnValue(cir.getReturnValue()
                 && !((Objects.equals(this.group.getName(), "spell_slot_1") && trinketInventory.getComponent().getEntity().getAttributeValue(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT) < 1)
                 || (Objects.equals(this.group.getName(), "spell_slot_2") && trinketInventory.getComponent().getEntity().getAttributeValue(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT) < 2)

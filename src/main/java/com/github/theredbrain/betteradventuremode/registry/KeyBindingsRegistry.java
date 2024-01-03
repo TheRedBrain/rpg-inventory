@@ -27,40 +27,40 @@ public class KeyBindingsRegistry {
 
     public static void registerKeyBindings() {
         KeyBindingsRegistry.sheatheWeapons = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.bamcore.sheatheWeapons",
+                "key.betteradventuremode.sheatheWeapons",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_F,
-                "category.bamcore.category"
+                "category.betteradventuremode.category"
         ));
         KeyBindingsRegistry.twoHandMainWeapon = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.bamcore.twoHandMainWeapon",
+                "key.betteradventuremode.twoHandMainWeapon",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_G,
-                "category.bamcore.category"
+                "category.betteradventuremode.category"
         ));
         KeyBindingsRegistry.swapMainHand = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.bamcore.swapMainHand",
+                "key.betteradventuremode.swapMainHand",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_E,
-                "category.bamcore.category"
+                "category.betteradventuremode.category"
         ));
         KeyBindingsRegistry.swapOffHand = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.bamcore.swapOffHand",
+                "key.betteradventuremode.swapOffHand",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_Q,
-                "category.bamcore.category"
+                "category.betteradventuremode.category"
         ));
         KeyBindingsRegistry.toggleNecklaceAbility = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.bamcore.toggleNecklaceAbility",
+                "key.betteradventuremode.toggleNecklaceAbility",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_Z,
-                "category.bamcore.category"
+                "category.betteradventuremode.category"
         ));
         KeyBindingsRegistry.openHousingScreen = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.bamcore.housingScreen",
+                "key.betteradventuremode.housingScreen",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_H,
-                "category.bamcore.category"
+                "category.betteradventuremode.category"
         ));
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (KeyBindingsRegistry.swapMainHand.wasPressed()) {

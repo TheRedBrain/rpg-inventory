@@ -30,7 +30,7 @@ public class EventsRegistry {
             }
         });
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-            sender.sendPacket(ServerPacketRegistry.SYNC_PLAYER_LOCATIONS, PlayerLocationsRegistry.getEncodedRegistry());
+            sender.sendPacket(ServerPacketRegistry.SYNC_PLAYER_LOCATIONS, PlayerLocationsRegistry.getEncodedRegistry()); // TODO convert to packet
         });
     }
 

@@ -129,7 +129,7 @@ public abstract class ItemStackMixin {
      * @author TheRedBrain
      */
     @Inject(method = "getAttributeModifiers", at = @At("HEAD"), cancellable = true)
-    public void bam$getAttributeModifiers(EquipmentSlot slot, CallbackInfoReturnable<Multimap<EntityAttribute, EntityAttributeModifier>> cir) {
+    public void betteradventuremode$getAttributeModifiers(EquipmentSlot slot, CallbackInfoReturnable<Multimap<EntityAttribute, EntityAttributeModifier>> cir) {
         if (this.getItem() instanceof BasicWeaponItem && !(ItemUtils.isUsable((ItemStack) (Object) this))) {
             cir.setReturnValue(HashMultimap.create());
             cir.cancel();

@@ -18,7 +18,7 @@ import java.util.function.Predicate;
 public abstract class EnchantmentHelperMixin {
 
     @Inject(method = "getDepthStrider", at = @At("RETURN"), cancellable = true)
-    private static void bamcore$hasDepthStriderTrinket(LivingEntity entity, CallbackInfoReturnable<Integer> cir) {
+    private static void betteradventuremode$getDepthStrider(LivingEntity entity, CallbackInfoReturnable<Integer> cir) {
         boolean depth_strider_trinket_equipped = false;
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(entity);
         if (trinkets.isPresent()) {
@@ -28,7 +28,7 @@ public abstract class EnchantmentHelperMixin {
         cir.setReturnValue(depth_strider_trinket_equipped ? 3 : cir.getReturnValue());
     }
     @Inject(method = "getLooting", at = @At("RETURN"), cancellable = true)
-    private static void bamcore$hasLootingTrinket(LivingEntity entity, CallbackInfoReturnable<Integer> cir) {
+    private static void betteradventuremode$getLooting(LivingEntity entity, CallbackInfoReturnable<Integer> cir) {
         boolean looting_trinket_equipped = false;
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(entity);
         if (trinkets.isPresent()) {

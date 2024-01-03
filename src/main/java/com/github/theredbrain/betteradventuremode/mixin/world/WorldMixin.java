@@ -28,11 +28,13 @@ public abstract class WorldMixin implements WorldAccess  {
             List<Integer> worldSpawnYList = BetterAdventureMode.serverConfig.worldSpawnYList;
             List<Integer> worldSpawnZList = BetterAdventureMode.serverConfig.worldSpawnZList;
             int listSize = worldSpawnXList.size();
-            int spawnPointIndex = this.random.nextBetweenExclusive(0, listSize);
-            if (spawnPointIndex < worldSpawnXList.size() && spawnPointIndex < worldSpawnYList.size() && spawnPointIndex < worldSpawnZList.size()) {
-                BlockPos pos = new BlockPos(worldSpawnXList.get(spawnPointIndex), worldSpawnYList.get(spawnPointIndex), worldSpawnZList.get(spawnPointIndex));
-                if (this.getWorldBorder().contains(pos)) {
-                    return pos;
+            if (listSize > 0) {
+                int spawnPointIndex = this.random.nextBetweenExclusive(0, listSize);
+                if (spawnPointIndex < worldSpawnXList.size() && spawnPointIndex < worldSpawnYList.size() && spawnPointIndex < worldSpawnZList.size()) {
+                    BlockPos pos = new BlockPos(worldSpawnXList.get(spawnPointIndex), worldSpawnYList.get(spawnPointIndex), worldSpawnZList.get(spawnPointIndex));
+                    if (this.getWorldBorder().contains(pos)) {
+                        return pos;
+                    }
                 }
             }
         }

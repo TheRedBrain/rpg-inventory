@@ -48,8 +48,10 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
     private int groupCount = 0;
     @Unique
     private PlayerInventory inventory;
-    private int spellSlotsX = 98;
-    private int spellSlotsY = 93;
+    @Unique
+    private final int spellSlotsX = 98;
+    @Unique
+    private final int spellSlotsY = 93;
 
     public PlayerScreenHandlerMixin() {
         super(null, 0);
@@ -82,13 +84,13 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
             if (BetterAdventureMode.serverConfig.use_adventure_inventory_screen) {
                 HashMap<Integer, Boolean> presentGroups = new HashMap<>(Map.of());
                 for (SlotGroup group : groups.values().stream().sorted(Comparator.comparing(SlotGroup::getOrder)).toList()) {
-                    if (!hasSlots(trinkets, group)) {
+                    if (!betteradventuremode$hasSlots(trinkets, group)) {
                         continue;
                     }
                     int order = group.getOrder();
                     int id = group.getSlotId();
                     if (id != -1) {
-                        BetterAdventureMode.LOGGER.warn("Trinket slot groups with id != -1 are ignored. This applies to group " + group.getName());
+                        BetterAdventureMode.warn("Trinket slot groups with id != -1 are ignored. This applies to group " + group.getName());
                     } else {
                         int x;
                         int y;
@@ -207,12 +209,12 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
                         } else if (order == 23) {
                             // these include empty hand slots which are necessary but should not be interacted with by the player
                             if (!Objects.equals(group.getName(), "empty_main_hand") && !Objects.equals(group.getName(), "empty_off_hand") && BetterAdventureModeClient.clientConfig.show_debug_log) {
-                                BetterAdventureMode.LOGGER.warn("Trinket Slots with order == 23 can not be interacted with by the player. This applies to group " + group.getName());
+                                BetterAdventureMode.warn("Trinket Slots with order == 23 can not be interacted with by the player. This applies to group " + group.getName());
                             }
                             continue;
                         } else {
                             if (BetterAdventureModeClient.clientConfig.show_debug_log) {
-                                BetterAdventureMode.LOGGER.warn("Trinket slot groups with order <= 0 or order > 23 are ignored. This applies to group " + group.getName());
+                                BetterAdventureMode.warn("Trinket slot groups with order <= 0 or order > 23 are ignored. This applies to group " + group.getName());
                             }
                             continue;
                         }
@@ -221,7 +223,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
                         groupNum++;
 
                         if (presentGroups.getOrDefault(order, false) && BetterAdventureModeClient.clientConfig.show_debug_log) {
-                            BetterAdventureMode.LOGGER.warn("Multiple slot groups with order " + order + " are defined. This may lead to unexpected behaviour. This applies to group " + group.getName());
+                            BetterAdventureMode.warn("Multiple slot groups with order " + order + " are defined. This may lead to unexpected behaviour. This applies to group " + group.getName());
                         } else {
                             presentGroups.put(order, true);
                         }
@@ -229,7 +231,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
                 }
             } else {
                 for (SlotGroup group : groups.values().stream().sorted(Comparator.comparing(SlotGroup::getOrder)).toList()) {
-                    if (!hasSlots(trinkets, group)) {
+                    if (!betteradventuremode$hasSlots(trinkets, group)) {
                         continue;
                     }
                     int id = group.getSlotId();
@@ -283,7 +285,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
                             continue;
                         }
                         if (stacks.size() > 1 && BetterAdventureModeClient.clientConfig.show_debug_log) {
-                            BetterAdventureMode.LOGGER.warn("Multiple slots are defined for slot group " + slot.getKey() + ". This may lead to unexpected behaviour");
+                            BetterAdventureMode.warn("Multiple slots are defined for slot group " + slot.getKey() + ". This may lead to unexpected behaviour");
                         }
                         int x = groupPos.get(group).x();
                         slotHeights.computeIfAbsent(group, (k) -> new ArrayList<>()).add(new Point(x, stacks.size()));
@@ -347,7 +349,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
     }
 
     @Unique
-    private boolean hasSlots(TrinketComponent comp, SlotGroup group) {
+    private boolean betteradventuremode$hasSlots(TrinketComponent comp, SlotGroup group) {
         for (TrinketInventory inv : comp.getInventory().get(group.getName()).values()) {
             if (inv.size() > 0) {
                 return true;
@@ -407,7 +409,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
     }
 
     @Inject(at = @At("HEAD"), method = "onClosed")
-    private void onClosed(PlayerEntity player, CallbackInfo info) {
+    private void betteradventuremode$onClosed(PlayerEntity player, CallbackInfo info) {
         if (player.getWorld().isClient) {
             TrinketsClient.activeGroup = null;
             TrinketsClient.activeType = null;

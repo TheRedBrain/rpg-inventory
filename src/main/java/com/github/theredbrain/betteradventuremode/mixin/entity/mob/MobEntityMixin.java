@@ -27,39 +27,39 @@ public abstract class MobEntityMixin extends LivingEntity {
 
     @Unique
     @Nullable
-    private BlockPos bamcore$boundSpawnerBlockPos;
+    private BlockPos betteradventuremode$boundSpawnerBlockPos;
 
     protected MobEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
     }
 
     @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
-    public void bamcore$writeCustomDataToNbt(NbtCompound nbt, CallbackInfo ci) {
-        if (this.bamcore$boundSpawnerBlockPos != null) {
-            nbt.putInt("boundSpawnerBlockPosX", this.bamcore$boundSpawnerBlockPos.getX());
-            nbt.putInt("boundSpawnerBlockPosY", this.bamcore$boundSpawnerBlockPos.getY());
-            nbt.putInt("boundSpawnerBlockPosZ", this.bamcore$boundSpawnerBlockPos.getZ());
+    public void betteradventuremode$writeCustomDataToNbt(NbtCompound nbt, CallbackInfo ci) {
+        if (this.betteradventuremode$boundSpawnerBlockPos != null) {
+            nbt.putInt("betteradventuremode$boundSpawnerBlockPosX", this.betteradventuremode$boundSpawnerBlockPos.getX());
+            nbt.putInt("betteradventuremode$boundSpawnerBlockPosY", this.betteradventuremode$boundSpawnerBlockPos.getY());
+            nbt.putInt("betteradventuremode$boundSpawnerBlockPosZ", this.betteradventuremode$boundSpawnerBlockPos.getZ());
         }
     }
 
     @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
-    public void bamcore$readCustomDataFromNbt(NbtCompound nbt, CallbackInfo ci) {
-        if (nbt.contains("boundSpawnerBlockPosX") && nbt.contains("boundSpawnerBlockPosY") && nbt.contains("boundSpawnerBlockPosZ")) {
-            this.bamcore$boundSpawnerBlockPos = new BlockPos(
-                    nbt.getInt("boundSpawnerBlockPosX"),
-                    nbt.getInt("boundSpawnerBlockPosY"),
-                    nbt.getInt("boundSpawnerBlockPosZ")
+    public void betteradventuremode$readCustomDataFromNbt(NbtCompound nbt, CallbackInfo ci) {
+        if (nbt.contains("betteradventuremode$boundSpawnerBlockPosX") && nbt.contains("betteradventuremode$boundSpawnerBlockPosY") && nbt.contains("betteradventuremode$boundSpawnerBlockPosZ")) {
+            this.betteradventuremode$boundSpawnerBlockPos = new BlockPos(
+                    nbt.getInt("betteradventuremode$boundSpawnerBlockPosX"),
+                    nbt.getInt("betteradventuremode$boundSpawnerBlockPosY"),
+                    nbt.getInt("betteradventuremode$boundSpawnerBlockPosZ")
             );
         }
     }
 
     @Inject(method = "initialize", at = @At("RETURN"))
-    public void bamcore$initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, EntityData entityData, NbtCompound entityNbt, CallbackInfoReturnable<EntityData> cir) {
-        if (entityNbt != null && entityNbt.contains("boundSpawnerBlockPosX") && entityNbt.contains("boundSpawnerBlockPosY") && entityNbt.contains("boundSpawnerBlockPosZ")) {
-            this.bamcore$boundSpawnerBlockPos = new BlockPos(
-                    entityNbt.getInt("boundSpawnerBlockPosX"),
-                    entityNbt.getInt("boundSpawnerBlockPosY"),
-                    entityNbt.getInt("boundSpawnerBlockPosZ")
+    public void betteradventuremode$initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, EntityData entityData, NbtCompound entityNbt, CallbackInfoReturnable<EntityData> cir) {
+        if (entityNbt != null && entityNbt.contains("betteradventuremode$boundSpawnerBlockPosX") && entityNbt.contains("betteradventuremode$boundSpawnerBlockPosY") && entityNbt.contains("betteradventuremode$boundSpawnerBlockPosZ")) {
+            this.betteradventuremode$boundSpawnerBlockPos = new BlockPos(
+                    entityNbt.getInt("betteradventuremode$boundSpawnerBlockPosX"),
+                    entityNbt.getInt("betteradventuremode$boundSpawnerBlockPosY"),
+                    entityNbt.getInt("betteradventuremode$boundSpawnerBlockPosZ")
             );
         }
     }
@@ -67,8 +67,8 @@ public abstract class MobEntityMixin extends LivingEntity {
     @Override
     public void onDeath(DamageSource damageSource) {
         super.onDeath(damageSource);
-        if (this.getWorld() instanceof ServerWorld serverWorld && this.bamcore$boundSpawnerBlockPos != null) {
-            BlockEntity blockEntity = serverWorld.getBlockEntity(this.bamcore$boundSpawnerBlockPos);
+        if (this.getWorld() instanceof ServerWorld serverWorld && this.betteradventuremode$boundSpawnerBlockPos != null) {
+            BlockEntity blockEntity = serverWorld.getBlockEntity(this.betteradventuremode$boundSpawnerBlockPos);
             if (blockEntity instanceof TriggeredSpawnerBlockEntity triggeredSpawnerBlockEntity) {
                 triggeredSpawnerBlockEntity.onBoundEntityKilled();
             }

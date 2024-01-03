@@ -12,7 +12,7 @@ import net.minecraft.item.ItemStack;
 public class ClientPacketRegistry {
 
     public static void init() {
-        ClientPlayNetworking.registerGlobalReceiver(ServerPacketRegistry.SWAPPED_HAND_ITEMS_PACKET, (client, handler, buffer, responseSender) -> {
+        ClientPlayNetworking.registerGlobalReceiver(ServerPacketRegistry.SWAPPED_HAND_ITEMS_PACKET, (client, handler, buffer, responseSender) -> { // TODO convert to packet
             int entityId = buffer.readInt();
             boolean mainHand = buffer.readBoolean();
             client.execute(() -> {
@@ -48,7 +48,7 @@ public class ClientPacketRegistry {
 //                }
 //            });
 //        });
-        ClientPlayNetworking.registerGlobalReceiver(ServerPacketRegistry.SYNC_PLAYER_LOCATIONS, (client, handler, buffer, responseSender) -> {
+        ClientPlayNetworking.registerGlobalReceiver(ServerPacketRegistry.SYNC_PLAYER_LOCATIONS, (client, handler, buffer, responseSender) -> { // TODO convert to packet
             PlayerLocationsRegistry.decodeRegistry(buffer);
         });
     }

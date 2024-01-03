@@ -52,7 +52,6 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         if (!player.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT) && !player.isCreative()) {
             ItemStack emptyMainHandStack = betteradventuremode$getEmptyMainHand();
             ItemStack mainHandStack = betteradventuremode$getMainHand();
-            // TODO think about this more, it seems off
             if (!player.hasStatusEffect(StatusEffectsRegistry.WEAPONS_SHEATHED_EFFECT)) {
                 cir.setReturnValue(ItemUtils.isUsable(mainHandStack) ? mainHandStack : emptyMainHandStack);
                 cir.cancel();
@@ -65,7 +64,6 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         if (!player.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT) && !player.isCreative()) {
             ItemStack emptyOffHandStack = betteradventuremode$getEmptyOffHand();
             ItemStack offHandStack = betteradventuremode$getOffHand();
-            // TODO think about this more, it seems off
             if (!player.hasStatusEffect(StatusEffectsRegistry.WEAPONS_SHEATHED_EFFECT) && !player.hasStatusEffect(StatusEffectsRegistry.TWO_HANDED_EFFECT)) {
                 return ItemUtils.isUsable(offHandStack) ? offHandStack : emptyOffHandStack;
             }
@@ -147,7 +145,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
     }
 
     public ItemStack betteradventuremode$getMainHand() {
-        ItemStack mainHandStack = this.main.get(this.selectedSlot); // TODO think about this more, it seems off
+        ItemStack mainHandStack = this.main.get(this.selectedSlot);
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
             if (trinkets.get().getInventory().get("main_hand") != null) {
@@ -173,7 +171,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
     }
 
     public ItemStack betteradventuremode$getOffHand() {
-        ItemStack offHandStack = this.offHand.get(0); // TODO think about this more, it seems off
+        ItemStack offHandStack = this.offHand.get(0);
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
             if (trinkets.get().getInventory().get("off_hand") != null) {

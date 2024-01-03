@@ -145,7 +145,7 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
     }
 
     @Inject(method = "initDataTracker", at = @At("RETURN"))
-    protected void bamcore$initDataTracker(CallbackInfo ci) {
+    protected void betteradventuremode$initDataTracker(CallbackInfo ci) {
         this.dataTracker.startTracking(POISE, 0.0F);
 
     }
@@ -195,7 +195,7 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
 
             switch (dropRule) {
                 case DROP:
-                    dropFromEntity(stack);
+                    betteradventuremode$dropFromEntity(stack);
                     // Fallthrough
                 case DESTROY:
                     inventory.setStack(ref.index(), ItemStack.EMPTY);
@@ -207,7 +207,7 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
     }
 
     @Unique
-    private void dropFromEntity(ItemStack stack) {
+    private void betteradventuremode$dropFromEntity(ItemStack stack) {
         ItemEntity entity = dropStack(stack);
         // Mimic player drop behavior for only players
         if (entity != null && ((Entity) this) instanceof PlayerEntity) {
@@ -439,7 +439,7 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
     }
 
     @Inject(method = "tick", at = @At("TAIL"))
-    public void bamcore$tick(CallbackInfo ci) {
+    public void betteradventuremode$tick(CallbackInfo ci) {
         if (this.betteradventuremode$getPoise() > 0) {
             this.betteradventuremode$addPoise((float) -(this.getMaxHealth() * this.betteradventuremode$getStaggerLimitMultiplier() * 0.01));
         }

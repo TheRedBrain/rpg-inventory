@@ -86,7 +86,10 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     @Shadow public abstract void sendMessage(Text message, boolean overlay);
 
     @Shadow protected HungerManager hungerManager;
+
+    @Unique
     private static final TrackedData<Float> MANA = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.FLOAT);
+    @Unique
     private static final TrackedData<Float> STAMINA = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.FLOAT);
 
     @Unique
@@ -111,7 +114,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 //    }
 
     @Inject(method = "createPlayerAttributes", at = @At("RETURN"), cancellable = true)
-    private static void bamcore$createPlayerAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
+    private static void betteradventuremode$$createPlayerAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
         cir.setReturnValue(cir.getReturnValue()
                 .add(EntityAttributesRegistry.MAX_EQUIPMENT_WEIGHT, 10.0F) // TODO balance
                 .add(EntityAttributesRegistry.EQUIPMENT_WEIGHT, 0.0F)
@@ -125,13 +128,13 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     }
 
     @Inject(method = "initDataTracker", at = @At("TAIL"))
-    public void bamcore$initDataTracker(CallbackInfo ci) {
+    public void betteradventuremode$$initDataTracker(CallbackInfo ci) {
         this.dataTracker.startTracking(MANA, 0.0F);
         this.dataTracker.startTracking(STAMINA, 20.0F);
     }
 
     @Inject(method = "tick", at = @At("TAIL"))
-    public void bamcore$tick(CallbackInfo ci) {
+    public void betteradventuremode$$tick(CallbackInfo ci) {
         if (this.isBlocking()) {
             this.blockingTime++;
         } else if (this.blockingTime > 0) {
@@ -144,7 +147,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     }
 
     @Inject(method = "updateTurtleHelmet", at = @At("TAIL"))
-    private void bamcore$updateTurtleHelmet(CallbackInfo ci) {
+    private void betteradventuremode$$updateTurtleHelmet(CallbackInfo ci) {
         boolean mana_regenerating_trinket_equipped = false;
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(this);
         if (trinkets.isPresent()) {
@@ -269,7 +272,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         if (this.isBlocking() && this.blockedByShield(source) && this.betteradventuremode$getStamina() > 0 && shieldItemStack.getItem() instanceof BasicShieldItem) {
             if (this.blockingTime <= 20 && this.betteradventuremode$getStamina() >= 20 && source.getAttacker() != null && source.getAttacker() instanceof LivingEntity && ((BasicShieldItem) shieldItemStack.getItem()).canParry()) {
                 // try to parry the attack
-                float blockedDamage = this.calculateBlockedDamage(amount, shieldItemStack, true);
+                float blockedDamage = this.betteradventuremode$$calculateBlockedDamage(amount, shieldItemStack, true);
                 this.betteradventuremode$addStamina(-4);
 
                 if (this.betteradventuremode$getStamina() >= 0) {
@@ -305,7 +308,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
                 }
             } else {
                 // try to block the attack
-                float blockedDamage = this.calculateBlockedDamage(amount, shieldItemStack, false);
+                float blockedDamage = this.betteradventuremode$$calculateBlockedDamage(amount, shieldItemStack, false);
                 this.betteradventuremode$addStamina(-2);
 
                 if (this.betteradventuremode$getStamina() >= 0) {
@@ -354,7 +357,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     }
 
     // TODO come up with a better formula
-    private float calculateBlockedDamage(float damageAmount, ItemStack blockingItem, boolean isParry) {
+    @Unique
+    private float betteradventuremode$$calculateBlockedDamage(float damageAmount, ItemStack blockingItem, boolean isParry) {
         float blockedDamage;
         float blockArmor = (float) (((BasicShieldItem) blockingItem.getItem()).getBlockArmor() * (isParry ? ((BasicShieldItem) blockingItem.getItem()).getParryBonus() : 1));
         if (damageAmount <= blockArmor) {
@@ -407,8 +411,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         this.emitGameEvent(GameEvent.ENTITY_DAMAGE);
     }
 
-    @Inject(method = {"attack"}, at = @At("HEAD"), cancellable = true)
-    public void bamcore$attack(Entity target, CallbackInfo ci) {
+    @Inject(method = "attack", at = @At("HEAD"), cancellable = true)
+    public void betteradventuremode$$attack(Entity target, CallbackInfo ci) {
         ItemStack mainHandStack = this.getMainHandStack();
         if (mainHandStack.getItem() instanceof BasicWeaponItem && this.betteradventuremode$getStamina() + ((BasicWeaponItem)mainHandStack.getItem()).getStaminaCost() <= 0) {
             this.sendMessage(Text.translatable("hud.message.staminaTooLow"), true);
@@ -418,13 +422,13 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
     // effectively disables the vanilla jump crit mechanic
     @Redirect(
-            method = {"attack"},
+            method = "attack",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/entity/player/PlayerEntity;hasVehicle()Z"
             )
     )
-    public boolean bamcore$redirect_isSprinting(PlayerEntity instance) {
+    public boolean betteradventuremode$redirect_hasVehicle(PlayerEntity instance) {
         return true;
     }
 
@@ -521,77 +525,13 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
             this.setSwimming(false);
         } else {
             if (this.isSwimming()) {
-                this.setSwimming(/*this.isSprinting()*/!this.hasStatusEffect(StatusEffectsRegistry.OVERBURDENED_EFFECT) && this.isTouchingWater() && !this.hasVehicle());
+                this.setSwimming(!this.hasStatusEffect(StatusEffectsRegistry.OVERBURDENED_EFFECT) && this.isTouchingWater() && !this.hasVehicle());
             } else {
-                this.setSwimming(/*this.isSprinting()*/!this.hasStatusEffect(StatusEffectsRegistry.OVERBURDENED_EFFECT) && this.isSubmergedInWater() && !this.hasVehicle() && this.getWorld().getFluidState(this.getBlockPos()).isIn(FluidTags.WATER));
+                this.setSwimming(!this.hasStatusEffect(StatusEffectsRegistry.OVERBURDENED_EFFECT) && this.isSubmergedInWater() && !this.hasVehicle() && this.getWorld().getFluidState(this.getBlockPos()).isIn(FluidTags.WATER));
             }
         }
 
     }
-
-
-//    /**
-//     * @author TheRedBrain
-//     * @reason
-//     */
-//    @Overwrite
-//    public void increaseTravelMotionStats(double dx, double dy, double dz) {
-//        if (!this.hasVehicle()) {
-//            int i;
-//            if (this.isSwimming()) {
-//                i = Math.round((float)Math.sqrt(dx * dx + dy * dy + dz * dz) * 100.0F);
-//                if (i > 0) {
-//                    this.increaseStat(Stats.SWIM_ONE_CM, i);
-////                    this.addExhaustion(0.01F * (float)i * 0.01F);
-//                    ((DuckPlayerEntityMixin)this).bamcore$addStamina(-0.2F);
-//                }
-//            } else if (this.isSubmergedIn(FluidTags.WATER)) {
-//                i = Math.round((float)Math.sqrt(dx * dx + dy * dy + dz * dz) * 100.0F);
-//                if (i > 0) {
-//                    this.increaseStat(Stats.WALK_UNDER_WATER_ONE_CM, i);
-////                    this.addExhaustion(0.01F * (float)i * 0.01F);
-//                    ((DuckPlayerEntityMixin)this).bamcore$addStamina(-0.4F);
-//                }
-//            } else if (this.isTouchingWater()) {
-//                i = Math.round((float)Math.sqrt(dx * dx + dz * dz) * 100.0F);
-//                if (i > 0) {
-//                    this.increaseStat(Stats.WALK_ON_WATER_ONE_CM, i);
-////                    this.addExhaustion(0.01F * (float)i * 0.01F);
-//                    ((DuckPlayerEntityMixin)this).bamcore$addStamina(-0.1F);
-//                }
-//            } else if (this.isClimbing()) {
-//                if (dy > 0.0) {
-//                    this.increaseStat(Stats.CLIMB_ONE_CM, (int)Math.round(dy * 100.0));
-//                    ((DuckPlayerEntityMixin)this).bamcore$addStamina(this.hasStatusEffect(StatusEffectsRegistry.OVERBURDENED_EFFECT) ? -4 : -1);
-//                }
-//            } else if (this.isOnGround()) {
-//                i = Math.round((float)Math.sqrt(dx * dx + dz * dz) * 100.0F);
-//                if (i > 0) {
-//                    if (this.isSprinting()) {
-//                        this.increaseStat(Stats.SPRINT_ONE_CM, i);
-////                        this.addExhaustion(0.1F * (float)i * 0.01F);
-//                        ((DuckPlayerEntityMixin)this).bamcore$addStamina(-0.1F);
-//                    } else if (this.isInSneakingPose()) {
-//                        this.increaseStat(Stats.CROUCH_ONE_CM, i);
-////                        this.addExhaustion(0.0F * (float)i * 0.01F);
-////                        ((DuckPlayerEntityMixin)this).bamcore$addStamina(-2);
-//                    } else {
-//                        this.increaseStat(Stats.WALK_ONE_CM, i);
-////                        this.addExhaustion(0.0F * (float)i * 0.01F);
-//                    }
-//                }
-//            } else if (this.isFallFlying()) {
-//                i = Math.round((float)Math.sqrt(dx * dx + dy * dy + dz * dz) * 100.0F);
-//                this.increaseStat(Stats.AVIATE_ONE_CM, i);
-//            } else {
-//                i = Math.round((float)Math.sqrt(dx * dx + dz * dz) * 100.0F);
-//                if (i > 25) {
-//                    this.increaseStat(Stats.FLY_ONE_CM, i);
-//                }
-//            }
-//
-//        }
-//    }
 
     @Override
     public void heal(float amount) {
@@ -607,8 +547,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     // custom check for adventure food
     @Unique
     public boolean betteradventuremode$canConsumeItem(ItemStack itemStack) {
-        List<Pair<StatusEffectInstance, Float>> list = itemStack.getItem().getFoodComponent().getStatusEffects();
-        if (itemStack.isFood() && list != null) {
+        if (itemStack.getItem().getFoodComponent() != null) {
+            List<Pair<StatusEffectInstance, Float>> list = itemStack.getItem().getFoodComponent().getStatusEffects();
             for (Pair<StatusEffectInstance, Float> pair : list) {
                 if (getWorld().isClient || pair.getFirst() == null) continue;
                 return betteradventuremode$tryEatAdventureFood(pair.getFirst());

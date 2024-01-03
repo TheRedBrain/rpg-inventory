@@ -16,7 +16,7 @@ public abstract class ToolItemMixin extends Item {
 
     @Nullable
     @Unique
-    private String translationKeyBroken;
+    private String betteradventuremode$translationKeyBroken;
 
     public ToolItemMixin(Settings settings) {
         super(settings);
@@ -26,11 +26,11 @@ public abstract class ToolItemMixin extends Item {
      * Gets or creates the translation key of this item when it is not protecting.
      */
     @Unique
-    private String getOrCreateTranslationKeyBroken() {
-        if (this.translationKeyBroken == null) {
-            this.translationKeyBroken = Util.createTranslationKey("item", new Identifier(Registries.ITEM.getId(this).getNamespace() + ":" + Registries.ITEM.getId(this).getPath() + "_broken"));
+    private String betteradventuremode$getOrCreateTranslationKeyBroken() {
+        if (this.betteradventuremode$translationKeyBroken == null) {
+            this.betteradventuremode$translationKeyBroken = Util.createTranslationKey("item", new Identifier(Registries.ITEM.getId(this).getNamespace() + ":" + Registries.ITEM.getId(this).getPath() + "_broken"));
         }
-        return this.translationKeyBroken;
+        return this.betteradventuremode$translationKeyBroken;
     }
 
     /**
@@ -38,6 +38,6 @@ public abstract class ToolItemMixin extends Item {
      */
     @Override
     public String getTranslationKey(ItemStack stack) {
-        return ItemUtils.isUsable(stack) ? this.getTranslationKey() : this.getOrCreateTranslationKeyBroken();
+        return ItemUtils.isUsable(stack) ? this.getTranslationKey() : this.betteradventuremode$getOrCreateTranslationKeyBroken();
     }
 }

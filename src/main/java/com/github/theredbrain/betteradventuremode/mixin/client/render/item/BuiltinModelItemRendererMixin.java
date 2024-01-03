@@ -23,11 +23,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(BuiltinModelItemRenderer.class)
 public class BuiltinModelItemRendererMixin {
 
-
     @Shadow private ShieldEntityModel modelShield;
 
     @Inject(method = "render", at = @At("TAIL"))
-    public void render(ItemStack stack, ModelTransformationMode mode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, CallbackInfo ci) {
+    public void betteradventuremode$render(ItemStack stack, ModelTransformationMode mode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, CallbackInfo ci) {
         if (stack.getItem() instanceof BasicShieldItem) {
             matrices.push();
             matrices.scale(1.0f, -1.0f, -1.0f);

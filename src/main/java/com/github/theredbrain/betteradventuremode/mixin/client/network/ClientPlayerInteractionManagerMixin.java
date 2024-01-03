@@ -46,7 +46,7 @@ public abstract class ClientPlayerInteractionManagerMixin {
     @Shadow protected abstract void syncSelectedSlot();
 
     @Inject(method = "breakBlock", at = @At("HEAD"), cancellable = true)
-    public void bamcore$breakBlock(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
+    public void betteradventuremode$breakBlock(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
         if (this.gameMode == GameMode.ADVENTURE && this.client.player != null && this.client.player.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT)) {
             ClientWorld world = this.client.world;
             BlockState blockState = world.getBlockState(pos);
@@ -63,7 +63,7 @@ public abstract class ClientPlayerInteractionManagerMixin {
     }
 
     @Inject(method = "attackBlock", at = @At("HEAD"), cancellable = true)
-    public void bamcore$attackBlock(BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> cir) {
+    public void betteradventuremode$attackBlock(BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> cir) {
         if (this.gameMode == GameMode.ADVENTURE && this.client.player != null && this.client.player.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT)) {
             BlockPos housingBlockPos = ComponentsRegistry.CURRENT_HOUSING_BLOCK_POS.get(this.client.player).getValue();
             boolean bl = false;
@@ -85,7 +85,7 @@ public abstract class ClientPlayerInteractionManagerMixin {
     }
 
     @Inject(method = "interactBlock", at = @At("HEAD"), cancellable = true)
-    public void interactBlock(ClientPlayerEntity player, Hand hand, BlockHitResult hitResult, CallbackInfoReturnable<ActionResult> cir) {
+    public void betteradventuremode$interactBlock(ClientPlayerEntity player, Hand hand, BlockHitResult hitResult, CallbackInfoReturnable<ActionResult> cir) {
         if (this.gameMode == GameMode.ADVENTURE && player.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT)) {
             this.syncSelectedSlot();
             BlockPos housingBlockPos = ComponentsRegistry.CURRENT_HOUSING_BLOCK_POS.get(player).getValue();

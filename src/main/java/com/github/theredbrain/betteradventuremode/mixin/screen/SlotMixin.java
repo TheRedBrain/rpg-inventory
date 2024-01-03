@@ -12,21 +12,21 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class SlotMixin implements DuckSlotMixin {
 
     @Unique
-    private boolean bamcore$disabledOverride = false;
+    private boolean betteradventuremode$disabledOverride = false;
 
     @Override
     public void betteradventuremode$setDisabledOverride(boolean disabled) {
-        this.bamcore$disabledOverride = disabled;
+        this.betteradventuremode$disabledOverride = disabled;
     }
 
     @Override
     public boolean betteradventuremode$getDisabledOverride() {
-        return this.bamcore$disabledOverride;
+        return this.betteradventuremode$disabledOverride;
     }
 
     @Inject(method = "isEnabled", at = @At("TAIL"), cancellable = true)
-    private void injectOverride(CallbackInfoReturnable<Boolean> cir) {
-        if (!this.bamcore$disabledOverride) return;
+    private void betteradventuremode$isEnabled(CallbackInfoReturnable<Boolean> cir) {
+        if (!this.betteradventuremode$disabledOverride) return;
         cir.setReturnValue(false);
     }
 }

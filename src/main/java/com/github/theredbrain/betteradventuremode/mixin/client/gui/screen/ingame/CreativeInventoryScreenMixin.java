@@ -32,17 +32,17 @@ public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScre
     }
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/TextFieldWidget;render(Lnet/minecraft/client/gui/DrawContext;IIF)V"), method = "drawBackground")
-    private void drawAdventureInventoryBackground(DrawContext context, float delta, int mouseX, int mouseY, CallbackInfo ci) {
+    private void betteradventuremode$drawAdventureInventoryBackground(DrawContext context, float delta, int mouseX, int mouseY, CallbackInfo ci) {
         if (selectedTab.getType() == ItemGroup.Type.INVENTORY && BetterAdventureMode.serverConfig.use_adventure_inventory_screen) {
             context.drawTexture(TAB_ADVENTURE_INVENTORY_TEXTURE, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
         }
     }
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/InventoryScreen;drawEntity(Lnet/minecraft/client/gui/DrawContext;IIIIIFFFLnet/minecraft/entity/LivingEntity;)V"), method = "drawBackground", cancellable = true)
-    private void moveDrawnPlayerEntity(DrawContext context, float delta, int mouseX, int mouseY, CallbackInfo ci) {
+    private void betteradventuremode$moveDrawnPlayerEntity(DrawContext context, float delta, int mouseX, int mouseY, CallbackInfo ci) {
         if (selectedTab.getType() == ItemGroup.Type.INVENTORY && BetterAdventureMode.serverConfig.use_adventure_inventory_screen) {
             InventoryScreen.drawEntity(context, this.x + 64, this.y + 6, this.x + 96, this.y + 49, 20, 0.0625F, (float)mouseX, (float)mouseY, this.client.player);
 //            InventoryScreen.drawEntity(context, this.x + 79, this.y + 45, 20, this.x + 88 - mouseX, this.y + 45 - 30 - mouseY, (LivingEntity)this.client.player);
-            drawExtraGroups(context, this);
+            betteradventuremode$drawExtraGroups(context, this);
             ci.cancel();
         }
     }
@@ -101,7 +101,7 @@ public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScre
     }
 
     @Unique
-    private static void drawExtraGroups(DrawContext context, TrinketScreen trinketScreen) {
+    private static void betteradventuremode$drawExtraGroups(DrawContext context, TrinketScreen trinketScreen) {
         int x = trinketScreen.trinkets$getX();
         int y = trinketScreen.trinkets$getY();
         context.drawTexture(SPELL_SLOTS_BACKGROUND, x - 41, y, 0, 0, 45, 84);
