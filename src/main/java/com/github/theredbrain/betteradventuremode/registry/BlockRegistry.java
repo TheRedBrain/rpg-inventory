@@ -68,6 +68,7 @@ public class BlockRegistry {
 
     //region Operator Blocks
     public static final Block DIALOGUE_BLOCK = registerBlock("dialogue_block", new DialogueBlock(FabricBlockSettings.create().mapColor(MapColor.LIGHT_GRAY).requiresTool().strength(-1.0f, 3600000.0f).dropsNothing()), ItemGroups.OPERATOR);
+    public static final Block SHOP_BLOCK = registerBlock("shop_block", new ShopBlock(FabricBlockSettings.create().mapColor(MapColor.LIGHT_GRAY).requiresTool().strength(-1.0f, 3600000.0f).dropsNothing()), ItemGroups.OPERATOR);
     public static final Block MIMIC_BLOCK = registerBlock("mimic_block", new MimicBlock(FabricBlockSettings.create().mapColor(MapColor.LIGHT_GRAY).requiresTool().strength(-1.0f, 3600000.0f).dropsNothing()), ItemGroups.OPERATOR);
     public static final Block MIMIC_FALLBACK_BLOCK = Registry.register(Registries.BLOCK, BetterAdventureMode.identifier("mimic_fallback_block"), new Block(FabricBlockSettings.create().mapColor(MapColor.LIGHT_GRAY).requiresTool().strength(-1.0f, 3600000.0f).dropsNothing()));
     public static final Block TRIGGERED_SPAWNER_BLOCK = registerBlock("triggered_spawner_block", new TriggeredSpawnerBlock(FabricBlockSettings.create().mapColor(MapColor.LIGHT_GRAY).requiresTool().strength(-1.0f, 3600000.0f).dropsNothing()), ItemGroups.OPERATOR);

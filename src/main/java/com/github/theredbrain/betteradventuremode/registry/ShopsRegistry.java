@@ -2,8 +2,9 @@ package com.github.theredbrain.betteradventuremode.registry;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.BetterAdventureModeClient;
-import com.github.theredbrain.betteradventuremode.api.json_files_backend.PlayerLocation;
-import com.github.theredbrain.betteradventuremode.api.json_files_backend.PlayerLocationHelper;
+import com.github.theredbrain.betteradventuremode.api.json_files_backend.Dialogue;
+import com.github.theredbrain.betteradventuremode.api.json_files_backend.Shop;
+import com.github.theredbrain.betteradventuremode.api.json_files_backend.ShopHelper;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
@@ -20,58 +21,58 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PlayerLocationsRegistry {
+public class ShopsRegistry {
 
-    static Map<Identifier, PlayerLocation> registeredPlayerLocations = new HashMap<>();
+    static Map<Identifier, Shop> registeredShops = new HashMap<>();
 
-    public static void register(Identifier itemId, PlayerLocation playerLocation) {
-        registeredPlayerLocations.put(itemId, playerLocation);
+    public static void register(Identifier shopId, Shop shop) {
+        registeredShops.put(shopId, shop);
     }
 
-    public static PlayerLocation getLocation(Identifier locationId) {
-        return registeredPlayerLocations.get(locationId);
+    public static Shop getShop(Identifier shopId) {
+        return registeredShops.get(shopId);
     }
 
     public static void init() {
         ServerLifecycleEvents.SERVER_STARTED.register((minecraftServer) -> {
-            loadLocations(minecraftServer.getResourceManager());
+            loadShops(minecraftServer.getResourceManager());
             encodeRegistry();
         });
     }
 
-    private static void loadLocations(ResourceManager resourceManager) {
+    private static void loadShops(ResourceManager resourceManager) {
         var gson = new Gson();
-        Map<Identifier, PlayerLocation> registeredPlayerLocations = new HashMap();
+        Map<Identifier, Shop> registeredShops = new HashMap();
         // Reading all attribute files
-        for (var entry : resourceManager.findResources("player_locations", fileName -> fileName.getPath().endsWith(".json")).entrySet()) {
+        for (var entry : resourceManager.findResources("shops", fileName -> fileName.getPath().endsWith(".json")).entrySet()) {
             var identifier = entry.getKey();
             var resource = entry.getValue();
             try {
                 // System.out.println("Checking resource: " + identifier);
                 JsonReader reader = new JsonReader(new InputStreamReader(resource.getInputStream()));
-                PlayerLocation playerLocation = PlayerLocationHelper.decode(reader);
+                Shop shop = ShopHelper.decode(reader);
                 var id = identifier
-                        .toString().replace("player_locations/", "");
+                        .toString().replace("shops/", "");
                 id = id.substring(0, id.lastIndexOf('.'));
-                registeredPlayerLocations.put(new Identifier(id), playerLocation);
+                registeredShops.put(new Identifier(id), shop);
             } catch (Exception e) {
                 System.err.println("Failed to parse: " + identifier);
                 e.printStackTrace();
             }
         }
-        PlayerLocationsRegistry.registeredPlayerLocations = registeredPlayerLocations;
+        ShopsRegistry.registeredShops = registeredShops;
     }
 
     // NETWORK SYNC
 
-    private static PacketByteBuf encodedRegisteredPlayerLocations = PacketByteBufs.create();
+    private static PacketByteBuf encodedRegisteredShops = PacketByteBufs.create();
 
     public static void encodeRegistry() {
         PacketByteBuf buffer = PacketByteBufs.create();
         var gson = new Gson();
-        var json = gson.toJson(registeredPlayerLocations);
+        var json = gson.toJson(registeredShops);
         if (BetterAdventureModeClient.clientConfig.show_debug_log) {
-            BetterAdventureMode.LOGGER.info("Player Locations registry loaded: " + json);
+            BetterAdventureMode.LOGGER.info("Shops registry loaded: " + json);
         }
 
         List<String> chunks = new ArrayList<>();
@@ -86,10 +87,10 @@ public class PlayerLocationsRegistry {
         }
 
         if (BetterAdventureModeClient.clientConfig.show_debug_log) {
-            BetterAdventureMode.LOGGER.info("Encoded Player Locations registry size (with package overhead): " + buffer.readableBytes()
+            BetterAdventureMode.LOGGER.info("Encoded Shops registry size (with package overhead): " + buffer.readableBytes()
                     + " bytes (in " + chunks.size() + " string chunks with the size of " + chunkSize + ")");
         }
-        encodedRegisteredPlayerLocations = buffer;
+        encodedRegisteredShops = buffer;
     }
 
     public static void decodeRegistry(PacketByteBuf buffer) {
@@ -99,20 +100,20 @@ public class PlayerLocationsRegistry {
             json = json.concat(buffer.readString());
         }
         if (BetterAdventureModeClient.clientConfig.show_debug_log) {
-            BetterAdventureMode.info("Decoded Player Locations registry in " + chunkCount + " string chunks");
-            BetterAdventureMode.info("Player Locations registry received: " + json);
+            BetterAdventureMode.LOGGER.info("Decoded Shops registry in " + chunkCount + " string chunks");
+            BetterAdventureMode.LOGGER.info("Shops registry received: " + json);
         }
         var gson = new Gson();
-        Type mapType = new TypeToken<Map<String, PlayerLocation>>() {}.getType();
-        Map<String, PlayerLocation> readRegisteredPlayerLocations = gson.fromJson(json, mapType);
-        Map<Identifier, PlayerLocation> newRegisteredPlayerLocations = new HashMap();
-        readRegisteredPlayerLocations.forEach((key, value) -> {
-            newRegisteredPlayerLocations.put(new Identifier(key), value);
+        Type mapType = new TypeToken<Map<String, Shop>>() {}.getType();
+        Map<String, Shop> readRegisteredShops = gson.fromJson(json, mapType);
+        Map<Identifier, Shop> newRegisteredShops = new HashMap();
+        readRegisteredShops.forEach((key, value) -> {
+            newRegisteredShops.put(new Identifier(key), value);
         });
-        registeredPlayerLocations = newRegisteredPlayerLocations;
+        registeredShops = newRegisteredShops;
     }
 
     public static PacketByteBuf getEncodedRegistry() {
-        return encodedRegisteredPlayerLocations;
+        return encodedRegisteredShops;
     }
 }

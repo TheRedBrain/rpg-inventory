@@ -66,6 +66,14 @@ public class ServerPacketRegistry {
 
         ServerPlayNetworking.registerGlobalReceiver(UpdateLocationControlBlockPacket.TYPE, new UpdateLocationControlBlockPacketReceiver());
 
+        // --- shop packets
+
+        ServerPlayNetworking.registerGlobalReceiver(UpdateShopBlockPacket.TYPE, new UpdateShopBlockPacketReceiver());
+
+        ServerPlayNetworking.registerGlobalReceiver(TradeWithShopPacket.TYPE, new TradeWithShopPacketReceiver());
+
+        // --- dialogue packets
+
         ServerPlayNetworking.registerGlobalReceiver(UpdateDialogueBlockPacket.TYPE, new UpdateDialogueBlockPacketReceiver());
 
         ServerPlayNetworking.registerGlobalReceiver(UseBlockViaDialoguePacket.TYPE, new UseBlockViaDialoguePacketReceiver());

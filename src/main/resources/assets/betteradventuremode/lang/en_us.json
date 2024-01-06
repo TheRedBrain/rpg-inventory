@@ -258,6 +258,9 @@
 	"gui.triggered_block.triggeredBlockPositionOffsetZ.placeholder": "Z",
 
 
+	"gui.shop_block.trade_button_label": "Trade",
+
+
 	"gui.entity_attribute_modifier.operation.addition": "Addition",
 	"gui.entity_attribute_modifier.operation.multiply_base": "Multiply Base",
 	"gui.entity_attribute_modifier.operation.multiply_total": "Multiply Total",

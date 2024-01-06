@@ -1,0 +1,56 @@
+{
+  "dealList": [
+    {
+      "offer": {
+        "id": "minecraft:hay_block",
+        "count": 1
+      },
+      "price": [
+        {
+          "id": "minecraft:iron_nugget",
+          "count": 1
+        }
+      ],
+      "maxStockCount": 1,
+      "lockAdvancement": "",
+      "unlockAdvancement": "",
+      "showLockedDeal": true
+    },
+    {
+      "offer": {
+        "id": "minecraft:stone",
+        "count": 3
+      },
+      "price": [
+        {
+          "id": "minecraft:apple",
+          "count": 5
+        },
+        {
+          "id": "minecraft:yellow_dye",
+          "count": 70
+        }
+      ],
+      "maxStockCount": 5,
+      "lockAdvancement": "",
+      "unlockAdvancement": "",
+      "showLockedDeal": true
+    },
+    {
+      "offer": {
+        "id": "minecraft:cobblestone",
+        "count": 1
+      },
+      "price": [
+        {
+          "id": "minecraft:iron_nugget",
+          "count": 1
+        }
+      ],
+      "maxStockCount": 1,
+      "lockAdvancement": "",
+      "unlockAdvancement": "",
+      "showLockedDeal": true
+    }
+  ]
+}

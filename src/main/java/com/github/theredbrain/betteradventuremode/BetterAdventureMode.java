@@ -45,6 +45,7 @@ public class BetterAdventureMode implements ModInitializer {
 		DimensionsManager.init();
 		EventsRegistry.initializeEvents();
 		DialoguesRegistry.init();
+		ShopsRegistry.init();
 		PlayerLocationsRegistry.init();
 		ItemRegistry.init();
 		ItemGroupRegistry.init();
