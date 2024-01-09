@@ -25,7 +25,7 @@ public class CraftFromCraftingBenchPacketReceiver implements ServerPlayNetworkin
         if (craftingRecipe != null && screenHandler instanceof CraftingBenchBlockScreenHandler craftingBenchBlockScreenHandler) {
             boolean bl = true;
             for (ItemUtils.VirtualItemStack ingredient : craftingRecipe.getIngredients()) {
-                Item virtualItem = ItemUtils.getItemStackFromShopItemStack(ingredient).getItem();
+                Item virtualItem = ItemUtils.getItemStackFromVirtualItemStack(ingredient).getItem();
                 int ingredientCount = ingredient.getCount();
 
                 int playerInventorySize = craftingBenchBlockScreenHandler.getPlayerInventory().size();
@@ -70,7 +70,7 @@ public class CraftFromCraftingBenchPacketReceiver implements ServerPlayNetworkin
                 }
             }
             if (bl) {
-                player.getInventory().offerOrDrop(ItemUtils.getItemStackFromShopItemStack(craftingRecipe.getResult()));
+                player.getInventory().offerOrDrop(ItemUtils.getItemStackFromVirtualItemStack(craftingRecipe.getResult()));
                 craftingBenchBlockScreenHandler.calculateUnlockedRecipes();
                 craftingBenchBlockScreenHandler.runContentsChangedListener();
             }

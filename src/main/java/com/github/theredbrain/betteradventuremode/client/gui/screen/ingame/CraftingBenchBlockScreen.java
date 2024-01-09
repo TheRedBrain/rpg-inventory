@@ -158,7 +158,7 @@ public class CraftingBenchBlockScreen extends HandledScreen<CraftingBenchBlockSc
 
                         boolean bl = true;
                         for (ItemUtils.VirtualItemStack ingredient : craftingRecipe.getIngredients()) {
-                            Item virtualItem = ItemUtils.getItemStackFromShopItemStack(ingredient).getItem();
+                            Item virtualItem = ItemUtils.getItemStackFromVirtualItemStack(ingredient).getItem();
                             int ingredientCount = ingredient.getCount();
 
                             for (int j = 0; j < inventorySize; j++) {
@@ -268,7 +268,7 @@ public class CraftingBenchBlockScreen extends HandledScreen<CraftingBenchBlockSc
                     x = this.x + 8 + (index % 3 * 18);
                     y = this.y + 53 + (index / 3) * 18;
 
-                    ItemStack resultItemStack = ItemUtils.getItemStackFromShopItemStack(craftingRecipe.getResult());
+                    ItemStack resultItemStack = ItemUtils.getItemStackFromVirtualItemStack(craftingRecipe.getResult());
                     k = x + y * this.backgroundWidth;
                     Identifier identifier;
                     if (i == this.handler.getSelectedRecipe()) {
@@ -294,7 +294,7 @@ public class CraftingBenchBlockScreen extends HandledScreen<CraftingBenchBlockSc
             int selectedRecipe = this.handler.getSelectedRecipe();
             if (selectedRecipe != -1) {
                 CraftingRecipe craftingRecipe = CraftingRecipeRegistry.getCraftingRecipe(recipeList.get(selectedRecipe));
-                ItemStack resultItemStack = ItemUtils.getItemStackFromShopItemStack(craftingRecipe.getResult());
+                ItemStack resultItemStack = ItemUtils.getItemStackFromVirtualItemStack(craftingRecipe.getResult());
 
                 x = this.x + 80;
                 y = this.y + 40;

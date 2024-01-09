@@ -17,7 +17,6 @@ import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.sound.PositionedSoundInstance;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
@@ -103,7 +102,7 @@ public class ShopBlockScreen extends HandledScreen<ShopBlockScreenHandler> {
                     boolean bl = true;
                     List<ItemUtils.VirtualItemStack> priceList = deal.getPriceList();
                     for (ItemUtils.VirtualItemStack price : priceList) {
-                        Item virtualItem = ItemUtils.getItemStackFromShopItemStack(price).getItem();
+                        Item virtualItem = ItemUtils.getItemStackFromVirtualItemStack(price).getItem();
                         int priceCount = price.getCount();
                         for (int j = 0; j < inventory.size(); j++) {
                             if (inventory.getStack(j).isOf(virtualItem)) {
@@ -307,14 +306,14 @@ public class ShopBlockScreen extends HandledScreen<ShopBlockScreenHandler> {
                 }
                 Shop.Deal deal = this.handler.getUnlockedDealsList().get(i);
                 if (deal != null) {
-                    ItemStack offerItemStack = ItemUtils.getItemStackFromShopItemStack(deal.getOffer());
+                    ItemStack offerItemStack = ItemUtils.getItemStackFromVirtualItemStack(deal.getOffer());
                     x = this.x + 85;
                     y = this.y + 18 + (index * 24);
                     k = x + y * this.backgroundWidth;
                     context.drawItemWithoutEntity(offerItemStack, x, y, k);
                     context.drawItemInSlot(this.textRenderer, offerItemStack, x, y);
                     for (int j = 0; j < deal.getPriceList().size(); j++) {
-                        ItemStack priceItemStack = ItemUtils.getItemStackFromShopItemStack(deal.getPriceList().get(j));
+                        ItemStack priceItemStack = ItemUtils.getItemStackFromVirtualItemStack(deal.getPriceList().get(j));
                         x = this.x + 8 + (j * 18);
                         y = this.y + 18 + (index * 24);
                         k = x + y * this.backgroundWidth;
@@ -346,6 +345,7 @@ public class ShopBlockScreen extends HandledScreen<ShopBlockScreenHandler> {
         this.drawBackground(context, delta, mouseX, mouseY);
     }
 
+    @Override
     public void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
         if (!this.showCreativeScreen) {
             int i = this.x;

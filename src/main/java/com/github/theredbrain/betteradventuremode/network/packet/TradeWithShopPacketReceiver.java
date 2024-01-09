@@ -36,7 +36,7 @@ public class TradeWithShopPacketReceiver implements ServerPlayNetworking.PlayPac
         if (currentDeal != null && screenHandler instanceof ShopBlockScreenHandler shopBlockScreenHandler) {
             boolean bl = true;
             for (ItemUtils.VirtualItemStack price : currentDeal.getPriceList()) {
-                Item virtualItem = ItemUtils.getItemStackFromShopItemStack(price).getItem();
+                Item virtualItem = ItemUtils.getItemStackFromVirtualItemStack(price).getItem();
                 int priceCount = price.getCount();
                 for (int j = 0; j < shopBlockScreenHandler.inventory.size(); j++) {
                     if (shopBlockScreenHandler.inventory.getStack(j).isOf(virtualItem)) {
@@ -58,7 +58,7 @@ public class TradeWithShopPacketReceiver implements ServerPlayNetworking.PlayPac
                 }
             }
             if (bl) {
-                player.getInventory().offerOrDrop(ItemUtils.getItemStackFromShopItemStack(currentDeal.getOffer()));
+                player.getInventory().offerOrDrop(ItemUtils.getItemStackFromVirtualItemStack(currentDeal.getOffer()));
             }
         }
     }

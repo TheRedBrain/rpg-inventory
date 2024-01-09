@@ -38,8 +38,44 @@
     },
     {
       "offer": {
-        "id": "minecraft:cobblestone",
-        "count": 1
+        "id": "minecraft:stone_sword",
+        "count": 1,
+        "tag": {
+          "key": "tag",
+          "value": "",
+          "type": "COMPOUND_TYPE",
+          "entries": [
+            {
+              "key": "Damage",
+              "value": 10,
+              "type": "INT_TYPE"
+            },
+            {
+              "key": "Enchantments",
+              "value": "",
+              "type": "LIST_TYPE",
+              "entries": [
+                {
+                  "key": "",
+                  "value": "",
+                  "type": "COMPOUND_TYPE",
+                  "entries": [
+                    {
+                      "key": "id",
+                      "value": "minecraft:unbreaking",
+                      "type": "STRING_TYPE"
+                    },
+                    {
+                      "key": "lvl",
+                      "value": "2",
+                      "type": "SHORT_TYPE"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
       },
       "price": [
         {
