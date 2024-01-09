@@ -49,6 +49,12 @@ public class BlockRegistry {
     public static final Block USE_RELAY_CRIMSON_TRAPDOOR = registerBlock("use_relay_crimson_trapdoor", new UseRelayTrapdoorBlock(FabricBlockSettings.create().mapColor(MapColor.DULL_PINK).requiresTool().strength(-1.0f, 3600000.0f).nonOpaque().dropsNothing()), ItemGroupRegistry.BAM_BLOCK);
     public static final Block USE_RELAY_WARPED_TRAPDOOR = registerBlock("use_relay_warped_trapdoor", new UseRelayTrapdoorBlock(FabricBlockSettings.create().mapColor(MapColor.DARK_AQUA).requiresTool().strength(-1.0f, 3600000.0f).nonOpaque().dropsNothing()), ItemGroupRegistry.BAM_BLOCK);
 
+    // crafting blocks
+    public static final Block CRAFTING_BENCH_BLOCK = registerBlock("crafting_bench_block", new CraftingRootBlock(FabricBlockSettings.create().mapColor(MapColor.OAK_TAN)), ItemGroupRegistry.BAM_BLOCK);
+    public static final Block STORAGE_PROVIDER_BLOCK = registerBlock("storage_provider_block", new CraftingTabProviderBlock(CraftingRootBlock.Tab.STORAGE, FabricBlockSettings.create().mapColor(MapColor.OAK_TAN)), ItemGroupRegistry.BAM_BLOCK);
+    public static final Block SMITHY_PROVIDER_BLOCK = registerBlock("smithy_provider_block", new CraftingTabProviderBlock(CraftingRootBlock.Tab.SMITHY, FabricBlockSettings.create().mapColor(MapColor.OAK_TAN)), ItemGroupRegistry.BAM_BLOCK);
+
+
     public static final Block BONFIRE_BLOCK = registerBlock("bonfire", new BonfireBlock(FabricBlockSettings.create().mapColor(MapColor.SPRUCE_BROWN).ticksRandomly().sounds(BlockSoundGroup.STONE).luminance((state) -> state.get(BonfireBlock.ACTIVE) ? 15 : 0).nonOpaque()), ItemGroupRegistry.BAM_BLOCK);
 
     // interactive barrier blocks

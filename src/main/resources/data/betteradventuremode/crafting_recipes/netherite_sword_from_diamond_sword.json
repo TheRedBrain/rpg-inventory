@@ -1,0 +1,19 @@
+{
+  "ingredients": [
+    {
+      "id": "betteradventuremode:diamond_sword",
+      "count": 1
+    },
+    {
+      "id": "minecraft:netherite_ingot",
+      "count": 1
+    }
+  ],
+  "result": {
+    "id": "betteradventuremode:netherite_sword",
+    "count": 1
+  },
+  "unlockAdvancement": "",
+  "tab": "SMITHY",
+  "level": 3
+}

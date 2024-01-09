@@ -43,6 +43,7 @@ public class BetterAdventureMode implements ModInitializer {
 		EntityAttributesRegistry.registerAttributes();
 		EntityAttributesRegistry.registerEntityAttributes();
 		DimensionsManager.init();
+		CraftingRecipeRegistry.init();
 		EventsRegistry.initializeEvents();
 		DialoguesRegistry.init();
 		ShopsRegistry.init();

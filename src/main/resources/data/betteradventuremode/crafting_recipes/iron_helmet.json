@@ -1,0 +1,15 @@
+{
+  "ingredients": [
+    {
+      "id": "minecraft:iron_ingot",
+      "count": 5
+    }
+  ],
+  "result": {
+    "id": "betteradventuremode:iron_helmet",
+    "count": 1
+  },
+  "unlockAdvancement": "",
+  "tab": "SMITHY",
+  "level": 1
+}

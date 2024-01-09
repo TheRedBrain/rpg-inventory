@@ -1,5 +1,6 @@
 package com.github.theredbrain.betteradventuremode;
 
+import com.github.theredbrain.betteradventuremode.client.gui.screen.ingame.CraftingBenchBlockScreen;
 import com.github.theredbrain.betteradventuremode.client.gui.screen.ingame.ShopBlockScreen;
 import com.github.theredbrain.betteradventuremode.client.gui.screen.ingame.TeleporterBlockScreen;
 import com.github.theredbrain.betteradventuremode.registry.ClientPacketRegistry;
@@ -100,6 +101,7 @@ public class BetterAdventureModeClient implements ClientModInitializer {
     }
 
     private void registerScreens() {
+        HandledScreens.register(ScreenHandlerTypesRegistry.CRAFTING_BENCH_BLOCK_SCREEN_HANDLER, CraftingBenchBlockScreen::new);
         HandledScreens.register(ScreenHandlerTypesRegistry.SHOP_BLOCK_SCREEN_HANDLER, ShopBlockScreen::new);
         HandledScreens.register(ScreenHandlerTypesRegistry.TELEPORTER_BLOCK_SCREEN_HANDLER, TeleporterBlockScreen::new);
     }

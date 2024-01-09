@@ -261,6 +261,10 @@
 	"gui.shop_block.trade_button_label": "Trade",
 
 
+	"gui.crafting_bench.craft_button_label": "Craft",
+	"gui.crafting_bench.upgrade_button_label": "Upgrade",
+
+
 	"gui.entity_attribute_modifier.operation.addition": "Addition",
 	"gui.entity_attribute_modifier.operation.multiply_base": "Multiply Base",
 	"gui.entity_attribute_modifier.operation.multiply_total": "Multiply Total",

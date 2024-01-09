@@ -26,6 +26,8 @@ public class ServerConfig implements ConfigData {
     public List<Integer> worldSpawnXList = new ArrayList<>();
     public List<Integer> worldSpawnYList = new ArrayList<>();
     public List<Integer> worldSpawnZList = new ArrayList<>();
+    @Comment("The radius crafting root blocks search for tab provider blocks")
+    public int crafting_root_block_reach_radius = 10;
 //    public List<Double> worldSpawnAngleList = new ArrayList<>();
     public ServerConfig() {
 
