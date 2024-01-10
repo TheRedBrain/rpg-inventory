@@ -1,0 +1,40 @@
+{
+	"locations.dungeons.choose_color": "Choose Color Location",
+	"locations.dungeons.combat_dungeon": "Combat Dungeon",
+	"locations.dungeons.test_dungeon": "Test Dungeon",
+	"locations.dungeons.test_dungeon.side_entrance": "Side Entrance to ",
+
+	"locations.houses.house_1": "House 1",
+
+	"dialogue.betteradventuremode.empty_line": "",
+
+	"dialogue.betteradventuremode.hello_world.dialogue_text.line_1": "Very looooooooooooooooooong text line",
+	"dialogue.betteradventuremode.hello_world.dialogue_text.line_6": "No line should be looooonger than this",
+
+	"dialogue.betteradventuremode.choose_color.dialogue_text.line_1": "           Color Picker           ",
+	"dialogue.betteradventuremode.choose_color.dialogue_text.line_2": "Choose a color.",
+	"dialogue.betteradventuremode.choose_color.dialogue_text.line_3": "",
+	"dialogue.betteradventuremode.choose_color.dialogue_text.line_4": "You will be teleported to the",
+	"dialogue.betteradventuremode.choose_color.dialogue_text.line_5": "corresponding wool block.",
+
+	"dialogue.betteradventuremode.choose_color.answer_text.1": "Green",
+	"dialogue.betteradventuremode.choose_color.answer_text.2": "Yellow",
+	"dialogue.betteradventuremode.choose_color.answer_text.3": "Red",
+	"dialogue.betteradventuremode.choose_color.answer_text.4": "Blue",
+	"dialogue.betteradventuremode.choose_color.answer_text.5": "Exit Dungeon",
+	"dialogue.betteradventuremode.choose_color.answer_text.6": "Cancel",
+
+	"dialogue.betteradventuremode.choose_color_cancel.dialogue_text.line_3": "Do you really want to",
+	"dialogue.betteradventuremode.choose_color_cancel.dialogue_text.line_4": "not pick a color?",
+	"dialogue.betteradventuremode.choose_color_cancel.answer_text.1": "Yes",
+	"dialogue.betteradventuremode.choose_color_cancel.answer_text.2": "No",
+
+	"dialogue.betteradventuremode.combat_dungeon.dialogue_text.line_1": "Combat Dungeon",
+	"dialogue.betteradventuremode.combat_dungeon.dialogue_text.line_3": "Do you want to enter the dungeon?",
+	"dialogue.betteradventuremode.combat_dungeon.answer_text.1": "Yes",
+	"dialogue.betteradventuremode.combat_dungeon.answer_text.2": "No",
+
+	"dialogue.betteradventuremode.combat_dungeon_exit.dialogue_text.line_3": "Do you want to leave the dungeon?",
+	"dialogue.betteradventuremode.combat_dungeon_exit.answer_text.1": "Yes",
+	"dialogue.betteradventuremode.combat_dungeon_exit.answer_text.2": "No"
+}

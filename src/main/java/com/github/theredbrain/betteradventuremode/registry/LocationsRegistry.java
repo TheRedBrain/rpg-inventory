@@ -2,8 +2,8 @@ package com.github.theredbrain.betteradventuremode.registry;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.BetterAdventureModeClient;
-import com.github.theredbrain.betteradventuremode.api.json_files_backend.Dialogue;
-import com.github.theredbrain.betteradventuremode.api.json_files_backend.DialogueHelper;
+import com.github.theredbrain.betteradventuremode.api.json_files_backend.Location;
+import com.github.theredbrain.betteradventuremode.api.json_files_backend.LocationHelper;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
@@ -20,57 +20,58 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DialoguesRegistry {
+public class LocationsRegistry {
 
-    static Map<Identifier, Dialogue> registeredDialogues = new HashMap<>();
+    static Map<Identifier, Location> registeredLocations = new HashMap<>();
 
-    public static void register(Identifier itemId, Dialogue playerLocation) {
-        registeredDialogues.put(itemId, playerLocation);
+    public static void register(Identifier itemId, Location location) {
+        registeredLocations.put(itemId, location);
     }
 
-    public static Dialogue getDialogue(Identifier dialogueId) {
-        return registeredDialogues.get(dialogueId);
+    public static Location getLocation(Identifier locationId) {
+        return registeredLocations.get(locationId);
     }
 
     public static void init() {
         ServerLifecycleEvents.SERVER_STARTED.register((minecraftServer) -> {
-            loadDialogues(minecraftServer.getResourceManager());
+            loadLocations(minecraftServer.getResourceManager());
             encodeRegistry();
         });
     }
 
-    private static void loadDialogues(ResourceManager resourceManager) {
+    private static void loadLocations(ResourceManager resourceManager) {
         var gson = new Gson();
-        Map<Identifier, Dialogue> registeredDialogues = new HashMap();
+        Map<Identifier, Location> registeredLocations = new HashMap();
         // Reading all attribute files
-        for (var entry : resourceManager.findResources("dialogues", fileName -> fileName.getPath().endsWith(".json")).entrySet()) {
+        for (var entry : resourceManager.findResources("locations", fileName -> fileName.getPath().endsWith(".json")).entrySet()) {
             var identifier = entry.getKey();
             var resource = entry.getValue();
             try {
+                // System.out.println("Checking resource: " + identifier);
                 JsonReader reader = new JsonReader(new InputStreamReader(resource.getInputStream()));
-                Dialogue dialogue = DialogueHelper.decode(reader);
+                Location location = LocationHelper.decode(reader);
                 var id = identifier
-                        .toString().replace("dialogues/", "");
+                        .toString().replace("locations/", "");
                 id = id.substring(0, id.lastIndexOf('.'));
-                registeredDialogues.put(new Identifier(id), dialogue);
+                registeredLocations.put(new Identifier(id), location);
             } catch (Exception e) {
                 System.err.println("Failed to parse: " + identifier);
                 e.printStackTrace();
             }
         }
-        DialoguesRegistry.registeredDialogues = registeredDialogues;
+        LocationsRegistry.registeredLocations = registeredLocations;
     }
 
     // NETWORK SYNC
 
-    private static PacketByteBuf encodedRegisteredDialogues = PacketByteBufs.create();
+    private static PacketByteBuf encodedRegisteredLocations = PacketByteBufs.create();
 
     public static void encodeRegistry() {
         PacketByteBuf buffer = PacketByteBufs.create();
         var gson = new Gson();
-        var json = gson.toJson(registeredDialogues);
+        var json = gson.toJson(registeredLocations);
         if (BetterAdventureModeClient.clientConfig.show_debug_log) {
-            BetterAdventureMode.LOGGER.info("Dialogues registry loaded: " + json);
+            BetterAdventureMode.LOGGER.info("Locations registry loaded: " + json);
         }
 
         List<String> chunks = new ArrayList<>();
@@ -85,10 +86,10 @@ public class DialoguesRegistry {
         }
 
         if (BetterAdventureModeClient.clientConfig.show_debug_log) {
-            BetterAdventureMode.LOGGER.info("Encoded Dialogues registry size (with package overhead): " + buffer.readableBytes()
+            BetterAdventureMode.LOGGER.info("Encoded Locations registry size (with package overhead): " + buffer.readableBytes()
                     + " bytes (in " + chunks.size() + " string chunks with the size of " + chunkSize + ")");
         }
-        encodedRegisteredDialogues = buffer;
+        encodedRegisteredLocations = buffer;
     }
 
     public static void decodeRegistry(PacketByteBuf buffer) {
@@ -98,20 +99,20 @@ public class DialoguesRegistry {
             json = json.concat(buffer.readString());
         }
         if (BetterAdventureModeClient.clientConfig.show_debug_log) {
-            BetterAdventureMode.LOGGER.info("Decoded Dialogues registry in " + chunkCount + " string chunks");
-            BetterAdventureMode.LOGGER.info("Dialogues registry received: " + json);
+            BetterAdventureMode.info("Decoded Locations registry in " + chunkCount + " string chunks");
+            BetterAdventureMode.info("Locations registry received: " + json);
         }
         var gson = new Gson();
-        Type mapType = new TypeToken<Map<String, Dialogue>>() {}.getType();
-        Map<String, Dialogue> readRegisteredDialogues = gson.fromJson(json, mapType);
-        Map<Identifier, Dialogue> newRegisteredDialogues = new HashMap();
-        readRegisteredDialogues.forEach((key, value) -> {
-            newRegisteredDialogues.put(new Identifier(key), value);
+        Type mapType = new TypeToken<Map<String, Location>>() {}.getType();
+        Map<String, Location> readRegisteredLocations = gson.fromJson(json, mapType);
+        Map<Identifier, Location> newRegisteredLocations = new HashMap();
+        readRegisteredLocations.forEach((key, value) -> {
+            newRegisteredLocations.put(new Identifier(key), value);
         });
-        registeredDialogues = newRegisteredDialogues;
+        registeredLocations = newRegisteredLocations;
     }
 
     public static PacketByteBuf getEncodedRegistry() {
-        return encodedRegisteredDialogues;
+        return encodedRegisteredLocations;
     }
 }

@@ -48,8 +48,17 @@ public class ClientPacketRegistry {
 //                }
 //            });
 //        });
-        ClientPlayNetworking.registerGlobalReceiver(ServerPacketRegistry.SYNC_PLAYER_LOCATIONS, (client, handler, buffer, responseSender) -> { // TODO convert to packet
-            PlayerLocationsRegistry.decodeRegistry(buffer);
+        ClientPlayNetworking.registerGlobalReceiver(ServerPacketRegistry.SYNC_CRAFTING_RECIPES, (client, handler, buffer, responseSender) -> { // TODO convert to packet
+            CraftingRecipeRegistry.decodeRegistry(buffer);
+        });
+        ClientPlayNetworking.registerGlobalReceiver(ServerPacketRegistry.SYNC_DIALOGUES, (client, handler, buffer, responseSender) -> { // TODO convert to packet
+            DialoguesRegistry.decodeRegistry(buffer);
+        });
+        ClientPlayNetworking.registerGlobalReceiver(ServerPacketRegistry.SYNC_LOCATIONS, (client, handler, buffer, responseSender) -> { // TODO convert to packet
+            LocationsRegistry.decodeRegistry(buffer);
+        });
+        ClientPlayNetworking.registerGlobalReceiver(ServerPacketRegistry.SYNC_SHOPS, (client, handler, buffer, responseSender) -> { // TODO convert to packet
+            ShopsRegistry.decodeRegistry(buffer);
         });
     }
 }

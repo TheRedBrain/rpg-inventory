@@ -15,7 +15,19 @@ import net.minecraft.util.math.BlockPos;
 public class TeleporterBlockScreenHandler extends ScreenHandler {
 
     private PlayerInventory playerInventory;
-    private Inventory inventory;
+    private Inventory inventory = new SimpleInventory(9) {
+        @Override
+        public int getMaxCountPerStack() {
+            return 999;
+        }
+
+        @Override
+        public void markDirty() {
+            super.markDirty();
+//            ShopBlockScreenHandler.this.onContentChanged(this);
+//            ShopBlockScreenHandler.this.contentsChangedListener.run();
+        }
+    };
 //    private TeleporterBlockBlockEntity teleporterBlockBlockEntity;
 
     private BlockPos blockPos;
@@ -25,16 +37,15 @@ public class TeleporterBlockScreenHandler extends ScreenHandler {
     private final int requiredKeyItemStackSlotY = 148;
 
     public TeleporterBlockScreenHandler(int syncId, PlayerInventory playerInventory, PacketByteBuf buf) {
-        this(syncId, playerInventory, new SimpleInventory(1), playerInventory.player.isCreativeLevelTwoOp());
+        this(syncId, playerInventory, playerInventory.player.isCreativeLevelTwoOp());
         this.blockPos = buf.readBlockPos();
     }
 
-    public TeleporterBlockScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, boolean showCreativeTab) {
+    public TeleporterBlockScreenHandler(int syncId, PlayerInventory playerInventory, boolean showCreativeTab) {
         super(ScreenHandlerTypesRegistry.TELEPORTER_BLOCK_SCREEN_HANDLER, syncId);
         // TODO
         // set teleporterBlockBlockEntity
         this.playerInventory = playerInventory;
-        this.inventory = inventory;
         this.blockPos = BlockPos.ORIGIN;
         this.showCreativeTab = showCreativeTab;
 
@@ -63,35 +74,35 @@ public class TeleporterBlockScreenHandler extends ScreenHandler {
 //            }
         });
 
-        // requiredKeyItemStackSlot
-        this.addSlot(new Slot(inventory, 0, this.requiredKeyItemStackSlotX, this.requiredKeyItemStackSlotY) {
-//            @Override
-//            public boolean isEnabled() {
-//                return showCreativeTab;
-//            }
-//
-//            @Override
-//            public void setStack(ItemStack stack) {
-//                super.setStack(stack);
-//                this.inventory.setStack(0, stack);
-//            }
-        });
+//        // requiredKeyItemStackSlot
+//        this.addSlot(new Slot(inventory, 0, this.requiredKeyItemStackSlotX, this.requiredKeyItemStackSlotY) {
+////            @Override
+////            public boolean isEnabled() {
+////                return showCreativeTab;
+////            }
+////
+////            @Override
+////            public void setStack(ItemStack stack) {
+////                super.setStack(stack);
+////                this.inventory.setStack(0, stack);
+////            }
+//        });
 
         // requiredKeyItemStackSlot in AdventureScreen
-        this.addSlot(new Slot(inventory, 0, 55, 80) {
+//        this.addSlot(new Slot(inventory, 0, 55, 80) {
+////            @Override
+////            public boolean isEnabled() {
+////                return !showCreativeTab && !(inventory.getStack(0).isEmpty());
+////            }
 //            @Override
-//            public boolean isEnabled() {
-//                return !showCreativeTab && !(inventory.getStack(0).isEmpty());
+//            public boolean canTakeItems(PlayerEntity playerEntity) {
+//                return false;
 //            }
-            @Override
-            public boolean canTakeItems(PlayerEntity playerEntity) {
-                return false;
-            }
-            @Override
-            public boolean canInsert(ItemStack stack) {
-                return false;
-            }
-        });
+//            @Override
+//            public boolean canInsert(ItemStack stack) {
+//                return false;
+//            }
+//        });
     }
 
     public BlockPos getBlockPos() {

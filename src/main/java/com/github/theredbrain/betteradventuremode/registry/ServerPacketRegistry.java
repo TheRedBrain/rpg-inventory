@@ -14,7 +14,10 @@ public class ServerPacketRegistry {
 
     public static final Identifier SYNC_CONFIG = BetterAdventureMode.identifier("sync_config");
 //    public static final Identifier SYNC_PLAYER_HOUSES = BetterAdventureModeCore.identifier("sync_player_houses");
-    public static final Identifier SYNC_PLAYER_LOCATIONS = BetterAdventureMode.identifier("sync_player_locations");
+    public static final Identifier SYNC_CRAFTING_RECIPES = BetterAdventureMode.identifier("sync_crafting_recipes");
+    public static final Identifier SYNC_DIALOGUES = BetterAdventureMode.identifier("sync_dialogues");
+    public static final Identifier SYNC_LOCATIONS = BetterAdventureMode.identifier("sync_locations");
+    public static final Identifier SYNC_SHOPS = BetterAdventureMode.identifier("sync_shops");
 
     public static void init() {
         ServerPlayNetworking.registerGlobalReceiver(SwapHandItemsPacket.TYPE, new SwapHandItemsPacketReceiver());

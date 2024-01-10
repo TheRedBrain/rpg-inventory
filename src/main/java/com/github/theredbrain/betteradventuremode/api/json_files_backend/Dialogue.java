@@ -10,7 +10,7 @@ public final class Dialogue {
     private final List<Answer> answerList;
     private final String unlockAdvancement;
     private final String lockAdvancement;
-    private boolean cancellable;
+    private final boolean cancellable;
 
     public Dialogue(List<String> dialogueTextList, List<Answer> answerList, String unlockAdvancement, String lockAdvancement, boolean cancellable) {
         this.dialogueTextList = dialogueTextList;
@@ -67,7 +67,7 @@ public final class Dialogue {
         private final @Nullable String grantedAdvancement;
 
         /**
-         * if grantedAdvancement is valid identifier for an advancement, grants that advancement
+         * if criterionName is valid identifier for an advancement criterion, grants that criterion
          */
         private final @Nullable String criterionName;
 

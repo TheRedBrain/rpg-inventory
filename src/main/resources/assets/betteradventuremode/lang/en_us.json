@@ -2,6 +2,9 @@
 	"flat_world_preset.betteradventuremode.bam_flat_level_preset": "Adventure",
 	"generator.betteradventuremode.adventure": "Adventure",
 
+	"betteradventuremode.builtin_resource_packs.better_adventure_mode_spell_engine_compat": "Spell Engine Compat",
+	"betteradventuremode.builtin_resource_packs.betteradventuremode_testing": "Testing Better Adventure Mode",
+
 	"wip": "WIP",
 
 	"gui.edit": "Edit",
@@ -307,47 +310,6 @@
 
 	"hud.message.staminaTooLow": "Your stamina is too low",
 	"hud.message.manaTooLow": "Your mana is too low",
-
-	"player_dimensions.player_dungeons.test_dungeon": "Test Dungeon",
-	"player_dimensions.player_dungeons.test_dungeon.side_entrance": "Side Entrance to ",
-
-	"player_dimensions.player_houses.house_1": "House 1",
-	"player_dimensions.player_houses.house_2": "House 2",
-	"player_dimensions.player_houses.house_3": "House 3",
-	"player_dimensions.player_houses.house_4": "House 4",
-	"player_dimensions.player_houses.test_house": "Test House",
-
-	"dialogue.betteradventuremode.empty_line": "",
-
-	"dialogue.betteradventuremode.hello_world.dialogue_text.line_1": "Very looooooooooooooooooong text line",
-	"dialogue.betteradventuremode.hello_world.dialogue_text.line_6": "No line should be looooonger than this",
-
-	"dialogue.betteradventuremode.choose_color.dialogue_text.line_1": "           Color Picker           ",
-	"dialogue.betteradventuremode.choose_color.dialogue_text.line_2": "Choose a color.",
-	"dialogue.betteradventuremode.choose_color.dialogue_text.line_3": "",
-	"dialogue.betteradventuremode.choose_color.dialogue_text.line_4": "You will be teleported to the",
-	"dialogue.betteradventuremode.choose_color.dialogue_text.line_5": "corresponding wool block.",
-
-	"dialogue.betteradventuremode.choose_color.answer_text.1": "Green",
-	"dialogue.betteradventuremode.choose_color.answer_text.2": "Yellow",
-	"dialogue.betteradventuremode.choose_color.answer_text.3": "Red",
-	"dialogue.betteradventuremode.choose_color.answer_text.4": "Blue",
-	"dialogue.betteradventuremode.choose_color.answer_text.5": "Exit Dungeon",
-	"dialogue.betteradventuremode.choose_color.answer_text.6": "Cancel",
-
-	"dialogue.betteradventuremode.choose_color_cancel.dialogue_text.line_3": "Do you really want to",
-	"dialogue.betteradventuremode.choose_color_cancel.dialogue_text.line_4": "not pick a color?",
-	"dialogue.betteradventuremode.choose_color_cancel.answer_text.1": "Yes",
-	"dialogue.betteradventuremode.choose_color_cancel.answer_text.2": "No",
-
-	"dialogue.betteradventuremode.combat_dungeon.dialogue_text.line_1": "Combat Dungeon",
-	"dialogue.betteradventuremode.combat_dungeon.dialogue_text.line_3": "Do you want to enter the dungeon?",
-	"dialogue.betteradventuremode.combat_dungeon.answer_text.1": "Yes",
-	"dialogue.betteradventuremode.combat_dungeon.answer_text.2": "No",
-
-	"dialogue.betteradventuremode.combat_dungeon_exit.dialogue_text.line_3": "Do you want to leave the dungeon?",
-	"dialogue.betteradventuremode.combat_dungeon_exit.answer_text.1": "Yes",
-	"dialogue.betteradventuremode.combat_dungeon_exit.answer_text.2": "No",
 
 	"trinkets.slot.belts.belt": "Belt",
 	"trinkets.slot.gloves.gloves": "Glove",

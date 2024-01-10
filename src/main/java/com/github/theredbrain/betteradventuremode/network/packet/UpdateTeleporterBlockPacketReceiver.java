@@ -44,12 +44,9 @@ public class UpdateTeleporterBlockPacketReceiver implements ServerPlayNetworking
 
         List<Pair<String, String>> locationsList = packet.locationsList;
 
-        boolean consumeKeyItemStack = packet.consumeKeyItemStack;
-
         String teleporterName = packet.teleporterName;
-        String currentTargetOwnerLabel = packet.currentTargetOwnerLabel;
         String currentTargetIdentifierLabel = packet.currentTargetIdentifierLabel;
-        String currentTargetEntranceLabel = packet.currentTargetEntranceLabel;
+        String currentTargetOwnerLabel = packet.currentTargetOwnerLabel;
         String teleportButtonLabel = packet.teleportButtonLabel;
         String cancelTeleportButtonLabel = packet.cancelTeleportButtonLabel;
 
@@ -107,30 +104,22 @@ public class UpdateTeleporterBlockPacketReceiver implements ServerPlayNetworking
                     player.sendMessage(Text.translatable("teleporter_block.specificLocationType.invalid"), false);
                     updateSuccessful = false;
                 }
-            } else if (teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.PLAYER_LOCATIONS) {
+            } else if (teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS) {
                 if (!teleporterBlockBlockEntity.setLocationsList(locationsList)) {
                     player.sendMessage(Text.translatable("teleporter_block.locationsList.invalid"), false);
                     updateSuccessful = false;
                 }
             }
-            if (!teleporterBlockBlockEntity.setConsumeKeyItemStack(consumeKeyItemStack)) {
-                player.sendMessage(Text.translatable("teleporter_block.consumeKeyItemStack.invalid"), false);
-                updateSuccessful = false;
-            }
             if (!teleporterBlockBlockEntity.setTeleporterName(teleporterName)) {
                 player.sendMessage(Text.translatable("teleporter_block.teleporterName.invalid"), false);
-                updateSuccessful = false;
-            }
-            if (!teleporterBlockBlockEntity.setCurrentTargetOwnerLabel(currentTargetOwnerLabel)) {
-                player.sendMessage(Text.translatable("teleporter_block.currentTargetOwnerLabel.invalid"), false);
                 updateSuccessful = false;
             }
             if (!teleporterBlockBlockEntity.setCurrentTargetIdentifierLabel(currentTargetIdentifierLabel)) {
                 player.sendMessage(Text.translatable("teleporter_block.currentTargetIdentifierLabel.invalid"), false);
                 updateSuccessful = false;
             }
-            if (!teleporterBlockBlockEntity.setCurrentTargetEntranceLabel(currentTargetEntranceLabel)) {
-                player.sendMessage(Text.translatable("teleporter_block.currentTargetEntranceLabel.invalid"), false);
+            if (!teleporterBlockBlockEntity.setCurrentTargetOwnerLabel(currentTargetOwnerLabel)) {
+                player.sendMessage(Text.translatable("teleporter_block.currentTargetOwnerLabel.invalid"), false);
                 updateSuccessful = false;
             }
             if (!teleporterBlockBlockEntity.setTeleportButtonLabel(teleportButtonLabel)) {

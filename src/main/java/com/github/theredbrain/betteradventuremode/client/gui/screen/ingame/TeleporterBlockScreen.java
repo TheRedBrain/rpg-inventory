@@ -1,13 +1,13 @@
 package com.github.theredbrain.betteradventuremode.client.gui.screen.ingame;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
-import com.github.theredbrain.betteradventuremode.api.json_files_backend.PlayerLocation;
+import com.github.theredbrain.betteradventuremode.api.json_files_backend.Location;
 import com.github.theredbrain.betteradventuremode.block.entity.TeleporterBlockBlockEntity;
 import com.github.theredbrain.betteradventuremode.client.network.DuckClientAdvancementManagerMixin;
 import com.github.theredbrain.betteradventuremode.network.packet.AddStatusEffectPacket;
 import com.github.theredbrain.betteradventuremode.network.packet.TeleportFromTeleporterBlockPacket;
 import com.github.theredbrain.betteradventuremode.network.packet.UpdateTeleporterBlockPacket;
-import com.github.theredbrain.betteradventuremode.registry.PlayerLocationsRegistry;
+import com.github.theredbrain.betteradventuremode.registry.LocationsRegistry;
 import com.github.theredbrain.betteradventuremode.registry.StatusEffectsRegistry;
 import com.github.theredbrain.betteradventuremode.screen.DuckSlotMixin;
 import com.github.theredbrain.betteradventuremode.screen.TeleporterBlockScreenHandler;
@@ -75,7 +75,8 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
     private static final Identifier SCROLL_BAR_BACKGROUND_8_70_TEXTURE = BetterAdventureMode.identifier("scroll_bar/scroll_bar_background_8_70");
     private static final Identifier CREATIVE_HOUSING_SCROLLER_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("scroll_bar/scroll_bar_background_8_95");
     private static final Identifier SCROLLER_TEXTURE = BetterAdventureMode.identifier("scroll_bar/scroller_vertical_6_7");
-    public static final Identifier ADVENTURE_TELEPORTER_SCREEN_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("textures/gui/container/adventure_teleporter_screen.png");
+    public static final Identifier ADVENTURE_TELEPORTER_SCREEN_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("textures/gui/container/teleporter_block/adventure_teleporter_screen.png");
+    public static final Identifier ADVENTURE_TELEPORTER_LOCATIONS_SCREEN_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("textures/gui/container/teleporter_block/adventure_teleporter_locations_screen.png");
     public static final Identifier CREATIVE_TELEPORTER_SCREEN_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("textures/gui/container/creative_teleporter_screen.png");
     public static final Identifier TELEPORTER_SCREEN_UTILITY_TEXTURE = BetterAdventureMode.identifier("textures/gui/container/teleporter_screen_util.png");
     private final TeleporterBlockScreenHandler handler;
@@ -108,11 +109,9 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
     private TextFieldWidget newLocationIdentifierField;
     private TextFieldWidget newLocationEntranceField;
     private ButtonWidget addNewLocationButton;
-//    private CyclingButtonWidget<Boolean> consumeKeyItemStackButton;
     private TextFieldWidget teleporterNameField;
     private TextFieldWidget currentTargetOwnerLabelField;
     private TextFieldWidget currentTargetIdentifierLabelField;
-    private TextFieldWidget currentTargetEntranceLabelField;
     private TextFieldWidget teleportButtonLabelField;
     private TextFieldWidget cancelTeleportButtonLabelField;
     private ButtonWidget doneButton;
@@ -153,7 +152,6 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
     List<Pair<String, String>> locationsList = new ArrayList<>();
     List<Pair<String, String>> visibleLocationsList = new ArrayList<>();
     List<Pair<String, String>> unlockedLocationsList = new ArrayList<>();
-//    private boolean consumeKeyItemStack;
     private int creativeLocationsListScrollPosition = 0;
     private int teamListScrollPosition = 0;
     private int visibleLocationsListScrollPosition = 0;
@@ -170,6 +168,8 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
     private boolean isCurrentLocationUnlocked;
     private Advancement currentLockAdvancement;
     private Advancement currentUnlockAdvancement;
+    private boolean isCurrentLocationPublic;
+    private boolean isCurrentLocationPlayer;
 
     public TeleporterBlockScreen(TeleporterBlockScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
@@ -212,7 +212,7 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
         this.currentTargetIdentifier = this.visibleLocationsList.get(this.visibleLocationsListScrollPosition + index).getLeft();
         this.currentTargetEntrance = this.visibleLocationsList.get(this.visibleLocationsListScrollPosition + index).getRight();
         this.showChooseTargetIdentifierScreen = false;
-        this.calculateUnlockedAndVisiblePlayerLocations(false);
+        this.calculateUnlockedAndVisibleLocations(false);
         this.updateWidgets();
     }
 
@@ -263,14 +263,14 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
         BetterAdventureMode.LOGGER.info(identifier);
         Text message = Text.literal("");
         if (Identifier.isValid(identifier)) {
-            PlayerLocation playerLocation = PlayerLocationsRegistry.getLocation(Identifier.tryParse(identifier));
-            if (playerLocation != null) {
-                if (!playerLocation.hasEntrance(entrance)) {
+            Location location = LocationsRegistry.getLocation(Identifier.tryParse(identifier));
+            if (location != null) {
+                if (!location.hasEntrance(entrance)) {
                     entrance = "";
                 }
                 boolean bl = false;
-                for (Pair<String, String> location : this.locationsList) {
-                    if (location.getLeft().equals(identifier) && location.getRight().equals(entrance)) {
+                for (Pair<String, String> locationsListEntry : this.locationsList) {
+                    if (locationsListEntry.getLeft().equals(identifier) && locationsListEntry.getRight().equals(entrance)) {
                         bl = true;
                         break;
                     }
@@ -323,9 +323,9 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
                 this.teleport();
             }
             this.backgroundWidth = 218;
-            if (this.teleporterBlock.getTeleportationMode() == TeleporterBlockBlockEntity.TeleportationMode.PLAYER_LOCATIONS) {
+            if (this.teleporterBlock.getTeleportationMode() == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS) {
                 this.backgroundHeight = 158;
-                this.calculateUnlockedAndVisiblePlayerLocations(true);
+                this.calculateUnlockedAndVisibleLocations(true);
             } else {
                 this.backgroundHeight = 47;
             }
@@ -333,15 +333,15 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
         super.init();
         //region adventure screen
 
-        this.openChooseTargetOwnerScreenButton = this.addDrawableChild(ButtonWidget.builder(EDIT_BUTTON_LABEL_TEXT, button -> this.openChooseCurrentTargetOwnerScreen()).dimensions(this.x + this.backgroundWidth - 57, this.y + 33, 50, 20).build());
-        this.cancelChooseTargetOwnerButton = this.addDrawableChild(ButtonWidget.builder(CANCEL_BUTTON_LABEL_TEXT, button -> this.cancelChooseCurrentTargetOwner()).dimensions(this.x + 7, this.y + this.backgroundHeight - 27, this.backgroundWidth - 14, 20).build());
-
-        this.openChooseTargetIdentifierScreenButton = this.addDrawableChild(ButtonWidget.builder(EDIT_BUTTON_LABEL_TEXT, button -> this.openChooseTargetIdentifierScreen()).dimensions(this.x + this.backgroundWidth - 57, this.y + 77, 50, 20).build());
+        this.openChooseTargetIdentifierScreenButton = this.addDrawableChild(ButtonWidget.builder(EDIT_BUTTON_LABEL_TEXT, button -> this.openChooseTargetIdentifierScreen()).dimensions(this.x + this.backgroundWidth - 57, this.y + 21, 50, 20).build());
         this.confirmChooseTargetIdentifier0Button = this.addDrawableChild(ButtonWidget.builder(CHOOSE_BUTTON_LABEL_TEXT, button -> this.chooseTargetIdentifier(0)).dimensions(this.x + this.backgroundWidth - 57, this.y + 20, 50, 20).build());
         this.confirmChooseTargetIdentifier1Button = this.addDrawableChild(ButtonWidget.builder(CHOOSE_BUTTON_LABEL_TEXT, button -> this.chooseTargetIdentifier(1)).dimensions(this.x + this.backgroundWidth - 57, this.y + 44, 50, 20).build());
         this.confirmChooseTargetIdentifier2Button = this.addDrawableChild(ButtonWidget.builder(CHOOSE_BUTTON_LABEL_TEXT, button -> this.chooseTargetIdentifier(2)).dimensions(this.x + this.backgroundWidth - 57, this.y + 68, 50, 20).build());
         this.confirmChooseTargetIdentifier3Button = this.addDrawableChild(ButtonWidget.builder(CHOOSE_BUTTON_LABEL_TEXT, button -> this.chooseTargetIdentifier(3)).dimensions(this.x + this.backgroundWidth - 57, this.y + 92, 50, 20).build());
         this.cancelChooseTargetIdentifierButton = this.addDrawableChild(ButtonWidget.builder(CANCEL_BUTTON_LABEL_TEXT, button -> this.cancelChooseTargetLocation()).dimensions(this.x + 7, this.y + this.backgroundHeight - 27, this.backgroundWidth - 14, 20).build());
+
+        this.openChooseTargetOwnerScreenButton = this.addDrawableChild(ButtonWidget.builder(EDIT_BUTTON_LABEL_TEXT, button -> this.openChooseCurrentTargetOwnerScreen()).dimensions(this.x + this.backgroundWidth - 57, this.y + 71, 50, 20).build());
+        this.cancelChooseTargetOwnerButton = this.addDrawableChild(ButtonWidget.builder(CANCEL_BUTTON_LABEL_TEXT, button -> this.cancelChooseCurrentTargetOwner()).dimensions(this.x + 7, this.y + this.backgroundHeight - 27, this.backgroundWidth - 14, 20).build());
 
         this.teleportButton = this.addDrawableChild(ButtonWidget.builder(Text.translatable(this.teleporterBlock.getTeleportButtonLabel()), button -> this.teleport()).dimensions(this.x + 7, this.y + this.backgroundHeight - 27, 100, 20).build());
         this.cancelTeleportButton = this.addDrawableChild(ButtonWidget.builder(Text.translatable(this.teleporterBlock.getCancelTeleportButtonLabel()), button -> this.cancelTeleport()).dimensions(this.x + this.backgroundWidth - 107, this.y + this.backgroundHeight - 27, 100, 20).build());
@@ -498,12 +498,6 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
         this.currentTargetIdentifierLabelField.setText(this.teleporterBlock.getCurrentTargetIdentifierLabel());
         this.addSelectableChild(this.currentTargetIdentifierLabelField);
 
-        this.currentTargetEntranceLabelField = new TextFieldWidget(this.textRenderer, this.width / 2 - 154, 116, 300, 20, Text.empty());
-        this.currentTargetEntranceLabelField.setMaxLength(128);
-        this.currentTargetEntranceLabelField.setPlaceholder(Text.translatable("gui.teleporter_block.target_entrance_field.place_holder"));
-        this.currentTargetEntranceLabelField.setText(this.teleporterBlock.getCurrentTargetEntranceLabel());
-        this.addSelectableChild(this.currentTargetEntranceLabelField);
-
         this.teleportButtonLabelField = new TextFieldWidget(this.textRenderer, this.width / 2 - 154, 140, 300, 20, Text.empty());
         this.teleportButtonLabelField.setMaxLength(128);
         this.teleportButtonLabelField.setPlaceholder(Text.translatable("gui.teleporter_block.teleport_button.place_holder"));
@@ -536,16 +530,16 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
     
     private void updateWidgets() {
 
-        this.openChooseTargetOwnerScreenButton.visible = false;
-        // TODO
-        this.cancelChooseTargetOwnerButton.visible = false;
-
         this.openChooseTargetIdentifierScreenButton.visible = false;
         this.confirmChooseTargetIdentifier0Button.visible = false;
         this.confirmChooseTargetIdentifier1Button.visible = false;
         this.confirmChooseTargetIdentifier2Button.visible = false;
         this.confirmChooseTargetIdentifier3Button.visible = false;
         this.cancelChooseTargetIdentifierButton.visible = false;
+
+        this.openChooseTargetOwnerScreenButton.visible = false;
+        // TODO
+        this.cancelChooseTargetOwnerButton.visible = false;
 
         this.teleportButton.visible = false;
         this.cancelTeleportButton.visible = false;
@@ -584,9 +578,8 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
         this.addNewLocationButton.visible = false;
 
         this.teleporterNameField.setVisible(false);
-        this.currentTargetOwnerLabelField.setVisible(false);
         this.currentTargetIdentifierLabelField.setVisible(false);
-        this.currentTargetEntranceLabelField.setVisible(false);
+        this.currentTargetOwnerLabelField.setVisible(false);
         this.teleportButtonLabelField.setVisible(false);
         this.cancelTeleportButtonLabelField.setVisible(false);
 
@@ -631,7 +624,7 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
 
                     this.spawnPointTypeButton.visible = true;
 
-                } else if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.PLAYER_LOCATIONS) {
+                } else if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS) {
 
                     int index = 0;
                     for (int i = 0; i < Math.min(3, this.locationsList.size()); i++) {
@@ -656,12 +649,9 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
                 this.teleportButtonLabelField.setVisible(true);
                 this.cancelTeleportButtonLabelField.setVisible(true);
 
-                if (!(this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DIRECT || this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.SPAWN_POINTS)) {
-                    this.currentTargetOwnerLabelField.setVisible(true);
+                if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS) {
                     this.currentTargetIdentifierLabelField.setVisible(true);
-                    if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.PLAYER_LOCATIONS) {
-                        this.currentTargetEntranceLabelField.setVisible(true);
-                    }
+                    this.currentTargetOwnerLabelField.setVisible(true);
                 }
 
             }
@@ -671,12 +661,7 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
 
         } else {
 
-            if (showChooseTargetOwnerScreen) {
-
-                // TODO
-                this.cancelChooseTargetOwnerButton.visible = true;
-
-            } else if (showChooseTargetIdentifierScreen) {
+            if (showChooseTargetIdentifierScreen) {
 
                 int index = 0;
                 for (int i = 0; i < Math.min(4, this.visibleLocationsList.size()); i++) {
@@ -694,6 +679,11 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
 
                 this.cancelChooseTargetIdentifierButton.visible = true;
 
+            } else if (showChooseTargetOwnerScreen) {
+
+                // TODO
+                this.cancelChooseTargetOwnerButton.visible = true;
+
             } else if (showRegenerationConfirmScreen) {
 
                 this.confirmDungeonRegenerationButton.visible = true;
@@ -701,7 +691,7 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
 
             } else {
 
-                if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.PLAYER_LOCATIONS) {
+                if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS) {
                     this.openChooseTargetIdentifierScreenButton.visible = true;
                     this.openChooseTargetOwnerScreenButton.visible = true;
                 }
@@ -714,7 +704,7 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
         }
     }
 
-    private void calculateUnlockedAndVisiblePlayerLocations(boolean shouldInit) {
+    private void calculateUnlockedAndVisibleLocations(boolean shouldInit) {
 
         ClientAdvancementManager advancementHandler = null;
         String lockAdvancementIdentifier;
@@ -726,14 +716,14 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
         }
 
         if (shouldInit) {
-            if (this.teleporterBlock.getTeleportationMode() == TeleporterBlockBlockEntity.TeleportationMode.PLAYER_LOCATIONS) {
+            if (this.teleporterBlock.getTeleportationMode() == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS) {
                 this.unlockedLocationsList.clear();
                 this.visibleLocationsList.clear();
                 for (Pair<String, String> stringStringPair : this.locationsList) {
-                    PlayerLocation playerLocation = PlayerLocationsRegistry.getLocation(new Identifier(stringStringPair.getLeft()));
-                    lockAdvancementIdentifier = playerLocation.lockAdvancement();
-                    unlockAdvancementIdentifier = playerLocation.unlockAdvancement();
-                    showLockedLocation = playerLocation.showLockedDungeon();
+                    Location location = LocationsRegistry.getLocation(new Identifier(stringStringPair.getLeft()));
+                    lockAdvancementIdentifier = location.lockAdvancement();
+                    unlockAdvancementIdentifier = location.unlockAdvancement();
+                    showLockedLocation = location.showLockedDungeon();
 
                     if (advancementHandler != null) {
                         AdvancementEntry lockAdvancementEntry = null;
@@ -766,14 +756,16 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
             }
         }
 
-        PlayerLocation playerLocation = PlayerLocationsRegistry.getLocation(Identifier.tryParse(this.currentTargetIdentifier));
-        if (playerLocation != null) {
-            lockAdvancementIdentifier = playerLocation.lockAdvancement();
-            unlockAdvancementIdentifier = playerLocation.unlockAdvancement();
-            this.showCurrentLockAdvancement = playerLocation.showLockAdvancement();
-            this.showCurrentUnlockAdvancement = playerLocation.showUnlockAdvancement();
-            this.currentTargetDisplayName = playerLocation.getDisplayName();
-            this.currentTargetEntranceDisplayName = playerLocation.getEntranceDisplayName(this.currentTargetEntrance);
+        Location location = LocationsRegistry.getLocation(Identifier.tryParse(this.currentTargetIdentifier));
+        if (location != null) {
+            lockAdvancementIdentifier = location.lockAdvancement();
+            unlockAdvancementIdentifier = location.unlockAdvancement();
+            this.showCurrentLockAdvancement = location.showLockAdvancement();
+            this.showCurrentUnlockAdvancement = location.showUnlockAdvancement();
+            this.currentTargetDisplayName = location.getDisplayName();
+            this.currentTargetEntranceDisplayName = location.getEntranceDisplayName(this.currentTargetEntrance);
+            this.isCurrentLocationPublic = location.publicLocation();
+            this.isCurrentLocationPlayer = location.playerLocation();
             if (advancementHandler != null) {
                 AdvancementEntry lockAdvancementEntry = null;
                 if (!lockAdvancementIdentifier.equals("")) {
@@ -824,7 +816,7 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
         int j;
         if (this.showCreativeTab
                 && this.creativeScreenPage == CreativeScreenPage.TELEPORTATION_MODE
-                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.PLAYER_LOCATIONS
+                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS
                 && this.locationsList.size() > 3) {
             i = this.width / 2 - 152;
             j = 71;
@@ -842,7 +834,7 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
         }
         if (!this.showCreativeTab
                 && this.showChooseTargetIdentifierScreen
-                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.PLAYER_LOCATIONS
+                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS
                 && this.visibleLocationsList.size() > 4) {
             i = this.x + 8;
             j = this.y + 21;
@@ -857,7 +849,7 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         if (this.showCreativeTab
                 && this.creativeScreenPage == CreativeScreenPage.TELEPORTATION_MODE
-                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.PLAYER_LOCATIONS
+                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS
                 && this.locationsList.size() > 3
                 && this.creativeLocationsListMouseClicked) {
             int i = this.locationsList.size() - 3;
@@ -868,7 +860,7 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
         // TODO team list
         if (!this.showCreativeTab
                 && this.showChooseTargetIdentifierScreen
-                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.PLAYER_LOCATIONS
+                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS
                 && this.visibleLocationsList.size() > 4
                 && this.visibleLocationsListMouseClicked) {
             int i = this.visibleLocationsList.size() - 4;
@@ -884,7 +876,7 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
         // TODO
         if (this.showCreativeTab
                 && this.creativeScreenPage == CreativeScreenPage.TELEPORTATION_MODE
-                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.PLAYER_LOCATIONS
+                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS
                 && this.locationsList.size() > 3
                 && mouseX >= (double)(this.width / 2 - 152) && mouseX <= (double)(this.width / 2 + 50)
                 && mouseY >= 70 && mouseY <= 140) {
@@ -896,7 +888,7 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
         // TODO team list
         if (!this.showCreativeTab
                 && this.showChooseTargetIdentifierScreen
-                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.PLAYER_LOCATIONS
+                && this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS
                 && this.visibleLocationsList.size() > 4
                 && mouseX >= this.x + 7 && mouseX <= this.x + this.backgroundWidth - 61 && mouseY >= this.y + 20 && mouseY <= this.y + 112) {
             int i = this.visibleLocationsList.size() - 4;
@@ -946,7 +938,7 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
                     this.directTeleportOrientationPitchField.render(context, mouseX, mouseY, delta);
                 } else if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.SPAWN_POINTS) {
                     context.drawTextWithShadow(this.textRenderer, SPAWN_POINT_TYPE_LABEL_TEXT, this.width / 2 - 153, 76, 0xA0A0A0);
-                } else if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.PLAYER_LOCATIONS) {
+                } else if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS) {
                     for (int i = this.creativeLocationsListScrollPosition; i < Math.min(this.creativeLocationsListScrollPosition + 3, this.locationsList.size()); i++) {
                         String text = this.locationsList.get(i).getLeft();
                         if (!this.locationsList.get(i).getRight().equals("")) {
@@ -966,16 +958,11 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
 
                 this.teleporterNameField.render(context, mouseX, mouseY, delta);
 
-                if (!(this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DIRECT || this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.SPAWN_POINTS)) {
+                if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS) {
 
-                    this.currentTargetOwnerLabelField.render(context, mouseX, mouseY, delta);
                     this.currentTargetIdentifierLabelField.render(context, mouseX, mouseY, delta);
+                    this.currentTargetOwnerLabelField.render(context, mouseX, mouseY, delta);
 
-                    if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.PLAYER_LOCATIONS) {
-
-                        this.currentTargetEntranceLabelField.render(context, mouseX, mouseY, delta);
-
-                    }
                 }
 
                 this.teleportButtonLabelField.render(context, mouseX, mouseY, delta);
@@ -1008,29 +995,26 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
 
                     context.drawText(this.textRenderer, teleporterName, this.x + teleporterNameOffset, this.y + 7, 0x404040, false);
 
-                    if (!(mode == TeleporterBlockBlockEntity.TeleportationMode.DIRECT || mode == TeleporterBlockBlockEntity.TeleportationMode.SPAWN_POINTS)) {
+                    if (mode == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS) {
 
-                        context.drawText(this.textRenderer, Text.translatable(this.teleporterBlock.getCurrentTargetOwnerLabel()), this.x + 8, this.y + 20, 0x404040, false);
+//                        context.drawText(this.textRenderer, Text.translatable(this.teleporterBlock.getCurrentTargetIdentifierLabel()), this.x + 8, this.y + 20, 0x404040, false);
 
-                        context.drawTexture(currentTargetOwner.getSkinTextures().texture(), this.x + 7, this.y + 39, 8, 8, 8, 8, 8, 8, 64, 64);
-                        context.drawText(this.textRenderer, currentTargetOwner.getProfile().getName(), this.x + 19, this.y + 39, 0x404040, false);
+                        if (!this.currentTargetEntrance.equals("")) {
 
-                        context.drawText(this.textRenderer, Text.translatable(this.teleporterBlock.getCurrentTargetIdentifierLabel()), this.x + 8, this.y + 57, 0x404040, false);
+                            context.drawText(this.textRenderer, Text.translatable(this.currentTargetEntranceDisplayName), this.x + 8, this.y + 20, 0x404040, false);
+                            context.drawText(this.textRenderer, Text.translatable(this.currentTargetDisplayName), this.x + 8, this.y + 33, 0x404040, false);
 
-                        if (mode == TeleporterBlockBlockEntity.TeleportationMode.PLAYER_LOCATIONS) {
+                        } else {
 
-                            if (!Objects.equals(this.currentTargetEntrance, "")) {
-
-                                context.drawText(this.textRenderer, Text.translatable(this.currentTargetEntranceDisplayName), this.x + 8, this.y + 76, 0x404040, false);
-                                context.drawText(this.textRenderer, Text.translatable(this.currentTargetDisplayName), this.x + 8, this.y + 89, 0x404040, false);
-
-                            } else {
-
-                                context.drawText(this.textRenderer, Text.translatable(this.currentTargetDisplayName), this.x + 8, this.y + 83, 0x404040, false);
-
-                            }
+                            context.drawText(this.textRenderer, Text.translatable(this.currentTargetDisplayName), this.x + 8, this.y + 27, 0x404040, false);
 
                         }
+
+                        context.drawText(this.textRenderer, Text.translatable(this.teleporterBlock.getCurrentTargetOwnerLabel()), this.x + 8, this.y + 58, 0x404040, false);
+
+                        context.drawTexture(currentTargetOwner.getSkinTextures().texture(), this.x + 7, this.y + 77, 8, 8, 8, 8, 8, 8, 64, 64);
+                        context.drawText(this.textRenderer, currentTargetOwner.getProfile().getName(), this.x + 19, this.y + 77, 0x404040, false);
+
                     }
                 }
             }
@@ -1046,10 +1030,10 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
         if (!this.showCreativeTab) {
             int i = this.x;
             int j = this.y;
-            if (this.teleporterBlock.getTeleportationMode() == TeleporterBlockBlockEntity.TeleportationMode.PLAYER_LOCATIONS) {
-                context.drawTexture(BetterAdventureMode.identifier("textures/gui/container/adventure_teleporter_locations_screen.png"), i, j, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
+            if (this.teleporterBlock.getTeleportationMode() == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS) {
+                context.drawTexture(ADVENTURE_TELEPORTER_LOCATIONS_SCREEN_BACKGROUND_TEXTURE, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
             } else {
-                context.drawTexture(BetterAdventureMode.identifier("textures/gui/container/adventure_teleporter_screen.png"), i, j, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
+                context.drawTexture(ADVENTURE_TELEPORTER_SCREEN_BACKGROUND_TEXTURE, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
             }
         }
     }
@@ -1108,7 +1092,7 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
         }
 
         List<Pair<String, String>> locationsList = new ArrayList<Pair<String, String>>();
-        if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.PLAYER_LOCATIONS) {
+        if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS) {
             locationsList = this.locationsList;
         }
 
@@ -1138,11 +1122,9 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
                 directTeleportPositionOffsetPitch,
                 spawnPointType.asString(),
                 locationsList,
-                false/*this.consumeKeyItemStack*/,
                 this.teleporterNameField.getText(),
-                this.currentTargetOwnerLabelField.getText(),
                 this.currentTargetIdentifierLabelField.getText(),
-                this.currentTargetEntranceLabelField.getText(),
+                this.currentTargetOwnerLabelField.getText(),
                 this.teleportButtonLabelField.getText(),
                 this.cancelTeleportButtonLabelField.getText()
         ));

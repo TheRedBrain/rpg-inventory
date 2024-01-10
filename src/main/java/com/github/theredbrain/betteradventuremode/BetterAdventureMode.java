@@ -47,18 +47,20 @@ public class BetterAdventureMode implements ModInitializer {
 		EventsRegistry.initializeEvents();
 		DialoguesRegistry.init();
 		ShopsRegistry.init();
-		PlayerLocationsRegistry.init();
+		LocationsRegistry.init();
 		ItemRegistry.init();
 		ItemGroupRegistry.init();
 		ScreenHandlerTypesRegistry.registerAll();
 		StatusEffectsRegistry.registerEffects();
 		GameRulesRegistry.init();
 		PredicateRegistry.init();
+		StructurePlacementTypesRegistry.register();
 	}
 
 	static {
 		ModContainer modContainer = FabricLoader.getInstance().getModContainer(MOD_ID).get();
 		registerBuiltinResourcePack(new Identifier(MOD_ID, "better_adventure_mode_spell_engine_compat"), modContainer, Text.translatable("betteradventuremode.builtin_resource_packs.better_adventure_mode_spell_engine_compat"), ResourcePackActivationType.NORMAL);
+		registerBuiltinResourcePack(new Identifier(MOD_ID, "betteradventuremode_testing"), modContainer, Text.translatable("betteradventuremode.builtin_resource_packs.betteradventuremode_testing"), ResourcePackActivationType.DEFAULT_ENABLED);
 	}
 
 	public static Identifier identifier(String path) {

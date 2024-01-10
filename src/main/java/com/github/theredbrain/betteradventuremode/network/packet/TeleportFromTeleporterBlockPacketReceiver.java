@@ -1,11 +1,11 @@
 package com.github.theredbrain.betteradventuremode.network.packet;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureModeClient;
-import com.github.theredbrain.betteradventuremode.api.json_files_backend.PlayerLocation;
+import com.github.theredbrain.betteradventuremode.api.json_files_backend.Location;
 import com.github.theredbrain.betteradventuremode.block.entity.LocationControlBlockEntity;
 import com.github.theredbrain.betteradventuremode.block.entity.TeleporterBlockBlockEntity;
 import com.github.theredbrain.betteradventuremode.registry.ComponentsRegistry;
-import com.github.theredbrain.betteradventuremode.registry.PlayerLocationsRegistry;
+import com.github.theredbrain.betteradventuremode.registry.LocationsRegistry;
 import com.github.theredbrain.betteradventuremode.world.DimensionsManager;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -76,7 +76,7 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
                 targetPos = server.getOverworld().getSpawnPos();
                 targetYaw = server.getOverworld().getSpawnAngle();
             }
-        } else if (teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.PLAYER_LOCATIONS) {
+        } else if (teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS) {
             ServerPlayerEntity targetDimensionOwner = server.getPlayerManager().getPlayer(targetDimensionOwnerName);
 
 //            BetterAdventureModeCore.info("targetLocation: " + targetLocation);
@@ -101,12 +101,12 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
                 }
 
 //                BetterAdventureModeCore.info("targetWorld: " + targetWorld);
-                PlayerLocation playerLocation = PlayerLocationsRegistry.getLocation(Identifier.tryParse(targetLocation));
+                Location location = LocationsRegistry.getLocation(Identifier.tryParse(targetLocation));
 
-                if (targetWorld != null && playerLocation != null) {
-//                    BetterAdventureModeCore.info("targetWorld != null && playerLocation != null");
+                if (targetWorld != null && location != null) {
+//                    BetterAdventureModeCore.info("targetWorld != null && location != null");
 
-                    BlockPos blockPos = playerLocation.controlBlockPos();
+                    BlockPos blockPos = location.controlBlockPos();
 
                     BlockEntity blockEntity = targetWorld.getBlockEntity(blockPos);
 
@@ -119,7 +119,7 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
 
 //                        server.getCommandManager().executeWithPrefix(server.getCommandSource(), "forceload query");
 
-                        String placeStructureCommand = "execute in " + targetWorld.getRegistryKey().getValue() + " run place structure " + playerLocation.getStructureIdentifier() + " " + blockPos.getX() + " " + blockPos.getY() + " " + blockPos.getZ();
+                        String placeStructureCommand = "execute in " + targetWorld.getRegistryKey().getValue() + " run place structure " + location.getStructureIdentifier() + " " + blockPos.getX() + " " + blockPos.getY() + " " + blockPos.getZ();
                         server.getCommandManager().executeWithPrefix(server.getCommandSource(), placeStructureCommand);
 
                         String forceLoadRemoveAllCommand = "execute in " + targetWorld.getRegistryKey().getValue() + " run forceload remove " + (blockPos.getX() - 16) + " " + (blockPos.getZ() - 16) + " " + (blockPos.getX() + 31) + " " + (blockPos.getZ() + 31);

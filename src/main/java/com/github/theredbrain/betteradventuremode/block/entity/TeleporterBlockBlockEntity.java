@@ -35,7 +35,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements ExtendedScreenHandlerFactory, Inventory {
+public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements ExtendedScreenHandlerFactory {
 
     private boolean calculateActivationBox = true;
     private Box activationArea = null;
@@ -60,16 +60,9 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
     // dungeon mode
     private List<Pair<String, String>> locationsList = new ArrayList<>(List.of());
 
-//    // player house mode
-//    private List<String> housingLocationsList = new ArrayList<>(List.of());
-
-    private boolean consumeKeyItemStack = false;
-    private DefaultedList<ItemStack> requiredKeyItemStack = DefaultedList.ofSize(1, ItemStack.EMPTY);
-
     private String teleporterName = "gui.teleporter_block.teleporter_name_field.label";
     private String currentTargetOwnerLabel = "gui.teleporter_block.target_owner_field.label";
     private String currentTargetIdentifierLabel = "gui.teleporter_block.target_identifier_field.label";
-    private String currentTargetEntranceLabel = "gui.teleporter_block.target_entrance_field.label";
     private String teleportButtonLabel = "gui.teleporter_block.teleport_button.label";
     private String cancelTeleportButtonLabel = "gui.teleporter_block.cancel_teleport_button.label";
 
@@ -116,12 +109,8 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
             nbt.putString("locationsListEntrance_" + i, this.locationsList.get(i).getRight());
         }
 
-        nbt.putBoolean("consumeKeyItemStack", this.consumeKeyItemStack);
-        Inventories.writeNbt(nbt, this.requiredKeyItemStack);
-
-        nbt.putString("currentTargetOwnerLabel", this.currentTargetOwnerLabel);
         nbt.putString("currentTargetIdentifierLabel", this.currentTargetIdentifierLabel);
-        nbt.putString("currentTargetEntranceLabel", this.currentTargetEntranceLabel);
+        nbt.putString("currentTargetOwnerLabel", this.currentTargetOwnerLabel);
         nbt.putString("teleportButtonLabel", this.teleportButtonLabel);
         nbt.putString("cancelTeleportButtonLabel", this.cancelTeleportButtonLabel);
 
@@ -180,13 +169,8 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
             this.locationsList.add(new Pair<>(nbt.getString("locationsListIdentifier_" + p), nbt.getString("locationsListEntrance_" + p)));
         }
 
-        this.consumeKeyItemStack = nbt.getBoolean("consumeKeyItemStack");
-        this.requiredKeyItemStack = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
-        Inventories.readNbt(nbt, this.requiredKeyItemStack);
-
-        this.currentTargetOwnerLabel = nbt.getString("currentTargetOwnerLabel");
         this.currentTargetIdentifierLabel = nbt.getString("currentTargetIdentifierLabel");
-        this.currentTargetEntranceLabel = nbt.getString("currentTargetEntranceLabel");
+        this.currentTargetOwnerLabel = nbt.getString("currentTargetOwnerLabel");
         this.teleportButtonLabel = nbt.getString("teleportButtonLabel");
         this.cancelTeleportButtonLabel = nbt.getString("cancelTeleportButtonLabel");
 
@@ -371,38 +355,6 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
         return true;
     }
 
-    public boolean getConsumeKeyItemStack() {
-        return consumeKeyItemStack;
-    }
-
-    // TODO check if input is valid
-    public boolean setConsumeKeyItemStack(boolean consumeKeyItemStack) {
-        this.consumeKeyItemStack = consumeKeyItemStack;
-        return true;
-    }
-
-//    public boolean isKeyItemStackSlotVisible() {
-//        return !(requiredKeyItemStack.get(0).isEmpty());
-//    }
-//
-//    public DefaultedList<ItemStack> getRequiredKeyItemStack() {
-//        return requiredKeyItemStack;
-//    }
-//
-//    public void setRequiredKeyItemStack(DefaultedList<ItemStack> requiredKeyItemStack) {
-//        this.requiredKeyItemStack = requiredKeyItemStack;
-//    }
-
-    public String getCurrentTargetOwnerLabel() {
-        return this.currentTargetOwnerLabel;
-    }
-
-    // TODO check if input is valid
-    public boolean setCurrentTargetOwnerLabel(String currentTargetOwnerLabel) {
-        this.currentTargetOwnerLabel = currentTargetOwnerLabel;
-        return true;
-    }
-
     public String getCurrentTargetIdentifierLabel() {
         return this.currentTargetIdentifierLabel;
     }
@@ -413,13 +365,13 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
         return true;
     }
 
-    public String getCurrentTargetEntranceLabel() {
-        return this.currentTargetEntranceLabel;
+    public String getCurrentTargetOwnerLabel() {
+        return this.currentTargetOwnerLabel;
     }
 
     // TODO check if input is valid
-    public boolean setCurrentTargetEntranceLabel(String currentTargetEntranceLabel) {
-        this.currentTargetEntranceLabel = currentTargetEntranceLabel;
+    public boolean setCurrentTargetOwnerLabel(String currentTargetOwnerLabel) {
+        this.currentTargetOwnerLabel = currentTargetOwnerLabel;
         return true;
     }
 
@@ -450,74 +402,12 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
-        if (player.isCreativeLevelTwoOp()) {
-            return new TeleporterBlockScreenHandler(syncId, playerInventory, this, true);
-        } else {
-            return new TeleporterBlockScreenHandler(syncId, playerInventory, this, false);
-        }
+        return new TeleporterBlockScreenHandler(syncId, playerInventory, player.isCreativeLevelTwoOp());
     }
 
     @Override
     public Text getDisplayName() {
         return Text.translatable(this.teleporterName);
-    }
-
-    @Override
-    public int size() {
-        return this.requiredKeyItemStack.size();
-    }
-
-    @Override
-    public boolean isEmpty() {
-        for (ItemStack itemStack : this.requiredKeyItemStack) {
-            if (itemStack.isEmpty()) continue;
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public ItemStack getStack(int slot) {
-        return this.requiredKeyItemStack.get(slot);
-    }
-
-    @Override
-    public ItemStack removeStack(int slot, int amount) {
-        ItemStack itemStack = Inventories.splitStack(this.requiredKeyItemStack, slot, amount);
-        if (!itemStack.isEmpty()) {
-            this.markDirty();
-        }
-        return itemStack;
-    }
-
-    @Override
-    public ItemStack removeStack(int slot) {
-        ItemStack itemStack = this.requiredKeyItemStack.get(slot);
-        if (itemStack.isEmpty()) {
-            return ItemStack.EMPTY;
-        }
-        this.requiredKeyItemStack.set(slot, ItemStack.EMPTY);
-        return itemStack;
-    }
-
-    @Override
-    public void setStack(int slot, ItemStack stack) {
-        this.requiredKeyItemStack.set(slot, stack);
-        if (!stack.isEmpty() && stack.getCount() > this.getMaxCountPerStack()) {
-            stack.setCount(this.getMaxCountPerStack());
-        }
-        this.markDirty();
-    }
-
-    @Override
-    public boolean canPlayerUse(PlayerEntity player) {
-        return Inventory.canPlayerUse(this, player, 48);
-    }
-
-    @Override
-    public void clear() {
-        this.requiredKeyItemStack.clear();
-        this.markDirty();
     }
 
     @Override
@@ -566,7 +456,7 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
     public static enum TeleportationMode implements StringIdentifiable {
         DIRECT("direct"),
         SPAWN_POINTS("spawn_points"),
-        PLAYER_LOCATIONS("player_locations");
+        LOCATIONS("locations");
 
         private final String name;
 
