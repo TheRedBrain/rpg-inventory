@@ -24,8 +24,17 @@ public class AddStatusEffectPacketReceiver implements ServerPlayNetworking.PlayP
         StatusEffect statusEffect = Registries.STATUS_EFFECT.get(effectId);
 
         if (statusEffect != null) {
+//            if (player.hasStatusEffect(statusEffect)) {
+//                player.removeStatusEffect(statusEffect);
+//            }
+//            if (!toggle) {
+//                player.addStatusEffect(new StatusEffectInstance(statusEffect, duration, amplifier, ambient, showParticles, showIcon));
+//            }
             if (toggle && player.hasStatusEffect(statusEffect)) {
                 player.removeStatusEffect(statusEffect);
+            } else if (player.hasStatusEffect(statusEffect)) {
+                player.removeStatusEffect(statusEffect);
+                player.addStatusEffect(new StatusEffectInstance(statusEffect, duration, amplifier, ambient, showParticles, showIcon));
             } else {
                 player.addStatusEffect(new StatusEffectInstance(statusEffect, duration, amplifier, ambient, showParticles, showIcon));
             }

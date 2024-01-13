@@ -1,0 +1,33 @@
+{
+  "controlBlockPosX": 0,
+  "controlBlockPosY": -63,
+  "controlBlockPosZ": 0,
+  "structureIdentifier": "betteradventuremode:locations/towns/town_1",
+  "displayName": "locations.towns.town_1",
+  "unlockAdvancement": "",
+  "lockAdvancement": "",
+  "showLockedLocation": true,
+  "showUnlockAdvancement": true,
+  "showLockAdvancement": false,
+  "publicLocation": true,
+  "playerLocation": false,
+  "consumeKey": false,
+  "side_entrances": {
+    "east_entrance": {
+      "name": "locations.towns.town_1.east_entrance",
+      "consumeKey": false
+    },
+    "south_entrance": {
+      "name": "locations.towns.town_1.south_entrance",
+      "consumeKey": false
+    },
+    "west_entrance": {
+      "name": "locations.towns.town_1.west_entrance",
+      "consumeKey": false
+    },
+    "north_entrance": {
+      "name": "locations.towns.town_1.north_entrance",
+      "consumeKey": false
+    }
+  }
+}

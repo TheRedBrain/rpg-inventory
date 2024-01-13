@@ -3,7 +3,7 @@
     {
       "element": {
         "element_type": "minecraft:single_pool_element",
-        "location": "betteradventuremode:player_locations/dungeons/interiors/13x13x13/crypt/dungeon",
+        "location": "betteradventuremode:locations/towns/town_1/town_1_start",
         "processors": {
           "processors": []
         },

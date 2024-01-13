@@ -100,6 +100,27 @@ public final class Location {
         return this.key;
     }
 
+    @Nullable
+    public ItemUtils.VirtualItemStack getKeyForEntrance(String entrance) {
+        if (entrance.equals("")) {
+            return this.key;
+        }
+        if (this.side_entrances != null && this.side_entrances.get(entrance) != null) {
+            return this.side_entrances.get(entrance).getKey();
+        }
+        return null;
+    }
+
+    public boolean consumeKeyAtEntrance(String entrance) {
+        if (entrance.equals("")) {
+            return this.consumeKey;
+        }
+        if (this.side_entrances != null && this.side_entrances.get(entrance) != null) {
+            return this.side_entrances.get(entrance).consumeKey();
+        }
+        return false;
+    }
+
     public boolean hasEntrance(String entrance) {
         if (this.side_entrances != null) {
             return this.side_entrances.containsKey(entrance);

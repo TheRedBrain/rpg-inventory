@@ -5,7 +5,7 @@
   "structureIdentifier": "betteradventuremode:locations/housing_dungeon",
   "displayName": "locations.dungeons.test_dungeon",
   "unlockAdvancement": "",
-  "lockAdvancement": "minecraft:story/mine_diamond",
+  "lockAdvancement": "",
   "showLockedLocation": true,
   "showUnlockAdvancement": true,
   "showLockAdvancement": false,

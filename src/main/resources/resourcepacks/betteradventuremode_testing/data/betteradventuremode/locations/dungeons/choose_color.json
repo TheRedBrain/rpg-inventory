@@ -4,7 +4,7 @@
   "controlBlockPosZ": 0,
   "structureIdentifier": "betteradventuremode:locations/choose_color",
   "displayName": "locations.dungeons.choose_color",
-  "unlockAdvancement": "minecraft:story/smelt_iron",
+  "unlockAdvancement": "",
   "lockAdvancement": "",
   "showLockedLocation": true,
   "showUnlockAdvancement": true,

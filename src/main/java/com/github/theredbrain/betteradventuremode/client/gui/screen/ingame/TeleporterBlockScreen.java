@@ -2,6 +2,7 @@ package com.github.theredbrain.betteradventuremode.client.gui.screen.ingame;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.api.json_files_backend.Location;
+import com.github.theredbrain.betteradventuremode.api.util.ItemUtils;
 import com.github.theredbrain.betteradventuremode.block.entity.TeleporterBlockBlockEntity;
 import com.github.theredbrain.betteradventuremode.client.network.DuckClientAdvancementManagerMixin;
 import com.github.theredbrain.betteradventuremode.network.packet.AddStatusEffectPacket;
@@ -26,6 +27,8 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.network.ClientAdvancementManager;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.screen.ScreenTexts;
@@ -63,6 +66,9 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
     private static final Text CONFIRM_BUTTON_LABEL_TEXT = Text.translatable("gui.confirm");
     private static final Text CANCEL_BUTTON_LABEL_TEXT = Text.translatable("gui.cancel");
     private static final Text CHOOSE_BUTTON_LABEL_TEXT = Text.translatable("gui.choose");
+    private static final Text KEY_ITEM_IS_CONSUMED_TEXT = Text.translatable("gui.teleporter_block.key_item_is_consumed_text");
+    private static final Text KEY_ITEM_IS_REQUIRED_TEXT = Text.translatable("gui.teleporter_block.key_item_is_required_text");
+    private static final Text LOCATION_IS_PUBLIC_TEXT = Text.translatable("gui.teleporter_block.location_is_public_text");
     private static final Text TELEPORTER_NAME_FIELD_LABEL_TEXT = Text.translatable("gui.teleporter_block.teleporter_name_field.label");
     private static final Text TARGET_OWNER_FIELD_LABEL_TEXT = Text.translatable("gui.teleporter_block.target_owner_field.label");
     private static final Text TARGET_IDENTIFIER_FIELD_LABEL_TEXT = Text.translatable("gui.teleporter_block.target_identifier_field.label");
@@ -120,6 +126,11 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
     // adventure mode
     private PlayerListEntry currentTargetOwner;
     private ButtonWidget openChooseTargetOwnerScreenButton;
+    private ButtonWidget confirmChoosePublicButton;
+    private ButtonWidget confirmChooseTargetOwner0Button;
+    private ButtonWidget confirmChooseTargetOwner1Button;
+    private ButtonWidget confirmChooseTargetOwner2Button;
+    private ButtonWidget confirmChooseTargetOwner3Button;
     private ButtonWidget cancelChooseTargetOwnerButton;
     private String currentTargetIdentifier;
     private String currentTargetDisplayName;
@@ -170,6 +181,8 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
     private Advancement currentUnlockAdvancement;
     private boolean isCurrentLocationPublic;
     private boolean isCurrentLocationPlayer;
+    private boolean consumeKeyItem = false;
+    private ItemUtils.VirtualItemStack currentKeyVirtualItemStack;
 
     public TeleporterBlockScreen(TeleporterBlockScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
@@ -324,7 +337,7 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
             }
             this.backgroundWidth = 218;
             if (this.teleporterBlock.getTeleportationMode() == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS) {
-                this.backgroundHeight = 158;
+                this.backgroundHeight = 147;//158;
                 this.calculateUnlockedAndVisibleLocations(true);
             } else {
                 this.backgroundHeight = 47;
@@ -693,7 +706,9 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
 
                 if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS) {
                     this.openChooseTargetIdentifierScreenButton.visible = true;
-                    this.openChooseTargetOwnerScreenButton.visible = true;
+                    if (this.isCurrentLocationPlayer) {
+                        this.openChooseTargetOwnerScreenButton.visible = true;
+                    }
                 }
 
                 this.teleportButton.visible = true;
@@ -734,8 +749,7 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
                         if (!unlockAdvancementIdentifier.equals("")) {
                             unlockAdvancementEntry = advancementHandler.get(Identifier.tryParse(unlockAdvancementIdentifier));
                         }
-                        if ((lockAdvancementIdentifier.equals("") || (lockAdvancementEntry != null && !((DuckClientAdvancementManagerMixin)advancementHandler).betteradventuremode$getAdvancementProgress(lockAdvancementEntry).isDone())) &&
-                            (unlockAdvancementIdentifier.equals("") || (unlockAdvancementEntry != null && ((DuckClientAdvancementManagerMixin)advancementHandler).betteradventuremode$getAdvancementProgress(unlockAdvancementEntry).isDone()))) {
+                        if ((lockAdvancementIdentifier.equals("") || (lockAdvancementEntry != null && !((DuckClientAdvancementManagerMixin) advancementHandler).betteradventuremode$getAdvancementProgress(lockAdvancementEntry).isDone())) && (unlockAdvancementIdentifier.equals("") || (unlockAdvancementEntry != null && ((DuckClientAdvancementManagerMixin) advancementHandler).betteradventuremode$getAdvancementProgress(unlockAdvancementEntry).isDone()))) {
                             this.unlockedLocationsList.add(stringStringPair);
                             this.visibleLocationsList.add(stringStringPair);
                         } else if (showLockedLocation) {
@@ -766,6 +780,9 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
             this.currentTargetEntranceDisplayName = location.getEntranceDisplayName(this.currentTargetEntrance);
             this.isCurrentLocationPublic = location.publicLocation();
             this.isCurrentLocationPlayer = location.playerLocation();
+            this.consumeKeyItem = location.consumeKeyAtEntrance(this.currentTargetEntrance);
+            this.currentKeyVirtualItemStack = location.getKeyForEntrance(this.currentTargetEntrance);
+            Inventory inventory = new SimpleInventory(36);
             if (advancementHandler != null) {
                 AdvancementEntry lockAdvancementEntry = null;
                 if (!lockAdvancementIdentifier.equals("")) {
@@ -781,8 +798,33 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
                 if (unlockAdvancementEntry != null) {
                     this.currentUnlockAdvancement = unlockAdvancementEntry.value();
                 }
-                this.isTeleportButtonActive = (lockAdvancementIdentifier.equals("") || (lockAdvancementEntry != null && !(((DuckClientAdvancementManagerMixin) advancementHandler).betteradventuremode$getAdvancementProgress(lockAdvancementEntry).isDone()))) &&
-                        (unlockAdvancementIdentifier.equals("") || (unlockAdvancementEntry != null && ((DuckClientAdvancementManagerMixin) advancementHandler).betteradventuremode$getAdvancementProgress(unlockAdvancementEntry).isDone()));
+
+                for (int k = 0; k < 36; k++) {
+                    ItemStack itemStack = this.handler.getPlayerInventory().getStack(k);
+                    inventory.setStack(k, itemStack.copy());
+                }
+                boolean bl = true;
+                ItemStack currentKeyItemStack = ItemUtils.getItemStackFromVirtualItemStack(this.currentKeyVirtualItemStack);
+                int keyCount = currentKeyItemStack.getCount();
+                for (int j = 0; j < inventory.size(); j++) {
+                    ItemStack itemStack = inventory.getStack(j);
+                    if (ItemStack.canCombine(currentKeyItemStack, itemStack)) {
+                        int stackCount = inventory.getStack(j).getCount();
+                        if (stackCount >= keyCount) {
+                            inventory.removeStack(j, keyCount);
+                            keyCount = 0;
+                            break;
+                        } else {
+                            inventory.setStack(j, ItemStack.EMPTY);
+                            keyCount = keyCount - stackCount;
+                        }
+                    }
+                }
+                if (keyCount > 0) {
+                    bl = false;
+                }
+
+                this.isTeleportButtonActive = this.isCurrentLocationUnlocked && bl;
             }
         }
     }
@@ -972,9 +1014,7 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
 
             TeleporterBlockBlockEntity.TeleportationMode mode = this.teleporterBlock.getTeleportationMode();
 
-            if (this.showChooseTargetOwnerScreen) {
-
-            } else if (this.showChooseTargetIdentifierScreen) {
+            if (this.showChooseTargetIdentifierScreen) {
 
                 for (int i = this.visibleLocationsListScrollPosition; i < Math.min(this.visibleLocationsListScrollPosition + 4, this.visibleLocationsList.size()); i++) {
                     context.drawText(this.textRenderer, this.visibleLocationsList.get(i).getLeft(), this.x + 19, this.y + 26 + ((i - this.visibleLocationsListScrollPosition) * 24), 0x404040, false);
@@ -985,13 +1025,20 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
                     context.drawGuiTexture(SCROLLER_TEXTURE, this.x + 8, this.y + 20 + 1 + k, 6, 7);
                 }
 
+            } else if (this.showChooseTargetOwnerScreen) {
+                if (this.isCurrentLocationPublic) {
+
+                }
+                if (this.isCurrentLocationPlayer) {
+
+                }
             } else if (this.showRegenerationConfirmScreen) {
 
             } else {
 
                 Text teleporterName = Text.translatable(this.teleporterBlock.getTeleporterName());
                 int teleporterNameOffset = this.backgroundWidth / 2 - this.textRenderer.getWidth(teleporterName) / 2;
-                if (this.currentTargetOwner != null) {
+//                if (this.currentTargetOwner != null) {
 
                     context.drawText(this.textRenderer, teleporterName, this.x + teleporterNameOffset, this.y + 7, 0x404040, false);
 
@@ -1010,13 +1057,27 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
 
                         }
 
-                        context.drawText(this.textRenderer, Text.translatable(this.teleporterBlock.getCurrentTargetOwnerLabel()), this.x + 8, this.y + 58, 0x404040, false);
+                        if (this.currentTargetOwner != null && this.isCurrentLocationPlayer) {
+                            context.drawText(this.textRenderer, Text.translatable(this.teleporterBlock.getCurrentTargetOwnerLabel()), this.x + 8, this.y + 58, 0x404040, false);
 
-                        context.drawTexture(currentTargetOwner.getSkinTextures().texture(), this.x + 7, this.y + 77, 8, 8, 8, 8, 8, 8, 64, 64);
-                        context.drawText(this.textRenderer, currentTargetOwner.getProfile().getName(), this.x + 19, this.y + 77, 0x404040, false);
+                            context.drawTexture(currentTargetOwner.getSkinTextures().texture(), this.x + 7, this.y + 77, 8, 8, 8, 8, 8, 8, 64, 64);
+                            context.drawText(this.textRenderer, currentTargetOwner.getProfile().getName(), this.x + 19, this.y + 77, 0x404040, false);
+                        } else if (this.isCurrentLocationPublic) {
+                            context.drawText(this.textRenderer, LOCATION_IS_PUBLIC_TEXT, this.x + 19, this.y + 77, 0x404040, false);
+                        }
 
+                        if (this.currentKeyVirtualItemStack != null) {
+                            ItemStack currentKey = ItemUtils.getItemStackFromVirtualItemStack(this.currentKeyVirtualItemStack);
+//                            BetterAdventureMode.info("should draw item: " + currentKey.toString());
+                            int x = this.x + 8;
+                            int y = this.y + 95;
+                            int k = x + y * this.backgroundWidth;
+                            context.drawItemWithoutEntity(currentKey, x, y, k);
+                            context.drawItemInSlot(this.textRenderer, currentKey, x, y);
+                            context.drawText(this.textRenderer, this.consumeKeyItem ? KEY_ITEM_IS_CONSUMED_TEXT : KEY_ITEM_IS_REQUIRED_TEXT, x + 18, y + 5, 0x404040, false);
+                        }
                     }
-                }
+//                }
             }
         }
 //        context.drawTextWithShadow(this.textRenderer, CONSUME_KEY_ITEMSTACK_LABEL_TEXT, this.width / 2 - 153, 221, 0x404040);
@@ -1150,8 +1211,12 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
 
     private void teleport() {
         String currentWorld = "";
+        String currentTargetOwnerName = "";
         if (this.teleporterBlock.getWorld() != null) {
             currentWorld = this.teleporterBlock.getWorld().getRegistryKey().getValue().toString();
+        }
+        if (this.currentTargetOwner != null) {
+            currentTargetOwnerName = this.currentTargetOwner.getProfile().getName();
         }
         ClientPlayNetworking.send(new TeleportFromTeleporterBlockPacket(
                 this.teleporterBlock.getPos(),
@@ -1163,7 +1228,7 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
                 this.teleporterBlock.getDirectTeleportOrientationYaw(),
                 this.teleporterBlock.getDirectTeleportOrientationPitch(),
                 this.teleporterBlock.getLocationType().asString(),
-                this.currentTargetOwner.getProfile().getName(),
+                currentTargetOwnerName,
                 this.currentTargetIdentifier,
                 this.currentTargetEntrance)
         );
@@ -1172,12 +1237,12 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
     private void givePortalResistanceEffect() {
         ClientPlayNetworking.send(new AddStatusEffectPacket(
                 Registries.STATUS_EFFECT.getId(StatusEffectsRegistry.PORTAL_RESISTANCE_EFFECT),
-                5,
+                40,
                 0,
                 false,
                 false,
                 false,
-                true)
+                false)
         );
     }
 

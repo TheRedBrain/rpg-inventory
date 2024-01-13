@@ -117,6 +117,10 @@ public class TeleporterBlockScreenHandler extends ScreenHandler {
         return requiredKeyItemStackSlotY;
     }
 
+    public PlayerInventory getPlayerInventory() {
+        return playerInventory;
+    }
+
     public boolean getShowCreativeTab() {
         return this.showCreativeTab;
     }

@@ -86,13 +86,13 @@ public class LocationControlBlockScreen extends Screen {
                     this.newSideEntranceNameField.getText(),
                     new MutablePair<>(
                             new BlockPos(
-                                    this.parseInt(this.mainEntrancePositionOffsetXField.getText()),
-                                    this.parseInt(this.mainEntrancePositionOffsetYField.getText()),
-                                    this.parseInt(this.mainEntrancePositionOffsetZField.getText())
+                                    this.parseInt(this.newSideEntrancePositionOffsetXField.getText()),
+                                    this.parseInt(this.newSideEntrancePositionOffsetYField.getText()),
+                                    this.parseInt(this.newSideEntrancePositionOffsetZField.getText())
                             ),
                             new MutablePair<>(
-                                    this.parseDouble(this.mainEntranceOrientationYawField.getText()),
-                                    this.parseDouble(this.mainEntranceOrientationPitchField.getText())
+                                    this.parseDouble(this.newSideEntranceOrientationYawField.getText()),
+                                    this.parseDouble(this.newSideEntranceOrientationPitchField.getText())
                             )
                     )
             ));
@@ -170,32 +170,26 @@ public class LocationControlBlockScreen extends Screen {
 
         this.newSideEntrancePositionOffsetXField = new TextFieldWidget(this.textRenderer, this.width / 2 - 154, 127, 100, 20, Text.empty());
         this.newSideEntrancePositionOffsetXField.setMaxLength(128);
-        this.newSideEntrancePositionOffsetXField.setText(Integer.toString(this.locationControlBlock.getMainEntrance().getLeft().getX()));
         this.addSelectableChild(this.newSideEntrancePositionOffsetXField);
 
         this.newSideEntrancePositionOffsetYField = new TextFieldWidget(this.textRenderer, this.width / 2 - 50, 127, 100, 20, Text.empty());
         this.newSideEntrancePositionOffsetYField.setMaxLength(128);
-        this.newSideEntrancePositionOffsetYField.setText(Integer.toString(this.locationControlBlock.getMainEntrance().getLeft().getY()));
         this.addSelectableChild(this.newSideEntrancePositionOffsetYField);
 
         this.newSideEntrancePositionOffsetZField = new TextFieldWidget(this.textRenderer, this.width / 2 + 54, 127, 100, 20, Text.empty());
         this.newSideEntrancePositionOffsetZField.setMaxLength(128);
-        this.newSideEntrancePositionOffsetZField.setText(Integer.toString(this.locationControlBlock.getMainEntrance().getLeft().getZ()));
         this.addSelectableChild(this.newSideEntrancePositionOffsetZField);
 
         this.newSideEntranceNameField = new TextFieldWidget(this.textRenderer, this.width / 2 - 154, 162, 204, 20, Text.empty());
         this.newSideEntranceNameField.setMaxLength(128);
-        this.newSideEntranceNameField.setText(Double.toString(this.locationControlBlock.getMainEntrance().getRight().getRight()));
         this.addSelectableChild(this.newSideEntranceNameField);
 
         this.newSideEntranceOrientationYawField = new TextFieldWidget(this.textRenderer, this.width / 2 + 54, 162, 48, 20, Text.empty());
         this.newSideEntranceOrientationYawField.setMaxLength(128);
-        this.newSideEntranceOrientationYawField.setText(Double.toString(this.locationControlBlock.getMainEntrance().getRight().getLeft()));
         this.addSelectableChild(this.newSideEntranceOrientationYawField);
 
         this.newSideEntranceOrientationPitchField = new TextFieldWidget(this.textRenderer, this.width / 2 + 106, 162, 48, 20, Text.empty());
         this.newSideEntranceOrientationPitchField.setMaxLength(128);
-        this.newSideEntranceOrientationPitchField.setText(Double.toString(this.locationControlBlock.getMainEntrance().getRight().getRight()));
         this.addSelectableChild(this.newSideEntranceOrientationPitchField);
 
         this.addNewSideEntranceButton = this.addDrawableChild(ButtonWidget.builder(ScreenTexts.DONE, button -> this.addNewSideEntrance()).dimensions(this.width / 2 - 4 - 150, 186, 308, 20).build());

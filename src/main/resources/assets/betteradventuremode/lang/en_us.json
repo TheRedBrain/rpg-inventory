@@ -111,7 +111,7 @@
 
 	"gui.teleporter_block.teleporter_name_field.label": "Teleporter Name",
 	"gui.teleporter_block.teleporter_name_field.place_holder": "Teleporter Name Label",
-	"gui.teleporter_block.target_owner_field.label": "Target Owner",
+	"gui.teleporter_block.target_owner_field.label": "Instance Owner",
 	"gui.teleporter_block.target_owner_field.place_holder": "Target Owner Label",
 	"gui.teleporter_block.target_identifier_field.label": "Target Identifier",
 	"gui.teleporter_block.target_identifier_field.place_holder": "Target Identifier Label",
@@ -121,6 +121,11 @@
 	"gui.teleporter_block.teleport_button.place_holder": "Teleport Button Label",
 	"gui.teleporter_block.cancel_teleport_button.label": "Cancel Teleport",
 	"gui.teleporter_block.cancel_teleport_button.place_holder": "Cancel Teleport Button Label",
+
+	"gui.teleporter_block.key_item_is_consumed_text": "will be consumed.",
+	"gui.teleporter_block.key_item_is_required_text": "is required.",
+
+	"gui.teleporter_block.location_is_public_text": "This instance is public",
 
 	"gui.teleporter_block.regenerateDungeonButton": "Regenerate",
 	"gui.teleporter_block.regenerateDungeonButton.tooltip.active": "Regenerate the selected dungeon instance",
@@ -449,6 +454,22 @@
 	"item.betteradventuremode.iron_axe": "Iron Axe",
 	"item.betteradventuremode.diamond_axe": "Diamond Axe",
 	"item.betteradventuremode.netherite_axe": "Netherite Axe",
+
+	"item.betteradventuremode.block_position_distance_meter": "Block Position Distance Meter",
+
+	"item.betteradventuremode.block_position_distance_meter.set_root_mode.true": "Set Root Block Position on shift-right click",
+	"item.betteradventuremode.block_position_distance_meter.set_root_mode.false": "Set Offset Block Position on shift-right click",
+
+	"item.betteradventuremode.block_position_distance_meter.root_mode": "Root Mode",
+	"item.betteradventuremode.block_position_distance_meter.offset_mode": "Offset Mode",
+
+	"item.betteradventuremode.block_position_distance_meter.tooltip.root_pos": "Root Position: %s, %s, %s.",
+	"item.betteradventuremode.block_position_distance_meter.tooltip.offset_pos": "Offset Position: %s, %s, %s.",
+	"item.betteradventuremode.block_position_distance_meter.tooltip.offset": "Offset: %s, %s, %s.",
+
+	"item.betteradventuremode.block_position_distance_meter.set_root_block": "New Root Block Position: %s, %s, %s.",
+	"item.betteradventuremode.block_position_distance_meter.set_offset_block": "New Offset Block Position: %s, %s, %s.",
+	"item.betteradventuremode.block_position_distance_meter.info": "Offset is %s, %s, %s.",
 
 	"item.betteradventuremode.default_empty_hand_weapon": "",
 

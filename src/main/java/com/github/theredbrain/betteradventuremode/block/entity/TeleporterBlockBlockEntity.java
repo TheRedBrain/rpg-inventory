@@ -213,7 +213,17 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
             for (PlayerEntity playerEntity : list) {
                 if (!playerEntity.hasStatusEffect(StatusEffectsRegistry.PORTAL_RESISTANCE_EFFECT) && !playerEntity.isCreative()) {
                     // prevents continuous opening of a screen
-                    playerEntity.setStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.PORTAL_RESISTANCE_EFFECT, -1), playerEntity);
+                    playerEntity.setStatusEffect(
+                            new StatusEffectInstance(
+                                    StatusEffectsRegistry.PORTAL_RESISTANCE_EFFECT,
+                                    -1,
+                                    0,
+                                    false,
+                                    false,
+                                    false
+                            ),
+                            playerEntity
+                    );
                     playerEntity.openHandledScreen(state.createScreenHandlerFactory(world, pos));
                 }
             }

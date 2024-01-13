@@ -591,8 +591,8 @@ public class TriggeredSpawnerBlockScreen extends Screen {
             return this.name;
         }
 
-        public static Optional<TeleporterBlockScreen.CreativeScreenPage> byName(String name) {
-            return Arrays.stream(TeleporterBlockScreen.CreativeScreenPage.values()).filter(creativeScreenPage -> creativeScreenPage.asString().equals(name)).findFirst();
+        public static Optional<TriggeredSpawnerBlockScreen.CreativeScreenPage> byName(String name) {
+            return Arrays.stream(TriggeredSpawnerBlockScreen.CreativeScreenPage.values()).filter(creativeScreenPage -> creativeScreenPage.asString().equals(name)).findFirst();
         }
 
         public Text asText() {

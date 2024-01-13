@@ -3,7 +3,7 @@
     {
       "element": {
         "element_type": "minecraft:single_pool_element",
-        "location": "betteradventuremode:player_locations/dungeons/entrances/simple_crypt_entrance",
+        "location": "betteradventuremode:locations/dungeons/walls/13x13x13/top_entrance_split_u_turn",
         "processors": {
           "processors": []
         },

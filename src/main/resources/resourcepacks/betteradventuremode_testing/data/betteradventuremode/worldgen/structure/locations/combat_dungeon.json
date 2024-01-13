@@ -43,8 +43,8 @@
   "start_height": {
     "absolute": -63
   },
-  "start_jigsaw_name": "betteradventuremode:player_location_anchor",
-  "start_pool": "betteradventuremode:player_locations/dungeons/combat_dungeon",
+  "start_jigsaw_name": "betteradventuremode:location_anchor",
+  "start_pool": "betteradventuremode:locations/dungeons/combat_dungeon",
   "step": "surface_structures",
   "use_expansion_hack": false
 }
