@@ -475,5 +475,6 @@
 
 	"itemGroup.betteradventuremode.bam_block": "Better Adventure Mode - Blocks",
 	"itemGroup.betteradventuremode.bam_equipment": "Better Adventure Mode - Equipment",
-	"itemGroup.betteradventuremode.bam_food": "Better Adventure Mode - Food"
+	"itemGroup.betteradventuremode.bam_food": "Better Adventure Mode - Food",
+	"itemGroup.betteradventuremode.script_blocks": "Better Adventure Mode - Script Blocks"
 }
