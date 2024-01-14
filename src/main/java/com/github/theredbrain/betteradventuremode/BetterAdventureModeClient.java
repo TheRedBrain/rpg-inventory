@@ -3,6 +3,7 @@ package com.github.theredbrain.betteradventuremode;
 import com.github.theredbrain.betteradventuremode.client.gui.screen.ingame.CraftingBenchBlockScreen;
 import com.github.theredbrain.betteradventuremode.client.gui.screen.ingame.ShopBlockScreen;
 import com.github.theredbrain.betteradventuremode.client.gui.screen.ingame.TeleporterBlockScreen;
+import com.github.theredbrain.betteradventuremode.client.render.block.entity.StatusEffectApplierBlockEntityRenderer;
 import com.github.theredbrain.betteradventuremode.registry.ClientPacketRegistry;
 import com.github.theredbrain.betteradventuremode.client.render.block.entity.HousingBlockBlockEntityRenderer;
 import com.github.theredbrain.betteradventuremode.client.render.block.entity.MimicBlockEntityRenderer;
@@ -93,6 +94,7 @@ public class BetterAdventureModeClient implements ClientModInitializer {
     private void registerBlockEntityRenderer() {
         BlockEntityRendererFactories.register(EntityRegistry.HOUSING_BLOCK_ENTITY, HousingBlockBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(EntityRegistry.MIMIC_BLOCK_ENTITY, MimicBlockEntityRenderer::new);
+        BlockEntityRendererFactories.register(EntityRegistry.STATUS_EFFECT_APPLIER_BLOCK_ENTITY, StatusEffectApplierBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(EntityRegistry.TELEPORTER_BLOCK_ENTITY, TeleporterBlockBlockEntityRenderer::new);
     }
 

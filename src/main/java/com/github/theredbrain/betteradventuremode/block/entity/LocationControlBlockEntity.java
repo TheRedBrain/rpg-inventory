@@ -3,9 +3,11 @@ package com.github.theredbrain.betteradventuremode.block.entity;
 import com.github.theredbrain.betteradventuremode.api.util.BlockRotationUtils;
 import com.github.theredbrain.betteradventuremode.block.RotatedBlockWithEntity;
 import com.github.theredbrain.betteradventuremode.block.Triggerable;
+import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.betteradventuremode.registry.EntityRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.BlockMirror;
@@ -95,6 +97,16 @@ public class LocationControlBlockEntity extends RotatedBlockEntity {
         return this.createNbt();
     }
 
+    public boolean openScreen(PlayerEntity player) {
+        if (!player.isCreativeLevelTwoOp()) {
+            return false;
+        }
+        if (player.getEntityWorld().isClient) {
+            ((DuckPlayerEntityMixin)player).betteradventuremode$openLocationControlBlockScreen(this);
+        }
+        return true;
+    }
+
     public MutablePair<BlockPos, MutablePair<Double, Double>> getMainEntrance() {
         return mainEntrance;
     }
@@ -144,6 +156,11 @@ public class LocationControlBlockEntity extends RotatedBlockEntity {
         }
     }
 
+    public boolean shouldReset() {
+        // TODO implement reset timer
+        return false;
+    }
+
     @Override
     protected void onRotate(BlockState state) {
         if (state.getBlock() instanceof RotatedBlockWithEntity) {
@@ -159,6 +176,8 @@ public class LocationControlBlockEntity extends RotatedBlockEntity {
                     this.sideEntrances.put(key, rotatedEntrance);
                 }
 
+                this.triggeredBlockPositionOffset = BlockRotationUtils.rotateOffsetBlockPos(this.triggeredBlockPositionOffset, blockRotation);
+
                 this.rotated = state.get(RotatedBlockWithEntity.ROTATED);
             }
             if (state.get(RotatedBlockWithEntity.X_MIRRORED) != this.x_mirrored) {
@@ -172,6 +191,8 @@ public class LocationControlBlockEntity extends RotatedBlockEntity {
                     this.sideEntrances.put(key, mirroredEntrance);
                 }
 
+                this.triggeredBlockPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.triggeredBlockPositionOffset, BlockMirror.FRONT_BACK);
+
                 this.x_mirrored = state.get(RotatedBlockWithEntity.X_MIRRORED);
             }
             if (state.get(RotatedBlockWithEntity.Z_MIRRORED) != this.z_mirrored) {
@@ -184,6 +205,8 @@ public class LocationControlBlockEntity extends RotatedBlockEntity {
                     MutablePair<BlockPos, MutablePair<Double, Double>> mirroredEntrance = BlockRotationUtils.mirrorEntrance(this.sideEntrances.get(key), BlockMirror.LEFT_RIGHT);
                     this.sideEntrances.put(key, mirroredEntrance);
                 }
+
+                this.triggeredBlockPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.triggeredBlockPositionOffset, BlockMirror.LEFT_RIGHT);
 
                 this.z_mirrored = state.get(RotatedBlockWithEntity.Z_MIRRORED);
             }

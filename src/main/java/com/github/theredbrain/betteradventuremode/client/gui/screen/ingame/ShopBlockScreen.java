@@ -41,17 +41,12 @@ public class ShopBlockScreen extends HandledScreen<ShopBlockScreenHandler> {
     private static final Identifier HAS_STOCK_TEXTURE = BetterAdventureMode.identifier("container/shop_screen/has_stock");
     private static final Identifier SCROLLER_VERTICAL_6_7_TEXTURE = BetterAdventureMode.identifier("scroll_bar/scroller_vertical_6_7");
     private ShopBlockEntity shopBlockEntity;
-
-    //region adventure widgets
     private ButtonWidget tradeButton0;
     private ButtonWidget tradeButton1;
     private ButtonWidget tradeButton2;
-    //endregion adventure widgets
-    //region creative widgets
     private TextFieldWidget shopIdentifierField;
     private ButtonWidget saveCreativeButton;
     private ButtonWidget cancelCreativeButton;
-    //endregion creative widgets
     private Text shopTitle = Text.empty();
     private Text playerOffersTitle = Text.empty();
     private final boolean showCreativeScreen;

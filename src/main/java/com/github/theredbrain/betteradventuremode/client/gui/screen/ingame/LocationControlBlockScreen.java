@@ -1,6 +1,7 @@
 package com.github.theredbrain.betteradventuremode.client.gui.screen.ingame;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
+import com.github.theredbrain.betteradventuremode.api.util.ItemUtils;
 import com.github.theredbrain.betteradventuremode.block.entity.LocationControlBlockEntity;
 import com.github.theredbrain.betteradventuremode.network.packet.UpdateLocationControlBlockPacket;
 import net.fabricmc.api.EnvType;
@@ -86,13 +87,13 @@ public class LocationControlBlockScreen extends Screen {
                     this.newSideEntranceNameField.getText(),
                     new MutablePair<>(
                             new BlockPos(
-                                    this.parseInt(this.newSideEntrancePositionOffsetXField.getText()),
-                                    this.parseInt(this.newSideEntrancePositionOffsetYField.getText()),
-                                    this.parseInt(this.newSideEntrancePositionOffsetZField.getText())
+                                    ItemUtils.parseInt(this.newSideEntrancePositionOffsetXField.getText()),
+                                    ItemUtils.parseInt(this.newSideEntrancePositionOffsetYField.getText()),
+                                    ItemUtils.parseInt(this.newSideEntrancePositionOffsetZField.getText())
                             ),
                             new MutablePair<>(
-                                    this.parseDouble(this.newSideEntranceOrientationYawField.getText()),
-                                    this.parseDouble(this.newSideEntranceOrientationPitchField.getText())
+                                    ItemUtils.parseDouble(this.newSideEntranceOrientationYawField.getText()),
+                                    ItemUtils.parseDouble(this.newSideEntranceOrientationPitchField.getText())
                             )
                     )
             ));
@@ -444,36 +445,20 @@ public class LocationControlBlockScreen extends Screen {
         ClientPlayNetworking.send(new UpdateLocationControlBlockPacket(
                 this.locationControlBlock.getPos(),
                 new BlockPos(
-                        this.parseInt(this.mainEntrancePositionOffsetXField.getText()),
-                        this.parseInt(this.mainEntrancePositionOffsetYField.getText()),
-                        this.parseInt(this.mainEntrancePositionOffsetZField.getText())
+                        ItemUtils.parseInt(this.mainEntrancePositionOffsetXField.getText()),
+                        ItemUtils.parseInt(this.mainEntrancePositionOffsetYField.getText()),
+                        ItemUtils.parseInt(this.mainEntrancePositionOffsetZField.getText())
                 ),
-                this.parseDouble(this.mainEntranceOrientationYawField.getText()),
-                this.parseDouble(this.mainEntranceOrientationPitchField.getText()),
+                ItemUtils.parseDouble(this.mainEntranceOrientationYawField.getText()),
+                ItemUtils.parseDouble(this.mainEntranceOrientationPitchField.getText()),
                 this.sideEntranceList,
                 new BlockPos(
-                        this.parseInt(this.triggeredBlockPositionOffsetXField.getText()),
-                        this.parseInt(this.triggeredBlockPositionOffsetYField.getText()),
-                        this.parseInt(this.triggeredBlockPositionOffsetZField.getText())
+                        ItemUtils.parseInt(this.triggeredBlockPositionOffsetXField.getText()),
+                        ItemUtils.parseInt(this.triggeredBlockPositionOffsetYField.getText()),
+                        ItemUtils.parseInt(this.triggeredBlockPositionOffsetZField.getText())
                 )
         ));
         return true;
-    }
-
-    private int parseInt(String string) {
-        try {
-            return Integer.parseInt(string);
-        } catch (NumberFormatException numberFormatException) {
-            return 0;
-        }
-    }
-
-    private double parseDouble(String string) {
-        try {
-            return Double.parseDouble(string);
-        } catch (NumberFormatException numberFormatException) {
-            return 0.0;
-        }
     }
 
     public static enum ScreenPage implements StringIdentifiable

@@ -1,6 +1,7 @@
 package com.github.theredbrain.betteradventuremode.client.gui.screen.ingame;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
+import com.github.theredbrain.betteradventuremode.api.util.ItemUtils;
 import com.github.theredbrain.betteradventuremode.block.entity.HousingBlockBlockEntity;
 import com.github.theredbrain.betteradventuremode.network.packet.*;
 import com.github.theredbrain.betteradventuremode.registry.StatusEffectsRegistry;
@@ -856,19 +857,19 @@ public class HousingScreen extends Screen {
                 housingBlockPos,
                 this.showInfluenceArea,
                 new Vec3i(
-                        this.parseInt(this.restrictBlockBreakingAreaDimensionsXField.getText()),
-                        this.parseInt(this.restrictBlockBreakingAreaDimensionsYField.getText()),
-                        this.parseInt(this.restrictBlockBreakingAreaDimensionsZField.getText())
+                        ItemUtils.parseInt(this.restrictBlockBreakingAreaDimensionsXField.getText()),
+                        ItemUtils.parseInt(this.restrictBlockBreakingAreaDimensionsYField.getText()),
+                        ItemUtils.parseInt(this.restrictBlockBreakingAreaDimensionsZField.getText())
                 ),
                 new BlockPos(
-                        this.parseInt(this.restrictBlockBreakingAreaPositionOffsetXField.getText()),
-                        this.parseInt(this.restrictBlockBreakingAreaPositionOffsetYField.getText()),
-                        this.parseInt(this.restrictBlockBreakingAreaPositionOffsetZField.getText())
+                        ItemUtils.parseInt(this.restrictBlockBreakingAreaPositionOffsetXField.getText()),
+                        ItemUtils.parseInt(this.restrictBlockBreakingAreaPositionOffsetYField.getText()),
+                        ItemUtils.parseInt(this.restrictBlockBreakingAreaPositionOffsetZField.getText())
                 ),
                 new BlockPos(
-                        this.parseInt(this.triggeredBlockPositionOffsetXField.getText()),
-                        this.parseInt(this.triggeredBlockPositionOffsetYField.getText()),
-                        this.parseInt(this.triggeredBlockPositionOffsetZField.getText())
+                        ItemUtils.parseInt(this.triggeredBlockPositionOffsetXField.getText()),
+                        ItemUtils.parseInt(this.triggeredBlockPositionOffsetYField.getText()),
+                        ItemUtils.parseInt(this.triggeredBlockPositionOffsetZField.getText())
                 ),
                 this.ownerMode.asString()
         ));
@@ -883,22 +884,6 @@ public class HousingScreen extends Screen {
                     this.trustedPersonsList,
                     this.guestList
             ));
-        }
-    }
-
-    private int parseInt(String string) {
-        try {
-            return Integer.parseInt(string);
-        } catch (NumberFormatException numberFormatException) {
-            return 0;
-        }
-    }
-
-    private double parseDouble(String string) {
-        try {
-            return Double.parseDouble(string);
-        } catch (NumberFormatException numberFormatException) {
-            return 0.0;
         }
     }
 

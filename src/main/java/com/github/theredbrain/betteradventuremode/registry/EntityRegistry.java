@@ -23,7 +23,7 @@ public class EntityRegistry {
             FabricBlockEntityTypeBuilder.create(BonfireBlockBlockEntity::new, BlockRegistry.BONFIRE_BLOCK).build());
     //endregion Content Blocks
 
-    //region Operator Blocks
+    //region Script Blocks
     public static final BlockEntityType<TriggeredCounterBlockEntity> TRIGGERED_COUNTER_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
             BetterAdventureMode.identifier("triggered_counter_block"),
             FabricBlockEntityTypeBuilder.create(TriggeredCounterBlockEntity::new, BlockRegistry.TRIGGERED_COUNTER_BLOCK).build());
@@ -63,6 +63,15 @@ public class EntityRegistry {
     public static final BlockEntityType<DelayTriggerBlockBlockEntity> DELAY_TRIGGER_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
             BetterAdventureMode.identifier("delay_trigger_block"),
             FabricBlockEntityTypeBuilder.create(DelayTriggerBlockBlockEntity::new, BlockRegistry.DELAY_TRIGGER_BLOCK).build());
+    public static final BlockEntityType<EntranceDelegationBlockEntity> ENTRANCE_DELEGATION_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
+            BetterAdventureMode.identifier("entrance_delegation_block"),
+            FabricBlockEntityTypeBuilder.create(EntranceDelegationBlockEntity::new, BlockRegistry.ENTRANCE_DELEGATION_BLOCK).build());
+    public static final BlockEntityType<StatusEffectApplierBlockEntity> STATUS_EFFECT_APPLIER_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
+            BetterAdventureMode.identifier("status_effect_applier_block"),
+            FabricBlockEntityTypeBuilder.create(StatusEffectApplierBlockEntity::new, BlockRegistry.STATUS_EFFECT_APPLIER_BLOCK).build());
+    public static final BlockEntityType<TriggeredAdvancementCheckerBlockEntity> TRIGGERED_ADVANCEMENT_CHECKER_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
+            BetterAdventureMode.identifier("triggered_advancement_checker_block"),
+            FabricBlockEntityTypeBuilder.create(TriggeredAdvancementCheckerBlockEntity::new, BlockRegistry.TRIGGERED_ADVANCEMENT_CHECKER_BLOCK).build());
     public static final BlockEntityType<UseRelayBlockEntity> USE_RELAY_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
             BetterAdventureMode.identifier("use_relay_block"),
             FabricBlockEntityTypeBuilder.create(UseRelayBlockEntity::new,
@@ -91,7 +100,7 @@ public class EntityRegistry {
                     BlockRegistry.USE_RELAY_BAMBOO_TRAPDOOR,
                     BlockRegistry.USE_RELAY_CRIMSON_TRAPDOOR,
                     BlockRegistry.USE_RELAY_WARPED_TRAPDOOR).build());
-    //endregion Operator Blocks
+    //endregion Script Blocks
 
     public static void init() {
     }

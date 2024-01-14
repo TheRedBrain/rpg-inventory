@@ -1,5 +1,6 @@
 package com.github.theredbrain.betteradventuremode.client.gui.screen.ingame;
 
+import com.github.theredbrain.betteradventuremode.api.util.ItemUtils;
 import com.github.theredbrain.betteradventuremode.block.entity.DelayTriggerBlockBlockEntity;
 import com.github.theredbrain.betteradventuremode.network.packet.UpdateDelayTriggerBlockPacket;
 import net.fabricmc.api.EnvType;
@@ -90,11 +91,11 @@ public class DelayTriggerBlockScreen extends Screen {
         ClientPlayNetworking.send(new UpdateDelayTriggerBlockPacket(
                 this.delayTriggerBlock.getPos(),
                 new BlockPos(
-                        parseInt(this.triggeredBlockPositionOffsetXField.getText()),
-                        parseInt(this.triggeredBlockPositionOffsetYField.getText()),
-                        parseInt(this.triggeredBlockPositionOffsetZField.getText())
+                        ItemUtils.parseInt(this.triggeredBlockPositionOffsetXField.getText()),
+                        ItemUtils.parseInt(this.triggeredBlockPositionOffsetYField.getText()),
+                        ItemUtils.parseInt(this.triggeredBlockPositionOffsetZField.getText())
                 ),
-                parseInt(this.triggerDelayField.getText())
+                ItemUtils.parseInt(this.triggerDelayField.getText())
         ));
         return true;
     }
@@ -110,11 +111,8 @@ public class DelayTriggerBlockScreen extends Screen {
         this.triggerDelayField.render(context, mouseX, mouseY, delta);
     }
 
-    private int parseInt(String string) {
-        try {
-            return Integer.parseInt(string);
-        } catch (NumberFormatException numberFormatException) {
-            return 0;
-        }
+    @Override
+    public boolean shouldPause() {
+        return false;
     }
 }

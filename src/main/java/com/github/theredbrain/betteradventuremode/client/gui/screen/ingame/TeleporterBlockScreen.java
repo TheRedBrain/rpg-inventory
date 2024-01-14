@@ -1131,13 +1131,13 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
         double directTeleportPositionOffsetPitch;
         if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DIRECT) {
             directTeleportPositionOffset = new BlockPos(
-                    this.parseInt(this.directTeleportPositionOffsetXField.getText()),
-                    this.parseInt(this.directTeleportPositionOffsetYField.getText()),
-                    this.parseInt(this.directTeleportPositionOffsetZField.getText())
+                    ItemUtils.parseInt(this.directTeleportPositionOffsetXField.getText()),
+                    ItemUtils.parseInt(this.directTeleportPositionOffsetYField.getText()),
+                    ItemUtils.parseInt(this.directTeleportPositionOffsetZField.getText())
             );
 
-            directTeleportPositionOffsetYaw = this.parseDouble(this.directTeleportOrientationYawField.getText());
-            directTeleportPositionOffsetPitch = this.parseDouble(this.directTeleportOrientationPitchField.getText());
+            directTeleportPositionOffsetYaw = ItemUtils.parseDouble(this.directTeleportOrientationYawField.getText());
+            directTeleportPositionOffsetPitch = ItemUtils.parseDouble(this.directTeleportOrientationPitchField.getText());
         } else {
             directTeleportPositionOffset = new BlockPos(0, 0, 0);
             directTeleportPositionOffsetYaw = 0.0;
@@ -1162,19 +1162,19 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
                 this.showActivationArea,
                 this.showAdventureScreen,
                 new Vec3i(
-                        this.parseInt(this.activationAreaDimensionsXField.getText()),
-                        this.parseInt(this.activationAreaDimensionsYField.getText()),
-                        this.parseInt(this.activationAreaDimensionsZField.getText())
+                        ItemUtils.parseInt(this.activationAreaDimensionsXField.getText()),
+                        ItemUtils.parseInt(this.activationAreaDimensionsYField.getText()),
+                        ItemUtils.parseInt(this.activationAreaDimensionsZField.getText())
                 ),
                 new BlockPos(
-                        this.parseInt(this.activationAreaPositionOffsetXField.getText()),
-                        this.parseInt(this.activationAreaPositionOffsetYField.getText()),
-                        this.parseInt(this.activationAreaPositionOffsetZField.getText())
+                        ItemUtils.parseInt(this.activationAreaPositionOffsetXField.getText()),
+                        ItemUtils.parseInt(this.activationAreaPositionOffsetYField.getText()),
+                        ItemUtils.parseInt(this.activationAreaPositionOffsetZField.getText())
                 ),
                 new BlockPos(
-                        this.parseInt(this.accessPositionOffsetXField.getText()),
-                        this.parseInt(this.accessPositionOffsetYField.getText()),
-                        this.parseInt(this.accessPositionOffsetZField.getText())
+                        ItemUtils.parseInt(this.accessPositionOffsetXField.getText()),
+                        ItemUtils.parseInt(this.accessPositionOffsetYField.getText()),
+                        ItemUtils.parseInt(this.accessPositionOffsetZField.getText())
                 ),
                 this.setAccessPosition,
                 this.teleportationMode.asString(),
@@ -1244,22 +1244,6 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
                 false,
                 false)
         );
-    }
-
-    private int parseInt(String string) {
-        try {
-            return Integer.parseInt(string);
-        } catch (NumberFormatException numberFormatException) {
-            return 0;
-        }
-    }
-
-    private double parseDouble(String string) {
-        try {
-            return Double.parseDouble(string);
-        } catch (NumberFormatException numberFormatException) {
-            return 0.0;
-        }
     }
 
     public static enum CreativeScreenPage implements StringIdentifiable

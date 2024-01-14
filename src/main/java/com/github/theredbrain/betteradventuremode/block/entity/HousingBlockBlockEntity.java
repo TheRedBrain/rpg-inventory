@@ -168,15 +168,15 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
                 String playerName = playerEntity.getName().getString();
                 String playerUuid = playerEntity.getUuidAsString();
                 if (Objects.equals(playerUuid, blockEntity.getOwnerUuid())) {
-                    playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.HOUSING_OWNER_EFFECT, 100, 0, true, false, true)); // TODO housing effects should show no icon
+                    playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.HOUSING_OWNER_EFFECT, 100, 0, true, false, false));
                 } else if (blockEntity.getCoOwnerList().contains(playerName)) {
-                    playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.HOUSING_CO_OWNER_EFFECT, 100, 0, true, false, true)); // TODO housing effects should show no icon
+                    playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.HOUSING_CO_OWNER_EFFECT, 100, 0, true, false, false));
                 } else if (blockEntity.getTrustedList().contains(playerName)) {
-                    playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.HOUSING_TRUSTED_EFFECT, 100, 0, true, false, true)); // TODO housing effects should show no icon
+                    playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.HOUSING_TRUSTED_EFFECT, 100, 0, true, false, false));
                 } else if (blockEntity.getGuestList().contains(playerName)) {
-                    playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.HOUSING_GUEST_EFFECT, 100, 0, true, false, true)); // TODO housing effects should show no icon
+                    playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.HOUSING_GUEST_EFFECT, 100, 0, true, false, false));
                 } else {
-                    playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.HOUSING_STRANGER_EFFECT, 100, 0, true, false, true)); // TODO housing effects should show no icon
+                    playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.HOUSING_STRANGER_EFFECT, 100, 0, true, false, false));
                 }
                 ComponentsRegistry.CURRENT_HOUSING_BLOCK_POS.get(playerEntity).setValue(blockEntity.pos);
             }

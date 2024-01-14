@@ -122,4 +122,19 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
     public void betteradventuremode$openDialogueScreen(DialogueBlockEntity dialogueBlockEntity, @Nullable Dialogue dialogue) {
         this.client.setScreen(new DialogueBlockScreen(dialogueBlockEntity, dialogue, this.isCreativeLevelTwoOp()));
     }
+
+    @Override
+    public void betteradventuremode$openEntranceDelegationBlockScreen(EntranceDelegationBlockEntity entranceDelegationBlockEntity) {
+        this.client.setScreen(new EntranceDelegationBlockScreen(entranceDelegationBlockEntity));
+    }
+
+    @Override
+    public void betteradventuremode$openStatusEffectApplierBlockScreen(StatusEffectApplierBlockEntity statusEffectApplierBlockEntity) {
+        this.client.setScreen(new StatusEffectApplierBlockScreen(statusEffectApplierBlockEntity));
+    }
+
+    @Override
+    public void betteradventuremode$openTriggeredAdvancementCheckerBlockScreen(TriggeredAdvancementCheckerBlockEntity triggeredAdvancementCheckerBlock) {
+        this.client.setScreen(new TriggeredAdvancementCheckerBlockScreen(triggeredAdvancementCheckerBlock));
+    }
 }

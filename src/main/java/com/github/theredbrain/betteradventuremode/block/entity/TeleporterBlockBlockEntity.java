@@ -11,9 +11,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
@@ -24,7 +21,6 @@ import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Pair;
 import net.minecraft.util.StringIdentifiable;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.MutablePair;
@@ -174,8 +170,10 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
         this.teleportButtonLabel = nbt.getString("teleportButtonLabel");
         this.cancelTeleportButtonLabel = nbt.getString("cancelTeleportButtonLabel");
 
-        this.activationArea = new Box(nbt.getDouble("activationAreaMinX"), nbt.getDouble("activationAreaMinY"), nbt.getDouble("activationAreaMinZ"), nbt.getDouble("activationAreaMaxX"), nbt.getDouble("activationAreaMaxY"), nbt.getDouble("activationAreaMaxZ"));
-        this.calculateActivationBox = true;
+        if (nbt.contains("activationAreaMinX") && nbt.contains("activationAreaMinY") && nbt.contains("activationAreaMinZ") && nbt.contains("activationAreaMaxX") && nbt.contains("activationAreaMaxY") && nbt.contains("activationAreaMaxZ")) {
+            this.activationArea = new Box(nbt.getDouble("activationAreaMinX"), nbt.getDouble("activationAreaMinY"), nbt.getDouble("activationAreaMinZ"), nbt.getDouble("activationAreaMaxX"), nbt.getDouble("activationAreaMaxY"), nbt.getDouble("activationAreaMaxZ"));
+            this.calculateActivationBox = true;
+        }
 
         super.readNbt(nbt);
     }

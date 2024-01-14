@@ -1,6 +1,7 @@
 package com.github.theredbrain.betteradventuremode.client.gui.screen.ingame;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
+import com.github.theredbrain.betteradventuremode.api.util.ItemUtils;
 import com.github.theredbrain.betteradventuremode.block.entity.RelayTriggerBlockBlockEntity;
 import com.github.theredbrain.betteradventuremode.network.packet.UpdateRelayTriggerBlockPacket;
 import net.fabricmc.api.EnvType;
@@ -102,7 +103,7 @@ public class RelayTriggerBlockScreen extends Screen {
         this.newTriggeredBlockPositionOffsetZField = new TextFieldWidget(this.textRenderer, this.width / 2 + 54, 153, 100, 20, Text.translatable(""));
         this.newTriggeredBlockPositionOffsetZField.setPlaceholder(NEW_POSITION_Z_FIELD_PLACEHOLDER_TEXT);
         this.addSelectableChild(this.newTriggeredBlockPositionOffsetZField);
-        this.addNewTriggeredBlockPositionOffsetButton = this.addDrawableChild(ButtonWidget.builder(ADD_BUTTON_LABEL_TEXT, button -> this.addTriggeredBlockEntry(new BlockPos(parseInt(this.newTriggeredBlockPositionOffsetXField.getText()), parseInt(this.newTriggeredBlockPositionOffsetYField.getText()), parseInt(this.newTriggeredBlockPositionOffsetZField.getText())))).dimensions(this.width / 2 - 4 - 150, 177, 300, 20).build());
+        this.addNewTriggeredBlockPositionOffsetButton = this.addDrawableChild(ButtonWidget.builder(ADD_BUTTON_LABEL_TEXT, button -> this.addTriggeredBlockEntry(new BlockPos(ItemUtils.parseInt(this.newTriggeredBlockPositionOffsetXField.getText()), ItemUtils.parseInt(this.newTriggeredBlockPositionOffsetYField.getText()), ItemUtils.parseInt(this.newTriggeredBlockPositionOffsetZField.getText())))).dimensions(this.width / 2 - 4 - 150, 177, 300, 20).build());
         this.saveButton = this.addDrawableChild(ButtonWidget.builder(ScreenTexts.DONE, button -> this.done()).dimensions(this.width / 2 - 4 - 150, 201, 150, 20).build());
         this.cancelButton = this.addDrawableChild(ButtonWidget.builder(ScreenTexts.CANCEL, button -> this.cancel()).dimensions(this.width / 2 + 4, 201, 150, 20).build());
         this.setInitialFocus(this.newTriggeredBlockPositionOffsetXField);
@@ -202,72 +203,6 @@ public class RelayTriggerBlockScreen extends Screen {
         return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
     }
 
-//    @Override
-//    protected @NotNull OwoUIAdapter<FlowLayout> createAdapter() {
-//        return OwoUIAdapter.create(this, Containers::verticalFlow);
-//    }
-//
-//    @Override
-//    protected void build(FlowLayout rootComponent) {
-//            List<BlockPos> triggeredBlocks = this.relayTriggerBlock.getTriggeredBlocks();
-//            rootComponent
-//                    .surface(Surface.VANILLA_TRANSLUCENT)
-//                    .horizontalAlignment(HorizontalAlignment.CENTER)
-//                    .verticalAlignment(VerticalAlignment.CENTER);
-//            rootComponent.children(List.of(
-//                    Components.label(this.title)
-//                            .shadow(true)
-//                            .color(Color.ofArgb(0xFFFFFF))
-//                            .margins(Insets.of(1, 1, 1, 1))
-//                            .sizing(Sizing.content(), Sizing.content()),
-//                    // scrolling container
-//                    Containers.verticalScroll(Sizing.fill(50), Sizing.fill(50),
-//                            Containers.verticalFlow(Sizing.fill(98), Sizing.content())
-//                                    .verticalAlignment(VerticalAlignment.CENTER)
-//                                    .horizontalAlignment(HorizontalAlignment.CENTER)
-//                                    .id("creativeScreenScrollingContent"))
-//                            .scrollbar(ScrollContainer.Scrollbar.vanilla())
-//                            .verticalAlignment(VerticalAlignment.CENTER)
-//                            .horizontalAlignment(HorizontalAlignment.LEFT),
-//                    Components.button(Text.translatable("gui.relay_trigger_block.addTriggeredBlockEntryButton"), button -> this.addTriggeredBlockEntry())
-//                            .sizing(Sizing.fill(30), Sizing.fixed(20)),
-//                    Containers.horizontalFlow(Sizing.fill(30), Sizing.content())
-//                            .children(List.of(
-//                                    Components.button(Text.translatable("gui.save"), button -> this.done())
-//                                            .sizing(Sizing.fill(49), Sizing.fixed(20)),
-//                                    Components.button(ScreenTexts.CANCEL, button -> this.cancel())
-//                                            .sizing(Sizing.fill(49), Sizing.fixed(20))
-//                            ))
-//                            .margins(Insets.of(1, 1, 1, 1))
-//                            .verticalAlignment(VerticalAlignment.CENTER)
-//                            .horizontalAlignment(HorizontalAlignment.CENTER)
-//            ));
-//            for (BlockPos triggeredBlock : triggeredBlocks) {
-//                    rootComponent.childById(FlowLayout.class, "creativeScreenScrollingContent").children(List.of(
-//                            Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
-//                                    .children(List.of(
-//                                            Components.textBox(Sizing.fill(17), Integer.toString(triggeredBlock.getX()))
-//                                                    .tooltip(Text.translatable("gui.triggered_block.triggeredBlockPositionOffsetX.tooltip"))
-//                                                    .margins(Insets.of(1, 1, 1, 1))
-//                                                    .id("triggeredBlockPositionOffset"),
-//                                            Components.textBox(Sizing.fill(17), Integer.toString(triggeredBlock.getY()))
-//                                                    .tooltip(Text.translatable("gui.triggered_block.triggeredBlockPositionOffsetY.tooltip"))
-//                                                    .margins(Insets.of(1, 1, 1, 1))
-//                                                    .id("triggeredBlockPositionOffsetY"),
-//                                            Components.textBox(Sizing.fill(17), Integer.toString(triggeredBlock.getZ()))
-//                                                    .tooltip(Text.translatable("gui.triggered_block.triggeredBlockPositionOffsetZ.tooltip"))
-//                                                    .margins(Insets.of(1, 1, 1, 1))
-//                                                    .id("triggeredBlockPositionOffsetZ"),
-//                                            Components.button(Text.translatable("gui.relay_trigger_block.deleteTriggeredBlockEntryButton"), button -> this.deleteTriggeredBlockEntry(button.parent()))
-//                                                    .sizing(Sizing.fill(25), Sizing.fixed(20))
-//                                                    .id("deleteTriggeredBlockEntryButton")
-//                                    ))
-//                                    .verticalAlignment(VerticalAlignment.CENTER)
-//                                    .horizontalAlignment(HorizontalAlignment.LEFT)
-//                    ));
-//            }
-//    }
-
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_KP_ENTER) {
@@ -278,23 +213,12 @@ public class RelayTriggerBlockScreen extends Screen {
     }
 
     private void updateRelayTriggerBlock() {
-//        List<Component> list = component(FlowLayout.class, "creativeScreenScrollingContent").children();
-//
-//        int creativeScreenScrollingContentSize = list.size();
-//
-//        List<BlockPos> triggeredBlocks = new ArrayList<>();
-//
-//        for (int i = 0; i < creativeScreenScrollingContentSize; i++) {
-//            FlowLayout triggeredBlockEntry = (FlowLayout) list.get(i);
-//
-//            triggeredBlocks.add(new BlockPos(
-//                    this.parseInt(((TextBoxComponent)(triggeredBlockEntry.children().get(0))).getText()),
-//                    this.parseInt(((TextBoxComponent)(triggeredBlockEntry.children().get(1))).getText()),
-//                    this.parseInt(((TextBoxComponent)(triggeredBlockEntry.children().get(2))).getText())
-//            ));
-//        }
-        ClientPlayNetworking.send(new UpdateRelayTriggerBlockPacket(this.relayTriggerBlock.getPos(), this.triggeredBlocks));
-//        return true;
+        ClientPlayNetworking.send(
+                new UpdateRelayTriggerBlockPacket(
+                        this.relayTriggerBlock.getPos(),
+                        this.triggeredBlocks
+                )
+        );
     }
 
     @Override
@@ -314,11 +238,8 @@ public class RelayTriggerBlockScreen extends Screen {
         this.newTriggeredBlockPositionOffsetZField.render(context, mouseX, mouseY, delta);
     }
 
-    private int parseInt(String string) {
-        try {
-            return Integer.parseInt(string);
-        } catch (NumberFormatException numberFormatException) {
-            return 0;
-        }
+    @Override
+    public boolean shouldPause() {
+        return false;
     }
 }

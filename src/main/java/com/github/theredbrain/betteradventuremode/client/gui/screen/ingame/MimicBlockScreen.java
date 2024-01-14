@@ -1,5 +1,6 @@
 package com.github.theredbrain.betteradventuremode.client.gui.screen.ingame;
 
+import com.github.theredbrain.betteradventuremode.api.util.ItemUtils;
 import com.github.theredbrain.betteradventuremode.block.entity.MimicBlockEntity;
 import com.github.theredbrain.betteradventuremode.network.packet.UpdateMimicBlockPacket;
 import net.fabricmc.api.EnvType;
@@ -99,14 +100,14 @@ public class MimicBlockScreen extends Screen {
         ClientPlayNetworking.send(new UpdateMimicBlockPacket(
                 this.mimicBlock.getPos(),
                 new BlockPos(
-                        parseInt(this.activeMimicBlockPositionOffsetXField.getText()),
-                        parseInt(this.activeMimicBlockPositionOffsetYField.getText()),
-                        parseInt(this.activeMimicBlockPositionOffsetZField.getText())
+                        ItemUtils.parseInt(this.activeMimicBlockPositionOffsetXField.getText()),
+                        ItemUtils.parseInt(this.activeMimicBlockPositionOffsetYField.getText()),
+                        ItemUtils.parseInt(this.activeMimicBlockPositionOffsetZField.getText())
                 ),
                 new BlockPos(
-                        parseInt(this.inactiveMimicBlockPositionOffsetXField.getText()),
-                        parseInt(this.inactiveMimicBlockPositionOffsetYField.getText()),
-                        parseInt(this.inactiveMimicBlockPositionOffsetZField.getText())
+                        ItemUtils.parseInt(this.inactiveMimicBlockPositionOffsetXField.getText()),
+                        ItemUtils.parseInt(this.inactiveMimicBlockPositionOffsetYField.getText()),
+                        ItemUtils.parseInt(this.inactiveMimicBlockPositionOffsetZField.getText())
                 )
         ));
     }
@@ -125,11 +126,8 @@ public class MimicBlockScreen extends Screen {
         this.inactiveMimicBlockPositionOffsetZField.render(context, mouseX, mouseY, delta);
     }
 
-    private int parseInt(String string) {
-        try {
-            return Integer.parseInt(string);
-        } catch (NumberFormatException numberFormatException) {
-            return 0;
-        }
+    @Override
+    public boolean shouldPause() {
+        return false;
     }
 }

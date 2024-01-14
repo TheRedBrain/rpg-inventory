@@ -1,6 +1,7 @@
 package com.github.theredbrain.betteradventuremode.client.gui.screen.ingame;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
+import com.github.theredbrain.betteradventuremode.api.util.ItemUtils;
 import com.github.theredbrain.betteradventuremode.block.entity.TriggeredCounterBlockEntity;
 import com.github.theredbrain.betteradventuremode.network.packet.UpdateTriggeredCounterBlockPacket;
 import net.fabricmc.api.EnvType;
@@ -58,7 +59,7 @@ public class TriggeredCounterBlockScreen extends Screen {
     }
 
     private void addTriggeredBlockEntry() {
-        int newTriggeredBlockCounter = parseInt(this.newTriggeredBlockCounterField.getText());
+        int newTriggeredBlockCounter = ItemUtils.parseInt(this.newTriggeredBlockCounterField.getText());
         for (MutablePair<Integer, BlockPos> entry : this.triggeredBlocksList) {
             if (entry.getLeft().equals(newTriggeredBlockCounter)) {
                 if (this.client != null && this.client.player != null) {
@@ -69,11 +70,11 @@ public class TriggeredCounterBlockScreen extends Screen {
         }
         this.triggeredBlocksList.add(
                 new MutablePair<>(
-                        parseInt(this.newTriggeredBlockCounterField.getText()),
+                        ItemUtils.parseInt(this.newTriggeredBlockCounterField.getText()),
                         new BlockPos(
-                                parseInt(this.newTriggeredBlockPositionOffsetXField.getText()),
-                                parseInt(this.newTriggeredBlockPositionOffsetYField.getText()),
-                                parseInt(this.newTriggeredBlockPositionOffsetZField.getText())
+                                ItemUtils.parseInt(this.newTriggeredBlockPositionOffsetXField.getText()),
+                                ItemUtils.parseInt(this.newTriggeredBlockPositionOffsetYField.getText()),
+                                ItemUtils.parseInt(this.newTriggeredBlockPositionOffsetZField.getText())
                         )
                 )
         );
@@ -256,11 +257,8 @@ public class TriggeredCounterBlockScreen extends Screen {
         this.newTriggeredBlockPositionOffsetZField.render(context, mouseX, mouseY, delta);
     }
 
-    private int parseInt(String string) {
-        try {
-            return Integer.parseInt(string);
-        } catch (NumberFormatException numberFormatException) {
-            return 0;
-        }
+    @Override
+    public boolean shouldPause() {
+        return false;
     }
 }

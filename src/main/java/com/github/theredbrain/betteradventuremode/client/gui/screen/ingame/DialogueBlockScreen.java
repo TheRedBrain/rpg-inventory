@@ -2,6 +2,7 @@ package com.github.theredbrain.betteradventuremode.client.gui.screen.ingame;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.api.json_files_backend.Dialogue;
+import com.github.theredbrain.betteradventuremode.api.util.ItemUtils;
 import com.github.theredbrain.betteradventuremode.block.entity.DialogueBlockEntity;
 import com.github.theredbrain.betteradventuremode.client.network.DuckClientAdvancementManagerMixin;
 import com.github.theredbrain.betteradventuremode.network.packet.UpdateDialogueBlockPacket;
@@ -230,9 +231,9 @@ public class DialogueBlockScreen extends Screen {
         this.dialogueUsedBlocksList.add(
                 new MutablePair<>(newDialogueUsedBlockIdentifier,
                         new BlockPos(
-                                this.parseInt(this.newDialogueUsedBlockPositionOffsetXField.getText()),
-                                this.parseInt(this.newDialogueUsedBlockPositionOffsetYField.getText()),
-                                this.parseInt(this.newDialogueUsedBlockPositionOffsetZField.getText())
+                                ItemUtils.parseInt(this.newDialogueUsedBlockPositionOffsetXField.getText()),
+                                ItemUtils.parseInt(this.newDialogueUsedBlockPositionOffsetYField.getText()),
+                                ItemUtils.parseInt(this.newDialogueUsedBlockPositionOffsetZField.getText())
                         )
                 )
         );
@@ -263,9 +264,9 @@ public class DialogueBlockScreen extends Screen {
         this.dialogueTriggeredBlocksList.add(
                 new MutablePair<>(newDialogueTriggeredBlockIdentifier,
                         new BlockPos(
-                                this.parseInt(this.newDialogueTriggeredBlockPositionOffsetXField.getText()),
-                                this.parseInt(this.newDialogueTriggeredBlockPositionOffsetYField.getText()),
-                                this.parseInt(this.newDialogueTriggeredBlockPositionOffsetZField.getText())
+                                ItemUtils.parseInt(this.newDialogueTriggeredBlockPositionOffsetXField.getText()),
+                                ItemUtils.parseInt(this.newDialogueTriggeredBlockPositionOffsetYField.getText()),
+                                ItemUtils.parseInt(this.newDialogueTriggeredBlockPositionOffsetZField.getText())
                         )
                 )
         );
@@ -948,14 +949,6 @@ public class DialogueBlockScreen extends Screen {
                 this.startingDialogueList
         ));
         return true;
-    }
-
-    private int parseInt(String string) {
-        try {
-            return Integer.parseInt(string);
-        } catch (NumberFormatException numberFormatException) {
-            return 0;
-        }
     }
 
     public static enum CreativeScreenPage implements StringIdentifiable

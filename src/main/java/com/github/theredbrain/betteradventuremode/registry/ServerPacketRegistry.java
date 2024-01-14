@@ -71,6 +71,12 @@ public class ServerPacketRegistry {
 
         ServerPlayNetworking.registerGlobalReceiver(CraftFromCraftingBenchPacket.TYPE, new CraftFromCraftingBenchPacketReceiver());
 
+        ServerPlayNetworking.registerGlobalReceiver(UpdateEntranceDelegationBlockPacket.TYPE, new UpdateEntranceDelegationBlockPacketReceiver());
+
+        ServerPlayNetworking.registerGlobalReceiver(UpdateStatusEffectApplierBlockPacket.TYPE, new UpdateStatusEffectApplierBlockPacketReceiver());
+
+        ServerPlayNetworking.registerGlobalReceiver(UpdateTriggeredAdvancementCheckerBlockPacket.TYPE, new UpdateTriggeredAdvancementCheckerBlockPacketReceiver());
+
         // --- shop packets
 
         ServerPlayNetworking.registerGlobalReceiver(UpdateShopBlockPacket.TYPE, new UpdateShopBlockPacketReceiver());

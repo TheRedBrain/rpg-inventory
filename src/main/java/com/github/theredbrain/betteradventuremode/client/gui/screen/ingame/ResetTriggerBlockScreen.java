@@ -1,6 +1,7 @@
 package com.github.theredbrain.betteradventuremode.client.gui.screen.ingame;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
+import com.github.theredbrain.betteradventuremode.api.util.ItemUtils;
 import com.github.theredbrain.betteradventuremode.block.entity.ResetTriggerBlockEntity;
 import com.github.theredbrain.betteradventuremode.network.packet.UpdateResetTriggerBlockPacket;
 import net.fabricmc.api.EnvType;
@@ -102,7 +103,7 @@ public class ResetTriggerBlockScreen extends Screen {
         this.newResetBlockPositionOffsetZField = new TextFieldWidget(this.textRenderer, this.width / 2 + 54, 153, 100, 20, Text.translatable(""));
         this.newResetBlockPositionOffsetZField.setPlaceholder(NEW_POSITION_Z_FIELD_PLACEHOLDER_TEXT);
         this.addSelectableChild(this.newResetBlockPositionOffsetZField);
-        this.addNewResetBlockPositionOffsetButton = this.addDrawableChild(ButtonWidget.builder(ADD_BUTTON_LABEL_TEXT, button -> this.addResetBlockEntry(new BlockPos(parseInt(this.newResetBlockPositionOffsetXField.getText()), parseInt(this.newResetBlockPositionOffsetYField.getText()), parseInt(this.newResetBlockPositionOffsetZField.getText())))).dimensions(this.width / 2 - 4 - 150, 177, 300, 20).build());
+        this.addNewResetBlockPositionOffsetButton = this.addDrawableChild(ButtonWidget.builder(ADD_BUTTON_LABEL_TEXT, button -> this.addResetBlockEntry(new BlockPos(ItemUtils.parseInt(this.newResetBlockPositionOffsetXField.getText()), ItemUtils.parseInt(this.newResetBlockPositionOffsetYField.getText()), ItemUtils.parseInt(this.newResetBlockPositionOffsetZField.getText())))).dimensions(this.width / 2 - 4 - 150, 177, 300, 20).build());
         this.saveButton = this.addDrawableChild(ButtonWidget.builder(ScreenTexts.DONE, button -> this.done()).dimensions(this.width / 2 - 4 - 150, 201, 150, 20).build());
         this.cancelButton = this.addDrawableChild(ButtonWidget.builder(ScreenTexts.CANCEL, button -> this.cancel()).dimensions(this.width / 2 + 4, 201, 150, 20).build());
         this.setInitialFocus(this.newResetBlockPositionOffsetXField);
@@ -232,11 +233,8 @@ public class ResetTriggerBlockScreen extends Screen {
         this.newResetBlockPositionOffsetZField.render(context, mouseX, mouseY, delta);
     }
 
-    private int parseInt(String string) {
-        try {
-            return Integer.parseInt(string);
-        } catch (NumberFormatException numberFormatException) {
-            return 0;
-        }
+    @Override
+    public boolean shouldPause() {
+        return false;
     }
 }

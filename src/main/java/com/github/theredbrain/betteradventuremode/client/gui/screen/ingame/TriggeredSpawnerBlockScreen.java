@@ -1,6 +1,7 @@
 package com.github.theredbrain.betteradventuremode.client.gui.screen.ingame;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
+import com.github.theredbrain.betteradventuremode.api.util.ItemUtils;
 import com.github.theredbrain.betteradventuremode.block.entity.TriggeredSpawnerBlockEntity;
 import com.github.theredbrain.betteradventuremode.network.packet.UpdateTriggeredSpawnerBlockPacket;
 import com.google.common.collect.Maps;
@@ -474,22 +475,22 @@ public class TriggeredSpawnerBlockScreen extends Screen {
                         this.spawnerBoundEntityModelIdentifierField.getText(),
                         this.spawnerBoundEntityTextureIdentifierField.getText(),
                         this.spawnerBoundEntityAnimationsIdentifierField.getText(),
-                        this.parseDouble(this.spawnerBoundEntityBoundingBoxHeightField.getText()),
-                        this.parseDouble(this.spawnerBoundEntityBoundingBoxWidthField.getText()),
+                        ItemUtils.parseDouble(this.spawnerBoundEntityBoundingBoxHeightField.getText()),
+                        ItemUtils.parseDouble(this.spawnerBoundEntityBoundingBoxWidthField.getText()),
                         this.spawnerBoundEntityLootTableIdentifierField.getText(),
                         new BlockPos(
-                                this.parseInt(this.entitySpawnPositionOffsetXField.getText()),
-                                this.parseInt(this.entitySpawnPositionOffsetYField.getText()),
-                                this.parseInt(this.entitySpawnPositionOffsetZField.getText())
+                                ItemUtils.parseInt(this.entitySpawnPositionOffsetXField.getText()),
+                                ItemUtils.parseInt(this.entitySpawnPositionOffsetYField.getText()),
+                                ItemUtils.parseInt(this.entitySpawnPositionOffsetZField.getText())
                         ),
                         this.spawningMode.asString(),
                         this.entityMode.asString(),
                         this.entityTypeIdField.getText(),
                         this.entityAttributeModifiersList,
                         new BlockPos(
-                                this.parseInt(this.triggeredBlockPositionOffsetXField.getText()),
-                                this.parseInt(this.triggeredBlockPositionOffsetYField.getText()),
-                                this.parseInt(this.triggeredBlockPositionOffsetZField.getText())
+                                ItemUtils.parseInt(this.triggeredBlockPositionOffsetXField.getText()),
+                                ItemUtils.parseInt(this.triggeredBlockPositionOffsetYField.getText()),
+                                ItemUtils.parseInt(this.triggeredBlockPositionOffsetZField.getText())
                         )
                 )
         );
@@ -558,20 +559,9 @@ public class TriggeredSpawnerBlockScreen extends Screen {
         }
     }
 
-    private int parseInt(String string) {
-        try {
-            return Integer.parseInt(string);
-        } catch (NumberFormatException numberFormatException) {
-            return 0;
-        }
-    }
-
-    private double parseDouble(String string) {
-        try {
-            return Double.parseDouble(string);
-        } catch (NumberFormatException numberFormatException) {
-            return 0.0;
-        }
+    @Override
+    public boolean shouldPause() {
+        return false;
     }
 
     public static enum CreativeScreenPage implements StringIdentifiable

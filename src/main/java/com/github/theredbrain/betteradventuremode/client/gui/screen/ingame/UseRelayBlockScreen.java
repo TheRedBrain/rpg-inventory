@@ -1,5 +1,6 @@
 package com.github.theredbrain.betteradventuremode.client.gui.screen.ingame;
 
+import com.github.theredbrain.betteradventuremode.api.util.ItemUtils;
 import com.github.theredbrain.betteradventuremode.block.entity.UseRelayBlockEntity;
 import com.github.theredbrain.betteradventuremode.network.packet.UpdateUseRelayBlockPacket;
 import net.fabricmc.api.EnvType;
@@ -82,9 +83,9 @@ public class UseRelayBlockScreen extends Screen {
         ClientPlayNetworking.send(new UpdateUseRelayBlockPacket(
                 this.useRelayBlock.getPos(),
                 new BlockPos(
-                        parseInt(this.relayBlockPositionOffsetXField.getText()),
-                        parseInt(this.relayBlockPositionOffsetYField.getText()),
-                        parseInt(this.relayBlockPositionOffsetZField.getText())
+                        ItemUtils.parseInt(this.relayBlockPositionOffsetXField.getText()),
+                        ItemUtils.parseInt(this.relayBlockPositionOffsetYField.getText()),
+                        ItemUtils.parseInt(this.relayBlockPositionOffsetZField.getText())
                 )
         ));
         return true;
@@ -99,11 +100,8 @@ public class UseRelayBlockScreen extends Screen {
         this.relayBlockPositionOffsetZField.render(context, mouseX, mouseY, delta);
     }
 
-    private int parseInt(String string) {
-        try {
-            return Integer.parseInt(string);
-        } catch (NumberFormatException numberFormatException) {
-            return 0;
-        }
+    @Override
+    public boolean shouldPause() {
+        return false;
     }
 }

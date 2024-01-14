@@ -1,5 +1,6 @@
 package com.github.theredbrain.betteradventuremode.client.gui.screen.ingame;
 
+import com.github.theredbrain.betteradventuremode.api.util.ItemUtils;
 import com.github.theredbrain.betteradventuremode.block.entity.JigsawPlacerBlockBlockEntity;
 import com.github.theredbrain.betteradventuremode.network.packet.UpdateJigsawPlacerBlockPacket;
 import net.fabricmc.api.EnvType;
@@ -133,9 +134,9 @@ public class JigsawPlacerBlockScreen extends Screen {
                 this.poolField.getText(),
                 this.joint,
                 new BlockPos(
-                        parseInt(this.triggeredBlockPositionOffsetXField.getText()),
-                        parseInt(this.triggeredBlockPositionOffsetYField.getText()),
-                        parseInt(this.triggeredBlockPositionOffsetZField.getText())
+                        ItemUtils.parseInt(this.triggeredBlockPositionOffsetXField.getText()),
+                        ItemUtils.parseInt(this.triggeredBlockPositionOffsetYField.getText()),
+                        ItemUtils.parseInt(this.triggeredBlockPositionOffsetZField.getText())
                 )
         ));
         return true;
@@ -157,11 +158,8 @@ public class JigsawPlacerBlockScreen extends Screen {
         this.triggeredBlockPositionOffsetZField.render(context, mouseX, mouseY, delta);
     }
 
-    private int parseInt(String string) {
-        try {
-            return Integer.parseInt(string);
-        } catch (NumberFormatException numberFormatException) {
-            return 0;
-        }
+    @Override
+    public boolean shouldPause() {
+        return false;
     }
 }
