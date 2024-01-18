@@ -95,6 +95,10 @@ public class AdventureInventoryScreen extends HandledScreen<PlayerScreenHandler>
         int visibleEffectsListSize = visibleEffectsList.size();
         if (visibleEffectsListSize == 0) {
             this.oldEffectsListSize = 0;
+            this.foodEffectsList.clear();
+            this.negativeEffectsList.clear();
+            this.positiveEffectsList.clear();
+            this.neutralEffectsList.clear();
             return;
         }
         boolean bl = false;
@@ -152,15 +156,6 @@ public class AdventureInventoryScreen extends HandledScreen<PlayerScreenHandler>
             return;
         }
         super.init();
-
-//        for (int i = 0; i < 3; ++i) {
-//            for (int j = 0; j < 9; ++j) {
-//                this.handler.getSlot(j + (i + 1) * 9).y = 146 + i * 18;
-//            }
-//        }
-//        for (int i = 0; i < 9; ++i) {
-//            this.handler.getSlot(i + 36).y = 204;
-//        }
 
         // disable vanilla crafting slots
         ((DuckSlotMixin)this.handler.slots.get(0)).betteradventuremode$setDisabledOverride(true);
@@ -232,7 +227,9 @@ public class AdventureInventoryScreen extends HandledScreen<PlayerScreenHandler>
     private void drawStatusEffects(DrawContext context, int mouseX, int mouseY) {
         int i = this.x - 123;
         int j = this.y + 7;
-        context.drawText(this.textRenderer, Text.translatable("gui.adventureInventory.status_effects"), i + 1, j, 0x404040, false);
+        if (this.oldEffectsListSize > 0) {
+            context.drawText(this.textRenderer, Text.translatable("gui.adventureInventory.status_effects"), i + 1, j, 0x404040, false);
+        }
         j += 13;
         if (this.foodEffectsList.size() > 0) {
 

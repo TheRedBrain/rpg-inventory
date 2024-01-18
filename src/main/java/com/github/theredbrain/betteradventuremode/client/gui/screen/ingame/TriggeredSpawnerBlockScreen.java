@@ -122,7 +122,7 @@ public class TriggeredSpawnerBlockScreen extends Screen {
                 this.newEntityAttributeModifierIdentifierField.getText(),
                 new EntityAttributeModifier(
                         this.newEntityAttributeModifierNameField.getText(),
-                        this.parseDouble(this.newEntityAttributeModifierValueField.getText()),
+                        ItemUtils.parseDouble(this.newEntityAttributeModifierValueField.getText()),
                         this.newEntityAttributeModifierOperation
                 )
         ));

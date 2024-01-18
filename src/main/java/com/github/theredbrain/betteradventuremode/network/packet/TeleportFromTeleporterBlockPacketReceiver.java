@@ -59,6 +59,7 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
 
         boolean locationWasGeneratedByOwner = true;
         boolean playerHadKeyItem = true;
+        boolean locationWasReset = false;
 
         if (teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DIRECT) {
             targetWorld = serverWorld;
@@ -145,6 +146,23 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
 //                    BetterAdventureModeCore.info("block at controlBlockPos: " + targetWorld.getBlockState(blockPos).getBlock());
 
                     if (blockEntity instanceof LocationControlBlockEntity locationControlBlock) {
+                        if (locationControlBlock.shouldReset()) {
+
+                            String forceLoadAddCommand = "execute in " + targetWorld.getRegistryKey().getValue() + " run forceload add " + (blockPos.getX() - 16) + " " + (blockPos.getZ() - 16) + " " + (blockPos.getX() + 31) + " " + (blockPos.getZ() + 31);
+                            server.getCommandManager().executeWithPrefix(server.getCommandSource(), forceLoadAddCommand);
+
+                            locationControlBlock.trigger();
+
+                            String forceLoadRemoveAllCommand = "execute in " + targetWorld.getRegistryKey().getValue() + " run forceload remove " + (blockPos.getX() - 16) + " " + (blockPos.getZ() - 16) + " " + (blockPos.getX() + 31) + " " + (blockPos.getZ() + 31);
+                            server.getCommandManager().executeWithPrefix(server.getCommandSource(), forceLoadRemoveAllCommand);
+
+                            blockEntity = null;
+                            locationWasReset = true;
+                        }
+                    }
+
+                    if (blockEntity instanceof LocationControlBlockEntity locationControlBlock) {
+
                         MutablePair<BlockPos, MutablePair<Double, Double>> entrance = locationControlBlock.getTargetEntrance(targetLocationEntrance);
                         targetPos = entrance.getLeft();
                         targetYaw = entrance.getRight().getLeft();
@@ -214,11 +232,15 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
                 }
             }
 
-            if (!playerHadKeyItem) {
-                serverPlayerEntity.sendMessage(Text.translatable("gui.teleporter_block.key_item_required"));
+            if (locationWasReset) {
+                serverPlayerEntity.sendMessage(Text.translatable("gui.teleporter_block.location_was_reset"));
             } else {
-                if (!locationWasGeneratedByOwner) {
-                    serverPlayerEntity.sendMessage(Text.translatable("gui.teleporter_block.location_not_visited_by_owner"));
+                if (!playerHadKeyItem) {
+                    serverPlayerEntity.sendMessage(Text.translatable("gui.teleporter_block.key_item_required"));
+                } else {
+                    if (!locationWasGeneratedByOwner) {
+                        serverPlayerEntity.sendMessage(Text.translatable("gui.teleporter_block.location_not_visited_by_owner"));
+                    }
                 }
             }
         }
