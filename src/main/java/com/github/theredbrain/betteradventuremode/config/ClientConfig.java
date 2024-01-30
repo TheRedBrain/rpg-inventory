@@ -8,6 +8,7 @@ import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
         name = "client"
 )
 public class ClientConfig implements ConfigData {
+    public boolean show_adventure_hud = true;
     @Comment("Current health, stamina and mana are shown above their respective bars in the HUD.")
     public boolean show_resource_bar_numbers = true;
     @Comment("Color of the health bar number.")

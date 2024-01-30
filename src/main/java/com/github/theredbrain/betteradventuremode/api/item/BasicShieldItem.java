@@ -2,8 +2,8 @@ package com.github.theredbrain.betteradventuremode.api.item;
 
 import com.github.theredbrain.betteradventuremode.api.util.AttributeModifierUUIDs;
 import com.github.theredbrain.betteradventuremode.api.util.ItemUtils;
+import com.github.theredbrain.betteradventuremode.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.betteradventuremode.registry.EntityAttributesRegistry;
-import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.entity.EquipmentSlot;
@@ -23,16 +23,22 @@ import java.util.UUID;
 
 public class BasicShieldItem extends Item implements Equipment {
     private final Multimap<EntityAttribute, EntityAttributeModifier> attributeModifiers;
-    private final float blockArmor;
+    private final float physicalDamageReduction;
+    private final float fireDamageReduction;
+    private final float frostDamageReduction;
+    private final float lightningDamageReduction;
     private final double blockForce;
     private final boolean canParry;
     private final double parryBonus;
     @Nullable
     private String translationKeyBroken;
     private final float weight;
-    public BasicShieldItem(float blockArmor, double blockForce, boolean canParry, double parryBonus, float weight, Settings settings) {
+    public BasicShieldItem(float physicalDamageReduction, float fireDamageReduction, float frostDamageReduction, float lightningDamageReduction, double blockForce, boolean canParry, double parryBonus, float weight, Settings settings) {
         super(settings);
-        this.blockArmor = blockArmor;
+        this.physicalDamageReduction = physicalDamageReduction;
+        this.fireDamageReduction = fireDamageReduction;
+        this.frostDamageReduction = frostDamageReduction;
+        this.lightningDamageReduction = lightningDamageReduction;
         this.blockForce = blockForce;
         this.canParry = canParry;
         this.parryBonus = parryBonus;
@@ -54,7 +60,7 @@ public class BasicShieldItem extends Item implements Equipment {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack itemStack = user.getStackInHand(hand);
         user.setCurrentHand(hand);
-        if (((DuckPlayerEntityMixin)user).betteradventuremode$getStamina() > 0) {
+        if (((DuckLivingEntityMixin)user).betteradventuremode$getStamina() > 0) {
             return TypedActionResult.consume(itemStack);
         }
         return TypedActionResult.fail(itemStack);
@@ -62,13 +68,11 @@ public class BasicShieldItem extends Item implements Equipment {
 
     @Override
     public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
-        PlayerEntity playerEntity;
-        if (remainingUseTicks < 0 || !(user instanceof PlayerEntity)) {
+        if (remainingUseTicks < 0) {
             user.stopUsingItem();
             return;
         }
-        playerEntity = (PlayerEntity)user;
-        if (((DuckPlayerEntityMixin) playerEntity).betteradventuremode$getStamina() <= 0) {
+        if (((DuckLivingEntityMixin) user).betteradventuremode$getStamina() <= 0) {
             user.stopUsingItem();
         }
     }
@@ -117,8 +121,20 @@ public class BasicShieldItem extends Item implements Equipment {
         return this.canParry;
     }
 
-    public float getBlockArmor() {
-        return this.blockArmor;
+    public float getPhysicalDamageReduction() {
+        return this.physicalDamageReduction;
+    }
+
+    public float getFireDamageReduction() {
+        return fireDamageReduction;
+    }
+
+    public float getFrostDamageReduction() {
+        return frostDamageReduction;
+    }
+
+    public float getLightningDamageReduction() {
+        return lightningDamageReduction;
     }
 
     public double getParryBonus() {

@@ -145,9 +145,9 @@ public class ItemRegistry {
     public static final Item TEST_BELT = registerItem("test_belt", new AccessoryTrinketItem(BetterAdventureMode.identifier("model/accessory/belt_basic"), new FabricItemSettings().maxCount(1)), ItemGroups.OPERATOR);
     public static final Item TEST_RING = registerItem("test_ring", new AccessoryTrinketItem(BetterAdventureMode.identifier("model/accessory/ring_basic"), new FabricItemSettings().maxCount(1)), ItemGroups.OPERATOR);
     public static final Item MANA_TEST_BELT = registerItem("mana_test_belt", new ManaTestBeltItem(new FabricItemSettings().maxCount(1)), ItemGroups.OPERATOR);
-    public static final Item TEST_BUCKLER = registerItem("test_buckler", new BasicShieldItem(2, 0.2, true, 3.0, 2, new FabricItemSettings().maxDamage(336)), ItemGroups.OPERATOR);
-    public static final Item TEST_NORMAL_SHIELD = registerItem("test_normal_shield", new BasicShieldItem(3, 0.5, true, 1.5, 3, new FabricItemSettings().maxDamage(336)), ItemGroups.OPERATOR);
-    public static final Item TEST_TOWER_SHIELD = registerItem("test_tower_shield", new BasicShieldItem(5, 1.0, false, 1.0, 5, new FabricItemSettings().maxDamage(336)), ItemGroups.OPERATOR);
+    public static final Item TEST_BUCKLER = registerItem("test_buckler", new BasicShieldItem(2, 0, 0, 0, 0.2, true, 3.0, 2, new FabricItemSettings().maxDamage(336)), ItemGroups.OPERATOR);
+    public static final Item TEST_NORMAL_SHIELD = registerItem("test_normal_shield", new BasicShieldItem(3, 0, 0, 0, 0.5, true, 1.5, 3, new FabricItemSettings().maxDamage(336)), ItemGroups.OPERATOR);
+    public static final Item TEST_TOWER_SHIELD = registerItem("test_tower_shield", new BasicShieldItem(5, 0, 0, 0, 1.0, false, 1.0, 5, new FabricItemSettings().maxDamage(336)), ItemGroups.OPERATOR);
     public static final Item TEST_SWORD = registerItem("test_sword", new BasicWeaponItem(DamageTypesRegistry.PLAYER_SLASHING_DAMAGE_TYPE, DamageTypesRegistry.PLAYER_PIERCING_DAMAGE_TYPE, 4, -3.0F, 3, 2, new FabricItemSettings().maxDamage(336)), ItemGroups.OPERATOR);
     public static final Item TEST_AURA_NECKLACE = registerItem("test_aura_necklace", new AuraGrantingNecklaceTrinketItem((AuraStatusEffect) StatusEffectsRegistry.TEST_AURA_EFFECT, BetterAdventureMode.identifier("model/accessory/invisible"), new FabricItemSettings().maxCount(1)), ItemGroups.OPERATOR);
 

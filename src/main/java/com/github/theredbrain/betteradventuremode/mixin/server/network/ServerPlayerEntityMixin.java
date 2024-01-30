@@ -1,5 +1,6 @@
 package com.github.theredbrain.betteradventuremode.mixin.server.network;
 
+import com.github.theredbrain.betteradventuremode.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.betteradventuremode.network.event.PlayerDeathCallback;
@@ -160,26 +161,26 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Du
                 if (i > 0) {
                     this.increaseStat(Stats.SWIM_ONE_CM, i);
 //                    this.addExhaustion(0.01F * (float)i * 0.01F);
-                    ((DuckPlayerEntityMixin)this).betteradventuremode$addStamina(-0.2F);
+                    ((DuckLivingEntityMixin)this).betteradventuremode$addStamina(-0.2F);
                 }
             } else if (this.isSubmergedIn(FluidTags.WATER)) {
                 i = Math.round((float)Math.sqrt(dx * dx + dy * dy + dz * dz) * 100.0F);
                 if (i > 0) {
                     this.increaseStat(Stats.WALK_UNDER_WATER_ONE_CM, i);
 //                    this.addExhaustion(0.01F * (float)i * 0.01F);
-                    ((DuckPlayerEntityMixin)this).betteradventuremode$addStamina(-0.4F);
+                    ((DuckLivingEntityMixin)this).betteradventuremode$addStamina(-0.4F);
                 }
             } else if (this.isTouchingWater()) {
                 i = Math.round((float)Math.sqrt(dx * dx + dz * dz) * 100.0F);
                 if (i > 0) {
                     this.increaseStat(Stats.WALK_ON_WATER_ONE_CM, i);
 //                    this.addExhaustion(0.01F * (float)i * 0.01F);
-                    ((DuckPlayerEntityMixin)this).betteradventuremode$addStamina(-0.1F);
+                    ((DuckLivingEntityMixin)this).betteradventuremode$addStamina(-0.1F);
                 }
             } else if (this.isClimbing()) {
                 if (dy > 0.0) {
                     this.increaseStat(Stats.CLIMB_ONE_CM, (int)Math.round(dy * 100.0));
-                    ((DuckPlayerEntityMixin)this).betteradventuremode$addStamina(this.hasStatusEffect(StatusEffectsRegistry.OVERBURDENED_EFFECT) ? -4 : -1);
+                    ((DuckLivingEntityMixin)this).betteradventuremode$addStamina(this.hasStatusEffect(StatusEffectsRegistry.OVERBURDENED_EFFECT) ? -4 : -1);
                 }
             } else if (this.isOnGround()) {
                 i = Math.round((float)Math.sqrt(dx * dx + dz * dz) * 100.0F);
@@ -187,7 +188,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Du
                     if (this.isSprinting()) {
                         this.increaseStat(Stats.SPRINT_ONE_CM, i);
 //                        this.addExhaustion(0.1F * (float)i * 0.01F);
-                        ((DuckPlayerEntityMixin)this).betteradventuremode$addStamina(-0.1F);
+                        ((DuckLivingEntityMixin)this).betteradventuremode$addStamina(-0.1F);
                     } else if (this.isInSneakingPose()) {
                         this.increaseStat(Stats.CROUCH_ONE_CM, i);
 //                        this.addExhaustion(0.0F * (float)i * 0.01F);

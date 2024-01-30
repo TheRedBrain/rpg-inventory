@@ -1,6 +1,7 @@
 package com.github.theredbrain.betteradventuremode.network.packet;
 
 import com.github.theredbrain.betteradventuremode.api.item.BasicWeaponItem;
+import com.github.theredbrain.betteradventuremode.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.betteradventuremode.registry.ServerPacketRegistry;
 import io.netty.buffer.Unpooled;
@@ -17,13 +18,13 @@ public class AttackStaminaCostPacketReceiver implements ServerPlayNetworking.Pla
 
         ItemStack attackHandItemStack = packet.itemStack;
 
-        if (((DuckPlayerEntityMixin) player).betteradventuremode$getStamina() <= 0) {
+        if (((DuckLivingEntityMixin) player).betteradventuremode$getStamina() <= 0) {
             PacketByteBuf data = new PacketByteBuf(Unpooled.buffer());
             data.writeInt(player.getId());
             ServerPlayNetworking.send(player, ServerPacketRegistry.CANCEL_ATTACK_PACKET, data); // TODO convert to packet
         } else {
             if (attackHandItemStack.getItem() instanceof BasicWeaponItem weaponItem) {
-                ((DuckPlayerEntityMixin) player).betteradventuremode$addStamina(-(weaponItem.getStaminaCost()));
+                ((DuckLivingEntityMixin) player).betteradventuremode$addStamina(-(weaponItem.getStaminaCost()));
             }
         }
     }

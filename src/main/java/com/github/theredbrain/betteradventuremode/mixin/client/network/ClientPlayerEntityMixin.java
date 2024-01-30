@@ -3,6 +3,7 @@ package com.github.theredbrain.betteradventuremode.mixin.client.network;
 import com.github.theredbrain.betteradventuremode.api.json_files_backend.Dialogue;
 import com.github.theredbrain.betteradventuremode.block.entity.*;
 import com.github.theredbrain.betteradventuremode.client.gui.screen.ingame.*;
+import com.github.theredbrain.betteradventuremode.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.betteradventuremode.registry.ComponentsRegistry;
 import com.github.theredbrain.betteradventuremode.registry.StatusEffectsRegistry;
@@ -39,7 +40,7 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
      */
     @Overwrite
     private boolean canSprint() {
-        return this.hasVehicle() || this.betteradventuremode$getStamina() > 0 || this.getAbilities().allowFlying;
+        return this.hasVehicle() || ((DuckLivingEntityMixin)this).betteradventuremode$getStamina() > 0 || this.getAbilities().allowFlying;
     }
 
     @Override

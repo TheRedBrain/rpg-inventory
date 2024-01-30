@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.api.effect;
 
-import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
+import com.github.theredbrain.betteradventuremode.entity.DuckLivingEntityMixin;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
@@ -26,7 +26,7 @@ public class AuraStatusEffect extends StatusEffect {
 
     public void applyUpdateEffect(LivingEntity entity, int amplifier) {
         World world = entity.getWorld();
-        if (entity instanceof PlayerEntity playerEntity && ((DuckPlayerEntityMixin)playerEntity).betteradventuremode$getMana() <= 0) {
+        if (((DuckLivingEntityMixin)entity).betteradventuremode$getMana() <= 0) {
             entity.removeStatusEffect(this);
         }
         if (world.getTime() % 80L == 0L && !world.isClient) {

@@ -14,20 +14,6 @@ public interface DuckPlayerEntityMixin {
     float betteradventuremode$getMaxEquipmentWeight();
     float betteradventuremode$getEquipmentWeight();
 
-    float betteradventuremode$getHealthRegeneration();
-
-    float betteradventuremode$getManaRegeneration();
-    float betteradventuremode$getMaxMana();
-    void betteradventuremode$addMana(float amount);
-    float betteradventuremode$getMana();
-    void betteradventuremode$setMana(float mana);
-
-    float betteradventuremode$getStaminaRegeneration();
-    float betteradventuremode$getMaxStamina();
-    void betteradventuremode$addStamina(float amount);
-    float betteradventuremode$getStamina();
-    void betteradventuremode$setStamina(float mana);
-
     boolean betteradventuremode$isAdventure();
 
     void betteradventuremode$openHousingScreen();

@@ -13,6 +13,8 @@ import java.util.List;
 public class ServerConfig implements ConfigData {
     @Comment("The player inventory screen is customized (WIP)")
     public boolean use_adventure_inventory_screen = true;
+    @Comment("Disables food, saturation and exhaustion")
+    public boolean disable_vanilla_food_system = true;
     @Comment("""
             World Spawn is chosen randomly from the following lists.
             It is recommended to set the gamerule 'spawnRadius' to 0.

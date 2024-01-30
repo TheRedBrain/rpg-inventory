@@ -71,10 +71,13 @@ public class StatusEffectsRegistry {
     public static final StatusEffect TWO_HANDED_EFFECT = new NeutralStatusEffect();
     public static final StatusEffect PORTAL_RESISTANCE_EFFECT = new NeutralStatusEffect();
     public static final StatusEffect STAGGERED = new HarmfulStatusEffect();
-    public static final StatusEffect BURNING = new HarmfulStatusEffect();
+    public static final StatusEffect BLEEDING = new BleedingStatusEffect();
+    public static final StatusEffect BURNING = new BurningStatusEffect();
     public static final StatusEffect CHILLED = new HarmfulStatusEffect();
     public static final StatusEffect FROZEN = new HarmfulStatusEffect();
     public static final StatusEffect WET = new HarmfulStatusEffect();
+    public static final StatusEffect POISON = new CustomPoisonStatusEffect();
+    public static final StatusEffect SHOCKED = new ShockedStatusEffect();
     public static final StatusEffect TEST_AURA_EFFECT = new AuraStatusEffect(StatusEffects.GLOWING, false)
             .addAttributeModifier(EntityAttributesRegistry.MAX_MANA, AttributeModifierUUIDs.AURA_EFFECT, -0.25F, EntityAttributeModifier.Operation.MULTIPLY_TOTAL)
             ;
@@ -120,10 +123,13 @@ public class StatusEffectsRegistry {
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("overburdened_effect"), OVERBURDENED_EFFECT);
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("staggered"), STAGGERED);
 
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("bleeding"), BLEEDING);
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("burning"), BURNING);
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("chilled"), CHILLED);
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("frozen"), FROZEN);
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("wet"), WET);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("poison"), POISON);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("shocked"), SHOCKED);
 
         // food effects
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("sweet_berry_food_effect"), SWEET_BERRIES_FOOD_EFFECT);

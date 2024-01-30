@@ -2,7 +2,7 @@ package com.github.theredbrain.betteradventuremode.network.packet;
 
 import com.github.theredbrain.betteradventuremode.api.effect.AuraStatusEffect;
 import com.github.theredbrain.betteradventuremode.api.item.AuraGrantingNecklaceTrinketItem;
-import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
+import com.github.theredbrain.betteradventuremode.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.betteradventuremode.registry.Tags;
 import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketsApi;
@@ -35,7 +35,7 @@ public class ToggleNecklaceAbilityPacketReceiver implements ServerPlayNetworking
 
         if (necklaceItemStack == ItemStack.EMPTY) {
             player.sendMessageToClient(Text.translatable("hud.message.noNecklaceEquipped"), true);
-        } else if (((DuckPlayerEntityMixin) player).betteradventuremode$getMana() > 0) {
+        } else if (((DuckLivingEntityMixin) player).betteradventuremode$getMana() > 0) {
             if (necklaceItemStack.isIn(Tags.TELEPORT_HOME_NECKLACES)) {
                 // TODO options
                 //  - give a status effect

@@ -1,7 +1,7 @@
 package com.github.theredbrain.betteradventuremode.network.packet;
 
+import com.github.theredbrain.betteradventuremode.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.betteradventuremode.registry.StatusEffectsRegistry;
-import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.betteradventuremode.registry.Tags;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -13,7 +13,7 @@ public class TwoHandMainWeaponPacketReceiver implements ServerPlayNetworking.Pla
     @Override
     public void receive(TwoHandMainWeaponPacket packet, ServerPlayerEntity player, PacketSender responseSender) {
 
-        if (((DuckPlayerEntityMixin) player).betteradventuremode$getStamina() <= 0) {
+        if (((DuckLivingEntityMixin) player).betteradventuremode$getStamina() <= 0) {
             player.sendMessageToClient(Text.translatable("hud.message.staminaTooLow"), true);
         } else if (player.hasStatusEffect(StatusEffectsRegistry.WEAPONS_SHEATHED_EFFECT)) {
             player.sendMessageToClient(Text.translatable("hud.message.weaponsAreSheathed"), true);

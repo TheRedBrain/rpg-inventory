@@ -3,7 +3,6 @@ package com.github.theredbrain.betteradventuremode.mixin.client.gui.hud;
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.BetterAdventureModeClient;
 import com.github.theredbrain.betteradventuremode.entity.DuckLivingEntityMixin;
-import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerInventoryMixin;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
@@ -49,6 +48,18 @@ public abstract class InGameHudMixin {
     @Shadow public abstract TextRenderer getTextRenderer();
 
     @Unique
+    private static final Identifier BLEEDING_BUILD_UP_BAR_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("boss_bar/short_red_background");
+    @Unique
+    private static final Identifier BLEEDING_BUILD_UP_BAR_PROGRESS_TEXTURE = BetterAdventureMode.identifier("boss_bar/short_red_progress");
+    @Unique
+    private static final Identifier BURNING_BUILD_UP_BAR_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("boss_bar/short_red_background");
+    @Unique
+    private static final Identifier BURNING_BUILD_UP_BAR_PROGRESS_TEXTURE = BetterAdventureMode.identifier("boss_bar/short_red_progress");
+    @Unique
+    private static final Identifier FREEZE_BUILD_UP_BAR_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("boss_bar/short_blue_background");
+    @Unique
+    private static final Identifier FREEZE_BUILD_UP_BAR_PROGRESS_TEXTURE = BetterAdventureMode.identifier("boss_bar/short_blue_progress");
+    @Unique
     private static final Identifier HOTBAR_HAND_SLOTS_TEXTURE = BetterAdventureMode.identifier("hud/hotbar_hand_slots");
     @Unique
     private static final Identifier HOTBAR_ALTERNATE_HAND_SLOTS_TEXTURE = BetterAdventureMode.identifier("hud/hotbar_alternate_hand_slots");
@@ -61,9 +72,13 @@ public abstract class InGameHudMixin {
     @Unique
     private static final Identifier MANA_BAR_PROGRESS_TEXTURE = new Identifier("boss_bar/blue_progress");
     @Unique
-    private static final Identifier STAGGER_BAR_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("hud/stagger_bar_background");
+    private static final Identifier POISON_BUILD_UP_BAR_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("boss_bar/short_green_background");
     @Unique
-    private static final Identifier STAGGER_BAR_PROGRESS_TEXTURE = BetterAdventureMode.identifier("hud/stagger_bar_progress");
+    private static final Identifier POISON_BUILD_UP_BAR_PROGRESS_TEXTURE = BetterAdventureMode.identifier("boss_bar/short_green_progress");
+    @Unique
+    private static final Identifier STAGGER_BAR_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("boss_bar/short_yellow_background");
+    @Unique
+    private static final Identifier STAGGER_BAR_PROGRESS_TEXTURE = BetterAdventureMode.identifier("boss_bar/short_yellow_progress");
     @Unique
     private static final Identifier STAMINA_BAR_BACKGROUND_TEXTURE = new Identifier("boss_bar/green_background");
     @Unique
@@ -147,7 +162,7 @@ public abstract class InGameHudMixin {
     @Inject(method = "renderExperienceBar", at = @At("HEAD"), cancellable = true)
     public void betteradventuremode$renderExperienceBar(DrawContext context, int x, CallbackInfo ci) {
         PlayerEntity playerEntity = this.getCameraPlayer();
-        if (playerEntity != null && ((DuckPlayerEntityMixin)playerEntity).betteradventuremode$isAdventure()) {
+        if (playerEntity != null && BetterAdventureModeClient.clientConfig.show_adventure_hud) {
             ci.cancel();
         }
     }
@@ -155,15 +170,20 @@ public abstract class InGameHudMixin {
     @Inject(method = "renderStatusBars", at = @At("HEAD"), cancellable = true)
     private void betteradventuremode$renderStatusBars(DrawContext context, CallbackInfo ci) {
         PlayerEntity playerEntity = this.getCameraPlayer();
-        if (playerEntity != null && ((DuckPlayerEntityMixin)playerEntity).betteradventuremode$isAdventure()) {
+        if (playerEntity != null && BetterAdventureModeClient.clientConfig.show_adventure_hud) {
             int health = MathHelper.ceil(playerEntity.getHealth());
             int maxHealth = MathHelper.ceil(playerEntity.getMaxHealth());
-            int stamina = MathHelper.ceil(((DuckPlayerEntityMixin)playerEntity).betteradventuremode$getStamina());
-            int maxStamina = MathHelper.ceil(((DuckPlayerEntityMixin)playerEntity).betteradventuremode$getMaxStamina());
-            int mana = MathHelper.ceil(((DuckPlayerEntityMixin)playerEntity).betteradventuremode$getMana());
-            int maxMana = MathHelper.ceil(((DuckPlayerEntityMixin)playerEntity).betteradventuremode$getMaxMana());
+            int stamina = MathHelper.ceil(((DuckLivingEntityMixin)playerEntity).betteradventuremode$getStamina());
+            int maxStamina = MathHelper.ceil(((DuckLivingEntityMixin)playerEntity).betteradventuremode$getMaxStamina());
+            int mana = MathHelper.ceil(((DuckLivingEntityMixin)playerEntity).betteradventuremode$getMana());
+            int maxMana = MathHelper.ceil(((DuckLivingEntityMixin)playerEntity).betteradventuremode$getMaxMana());
             int poise = MathHelper.ceil(((DuckLivingEntityMixin) playerEntity).betteradventuremode$getPoise());
             double poiseLimitMultiplier = ((DuckLivingEntityMixin) playerEntity).betteradventuremode$getStaggerLimitMultiplier();
+            int bleedingBuildUp = MathHelper.ceil(((DuckLivingEntityMixin) playerEntity).betteradventuremode$getBleedingBuildUp());
+            int burnBuildUp = MathHelper.ceil(((DuckLivingEntityMixin) playerEntity).betteradventuremode$getBurnBuildUp());
+            int freezeBuildUp = MathHelper.ceil(((DuckLivingEntityMixin) playerEntity).betteradventuremode$getFreezeBuildUp());
+            int poisonBuildUp = MathHelper.ceil(((DuckLivingEntityMixin) playerEntity).betteradventuremode$getPoisonBuildUp());
+            int shockBuildUp = MathHelper.ceil(((DuckLivingEntityMixin) playerEntity).betteradventuremode$getShockBuildUp());
 
             int attributeBarX = this.scaledWidth / 2 - 91;
             int attributeBarY = this.scaledHeight - 32 + 2;
@@ -229,6 +249,51 @@ public abstract class InGameHudMixin {
 
             if (poise > 0/* && !playerEntity.hasStatusEffect(BetterAdventureModeCoreStatusEffects.STAGGERED)*/) {
                 this.client.getProfiler().swap("stagger_bar");
+                context.drawGuiTexture(STAGGER_BAR_BACKGROUND_TEXTURE, attributeBarX + 60, this.scaledHeight / 2 - 7 + 25, 62, 5);
+                if (normalizedPoiseRatio > 0) {
+                    context.drawGuiTexture(STAGGER_BAR_PROGRESS_TEXTURE, attributeBarX + 60, this.scaledHeight / 2 - 7 + 25, normalizedPoiseRatio, 5);
+                }
+            }
+
+            // bleeding build up
+            if (poise > 0/* && !playerEntity.hasStatusEffect(BetterAdventureModeCoreStatusEffects.STAGGERED)*/) {
+                this.client.getProfiler().swap("bleeding_build_up_bar");
+                context.drawGuiTexture(STAGGER_BAR_BACKGROUND_TEXTURE, attributeBarX + 60, this.scaledHeight / 2 - 7 + 25, 62, 5);
+                if (normalizedPoiseRatio > 0) {
+                    context.drawGuiTexture(STAGGER_BAR_PROGRESS_TEXTURE, attributeBarX + 60, this.scaledHeight / 2 - 7 + 25, normalizedPoiseRatio, 5);
+                }
+            }
+
+            // burn  build up
+            if (poise > 0/* && !playerEntity.hasStatusEffect(BetterAdventureModeCoreStatusEffects.STAGGERED)*/) {
+                this.client.getProfiler().swap("burn_build_up_bar");
+                context.drawGuiTexture(STAGGER_BAR_BACKGROUND_TEXTURE, attributeBarX + 60, this.scaledHeight / 2 - 7 + 25, 62, 5);
+                if (normalizedPoiseRatio > 0) {
+                    context.drawGuiTexture(STAGGER_BAR_PROGRESS_TEXTURE, attributeBarX + 60, this.scaledHeight / 2 - 7 + 25, normalizedPoiseRatio, 5);
+                }
+            }
+
+            // freeze build up
+            if (poise > 0/* && !playerEntity.hasStatusEffect(BetterAdventureModeCoreStatusEffects.STAGGERED)*/) {
+                this.client.getProfiler().swap("freeze_build_up_bar");
+                context.drawGuiTexture(STAGGER_BAR_BACKGROUND_TEXTURE, attributeBarX + 60, this.scaledHeight / 2 - 7 + 25, 62, 5);
+                if (normalizedPoiseRatio > 0) {
+                    context.drawGuiTexture(STAGGER_BAR_PROGRESS_TEXTURE, attributeBarX + 60, this.scaledHeight / 2 - 7 + 25, normalizedPoiseRatio, 5);
+                }
+            }
+
+            // poison build up
+            if (poise > 0/* && !playerEntity.hasStatusEffect(BetterAdventureModeCoreStatusEffects.STAGGERED)*/) {
+                this.client.getProfiler().swap("poison_build_up_bar");
+                context.drawGuiTexture(STAGGER_BAR_BACKGROUND_TEXTURE, attributeBarX + 60, this.scaledHeight / 2 - 7 + 25, 62, 5);
+                if (normalizedPoiseRatio > 0) {
+                    context.drawGuiTexture(STAGGER_BAR_PROGRESS_TEXTURE, attributeBarX + 60, this.scaledHeight / 2 - 7 + 25, normalizedPoiseRatio, 5);
+                }
+            }
+
+            // shock build up
+            if (poise > 0/* && !playerEntity.hasStatusEffect(BetterAdventureModeCoreStatusEffects.STAGGERED)*/) {
+                this.client.getProfiler().swap("shock_build_up_bar");
                 context.drawGuiTexture(STAGGER_BAR_BACKGROUND_TEXTURE, attributeBarX + 60, this.scaledHeight / 2 - 7 + 25, 62, 5);
                 if (normalizedPoiseRatio > 0) {
                     context.drawGuiTexture(STAGGER_BAR_PROGRESS_TEXTURE, attributeBarX + 60, this.scaledHeight / 2 - 7 + 25, normalizedPoiseRatio, 5);
