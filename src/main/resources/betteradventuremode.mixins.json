@@ -39,6 +39,7 @@
     "client.network.ClientAdvancementManagerMixin",
     "client.network.ClientPlayerEntityMixin",
     "client.network.ClientPlayerInteractionManagerMixin",
+    "client.render.entity.HeadFeatureRendererMixin",
     "client.render.entity.PlayerEntityRendererMixin",
     "client.render.item.BuiltinModelItemRendererMixin"
   ]

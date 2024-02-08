@@ -12,5 +12,6 @@ accessible method net/minecraft/client/render/WorldRenderer canDrawEntityOutline
 
 accessible class net/minecraft/client/gui/screen/ingame/CreativeInventoryScreen$CreativeSlot
 
+accessible field net/minecraft/client/model/ModelPart cuboids Ljava/util/List;
 #mutable field net/minecraft/screen/slot/Slot x I
 #mutable field net/minecraft/screen/slot/Slot y I

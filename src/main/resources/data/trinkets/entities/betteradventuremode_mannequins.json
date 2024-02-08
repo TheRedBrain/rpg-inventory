@@ -1,0 +1,30 @@
+{
+  "replace": true,
+  "entities": [
+    "betteradventuremode:mannequin"
+  ],
+  "slots": [
+    "alternative_main_hand/alternative_main_hand",
+    "alternative_off_hand/alternative_off_hand",
+    "belts/belt",
+    "boots/boots",
+    "chest_plates/chest_plate",
+    "gloves/gloves",
+    "helmets/helmet",
+    "leggings/leggings",
+    "main_hand/main_hand",
+    "necklaces/necklace",
+    "off_hand/off_hand",
+    "rings_1/ring",
+    "rings_2/ring",
+    "shoulders/shoulders",
+    "spell_slot_1/spell",
+    "spell_slot_2/spell",
+    "spell_slot_3/spell",
+    "spell_slot_4/spell",
+    "spell_slot_5/spell",
+    "spell_slot_6/spell",
+    "spell_slot_7/spell",
+    "spell_slot_8/spell"
+  ]
+}

@@ -1,5 +1,6 @@
 package com.github.theredbrain.betteradventuremode.client.render.entity.feature;
 
+import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.item.ModeledTrinketItem;
 import com.github.theredbrain.betteradventuremode.azurelib.BetterAdventureModeRenderProvider;
 import com.google.common.collect.Maps;

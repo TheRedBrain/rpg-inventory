@@ -1,0 +1,28 @@
+{
+  "values": [
+    "#minecraft:bypasses_armor",
+    "#minecraft:is_explosion",
+    "minecraft:arrow",
+    "minecraft:cactus",
+    "minecraft:dry_out",
+    "minecraft:falling_anvil",
+    "minecraft:falling_block",
+    "minecraft:falling_stalactite",
+    "minecraft:fireball",
+    "minecraft:hot_floor",
+    "minecraft:in_fire",
+    "minecraft:lava",
+    "minecraft:lightning_bolt",
+    "minecraft:mob_attack",
+    "minecraft:mob_attack_no_aggro",
+    "minecraft:mob_projectile",
+    "minecraft:player_attack",
+    "minecraft:sting",
+    "minecraft:sweet_berry_bush",
+    "minecraft:thorns",
+    "minecraft:thrown",
+    "minecraft:trident",
+    "minecraft:unattributed_fireball",
+    "minecraft:wither_skull"
+  ]
+}

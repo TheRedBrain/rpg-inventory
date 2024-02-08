@@ -1,5 +1,7 @@
 package com.github.theredbrain.betteradventuremode.mixin.entity;
 
+import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
+import com.github.theredbrain.betteradventuremode.BetterAdventureModeClient;
 import com.github.theredbrain.betteradventuremode.api.item.BasicShieldItem;
 import com.github.theredbrain.betteradventuremode.registry.EntityAttributesRegistry;
 import com.github.theredbrain.betteradventuremode.registry.StatusEffectsRegistry;
@@ -519,9 +521,16 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
         float frost_amount = 0;
         float lightning_amount = 0;
         float burning_amount = 0;
+        float vanilla_amount = 0;
 
+        if (source.isIn(Tags.IS_VANILLA)) {
+            if (BetterAdventureModeClient.clientConfig.show_debug_log) {
+                BetterAdventureMode.info("This vanilla damage type was used: " + source.getType().toString());
+            }
+            vanilla_amount = amount;
+        }
         if (source.isIn(Tags.IS_BASHING)) {
-            
+
             bashing_amount = amount;
 
             if (source.isIn(Tags.HAS_BASHING_DIVISION_OF_0_5)) {
@@ -728,7 +737,7 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
         // endregion apply resistances/armor
 
 
-        float appliedDamage = piercing_amount + bashing_amount + slashing_amount;
+        float appliedDamage = piercing_amount + bashing_amount + slashing_amount + vanilla_amount;
 
         // taking damage interrupts eating food, drinking potions, etc
         if (appliedDamage > 0.0f && !this.isBlocking()) {

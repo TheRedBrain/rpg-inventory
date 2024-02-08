@@ -42,6 +42,7 @@ public class BetterAdventureMode implements ModInitializer {
 		EntityRegistry.init();
 		EntityAttributesRegistry.registerAttributes();
 		EntityAttributesRegistry.registerEntityAttributes();
+		DataHandlerRegistry.init();
 		DimensionsManager.init();
 		CraftingRecipeRegistry.init();
 		EventsRegistry.initializeEvents();
@@ -59,7 +60,6 @@ public class BetterAdventureMode implements ModInitializer {
 
 	static {
 		ModContainer modContainer = FabricLoader.getInstance().getModContainer(MOD_ID).get();
-		registerBuiltinResourcePack(new Identifier(MOD_ID, "better_adventure_mode_spell_engine_compat"), modContainer, Text.translatable("betteradventuremode.builtin_resource_packs.better_adventure_mode_spell_engine_compat"), ResourcePackActivationType.NORMAL);
 		registerBuiltinResourcePack(new Identifier(MOD_ID, "betteradventuremode_testing"), modContainer, Text.translatable("betteradventuremode.builtin_resource_packs.betteradventuremode_testing"), ResourcePackActivationType.DEFAULT_ENABLED);
 	}
 

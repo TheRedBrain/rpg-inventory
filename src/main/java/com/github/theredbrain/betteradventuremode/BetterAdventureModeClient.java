@@ -1,13 +1,12 @@
 package com.github.theredbrain.betteradventuremode;
 
 import com.github.theredbrain.betteradventuremode.client.gui.screen.ingame.CraftingBenchBlockScreen;
+import com.github.theredbrain.betteradventuremode.client.gui.screen.ingame.MannequinScreen;
 import com.github.theredbrain.betteradventuremode.client.gui.screen.ingame.ShopBlockScreen;
 import com.github.theredbrain.betteradventuremode.client.gui.screen.ingame.TeleporterBlockScreen;
-import com.github.theredbrain.betteradventuremode.client.render.block.entity.StatusEffectApplierBlockEntityRenderer;
+import com.github.theredbrain.betteradventuremode.client.render.block.entity.*;
+import com.github.theredbrain.betteradventuremode.client.render.renderer.MannequinEntityRenderer;
 import com.github.theredbrain.betteradventuremode.registry.ClientPacketRegistry;
-import com.github.theredbrain.betteradventuremode.client.render.block.entity.HousingBlockBlockEntityRenderer;
-import com.github.theredbrain.betteradventuremode.client.render.block.entity.MimicBlockEntityRenderer;
-import com.github.theredbrain.betteradventuremode.client.render.block.entity.TeleporterBlockBlockEntityRenderer;
 import com.github.theredbrain.betteradventuremode.client.render.renderer.SpawnerBoundEntityRenderer;
 import com.github.theredbrain.betteradventuremode.config.ClientConfig;
 import com.github.theredbrain.betteradventuremode.config.ClientConfigWrapper;
@@ -99,11 +98,13 @@ public class BetterAdventureModeClient implements ClientModInitializer {
     }
 
     private void registerEntityRenderer() {
+        EntityRendererRegistry.register(EntityRegistry.MANNEQUIN_ENTITY, MannequinEntityRenderer::new);
         EntityRendererRegistry.register(EntityRegistry.SPAWNER_BOUND_ENTITY, SpawnerBoundEntityRenderer::new);
     }
 
     private void registerScreens() {
         HandledScreens.register(ScreenHandlerTypesRegistry.CRAFTING_BENCH_BLOCK_SCREEN_HANDLER, CraftingBenchBlockScreen::new);
+        HandledScreens.register(ScreenHandlerTypesRegistry.MANNEQUIN_SCREEN_HANDLER, MannequinScreen::new);
         HandledScreens.register(ScreenHandlerTypesRegistry.SHOP_BLOCK_SCREEN_HANDLER, ShopBlockScreen::new);
         HandledScreens.register(ScreenHandlerTypesRegistry.TELEPORTER_BLOCK_SCREEN_HANDLER, TeleporterBlockScreen::new);
     }

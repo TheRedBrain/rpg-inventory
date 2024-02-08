@@ -36,9 +36,9 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
 
     @Inject(method = "<init>", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILSOFT)
     private void betteradventuremode$init(EntityRendererFactory.Context ctx, boolean slim, CallbackInfo info) {
-        this.addFeature(new TrinketFeatureRenderer(this, this.model));
-        this.addFeature(new SheathedMainHandItemFeatureRenderer(this, ctx.getHeldItemRenderer()));
-        this.addFeature(new SheathedOffHandItemFeatureRenderer(this, ctx.getHeldItemRenderer()));
+        this.addFeature(new TrinketFeatureRenderer<>(this, this.model));
+        this.addFeature(new SheathedMainHandItemFeatureRenderer<>(this, ctx.getHeldItemRenderer()));
+        this.addFeature(new SheathedOffHandItemFeatureRenderer<>(this, ctx.getHeldItemRenderer()));
     } 
 
     /**
@@ -74,7 +74,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
             if (useAction == UseAction.BRUSH) {
                 return BipedEntityModel.ArmPose.BRUSH;
             }
-        } else if (!player.handSwinging && ((itemStack.isOf(Items.CROSSBOW) && CrossbowItem.isCharged(itemStack))) || (player.hasStatusEffect(StatusEffectsRegistry.TWO_HANDED_EFFECT))) {
+        } else if (!player.handSwinging && ((itemStack.isOf(Items.CROSSBOW) && CrossbowItem.isCharged(itemStack)) || player.hasStatusEffect(StatusEffectsRegistry.TWO_HANDED_EFFECT))) {
             return BipedEntityModel.ArmPose.CROSSBOW_HOLD;
         }
         return BipedEntityModel.ArmPose.ITEM;

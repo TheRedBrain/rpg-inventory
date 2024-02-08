@@ -418,7 +418,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
     }
 
     public ItemStack betteradventuremode$setGlovesStack(ItemStack itemStack) {
-        ItemStack oldStack = betteradventuremode$getFeetStack();
+        ItemStack oldStack = betteradventuremode$getGlovesStack();
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
             if (trinkets.get().getInventory().get("boots") != null) {
@@ -444,7 +444,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
     }
 
     public ItemStack betteradventuremode$setShouldersStack(ItemStack itemStack) {
-        ItemStack oldStack = betteradventuremode$getFeetStack();
+        ItemStack oldStack = betteradventuremode$getShouldersStack();
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
             if (trinkets.get().getInventory().get("boots") != null) {
@@ -470,7 +470,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
     }
 
     public ItemStack betteradventuremode$setRing1Stack(ItemStack itemStack) {
-        ItemStack oldStack = betteradventuremode$getFeetStack();
+        ItemStack oldStack = betteradventuremode$getRing1Stack();
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
             if (trinkets.get().getInventory().get("rings_1") != null) {
@@ -496,7 +496,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
     }
 
     public ItemStack betteradventuremode$setRing2Stack(ItemStack itemStack) {
-        ItemStack oldStack = betteradventuremode$getFeetStack();
+        ItemStack oldStack = betteradventuremode$getRing2Stack();
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
             if (trinkets.get().getInventory().get("rings_2") != null) {
@@ -522,7 +522,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
     }
 
     public ItemStack betteradventuremode$setBeltStack(ItemStack itemStack) {
-        ItemStack oldStack = betteradventuremode$getFeetStack();
+        ItemStack oldStack = betteradventuremode$getBeltStack();
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
             if (trinkets.get().getInventory().get("belts") != null) {
@@ -548,7 +548,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
     }
 
     public ItemStack betteradventuremode$setNecklaceStack(ItemStack itemStack) {
-        ItemStack oldStack = betteradventuremode$getFeetStack();
+        ItemStack oldStack = betteradventuremode$getNecklaceStack();
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
             if (trinkets.get().getInventory().get("necklaces") != null) {
@@ -575,7 +575,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
     }
 
     public ItemStack betteradventuremode$setSpellSlotStack(ItemStack itemStack, int spellSlotNumber) {
-        ItemStack oldStack = betteradventuremode$getFeetStack();
+        ItemStack oldStack = betteradventuremode$getSpellSlotStack(spellSlotNumber);
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
             if (trinkets.get().getInventory().get("spell_slot_" + spellSlotNumber) != null) {

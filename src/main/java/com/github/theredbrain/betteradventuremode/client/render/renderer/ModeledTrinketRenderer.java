@@ -526,7 +526,7 @@ public class ModeledTrinketRenderer<T extends Item & GeoItem> extends BipedEntit
      * <br>
      * If you are rendering a geo entity with armor, you should probably be calling this prior to rendering
      */
-    public void applyBoneVisibilityByPart(SlotReference currentSlotReference, ModelPart currentPart, BipedEntityModel<?> model) {
+    public void applyBoneVisibilityByPart(String slotGroup, String slotName, ModelPart currentPart, BipedEntityModel<?> model) {
 //        setVisible(false);
 //
 //        currentPart.visible = true;

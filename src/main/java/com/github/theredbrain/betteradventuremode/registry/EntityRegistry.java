@@ -2,10 +2,12 @@ package com.github.theredbrain.betteradventuremode.registry;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.block.entity.*;
+import com.github.theredbrain.betteradventuremode.entity.decoration.MannequinEntity;
 import com.github.theredbrain.betteradventuremode.entity.mob.SpawnerBoundEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.registry.Registries;
@@ -16,6 +18,9 @@ public class EntityRegistry {
     public static final EntityType<SpawnerBoundEntity> SPAWNER_BOUND_ENTITY = Registry.register(Registries.ENTITY_TYPE,
             BetterAdventureMode.identifier("spawner_bound_entity"),
             FabricEntityTypeBuilder.create(SpawnGroup.MISC, SpawnerBoundEntity::new).build());
+    public static final EntityType<MannequinEntity> MANNEQUIN_ENTITY = Registry.register(Registries.ENTITY_TYPE,
+            BetterAdventureMode.identifier("mannequin"),
+            FabricEntityTypeBuilder.create(SpawnGroup.MISC, MannequinEntity::new).dimensions(new EntityDimensions(0.6F, 1.8F, false)).build());
 
     //region Content Blocks
     public static final BlockEntityType<BonfireBlockBlockEntity> BONFIRE_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,

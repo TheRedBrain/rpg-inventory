@@ -65,6 +65,16 @@ public class ServerPacketRegistry {
 
         ServerPlayNetworking.registerGlobalReceiver(UpdateMimicBlockPacket.TYPE, new UpdateMimicBlockPacketReceiver());
 
+        ServerPlayNetworking.registerGlobalReceiver(RemoveMannequinPacket.TYPE, new RemoveMannequinPacketReceiver());
+
+        ServerPlayNetworking.registerGlobalReceiver(UpdateMannequinSettingsPacket.TYPE, new UpdateMannequinSettingsPacketReceiver());
+
+        ServerPlayNetworking.registerGlobalReceiver(UpdateMannequinEquipmentPacket.TYPE, new UpdateMannequinEquipmentPacketReceiver());
+
+        ServerPlayNetworking.registerGlobalReceiver(UpdateMannequinModelPartsPacket.TYPE, new UpdateMannequinModelPartsPacketReceiver());
+
+        ServerPlayNetworking.registerGlobalReceiver(ExportImportMannequinEquipmentPacket.TYPE, new ExportImportMannequinEquipmentPacketReceiver());
+
         ServerPlayNetworking.registerGlobalReceiver(UpdateTriggeredSpawnerBlockPacket.TYPE, new UpdateTriggeredSpawnerBlockPacketReceiver());
 
         ServerPlayNetworking.registerGlobalReceiver(UpdateLocationControlBlockPacket.TYPE, new UpdateLocationControlBlockPacketReceiver());

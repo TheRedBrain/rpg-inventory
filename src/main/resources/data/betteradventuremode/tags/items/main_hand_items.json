@@ -20,6 +20,8 @@
     "betteradventuremode:diamond_sword",
     "betteradventuremode:golden_sword",
     "betteradventuremode:netherite_sword",
-    "betteradventuremode:test_sword"
+    "betteradventuremode:test_sword",
+    "betteradventuremode:elemental_fire_wand",
+    "betteradventuremode:elemental_ice_wand"
   ]
 }
