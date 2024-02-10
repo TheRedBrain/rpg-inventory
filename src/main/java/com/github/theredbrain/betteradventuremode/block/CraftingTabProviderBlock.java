@@ -6,6 +6,7 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -13,8 +14,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class CraftingTabProviderBlock extends Block {
-    private final CraftingRootBlock.Tab openedTab;
-    public CraftingTabProviderBlock(CraftingRootBlock.Tab openedTab, Settings settings) {
+    private final int openedTab;
+    public CraftingTabProviderBlock(int openedTab, Settings settings) {
         super(settings);
         this.openedTab = openedTab;
     }
@@ -38,14 +39,15 @@ public class CraftingTabProviderBlock extends Block {
                 for (int k = -crafting_root_block_reach_radius; k <= crafting_root_block_reach_radius; k++) {
                     BlockPos blockPos = new BlockPos(posX + i, posY + j, posZ + k);
                     BlockState blockState = world.getBlockState(blockPos);
-                    if (blockState.isOf(BlockRegistry.CRAFTING_BENCH_BLOCK)) {
+                    if (blockState.isOf(BlockRegistry.CRAFTING_ROOT_BLOCK)) {
                         player.openHandledScreen(CraftingRootBlock.createCraftingRootBlockScreenHandlerFactory(blockState, world, blockPos, this.openedTab));
                         return ActionResult.CONSUME;
                     }
                 }
             }
         }
-        return ActionResult.FAIL;
+        player.sendMessage(Text.translatable("gui.crafting_bench.no_crafting_root_block_nearby"), true);
+        return ActionResult.CONSUME;
 //        player.incrementStat(Stats.INTERACT_WITH_CRAFTING_TABLE); // TODO stats
     }
 }

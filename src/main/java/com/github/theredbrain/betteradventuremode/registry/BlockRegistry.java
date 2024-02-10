@@ -13,7 +13,6 @@ import net.minecraft.block.MapColor;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemGroups;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -50,9 +49,11 @@ public class BlockRegistry {
     public static final Block USE_RELAY_WARPED_TRAPDOOR = registerBlock("use_relay_warped_trapdoor", new UseRelayTrapdoorBlock(FabricBlockSettings.create().mapColor(MapColor.DARK_AQUA).requiresTool().strength(-1.0f, 3600000.0f).nonOpaque().dropsNothing()), ItemGroupRegistry.SCRIPT_BLOCKS);
 
     // crafting blocks
-    public static final Block CRAFTING_BENCH_BLOCK = registerBlock("crafting_bench_block", new CraftingRootBlock(FabricBlockSettings.create().mapColor(MapColor.OAK_TAN)), ItemGroupRegistry.BAM_BLOCK);
-    public static final Block STORAGE_PROVIDER_BLOCK = registerBlock("storage_provider_block", new CraftingTabProviderBlock(CraftingRootBlock.Tab.STORAGE, FabricBlockSettings.create().mapColor(MapColor.OAK_TAN)), ItemGroupRegistry.BAM_BLOCK);
-    public static final Block SMITHY_PROVIDER_BLOCK = registerBlock("smithy_provider_block", new CraftingTabProviderBlock(CraftingRootBlock.Tab.SMITHY, FabricBlockSettings.create().mapColor(MapColor.OAK_TAN)), ItemGroupRegistry.BAM_BLOCK);
+    public static final Block CRAFTING_ROOT_BLOCK = registerBlock("crafting_root_block", new CraftingRootBlock(FabricBlockSettings.create().mapColor(MapColor.OAK_TAN)), ItemGroupRegistry.BAM_BLOCK);
+    public static final Block STORAGE_PROVIDER_BLOCK = registerBlock("storage_provider_block", new CraftingTabProviderBlock(-1, FabricBlockSettings.create().mapColor(MapColor.OAK_TAN)), ItemGroupRegistry.BAM_BLOCK);
+    public static final Block CRAFTING_TAB_1_PROVIDER_BLOCK = registerBlock("crafting_tab_1_provider_block", new CraftingTabProviderBlock(1, FabricBlockSettings.create().mapColor(MapColor.OAK_TAN)), ItemGroupRegistry.BAM_BLOCK);
+    public static final Block CRAFTING_TAB_2_PROVIDER_BLOCK = registerBlock("crafting_tab_2_provider_block", new CraftingTabProviderBlock(2, FabricBlockSettings.create().mapColor(MapColor.OAK_TAN)), ItemGroupRegistry.BAM_BLOCK);
+    public static final Block CRAFTING_TAB_3_PROVIDER_BLOCK = registerBlock("crafting_tab_3_provider_block", new CraftingTabProviderBlock(3, FabricBlockSettings.create().mapColor(MapColor.OAK_TAN)), ItemGroupRegistry.BAM_BLOCK);
 
 
     public static final Block BONFIRE_BLOCK = registerBlock("bonfire", new BonfireBlock(FabricBlockSettings.create().mapColor(MapColor.SPRUCE_BROWN).ticksRandomly().sounds(BlockSoundGroup.STONE).luminance((state) -> state.get(BonfireBlock.ACTIVE) ? 15 : 0).nonOpaque()), ItemGroupRegistry.BAM_BLOCK);

@@ -14,6 +14,7 @@
     "count": 1
   },
   "unlockAdvancement": "",
-  "tab": "SMITHY",
+  "tab": 1,
+  "recipeType": "STANDARD",
   "level": 1
 }

@@ -14,6 +14,7 @@
     "count": 1
   },
   "unlockAdvancement": "",
-  "tab": "CRAFTING_BENCH",
+  "tab": 0,
+  "recipeType": "STANDARD",
   "level": 1
 }

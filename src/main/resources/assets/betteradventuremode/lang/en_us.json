@@ -270,8 +270,27 @@
 	"gui.shop_block.trade_button_label": "Trade",
 
 
-	"gui.crafting_bench.craft_button_label": "Craft",
-	"gui.crafting_bench.upgrade_button_label": "Upgrade",
+	"gui.crafting_bench.toggle_standard_crafting_button_label.0": "Crafting",
+	"gui.crafting_bench.toggle_standard_crafting_button_label.1": "Crafting",
+	"gui.crafting_bench.toggle_standard_crafting_button_label.2": "Crafting",
+	"gui.crafting_bench.toggle_standard_crafting_button_label.3": "Crafting",
+
+	"gui.crafting_bench.toggle_special_crafting_button_label.0": "Upgrading",
+	"gui.crafting_bench.toggle_special_crafting_button_label.1": "Upgrading",
+	"gui.crafting_bench.toggle_special_crafting_button_label.2": "Upgrading",
+	"gui.crafting_bench.toggle_special_crafting_button_label.3": "Upgrading",
+
+	"gui.crafting_bench.standard_craft_button_label.0": "Craft",
+	"gui.crafting_bench.standard_craft_button_label.1": "Craft",
+	"gui.crafting_bench.standard_craft_button_label.2": "Craft",
+	"gui.crafting_bench.standard_craft_button_label.3": "Craft",
+
+	"gui.crafting_bench.special_craft_button_label.0": "Upgrade",
+	"gui.crafting_bench.special_craft_button_label.1": "Upgrade",
+	"gui.crafting_bench.special_craft_button_label.2": "Upgrade",
+	"gui.crafting_bench.special_craft_button_label.3": "Upgrade",
+
+	"gui.crafting_bench.no_crafting_root_block_nearby": "No Nearby Work Bench",
 
 
 	"gui.mannequin_entity.head_pivot_x_tooltip": "Head: Pivot X",
@@ -385,6 +404,12 @@
 	"gui.entity_attribute_modifier.operation.addition": "Addition",
 	"gui.entity_attribute_modifier.operation.multiply_base": "Multiply Base",
 	"gui.entity_attribute_modifier.operation.multiply_total": "Multiply Total",
+
+	"block.betteradventuremode.crafting_root_block": "Work Bench",
+	"block.betteradventuremode.storage_provider_block": "Crafting Storage",
+	"block.betteradventuremode.crafting_tab_1_provider_block": "Smithy",
+	"block.betteradventuremode.crafting_tab_2_provider_block": "Cauldron",
+	"block.betteradventuremode.crafting_tab_3_provider_block": "Crafting Station 3",
 
 	"block.betteradventuremode.area_filler_block": "Area Filler Block",
 	"block.betteradventuremode.redstone_trigger_block": "Redstone Trigger Block",

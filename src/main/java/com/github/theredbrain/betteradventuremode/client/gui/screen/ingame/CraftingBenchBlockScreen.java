@@ -3,7 +3,8 @@ package com.github.theredbrain.betteradventuremode.client.gui.screen.ingame;
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.api.json_files_backend.CraftingRecipe;
 import com.github.theredbrain.betteradventuremode.api.util.ItemUtils;
-import com.github.theredbrain.betteradventuremode.block.CraftingRootBlock;
+import com.github.theredbrain.betteradventuremode.client.gui.widget.ItemButtonWidget;
+import com.github.theredbrain.betteradventuremode.registry.BlockRegistry;
 import com.github.theredbrain.betteradventuremode.registry.CraftingRecipeRegistry;
 import com.github.theredbrain.betteradventuremode.screen.CraftingBenchBlockScreenHandler;
 import com.github.theredbrain.betteradventuremode.screen.DuckSlotMixin;
@@ -12,6 +13,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,30 +25,45 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.MathHelper;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
 public class CraftingBenchBlockScreen extends HandledScreen<CraftingBenchBlockScreenHandler> {
-    private static final Text CRAFT_BUTTON_LABEL_TEXT = Text.translatable("gui.crafting_bench.craft_button_label");
-    private static final Text UPGRADE_BUTTON_LABEL_TEXT = Text.translatable("gui.crafting_bench.upgrade_button_label");
+    private static final Text TOGGLE_STANDARD_CRAFTING_TAB_0_BUTTON_LABEL_TEXT = Text.translatable("gui.crafting_bench.toggle_standard_crafting_button_label.0");
+    private static final Text TOGGLE_STANDARD_CRAFTING_TAB_1_BUTTON_LABEL_TEXT = Text.translatable("gui.crafting_bench.toggle_standard_crafting_button_label.1");
+    private static final Text TOGGLE_STANDARD_CRAFTING_TAB_2_BUTTON_LABEL_TEXT = Text.translatable("gui.crafting_bench.toggle_standard_crafting_button_label.2");
+    private static final Text TOGGLE_STANDARD_CRAFTING_TAB_3_BUTTON_LABEL_TEXT = Text.translatable("gui.crafting_bench.toggle_standard_crafting_button_label.3");
+    private static final Text TOGGLE_SPECIAL_CRAFTING_TAB_0_BUTTON_LABEL_TEXT = Text.translatable("gui.crafting_bench.toggle_special_crafting_button_label.0");
+    private static final Text TOGGLE_SPECIAL_CRAFTING_TAB_1_BUTTON_LABEL_TEXT = Text.translatable("gui.crafting_bench.toggle_special_crafting_button_label.1");
+    private static final Text TOGGLE_SPECIAL_CRAFTING_TAB_2_BUTTON_LABEL_TEXT = Text.translatable("gui.crafting_bench.toggle_special_crafting_button_label.2");
+    private static final Text TOGGLE_SPECIAL_CRAFTING_TAB_3_BUTTON_LABEL_TEXT = Text.translatable("gui.crafting_bench.toggle_special_crafting_button_label.3");
+    private static final Text STANDARD_CRAFT_TAB_0_BUTTON_LABEL_TEXT = Text.translatable("gui.crafting_bench.standard_craft_button_label.0");
+    private static final Text STANDARD_CRAFT_TAB_1_BUTTON_LABEL_TEXT = Text.translatable("gui.crafting_bench.standard_craft_button_label.1");
+    private static final Text STANDARD_CRAFT_TAB_2_BUTTON_LABEL_TEXT = Text.translatable("gui.crafting_bench.standard_craft_button_label.2");
+    private static final Text STANDARD_CRAFT_TAB_3_BUTTON_LABEL_TEXT = Text.translatable("gui.crafting_bench.standard_craft_button_label.3");
+    private static final Text SPECIAL_CRAFT_TAB_0_BUTTON_LABEL_TEXT = Text.translatable("gui.crafting_bench.special_craft_button_label.0");
+    private static final Text SPECIAL_CRAFT_TAB_1_BUTTON_LABEL_TEXT = Text.translatable("gui.crafting_bench.special_craft_button_label.1");
+    private static final Text SPECIAL_CRAFT_TAB_2_BUTTON_LABEL_TEXT = Text.translatable("gui.crafting_bench.special_craft_button_label.2");
+    private static final Text SPECIAL_CRAFT_TAB_3_BUTTON_LABEL_TEXT = Text.translatable("gui.crafting_bench.special_craft_button_label.3");
     private static final Identifier RECIPE_SELECTED_TEXTURE = BetterAdventureMode.identifier("container/crafting_bench_screen/recipe_selected");
     private static final Identifier RECIPE_HIGHLIGHTED_TEXTURE = BetterAdventureMode.identifier("container/crafting_bench_screen/recipe_highlighted");
     private static final Identifier RECIPE_TEXTURE = BetterAdventureMode.identifier("container/crafting_bench_screen/recipe");
-    public static final Identifier CRAFTING_BENCH_DEFAULT_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("textures/gui/container/crafting_bench_default_background.png");
-    public static final Identifier CRAFTING_BENCH_STORAGE_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("textures/gui/container/crafting_bench_storage_background.png");
+    public static final Identifier STORAGE_TAB_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("textures/gui/container/crafting_bench/storage_tab_background.png");
     private static final Identifier SCROLLER_VERTICAL_6_7_TEXTURE = BetterAdventureMode.identifier("scroll_bar/scroller_vertical_6_7");
     private static final Identifier SCROLLER_VERTICAL_6_7_DISABLED_TEXTURE = BetterAdventureMode.identifier("scroll_bar/scroller_vertical_6_7_disabled");
 
+    private ButtonWidget toggleTab0Button;
+    private ButtonWidget toggleTab1Button;
+    private ButtonWidget toggleTab2Button;
+    private ButtonWidget toggleTab3Button;
+    private ButtonWidget toggleStorageTabButton;
+    private ButtonWidget toggleStandardCraftingButton;
+    private ButtonWidget toggleSpecialCraftingButton;
     private ButtonWidget craftButton;
-    private CraftingRootBlock.Tab currentTab;
-    private final boolean isStorageTabEnabled;
-    private final boolean isSmithyTabEnabled;
-    private RecipeType currentRecipeType;
+    private int currentTab;
+    private CraftingBenchBlockScreenHandler.RecipeType currentRecipeType;
     private float scrollAmount;
     private boolean mouseClicked;
     private int scrollPosition;
@@ -56,19 +73,46 @@ public class CraftingBenchBlockScreen extends HandledScreen<CraftingBenchBlockSc
         super(handler, inventory, title);
         handler.setContentsChangedListener(this::onCraft);
         this.playerEntity = inventory.player;
-        this.isStorageTabEnabled = handler.isStorageTabProviderInReach();
-        this.isSmithyTabEnabled = handler.isSmithyTabProviderInReach();
-//        this.availableCraftingBenchRecipes = handler.getAvailableCraftingBenchRecipes();
-//        this.availableSmithyRecipes = handler.getAvailableSmithyRecipes();
     }
 
     @Override
     protected void init() {
+        this.backgroundWidth = 284;
+        this.backgroundHeight = 233;
+
+        this.playerInventoryTitleX = 62;
+        this.playerInventoryTitleY = 139;
+        super.init();
+
+        this.toggleTab0Button = this.addDrawableChild(ItemButtonWidget.builder(BlockRegistry.CRAFTING_ROOT_BLOCK.asItem().getDefaultStack(), button -> this.toggleTab(0)).dimensions(this.x + 7, this.y + 17, 50, 20).build());
+        this.toggleTab0Button.setTooltip(Tooltip.of(BlockRegistry.CRAFTING_ROOT_BLOCK.getName()));
+
+        this.toggleTab1Button = this.addDrawableChild(ItemButtonWidget.builder(BlockRegistry.CRAFTING_TAB_1_PROVIDER_BLOCK.asItem().getDefaultStack(), button -> this.toggleTab(1)).dimensions(this.x + 7, this.y + 41, 50, 20).build());
+        this.toggleTab1Button.setTooltip(Tooltip.of(BlockRegistry.CRAFTING_TAB_1_PROVIDER_BLOCK.getName()));
+
+        this.toggleTab2Button = this.addDrawableChild(ItemButtonWidget.builder(BlockRegistry.CRAFTING_TAB_2_PROVIDER_BLOCK.asItem().getDefaultStack(), button -> this.toggleTab(2)).dimensions(this.x + 7, this.y + 65, 50, 20).build());
+        this.toggleTab2Button.setTooltip(Tooltip.of(BlockRegistry.CRAFTING_TAB_2_PROVIDER_BLOCK.getName()));
+
+        this.toggleTab3Button = this.addDrawableChild(ItemButtonWidget.builder(BlockRegistry.CRAFTING_TAB_3_PROVIDER_BLOCK.asItem().getDefaultStack(), button -> this.toggleTab(3)).dimensions(this.x + 7, this.y + 89, 50, 20).build());
+        this.toggleTab3Button.setTooltip(Tooltip.of(BlockRegistry.CRAFTING_TAB_3_PROVIDER_BLOCK.getName()));
+
+        this.toggleStorageTabButton = this.addDrawableChild(ItemButtonWidget.builder(BlockRegistry.STORAGE_PROVIDER_BLOCK.asItem().getDefaultStack(), button -> this.toggleTab(-1)).dimensions(this.x + 7, this.y + 116, 50, 20).build());
+        this.toggleStorageTabButton.setTooltip(Tooltip.of(BlockRegistry.STORAGE_PROVIDER_BLOCK.getName()));
+
+        this.toggleStandardCraftingButton = this.addDrawableChild(ButtonWidget.builder(TOGGLE_STANDARD_CRAFTING_TAB_0_BUTTON_LABEL_TEXT, button -> this.toggleRecipeType(true)).dimensions(this.x + 61, this.y + 17, 65, 20).build());
+        this.toggleSpecialCraftingButton = this.addDrawableChild(ButtonWidget.builder(TOGGLE_SPECIAL_CRAFTING_TAB_0_BUTTON_LABEL_TEXT, button -> this.toggleRecipeType(false)).dimensions(this.x + 61, this.y + 41, 65, 20).build());
+        this.craftButton = this.addDrawableChild(ButtonWidget.builder(STANDARD_CRAFT_TAB_0_BUTTON_LABEL_TEXT, button -> this.craft()).dimensions(this.x + 130, this.y + 116, 147, 20).build());
+
+        this.handler.calculateUnlockedRecipes();
+        this.updateWidgets();
+    }
+
+    private void updateWidgets() {
         this.currentTab = handler.getCurrentTab();
-        this.currentRecipeType = RecipeType.CRAFTING;
+        this.currentRecipeType = handler.getCurrentRecipeType();
 
         for (int i = 36; i < this.handler.slots.size(); i++) {
-            boolean bl = this.currentTab == CraftingRootBlock.Tab.STORAGE;
+            boolean bl = this.currentTab == -1;
             if (i < 63) {
                 ((DuckSlotMixin) this.handler.slots.get(i)).betteradventuremode$setDisabledOverride(!bl);
             } else {
@@ -76,39 +120,87 @@ public class CraftingBenchBlockScreen extends HandledScreen<CraftingBenchBlockSc
             }
         }
 
-
-        this.backgroundWidth = 176;
-        this.backgroundHeight = 227;
-        this.x = (this.width - this.backgroundWidth) / 2;
-        this.y = ((this.height - this.backgroundHeight) / 2);
-
-        this.playerInventoryTitleY = 133;
-        super.init();
-
-        this.craftButton = this.addDrawableChild(ButtonWidget.builder(CRAFT_BUTTON_LABEL_TEXT, button -> this.craft()).dimensions(this.x + 76, this.y + 88, 93, 20).build());
-
-        this.handler.calculateUnlockedRecipes();
-        this.updateWidgets();
-    }
-
-    private void updateWidgets() {
-
+        this.toggleStandardCraftingButton.visible = false;
+        this.toggleSpecialCraftingButton.visible = false;
         this.craftButton.visible = false;
 
-        if (this.currentTab != CraftingRootBlock.Tab.STORAGE) {
+        this.toggleTab1Button.visible = false;
+        this.toggleTab2Button.visible = false;
+        this.toggleTab3Button.visible = false;
+        this.toggleStorageTabButton.visible = this.handler.isStorageTabProviderInReach();
 
+        this.toggleTab0Button.active = this.currentTab != 0;
+        this.toggleTab1Button.active = this.currentTab != 1;
+        this.toggleTab2Button.active = this.currentTab != 2;
+        this.toggleTab3Button.active = this.currentTab != 3;
+        this.toggleStorageTabButton.active = this.currentTab != -1;
+
+        int y = this.y + 41;
+
+        if (this.handler.isTab1ProviderInReach()) {
+            this.toggleTab1Button.visible = true;
+            this.toggleTab1Button.setY(y);
+            y += 24;
+        }
+        if (this.handler.isTab2ProviderInReach()) {
+            this.toggleTab2Button.visible = true;
+            this.toggleTab2Button.setY(y);
+            y += 24;
+        }
+        if (this.handler.isTab3ProviderInReach()) {
+            this.toggleTab3Button.visible = true;
+            this.toggleTab3Button.setY(y);
+        }
+
+        if (this.currentTab >= 0) {
+
+            this.toggleStandardCraftingButton.visible = true;;
+            this.toggleSpecialCraftingButton.visible = true;;
             this.craftButton.visible = true;
 
-            if (this.currentRecipeType == RecipeType.UPGRADING) {
-                this.craftButton.setMessage(UPGRADE_BUTTON_LABEL_TEXT);
-            } else {
-                this.craftButton.setMessage(CRAFT_BUTTON_LABEL_TEXT);
+            this.toggleStandardCraftingButton.active = this.currentRecipeType != CraftingBenchBlockScreenHandler.RecipeType.STANDARD;
+            this.toggleSpecialCraftingButton.active = this.currentRecipeType != CraftingBenchBlockScreenHandler.RecipeType.SPECIAL;
+
+            Text toggleStandardCraftingButtonMessage = Text.empty();
+            Text toggleSpecialCraftingButtonMessage = Text.empty();
+            Text craftButtonMessage = Text.empty();
+
+            if (this.currentTab == 0) {
+                toggleStandardCraftingButtonMessage = TOGGLE_STANDARD_CRAFTING_TAB_0_BUTTON_LABEL_TEXT;
+                toggleSpecialCraftingButtonMessage = TOGGLE_SPECIAL_CRAFTING_TAB_0_BUTTON_LABEL_TEXT;
+                craftButtonMessage = this.currentRecipeType == CraftingBenchBlockScreenHandler.RecipeType.SPECIAL ? SPECIAL_CRAFT_TAB_0_BUTTON_LABEL_TEXT : STANDARD_CRAFT_TAB_0_BUTTON_LABEL_TEXT;
+            } else if (this.currentTab == 1) {
+                toggleStandardCraftingButtonMessage = TOGGLE_STANDARD_CRAFTING_TAB_1_BUTTON_LABEL_TEXT;
+                toggleSpecialCraftingButtonMessage = TOGGLE_SPECIAL_CRAFTING_TAB_1_BUTTON_LABEL_TEXT;
+                craftButtonMessage = this.currentRecipeType == CraftingBenchBlockScreenHandler.RecipeType.SPECIAL ? SPECIAL_CRAFT_TAB_1_BUTTON_LABEL_TEXT : STANDARD_CRAFT_TAB_1_BUTTON_LABEL_TEXT;
+            } else if (this.currentTab == 2) {
+                toggleStandardCraftingButtonMessage = TOGGLE_STANDARD_CRAFTING_TAB_2_BUTTON_LABEL_TEXT;
+                toggleSpecialCraftingButtonMessage = TOGGLE_SPECIAL_CRAFTING_TAB_2_BUTTON_LABEL_TEXT;
+                craftButtonMessage = this.currentRecipeType == CraftingBenchBlockScreenHandler.RecipeType.SPECIAL ? SPECIAL_CRAFT_TAB_2_BUTTON_LABEL_TEXT : STANDARD_CRAFT_TAB_2_BUTTON_LABEL_TEXT;
+            } else if (this.currentTab == 3) {
+                toggleStandardCraftingButtonMessage = TOGGLE_STANDARD_CRAFTING_TAB_3_BUTTON_LABEL_TEXT;
+                toggleSpecialCraftingButtonMessage = TOGGLE_SPECIAL_CRAFTING_TAB_3_BUTTON_LABEL_TEXT;
+                craftButtonMessage = this.currentRecipeType == CraftingBenchBlockScreenHandler.RecipeType.SPECIAL ? SPECIAL_CRAFT_TAB_3_BUTTON_LABEL_TEXT : STANDARD_CRAFT_TAB_3_BUTTON_LABEL_TEXT;
             }
 
-            calculateCraftingStatus();
+            this.toggleStandardCraftingButton.setMessage(toggleStandardCraftingButtonMessage);
+            this.toggleSpecialCraftingButton.setMessage(toggleSpecialCraftingButtonMessage);
+            this.craftButton.setMessage(craftButtonMessage);
+
+            this.calculateCraftingStatus();
         }
         this.scrollPosition = 0;
         this.scrollAmount = 0.0f;
+    }
+
+    private void toggleTab(int tabIndex) {
+        this.handler.setCurrentTab(tabIndex);
+        this.updateWidgets();
+    }
+
+    private void toggleRecipeType(boolean isStandard) {
+        this.handler.setCurrentRecipeType(isStandard);
+        this.updateWidgets();
     }
 
     private void craft() {
@@ -128,16 +220,16 @@ public class CraftingBenchBlockScreen extends HandledScreen<CraftingBenchBlockSc
 
     private void calculateCraftingStatus() {
 
-        if (this.currentTab != CraftingRootBlock.Tab.STORAGE) {
+        if (this.currentTab >= 0) {
 
             boolean craftButtonActive = false;
 
-            List<Identifier> activeRecipeList = this.currentTab == CraftingRootBlock.Tab.SMITHY ? (this.currentRecipeType == RecipeType.UPGRADING ? this.handler.getSmithyUpgradingRecipesIdentifierList() : this.handler.getSmithyCraftingRecipesIdentifierList()) : (this.currentRecipeType == RecipeType.UPGRADING ? this.handler.getCraftingBenchUpgradingRecipesIdentifierList() : this.handler.getCraftingBenchCraftingRecipesIdentifierList());
+            List<Identifier> activeRecipeList = this.handler.getCurrentCraftingRecipesList();
             int selectedRecipe = this.handler.getSelectedRecipe();
             if (selectedRecipe >= 0) {
                 CraftingRecipe craftingRecipe = CraftingRecipeRegistry.getCraftingRecipe(activeRecipeList.get(selectedRecipe));
                 if (craftingRecipe != null) {
-                    if (this.handler.getTabLevels().get(this.currentTab.asString()) >= craftingRecipe.getLevel()) {
+                    if (this.handler.getTabLevels()[this.currentTab] >= craftingRecipe.getLevel()) {
 
                         int playerInventorySize = this.handler.getPlayerInventory().size();
 
@@ -193,10 +285,10 @@ public class CraftingBenchBlockScreen extends HandledScreen<CraftingBenchBlockSc
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         this.mouseClicked = false;
-        if (this.currentTab != CraftingRootBlock.Tab.STORAGE) {
-            int i = this.x + 8;
-            int j = this.y + 53;
-            int k = this.scrollPosition + 9;
+        if (this.currentTab >= 0) {
+            int i = this.x + 62;
+            int j = this.y + 63;
+            int k = this.scrollPosition + 12;
 
             for(int l = this.scrollPosition; l < k; ++l) {
                 int m = l - this.scrollPosition;
@@ -210,9 +302,9 @@ public class CraftingBenchBlockScreen extends HandledScreen<CraftingBenchBlockSc
                 }
             }
 
-            i = this.x + 65;
-            j = this.y + 53;
-            if (mouseX >= (double)i && mouseX < (double)(i + 6) && mouseY >= (double)j && mouseY < (double)(j + 54)) {
+            i = this.x + 119;
+            j = this.y + 63;
+            if (mouseX >= (double)i && mouseX < (double)(i + 6) && mouseY >= (double)j && mouseY < (double)(j + 72)) {
                 this.mouseClicked = true;
             }
         }
@@ -223,7 +315,7 @@ public class CraftingBenchBlockScreen extends HandledScreen<CraftingBenchBlockSc
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         if (this.mouseClicked && this.shouldScroll()) {
-            int i = this.y + 52;
+            int i = this.y + 62;
             int j = i + 54;
             this.scrollAmount = ((float)mouseY - (float)i - 7.5F) / ((float)(j - i) - 15.0F);
             this.scrollAmount = MathHelper.clamp(this.scrollAmount, 0.0F, 1.0F);
@@ -250,23 +342,23 @@ public class CraftingBenchBlockScreen extends HandledScreen<CraftingBenchBlockSc
     public void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
         int x = this.x;
         int y = this.y;
-        if (this.currentTab == CraftingRootBlock.Tab.STORAGE) {
-            context.drawTexture(CRAFTING_BENCH_STORAGE_BACKGROUND_TEXTURE, x, y, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
+        if (this.currentTab == -1) {
+            context.drawTexture(STORAGE_TAB_BACKGROUND_TEXTURE, x, y, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
         } else {
-            context.drawTexture(CRAFTING_BENCH_DEFAULT_BACKGROUND_TEXTURE, x, y, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
+            context.drawTexture(BetterAdventureMode.identifier("textures/gui/container/crafting_bench/tab_" + this.currentTab + "_background.png"), x, y, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
             int k;
             int index = 0;
-            int recipeCounter = this.currentTab == CraftingRootBlock.Tab.SMITHY ? this.handler.getSmithyCraftingRecipesSize() : this.handler.getCraftingBenchCraftingRecipesSize();
-            List<Identifier> recipeList = this.currentTab == CraftingRootBlock.Tab.SMITHY ? this.handler.getSmithyCraftingRecipesIdentifierList() : this.handler.getCraftingBenchCraftingRecipesIdentifierList();
-            for (int i = this.scrollPosition; i < Math.min(this.scrollPosition + 9, recipeCounter); i++) {
+            List<Identifier> recipeList = this.handler.getCurrentCraftingRecipesList();
+            int recipeCounter = recipeList.size();
+            for (int i = this.scrollPosition; i < Math.min(this.scrollPosition + 12, recipeCounter); i++) {
                 if (i > recipeList.size()) {
                     break;
                 }
                 CraftingRecipe craftingRecipe = CraftingRecipeRegistry.getCraftingRecipe(recipeList.get(i));
                 if (craftingRecipe != null) {
 
-                    x = this.x + 8 + (index % 3 * 18);
-                    y = this.y + 53 + (index / 3) * 18;
+                    x = this.x + 62 + (index % 3 * 18);
+                    y = this.y + 63 + (index / 3) * 18;
 
                     ItemStack resultItemStack = ItemUtils.getItemStackFromVirtualItemStack(craftingRecipe.getResult());
                     k = x + y * this.backgroundWidth;
@@ -287,17 +379,17 @@ public class CraftingBenchBlockScreen extends HandledScreen<CraftingBenchBlockSc
             }
             x = this.x;
             y = this.y;
-            k = (int)(47.0F * this.scrollAmount);
+            k = (int)(65.0F * this.scrollAmount);
             Identifier identifier = this.shouldScroll() ? SCROLLER_VERTICAL_6_7_TEXTURE : SCROLLER_VERTICAL_6_7_DISABLED_TEXTURE;
-            context.drawGuiTexture(identifier, x + 65, y + 53 + k, 6, 7);
+            context.drawGuiTexture(identifier, x + 119, y + 63 + k, 6, 7);
 
             int selectedRecipe = this.handler.getSelectedRecipe();
             if (selectedRecipe != -1) {
                 CraftingRecipe craftingRecipe = CraftingRecipeRegistry.getCraftingRecipe(recipeList.get(selectedRecipe));
                 ItemStack resultItemStack = ItemUtils.getItemStackFromVirtualItemStack(craftingRecipe.getResult());
 
-                x = this.x + 80;
-                y = this.y + 40;
+                x = this.x + 135;
+                y = this.y + 20;
                 k = x + y * this.backgroundWidth;
                 context.drawItemWithoutEntity(resultItemStack, x, y, k);
                 context.drawItemInSlot(this.textRenderer, resultItemStack, x, y);
@@ -308,39 +400,15 @@ public class CraftingBenchBlockScreen extends HandledScreen<CraftingBenchBlockSc
     }
 
     private boolean shouldScroll() {
-        return (this.currentTab == CraftingRootBlock.Tab.CRAFTING_BENCH && this.handler.getCraftingBenchCraftingRecipesSize() > 9) || (this.currentTab == CraftingRootBlock.Tab.SMITHY && this.handler.getSmithyCraftingRecipesSize() > 9);
+        return this.handler.getCurrentCraftingRecipesList().size() > 12;
     }
 
     protected int getMaxScroll() {
-        return ((this.currentTab == CraftingRootBlock.Tab.SMITHY ? this.handler.getSmithyCraftingRecipesSize() : this.handler.getCraftingBenchCraftingRecipesSize()) + 3 - 1) / 3 - 3;
+        return (this.handler.getCurrentCraftingRecipesList().size() + 3 - 1) / 3 - 3; // TODO ?
     }
 
     private void onCraft() {
         BetterAdventureMode.info("onCraft");
         this.updateWidgets();
-    }
-
-    public static enum RecipeType implements StringIdentifiable {
-        CRAFTING("crafting"),
-        UPGRADING("upgrading");
-
-        private final String name;
-
-        private RecipeType(String name) {
-            this.name = name;
-        }
-
-        @Override
-        public String asString() {
-            return this.name;
-        }
-
-        public static Optional<RecipeType> byName(String name) {
-            return Arrays.stream(RecipeType.values()).filter(recipeType -> recipeType.asString().equals(name)).findFirst();
-        }
-
-        public Text asText() {
-            return Text.translatable("gui.crafting_bench_block.recipeType." + this.name);
-        }
     }
 }
