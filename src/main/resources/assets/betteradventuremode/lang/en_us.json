@@ -270,6 +270,9 @@
 	"gui.shop_block.trade_button_label": "Trade",
 
 
+	"gui.crafting_bench.toggle_use_stash_for_crafting_button_label.on": "Stash Crafting: Yes",
+	"gui.crafting_bench.toggle_use_stash_for_crafting_button_label.off": "Stash Crafting: No",
+
 	"gui.crafting_bench.toggle_standard_crafting_button_label.0": "Crafting",
 	"gui.crafting_bench.toggle_standard_crafting_button_label.1": "Crafting",
 	"gui.crafting_bench.toggle_standard_crafting_button_label.2": "Crafting",
@@ -406,7 +409,7 @@
 	"gui.entity_attribute_modifier.operation.multiply_total": "Multiply Total",
 
 	"block.betteradventuremode.crafting_root_block": "Work Bench",
-	"block.betteradventuremode.storage_provider_block": "Crafting Storage",
+	"block.betteradventuremode.storage_provider_block": "Stash",
 	"block.betteradventuremode.crafting_tab_1_provider_block": "Smithy",
 	"block.betteradventuremode.crafting_tab_2_provider_block": "Cauldron",
 	"block.betteradventuremode.crafting_tab_3_provider_block": "Crafting Station 3",

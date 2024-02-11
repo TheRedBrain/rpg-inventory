@@ -1,18 +1,20 @@
 package com.github.theredbrain.betteradventuremode.api.json_files_backend;
 
+import com.github.theredbrain.betteradventuremode.api.util.ItemUtils;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public final class Dialogue {
     private final List<String> dialogueTextList;
-    private final List<Answer> answerList;
+    private final List<String> answerList;
     private final String unlockAdvancement;
     private final String lockAdvancement;
     private final boolean cancellable;
 
-    public Dialogue(List<String> dialogueTextList, List<Answer> answerList, String unlockAdvancement, String lockAdvancement, boolean cancellable) {
+    public Dialogue(List<String> dialogueTextList, List<String> answerList, String unlockAdvancement, String lockAdvancement, boolean cancellable) {
         this.dialogueTextList = dialogueTextList;
         this.answerList = answerList;
         this.unlockAdvancement = unlockAdvancement;
@@ -24,8 +26,14 @@ public final class Dialogue {
         return this.dialogueTextList;
     }
 
-    public List<Answer> getAnswerList() {
-        return this.answerList;
+    public List<Identifier> getAnswerList() {
+        List<Identifier> answerIdentifiersList = new ArrayList<>();
+        for (String answer : this.answerList) {
+            if (Identifier.isValid(answer)) {
+                answerIdentifiersList.add(new Identifier(answer));
+            }
+        }
+        return answerIdentifiersList;
     }
 
     public String getUnlockAdvancement() {
@@ -86,7 +94,12 @@ public final class Dialogue {
          */
         private final @Nullable String triggeredBlock;
 
-        public Answer(String answerText, String responseDialogue, String lockAdvancement, String unlockAdvancement, boolean showLockedAnswer, @Nullable String grantedAdvancement, @Nullable String criterionName, @Nullable String lootTable, @Nullable String usedBlock, @Nullable String triggeredBlock) {
+        /**
+         * player inventory is checked for specified items, if all are found they are removed from player inventory, otherwise the answer fails
+         */
+        private final @Nullable List<ItemUtils.VirtualItemStack> itemCost;
+
+        public Answer(String answerText, String responseDialogue, String lockAdvancement, String unlockAdvancement, boolean showLockedAnswer, @Nullable String grantedAdvancement, @Nullable String criterionName, @Nullable String lootTable, @Nullable String usedBlock, @Nullable String triggeredBlock, @Nullable List<ItemUtils.VirtualItemStack> itemCost) {
             this.answerText = answerText;
             this.responseDialogue = responseDialogue;
             this.lockAdvancement = lockAdvancement;
@@ -97,6 +110,7 @@ public final class Dialogue {
             this.lootTable = lootTable;
             this.usedBlock = usedBlock;
             this.triggeredBlock = triggeredBlock;
+            this.itemCost = itemCost;
         }
 
         public String getAnswerText() {
@@ -157,6 +171,11 @@ public final class Dialogue {
         @Nullable
         public String getTriggeredBlock() {
             return this.triggeredBlock;
+        }
+
+        @Nullable
+        public List<ItemUtils.VirtualItemStack> getItemCost() {
+            return this.itemCost;
         }
     }
 }

@@ -11,16 +11,16 @@ public class CraftFromCraftingBenchPacket implements FabricPacket {
             CraftFromCraftingBenchPacket::new
     );
 
-//    public final boolean useEnderChestInventory;
     public final String recipeIdentifier;
+    public final boolean useStorageInventory;
 
-    public CraftFromCraftingBenchPacket(String recipeIdentifier) {
-//        this.useEnderChestInventory = useEnderChestInventory;
+    public CraftFromCraftingBenchPacket(String recipeIdentifier, boolean useStorageInventory) {
         this.recipeIdentifier = recipeIdentifier;
+        this.useStorageInventory = useStorageInventory;
     }
 
     public CraftFromCraftingBenchPacket(PacketByteBuf buf) {
-        this(buf.readString());
+        this(buf.readString(), buf.readBoolean());
     }
 
     @Override
@@ -30,7 +30,7 @@ public class CraftFromCraftingBenchPacket implements FabricPacket {
 
     @Override
     public void write(PacketByteBuf buf) {
-//        buf.writeBoolean(this.useEnderChestInventory);
         buf.writeString(this.recipeIdentifier);
+        buf.writeBoolean(this.useStorageInventory);
     }
 }

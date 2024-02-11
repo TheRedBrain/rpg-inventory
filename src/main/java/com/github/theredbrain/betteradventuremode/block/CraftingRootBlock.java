@@ -1,5 +1,6 @@
 package com.github.theredbrain.betteradventuremode.block;
 
+import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.betteradventuremode.registry.BlockRegistry;
 import com.github.theredbrain.betteradventuremode.registry.Tags;
 import com.github.theredbrain.betteradventuremode.screen.CraftingBenchBlockScreenHandler;
@@ -59,8 +60,14 @@ public class CraftingRootBlock extends Block {
         boolean isCraftingTab1ProviderInReach = false;
         boolean isCraftingTab2ProviderInReach = false;
         boolean isCraftingTab3ProviderInReach = false;
+        boolean isStorageArea0ProviderInReach = false;
+        boolean isStorageArea1ProviderInReach = false;
+        boolean isStorageArea2ProviderInReach = false;
+        boolean isStorageArea3ProviderInReach = false;
+        boolean isStorageArea4ProviderInReach = false;
         int[] tabLevels = new int[CRAFTING_TAB_AMOUNT];
         byte tabProvidersInReach = 0;
+        byte storageProvidersInReach = 0;
 
         BlockState blockState;
         if (world != null) {
@@ -68,9 +75,25 @@ public class CraftingRootBlock extends Block {
                 for (int j = -REACH_RADIUS; j <= REACH_RADIUS; j++) {
                     for (int k = -REACH_RADIUS; k <= REACH_RADIUS; k++) {
                         blockState = world.getBlockState(new BlockPos(posX + i, posY + j, posZ + k));
-                        if (blockState.isOf(BlockRegistry.STORAGE_PROVIDER_BLOCK)) {
-                            isStorageTabProviderInReach = true;
+
+                        if (blockState.isIn(Tags.PROVIDES_STORAGE_AREA_0)) {
+                            isStorageArea0ProviderInReach = true;
                         }
+                        if (blockState.isIn(Tags.PROVIDES_STORAGE_AREA_1)) {
+                            isStorageArea1ProviderInReach = true;
+                        }
+                        if (blockState.isIn(Tags.PROVIDES_STORAGE_AREA_2)) {
+                            isStorageArea2ProviderInReach = true;
+                        }
+                        if (blockState.isIn(Tags.PROVIDES_STORAGE_AREA_3)) {
+                            isStorageArea3ProviderInReach = true;
+                        }
+                        if (blockState.isIn(Tags.PROVIDES_STORAGE_AREA_4)) {
+                            isStorageArea4ProviderInReach = true;
+                        }
+
+                        isStorageTabProviderInReach = isStorageArea0ProviderInReach || isStorageArea1ProviderInReach || isStorageArea2ProviderInReach || isStorageArea3ProviderInReach || isStorageArea4ProviderInReach;
+
                         if (blockState.isOf(BlockRegistry.CRAFTING_TAB_1_PROVIDER_BLOCK)) {
                             isCraftingTab1ProviderInReach = true;
                         }
@@ -107,13 +130,21 @@ public class CraftingRootBlock extends Block {
         tabProvidersInReach = (byte)(isCraftingTab2ProviderInReach ? tabProvidersInReach | 1 << 2 : tabProvidersInReach & ~(1 << 2));
         tabProvidersInReach = (byte)(isCraftingTab3ProviderInReach ? tabProvidersInReach | 1 << 3 : tabProvidersInReach & ~(1 << 3));
 
+        storageProvidersInReach = (byte)(isStorageArea0ProviderInReach ? storageProvidersInReach | 1 << 0 : storageProvidersInReach & ~(1 << 0));
+        storageProvidersInReach = (byte)(isStorageArea1ProviderInReach ? storageProvidersInReach | 1 << 1 : storageProvidersInReach & ~(1 << 1));
+        storageProvidersInReach = (byte)(isStorageArea2ProviderInReach ? storageProvidersInReach | 1 << 2 : storageProvidersInReach & ~(1 << 2));
+        storageProvidersInReach = (byte)(isStorageArea3ProviderInReach ? storageProvidersInReach | 1 << 3 : storageProvidersInReach & ~(1 << 3));
+        storageProvidersInReach = (byte)(isStorageArea4ProviderInReach ? storageProvidersInReach | 1 << 4 : storageProvidersInReach & ~(1 << 4));
+
         byte finalTabProvidersInReach = tabProvidersInReach;
+        byte finalStorageProvidersInReach = storageProvidersInReach;
         return new ExtendedScreenHandlerFactory() {
             @Override
             public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
                 buf.writeBlockPos(pos);
                 buf.writeInt(initialTab);
                 buf.writeByte(finalTabProvidersInReach);
+                buf.writeByte(finalStorageProvidersInReach);
                 buf.writeIntArray(tabLevels);
             }
 
@@ -125,7 +156,7 @@ public class CraftingRootBlock extends Block {
             @Nullable
             @Override
             public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
-                return new CraftingBenchBlockScreenHandler(syncId, playerInventory, player.getEnderChestInventory(), pos, initialTab, finalTabProvidersInReach, tabLevels);
+                return new CraftingBenchBlockScreenHandler(syncId, playerInventory, player.getEnderChestInventory(), ((DuckPlayerEntityMixin)player).betteradventuremode$getStashInventory(), pos, initialTab, finalTabProvidersInReach, finalStorageProvidersInReach, tabLevels);
             }
         };
     }

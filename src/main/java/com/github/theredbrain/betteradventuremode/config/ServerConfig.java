@@ -15,6 +15,8 @@ public class ServerConfig implements ConfigData {
     public boolean use_adventure_inventory_screen = true;
     @Comment("Disables food, saturation and exhaustion")
     public boolean disable_vanilla_food_system = true;
+    @Comment("Disables the recipe book")
+    public boolean disable_recipe_book = true;
     @Comment("""
             World Spawn is chosen randomly from the following lists.
             It is recommended to set the gamerule 'spawnRadius' to 0.

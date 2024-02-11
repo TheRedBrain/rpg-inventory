@@ -3,7 +3,8 @@ package com.github.theredbrain.betteradventuremode.registry;
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.BetterAdventureModeClient;
 import com.github.theredbrain.betteradventuremode.api.json_files_backend.Dialogue;
-import com.github.theredbrain.betteradventuremode.api.json_files_backend.DialogueHelper;
+import com.github.theredbrain.betteradventuremode.api.json_files_backend.DialogueAnswer;
+import com.github.theredbrain.betteradventuremode.api.json_files_backend.DialogueAnswerHelper;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
@@ -20,37 +21,37 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DialoguesRegistry {
+public class DialogueAnswersRegistry {
 
-    static Map<Identifier, Dialogue> registeredDialogues = new HashMap<>();
+    static Map<Identifier, DialogueAnswer> registeredDialogueAnswers = new HashMap<>();
 
-    public static void register(Identifier itemId, Dialogue dialogue) {
-        registeredDialogues.put(itemId, dialogue);
+    public static void register(Identifier itemId, DialogueAnswer dialogueAnswer) {
+        registeredDialogueAnswers.put(itemId, dialogueAnswer);
     }
 
-    public static Dialogue getDialogue(Identifier dialogueId) {
-        return registeredDialogues.get(dialogueId);
+    public static DialogueAnswer getDialogueAnswer(Identifier dialogueAnswerId) {
+        return registeredDialogueAnswers.get(dialogueAnswerId);
     }
 
     public static void init() {
         ServerLifecycleEvents.SERVER_STARTED.register((minecraftServer) -> {
-            loadDialogues(minecraftServer.getResourceManager());
+            loadDialogueAnswers(minecraftServer.getResourceManager());
             encodeRegistry();
         });
     }
 
-    private static void loadDialogues(ResourceManager resourceManager) {
+    private static void loadDialogueAnswers(ResourceManager resourceManager) {
         var gson = new Gson();
-        Map<Identifier, Dialogue> registeredDialogues = new HashMap();
+        Map<Identifier, DialogueAnswer> registeredDialogues = new HashMap();
         // Reading all attribute files
-        for (var entry : resourceManager.findResources("dialogues", fileName -> fileName.getPath().endsWith(".json")).entrySet()) {
+        for (var entry : resourceManager.findResources("dialogues/answers", fileName -> fileName.getPath().endsWith(".json")).entrySet()) {
             var identifier = entry.getKey();
             var resource = entry.getValue();
             try {
                 JsonReader reader = new JsonReader(new InputStreamReader(resource.getInputStream()));
-                Dialogue dialogue = DialogueHelper.decode(reader);
+                DialogueAnswer dialogue = DialogueAnswerHelper.decode(reader);
                 var id = identifier
-                        .toString().replace("dialogues/", "");
+                        .toString().replace("dialogues/answers/", "");
                 id = id.substring(0, id.lastIndexOf('.'));
                 registeredDialogues.put(new Identifier(id), dialogue);
             } catch (Exception e) {
@@ -58,19 +59,19 @@ public class DialoguesRegistry {
                 e.printStackTrace();
             }
         }
-        DialoguesRegistry.registeredDialogues = registeredDialogues;
+        DialogueAnswersRegistry.registeredDialogueAnswers = registeredDialogues;
     }
 
     // NETWORK SYNC
 
-    private static PacketByteBuf encodedRegisteredDialogues = PacketByteBufs.create();
+    private static PacketByteBuf encodedRegisteredDialogueAnswers = PacketByteBufs.create();
 
     public static void encodeRegistry() {
         PacketByteBuf buffer = PacketByteBufs.create();
         var gson = new Gson();
-        var json = gson.toJson(registeredDialogues);
+        var json = gson.toJson(registeredDialogueAnswers);
         if (BetterAdventureModeClient.clientConfig.show_debug_log) {
-            BetterAdventureMode.LOGGER.info("Dialogues registry loaded: " + json);
+            BetterAdventureMode.LOGGER.info("Dialogue Answers registry loaded: " + json);
         }
 
         List<String> chunks = new ArrayList<>();
@@ -85,10 +86,10 @@ public class DialoguesRegistry {
         }
 
         if (BetterAdventureModeClient.clientConfig.show_debug_log) {
-            BetterAdventureMode.LOGGER.info("Encoded Dialogues registry size (with package overhead): " + buffer.readableBytes()
+            BetterAdventureMode.LOGGER.info("Encoded Dialogue Answers registry size (with package overhead): " + buffer.readableBytes()
                     + " bytes (in " + chunks.size() + " string chunks with the size of " + chunkSize + ")");
         }
-        encodedRegisteredDialogues = buffer;
+        encodedRegisteredDialogueAnswers = buffer;
     }
 
     public static void decodeRegistry(PacketByteBuf buffer) {
@@ -98,20 +99,20 @@ public class DialoguesRegistry {
             json = json.concat(buffer.readString());
         }
         if (BetterAdventureModeClient.clientConfig.show_debug_log) {
-            BetterAdventureMode.LOGGER.info("Decoded Dialogues registry in " + chunkCount + " string chunks");
-            BetterAdventureMode.LOGGER.info("Dialogues registry received: " + json);
+            BetterAdventureMode.LOGGER.info("Decoded Dialogue Answers registry in " + chunkCount + " string chunks");
+            BetterAdventureMode.LOGGER.info("Dialogue Answers registry received: " + json);
         }
         var gson = new Gson();
-        Type mapType = new TypeToken<Map<String, Dialogue>>() {}.getType();
-        Map<String, Dialogue> readRegisteredDialogues = gson.fromJson(json, mapType);
-        Map<Identifier, Dialogue> newRegisteredDialogues = new HashMap();
-        readRegisteredDialogues.forEach((key, value) -> {
-            newRegisteredDialogues.put(new Identifier(key), value);
+        Type mapType = new TypeToken<Map<String, DialogueAnswer>>() {}.getType();
+        Map<String, DialogueAnswer> readRegisteredDialogueAnswers = gson.fromJson(json, mapType);
+        Map<Identifier, DialogueAnswer> newRegisteredDialogueAnswers = new HashMap();
+        readRegisteredDialogueAnswers.forEach((key, value) -> {
+            newRegisteredDialogueAnswers.put(new Identifier(key), value);
         });
-        registeredDialogues = newRegisteredDialogues;
+        registeredDialogueAnswers = newRegisteredDialogueAnswers;
     }
 
     public static PacketByteBuf getEncodedRegistry() {
-        return encodedRegisteredDialogues;
+        return encodedRegisteredDialogueAnswers;
     }
 }

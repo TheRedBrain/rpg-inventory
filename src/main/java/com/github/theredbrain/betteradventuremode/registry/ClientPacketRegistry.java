@@ -2,6 +2,8 @@ package com.github.theredbrain.betteradventuremode.registry;
 
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerInventoryMixin;
 //import net.bettercombat.api.MinecraftClient_BetterCombat;
+import com.github.theredbrain.betteradventuremode.network.packet.OpenDialogueScreenPacket;
+import com.github.theredbrain.betteradventuremode.network.packet.OpenDialogueScreenPacketReceiver;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -12,6 +14,8 @@ import net.minecraft.item.ItemStack;
 public class ClientPacketRegistry {
 
     public static void init() {
+        ClientPlayNetworking.registerGlobalReceiver(OpenDialogueScreenPacket.TYPE, new OpenDialogueScreenPacketReceiver());
+
         ClientPlayNetworking.registerGlobalReceiver(ServerPacketRegistry.SWAPPED_HAND_ITEMS_PACKET, (client, handler, buffer, responseSender) -> { // TODO convert to packet
             int entityId = buffer.readInt();
             boolean mainHand = buffer.readBoolean();
@@ -53,6 +57,9 @@ public class ClientPacketRegistry {
         });
         ClientPlayNetworking.registerGlobalReceiver(ServerPacketRegistry.SYNC_DIALOGUES, (client, handler, buffer, responseSender) -> { // TODO convert to packet
             DialoguesRegistry.decodeRegistry(buffer);
+        });
+        ClientPlayNetworking.registerGlobalReceiver(ServerPacketRegistry.SYNC_DIALOGUE_ANSWERS, (client, handler, buffer, responseSender) -> { // TODO convert to packet
+            DialogueAnswersRegistry.decodeRegistry(buffer);
         });
         ClientPlayNetworking.registerGlobalReceiver(ServerPacketRegistry.SYNC_LOCATIONS, (client, handler, buffer, responseSender) -> { // TODO convert to packet
             LocationsRegistry.decodeRegistry(buffer);

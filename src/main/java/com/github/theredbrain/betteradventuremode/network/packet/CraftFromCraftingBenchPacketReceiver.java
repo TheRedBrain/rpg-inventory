@@ -18,53 +18,148 @@ public class CraftFromCraftingBenchPacketReceiver implements ServerPlayNetworkin
 
         String recipeIdentifier = packet.recipeIdentifier;
 
+        boolean useStorageInventory = packet.useStorageInventory;
+
         ScreenHandler screenHandler = player.currentScreenHandler;
 
         CraftingRecipe craftingRecipe = CraftingRecipeRegistry.getCraftingRecipe(new Identifier(recipeIdentifier));
 
         if (craftingRecipe != null && screenHandler instanceof CraftingBenchBlockScreenHandler craftingBenchBlockScreenHandler) {
+
+            int playerInventorySize = craftingBenchBlockScreenHandler.getPlayerInventory().size();
+
+            int stash0InventorySize = useStorageInventory && craftingBenchBlockScreenHandler.isStorageArea0ProviderInReach() ? 6 : 0;
+
+            int stash1InventorySize = useStorageInventory && craftingBenchBlockScreenHandler.isStorageArea1ProviderInReach() ? 8 : 0;
+
+            int stash2InventorySize = useStorageInventory && craftingBenchBlockScreenHandler.isStorageArea2ProviderInReach() ? 12 : 0;
+
+            int stash3InventorySize = useStorageInventory && craftingBenchBlockScreenHandler.isStorageArea3ProviderInReach() ? 14 : 0;
+
+            int stash4InventorySize = useStorageInventory && craftingBenchBlockScreenHandler.isStorageArea4ProviderInReach() ? 21 : 0;
+
             boolean bl = true;
+            ItemStack itemStack;
+
             for (ItemUtils.VirtualItemStack ingredient : craftingRecipe.getIngredients()) {
+
                 Item virtualItem = ItemUtils.getItemStackFromVirtualItemStack(ingredient).getItem();
                 int ingredientCount = ingredient.getCount();
+                int j;
 
-                int playerInventorySize = craftingBenchBlockScreenHandler.getPlayerInventory().size();
+                // TODO play test which inventory normally contains the most crafting ingredients and should be checked first
 
-                int enderChestInventorySize = craftingBenchBlockScreenHandler.getEnderChestInventory().size();
-
-                int inventorySize = craftingBenchBlockScreenHandler.isStorageTabProviderInReach() ? playerInventorySize + enderChestInventorySize : playerInventorySize;
-
-                for (int j = 0; j < inventorySize; j++) {
-                    if (j < playerInventorySize) {
-                        if (craftingBenchBlockScreenHandler.getPlayerInventory().getStack(j).isOf(virtualItem)) {
-                            ItemStack itemStack = craftingBenchBlockScreenHandler.slots.get(j).getStack().copy();
-                            int stackCount = itemStack.getCount();
-                            if (stackCount >= ingredientCount) {
-                                itemStack.setCount(stackCount - ingredientCount);
-                                craftingBenchBlockScreenHandler.slots.get(j).setStack(itemStack);
-                                ingredientCount = 0;
-                                break;
-                            } else {
-                                craftingBenchBlockScreenHandler.slots.get(j).setStack(ItemStack.EMPTY);
-                                ingredientCount = ingredientCount - stackCount;
-                            }
-                        }
-                    } else {
-                        if (craftingBenchBlockScreenHandler.getEnderChestInventory().getStack(j - playerInventorySize).isOf(virtualItem)) {
-                            ItemStack itemStack = craftingBenchBlockScreenHandler.getEnderChestInventory().getStack(j - playerInventorySize).copy();
-                            int stackCount = itemStack.getCount();
-                            if (stackCount >= ingredientCount) {
-                                itemStack.setCount(stackCount - ingredientCount);
-                                craftingBenchBlockScreenHandler.getEnderChestInventory().setStack(j - playerInventorySize, itemStack);
-                                ingredientCount = 0;
-                                break;
-                            } else {
-                                craftingBenchBlockScreenHandler.getEnderChestInventory().setStack(j - playerInventorySize, ItemStack.EMPTY);
-                                ingredientCount = ingredientCount - stackCount;
-                            }
+                for (j = 0; j < playerInventorySize; j++) {
+                    if (craftingBenchBlockScreenHandler.getPlayerInventory().getStack(j).isOf(virtualItem)) {
+                        itemStack = craftingBenchBlockScreenHandler.getPlayerInventory().getStack(j).copy();
+                        int stackCount = itemStack.getCount();
+                        if (stackCount >= ingredientCount) {
+                            itemStack.setCount(stackCount - ingredientCount);
+                            craftingBenchBlockScreenHandler.getPlayerInventory().setStack(j, itemStack);
+                            ingredientCount = 0;
+                            break;
+                        } else {
+                            craftingBenchBlockScreenHandler.getPlayerInventory().setStack(j, ItemStack.EMPTY);
+                            ingredientCount = ingredientCount - stackCount;
                         }
                     }
                 }
+                if (ingredientCount == 0) {
+                    break;
+                }
+
+                for (j = 0; j < stash0InventorySize; j++) {
+                    if (craftingBenchBlockScreenHandler.getEnderChestInventory().getStack(j).isOf(virtualItem)) {
+                        itemStack = craftingBenchBlockScreenHandler.getEnderChestInventory().getStack(j).copy();
+                        int stackCount = itemStack.getCount();
+                        if (stackCount >= ingredientCount) {
+                            itemStack.setCount(stackCount - ingredientCount);
+                            craftingBenchBlockScreenHandler.getEnderChestInventory().setStack(j, itemStack);
+                            ingredientCount = 0;
+                            break;
+                        } else {
+                            craftingBenchBlockScreenHandler.getEnderChestInventory().setStack(j, ItemStack.EMPTY);
+                            ingredientCount = ingredientCount - stackCount;
+                        }
+                    }
+                }
+                if (ingredientCount == 0) {
+                    break;
+                }
+
+                for (j = 0; j < stash1InventorySize; j++) {
+                    if (craftingBenchBlockScreenHandler.getStashInventory().getStack(j).isOf(virtualItem)) {
+                        itemStack = craftingBenchBlockScreenHandler.getStashInventory().getStack(j).copy();
+                        int stackCount = itemStack.getCount();
+                        if (stackCount >= ingredientCount) {
+                            itemStack.setCount(stackCount - ingredientCount);
+                            craftingBenchBlockScreenHandler.getStashInventory().setStack(j, itemStack);
+                            ingredientCount = 0;
+                            break;
+                        } else {
+                            craftingBenchBlockScreenHandler.getStashInventory().setStack(j, ItemStack.EMPTY);
+                            ingredientCount = ingredientCount - stackCount;
+                        }
+                    }
+                }
+                if (ingredientCount == 0) {
+                    break;
+                }
+
+                for (j = 0; j < stash2InventorySize; j++) {
+                    if (craftingBenchBlockScreenHandler.getStashInventory().getStack(8 + j).isOf(virtualItem)) {
+                        itemStack = craftingBenchBlockScreenHandler.getStashInventory().getStack(8 + j).copy();
+                        int stackCount = itemStack.getCount();
+                        if (stackCount >= ingredientCount) {
+                            itemStack.setCount(stackCount - ingredientCount);
+                            craftingBenchBlockScreenHandler.getStashInventory().setStack(8 + j, itemStack);
+                            ingredientCount = 0;
+                            break;
+                        } else {
+                            craftingBenchBlockScreenHandler.getStashInventory().setStack(8 + j, ItemStack.EMPTY);
+                            ingredientCount = ingredientCount - stackCount;
+                        }
+                    }
+                }
+                if (ingredientCount == 0) {
+                    break;
+                }
+
+                for (j = 0; j < stash3InventorySize; j++) {
+                    if (craftingBenchBlockScreenHandler.getStashInventory().getStack(20 + j).isOf(virtualItem)) {
+                        itemStack = craftingBenchBlockScreenHandler.getStashInventory().getStack(20 + j).copy();
+                        int stackCount = itemStack.getCount();
+                        if (stackCount >= ingredientCount) {
+                            itemStack.setCount(stackCount - ingredientCount);
+                            craftingBenchBlockScreenHandler.getStashInventory().setStack(20 + j, itemStack);
+                            ingredientCount = 0;
+                            break;
+                        } else {
+                            craftingBenchBlockScreenHandler.getStashInventory().setStack(20 + j, ItemStack.EMPTY);
+                            ingredientCount = ingredientCount - stackCount;
+                        }
+                    }
+                }
+                if (ingredientCount == 0) {
+                    break;
+                }
+
+                for (j = 0; j < stash4InventorySize; j++) {
+                    if (craftingBenchBlockScreenHandler.getEnderChestInventory().getStack(6 + j).isOf(virtualItem)) {
+                        itemStack = craftingBenchBlockScreenHandler.getEnderChestInventory().getStack(6 + j).copy();
+                        int stackCount = itemStack.getCount();
+                        if (stackCount >= ingredientCount) {
+                            itemStack.setCount(stackCount - ingredientCount);
+                            craftingBenchBlockScreenHandler.getEnderChestInventory().setStack(6 + j, itemStack);
+                            ingredientCount = 0;
+                            break;
+                        } else {
+                            craftingBenchBlockScreenHandler.getEnderChestInventory().setStack(6 + j, ItemStack.EMPTY);
+                            ingredientCount = ingredientCount - stackCount;
+                        }
+                    }
+                }
+
                 if (ingredientCount > 0) {
                     bl = false;
                 }
@@ -72,7 +167,7 @@ public class CraftFromCraftingBenchPacketReceiver implements ServerPlayNetworkin
             if (bl) {
                 player.getInventory().offerOrDrop(ItemUtils.getItemStackFromVirtualItemStack(craftingRecipe.getResult()));
                 craftingBenchBlockScreenHandler.calculateUnlockedRecipes();
-                craftingBenchBlockScreenHandler.runContentsChangedListener();
+                craftingBenchBlockScreenHandler.setShouldScreenCalculateCraftingStatus(1);
             }
         }
     }

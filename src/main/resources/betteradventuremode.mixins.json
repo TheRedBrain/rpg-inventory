@@ -17,6 +17,7 @@
     "item.MiningToolItemMixin",
     "item.SwordItemMixin",
     "item.ToolItemMixin",
+    "recipe.book.RecipeBookMixin",
     "screen.PlayerScreenHandlerMixin",
     "screen.SlotMixin",
     "server.PlayerManagerMixin",
@@ -24,6 +25,7 @@
     "server.network.ServerPlayerEntityMixin",
     "server.network.ServerPlayerInteractionManagerMixin",
     "server.network.ServerPlayNetworkHandlerMixin",
+    "server.network.ServerRecipeBookMixin",
     "trinkets.SurvivalTrinketSlotMixin",
     "world.WorldMixin"
   ],

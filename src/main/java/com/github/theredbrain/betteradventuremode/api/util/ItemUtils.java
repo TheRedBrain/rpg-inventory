@@ -26,13 +26,13 @@ public class ItemUtils {
 //        return spellContainer;
 //    }
 
-    public static ItemStack getItemStackFromVirtualItemStack(ItemUtils.VirtualItemStack shopItemStack) {
+    public static ItemStack getItemStackFromVirtualItemStack(ItemUtils.VirtualItemStack virtualItemStack) {
         NbtCompound nbt = new NbtCompound();
 
         // makes sure identifier is always a valid item identifier
-        nbt.putString("id", Registries.ITEM.getId(Registries.ITEM.get(Identifier.tryParse(shopItemStack.getId()))).toString());
-        nbt.putByte("Count", (byte)shopItemStack.getCount());
-        VirtualNbtElement tag = shopItemStack.getTag();
+        nbt.putString("id", Registries.ITEM.getId(Registries.ITEM.get(Identifier.tryParse(virtualItemStack.getId()))).toString());
+        nbt.putByte("Count", (byte)virtualItemStack.getCount());
+        VirtualNbtElement tag = virtualItemStack.getTag();
         if (tag != null) {
             nbt.put("tag", getNbtCompoundFromVirtualNbtElement(tag));
         }

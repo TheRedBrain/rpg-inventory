@@ -1,8 +1,8 @@
 package com.github.theredbrain.betteradventuremode.screen;
 
-import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.api.json_files_backend.CraftingRecipe;
 import com.github.theredbrain.betteradventuremode.client.network.DuckClientAdvancementManagerMixin;
+import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.betteradventuremode.network.packet.CraftFromCraftingBenchPacket;
 import com.github.theredbrain.betteradventuremode.registry.CraftingRecipeRegistry;
 import com.github.theredbrain.betteradventuremode.registry.ScreenHandlerTypesRegistry;
@@ -39,8 +39,14 @@ public class CraftingBenchBlockScreenHandler extends ScreenHandler {
     private boolean isTab1ProviderInReach;
     private boolean isTab2ProviderInReach;
     private boolean isTab3ProviderInReach;
+    private boolean isStorageArea0ProviderInReach;
+    private boolean isStorageArea1ProviderInReach;
+    private boolean isStorageArea2ProviderInReach;
+    private boolean isStorageArea3ProviderInReach;
+    private boolean isStorageArea4ProviderInReach;
     long lastTakeTime;
     private final Property selectedRecipe = Property.create();
+    private final Property shouldScreenCalculateCraftingStatus = Property.create();
     private final World world;
     private List<Identifier> craftingRecipesIdentifierList;
     private List<Identifier> tab0StandardCraftingRecipesIdentifierList = new ArrayList<>(List.of());
@@ -57,14 +63,13 @@ public class CraftingBenchBlockScreenHandler extends ScreenHandler {
     private RecipeType currentRecipeType;
     private final PlayerInventory playerInventory;
     private final EnderChestInventory enderChestInventory;
-    Runnable contentsChangedListener = () -> {
-    };
+    private final SimpleInventory stashInventory;
 
     public CraftingBenchBlockScreenHandler(int syncId, PlayerInventory playerInventory, PacketByteBuf buf) {
-        this(syncId, playerInventory, playerInventory.player.getEnderChestInventory(), buf.readBlockPos(), buf.readInt(), buf.readByte(), buf.readIntArray());
+        this(syncId, playerInventory, playerInventory.player.getEnderChestInventory(), ((DuckPlayerEntityMixin)playerInventory.player).betteradventuremode$getStashInventory(), buf.readBlockPos(), buf.readInt(), buf.readByte(), buf.readByte(), buf.readIntArray());
     }
 
-    public CraftingBenchBlockScreenHandler(int syncId, PlayerInventory playerInventory, EnderChestInventory enderChestInventory, BlockPos blockPos, int  initialTab, byte tabProvidersInReach, int[] tabLevels) {
+    public CraftingBenchBlockScreenHandler(int syncId, PlayerInventory playerInventory, EnderChestInventory enderChestInventory, SimpleInventory stashInventory, BlockPos blockPos, int  initialTab, byte tabProvidersInReach, byte storageProvidersInReach, int[] tabLevels) {
         super(ScreenHandlerTypesRegistry.CRAFTING_BENCH_BLOCK_SCREEN_HANDLER, syncId);
         this.playerInventory = playerInventory;
         this.world = playerInventory.player.getWorld();
@@ -75,8 +80,14 @@ public class CraftingBenchBlockScreenHandler extends ScreenHandler {
         this.isTab1ProviderInReach = (tabProvidersInReach & 1 << 1) != 0;
         this.isTab2ProviderInReach = (tabProvidersInReach & 1 << 2) != 0;
         this.isTab3ProviderInReach = (tabProvidersInReach & 1 << 3) != 0;
+        this.isStorageArea0ProviderInReach = (storageProvidersInReach & 1 << 0) != 0;
+        this.isStorageArea1ProviderInReach = (storageProvidersInReach & 1 << 1) != 0;
+        this.isStorageArea2ProviderInReach = (storageProvidersInReach & 1 << 2) != 0;
+        this.isStorageArea3ProviderInReach = (storageProvidersInReach & 1 << 3) != 0;
+        this.isStorageArea4ProviderInReach = (storageProvidersInReach & 1 << 4) != 0;
         this.tabLevels = tabLevels;
         this.enderChestInventory = enderChestInventory;
+        this.stashInventory = stashInventory;
 
         this.craftingRecipesIdentifierList = CraftingRecipeRegistry.getCraftingRecipeIdentifiers();
 
@@ -91,14 +102,38 @@ public class CraftingBenchBlockScreenHandler extends ScreenHandler {
                 this.addSlot(new Slot(playerInventory, j + (i + 1) * 9, 62 + j * 18, 151 + i * 18));
             }
         }
-        // ender chest inventory 36 - 62
+        // stash area 0: 36 - 41
+        for (i = 0; i < 6; ++i) {
+            this.addSlot(new Slot(enderChestInventory, i, 170 + i * 18, 19));
+        }
+        // stash area 1: 42 - 49
+        for (i = 0; i < 2; ++i) {
+            for (int j = 0; j < 4; ++j) {
+                this.addSlot(new Slot(stashInventory, j + i * 4, 206 + j * 18, 42 + i * 18));
+            }
+        }
+        // stash area 2: 50 - 61
         for (i = 0; i < 3; ++i) {
-            for (int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(enderChestInventory, j + i * 9, 62 + j * 18, 83 + i * 18));
+            for (int j = 0; j < 4; ++j) {
+                this.addSlot(new Slot(stashInventory, 8 + j + i * 4, 206 + j * 18, 83 + i * 18));
+            }
+        }
+        // stash area 3: 62 - 75
+        for (i = 0; i < 2; ++i) {
+            for (int j = 0; j < 7; ++j) {
+                this.addSlot(new Slot(stashInventory, 20 + j + i * 7, 69 + j * 18, 42 + i * 18));
+            }
+        }
+        // stash area 4: 76 - 96
+        for (i = 0; i < 3; ++i) {
+            for (int j = 0; j < 7; ++j) {
+                this.addSlot(new Slot(enderChestInventory, 6 + j + i * 7, 69 + j * 18, 83 + i * 18));
             }
         }
         this.addProperty(this.selectedRecipe);
         this.selectedRecipe.set(-1);
+        this.addProperty(this.shouldScreenCalculateCraftingStatus);
+        this.shouldScreenCalculateCraftingStatus.set(0);
     }
 
     @Override
@@ -119,7 +154,8 @@ public class CraftingBenchBlockScreenHandler extends ScreenHandler {
                 List<Identifier> currentRecipeList = this.getCurrentCraftingRecipesList();
                 ClientPlayNetworking.send(
                         new CraftFromCraftingBenchPacket(
-                                currentRecipeList.get(this.selectedRecipe.get()).toString()
+                                currentRecipeList.get(this.selectedRecipe.get()).toString(),
+                                ((DuckPlayerEntityMixin)player).betteradventuremode$useStashForCrafting()
                         )
                 );
             }
@@ -130,7 +166,7 @@ public class CraftingBenchBlockScreenHandler extends ScreenHandler {
     }
 
     public BlockPos getBlockPos() {
-        return blockPos;
+        return this.blockPos;
     }
 
     public int getSelectedRecipe() {
@@ -138,15 +174,19 @@ public class CraftingBenchBlockScreenHandler extends ScreenHandler {
     }
 
     public int[] getTabLevels() {
-        return tabLevels;
+        return this.tabLevels;
     }
 
     public EnderChestInventory getEnderChestInventory() {
-        return enderChestInventory;
+        return this.enderChestInventory;
+    }
+
+    public SimpleInventory getStashInventory() {
+        return this.stashInventory;
     }
 
     public PlayerInventory getPlayerInventory() {
-        return playerInventory;
+        return this.playerInventory;
     }
 
     public boolean isStorageTabProviderInReach() {
@@ -165,8 +205,28 @@ public class CraftingBenchBlockScreenHandler extends ScreenHandler {
         return this.isTab3ProviderInReach;
     }
 
+    public boolean isStorageArea0ProviderInReach() {
+        return this.isStorageArea0ProviderInReach;
+    }
+
+    public boolean isStorageArea1ProviderInReach() {
+        return this.isStorageArea1ProviderInReach;
+    }
+
+    public boolean isStorageArea2ProviderInReach() {
+        return this.isStorageArea2ProviderInReach;
+    }
+
+    public boolean isStorageArea3ProviderInReach() {
+        return this.isStorageArea3ProviderInReach;
+    }
+
+    public boolean isStorageArea4ProviderInReach() {
+        return this.isStorageArea4ProviderInReach;
+    }
+
     public int getCurrentTab() {
-        return currentTab;
+        return this.currentTab;
     }
 
     public void setCurrentTab(int currentTab) {
@@ -175,7 +235,7 @@ public class CraftingBenchBlockScreenHandler extends ScreenHandler {
     }
 
     public RecipeType getCurrentRecipeType() {
-        return currentRecipeType;
+        return this.currentRecipeType;
     }
 
     public void setCurrentRecipeType(boolean isStandard) {
@@ -188,14 +248,12 @@ public class CraftingBenchBlockScreenHandler extends ScreenHandler {
 
     }
 
-    public void setContentsChangedListener(Runnable contentsChangedListener) {
-//        BetterAdventureMode.info("setContentsChangedListener");
-        this.contentsChangedListener = contentsChangedListener;
+    public int shouldScreenCalculateCraftingStatus() {
+        return this.shouldScreenCalculateCraftingStatus.get();
     }
 
-    public void runContentsChangedListener() {
-//        BetterAdventureMode.info("runContentsChangedListener()");
-        this.contentsChangedListener.run();
+    public void setShouldScreenCalculateCraftingStatus(int shouldScreenCalculateCraftingStatus) {
+        this.shouldScreenCalculateCraftingStatus.set(shouldScreenCalculateCraftingStatus);
     }
 
     private boolean isInBounds(int id) {
@@ -207,8 +265,6 @@ public class CraftingBenchBlockScreenHandler extends ScreenHandler {
     }
 
     public void calculateUnlockedRecipes() {
-
-//        BetterAdventureMode.info("calculateUnlockedRecipes()");
 
         ClientAdvancementManager advancementHandler = null;
         String unlockAdvancementIdentifier;
@@ -236,7 +292,7 @@ public class CraftingBenchBlockScreenHandler extends ScreenHandler {
                 if (!unlockAdvancementIdentifier.equals("")) {
                     unlockAdvancementEntry = advancementHandler.get(Identifier.tryParse(unlockAdvancementIdentifier));
                 }
-                boolean bl = !world.getGameRules().getBoolean(GameRules.DO_LIMITED_CRAFTING) || unlockAdvancementIdentifier.equals("") || (unlockAdvancementEntry != null && ((DuckClientAdvancementManagerMixin) advancementHandler.getManager()).betteradventuremode$getAdvancementProgress(unlockAdvancementEntry).isDone());
+                boolean bl = !this.world.getGameRules().getBoolean(GameRules.DO_LIMITED_CRAFTING) || unlockAdvancementIdentifier.equals("") || (unlockAdvancementEntry != null && ((DuckClientAdvancementManagerMixin) advancementHandler.getManager()).betteradventuremode$getAdvancementProgress(unlockAdvancementEntry).isDone());
 
                 if (bl) {
                     int tab = craftingRecipe.getTab();

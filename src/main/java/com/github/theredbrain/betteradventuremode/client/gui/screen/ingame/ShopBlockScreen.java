@@ -161,8 +161,8 @@ public class ShopBlockScreen extends HandledScreen<ShopBlockScreenHandler> {
 
         this.backgroundWidth = 176;
         this.backgroundHeight = 212;
-        this.x = (this.width - this.backgroundWidth) / 2;
-        this.y = (this.height - this.backgroundHeight) / 2;
+//        this.x = (this.width - this.backgroundWidth) / 2;
+//        this.y = (this.height - this.backgroundHeight) / 2;
 
         this.playerInventoryTitleY = 118;
         super.init();

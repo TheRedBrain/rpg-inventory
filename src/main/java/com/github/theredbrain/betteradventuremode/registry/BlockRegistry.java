@@ -50,7 +50,11 @@ public class BlockRegistry {
 
     // crafting blocks
     public static final Block CRAFTING_ROOT_BLOCK = registerBlock("crafting_root_block", new CraftingRootBlock(FabricBlockSettings.create().mapColor(MapColor.OAK_TAN)), ItemGroupRegistry.BAM_BLOCK);
-    public static final Block STORAGE_PROVIDER_BLOCK = registerBlock("storage_provider_block", new CraftingTabProviderBlock(-1, FabricBlockSettings.create().mapColor(MapColor.OAK_TAN)), ItemGroupRegistry.BAM_BLOCK);
+    public static final Block STORAGE_AREA_0_PROVIDER_BLOCK = registerBlock("storage_area_0_provider_block", new CraftingTabProviderBlock(-1, FabricBlockSettings.create().mapColor(MapColor.OAK_TAN)), ItemGroupRegistry.BAM_BLOCK);
+    public static final Block STORAGE_AREA_1_PROVIDER_BLOCK = registerBlock("storage_area_1_provider_block", new CraftingTabProviderBlock(-1, FabricBlockSettings.create().mapColor(MapColor.OAK_TAN)), ItemGroupRegistry.BAM_BLOCK);
+    public static final Block STORAGE_AREA_2_PROVIDER_BLOCK = registerBlock("storage_area_2_provider_block", new CraftingTabProviderBlock(-1, FabricBlockSettings.create().mapColor(MapColor.OAK_TAN)), ItemGroupRegistry.BAM_BLOCK);
+    public static final Block STORAGE_AREA_3_PROVIDER_BLOCK = registerBlock("storage_area_3_provider_block", new CraftingTabProviderBlock(-1, FabricBlockSettings.create().mapColor(MapColor.OAK_TAN)), ItemGroupRegistry.BAM_BLOCK);
+    public static final Block STORAGE_AREA_4_PROVIDER_BLOCK = registerBlock("storage_area_4_provider_block", new CraftingTabProviderBlock(-1, FabricBlockSettings.create().mapColor(MapColor.OAK_TAN)), ItemGroupRegistry.BAM_BLOCK);
     public static final Block CRAFTING_TAB_1_PROVIDER_BLOCK = registerBlock("crafting_tab_1_provider_block", new CraftingTabProviderBlock(1, FabricBlockSettings.create().mapColor(MapColor.OAK_TAN)), ItemGroupRegistry.BAM_BLOCK);
     public static final Block CRAFTING_TAB_2_PROVIDER_BLOCK = registerBlock("crafting_tab_2_provider_block", new CraftingTabProviderBlock(2, FabricBlockSettings.create().mapColor(MapColor.OAK_TAN)), ItemGroupRegistry.BAM_BLOCK);
     public static final Block CRAFTING_TAB_3_PROVIDER_BLOCK = registerBlock("crafting_tab_3_provider_block", new CraftingTabProviderBlock(3, FabricBlockSettings.create().mapColor(MapColor.OAK_TAN)), ItemGroupRegistry.BAM_BLOCK);

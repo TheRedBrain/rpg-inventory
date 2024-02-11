@@ -2,10 +2,12 @@ package com.github.theredbrain.betteradventuremode.client.gui.screen.ingame;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.api.json_files_backend.Dialogue;
+import com.github.theredbrain.betteradventuremode.api.json_files_backend.DialogueAnswer;
 import com.github.theredbrain.betteradventuremode.api.util.ItemUtils;
 import com.github.theredbrain.betteradventuremode.block.entity.DialogueBlockEntity;
 import com.github.theredbrain.betteradventuremode.client.network.DuckClientAdvancementManagerMixin;
 import com.github.theredbrain.betteradventuremode.network.packet.UpdateDialogueBlockPacket;
+import com.github.theredbrain.betteradventuremode.registry.DialogueAnswersRegistry;
 import com.github.theredbrain.betteradventuremode.registry.DialoguesRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -19,6 +21,10 @@ import net.minecraft.client.gui.widget.CyclingButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.network.ClientAdvancementManager;
 import net.minecraft.client.util.NarratorManager;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.SimpleInventory;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -90,8 +96,8 @@ public class DialogueBlockScreen extends Screen {
     private List<MutablePair<String, BlockPos>> dialogueUsedBlocksList = new ArrayList<>(List.of());
     private List<MutablePair<String, BlockPos>> dialogueTriggeredBlocksList = new ArrayList<>(List.of());
     private List<MutablePair<String, MutablePair<String, String>>> startingDialogueList = new ArrayList<>(List.of());
-    private List<Dialogue.Answer> unlockedAnswersList = new ArrayList<>(List.of());
-    private List<Dialogue.Answer> visibleAnswersList = new ArrayList<>(List.of());
+    private List<Identifier> unlockedAnswersList = new ArrayList<>(List.of());
+    private List<Identifier> visibleAnswersList = new ArrayList<>(List.of());
     private List<String> dialogueTextList = new ArrayList<>(List.of());
     private int backgroundWidth;
     private int backgroundHeight;
@@ -117,63 +123,13 @@ public class DialogueBlockScreen extends Screen {
 
     private void answer(int index) {
         if (index + this.answersScrollPosition < this.visibleAnswersList.size()) {
-            Dialogue.Answer currentAnswer = this.visibleAnswersList.get(index + this.answersScrollPosition);
-            
-            // loot_table
-            Identifier lootTableIdentifier = currentAnswer.getLootTable();
-            if (lootTableIdentifier != null && this.client != null && this.client.player != null) {
-                this.dialogueBlockEntity.dialogueGiveItemsFromLootTable(this.client.player, lootTableIdentifier);
-            }
-            
-            // advancement
-            Identifier advancementIdentifier = currentAnswer.getGrantedAdvancement();
-            String criterionName = currentAnswer.getCriterionName();
-            if (advancementIdentifier != null && criterionName != null && this.client != null && this.client.player != null) {
-                this.dialogueBlockEntity.dialogueGrantAdvancement(this.client.player, advancementIdentifier, criterionName);
-            }
+            Identifier currentAnswerIdentifier = this.visibleAnswersList.get(index + this.answersScrollPosition);
 
-            String responseDialogueIdentifier = currentAnswer.getResponseDialogue();
-            if (responseDialogueIdentifier.equals("")) {
-                if (this.client != null) {
-                    this.client.setScreen(null);
-                }
-            } else {
-                Dialogue responseDialogue = DialoguesRegistry.getDialogue(Identifier.tryParse(responseDialogueIdentifier));
-                if (this.client != null) {
-                    this.client.setScreen(new DialogueBlockScreen(this.dialogueBlockEntity, responseDialogue, false));
-                }
-            }
-
-            // trigger block
-            String triggeredBlock = currentAnswer.getTriggeredBlock();
-            if (triggeredBlock != null) {
-                BetterAdventureMode.info("triggeredBlock != null");
-                for (MutablePair<String, BlockPos> entry : this.dialogueTriggeredBlocksList) {
-                    if (entry.getLeft().equals(triggeredBlock)) {
-                        BetterAdventureMode.info("triggeredBlock: " + triggeredBlock);
-                        this.dialogueBlockEntity.triggerBlock(triggeredBlock);
-                        break;
-                    }
-                }
-            }
-
-            // use block
-            String usedBlock = currentAnswer.getUsedBlock();
-            if (usedBlock != null) {
-                BetterAdventureMode.info("usedBlock != null");
-                for (MutablePair<String, BlockPos> entry : this.dialogueUsedBlocksList) {
-                    if (entry.getLeft().equals(usedBlock)) {
-                        if (this.client != null && this.client.player != null) {
-                            this.dialogueBlockEntity.dialogueUseBlock(this.client.player, usedBlock);
-                            return;
-                        }
-                    }
-                }
-            }
+            this.dialogueBlockEntity.answer(currentAnswerIdentifier);
         }
     }
 
-    private void calculateUnlockedAndVisibleAnswers(List<Dialogue.Answer> answerList) {
+    private void calculateUnlockedAndVisibleAnswers(List<Identifier> answerIdentifiersList) {
         ClientAdvancementManager advancementHandler = null;
         String lockAdvancementIdentifier;
         String unlockAdvancementIdentifier;
@@ -183,11 +139,55 @@ public class DialogueBlockScreen extends Screen {
             advancementHandler = this.client.player.networkHandler.getAdvancementHandler();
         }
 
-        for (Dialogue.Answer answer: answerList) {
-            
-            lockAdvancementIdentifier = answer.getLockAdvancement();
-            unlockAdvancementIdentifier = answer.getUnlockAdvancement();
-            showLockedAnswer = answer.showLockedAnswer();
+        for (Identifier answerIdentifier: answerIdentifiersList) {
+
+            DialogueAnswer dialogueAnswer = DialogueAnswersRegistry.getDialogueAnswer(answerIdentifier);
+            if (dialogueAnswer == null) {
+                continue;
+            }
+
+            boolean isItemCostPayable = true;
+            List<ItemUtils.VirtualItemStack> virtualItemCost = dialogueAnswer.getItemCost();
+            if (virtualItemCost != null && this.client != null && this.client.player != null) {
+                int inventorySize = this.client.player.getInventory().size();
+                Inventory inventory = new SimpleInventory(inventorySize);
+                ItemStack itemStack;
+                for (int k = 0; k < inventorySize; k++) {
+                    inventory.setStack(k, this.client.player.getInventory().getStack(k).copy());
+                }
+
+                boolean bl = true;
+                for (ItemUtils.VirtualItemStack ingredient : virtualItemCost) {
+                    Item virtualItem = ItemUtils.getItemStackFromVirtualItemStack(ingredient).getItem();
+                    int ingredientCount = ingredient.getCount();
+
+                    for (int j = 0; j < inventorySize; j++) {
+                        if (inventory.getStack(j).isOf(virtualItem)) {
+                            itemStack = inventory.getStack(j).copy();
+                            int stackCount = itemStack.getCount();
+                            if (stackCount >= ingredientCount) {
+                                itemStack.setCount(stackCount - ingredientCount);
+                                inventory.setStack(j, itemStack);
+                                ingredientCount = 0;
+                                break;
+                            } else {
+                                inventory.setStack(j, ItemStack.EMPTY);
+                                ingredientCount = ingredientCount - stackCount;
+                            }
+                        }
+                    }
+                    if (ingredientCount > 0) {
+                        bl = false;
+                    }
+                }
+                if (!bl) {
+                    isItemCostPayable = false;
+                }
+            }
+
+            lockAdvancementIdentifier = dialogueAnswer.getLockAdvancement();
+            unlockAdvancementIdentifier = dialogueAnswer.getUnlockAdvancement();
+            showLockedAnswer = dialogueAnswer.showLockedAnswer();
 
             if (advancementHandler != null) {
                 AdvancementEntry lockAdvancementEntry = null;
@@ -200,10 +200,14 @@ public class DialogueBlockScreen extends Screen {
                 }
                 if ((lockAdvancementIdentifier.equals("") || (lockAdvancementEntry != null && !((DuckClientAdvancementManagerMixin)advancementHandler.getManager()).betteradventuremode$getAdvancementProgress(lockAdvancementEntry).isDone())) &&
                     (unlockAdvancementIdentifier.equals("") || (unlockAdvancementEntry != null && ((DuckClientAdvancementManagerMixin)advancementHandler.getManager()).betteradventuremode$getAdvancementProgress(unlockAdvancementEntry).isDone()))) {
-                    this.unlockedAnswersList.add(answer);
-                    this.visibleAnswersList.add(answer);
+                    if (isItemCostPayable) {
+                        this.unlockedAnswersList.add(answerIdentifier);
+                        this.visibleAnswersList.add(answerIdentifier);
+                    } else {
+                        this.visibleAnswersList.add(answerIdentifier);
+                    }
                 } else if (showLockedAnswer) {
-                    this.visibleAnswersList.add(answer);
+                    this.visibleAnswersList.add(answerIdentifier);
                 }
             }
         }
@@ -623,8 +627,8 @@ public class DialogueBlockScreen extends Screen {
         List<MutablePair<String, BlockPos>> list = new ArrayList<>(this.dialogueUsedBlocksList);
         List<MutablePair<String, BlockPos>> list1 = new ArrayList<>(this.dialogueTriggeredBlocksList);
         List<MutablePair<String, MutablePair<String, String>>> list2 = new ArrayList<>(this.startingDialogueList);
-        List<Dialogue.Answer> list3 = new ArrayList<>(this.unlockedAnswersList);
-        List<Dialogue.Answer> list4 = new ArrayList<>(this.visibleAnswersList);
+        List<Identifier> list3 = new ArrayList<>(this.unlockedAnswersList);
+        List<Identifier> list4 = new ArrayList<>(this.visibleAnswersList);
         List<String> list5 = new ArrayList<>(this.dialogueTextList);
         int number = this.dialogueTextScrollPosition;
         float number1 =  this.dialogueTextScrollAmount;
@@ -897,7 +901,8 @@ public class DialogueBlockScreen extends Screen {
             }
             int index = 0;
             for (int i = this.answersScrollPosition; i < Math.min(this.answersScrollPosition + 4, this.visibleAnswersList.size()); i++) {
-                String text = this.visibleAnswersList.get(i).getAnswerText();
+                DialogueAnswer dialogueAnswer = DialogueAnswersRegistry.getDialogueAnswer(this.visibleAnswersList.get(i));
+                String text = dialogueAnswer.getAnswerText();
                 if (index == 0) {
                     this.answerButton0.setMessage(Text.translatable(text));
                 } else if (index == 1) {

@@ -16,6 +16,7 @@ public class ServerPacketRegistry {
 //    public static final Identifier SYNC_PLAYER_HOUSES = BetterAdventureModeCore.identifier("sync_player_houses");
     public static final Identifier SYNC_CRAFTING_RECIPES = BetterAdventureMode.identifier("sync_crafting_recipes");
     public static final Identifier SYNC_DIALOGUES = BetterAdventureMode.identifier("sync_dialogues");
+    public static final Identifier SYNC_DIALOGUE_ANSWERS = BetterAdventureMode.identifier("sync_dialogue_answers");
     public static final Identifier SYNC_LOCATIONS = BetterAdventureMode.identifier("sync_locations");
     public static final Identifier SYNC_SHOPS = BetterAdventureMode.identifier("sync_shops");
 
@@ -81,6 +82,10 @@ public class ServerPacketRegistry {
 
         ServerPlayNetworking.registerGlobalReceiver(CraftFromCraftingBenchPacket.TYPE, new CraftFromCraftingBenchPacketReceiver());
 
+        ServerPlayNetworking.registerGlobalReceiver(ToggleUseStashForCraftingPacket.TYPE, new ToggleUseStashForCraftingPacketReceiver());
+
+        ServerPlayNetworking.registerGlobalReceiver(UpdateCraftingBenchScreenHandlerPropertyPacket.TYPE, new UpdateCraftingBenchScreenHandlerPropertyPacketReceiver());
+
         ServerPlayNetworking.registerGlobalReceiver(UpdateEntranceDelegationBlockPacket.TYPE, new UpdateEntranceDelegationBlockPacketReceiver());
 
         ServerPlayNetworking.registerGlobalReceiver(UpdateStatusEffectApplierBlockPacket.TYPE, new UpdateStatusEffectApplierBlockPacketReceiver());
@@ -97,12 +102,6 @@ public class ServerPacketRegistry {
 
         ServerPlayNetworking.registerGlobalReceiver(UpdateDialogueBlockPacket.TYPE, new UpdateDialogueBlockPacketReceiver());
 
-        ServerPlayNetworking.registerGlobalReceiver(UseBlockViaDialoguePacket.TYPE, new UseBlockViaDialoguePacketReceiver());
-
-        ServerPlayNetworking.registerGlobalReceiver(TriggerBlockViaDialoguePacket.TYPE, new TriggerBlockViaDialoguePacketReceiver());
-
-        ServerPlayNetworking.registerGlobalReceiver(DialogueGrantAdvancementPacket.TYPE, new DialogueGrantAdvancementPacketReceiver());
-
-        ServerPlayNetworking.registerGlobalReceiver(DialogueGiveItemsFromLootTablePacket.TYPE, new DialogueGiveItemsFromLootTablePacketReceiver());
+        ServerPlayNetworking.registerGlobalReceiver(DialogueAnswerPacket.TYPE, new DialogueAnswerPacketReceiver());
     }
 }

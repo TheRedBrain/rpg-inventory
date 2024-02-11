@@ -5,10 +5,7 @@ import com.github.theredbrain.betteradventuremode.api.util.BlockRotationUtils;
 import com.github.theredbrain.betteradventuremode.block.RotatedBlockWithEntity;
 import com.github.theredbrain.betteradventuremode.client.network.DuckClientAdvancementManagerMixin;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
-import com.github.theredbrain.betteradventuremode.network.packet.DialogueGiveItemsFromLootTablePacket;
-import com.github.theredbrain.betteradventuremode.network.packet.DialogueGrantAdvancementPacket;
-import com.github.theredbrain.betteradventuremode.network.packet.TriggerBlockViaDialoguePacket;
-import com.github.theredbrain.betteradventuremode.network.packet.UseBlockViaDialoguePacket;
+import com.github.theredbrain.betteradventuremode.network.packet.*;
 import com.github.theredbrain.betteradventuremode.registry.DialoguesRegistry;
 import com.github.theredbrain.betteradventuremode.registry.EntityRegistry;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -22,9 +19,7 @@ import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.jetbrains.annotations.Nullable;
@@ -166,34 +161,10 @@ public class DialogueBlockEntity extends RotatedBlockEntity {
         return startingDialogue;
     }
 
-    public void dialogueUseBlock(PlayerEntity player, String key) {
-        if (this.world != null && this.dialogueUsedBlocks.containsKey(key)) {
-            ClientPlayNetworking.send(new UseBlockViaDialoguePacket(
-                    new BlockHitResult(player.getPos(), Direction.UP, this.dialogueUsedBlocks.get(key).add(this.pos), false)
-            ));
-        }
-    }
-
-    public void triggerBlock(String key) {
-        if (this.world != null && this.dialogueTriggeredBlocks.containsKey(key)) {
-            ClientPlayNetworking.send(new TriggerBlockViaDialoguePacket(
-                    this.dialogueTriggeredBlocks.get(key).add(this.pos)
-            ));
-        }
-    }
-
-    public void dialogueGiveItemsFromLootTable(PlayerEntity player, Identifier lootTableIdentifier) {
-        ClientPlayNetworking.send(new DialogueGiveItemsFromLootTablePacket(
-                player.getUuid(),
-                lootTableIdentifier
-        ));
-    }
-
-    public void dialogueGrantAdvancement(PlayerEntity player, Identifier advancementIdentifier, String criterionName) {
-        ClientPlayNetworking.send(new DialogueGrantAdvancementPacket(
-                player.getUuid(),
-                advancementIdentifier,
-                criterionName
+    public void answer(Identifier answerIdentifier) {
+        ClientPlayNetworking.send(new DialogueAnswerPacket(
+                this.pos,
+                answerIdentifier
         ));
     }
 

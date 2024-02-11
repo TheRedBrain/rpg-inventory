@@ -75,15 +75,15 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Du
     }
 
     @Inject(method = "tick", at = @At("TAIL"))
-    public void bamcore$tick(CallbackInfo ci) {
+    public void betteradventuremode$tick(CallbackInfo ci) {
         if (!this.getWorld().isClient) {
             if (!ItemStack.areItemsEqual(mainHandSlotStack, ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getMainHand()) || !ItemStack.areItemsEqual(alternateMainHandSlotStack, ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getAlternativeMainHand())) {
-                bamcore$sendChangedHandSlotsPacket(true);
+                betteradventuremode$sendChangedHandSlotsPacket(true);
             }
             mainHandSlotStack = ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getMainHand();
             alternateMainHandSlotStack = ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getAlternativeMainHand();
             if (!ItemStack.areItemsEqual(offHandSlotStack, ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getOffHand()) || !ItemStack.areItemsEqual(alternateOffHandSlotStack, ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getAlternativeOffHand())) {
-                bamcore$sendChangedHandSlotsPacket(false);
+                betteradventuremode$sendChangedHandSlotsPacket(false);
             }
             offHandSlotStack = ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getOffHand();
             alternateOffHandSlotStack = ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getAlternativeOffHand();
@@ -91,10 +91,15 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Du
     }
 
     @Inject(method = "onDeath", at = @At("TAIL"))
-    public void bamcore$onDeath(DamageSource damageSource, CallbackInfo ci) {
+    public void betteradventuremode$onDeath(DamageSource damageSource, CallbackInfo ci) {
         ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
         MinecraftServer server = this.getServer();
         PlayerDeathCallback.EVENT.invoker().kill(player, server, damageSource);
+    }
+
+    @Inject(method = "copyFrom", at = @At("TAIL"))
+    public void betteradventuremode$copyFrom(ServerPlayerEntity oldPlayer, boolean alive, CallbackInfo ci) {
+        ((DuckPlayerEntityMixin) this).betteradventuremode$setStashInventory(((DuckPlayerEntityMixin) oldPlayer).betteradventuremode$getStashInventory());
     }
 
     /**
@@ -217,7 +222,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Du
     }
 
     @Unique
-    private void bamcore$sendChangedHandSlotsPacket(boolean mainHand) {
+    private void betteradventuremode$sendChangedHandSlotsPacket(boolean mainHand) {
         Collection<ServerPlayerEntity> players = PlayerLookup.tracking((ServerWorld) this.getWorld(), this.getBlockPos());
         PacketByteBuf data = new PacketByteBuf(Unpooled.buffer());
         data.writeInt(this.getId());

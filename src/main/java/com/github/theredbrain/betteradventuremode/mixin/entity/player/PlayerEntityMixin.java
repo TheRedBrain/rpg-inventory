@@ -2,7 +2,6 @@ package com.github.theredbrain.betteradventuremode.mixin.entity.player;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.api.block.AbstractSetSpawnBlock;
-import com.github.theredbrain.betteradventuremode.api.item.BasicShieldItem;
 import com.github.theredbrain.betteradventuremode.api.item.BasicWeaponItem;
 import com.github.theredbrain.betteradventuremode.api.effect.FoodStatusEffect;
 import com.github.theredbrain.betteradventuremode.api.json_files_backend.Dialogue;
@@ -23,15 +22,18 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.RespawnAnchorBlock;
 import net.minecraft.entity.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.EnderChestInventory;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.registry.tag.DamageTypeTags;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.slot.Slot;
@@ -41,7 +43,6 @@ import net.minecraft.stat.Stats;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
-import net.minecraft.world.Difficulty;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -82,7 +83,13 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     private boolean isAdventureHotbarCleanedUp = false;
 
     @Unique
+    private static final TrackedData<Boolean> USE_STASH_FOR_CRAFTING = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+
+    @Unique
     private int oldActiveSpellSlotAmount = 0;
+
+    @Unique
+    protected SimpleInventory stashInventory = new SimpleInventory(34);
 
     protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
@@ -97,7 +104,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 //    }
 
     @Inject(method = "createPlayerAttributes", at = @At("RETURN"), cancellable = true)
-    private static void betteradventuremode$$createPlayerAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
+    private static void betteradventuremode$createPlayerAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
         cir.setReturnValue(cir.getReturnValue()
                 .add(EntityAttributesRegistry.MAX_EQUIPMENT_WEIGHT, 10.0F) // TODO balance
                 .add(EntityAttributesRegistry.EQUIPMENT_WEIGHT, 0.0F)
@@ -105,8 +112,14 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         );
     }
 
+    @Inject(method = "initDataTracker", at = @At("RETURN"))
+    protected void betteradventuremode$initDataTracker(CallbackInfo ci) {
+        this.dataTracker.startTracking(USE_STASH_FOR_CRAFTING, true);
+
+    }
+
     @Inject(method = "tick", at = @At("TAIL"))
-    public void betteradventuremode$$tick(CallbackInfo ci) {
+    public void betteradventuremode$tick(CallbackInfo ci) {
         if (!this.getWorld().isClient) {
             this.ejectItemsFromInactiveSpellSlots();
             this.ejectNonHotbarItemsFromHotbar();
@@ -114,7 +127,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     }
 
     @Inject(method = "updateTurtleHelmet", at = @At("TAIL"))
-    private void betteradventuremode$$updateTurtleHelmet(CallbackInfo ci) {
+    private void betteradventuremode$updateTurtleHelmet(CallbackInfo ci) {
         boolean mana_regenerating_trinket_equipped = false;
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(this);
         if (trinkets.isPresent()) {
@@ -167,6 +180,26 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
     }
 
+    @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
+    public void betteradventuremode$readCustomDataFromNbt(NbtCompound nbt, CallbackInfo ci) {
+
+        if (nbt.contains("stash_items", NbtElement.LIST_TYPE)) {
+            this.stashInventory.readNbtList(nbt.getList("stash_items", NbtElement.COMPOUND_TYPE));
+        }
+
+        if (nbt.contains("use_stash_for_crafting", NbtElement.BYTE_TYPE)) {
+            this.betteradventuremode$setUseStashForCrafting(nbt.getBoolean("use_stash_for_crafting"));
+        }
+    }
+
+    @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
+    public void betteradventuremode$writeCustomDataToNbt(NbtCompound nbt, CallbackInfo ci) {
+
+        nbt.put("stash_items", this.stashInventory.toNbtList());
+
+        nbt.putBoolean("use_stash_for_crafting", this.betteradventuremode$useStashForCrafting());
+    }
+
 //    // TODO move to bamentity
 //    @Inject(method = "shouldDismount", at = @At("RETURN"), cancellable = true)
 //    protected void bamcore$shouldDismount(CallbackInfoReturnable<Boolean> cir) {
@@ -204,7 +237,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     }
 
     @Inject(method = "attack", at = @At("HEAD"), cancellable = true)
-    public void betteradventuremode$$attack(Entity target, CallbackInfo ci) {
+    public void betteradventuremode$attack(Entity target, CallbackInfo ci) {
         ItemStack mainHandStack = this.getMainHandStack();
         if (mainHandStack.getItem() instanceof BasicWeaponItem && this.betteradventuremode$getStamina() + ((BasicWeaponItem)mainHandStack.getItem()).getStaminaCost() <= 0) {
             this.sendMessage(Text.translatable("hud.message.staminaTooLow"), true);
@@ -376,6 +409,26 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
      */
     @Override
     public abstract boolean betteradventuremode$isAdventure();
+
+    @Override
+    public boolean betteradventuremode$useStashForCrafting() {
+        return this.dataTracker.get(USE_STASH_FOR_CRAFTING);
+    }
+
+    @Override
+    public void betteradventuremode$setUseStashForCrafting(boolean useStashForCrafting) {
+        this.dataTracker.set(USE_STASH_FOR_CRAFTING, useStashForCrafting);
+    }
+
+    @Override
+    public SimpleInventory betteradventuremode$getStashInventory() {
+        return this.stashInventory;
+    }
+
+    @Override
+    public void betteradventuremode$setStashInventory(SimpleInventory stashInventory) {
+        this.stashInventory = stashInventory;
+    }
 
     @Unique
     private void ejectItemsFromInactiveSpellSlots() {
