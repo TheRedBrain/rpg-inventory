@@ -21,6 +21,7 @@ public class Tags {
     //endregion BlockTags
     //region DamageTypeTags
     public static final TagKey<DamageType> IS_VANILLA = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("is_vanilla"));
+    public static final TagKey<DamageType> IS_TRUE_DAMAGE = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("is_true_damage"));
 
     public static final TagKey<DamageType> HAS_BASHING_DIVISION_OF_0_1 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_bashing_division_of_0_1"));
     public static final TagKey<DamageType> HAS_BASHING_DIVISION_OF_0_2 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_bashing_division_of_0_2"));

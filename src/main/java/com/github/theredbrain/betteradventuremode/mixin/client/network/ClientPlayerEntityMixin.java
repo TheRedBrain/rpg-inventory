@@ -14,6 +14,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -33,7 +34,6 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
         super(world, profile);
     }
 
-
     /**
      * @author TheRedBrain
      * @reason convenience, might redo later
@@ -41,6 +41,15 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
     @Overwrite
     private boolean canSprint() {
         return this.hasVehicle() || ((DuckLivingEntityMixin)this).betteradventuremode$getStamina() > 0 || this.getAbilities().allowFlying;
+    }
+
+    /**
+     * @author TheRedBrain
+     * @reason convenience, might redo later
+     */
+    @Overwrite
+    public void applyDamage(DamageSource source, float amount) {
+        super.applyDamage(source, amount);
     }
 
     @Override

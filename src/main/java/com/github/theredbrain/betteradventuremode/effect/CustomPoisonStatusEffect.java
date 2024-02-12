@@ -10,11 +10,11 @@ public class CustomPoisonStatusEffect extends HarmfulStatusEffect {
 
     public void applyUpdateEffect(LivingEntity entity, int amplifier) {
         super.applyUpdateEffect(entity, amplifier);
-        entity.damage(((DuckDamageSourcesMixin)entity.getDamageSources()).betteradventuremode$poison(), amplifier + 1); // TODO balance
+        float poisonDamage = amplifier + 1.0f;
+        entity.damage(((DuckDamageSourcesMixin)entity.getDamageSources()).betteradventuremode$poison(), poisonDamage); // TODO balance
     }
 
-    @Override
     public boolean canApplyUpdateEffect(int duration, int amplifier) {
-        return true;
+        return duration % 40 == 1;
     }
 }

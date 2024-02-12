@@ -22,6 +22,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.RespawnAnchorBlock;
 import net.minecraft.entity.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
@@ -206,6 +207,15 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 //        cir.setReturnValue(cir.getReturnValue() && !(((PlayerEntity) (Object) this).hasStatusEffect(BetterAdventureModeCoreStatusEffects.PERMANENT_MOUNT_EFFECT)));
 ////        cir.cancel();
 //    }
+
+    /**
+     * @author TheRedBrain
+     * @reason
+     */
+    @Overwrite
+    public void applyDamage(DamageSource source, float amount) {
+        super.applyDamage(source, amount);
+    }
 
     /**
      * @author TheRedBrain
@@ -441,7 +451,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
                 if (!((DuckPlayerInventoryMixin)playerInventory).betteradventuremode$getSpellSlotStack(j).isEmpty()) {
                     playerInventory.offerOrDrop(((DuckPlayerInventoryMixin)playerInventory).betteradventuremode$setSpellSlotStack(ItemStack.EMPTY, j));
                     if (((PlayerEntity) (Object) this) instanceof ServerPlayerEntity serverPlayerEntity) {
-                        serverPlayerEntity.sendMessageToClient(Text.translatable("hud.message.spellsRemovedFromInactiveSpellSlots"), true);
+                        serverPlayerEntity.sendMessage(Text.translatable("hud.message.spellsRemovedFromInactiveSpellSlots"), false);
                     }
                 }
             }
@@ -451,7 +461,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     }
 
     @Unique
-    private void ejectNonHotbarItemsFromHotbar() {
+    private void ejectNonHotbarItemsFromHotbar() { // FIXME is only called once?
         if (this.betteradventuremode$isAdventure() && !this.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT)) {
             if (!this.isAdventureHotbarCleanedUp) {
                 for (int i = 0; i < 9; i++) {
@@ -469,11 +479,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
                 this.isAdventureHotbarCleanedUp = false;
             }
         }
-    }
-
-    @Unique
-    private boolean isMoving() {
-        return this.prevX != this.getX() || this.prevY != this.getY() || this.prevZ != this.getZ();
     }
 
     @Unique
@@ -495,7 +500,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         double encumbrance = this.getEncumbrance();
         return (float) (
                 this.betteradventuremode$getStaminaRegeneration() *
-                (this.isSprinting() ? 0 : this.isMoving() ? 0.5 : 1) *
+                (this.isSprinting() ? 0 : this.betteradventuremode$isMoving() ? 0.5 : 1) *
                 (this.isBlocking() ? 0.5 : 1) *
                 (encumbrance <= 0.5 ? 1 : encumbrance <= 1 ? 0.75 : 0.5) *
                 (this.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT) ? 5 : 1)
@@ -515,12 +520,13 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
     @Override
     public int betteradventuremode$getStaggerDuration() {
-        return 24;
+        return 200;//24;
     }
 
     @Override
     public float betteradventuremode$getMaxStaggerBuildUp() {
-        return this.getMaxHealth() * 0.4f;
+//        return this.getMaxHealth() * 0.4f;
+        return 20.0f;
     }
 
     @Override

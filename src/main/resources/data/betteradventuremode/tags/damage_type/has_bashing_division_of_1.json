@@ -1,4 +1,8 @@
 {
   "values": [
+    "betteradventuremode:bashing_damage_type",
+    "betteradventuremode:unarmed_damage_type",
+    "betteradventuremode:player_bashing_damage_type",
+    "betteradventuremode:player_unarmed_damage_type"
   ]
 }

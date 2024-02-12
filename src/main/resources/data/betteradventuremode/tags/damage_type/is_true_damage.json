@@ -1,0 +1,8 @@
+{
+  "values": [
+    "betteradventuremode:bleeding_damage_type",
+    "betteradventuremode:burning_damage_type",
+    "betteradventuremode:poison_damage_type",
+    "betteradventuremode:shocked_damage_type"
+  ]
+}

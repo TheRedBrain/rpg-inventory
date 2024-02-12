@@ -6,6 +6,12 @@ public interface DuckLivingEntityMixin {
     int betteradventuremode$getHealthTickThreshold();
     int betteradventuremode$getStaminaTickThreshold();
     int betteradventuremode$getManaTickThreshold();
+    int betteradventuremode$getBleedingTickThreshold();
+    int betteradventuremode$getBurnTickThreshold();
+    int betteradventuremode$getFreezeTickThreshold();
+    int betteradventuremode$getStaggerTickThreshold();
+    int betteradventuremode$getPoisonTickThreshold();
+    int betteradventuremode$getShockTickThreshold();
 
     float betteradventuremode$getRegeneratedHealth();
     float betteradventuremode$getRegeneratedStamina();
@@ -62,5 +68,6 @@ public interface DuckLivingEntityMixin {
     void betteradventuremode$setStamina(float mana);
 
     boolean betteradventuremode$canParry();
+    boolean betteradventuremode$isMoving();
 
 }

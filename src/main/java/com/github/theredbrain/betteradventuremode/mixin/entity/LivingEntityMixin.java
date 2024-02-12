@@ -172,11 +172,31 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
     @Unique
     private int manaTickTimer = 0;
     @Unique
+    private int bleedingTickTimer = 0;
+    @Unique
+    private int burnTickTimer = 0;
+    @Unique
+    private int freezeTickTimer = 0;
+    @Unique
+    private int staggerTickTimer = 0;
+    @Unique
+    private int poisonTickTimer = 0;
+    @Unique
+    private int shockTickTimer = 0;
+    @Unique
     private int staminaRegenerationDelayTimer = 0;
     @Unique
     private boolean delayStaminaRegeneration = false;
     @Unique
     private int blockingTime = 0;
+    @Unique
+    private double oldPosX = 0.0;
+    @Unique
+    private double oldPosY = 0.0;
+    @Unique
+    private double oldPosZ = 0.0;
+    @Unique
+    private boolean isMoving = false;
 
     @Unique
     private static final TrackedData<Float> BLEEDING_BUILD_UP = DataTracker.registerData(LivingEntity.class, TrackedDataHandlerRegistry.FLOAT);
@@ -581,13 +601,18 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
         if (!source.isIn(DamageTypeTags.BYPASSES_ARMOR)) {
             this.damageArmor(source, amount);
         }
-        float vanilla_amount = 0;
 
+        float vanilla_amount = 0;
         if (source.isIn(Tags.IS_VANILLA)) {
             if (BetterAdventureModeClient.clientConfig.show_debug_log) {
                 BetterAdventureMode.info("This vanilla damage type was used: " + source.getType().toString());
             }
             vanilla_amount = amount;
+        }
+
+        float true_amount = 0;
+        if (source.isIn(Tags.IS_TRUE_DAMAGE)) {
+            true_amount = amount;
         }
 
         float bashing_multiplier = source.isIn(Tags.HAS_BASHING_DIVISION_OF_1) ? 1.0f : source.isIn(Tags.HAS_BASHING_DIVISION_OF_0_9) ? 0.9f : source.isIn(Tags.HAS_BASHING_DIVISION_OF_0_8) ? 0.8f : source.isIn(Tags.HAS_BASHING_DIVISION_OF_0_7) ? 0.7f : source.isIn(Tags.HAS_BASHING_DIVISION_OF_0_6) ? 0.6f : source.isIn(Tags.HAS_BASHING_DIVISION_OF_0_5) ? 0.5f : source.isIn(Tags.HAS_BASHING_DIVISION_OF_0_4) ? 0.4f : source.isIn(Tags.HAS_BASHING_DIVISION_OF_0_3) ? 0.3f : source.isIn(Tags.HAS_BASHING_DIVISION_OF_0_2) ? 0.2f : source.isIn(Tags.HAS_BASHING_DIVISION_OF_0_1) ? 0.1f : 0;
@@ -683,7 +708,7 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
                     this.getWorld().sendEntityStatus(this, EntityStatuses.BREAK_SHIELD);
                 }
             }
-        } else {
+        } else if (!source.isIn(Tags.IS_TRUE_DAMAGE)) {
             this.stopUsingItem();
         }
         // endregion shield blocks
@@ -738,19 +763,22 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
         // endregion apply resistances/armor
 
 
-        float appliedDamage = piercing_amount + bashing_amount + slashing_amount + vanilla_amount;
+        float applied_damage = piercing_amount + bashing_amount + slashing_amount + vanilla_amount;
 
         // taking damage interrupts eating food, drinking potions, etc
-        if (appliedDamage > 0.0f && !this.isBlocking()) {
+        if (applied_damage > 0.0f && !this.isBlocking()) {
             this.stopUsingItem();
         }
 
-        this.getDamageTracker().onDamage(source, appliedDamage);
-        this.setHealth(this.getHealth() - appliedDamage);
-        if (((LivingEntity) (Object) this) instanceof ServerPlayerEntity serverPlayerEntity && appliedDamage < 3.4028235E37f) {
-            serverPlayerEntity.increaseStat(Stats.DAMAGE_TAKEN, Math.round(appliedDamage * 10.0f));
+        applied_damage = applied_damage + true_amount;
+        if (applied_damage != 0.0F) {
+            this.getDamageTracker().onDamage(source, applied_damage);
+            this.setHealth(this.getHealth() - applied_damage);
+            if (((LivingEntity) (Object) this) instanceof ServerPlayerEntity serverPlayerEntity && applied_damage < 3.4028235E37f) {
+                serverPlayerEntity.increaseStat(Stats.DAMAGE_TAKEN, Math.round(applied_damage * 10.0f));
+            }
+            this.emitGameEvent(GameEvent.ENTITY_DAMAGE);
         }
-        this.emitGameEvent(GameEvent.ENTITY_DAMAGE);
 
         // apply bleeding
         float appliedBleeding = (float) ((piercing_amount * 0.5) + (slashing_amount * 0.5));
@@ -801,9 +829,12 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
     @Inject(method = "tick", at = @At("TAIL"))
     public void betteradventuremode$tick(CallbackInfo ci) {
         if (!this.getWorld().isClient) {
-            if (this.betteradventuremode$getStaggerBuildUp() > 0) {
-                this.betteradventuremode$addStaggerBuildUp((float) -(this.getMaxHealth() * this.betteradventuremode$getMaxStaggerBuildUp() * 0.01));
-            }
+
+            this.isMoving = this.oldPosX != this.getX() || this.oldPosY != this.getY() || this.oldPosZ != this.getZ();
+            this.oldPosX = this.getX();
+            this.oldPosY = this.getY();
+            this.oldPosZ = this.getZ();
+
             if (this.isBlocking()) {
                 this.blockingTime++;
             } else if (this.blockingTime > 0) {
@@ -850,6 +881,97 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
                 this.manaTickTimer = 0;
             }
 
+            if (this.betteradventuremode$getBleedingBuildUp() > 0) {
+                this.bleedingTickTimer++;
+                if (this.bleedingTickTimer >= this.betteradventuremode$getBleedingTickThreshold()) {
+                    if (this.betteradventuremode$getBleedingBuildUp() >= this.betteradventuremode$getMaxBleedingBuildUp()) {
+                        this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.BLEEDING, this.betteradventuremode$getBleedingDuration(), 0, false, false, true));
+                        this.betteradventuremode$setBleedingBuildUp(-this.betteradventuremode$getMaxBleedingBuildUp());
+                    } else {
+                        this.betteradventuremode$addBleedingBuildUp(-1);
+                    }
+                    this.bleedingTickTimer = 0;
+                }
+            }
+
+            if (this.betteradventuremode$getBurnBuildUp() > 0) {
+                this.burnTickTimer++;
+                if (this.burnTickTimer >= this.betteradventuremode$getBurnTickThreshold()) {
+                    if (this.betteradventuremode$getBurnBuildUp() >= this.betteradventuremode$getMaxBurnBuildUp()) {
+                        int burnDuration = this.betteradventuremode$getBurnDuration();
+                        StatusEffectInstance statusEffectInstance = this.getStatusEffect(StatusEffectsRegistry.BURNING);
+                        if (statusEffectInstance != null) {
+                            burnDuration = burnDuration + statusEffectInstance.getDuration();
+                        }
+                        this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.BURNING, burnDuration, 0, false, false, true));
+                        this.betteradventuremode$setBurnBuildUp(0);
+                    } else {
+                        this.betteradventuremode$addBurnBuildUp(-1);
+                    }
+                    this.burnTickTimer = 0;
+                }
+            }
+
+            if (this.betteradventuremode$getFreezeBuildUp() > 0) {
+                this.freezeTickTimer++;
+                if (this.freezeTickTimer >= this.betteradventuremode$getFreezeTickThreshold()) {
+                    if (this.betteradventuremode$getFreezeBuildUp() >= this.betteradventuremode$getMaxFreezeBuildUp()) {
+                        this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.FROZEN, this.betteradventuremode$getFreezeDuration(), 0, false, false, true));
+                        this.betteradventuremode$setFreezeBuildUp(0);
+                    } else {
+                        this.betteradventuremode$addFreezeBuildUp(-1);
+                    }
+                    this.freezeTickTimer = 0;
+                }
+            }
+
+//            if (this.betteradventuremode$getStaggerBuildUp() > 0) {
+//                this.betteradventuremode$addStaggerBuildUp((float) -(this.getMaxHealth() * this.betteradventuremode$getMaxStaggerBuildUp() * 0.01));
+//            }
+            if (this.betteradventuremode$getStaggerBuildUp() > 0) {
+                this.staggerTickTimer++;
+                if (this.staggerTickTimer >= this.betteradventuremode$getStaggerTickThreshold()) {
+                    if (this.betteradventuremode$getStaggerBuildUp() >= this.betteradventuremode$getMaxStaggerBuildUp()) {
+                        this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.STAGGERED, this.betteradventuremode$getStaggerDuration(), 0, false, false, true));
+                        this.betteradventuremode$setStaggerBuildUp(0);
+                    } else {
+                        this.betteradventuremode$addStaggerBuildUp(-1);
+                    }
+                    this.staggerTickTimer = 0;
+                }
+            }
+
+            if (this.betteradventuremode$getPoisonBuildUp() > 0) {
+                this.poisonTickTimer++;
+                if (this.poisonTickTimer >= this.betteradventuremode$getPoisonTickThreshold()) {
+                    if (this.betteradventuremode$getPoisonBuildUp() >= this.betteradventuremode$getMaxPoisonBuildUp()) {
+                        int poisonAmplifier = 0;
+                        StatusEffectInstance statusEffectInstance = this.getStatusEffect(StatusEffectsRegistry.POISON);
+                        if (statusEffectInstance != null) {
+                            poisonAmplifier = statusEffectInstance.getAmplifier() + 1;
+                        }
+                        this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.POISON, this.betteradventuremode$getPoisonDuration(), poisonAmplifier, false, false, true));
+                        this.betteradventuremode$setPoisonBuildUp(0);
+                    } else {
+                        this.betteradventuremode$addPoisonBuildUp(-1);
+                    }
+                    this.poisonTickTimer = 0;
+                }
+            }
+
+            if (this.betteradventuremode$getShockBuildUp() > 0) {
+                this.shockTickTimer++;
+                if (this.shockTickTimer >= this.betteradventuremode$getShockTickThreshold()) {
+                    if (this.betteradventuremode$getShockBuildUp() >= this.betteradventuremode$getMaxShockBuildUp()) {
+                        this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.SHOCKED, this.betteradventuremode$getShockDuration(), 0, false, false, false));
+                        this.betteradventuremode$setShockBuildUp(0);
+                    } else {
+                        this.betteradventuremode$addShockBuildUp(-1);
+                    }
+                    this.shockTickTimer = 0;
+                }
+            }
+
             StatusEffectInstance burningStatusEffectInstance = this.getStatusEffect(StatusEffectsRegistry.BURNING);
             if (burningStatusEffectInstance != null && this.isTouchingWaterOrRain()) {
                 int oldBurnDuration = burningStatusEffectInstance.getDuration();
@@ -857,29 +979,6 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
                 this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.BURNING, oldBurnDuration - 5, 0, false, false, true));
             }
 
-            if (this.betteradventuremode$getBleedingBuildUp() > 0) {
-                this.betteradventuremode$addBleedingBuildUp(-1);
-            }
-
-            if (this.betteradventuremode$getBurnBuildUp() > 0) {
-                this.betteradventuremode$addBurnBuildUp(-1);
-            }
-
-            if (this.betteradventuremode$getFreezeBuildUp() > 0) {
-                this.betteradventuremode$addFreezeBuildUp(-1);
-            }
-
-            if (this.betteradventuremode$getStaggerBuildUp() > 0) {
-                this.betteradventuremode$addStaggerBuildUp(-1);
-            }
-
-            if (this.betteradventuremode$getPoisonBuildUp() > 0) {
-                this.betteradventuremode$addPoisonBuildUp(-1);
-            }
-
-            if (this.betteradventuremode$getShockBuildUp() > 0) {
-                this.betteradventuremode$addShockBuildUp(-1);
-            }
         }
     }
 
@@ -909,6 +1008,36 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
     }
 
     @Override
+    public int betteradventuremode$getBleedingTickThreshold() {
+        return 20;
+    }
+
+    @Override
+    public int betteradventuremode$getBurnTickThreshold() {
+        return 20;
+    }
+
+    @Override
+    public int betteradventuremode$getFreezeTickThreshold() {
+        return 20;
+    }
+
+    @Override
+    public int betteradventuremode$getStaggerTickThreshold() {
+        return 20;
+    }
+
+    @Override
+    public int betteradventuremode$getPoisonTickThreshold() {
+        return 20;
+    }
+
+    @Override
+    public int betteradventuremode$getShockTickThreshold() {
+        return 20;
+    }
+
+    @Override
     public float betteradventuremode$getRegeneratedHealth() {
         return this.betteradventuremode$getHealthRegeneration();
     }
@@ -926,12 +1055,11 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
     // region bleeding build up
     @Override
     public void betteradventuremode$addBleedingBuildUp(float amount) {
-        if (!(this.betteradventuremode$getMaxBleedingBuildUp() == -1.0f && this.hasStatusEffect(StatusEffectsRegistry.BLEEDING))) {
+        if (!(this.betteradventuremode$getMaxBleedingBuildUp() == -1.0f || this.hasStatusEffect(StatusEffectsRegistry.BLEEDING))) {
             float f = this.betteradventuremode$getBleedingBuildUp();
             this.betteradventuremode$setBleedingBuildUp(f + amount);
-            if (this.betteradventuremode$getBleedingBuildUp() >= this.betteradventuremode$getMaxBleedingBuildUp()) {
-                this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.BLEEDING, this.betteradventuremode$getBleedingDuration(), 0, false, false, true));
-                this.betteradventuremode$setBleedingBuildUp(-this.betteradventuremode$getMaxBleedingBuildUp());
+            if (amount > 0) {
+                this.bleedingTickTimer = this.betteradventuremode$getBleedingTickThreshold();
             }
         }
     }
@@ -953,7 +1081,7 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
 
     @Override
     public int betteradventuremode$getBleedingDuration() {
-        return 20;
+        return 200;
     }
     // endregion bleeding build up
 
@@ -963,14 +1091,8 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
         if (!(this.betteradventuremode$getMaxBurnBuildUp() == -1.0f)) {
             float f = this.betteradventuremode$getBurnBuildUp();
             this.betteradventuremode$setBurnBuildUp(f + amount);
-            if (this.betteradventuremode$getBurnBuildUp() >= this.betteradventuremode$getMaxBurnBuildUp()) {
-                int burnDuration = this.betteradventuremode$getBurnDuration();
-                StatusEffectInstance statusEffectInstance = this.getStatusEffect(StatusEffectsRegistry.BURNING);
-                if (statusEffectInstance != null) {
-                    burnDuration = burnDuration + statusEffectInstance.getDuration();
-                }
-                this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.BURNING, burnDuration, 0, false, false, true));
-                this.betteradventuremode$setBurnBuildUp(0);
+            if (amount > 0) {
+                this.burnTickTimer = this.betteradventuremode$getBurnTickThreshold();
             }
         }
     }
@@ -992,19 +1114,18 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
 
     @Override
     public int betteradventuremode$getBurnDuration() {
-        return 20;
+        return 351;
     }
     // endregion burn build up
 
     // region freeze build up
     @Override
     public void betteradventuremode$addFreezeBuildUp(float amount) {
-        if (!(this.betteradventuremode$getMaxFreezeBuildUp() == -1.0f && this.hasStatusEffect(StatusEffectsRegistry.FROZEN))) {
+        if (!(this.betteradventuremode$getMaxFreezeBuildUp() == -1.0f || this.hasStatusEffect(StatusEffectsRegistry.FROZEN))) {
             float f = this.betteradventuremode$getFreezeBuildUp();
             this.betteradventuremode$setFreezeBuildUp(f + amount);
-            if (this.betteradventuremode$getFreezeBuildUp() >= this.betteradventuremode$getMaxFreezeBuildUp()) {
-                this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.FROZEN, this.betteradventuremode$getFreezeDuration(), 0, false, false, true));
-                this.betteradventuremode$setFreezeBuildUp(0);
+            if (amount > 0) {
+                this.freezeTickTimer = this.betteradventuremode$getFreezeTickThreshold();
             }
         }
     }
@@ -1036,9 +1157,8 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
         if (!(this.betteradventuremode$getMaxStaggerBuildUp() == -1.0f || this.hasStatusEffect(StatusEffectsRegistry.STAGGERED))) {
             float f = this.betteradventuremode$getStaggerBuildUp();
             this.betteradventuremode$setStaggerBuildUp(f + amount);
-            if (this.betteradventuremode$getStaggerBuildUp() >= this.betteradventuremode$getMaxStaggerBuildUp()) {
-                this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.STAGGERED, this.betteradventuremode$getStaggerDuration(), 0, false, false, true));
-                this.betteradventuremode$setStaggerBuildUp(0);
+            if (amount > 0) {
+                this.staggerTickTimer = this.betteradventuremode$getStaggerTickThreshold();
             }
         }
     }
@@ -1055,12 +1175,13 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
 
     @Override
     public float betteradventuremode$getMaxStaggerBuildUp() {
-        return this.getMaxHealth() * 0.5f;
+//        return this.getMaxHealth() * 0.5f;
+        return 20.0f;
     }
 
     @Override
     public int betteradventuremode$getStaggerDuration() {
-        return 20;
+        return 200;
     }
     // endregion stagger build up
 
@@ -1070,14 +1191,8 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
         if (!(this.betteradventuremode$getMaxPoisonBuildUp() == -1.0f)) {
             float f = this.betteradventuremode$getPoisonBuildUp();
             this.betteradventuremode$setPoisonBuildUp(f + amount);
-            if (this.betteradventuremode$getPoisonBuildUp() >= this.betteradventuremode$getMaxPoisonBuildUp()) {
-                int poisonAmplifier = 0;
-                StatusEffectInstance statusEffectInstance = this.getStatusEffect(StatusEffectsRegistry.POISON);
-                if (statusEffectInstance != null) {
-                    poisonAmplifier = statusEffectInstance.getAmplifier() + 1;
-                }
-                this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.POISON, this.betteradventuremode$getPoisonDuration(), poisonAmplifier, false, false, true));
-                this.betteradventuremode$setPoisonBuildUp(0);
+            if (amount > 0) {
+                this.poisonTickTimer = this.betteradventuremode$getPoisonTickThreshold();
             }
         }
     }
@@ -1109,9 +1224,8 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
         if (!(this.betteradventuremode$getMaxShockBuildUp() == -1.0f)) {
             float f = this.betteradventuremode$getShockBuildUp();
             this.betteradventuremode$setShockBuildUp(f + amount);
-            if (this.betteradventuremode$getShockBuildUp() >= this.betteradventuremode$getMaxShockBuildUp()) {
-                this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.SHOCKED, this.betteradventuremode$getShockDuration(), 0, false, false, true));
-                this.betteradventuremode$setShockBuildUp(0);
+            if (amount > 0) {
+                this.shockTickTimer = this.betteradventuremode$getShockTickThreshold();
             }
         }
     }
@@ -1205,4 +1319,8 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
         return false;
     }
 
+    @Override
+    public boolean betteradventuremode$isMoving() {
+        return this.isMoving;
+    }
 }

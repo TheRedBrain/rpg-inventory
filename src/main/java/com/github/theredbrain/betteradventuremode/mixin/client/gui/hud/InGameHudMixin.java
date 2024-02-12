@@ -184,29 +184,29 @@ public abstract class InGameHudMixin {
             int bleedingBuildUp = MathHelper.ceil(((DuckLivingEntityMixin) playerEntity).betteradventuremode$getBleedingBuildUp());
             int maxBleedingBuildUp = MathHelper.ceil(((DuckLivingEntityMixin) playerEntity).betteradventuremode$getMaxBleedingBuildUp());
             int burnBuildUp = MathHelper.ceil(((DuckLivingEntityMixin) playerEntity).betteradventuremode$getBurnBuildUp());
-            int maxBurnBuildUp = MathHelper.ceil(((DuckLivingEntityMixin) playerEntity).betteradventuremode$getBurnBuildUp());
+            int maxBurnBuildUp = MathHelper.ceil(((DuckLivingEntityMixin) playerEntity).betteradventuremode$getMaxBurnBuildUp());
             int freezeBuildUp = MathHelper.ceil(((DuckLivingEntityMixin) playerEntity).betteradventuremode$getFreezeBuildUp());
-            int maxFreezeBuildUp = MathHelper.ceil(((DuckLivingEntityMixin) playerEntity).betteradventuremode$getFreezeBuildUp());
+            int maxFreezeBuildUp = MathHelper.ceil(((DuckLivingEntityMixin) playerEntity).betteradventuremode$getMaxFreezeBuildUp());
             int staggerBuildUp = MathHelper.ceil(((DuckLivingEntityMixin) playerEntity).betteradventuremode$getStaggerBuildUp());
             int maxStaggerBuildUp = MathHelper.ceil(((DuckLivingEntityMixin) playerEntity).betteradventuremode$getMaxStaggerBuildUp());
             int poisonBuildUp = MathHelper.ceil(((DuckLivingEntityMixin) playerEntity).betteradventuremode$getPoisonBuildUp());
-            int maxPoisonBuildUp = MathHelper.ceil(((DuckLivingEntityMixin) playerEntity).betteradventuremode$getPoisonBuildUp());
+            int maxPoisonBuildUp = MathHelper.ceil(((DuckLivingEntityMixin) playerEntity).betteradventuremode$getMaxPoisonBuildUp());
             int shockBuildUp = MathHelper.ceil(((DuckLivingEntityMixin) playerEntity).betteradventuremode$getShockBuildUp());
-            int maxShockBuildUp = MathHelper.ceil(((DuckLivingEntityMixin) playerEntity).betteradventuremode$getShockBuildUp());
+            int maxShockBuildUp = MathHelper.ceil(((DuckLivingEntityMixin) playerEntity).betteradventuremode$getMaxShockBuildUp());
 
             int attributeBarX = this.scaledWidth / 2 - 91;
             int attributeBarY = this.scaledHeight - 32 + 2;
             int attributeBarNumberX;
             int attributeBarNumberY;
-            int normalizedHealthRatio = (health / Math.max(maxHealth, 1)) * 182;
-            int normalizedStaminaRatio = (stamina / Math.max(maxStamina, 1)) * 182;
-            int normalizedManaRatio = (mana / Math.max(maxMana, 1)) * 182;
-            int normalizedBleedingBuildUpRatio = (bleedingBuildUp / Math.max(maxBleedingBuildUp, 1)) * 62;
-            int normalizedBurnBuildUpRatio = (burnBuildUp / Math.max(maxBurnBuildUp, 1)) * 62;
-            int normalizedFreezeBuildUpRatio = (freezeBuildUp / Math.max(maxFreezeBuildUp, 1)) * 62;
-            int normalizedStaggerBuildUpRatio = (staggerBuildUp / Math.max(maxStaggerBuildUp, 1)) * 62;
-            int normalizedPoisonBuildUpRatio = (poisonBuildUp / Math.max(maxPoisonBuildUp, 1)) * 62;
-            int normalizedShockBuildUpRatio = (shockBuildUp / Math.max(maxShockBuildUp, 1)) * 62;
+            int normalizedHealthRatio = (int) (((double) health / Math.max(maxHealth, 1)) * 182);
+            int normalizedStaminaRatio = (int) (((double) stamina / Math.max(maxStamina, 1)) * 182);
+            int normalizedManaRatio = (int) (((double) mana / Math.max(maxMana, 1)) * 182);
+            int normalizedBleedingBuildUpRatio = (int) (((double) bleedingBuildUp / Math.max(maxBleedingBuildUp, 1)) * 62);
+            int normalizedBurnBuildUpRatio = (int) (((double) burnBuildUp / Math.max(maxBurnBuildUp, 1)) * 62);
+            int normalizedFreezeBuildUpRatio = (int) (((double) freezeBuildUp / Math.max(maxFreezeBuildUp, 1)) * 62);
+            int normalizedStaggerBuildUpRatio = (int) (((double) staggerBuildUp / Math.max(maxStaggerBuildUp, 1)) * 62);
+            int normalizedPoisonBuildUpRatio = (int) (((double) poisonBuildUp / Math.max(maxPoisonBuildUp, 1)) * 62);
+            int normalizedShockBuildUpRatio = (int) (((double) shockBuildUp / Math.max(maxShockBuildUp, 1)) * 62);
 
             this.client.getProfiler().push("health_bar");
             context.drawGuiTexture(HEALTH_BAR_BACKGROUND_TEXTURE, attributeBarX, attributeBarY, 182, 5);
@@ -215,7 +215,7 @@ public abstract class InGameHudMixin {
             }
             if (BetterAdventureModeClient.clientConfig.show_resource_bar_numbers) {
                 this.client.getProfiler().swap("health_bar_number");
-                String string = "" + health;
+                String string = String.valueOf(health);
                 attributeBarNumberX = (this.scaledWidth - this.getTextRenderer().getWidth(string)) / 2;
                 attributeBarNumberY = attributeBarY - 1;
                 context.drawText(this.getTextRenderer(), string, attributeBarNumberX + 1, attributeBarNumberY, 0, false);
@@ -232,7 +232,7 @@ public abstract class InGameHudMixin {
             }
             if (BetterAdventureModeClient.clientConfig.show_resource_bar_numbers) {
                 this.client.getProfiler().swap("stamina_bar_number");
-                String string = "" + stamina;
+                String string = String.valueOf(stamina);
                 attributeBarNumberX = (this.scaledWidth - this.getTextRenderer().getWidth(string)) / 2;
                 attributeBarNumberY = attributeBarY - 10;
                 context.drawText(this.getTextRenderer(), string, attributeBarNumberX + 1, attributeBarNumberY, 0, false);
@@ -250,7 +250,7 @@ public abstract class InGameHudMixin {
                 }
                 if (BetterAdventureModeClient.clientConfig.show_resource_bar_numbers) {
                     this.client.getProfiler().swap("mana_bar_number");
-                    String string = "" + mana;
+                    String string = String.valueOf(mana);
                     attributeBarNumberX = (this.scaledWidth - this.getTextRenderer().getWidth(string)) / 2;
                     attributeBarNumberY = attributeBarY - 19;
                     context.drawText(this.getTextRenderer(), string, attributeBarNumberX + 1, attributeBarNumberY, 0, false);
