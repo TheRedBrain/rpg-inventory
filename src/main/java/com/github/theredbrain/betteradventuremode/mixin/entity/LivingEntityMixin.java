@@ -135,23 +135,32 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
     @Shadow
     public abstract @Nullable StatusEffectInstance getStatusEffect(StatusEffect effect);
 
-    @Shadow public abstract void damageArmor(DamageSource source, float amount);
+    @Shadow
+    public abstract void damageArmor(DamageSource source, float amount);
 
-    @Shadow public abstract int getArmor();
+    @Shadow
+    public abstract int getArmor();
 
-    @Shadow public abstract double getAttributeValue(EntityAttribute attribute);
+    @Shadow
+    public abstract double getAttributeValue(EntityAttribute attribute);
 
-    @Shadow public abstract ItemStack getOffHandStack();
+    @Shadow
+    public abstract ItemStack getOffHandStack();
 
-    @Shadow public abstract boolean isBlocking();
+    @Shadow
+    public abstract boolean isBlocking();
 
-    @Shadow public abstract boolean blockedByShield(DamageSource source);
+    @Shadow
+    public abstract boolean blockedByShield(DamageSource source);
 
-    @Shadow public abstract void stopUsingItem();
+    @Shadow
+    public abstract void stopUsingItem();
 
-    @Shadow public abstract boolean removeStatusEffect(StatusEffect type);
+    @Shadow
+    public abstract boolean removeStatusEffect(StatusEffect type);
 
-    @Shadow public abstract boolean addStatusEffect(StatusEffectInstance effect, @Nullable Entity source);
+    @Shadow
+    public abstract boolean addStatusEffect(StatusEffectInstance effect, @Nullable Entity source);
 
     @Unique
     private int healthTickTimer = 0;
@@ -513,14 +522,6 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
         if (!source.isIn(DamageTypeTags.BYPASSES_ARMOR)) {
             this.damageArmor(source, amount);
         }
-        float bashing_amount = 0;
-        float piercing_amount = 0;
-        float slashing_amount = 0;
-        float poison_amount = 0;
-        float fire_amount = 0;
-        float frost_amount = 0;
-        float lightning_amount = 0;
-        float burning_amount = 0;
         float vanilla_amount = 0;
 
         if (source.isIn(Tags.IS_VANILLA)) {
@@ -529,80 +530,27 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
             }
             vanilla_amount = amount;
         }
-        if (source.isIn(Tags.IS_BASHING)) {
 
-            bashing_amount = amount;
+        float bashing_multiplier = source.isIn(Tags.HAS_BASHING_DIVISION_OF_1) ? 1.0f : source.isIn(Tags.HAS_BASHING_DIVISION_OF_0_9) ? 0.9f : source.isIn(Tags.HAS_BASHING_DIVISION_OF_0_8) ? 0.8f : source.isIn(Tags.HAS_BASHING_DIVISION_OF_0_7) ? 0.7f : source.isIn(Tags.HAS_BASHING_DIVISION_OF_0_6) ? 0.6f : source.isIn(Tags.HAS_BASHING_DIVISION_OF_0_5) ? 0.5f : source.isIn(Tags.HAS_BASHING_DIVISION_OF_0_4) ? 0.4f : source.isIn(Tags.HAS_BASHING_DIVISION_OF_0_3) ? 0.3f : source.isIn(Tags.HAS_BASHING_DIVISION_OF_0_2) ? 0.2f : source.isIn(Tags.HAS_BASHING_DIVISION_OF_0_1) ? 0.1f : 0;
+        float bashing_amount = amount * bashing_multiplier;
 
-            if (source.isIn(Tags.HAS_BASHING_DIVISION_OF_0_5)) {
-                bashing_amount = (float) (bashing_amount * 0.5);
-            }
-        }
-        if (source.isIn(Tags.IS_PIERCING)) {
-            
-            piercing_amount = amount;
+        float piercing_multiplier = source.isIn(Tags.HAS_PIERCING_DIVISION_OF_1) ? 1.0f : source.isIn(Tags.HAS_PIERCING_DIVISION_OF_0_9) ? 0.9f : source.isIn(Tags.HAS_PIERCING_DIVISION_OF_0_8) ? 0.8f : source.isIn(Tags.HAS_PIERCING_DIVISION_OF_0_7) ? 0.7f : source.isIn(Tags.HAS_PIERCING_DIVISION_OF_0_6) ? 0.6f : source.isIn(Tags.HAS_PIERCING_DIVISION_OF_0_5) ? 0.5f : source.isIn(Tags.HAS_PIERCING_DIVISION_OF_0_4) ? 0.4f : source.isIn(Tags.HAS_PIERCING_DIVISION_OF_0_3) ? 0.3f : source.isIn(Tags.HAS_PIERCING_DIVISION_OF_0_2) ? 0.2f : source.isIn(Tags.HAS_PIERCING_DIVISION_OF_0_1) ? 0.1f : 0;
+        float piercing_amount = amount * piercing_multiplier;
 
-            if (source.isIn(Tags.HAS_PIERCING_DIVISION_OF_0_5)) {
-                piercing_amount = (float) (piercing_amount * 0.5);
-            }
-        }
-        if (source.isIn(Tags.IS_SLASHING)) {
-            
-            bashing_amount = amount;
+        float slashing_multiplier = source.isIn(Tags.HAS_SLASHING_DIVISION_OF_1) ? 1.0f : source.isIn(Tags.HAS_SLASHING_DIVISION_OF_0_9) ? 0.9f : source.isIn(Tags.HAS_SLASHING_DIVISION_OF_0_8) ? 0.8f : source.isIn(Tags.HAS_SLASHING_DIVISION_OF_0_7) ? 0.7f : source.isIn(Tags.HAS_SLASHING_DIVISION_OF_0_6) ? 0.6f : source.isIn(Tags.HAS_SLASHING_DIVISION_OF_0_5) ? 0.5f : source.isIn(Tags.HAS_SLASHING_DIVISION_OF_0_4) ? 0.4f : source.isIn(Tags.HAS_SLASHING_DIVISION_OF_0_3) ? 0.3f : source.isIn(Tags.HAS_SLASHING_DIVISION_OF_0_2) ? 0.2f : source.isIn(Tags.HAS_SLASHING_DIVISION_OF_0_1) ? 0.1f : 0;
+        float slashing_amount = amount * slashing_multiplier;
 
-            if (source.isIn(Tags.HAS_SLASHING_DIVISION_OF_0_5)) {
-                bashing_amount = (float) (bashing_amount * 0.5);
-            }
-        }
+        float poison_multiplier = source.isIn(Tags.HAS_POISON_DIVISION_OF_1) ? 1.0f : source.isIn(Tags.HAS_POISON_DIVISION_OF_0_9) ? 0.9f : source.isIn(Tags.HAS_POISON_DIVISION_OF_0_8) ? 0.8f : source.isIn(Tags.HAS_POISON_DIVISION_OF_0_7) ? 0.7f : source.isIn(Tags.HAS_POISON_DIVISION_OF_0_6) ? 0.6f : source.isIn(Tags.HAS_POISON_DIVISION_OF_0_5) ? 0.5f : source.isIn(Tags.HAS_POISON_DIVISION_OF_0_4) ? 0.4f : source.isIn(Tags.HAS_POISON_DIVISION_OF_0_3) ? 0.3f : source.isIn(Tags.HAS_POISON_DIVISION_OF_0_2) ? 0.2f : source.isIn(Tags.HAS_POISON_DIVISION_OF_0_1) ? 0.1f : 0;
+        float poison_amount = amount * poison_multiplier;
 
-        if (source.isIn(Tags.APPLIES_POISONED)) {
+        float fire_multiplier = source.isIn(Tags.HAS_FIRE_DIVISION_OF_1) ? 1.0f : source.isIn(Tags.HAS_FIRE_DIVISION_OF_0_9) ? 0.9f : source.isIn(Tags.HAS_FIRE_DIVISION_OF_0_8) ? 0.8f : source.isIn(Tags.HAS_FIRE_DIVISION_OF_0_7) ? 0.7f : source.isIn(Tags.HAS_FIRE_DIVISION_OF_0_6) ? 0.6f : source.isIn(Tags.HAS_FIRE_DIVISION_OF_0_5) ? 0.5f : source.isIn(Tags.HAS_FIRE_DIVISION_OF_0_4) ? 0.4f : source.isIn(Tags.HAS_FIRE_DIVISION_OF_0_3) ? 0.3f : source.isIn(Tags.HAS_FIRE_DIVISION_OF_0_2) ? 0.2f : source.isIn(Tags.HAS_FIRE_DIVISION_OF_0_1) ? 0.1f : 0;
+        float fire_amount = amount * fire_multiplier;
 
-            poison_amount = amount;
+        float frost_multiplier = source.isIn(Tags.HAS_FROST_DIVISION_OF_1) ? 1.0f : source.isIn(Tags.HAS_FROST_DIVISION_OF_0_9) ? 0.9f : source.isIn(Tags.HAS_FROST_DIVISION_OF_0_8) ? 0.8f : source.isIn(Tags.HAS_FROST_DIVISION_OF_0_7) ? 0.7f : source.isIn(Tags.HAS_FROST_DIVISION_OF_0_6) ? 0.6f : source.isIn(Tags.HAS_FROST_DIVISION_OF_0_5) ? 0.5f : source.isIn(Tags.HAS_FROST_DIVISION_OF_0_4) ? 0.4f : source.isIn(Tags.HAS_FROST_DIVISION_OF_0_3) ? 0.3f : source.isIn(Tags.HAS_FROST_DIVISION_OF_0_2) ? 0.2f : source.isIn(Tags.HAS_FROST_DIVISION_OF_0_1) ? 0.1f : 0;
+        float frost_amount = amount * frost_multiplier;
 
-            if (source.isIn(Tags.HAS_APPLIES_POISONED_DIVISION_OF_0_5)) {
-                poison_amount = (float) (poison_amount * 0.5);
-            }
-
-        }
-
-        if (source.isIn(Tags.APPLIES_BURNING)) {
-
-            fire_amount = amount;
-
-            if (source.isIn(Tags.HAS_APPLIES_BURNING_DIVISION_OF_0_5)) {
-                fire_amount = (float) (fire_amount * 0.5);
-            }
-
-        }
-
-        if (source.isIn(Tags.APPLIES_CHILLED_AND_FREEZING)) {
-
-            frost_amount = amount;
-
-            if (source.isIn(Tags.HAS_APPLIES_CHILLED_AND_FREEZING_DIVISION_OF_0_5)) {
-                frost_amount = (float) (frost_amount * 0.5);
-            }
-
-        }
-
-        if (source.isIn(Tags.IS_LIGHTNING)) {
-
-            lightning_amount = amount;
-
-            if (source.isIn(Tags.HAS_LIGHTNING_DIVISION_OF_0_5)) {
-                lightning_amount = (float) (lightning_amount * 0.5);
-            }
-
-        }
-
-        if (source.isIn(Tags.IS_BURNING)) {
-
-            burning_amount = amount;
-
-            if (source.isIn(Tags.HAS_BURNING_DIVISION_OF_0_5)) {
-                burning_amount = (float) (burning_amount * 0.5);
-            }
-
-        }
+        float lightning_multiplier = source.isIn(Tags.HAS_LIGHTNING_DIVISION_OF_1) ? 1.0f : source.isIn(Tags.HAS_LIGHTNING_DIVISION_OF_0_9) ? 0.9f : source.isIn(Tags.HAS_LIGHTNING_DIVISION_OF_0_8) ? 0.8f : source.isIn(Tags.HAS_LIGHTNING_DIVISION_OF_0_7) ? 0.7f : source.isIn(Tags.HAS_LIGHTNING_DIVISION_OF_0_6) ? 0.6f : source.isIn(Tags.HAS_LIGHTNING_DIVISION_OF_0_5) ? 0.5f : source.isIn(Tags.HAS_LIGHTNING_DIVISION_OF_0_4) ? 0.4f : source.isIn(Tags.HAS_LIGHTNING_DIVISION_OF_0_3) ? 0.3f : source.isIn(Tags.HAS_LIGHTNING_DIVISION_OF_0_2) ? 0.2f : source.isIn(Tags.HAS_LIGHTNING_DIVISION_OF_0_1) ? 0.1f : 0;
+        float lightning_amount = amount * lightning_multiplier;
 
         if (attacker != null) {
             bashing_amount = (float) ((attacker.getAttributeValue(EntityAttributesRegistry.ADDITIONAL_BASHING_DAMAGE) + bashing_amount) * attacker.getAttributeValue(EntityAttributesRegistry.INCREASED_BASHING_DAMAGE));
@@ -668,7 +616,7 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
 
                         //
                         if (attacker != null) {
-                            attacker.takeKnockback(((BasicShieldItem)shieldItemStack.getItem()).getBlockForce(), attacker.getX() - this.getX(), attacker.getZ() - this.getZ());
+                            attacker.takeKnockback(((BasicShieldItem) shieldItemStack.getItem()).getBlockForce(), attacker.getX() - this.getX(), attacker.getZ() - this.getZ());
                         }
 
                     }
@@ -710,11 +658,11 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
             effectiveArmor = 0;
         }
 
-        if (burning_amount <= effectiveArmor) {
-            effectiveArmor -= burning_amount;
-            burning_amount = 0;
+        if (fire_amount <= effectiveArmor) {
+            effectiveArmor -= fire_amount;
+            fire_amount = 0;
         } else {
-            burning_amount -= effectiveArmor;
+            fire_amount -= effectiveArmor;
             effectiveArmor = 0;
         }
 

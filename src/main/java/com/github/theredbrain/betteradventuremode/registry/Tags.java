@@ -21,23 +21,86 @@ public class Tags {
     //endregion BlockTags
     //region DamageTypeTags
     public static final TagKey<DamageType> IS_VANILLA = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("is_vanilla"));
-    public static final TagKey<DamageType> APPLIES_POISONED = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("applies_poisoned"));
-    public static final TagKey<DamageType> HAS_APPLIES_POISONED_DIVISION_OF_0_5 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_applies_poisoned_division_of_0_5"));
-    public static final TagKey<DamageType> APPLIES_BURNING = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("applies_burning"));
-    public static final TagKey<DamageType> HAS_APPLIES_BURNING_DIVISION_OF_0_5 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_applies_burning_division_of_0_5"));
-    public static final TagKey<DamageType> IS_BURNING = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("is_burning"));
-    public static final TagKey<DamageType> HAS_BURNING_DIVISION_OF_0_5 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_burning_division_of_0_5"));
-    public static final TagKey<DamageType> APPLIES_CHILLED_AND_FREEZING = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("applies_chilled_and_freezing"));
-    public static final TagKey<DamageType> HAS_APPLIES_CHILLED_AND_FREEZING_DIVISION_OF_0_5 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_applies_chilled_and_freezing_division_of_0_5"));
-    public static final TagKey<DamageType> IS_LIGHTNING = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("is_lightning"));
-    public static final TagKey<DamageType> HAS_LIGHTNING_DIVISION_OF_0_5 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_lightning_division_of_0_5"));
-    public static final TagKey<DamageType> IS_BASHING = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("is_bashing"));
+
+    public static final TagKey<DamageType> HAS_BASHING_DIVISION_OF_0_1 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_bashing_division_of_0_1"));
+    public static final TagKey<DamageType> HAS_BASHING_DIVISION_OF_0_2 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_bashing_division_of_0_2"));
+    public static final TagKey<DamageType> HAS_BASHING_DIVISION_OF_0_3 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_bashing_division_of_0_3"));
+    public static final TagKey<DamageType> HAS_BASHING_DIVISION_OF_0_4 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_bashing_division_of_0_4"));
     public static final TagKey<DamageType> HAS_BASHING_DIVISION_OF_0_5 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_bashing_division_of_0_5"));
-    public static final TagKey<DamageType> IS_PIERCING = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("is_piercing"));
+    public static final TagKey<DamageType> HAS_BASHING_DIVISION_OF_0_6 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_bashing_division_of_0_6"));
+    public static final TagKey<DamageType> HAS_BASHING_DIVISION_OF_0_7 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_bashing_division_of_0_7"));
+    public static final TagKey<DamageType> HAS_BASHING_DIVISION_OF_0_8 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_bashing_division_of_0_8"));
+    public static final TagKey<DamageType> HAS_BASHING_DIVISION_OF_0_9 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_bashing_division_of_0_9"));
+    public static final TagKey<DamageType> HAS_BASHING_DIVISION_OF_1 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_bashing_division_of_1"));
+    
+    public static final TagKey<DamageType> HAS_PIERCING_DIVISION_OF_0_1 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_piercing_division_of_0_1"));
+    public static final TagKey<DamageType> HAS_PIERCING_DIVISION_OF_0_2 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_piercing_division_of_0_2"));
+    public static final TagKey<DamageType> HAS_PIERCING_DIVISION_OF_0_3 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_piercing_division_of_0_3"));
+    public static final TagKey<DamageType> HAS_PIERCING_DIVISION_OF_0_4 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_piercing_division_of_0_4"));
     public static final TagKey<DamageType> HAS_PIERCING_DIVISION_OF_0_5 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_piercing_division_of_0_5"));
-    public static final TagKey<DamageType> IS_SLASHING = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("is_slashing"));
+    public static final TagKey<DamageType> HAS_PIERCING_DIVISION_OF_0_6 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_piercing_division_of_0_6"));
+    public static final TagKey<DamageType> HAS_PIERCING_DIVISION_OF_0_7 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_piercing_division_of_0_7"));
+    public static final TagKey<DamageType> HAS_PIERCING_DIVISION_OF_0_8 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_piercing_division_of_0_8"));
+    public static final TagKey<DamageType> HAS_PIERCING_DIVISION_OF_0_9 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_piercing_division_of_0_9"));
+    public static final TagKey<DamageType> HAS_PIERCING_DIVISION_OF_1 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_piercing_division_of_1"));
+    
+    public static final TagKey<DamageType> HAS_SLASHING_DIVISION_OF_0_1 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_slashing_division_of_0_1"));
+    public static final TagKey<DamageType> HAS_SLASHING_DIVISION_OF_0_2 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_slashing_division_of_0_2"));
+    public static final TagKey<DamageType> HAS_SLASHING_DIVISION_OF_0_3 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_slashing_division_of_0_3"));
+    public static final TagKey<DamageType> HAS_SLASHING_DIVISION_OF_0_4 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_slashing_division_of_0_4"));
     public static final TagKey<DamageType> HAS_SLASHING_DIVISION_OF_0_5 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_slashing_division_of_0_5"));
+    public static final TagKey<DamageType> HAS_SLASHING_DIVISION_OF_0_6 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_slashing_division_of_0_6"));
+    public static final TagKey<DamageType> HAS_SLASHING_DIVISION_OF_0_7 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_slashing_division_of_0_7"));
+    public static final TagKey<DamageType> HAS_SLASHING_DIVISION_OF_0_8 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_slashing_division_of_0_8"));
+    public static final TagKey<DamageType> HAS_SLASHING_DIVISION_OF_0_9 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_slashing_division_of_0_9"));
+    public static final TagKey<DamageType> HAS_SLASHING_DIVISION_OF_1 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_slashing_division_of_1"));
+    
     public static final TagKey<DamageType> APPLIES_BLEEDING = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("applies_bleeding"));
+
+    public static final TagKey<DamageType> HAS_POISON_DIVISION_OF_0_1 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_poison_division_of_0_1"));
+    public static final TagKey<DamageType> HAS_POISON_DIVISION_OF_0_2 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_poison_division_of_0_2"));
+    public static final TagKey<DamageType> HAS_POISON_DIVISION_OF_0_3 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_poison_division_of_0_3"));
+    public static final TagKey<DamageType> HAS_POISON_DIVISION_OF_0_4 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_poison_division_of_0_4"));
+    public static final TagKey<DamageType> HAS_POISON_DIVISION_OF_0_5 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_poison_division_of_0_5"));
+    public static final TagKey<DamageType> HAS_POISON_DIVISION_OF_0_6 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_poison_division_of_0_6"));
+    public static final TagKey<DamageType> HAS_POISON_DIVISION_OF_0_7 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_poison_division_of_0_7"));
+    public static final TagKey<DamageType> HAS_POISON_DIVISION_OF_0_8 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_poison_division_of_0_8"));
+    public static final TagKey<DamageType> HAS_POISON_DIVISION_OF_0_9 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_poison_division_of_0_9"));
+    public static final TagKey<DamageType> HAS_POISON_DIVISION_OF_1 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_poison_division_of_1"));
+
+    public static final TagKey<DamageType> HAS_FIRE_DIVISION_OF_0_1 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_fire_division_of_0_1"));
+    public static final TagKey<DamageType> HAS_FIRE_DIVISION_OF_0_2 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_fire_division_of_0_2"));
+    public static final TagKey<DamageType> HAS_FIRE_DIVISION_OF_0_3 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_fire_division_of_0_3"));
+    public static final TagKey<DamageType> HAS_FIRE_DIVISION_OF_0_4 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_fire_division_of_0_4"));
+    public static final TagKey<DamageType> HAS_FIRE_DIVISION_OF_0_5 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_fire_division_of_0_5"));
+    public static final TagKey<DamageType> HAS_FIRE_DIVISION_OF_0_6 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_fire_division_of_0_6"));
+    public static final TagKey<DamageType> HAS_FIRE_DIVISION_OF_0_7 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_fire_division_of_0_7"));
+    public static final TagKey<DamageType> HAS_FIRE_DIVISION_OF_0_8 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_fire_division_of_0_8"));
+    public static final TagKey<DamageType> HAS_FIRE_DIVISION_OF_0_9 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_fire_division_of_0_9"));
+    public static final TagKey<DamageType> HAS_FIRE_DIVISION_OF_1 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_fire_division_of_1"));
+
+    public static final TagKey<DamageType> HAS_FROST_DIVISION_OF_0_1 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_frost_division_of_0_1"));
+    public static final TagKey<DamageType> HAS_FROST_DIVISION_OF_0_2 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_frost_division_of_0_2"));
+    public static final TagKey<DamageType> HAS_FROST_DIVISION_OF_0_3 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_frost_division_of_0_3"));
+    public static final TagKey<DamageType> HAS_FROST_DIVISION_OF_0_4 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_frost_division_of_0_4"));
+    public static final TagKey<DamageType> HAS_FROST_DIVISION_OF_0_5 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_frost_division_of_0_5"));
+    public static final TagKey<DamageType> HAS_FROST_DIVISION_OF_0_6 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_frost_division_of_0_6"));
+    public static final TagKey<DamageType> HAS_FROST_DIVISION_OF_0_7 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_frost_division_of_0_7"));
+    public static final TagKey<DamageType> HAS_FROST_DIVISION_OF_0_8 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_frost_division_of_0_8"));
+    public static final TagKey<DamageType> HAS_FROST_DIVISION_OF_0_9 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_frost_division_of_0_9"));
+    public static final TagKey<DamageType> HAS_FROST_DIVISION_OF_1 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_frost_division_of_1"));
+
+    public static final TagKey<DamageType> HAS_LIGHTNING_DIVISION_OF_0_1 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_lightning_division_of_0_1"));
+    public static final TagKey<DamageType> HAS_LIGHTNING_DIVISION_OF_0_2 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_lightning_division_of_0_2"));
+    public static final TagKey<DamageType> HAS_LIGHTNING_DIVISION_OF_0_3 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_lightning_division_of_0_3"));
+    public static final TagKey<DamageType> HAS_LIGHTNING_DIVISION_OF_0_4 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_lightning_division_of_0_4"));
+    public static final TagKey<DamageType> HAS_LIGHTNING_DIVISION_OF_0_5 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_lightning_division_of_0_5"));
+    public static final TagKey<DamageType> HAS_LIGHTNING_DIVISION_OF_0_6 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_lightning_division_of_0_6"));
+    public static final TagKey<DamageType> HAS_LIGHTNING_DIVISION_OF_0_7 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_lightning_division_of_0_7"));
+    public static final TagKey<DamageType> HAS_LIGHTNING_DIVISION_OF_0_8 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_lightning_division_of_0_8"));
+    public static final TagKey<DamageType> HAS_LIGHTNING_DIVISION_OF_0_9 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_lightning_division_of_0_9"));
+    public static final TagKey<DamageType> HAS_LIGHTNING_DIVISION_OF_1 = TagKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("has_lightning_division_of_1"));
+
     //endregion DamageTypeTags
     //region ItemTags
     public static final TagKey<Item> INTERACTIVE_STONE_BLOCK_TOOLS = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("tools/interactive_stone_block_tools"));
