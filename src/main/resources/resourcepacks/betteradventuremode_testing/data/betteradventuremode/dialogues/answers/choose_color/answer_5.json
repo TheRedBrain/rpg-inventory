@@ -1,0 +1,26 @@
+{
+  "answerText": "dialogue.betteradventuremode.choose_color.answer_text.5",
+  "responseDialogue": "",
+  "lockAdvancement": "",
+  "unlockAdvancement": "",
+  "showLockedAnswer": true,
+  "usedBlock": "exit",
+  "itemCost": [
+    {
+      "id": "minecraft:green_wool",
+      "count": 1
+    },
+    {
+      "id": "minecraft:yellow_wool",
+      "count": 1
+    },
+    {
+      "id": "minecraft:red_wool",
+      "count": 1
+    },
+    {
+      "id": "minecraft:blue_wool",
+      "count": 1
+    }
+  ]
+}

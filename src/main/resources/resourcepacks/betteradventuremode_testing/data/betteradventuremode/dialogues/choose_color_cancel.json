@@ -6,22 +6,8 @@
     "dialogue.betteradventuremode.choose_color_cancel.dialogue_text.line_4"
   ],
   "answerList": [
-    {
-      "answerText": "dialogue.betteradventuremode.choose_color_cancel.answer_text.1",
-      "responseDialogue": "",
-      "lockAdvancement": "",
-      "unlockAdvancement": "",
-      "showLockedAnswer": true,
-      "grantedAdvancement": "minecraft:adventure/voluntary_exile",
-      "criterionName": "voluntary_exile"
-    },
-    {
-      "answerText": "dialogue.betteradventuremode.choose_color_cancel.answer_text.2",
-      "responseDialogue": "betteradventuremode:choose_color",
-      "lockAdvancement": "",
-      "unlockAdvancement": "",
-      "showLockedAnswer": true
-    }
+    "betteradventuremode:choose_color_cancel/answer_1",
+    "betteradventuremode:choose_color_cancel/answer_2"
   ],
   "lockAdvancement": "",
   "unlockAdvancement": "",

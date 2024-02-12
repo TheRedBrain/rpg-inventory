@@ -1,0 +1,7 @@
+{
+  "answerText": "dialogue.betteradventuremode.choose_color.answer_text.6",
+  "responseDialogue": "betteradventuremode:choose_color_cancel",
+  "lockAdvancement": "",
+  "unlockAdvancement": "",
+  "showLockedAnswer": true
+}

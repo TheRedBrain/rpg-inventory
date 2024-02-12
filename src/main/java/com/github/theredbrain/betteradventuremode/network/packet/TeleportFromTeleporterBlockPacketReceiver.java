@@ -1,5 +1,6 @@
 package com.github.theredbrain.betteradventuremode.network.packet;
 
+import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.BetterAdventureModeClient;
 import com.github.theredbrain.betteradventuremode.api.json_files_backend.Location;
 import com.github.theredbrain.betteradventuremode.api.util.ItemUtils;
@@ -89,19 +90,19 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
 
             ServerPlayerEntity targetDimensionOwner = server.getPlayerManager().getPlayer(targetDimensionOwnerName);
 
-//            BetterAdventureModeCore.info("targetLocation: " + targetLocation);
+//            BetterAdventureMode.info("targetLocation: " + targetLocation);
 
             if (location != null) {
                 if (location.playerLocation() && targetDimensionOwner != null) {
-//                BetterAdventureModeCore.info("targetDimensionOwner: " + targetDimensionOwner);
+//                BetterAdventureMode.info("targetDimensionOwner: " + targetDimensionOwner);
                     Identifier targetDimensionId = Identifier.tryParse(targetDimensionOwner.getUuidAsString());
-//                BetterAdventureModeCore.info("targetDimensionId: " + targetDimensionId);
+//                BetterAdventureMode.info("targetDimensionId: " + targetDimensionId);
                     RegistryKey<World> dimensionregistryKey = RegistryKey.of(RegistryKeys.WORLD, targetDimensionId);
                     targetWorld = server.getWorld(dimensionregistryKey);
 
                     if (targetWorld == null) {
                         if (targetDimensionOwner.getUuid() == serverPlayerEntity.getUuid()) {
-//                        BetterAdventureModeCore.info("targetDimensionOwner.getUuid() == serverPlayerEntity.getUuid()");
+//                        BetterAdventureMode.info("targetDimensionOwner.getUuid() == serverPlayerEntity.getUuid()");
                             DimensionsManager.addAndSaveDynamicDimension(targetDimensionId, server);
                             dimensionregistryKey = RegistryKey.of(RegistryKeys.WORLD, targetDimensionId);
                             targetWorld = server.getWorld(dimensionregistryKey);
@@ -115,10 +116,10 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
                 if (location.publicLocation() && targetDimensionOwner == null) {
                     targetWorld = server.getOverworld();
                 }
-//                BetterAdventureModeCore.info("targetWorld: " + targetWorld);
+//                BetterAdventureMode.info("targetWorld: " + targetWorld);
 
                 if (targetWorld != null) {
-//                    BetterAdventureModeCore.info("targetWorld != null && location != null");
+//                    BetterAdventureMode.info("targetWorld != null && location != null");
 
                     BlockPos blockPos = location.controlBlockPos();
 
@@ -126,7 +127,7 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
 
                     if (!(blockEntity instanceof LocationControlBlockEntity)) {
 
-//                        BetterAdventureModeCore.info("!(blockEntity instanceof LocationControlBlockEntity)");
+//                        BetterAdventureMode.info("!(blockEntity instanceof LocationControlBlockEntity)");
 
                         String forceLoadAddCommand = "execute in " + targetWorld.getRegistryKey().getValue() + " run forceload add " + (blockPos.getX() - 16) + " " + (blockPos.getZ() - 16) + " " + (blockPos.getX() + 31) + " " + (blockPos.getZ() + 31);
                         server.getCommandManager().executeWithPrefix(server.getCommandSource(), forceLoadAddCommand);
@@ -142,8 +143,8 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
                         blockEntity = targetWorld.getBlockEntity(blockPos);
                     }
 
-//                    BetterAdventureModeCore.info("controlBlockPos: " + blockPos);
-//                    BetterAdventureModeCore.info("block at controlBlockPos: " + targetWorld.getBlockState(blockPos).getBlock());
+//                    BetterAdventureMode.info("controlBlockPos: " + blockPos);
+//                    BetterAdventureMode.info("block at controlBlockPos: " + targetWorld.getBlockState(blockPos).getBlock());
 
                     if (blockEntity instanceof LocationControlBlockEntity locationControlBlock) {
                         if (locationControlBlock.shouldReset()) {
@@ -203,7 +204,7 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
 //                            targetYaw = entranceDelegationBlockEntity.getEntranceYaw();
 //                            targetPitch = entranceDelegationBlockEntity.getEntrancePitch();
 //                        }
-//                        BetterAdventureModeCore.info("targetPos: " + targetPos);
+//                        BetterAdventureMode.info("targetPos: " + targetPos);
 
                         if (setAccessPosition && Identifier.isValid(accessPositionDimension)) {
                             ComponentsRegistry.PLAYER_LOCATION_ACCESS_POS.get(serverPlayerEntity).setValue(new Pair<>(new Pair<>(accessPositionDimension, teleportBlockPosition.add(accessPositionOffset.getX(), accessPositionOffset.getY(), accessPositionOffset.getZ())), true));

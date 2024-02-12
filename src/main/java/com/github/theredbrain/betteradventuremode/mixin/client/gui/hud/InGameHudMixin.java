@@ -76,6 +76,10 @@ public abstract class InGameHudMixin {
     @Unique
     private static final Identifier POISON_BUILD_UP_BAR_PROGRESS_TEXTURE = BetterAdventureMode.identifier("boss_bar/short_green_progress");
     @Unique
+    private static final Identifier SHOCK_BUILD_UP_BAR_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("boss_bar/short_white_background");
+    @Unique
+    private static final Identifier SHOCK_BUILD_UP_BAR_PROGRESS_TEXTURE = BetterAdventureMode.identifier("boss_bar/short_white_progress");
+    @Unique
     private static final Identifier STAGGER_BAR_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("boss_bar/short_yellow_background");
     @Unique
     private static final Identifier STAGGER_BAR_PROGRESS_TEXTURE = BetterAdventureMode.identifier("boss_bar/short_yellow_progress");
@@ -177,22 +181,32 @@ public abstract class InGameHudMixin {
             int maxStamina = MathHelper.ceil(((DuckLivingEntityMixin)playerEntity).betteradventuremode$getMaxStamina());
             int mana = MathHelper.ceil(((DuckLivingEntityMixin)playerEntity).betteradventuremode$getMana());
             int maxMana = MathHelper.ceil(((DuckLivingEntityMixin)playerEntity).betteradventuremode$getMaxMana());
-            int poise = MathHelper.ceil(((DuckLivingEntityMixin) playerEntity).betteradventuremode$getPoise());
-            double poiseLimitMultiplier = ((DuckLivingEntityMixin) playerEntity).betteradventuremode$getStaggerLimitMultiplier();
             int bleedingBuildUp = MathHelper.ceil(((DuckLivingEntityMixin) playerEntity).betteradventuremode$getBleedingBuildUp());
+            int maxBleedingBuildUp = MathHelper.ceil(((DuckLivingEntityMixin) playerEntity).betteradventuremode$getMaxBleedingBuildUp());
             int burnBuildUp = MathHelper.ceil(((DuckLivingEntityMixin) playerEntity).betteradventuremode$getBurnBuildUp());
+            int maxBurnBuildUp = MathHelper.ceil(((DuckLivingEntityMixin) playerEntity).betteradventuremode$getBurnBuildUp());
             int freezeBuildUp = MathHelper.ceil(((DuckLivingEntityMixin) playerEntity).betteradventuremode$getFreezeBuildUp());
+            int maxFreezeBuildUp = MathHelper.ceil(((DuckLivingEntityMixin) playerEntity).betteradventuremode$getFreezeBuildUp());
+            int staggerBuildUp = MathHelper.ceil(((DuckLivingEntityMixin) playerEntity).betteradventuremode$getStaggerBuildUp());
+            int maxStaggerBuildUp = MathHelper.ceil(((DuckLivingEntityMixin) playerEntity).betteradventuremode$getMaxStaggerBuildUp());
             int poisonBuildUp = MathHelper.ceil(((DuckLivingEntityMixin) playerEntity).betteradventuremode$getPoisonBuildUp());
+            int maxPoisonBuildUp = MathHelper.ceil(((DuckLivingEntityMixin) playerEntity).betteradventuremode$getPoisonBuildUp());
             int shockBuildUp = MathHelper.ceil(((DuckLivingEntityMixin) playerEntity).betteradventuremode$getShockBuildUp());
+            int maxShockBuildUp = MathHelper.ceil(((DuckLivingEntityMixin) playerEntity).betteradventuremode$getShockBuildUp());
 
             int attributeBarX = this.scaledWidth / 2 - 91;
             int attributeBarY = this.scaledHeight - 32 + 2;
             int attributeBarNumberX;
             int attributeBarNumberY;
-            int normalizedHealthRatio = (int) (((double) health / Math.max(maxHealth, 1)) * 182);
-            int normalizedStaminaRatio = (int)(((double) stamina / Math.max(maxStamina, 1)) * 182);
-            int normalizedManaRatio = (int)(((double) mana / Math.max(maxMana, 1)) * 182);
-            int normalizedPoiseRatio = (int)(((double) poise/* * 10*/ / Math.max(MathHelper.ceil(maxHealth * poiseLimitMultiplier/* * 10*/), 1)) * 62);
+            int normalizedHealthRatio = (health / Math.max(maxHealth, 1)) * 182;
+            int normalizedStaminaRatio = (stamina / Math.max(maxStamina, 1)) * 182;
+            int normalizedManaRatio = (mana / Math.max(maxMana, 1)) * 182;
+            int normalizedBleedingBuildUpRatio = (bleedingBuildUp / Math.max(maxBleedingBuildUp, 1)) * 62;
+            int normalizedBurnBuildUpRatio = (burnBuildUp / Math.max(maxBurnBuildUp, 1)) * 62;
+            int normalizedFreezeBuildUpRatio = (freezeBuildUp / Math.max(maxFreezeBuildUp, 1)) * 62;
+            int normalizedStaggerBuildUpRatio = (staggerBuildUp / Math.max(maxStaggerBuildUp, 1)) * 62;
+            int normalizedPoisonBuildUpRatio = (poisonBuildUp / Math.max(maxPoisonBuildUp, 1)) * 62;
+            int normalizedShockBuildUpRatio = (shockBuildUp / Math.max(maxShockBuildUp, 1)) * 62;
 
             this.client.getProfiler().push("health_bar");
             context.drawGuiTexture(HEALTH_BAR_BACKGROUND_TEXTURE, attributeBarX, attributeBarY, 182, 5);
@@ -247,56 +261,63 @@ public abstract class InGameHudMixin {
                 }
             }
 
-            if (poise > 0/* && !playerEntity.hasStatusEffect(BetterAdventureModeCoreStatusEffects.STAGGERED)*/) {
+            attributeBarX = attributeBarX + 60;
+            attributeBarY = this.scaledHeight / 2 - 7 + 25;
+            if (staggerBuildUp > 0) {
                 this.client.getProfiler().swap("stagger_bar");
-                context.drawGuiTexture(STAGGER_BAR_BACKGROUND_TEXTURE, attributeBarX + 60, this.scaledHeight / 2 - 7 + 25, 62, 5);
-                if (normalizedPoiseRatio > 0) {
-                    context.drawGuiTexture(STAGGER_BAR_PROGRESS_TEXTURE, attributeBarX + 60, this.scaledHeight / 2 - 7 + 25, normalizedPoiseRatio, 5);
+                context.drawGuiTexture(STAGGER_BAR_BACKGROUND_TEXTURE, attributeBarX, attributeBarY, 62, 5);
+                if (normalizedStaggerBuildUpRatio > 0) {
+                    context.drawGuiTexture(STAGGER_BAR_PROGRESS_TEXTURE, attributeBarX, attributeBarY, normalizedStaggerBuildUpRatio, 5);
                 }
+                attributeBarY = attributeBarY + 6;
             }
 
             // bleeding build up
-            if (poise > 0/* && !playerEntity.hasStatusEffect(BetterAdventureModeCoreStatusEffects.STAGGERED)*/) {
+            if (bleedingBuildUp > 0) {
                 this.client.getProfiler().swap("bleeding_build_up_bar");
-                context.drawGuiTexture(STAGGER_BAR_BACKGROUND_TEXTURE, attributeBarX + 60, this.scaledHeight / 2 - 7 + 25, 62, 5);
-                if (normalizedPoiseRatio > 0) {
-                    context.drawGuiTexture(STAGGER_BAR_PROGRESS_TEXTURE, attributeBarX + 60, this.scaledHeight / 2 - 7 + 25, normalizedPoiseRatio, 5);
+                context.drawGuiTexture(BLEEDING_BUILD_UP_BAR_BACKGROUND_TEXTURE, attributeBarX, attributeBarY, 62, 5);
+                if (normalizedBleedingBuildUpRatio > 0) {
+                    context.drawGuiTexture(BLEEDING_BUILD_UP_BAR_PROGRESS_TEXTURE, attributeBarX, attributeBarY, normalizedBleedingBuildUpRatio, 5);
                 }
+                attributeBarY = attributeBarY + 6;
             }
 
-            // burn  build up
-            if (poise > 0/* && !playerEntity.hasStatusEffect(BetterAdventureModeCoreStatusEffects.STAGGERED)*/) {
+            // burn build up
+            if (burnBuildUp > 0) {
                 this.client.getProfiler().swap("burn_build_up_bar");
-                context.drawGuiTexture(STAGGER_BAR_BACKGROUND_TEXTURE, attributeBarX + 60, this.scaledHeight / 2 - 7 + 25, 62, 5);
-                if (normalizedPoiseRatio > 0) {
-                    context.drawGuiTexture(STAGGER_BAR_PROGRESS_TEXTURE, attributeBarX + 60, this.scaledHeight / 2 - 7 + 25, normalizedPoiseRatio, 5);
+                context.drawGuiTexture(BURNING_BUILD_UP_BAR_BACKGROUND_TEXTURE, attributeBarX, attributeBarY, 62, 5);
+                if (normalizedBurnBuildUpRatio > 0) {
+                    context.drawGuiTexture(BURNING_BUILD_UP_BAR_PROGRESS_TEXTURE, attributeBarX, attributeBarY, normalizedBurnBuildUpRatio, 5);
                 }
+                attributeBarY = attributeBarY + 6;
             }
 
             // freeze build up
-            if (poise > 0/* && !playerEntity.hasStatusEffect(BetterAdventureModeCoreStatusEffects.STAGGERED)*/) {
+            if (freezeBuildUp > 0) {
                 this.client.getProfiler().swap("freeze_build_up_bar");
-                context.drawGuiTexture(STAGGER_BAR_BACKGROUND_TEXTURE, attributeBarX + 60, this.scaledHeight / 2 - 7 + 25, 62, 5);
-                if (normalizedPoiseRatio > 0) {
-                    context.drawGuiTexture(STAGGER_BAR_PROGRESS_TEXTURE, attributeBarX + 60, this.scaledHeight / 2 - 7 + 25, normalizedPoiseRatio, 5);
+                context.drawGuiTexture(FREEZE_BUILD_UP_BAR_BACKGROUND_TEXTURE, attributeBarX, attributeBarY, 62, 5);
+                if (normalizedFreezeBuildUpRatio > 0) {
+                    context.drawGuiTexture(FREEZE_BUILD_UP_BAR_PROGRESS_TEXTURE, attributeBarX, attributeBarY, normalizedFreezeBuildUpRatio, 5);
                 }
+                attributeBarY = attributeBarY + 6;
             }
 
             // poison build up
-            if (poise > 0/* && !playerEntity.hasStatusEffect(BetterAdventureModeCoreStatusEffects.STAGGERED)*/) {
+            if (poisonBuildUp > 0) {
                 this.client.getProfiler().swap("poison_build_up_bar");
-                context.drawGuiTexture(STAGGER_BAR_BACKGROUND_TEXTURE, attributeBarX + 60, this.scaledHeight / 2 - 7 + 25, 62, 5);
-                if (normalizedPoiseRatio > 0) {
-                    context.drawGuiTexture(STAGGER_BAR_PROGRESS_TEXTURE, attributeBarX + 60, this.scaledHeight / 2 - 7 + 25, normalizedPoiseRatio, 5);
+                context.drawGuiTexture(POISON_BUILD_UP_BAR_BACKGROUND_TEXTURE, attributeBarX, attributeBarY, 62, 5);
+                if (normalizedPoisonBuildUpRatio > 0) {
+                    context.drawGuiTexture(POISON_BUILD_UP_BAR_PROGRESS_TEXTURE, attributeBarX, attributeBarY, normalizedPoisonBuildUpRatio, 5);
                 }
+                attributeBarY = attributeBarY + 6;
             }
 
             // shock build up
-            if (poise > 0/* && !playerEntity.hasStatusEffect(BetterAdventureModeCoreStatusEffects.STAGGERED)*/) {
+            if (shockBuildUp > 0) {
                 this.client.getProfiler().swap("shock_build_up_bar");
-                context.drawGuiTexture(STAGGER_BAR_BACKGROUND_TEXTURE, attributeBarX + 60, this.scaledHeight / 2 - 7 + 25, 62, 5);
-                if (normalizedPoiseRatio > 0) {
-                    context.drawGuiTexture(STAGGER_BAR_PROGRESS_TEXTURE, attributeBarX + 60, this.scaledHeight / 2 - 7 + 25, normalizedPoiseRatio, 5);
+                context.drawGuiTexture(SHOCK_BUILD_UP_BAR_BACKGROUND_TEXTURE, attributeBarX, attributeBarY, 62, 5);
+                if (normalizedShockBuildUpRatio > 0) {
+                    context.drawGuiTexture(SHOCK_BUILD_UP_BAR_PROGRESS_TEXTURE, attributeBarX, attributeBarY, normalizedShockBuildUpRatio, 5);
                 }
             }
             this.client.getProfiler().pop();

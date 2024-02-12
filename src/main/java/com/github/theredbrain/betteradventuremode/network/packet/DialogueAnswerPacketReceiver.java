@@ -20,6 +20,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
@@ -77,6 +78,7 @@ public class DialogueAnswerPacketReceiver implements ServerPlayNetworking.PlayPa
                         }
                     }
                     if (ingredientCount > 0) {
+                        player.sendMessage(Text.translatable("gui.dialogue_screen.item_cost_too_high"));
                         return;
                     }
                 }

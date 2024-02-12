@@ -1,0 +1,19 @@
+{
+  "placement": {
+    "type": "betteradventuremode:fixed",
+    "positions": [
+      [
+        128,
+        -63,
+        128
+      ]
+    ],
+    "salt": 0
+  },
+  "structures": [
+    {
+      "structure": "betteradventuremode:locations/choose_color",
+      "weight": 1
+    }
+  ]
+}

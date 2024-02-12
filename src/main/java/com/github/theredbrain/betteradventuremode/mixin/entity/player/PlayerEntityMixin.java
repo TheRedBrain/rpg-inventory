@@ -519,8 +519,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     }
 
     @Override
-    public double betteradventuremode$getStaggerLimitMultiplier() {
-        return 0.4;
+    public float betteradventuremode$getMaxStaggerBuildUp() {
+        return this.getMaxHealth() * 0.4f;
     }
 
     @Override

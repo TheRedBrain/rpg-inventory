@@ -223,6 +223,8 @@
 	"gui.location_controller_block.screenPage.triggered_block": "Triggered Block",
 
 
+	"gui.dialogue_screen.item_cost_too_high": "You don't have the required items!",
+
 	"gui.dialogue_screen.creativeScreenPage.dialogue_used_blocks": "Used Blocks",
 	"gui.dialogue_screen.creativeScreenPage.dialogue_triggered_blocks": "Triggered Blocks",
 	"gui.dialogue_screen.creativeScreenPage.starting_dialogues": "Starting Dialogues",

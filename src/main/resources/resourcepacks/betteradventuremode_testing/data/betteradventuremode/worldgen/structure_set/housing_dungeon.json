@@ -1,0 +1,19 @@
+{
+  "placement": {
+    "type": "betteradventuremode:fixed",
+    "positions": [
+      [
+        64,
+        -30,
+        64
+      ]
+    ],
+    "salt": 0
+  },
+  "structures": [
+    {
+      "structure": "betteradventuremode:locations/housing_dungeon",
+      "weight": 1
+    }
+  ]
+}

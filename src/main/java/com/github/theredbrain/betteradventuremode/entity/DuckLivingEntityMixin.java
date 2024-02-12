@@ -14,29 +14,38 @@ public interface DuckLivingEntityMixin {
     void betteradventuremode$addBleedingBuildUp(float amount);
     float betteradventuremode$getBleedingBuildUp();
     void betteradventuremode$setBleedingBuildUp(float bleedingBuildUp);
+    float betteradventuremode$getMaxBleedingBuildUp();
+    int betteradventuremode$getBleedingDuration();
 
     void betteradventuremode$addBurnBuildUp(float amount);
     float betteradventuremode$getBurnBuildUp();
     void betteradventuremode$setBurnBuildUp(float burnBuildUp);
+    float betteradventuremode$getMaxBurnBuildUp();
+    int betteradventuremode$getBurnDuration();
 
     void betteradventuremode$addFreezeBuildUp(float amount);
     float betteradventuremode$getFreezeBuildUp();
     void betteradventuremode$setFreezeBuildUp(float freezeBuildUp);
+    float betteradventuremode$getMaxFreezeBuildUp();
+    int betteradventuremode$getFreezeDuration();
 
-    void betteradventuremode$addPoise(float amount);
-    float betteradventuremode$getPoise();
-    void betteradventuremode$setPoise(float poise);
+    void betteradventuremode$addStaggerBuildUp(float amount);
+    float betteradventuremode$getStaggerBuildUp();
+    void betteradventuremode$setStaggerBuildUp(float poise);
+    float betteradventuremode$getMaxStaggerBuildUp();
+    int betteradventuremode$getStaggerDuration();
 
     void betteradventuremode$addPoisonBuildUp(float amount);
     float betteradventuremode$getPoisonBuildUp();
     void betteradventuremode$setPoisonBuildUp(float poisonBuildUp);
+    float betteradventuremode$getMaxPoisonBuildUp();
+    int betteradventuremode$getPoisonDuration();
 
     void betteradventuremode$addShockBuildUp(float amount);
     float betteradventuremode$getShockBuildUp();
     void betteradventuremode$setShockBuildUp(float shockBuildUp);
-
-    int betteradventuremode$getStaggerDuration();
-    double betteradventuremode$getStaggerLimitMultiplier();
+    float betteradventuremode$getMaxShockBuildUp();
+    int betteradventuremode$getShockDuration();
 
     float betteradventuremode$getHealthRegeneration();
 

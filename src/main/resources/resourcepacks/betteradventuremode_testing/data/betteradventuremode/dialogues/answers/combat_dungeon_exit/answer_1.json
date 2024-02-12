@@ -1,0 +1,9 @@
+{
+  "answerText": "dialogue.betteradventuremode.combat_dungeon_exit.answer_text.1",
+  "responseDialogue": "",
+  "lockAdvancement": "",
+  "unlockAdvancement": "",
+  "showLockedAnswer": true,
+  "usedBlock": "teleporter",
+  "triggeredBlock": "location_reset"
+}

@@ -5,22 +5,8 @@
     "dialogue.betteradventuremode.combat_dungeon_exit.dialogue_text.line_3"
   ],
   "answerList": [
-    {
-      "answerText": "dialogue.betteradventuremode.combat_dungeon_exit.answer_text.1",
-      "responseDialogue": "",
-      "lockAdvancement": "",
-      "unlockAdvancement": "",
-      "showLockedAnswer": true,
-      "usedBlock": "teleporter",
-      "triggeredBlock": "location_reset"
-    },
-    {
-      "answerText": "dialogue.betteradventuremode.combat_dungeon_exit.answer_text.2",
-      "responseDialogue": "",
-      "lockAdvancement": "",
-      "unlockAdvancement": "",
-      "showLockedAnswer": true
-    }
+    "betteradventuremode:combat_dungeon_exit/answer_1",
+    "betteradventuremode:combat_dungeon_exit/answer_2"
   ],
   "lockAdvancement": "",
   "unlockAdvancement": "",

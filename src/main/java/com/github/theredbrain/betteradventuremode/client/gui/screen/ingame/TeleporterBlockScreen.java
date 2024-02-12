@@ -851,7 +851,6 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
             this.isCurrentLocationPlayer = location.playerLocation();
             this.consumeKeyItem = location.consumeKeyAtEntrance(this.currentTargetEntrance);
             this.currentKeyVirtualItemStack = location.getKeyForEntrance(this.currentTargetEntrance);
-            Inventory inventory = new SimpleInventory(36);
             if (advancementHandler != null) {
                 AdvancementEntry lockAdvancementEntry = null;
                 if (!lockAdvancementIdentifier.equals("")) {
@@ -868,29 +867,32 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
                     this.currentUnlockAdvancement = unlockAdvancementEntry.value();
                 }
 
+                Inventory inventory = new SimpleInventory(36);
                 for (int k = 0; k < 36; k++) {
                     ItemStack itemStack = this.handler.getPlayerInventory().getStack(k);
                     inventory.setStack(k, itemStack.copy());
                 }
                 boolean bl = true;
-                ItemStack currentKeyItemStack = ItemUtils.getItemStackFromVirtualItemStack(this.currentKeyVirtualItemStack);
-                int keyCount = currentKeyItemStack.getCount();
-                for (int j = 0; j < inventory.size(); j++) {
-                    ItemStack itemStack = inventory.getStack(j);
-                    if (ItemStack.canCombine(currentKeyItemStack, itemStack)) {
-                        int stackCount = inventory.getStack(j).getCount();
-                        if (stackCount >= keyCount) {
-                            inventory.removeStack(j, keyCount);
-                            keyCount = 0;
-                            break;
-                        } else {
-                            inventory.setStack(j, ItemStack.EMPTY);
-                            keyCount = keyCount - stackCount;
+                if (this.currentKeyVirtualItemStack != null) {
+                    ItemStack currentKeyItemStack = ItemUtils.getItemStackFromVirtualItemStack(this.currentKeyVirtualItemStack);
+                    int keyCount = currentKeyItemStack.getCount();
+                    for (int j = 0; j < inventory.size(); j++) {
+                        ItemStack itemStack = inventory.getStack(j);
+                        if (ItemStack.canCombine(currentKeyItemStack, itemStack)) {
+                            int stackCount = inventory.getStack(j).getCount();
+                            if (stackCount >= keyCount) {
+                                inventory.removeStack(j, keyCount);
+                                keyCount = 0;
+                                break;
+                            } else {
+                                inventory.setStack(j, ItemStack.EMPTY);
+                                keyCount = keyCount - stackCount;
+                            }
                         }
                     }
-                }
-                if (keyCount > 0) {
-                    bl = false;
+                    if (keyCount > 0) {
+                        bl = false;
+                    }
                 }
 
                 this.isTeleportButtonActive = this.isCurrentLocationUnlocked && bl;
@@ -1287,6 +1289,9 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
         }
         if (this.currentTargetOwner != null) {
             currentTargetOwnerName = this.currentTargetOwner.getProfile().getName();
+        }
+        if (this.isCurrentLocationPublic && !this.isCurrentLocationPlayer) {
+            currentTargetOwnerName = "";
         }
         ClientPlayNetworking.send(new TeleportFromTeleporterBlockPacket(
                 this.teleporterBlock.getPos(),

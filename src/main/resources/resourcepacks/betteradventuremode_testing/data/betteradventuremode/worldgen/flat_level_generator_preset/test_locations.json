@@ -11,6 +11,9 @@
       }
     ],
     "structure_overrides": [
+      "betteradventuremode:choose_color",
+      "betteradventuremode:combat_dungeon",
+      "betteradventuremode:housing_dungeon",
       "betteradventuremode:town_1"
     ]
   }

@@ -1,7 +1,7 @@
 {
-  "controlBlockPosX": 0,
+  "controlBlockPosX": 128,
   "controlBlockPosY": -63,
-  "controlBlockPosZ": 0,
+  "controlBlockPosZ": 128,
   "structureIdentifier": "betteradventuremode:locations/choose_color",
   "displayName": "locations.dungeons.choose_color",
   "unlockAdvancement": "",

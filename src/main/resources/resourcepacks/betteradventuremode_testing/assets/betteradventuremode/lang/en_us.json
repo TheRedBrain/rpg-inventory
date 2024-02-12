@@ -6,11 +6,6 @@
 
 	"locations.houses.house_1": "House 1",
 
-	"dialogue.betteradventuremode.empty_line": "",
-
-	"dialogue.betteradventuremode.hello_world.dialogue_text.line_1": "Very looooooooooooooooooong text line",
-	"dialogue.betteradventuremode.hello_world.dialogue_text.line_6": "No line should be looooonger than this",
-
 	"dialogue.betteradventuremode.choose_color.dialogue_text.line_1": "           Color Picker           ",
 	"dialogue.betteradventuremode.choose_color.dialogue_text.line_2": "Choose a color.",
 	"dialogue.betteradventuremode.choose_color.dialogue_text.line_3": "",
