@@ -888,7 +888,7 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
                         this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.BLEEDING, this.betteradventuremode$getBleedingDuration(), 0, false, false, true));
                         this.betteradventuremode$setBleedingBuildUp(-this.betteradventuremode$getMaxBleedingBuildUp());
                     } else {
-                        this.betteradventuremode$addBleedingBuildUp(-1);
+                        this.betteradventuremode$addBleedingBuildUp( - this.betteradventuremode$getBleedingBuildUpReduction());
                     }
                     this.bleedingTickTimer = 0;
                 }
@@ -906,7 +906,7 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
                         this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.BURNING, burnDuration, 0, false, false, true));
                         this.betteradventuremode$setBurnBuildUp(0);
                     } else {
-                        this.betteradventuremode$addBurnBuildUp(-1);
+                        this.betteradventuremode$addBurnBuildUp( - this.betteradventuremode$getBurnBuildUpReduction());
                     }
                     this.burnTickTimer = 0;
                 }
@@ -919,15 +919,12 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
                         this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.FROZEN, this.betteradventuremode$getFreezeDuration(), 0, false, false, true));
                         this.betteradventuremode$setFreezeBuildUp(0);
                     } else {
-                        this.betteradventuremode$addFreezeBuildUp(-1);
+                        this.betteradventuremode$addFreezeBuildUp( - this.betteradventuremode$getFreezeBuildUpReduction());
                     }
                     this.freezeTickTimer = 0;
                 }
             }
 
-//            if (this.betteradventuremode$getStaggerBuildUp() > 0) {
-//                this.betteradventuremode$addStaggerBuildUp((float) -(this.getMaxHealth() * this.betteradventuremode$getMaxStaggerBuildUp() * 0.01));
-//            }
             if (this.betteradventuremode$getStaggerBuildUp() > 0) {
                 this.staggerTickTimer++;
                 if (this.staggerTickTimer >= this.betteradventuremode$getStaggerTickThreshold()) {
@@ -935,7 +932,7 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
                         this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.STAGGERED, this.betteradventuremode$getStaggerDuration(), 0, false, false, true));
                         this.betteradventuremode$setStaggerBuildUp(0);
                     } else {
-                        this.betteradventuremode$addStaggerBuildUp(-1);
+                        this.betteradventuremode$addStaggerBuildUp( - this.betteradventuremode$getStaggerBuildUpReduction());
                     }
                     this.staggerTickTimer = 0;
                 }
@@ -953,7 +950,7 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
                         this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.POISON, this.betteradventuremode$getPoisonDuration(), poisonAmplifier, false, false, true));
                         this.betteradventuremode$setPoisonBuildUp(0);
                     } else {
-                        this.betteradventuremode$addPoisonBuildUp(-1);
+                        this.betteradventuremode$addPoisonBuildUp( - this.betteradventuremode$getPoisonBuildUpReduction());
                     }
                     this.poisonTickTimer = 0;
                 }
@@ -966,7 +963,7 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
                         this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.SHOCKED, this.betteradventuremode$getShockDuration(), 0, false, false, false));
                         this.betteradventuremode$setShockBuildUp(0);
                     } else {
-                        this.betteradventuremode$addShockBuildUp(-1);
+                        this.betteradventuremode$addShockBuildUp( - this.betteradventuremode$getShockBuildUpReduction());
                     }
                     this.shockTickTimer = 0;
                 }
@@ -1004,36 +1001,6 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
 
     @Override
     public int betteradventuremode$getManaTickThreshold() {
-        return 20;
-    }
-
-    @Override
-    public int betteradventuremode$getBleedingTickThreshold() {
-        return 20;
-    }
-
-    @Override
-    public int betteradventuremode$getBurnTickThreshold() {
-        return 20;
-    }
-
-    @Override
-    public int betteradventuremode$getFreezeTickThreshold() {
-        return 20;
-    }
-
-    @Override
-    public int betteradventuremode$getStaggerTickThreshold() {
-        return 20;
-    }
-
-    @Override
-    public int betteradventuremode$getPoisonTickThreshold() {
-        return 20;
-    }
-
-    @Override
-    public int betteradventuremode$getShockTickThreshold() {
         return 20;
     }
 
@@ -1076,12 +1043,22 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
 
     @Override
     public float betteradventuremode$getMaxBleedingBuildUp() {
-        return 20.0f;
+        return BetterAdventureMode.gamePlayBalanceConfig.default_max_bleeding_build_up;
     }
 
     @Override
     public int betteradventuremode$getBleedingDuration() {
-        return 200;
+        return BetterAdventureMode.gamePlayBalanceConfig.default_bleeding_duration;
+    }
+
+    @Override
+    public int betteradventuremode$getBleedingTickThreshold() {
+        return BetterAdventureMode.gamePlayBalanceConfig.default_bleeding_tick_threshold;
+    }
+
+    @Override
+    public int betteradventuremode$getBleedingBuildUpReduction() {
+        return BetterAdventureMode.gamePlayBalanceConfig.default_bleeding_build_up_reduction;
     }
     // endregion bleeding build up
 
@@ -1109,12 +1086,22 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
 
     @Override
     public float betteradventuremode$getMaxBurnBuildUp() {
-        return 20.0f;
+        return BetterAdventureMode.gamePlayBalanceConfig.default_max_burning_build_up;
     }
 
     @Override
     public int betteradventuremode$getBurnDuration() {
-        return 351;
+        return BetterAdventureMode.gamePlayBalanceConfig.default_burning_duration;
+    }
+
+    @Override
+    public int betteradventuremode$getBurnTickThreshold() {
+        return BetterAdventureMode.gamePlayBalanceConfig.default_burning_tick_threshold;
+    }
+
+    @Override
+    public int betteradventuremode$getBurnBuildUpReduction() {
+        return BetterAdventureMode.gamePlayBalanceConfig.default_burning_build_up_reduction;
     }
     // endregion burn build up
 
@@ -1142,12 +1129,22 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
 
     @Override
     public float betteradventuremode$getMaxFreezeBuildUp() {
-        return 20.0f;
+        return BetterAdventureMode.gamePlayBalanceConfig.default_max_freeze_build_up;
     }
 
     @Override
     public int betteradventuremode$getFreezeDuration() {
-        return 200;
+        return BetterAdventureMode.gamePlayBalanceConfig.default_freeze_duration;
+    }
+
+    @Override
+    public int betteradventuremode$getFreezeTickThreshold() {
+        return BetterAdventureMode.gamePlayBalanceConfig.default_freeze_tick_threshold;
+    }
+
+    @Override
+    public int betteradventuremode$getFreezeBuildUpReduction() {
+        return BetterAdventureMode.gamePlayBalanceConfig.default_freeze_build_up_reduction;
     }
     // endregion freeze build up
 
@@ -1176,12 +1173,22 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
     @Override
     public float betteradventuremode$getMaxStaggerBuildUp() {
 //        return this.getMaxHealth() * 0.5f;
-        return 20.0f;
+        return BetterAdventureMode.gamePlayBalanceConfig.default_max_stagger_build_up;
     }
 
     @Override
     public int betteradventuremode$getStaggerDuration() {
-        return 200;
+        return BetterAdventureMode.gamePlayBalanceConfig.default_stagger_duration;
+    }
+
+    @Override
+    public int betteradventuremode$getStaggerTickThreshold() {
+        return BetterAdventureMode.gamePlayBalanceConfig.default_stagger_tick_threshold;
+    }
+
+    @Override
+    public int betteradventuremode$getStaggerBuildUpReduction() {
+        return BetterAdventureMode.gamePlayBalanceConfig.default_stagger_build_up_reduction;
     }
     // endregion stagger build up
 
@@ -1209,12 +1216,22 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
 
     @Override
     public float betteradventuremode$getMaxPoisonBuildUp() {
-        return 20.0f;
+        return BetterAdventureMode.gamePlayBalanceConfig.default_max_poison_build_up;
     }
 
     @Override
     public int betteradventuremode$getPoisonDuration() {
-        return 200;
+        return BetterAdventureMode.gamePlayBalanceConfig.default_poison_duration;
+    }
+
+    @Override
+    public int betteradventuremode$getPoisonTickThreshold() {
+        return BetterAdventureMode.gamePlayBalanceConfig.default_poison_tick_threshold;
+    }
+
+    @Override
+    public int betteradventuremode$getPoisonBuildUpReduction() {
+        return BetterAdventureMode.gamePlayBalanceConfig.default_poison_build_up_reduction;
     }
     // endregion poison build up
 
@@ -1242,12 +1259,22 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
 
     @Override
     public float betteradventuremode$getMaxShockBuildUp() {
-        return 20.0f;
+        return BetterAdventureMode.gamePlayBalanceConfig.default_max_shock_build_up;
     }
 
     @Override
     public int betteradventuremode$getShockDuration() {
         return 1;
+    }
+
+    @Override
+    public int betteradventuremode$getShockTickThreshold() {
+        return BetterAdventureMode.gamePlayBalanceConfig.default_shock_tick_threshold;
+    }
+
+    @Override
+    public int betteradventuremode$getShockBuildUpReduction() {
+        return BetterAdventureMode.gamePlayBalanceConfig.default_shock_build_up_reduction;
     }
     // endregion shock build up
 
