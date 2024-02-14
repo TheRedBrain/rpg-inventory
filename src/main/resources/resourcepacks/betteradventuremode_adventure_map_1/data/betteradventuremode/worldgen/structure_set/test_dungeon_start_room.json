@@ -1,0 +1,19 @@
+{
+  "placement": {
+    "type": "betteradventuremode:fixed",
+    "positions": [
+      [
+        0,
+        -63,
+        0
+      ]
+    ],
+    "salt": 0
+  },
+  "structures": [
+    {
+      "structure": "betteradventuremode:locations/dungeons/test_dungeon/start_room",
+      "weight": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "placement": {
+    "type": "betteradventuremode:fixed",
+    "positions": [
+      [
+        256,
+        -63,
+        0
+      ]
+    ],
+    "salt": 0
+  },
+  "structures": [
+    {
+      "structure": "betteradventuremode:locations/dungeons/test_dungeon/combat_room_2",
+      "weight": 1
+    }
+  ]
+}

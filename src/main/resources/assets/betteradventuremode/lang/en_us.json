@@ -1,8 +1,10 @@
 {
 	"flat_world_preset.betteradventuremode.bam_flat_level_preset": "Adventure",
+	"flat_world_preset.betteradventuremode.adventure_map_1": "Adventure Map 1",
 	"generator.betteradventuremode.adventure": "Adventure",
 
 	"betteradventuremode.builtin_resource_packs.betteradventuremode_testing": "Testing Better Adventure Mode",
+	"betteradventuremode.builtin_resource_packs.betteradventuremode_adventure_map_1": "Adventure Map 1",
 
 	"wip": "WIP",
 
@@ -617,5 +619,52 @@
 	"itemGroup.betteradventuremode.bam_block": "Better Adventure Mode - Blocks",
 	"itemGroup.betteradventuremode.bam_equipment": "Better Adventure Mode - Equipment",
 	"itemGroup.betteradventuremode.bam_food": "Better Adventure Mode - Food",
-	"itemGroup.betteradventuremode.script_blocks": "Better Adventure Mode - Script Blocks"
+	"itemGroup.betteradventuremode.script_blocks": "Better Adventure Mode - Script Blocks",
+
+
+
+
+	"locations.dungeons.test_dungeon.boss_room_1": "Boss Room 1",
+	"locations.dungeons.test_dungeon.combat_room_1": "Combat Room 1",
+	"locations.dungeons.test_dungeon.combat_room_2": "Combat Room 2",
+	"locations.dungeons.test_dungeon.combat_room_3": "Combat Room 3",
+	"locations.dungeons.test_dungeon.start_room": "Start Room",
+	"locations.dungeons.test_dungeon.trader_room_1": "Trader Room 1",
+
+
+
+
+	"locations.dungeons.choose_color": "Choose Color Location",
+	"locations.dungeons.combat_dungeon": "Combat Dungeon",
+	"locations.dungeons.test_dungeon": "Test Dungeon",
+	"locations.dungeons.test_dungeon.side_entrance": "Side Entrance to ",
+
+	"locations.houses.house_1": "House 1",
+
+	"dialogue.betteradventuremode.choose_color.dialogue_text.line_1": "           Color Picker           ",
+	"dialogue.betteradventuremode.choose_color.dialogue_text.line_2": "Choose a color.",
+	"dialogue.betteradventuremode.choose_color.dialogue_text.line_3": "",
+	"dialogue.betteradventuremode.choose_color.dialogue_text.line_4": "You will be teleported to the",
+	"dialogue.betteradventuremode.choose_color.dialogue_text.line_5": "corresponding wool block.",
+
+	"dialogue.betteradventuremode.choose_color.answer_text.1": "Green",
+	"dialogue.betteradventuremode.choose_color.answer_text.2": "Yellow",
+	"dialogue.betteradventuremode.choose_color.answer_text.3": "Red",
+	"dialogue.betteradventuremode.choose_color.answer_text.4": "Blue",
+	"dialogue.betteradventuremode.choose_color.answer_text.5": "Exit Dungeon",
+	"dialogue.betteradventuremode.choose_color.answer_text.6": "Cancel",
+
+	"dialogue.betteradventuremode.choose_color_cancel.dialogue_text.line_3": "Do you really want to",
+	"dialogue.betteradventuremode.choose_color_cancel.dialogue_text.line_4": "not pick a color?",
+	"dialogue.betteradventuremode.choose_color_cancel.answer_text.1": "Yes",
+	"dialogue.betteradventuremode.choose_color_cancel.answer_text.2": "No",
+
+	"dialogue.betteradventuremode.combat_dungeon.dialogue_text.line_1": "Combat Dungeon",
+	"dialogue.betteradventuremode.combat_dungeon.dialogue_text.line_3": "Do you want to enter the dungeon?",
+	"dialogue.betteradventuremode.combat_dungeon.answer_text.1": "Yes",
+	"dialogue.betteradventuremode.combat_dungeon.answer_text.2": "No",
+
+	"dialogue.betteradventuremode.combat_dungeon_exit.dialogue_text.line_3": "Do you want to leave the dungeon?",
+	"dialogue.betteradventuremode.combat_dungeon_exit.answer_text.1": "Yes",
+	"dialogue.betteradventuremode.combat_dungeon_exit.answer_text.2": "No"
 }

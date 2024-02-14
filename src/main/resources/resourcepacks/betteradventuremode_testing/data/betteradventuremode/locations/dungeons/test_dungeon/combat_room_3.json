@@ -1,0 +1,15 @@
+{
+  "controlBlockPosX": 128,
+  "controlBlockPosY": -63,
+  "controlBlockPosZ": 256,
+  "structureIdentifier": "betteradventuremode:locations/dungeons/test_dungeon/combat_room_3",
+  "displayName": "locations.dungeons.test_dungeon.combat_room_3",
+  "unlockAdvancement": "",
+  "lockAdvancement": "",
+  "showLockedLocation": true,
+  "showUnlockAdvancement": true,
+  "showLockAdvancement": false,
+  "publicLocation": false,
+  "playerLocation": true,
+  "consumeKey": false
+}

@@ -1,0 +1,19 @@
+{
+  "placement": {
+    "type": "betteradventuremode:fixed",
+    "positions": [
+      [
+        256,
+        -63,
+        512
+      ]
+    ],
+    "salt": 0
+  },
+  "structures": [
+    {
+      "structure": "betteradventuremode:locations/dungeons/test_dungeon/boss_room_1",
+      "weight": 1
+    }
+  ]
+}

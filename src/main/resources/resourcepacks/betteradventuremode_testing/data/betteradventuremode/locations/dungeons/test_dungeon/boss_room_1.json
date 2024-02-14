@@ -1,0 +1,15 @@
+{
+  "controlBlockPosX": 128,
+  "controlBlockPosY": -63,
+  "controlBlockPosZ": 256,
+  "structureIdentifier": "betteradventuremode:locations/dungeons/test_dungeon/boss_room_1",
+  "displayName": "locations.dungeons.test_dungeon.boss_room_1",
+  "unlockAdvancement": "",
+  "lockAdvancement": "",
+  "showLockedLocation": true,
+  "showUnlockAdvancement": true,
+  "showLockAdvancement": false,
+  "publicLocation": false,
+  "playerLocation": true,
+  "consumeKey": false
+}

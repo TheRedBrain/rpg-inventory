@@ -67,7 +67,7 @@ public class EntranceDelegationBlockEntity extends RotatedBlockEntity {
     }
 
     public MutablePair<BlockPos, MutablePair<Double, Double>> getDelegatedEntrance() {
-        return new MutablePair<>(new BlockPos(this.delegatedEntrance.getLeft().getX() + this.getPos().getX(), this.delegatedEntrance.getLeft().getY() + this.getPos().getY(), this.delegatedEntrance.getLeft().getZ() + this.getPos().getZ()), this.delegatedEntrance.getRight());
+        return this.delegatedEntrance;
     }
 
     public boolean setDelegatedEntrance(MutablePair<BlockPos, MutablePair<Double, Double>> delegatedEntrance) {

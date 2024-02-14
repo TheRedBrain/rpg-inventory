@@ -200,7 +200,7 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
 
                         if (targetWorld.getBlockEntity(targetPos) instanceof EntranceDelegationBlockEntity entranceDelegationBlockEntity) {
                             MutablePair<BlockPos, MutablePair<Double, Double>> delegatedEntrance = entranceDelegationBlockEntity.getDelegatedEntrance();
-                            targetPos = delegatedEntrance.getLeft();
+                            targetPos = new BlockPos(delegatedEntrance.getLeft().getX() + entranceDelegationBlockEntity.getPos().getX(), delegatedEntrance.getLeft().getY() + entranceDelegationBlockEntity.getPos().getY(), delegatedEntrance.getLeft().getZ() + entranceDelegationBlockEntity.getPos().getZ());
                             targetYaw = delegatedEntrance.getRight().getLeft();
                             targetPitch = delegatedEntrance.getRight().getRight();
                         }
