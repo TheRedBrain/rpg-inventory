@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.block.entity;
 
-import com.github.theredbrain.betteradventuremode.api.util.BlockRotationUtils;
+import com.github.theredbrain.betteradventuremode.util.BlockRotationUtils;
 import com.github.theredbrain.betteradventuremode.block.RotatedBlockWithEntity;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.betteradventuremode.registry.EntityRegistry;
@@ -67,7 +67,7 @@ public class EntranceDelegationBlockEntity extends RotatedBlockEntity {
     }
 
     public MutablePair<BlockPos, MutablePair<Double, Double>> getDelegatedEntrance() {
-        return this.delegatedEntrance;
+        return new MutablePair<>(new BlockPos(this.delegatedEntrance.getLeft().getX() + this.getPos().getX(), this.delegatedEntrance.getLeft().getY() + this.getPos().getY(), this.delegatedEntrance.getLeft().getZ() + this.getPos().getZ()), this.delegatedEntrance.getRight());
     }
 
     public boolean setDelegatedEntrance(MutablePair<BlockPos, MutablePair<Double, Double>> delegatedEntrance) {

@@ -1,9 +1,9 @@
 package com.github.theredbrain.betteradventuremode.registry;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
-import com.github.theredbrain.betteradventuremode.api.effect.AuraStatusEffect;
-import com.github.theredbrain.betteradventuremode.api.effect.FoodStatusEffect;
-import com.github.theredbrain.betteradventuremode.api.util.AttributeModifierUUIDs;
+import com.github.theredbrain.betteradventuremode.effect.AuraStatusEffect;
+import com.github.theredbrain.betteradventuremode.effect.FoodStatusEffect;
+import com.github.theredbrain.betteradventuremode.util.AttributeModifierUUIDs;
 import com.github.theredbrain.betteradventuremode.effect.*;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;

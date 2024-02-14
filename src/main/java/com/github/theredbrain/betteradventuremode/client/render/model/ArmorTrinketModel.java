@@ -1,7 +1,7 @@
 package com.github.theredbrain.betteradventuremode.client.render.model;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
-import com.github.theredbrain.betteradventuremode.api.item.ArmorTrinketItem;
+import com.github.theredbrain.betteradventuremode.item.ArmorTrinketItem;
 import mod.azure.azurelib.common.api.client.model.GeoModel;
 import net.minecraft.util.Identifier;
 

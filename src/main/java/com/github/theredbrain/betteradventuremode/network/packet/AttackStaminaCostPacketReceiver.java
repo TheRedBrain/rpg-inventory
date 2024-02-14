@@ -1,8 +1,7 @@
 package com.github.theredbrain.betteradventuremode.network.packet;
 
-import com.github.theredbrain.betteradventuremode.api.item.BasicWeaponItem;
+import com.github.theredbrain.betteradventuremode.item.BasicWeaponItem;
 import com.github.theredbrain.betteradventuremode.entity.DuckLivingEntityMixin;
-import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.betteradventuremode.registry.ServerPacketRegistry;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;

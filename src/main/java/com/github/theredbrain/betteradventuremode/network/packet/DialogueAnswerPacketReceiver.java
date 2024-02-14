@@ -1,7 +1,7 @@
 package com.github.theredbrain.betteradventuremode.network.packet;
 
-import com.github.theredbrain.betteradventuremode.api.json_files_backend.DialogueAnswer;
-import com.github.theredbrain.betteradventuremode.api.util.ItemUtils;
+import com.github.theredbrain.betteradventuremode.data.DialogueAnswer;
+import com.github.theredbrain.betteradventuremode.util.ItemUtils;
 import com.github.theredbrain.betteradventuremode.block.Triggerable;
 import com.github.theredbrain.betteradventuremode.block.entity.DialogueBlockEntity;
 import com.github.theredbrain.betteradventuremode.registry.DialogueAnswersRegistry;

@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.entity.player;
 
-import com.github.theredbrain.betteradventuremode.api.json_files_backend.Dialogue;
+import com.github.theredbrain.betteradventuremode.data.Dialogue;
 import com.github.theredbrain.betteradventuremode.block.entity.*;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.inventory.SimpleInventory;

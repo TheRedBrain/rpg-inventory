@@ -1,6 +1,5 @@
 package com.github.theredbrain.betteradventuremode.item;
 
-import com.github.theredbrain.betteradventuremode.api.item.BasicWeaponItem;
 import com.github.theredbrain.betteradventuremode.registry.DamageTypesRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;

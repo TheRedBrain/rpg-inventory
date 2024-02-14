@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.block.entity;
 
-import com.github.theredbrain.betteradventuremode.api.json_files_backend.Shop;
+import com.github.theredbrain.betteradventuremode.data.Shop;
 import com.github.theredbrain.betteradventuremode.registry.EntityRegistry;
 import com.github.theredbrain.betteradventuremode.registry.ShopsRegistry;
 import com.github.theredbrain.betteradventuremode.screen.ShopBlockScreenHandler;

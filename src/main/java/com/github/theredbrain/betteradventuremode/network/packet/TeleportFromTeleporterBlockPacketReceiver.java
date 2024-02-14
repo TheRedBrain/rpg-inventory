@@ -1,9 +1,9 @@
 package com.github.theredbrain.betteradventuremode.network.packet;
 
-import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.BetterAdventureModeClient;
-import com.github.theredbrain.betteradventuremode.api.json_files_backend.Location;
-import com.github.theredbrain.betteradventuremode.api.util.ItemUtils;
+import com.github.theredbrain.betteradventuremode.data.Location;
+import com.github.theredbrain.betteradventuremode.util.ItemUtils;
+import com.github.theredbrain.betteradventuremode.block.entity.EntranceDelegationBlockEntity;
 import com.github.theredbrain.betteradventuremode.block.entity.LocationControlBlockEntity;
 import com.github.theredbrain.betteradventuremode.block.entity.TeleporterBlockBlockEntity;
 import com.github.theredbrain.betteradventuremode.registry.ComponentsRegistry;
@@ -14,7 +14,6 @@ import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -198,13 +197,13 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
                             }
                             playerHadKeyItem = keyCount <= 0;
                         }
-//                        // TODO add EntranceDelegationBlock
-//                        if (targetWorld.getBlockEntity(targetPos) instanceof EntranceDelegationBlockEntity entranceDelegationBlockEntity) {
-//                            targetPos = entranceDelegationBlockEntity.getEntrancePosition();
-//                            targetYaw = entranceDelegationBlockEntity.getEntranceYaw();
-//                            targetPitch = entranceDelegationBlockEntity.getEntrancePitch();
-//                        }
-//                        BetterAdventureMode.info("targetPos: " + targetPos);
+
+                        if (targetWorld.getBlockEntity(targetPos) instanceof EntranceDelegationBlockEntity entranceDelegationBlockEntity) {
+                            MutablePair<BlockPos, MutablePair<Double, Double>> delegatedEntrance = entranceDelegationBlockEntity.getDelegatedEntrance();
+                            targetPos = delegatedEntrance.getLeft();
+                            targetYaw = delegatedEntrance.getRight().getLeft();
+                            targetPitch = delegatedEntrance.getRight().getRight();
+                        }
 
                         if (setAccessPosition && Identifier.isValid(accessPositionDimension)) {
                             ComponentsRegistry.PLAYER_LOCATION_ACCESS_POS.get(serverPlayerEntity).setValue(new Pair<>(new Pair<>(accessPositionDimension, teleportBlockPosition.add(accessPositionOffset.getX(), accessPositionOffset.getY(), accessPositionOffset.getZ())), true));

@@ -1,7 +1,7 @@
 package com.github.theredbrain.betteradventuremode.network.packet;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
-import com.github.theredbrain.betteradventuremode.api.util.PacketByteBufUtils;
+import com.github.theredbrain.betteradventuremode.util.PacketByteBufUtils;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.minecraft.network.PacketByteBuf;

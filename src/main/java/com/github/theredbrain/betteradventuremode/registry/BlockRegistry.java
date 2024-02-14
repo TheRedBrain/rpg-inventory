@@ -1,9 +1,9 @@
 package com.github.theredbrain.betteradventuremode.registry;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
-import com.github.theredbrain.betteradventuremode.api.block.InteractiveAdventureFullToAirBlock;
-import com.github.theredbrain.betteradventuremode.api.block.InteractiveAdventureLogBlock;
-import com.github.theredbrain.betteradventuremode.api.block.InteractiveAdventurePlantBlock;
+import com.github.theredbrain.betteradventuremode.block.InteractiveAdventureFullToAirBlock;
+import com.github.theredbrain.betteradventuremode.block.InteractiveAdventureLogBlock;
+import com.github.theredbrain.betteradventuremode.block.InteractiveAdventurePlantBlock;
 import com.github.theredbrain.betteradventuremode.block.*;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;

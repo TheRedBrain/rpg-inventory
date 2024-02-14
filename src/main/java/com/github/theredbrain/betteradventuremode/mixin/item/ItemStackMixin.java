@@ -1,8 +1,8 @@
 package com.github.theredbrain.betteradventuremode.mixin.item;
 
-import com.github.theredbrain.betteradventuremode.api.item.BasicWeaponItem;
-import com.github.theredbrain.betteradventuremode.api.item.BasicShieldItem;
-import com.github.theredbrain.betteradventuremode.api.util.ItemUtils;
+import com.github.theredbrain.betteradventuremode.item.BasicWeaponItem;
+import com.github.theredbrain.betteradventuremode.item.BasicShieldItem;
+import com.github.theredbrain.betteradventuremode.util.ItemUtils;
 import com.github.theredbrain.betteradventuremode.registry.StatusEffectsRegistry;
 import com.github.theredbrain.betteradventuremode.registry.Tags;
 import com.google.common.collect.*;

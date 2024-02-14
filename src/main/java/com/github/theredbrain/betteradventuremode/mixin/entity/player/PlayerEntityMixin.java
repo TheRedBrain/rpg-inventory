@@ -1,10 +1,10 @@
 package com.github.theredbrain.betteradventuremode.mixin.entity.player;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
-import com.github.theredbrain.betteradventuremode.api.block.AbstractSetSpawnBlock;
-import com.github.theredbrain.betteradventuremode.api.item.BasicWeaponItem;
-import com.github.theredbrain.betteradventuremode.api.effect.FoodStatusEffect;
-import com.github.theredbrain.betteradventuremode.api.json_files_backend.Dialogue;
+import com.github.theredbrain.betteradventuremode.block.AbstractSetSpawnBlock;
+import com.github.theredbrain.betteradventuremode.item.BasicWeaponItem;
+import com.github.theredbrain.betteradventuremode.effect.FoodStatusEffect;
+import com.github.theredbrain.betteradventuremode.data.Dialogue;
 import com.github.theredbrain.betteradventuremode.block.entity.*;
 import com.github.theredbrain.betteradventuremode.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;

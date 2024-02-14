@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.network.packet;
 
-import com.github.theredbrain.betteradventuremode.api.util.MathUtils;
+import com.github.theredbrain.betteradventuremode.util.MathUtils;
 import com.github.theredbrain.betteradventuremode.entity.decoration.MannequinEntity;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;

@@ -52,7 +52,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
     @Unique
     private final int spellSlotsX = 98;
     @Unique
-    private final int spellSlotsY = 93;
+    private final int spellSlotsY = 90;
 
     public PlayerScreenHandlerMixin() {
         super(null, 0);
@@ -70,12 +70,12 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
             for (int i = 0; i < 3; ++i) {
                 for (int j = 0; j < 9; ++j) {
 //                    this.slots.get(j + (i + 1) * 9).y = 146 + i * 18;
-                    ((DuckSlotMixin)this.slots.get(j + (i + 1) * 9)).betteradventuremode$setY(146 + i * 18);
+                    ((DuckSlotMixin)this.slots.get(j + (i + 1) * 9)).betteradventuremode$setY(138 + i * 18);
                 }
             }
             for (int i = 0; i < 9; ++i) {
 //                this.slots.get(i + 36).y = 204;
-                ((DuckSlotMixin)this.slots.get(i + 36)).betteradventuremode$setY(204);
+                ((DuckSlotMixin)this.slots.get(i + 36)).betteradventuremode$setY(196);
             }
         }
 
@@ -129,72 +129,72 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
                         if (order == 1) {
                             // leggings
                             x = 8;
-                            y = 93;
+                            y = 90;
 
                         } else if (order == 2) {
                             // belts
                             x = 8;
-                            y = 75;
+                            y = 72;
 
                         } else if (order == 3) {
                             // chest_plates
                             x = 8;
-                            y = 57;
+                            y = 54;
 
                         } else if (order == 4) {
                             // shoulders
                             x = 8;
-                            y = 39;
+                            y = 36;
 
                         } else if (order == 5) {
                             // helmets
                             x = 33;
-                            y = 21;
+                            y = 18;
 
                         } else if (order == 6) {
                             // necklaces
                             x = 52;
-                            y = 21;
+                            y = 18;
 
                         } else if (order == 7) {
                             // rings 1
                             x = 77;
-                            y = 39;
+                            y = 36;
 
                         } else if (order == 8) {
                             // rings 2
                             x = 77;
-                            y = 57;
+                            y = 54;
 
                         } else if (order == 9) {
                             // gloves
                             x = 77;
-                            y = 75;
+                            y = 72;
 
                         } else if (order == 10) {
                             // boots
                             x = 77;
-                            y = 93;
+                            y = 90;
 
                         } else if (order == 11) {
                             // main_hand
                             x = 8;
-                            y = 111;
+                            y = 108;
 
                         } else if (order == 12) {
                             // off_hand
                             x = 26;
-                            y = 111;
+                            y = 108;
 
                         } else if (order == 13) {
                             // alternative main hand
                             x = 59;
-                            y = 111;
+                            y = 108;
 
                         } else if (order == 14) {
                             // alternative off hand
                             x = 77;
-                            y = 111;
+                            y = 108;
 
                         } else if (order == 15) {
                             // spell slot 1

@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.client.gui.screen.ingame;
 
-import com.github.theredbrain.betteradventuremode.api.util.ItemUtils;
+import com.github.theredbrain.betteradventuremode.util.ItemUtils;
 import com.github.theredbrain.betteradventuremode.block.entity.JigsawPlacerBlockBlockEntity;
 import com.github.theredbrain.betteradventuremode.network.packet.UpdateJigsawPlacerBlockPacket;
 import net.fabricmc.api.EnvType;

@@ -2,7 +2,7 @@ package com.github.theredbrain.betteradventuremode.mixin.entity;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.BetterAdventureModeClient;
-import com.github.theredbrain.betteradventuremode.api.item.BasicShieldItem;
+import com.github.theredbrain.betteradventuremode.item.BasicShieldItem;
 import com.github.theredbrain.betteradventuremode.registry.EntityAttributesRegistry;
 import com.github.theredbrain.betteradventuremode.registry.StatusEffectsRegistry;
 import com.github.theredbrain.betteradventuremode.entity.DuckLivingEntityMixin;
@@ -164,7 +164,6 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
     @Shadow
     public abstract boolean addStatusEffect(StatusEffectInstance effect, @Nullable Entity source);
 
-    @Shadow private @Nullable LivingEntity attacker;
     @Unique
     private int healthTickTimer = 0;
     @Unique
@@ -596,6 +595,10 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
         }
         if (this.isInvulnerableTo(source)) {
             return;
+        }
+
+        if (this.hasStatusEffect(StatusEffectsRegistry.STAGGERED)) {
+            amount = amount * 2;
         }
 
         if (!source.isIn(DamageTypeTags.BYPASSES_ARMOR)) {

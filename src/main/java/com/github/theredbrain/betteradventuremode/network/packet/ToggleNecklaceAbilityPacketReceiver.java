@@ -1,7 +1,7 @@
 package com.github.theredbrain.betteradventuremode.network.packet;
 
-import com.github.theredbrain.betteradventuremode.api.effect.AuraStatusEffect;
-import com.github.theredbrain.betteradventuremode.api.item.AuraGrantingNecklaceTrinketItem;
+import com.github.theredbrain.betteradventuremode.effect.AuraStatusEffect;
+import com.github.theredbrain.betteradventuremode.item.AuraGrantingNecklaceTrinketItem;
 import com.github.theredbrain.betteradventuremode.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.betteradventuremode.registry.Tags;
 import dev.emi.trinkets.api.TrinketComponent;

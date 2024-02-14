@@ -1,7 +1,7 @@
 package com.github.theredbrain.betteradventuremode.block.entity;
 
-import com.github.theredbrain.betteradventuremode.api.json_files_backend.Dialogue;
-import com.github.theredbrain.betteradventuremode.api.util.BlockRotationUtils;
+import com.github.theredbrain.betteradventuremode.data.Dialogue;
+import com.github.theredbrain.betteradventuremode.util.BlockRotationUtils;
 import com.github.theredbrain.betteradventuremode.block.RotatedBlockWithEntity;
 import com.github.theredbrain.betteradventuremode.client.network.DuckClientAdvancementManagerMixin;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;

@@ -1,7 +1,7 @@
 package com.github.theredbrain.betteradventuremode.client.gui.screen.ingame;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
-import com.github.theredbrain.betteradventuremode.api.effect.FoodStatusEffect;
+import com.github.theredbrain.betteradventuremode.effect.FoodStatusEffect;
 import com.github.theredbrain.betteradventuremode.registry.EntityAttributesRegistry;
 import com.github.theredbrain.betteradventuremode.screen.DuckSlotMixin;
 import com.google.common.collect.Ordering;
@@ -72,9 +72,13 @@ public class AdventureInventoryScreen extends HandledScreen<PlayerScreenHandler>
     private boolean neutralMouseClicked = false;
 
     public AdventureInventoryScreen(PlayerEntity player) {
-        super(player.playerScreenHandler, player.getInventory(), Text.translatable("gui.adventureInventory"));
+        super(player.playerScreenHandler, player.getInventory(), Text.translatable("gui.adventureInventory.equipmentSlots"));
         this.backgroundWidth = 176;
-        this.backgroundHeight = 228;
+        this.backgroundHeight = 220;
+        this.titleX = 8;
+        this.titleY = 6;
+        this.playerInventoryTitleX = 8;
+        this.playerInventoryTitleY = this.backgroundHeight - 93;
     }
 
     public void handledScreenTick() {
@@ -175,11 +179,6 @@ public class AdventureInventoryScreen extends HandledScreen<PlayerScreenHandler>
     }
 
     @Override
-    protected void drawForeground(DrawContext context, int mouseX, int mouseY) {
-        context.drawText(this.textRenderer, this.title, this.titleX, this.titleY, 0x404040, false);
-    }
-
-    @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         TrinketScreenManager.update(mouseX, mouseY);
         super.render(context, mouseX, mouseY, delta);
@@ -198,11 +197,19 @@ public class AdventureInventoryScreen extends HandledScreen<PlayerScreenHandler>
             activeSpellSlotAmount = (int) this.client.player.getAttributeInstance(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT).getValue();
             updateEffectsLists(this.client.player);
         }
-        context.drawTexture(BetterAdventureMode.identifier("textures/gui/container/adventure_inventory/adventure_inventory_main_background_" + activeSpellSlotAmount + ".png"), i, j, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
+        context.drawTexture(BetterAdventureMode.identifier("textures/gui/container/adventure_inventory/adventure_inventory_main_background.png"), i, j, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
+        if (activeSpellSlotAmount > 0) {
+            int width = activeSpellSlotAmount < 5 ? (activeSpellSlotAmount % 5) * 18 : 72;
+            int height = activeSpellSlotAmount < 5 ? 18 : 36;
+            context.drawTexture(BetterAdventureMode.identifier("textures/gui/container/adventure_inventory/adventure_inventory_spells_background_" + activeSpellSlotAmount + ".png"), this.x + 97, this.y + 89, 0, 0, width, height, width, height);
+
+        }
         if (this.oldEffectsListSize > 0) {
             context.drawTexture(ADVENTURE_INVENTORY_SIDES_BACKGROUND_TEXTURE, i - 130, j, 0, 0, 130, this.backgroundHeight, 130, this.backgroundHeight);
         }
-        InventoryScreen.drawEntity(context, i + 26, j + 39, i + 75, j + 109, 30, 0.0625f, this.mouseX, this.mouseY, this.client.player);
+        if (this.client != null && this.client.player != null) {
+            InventoryScreen.drawEntity(context, i + 26, j + 36, i + 75, j + 106, 30, 0.0625f, this.mouseX, this.mouseY, this.client.player);
+        }
     }
 
     @Override

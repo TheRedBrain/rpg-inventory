@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.client.gui.screen.ingame;
 
-import com.github.theredbrain.betteradventuremode.api.util.ItemUtils;
+import com.github.theredbrain.betteradventuremode.util.ItemUtils;
 import com.github.theredbrain.betteradventuremode.block.entity.MimicBlockEntity;
 import com.github.theredbrain.betteradventuremode.network.packet.UpdateMimicBlockPacket;
 import net.fabricmc.api.EnvType;

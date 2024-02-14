@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.client.render.renderer;
 
-import com.github.theredbrain.betteradventuremode.api.item.AccessoryTrinketItem;
+import com.github.theredbrain.betteradventuremode.item.AccessoryTrinketItem;
 import com.github.theredbrain.betteradventuremode.client.render.model.AccessoryTrinketModel;
 import net.minecraft.util.Identifier;
 

@@ -1,8 +1,8 @@
 package com.github.theredbrain.betteradventuremode.client.gui.screen.ingame;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
-import com.github.theredbrain.betteradventuremode.api.json_files_backend.Shop;
-import com.github.theredbrain.betteradventuremode.api.util.ItemUtils;
+import com.github.theredbrain.betteradventuremode.data.Shop;
+import com.github.theredbrain.betteradventuremode.util.ItemUtils;
 import com.github.theredbrain.betteradventuremode.block.entity.ShopBlockEntity;
 import com.github.theredbrain.betteradventuremode.network.packet.UpdateShopBlockPacket;
 import com.github.theredbrain.betteradventuremode.screen.DuckSlotMixin;

@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.block;
 
-import com.github.theredbrain.betteradventuremode.api.util.BlockRotationUtils;
+import com.github.theredbrain.betteradventuremode.util.BlockRotationUtils;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

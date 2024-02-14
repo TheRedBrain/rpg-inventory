@@ -2,8 +2,8 @@ package com.github.theredbrain.betteradventuremode.registry;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.BetterAdventureModeClient;
-import com.github.theredbrain.betteradventuremode.api.json_files_backend.Dialogue;
-import com.github.theredbrain.betteradventuremode.api.json_files_backend.DialogueHelper;
+import com.github.theredbrain.betteradventuremode.data.Dialogue;
+import com.github.theredbrain.betteradventuremode.data.DialogueHelper;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;

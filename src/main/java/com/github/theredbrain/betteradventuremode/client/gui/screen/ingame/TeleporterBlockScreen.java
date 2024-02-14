@@ -1,8 +1,8 @@
 package com.github.theredbrain.betteradventuremode.client.gui.screen.ingame;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
-import com.github.theredbrain.betteradventuremode.api.json_files_backend.Location;
-import com.github.theredbrain.betteradventuremode.api.util.ItemUtils;
+import com.github.theredbrain.betteradventuremode.data.Location;
+import com.github.theredbrain.betteradventuremode.util.ItemUtils;
 import com.github.theredbrain.betteradventuremode.block.entity.TeleporterBlockBlockEntity;
 import com.github.theredbrain.betteradventuremode.client.network.DuckClientAdvancementManagerMixin;
 import com.github.theredbrain.betteradventuremode.network.packet.AddStatusEffectPacket;
@@ -177,6 +177,8 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
     private boolean visibleLocationsListMouseClicked = false;
 
     private boolean isTeleportButtonActive = true;
+    private boolean canLocationBeRegenerated = false;
+    private boolean isRegenerateButtonActive = true;
     private boolean showCurrentLockAdvancement;
     private boolean showCurrentUnlockAdvancement;
     private boolean isCurrentLocationUnlocked;
@@ -219,17 +221,19 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
         this.updateWidgets();
     }
 
-    private void confirmChooseCurrentTargetOwner() {
-        this.showChooseTargetOwnerScreen = false;
-//        this.thisMethodHandlesTheAdvancementStuff(false);
-        this.updateWidgets();
-    }
+//    private void confirmChooseCurrentTargetOwner() {
+//        this.showChooseTargetOwnerScreen = false;
+////        this.thisMethodHandlesTheAdvancementStuff(false);
+//        this.updateWidgets();
+//    }
 
     private void chooseTargetOwner(int index) {
+        this.canLocationBeRegenerated = false;
         if (index == -2) {
             this.currentTargetOwner = null;
         } else if (index == -1 && this.client != null && this.client.player != null) {
             this.currentTargetOwner = this.client.player.networkHandler.getPlayerListEntry(this.client.player.getUuid());
+            this.canLocationBeRegenerated = true;
         } else {
             this.currentTargetOwner = this.partyMemberList.get(this.teamListScrollPosition + index);
         }
@@ -348,6 +352,7 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
             }
             if (this.client.player != null) {
                 this.currentTargetOwner = this.client.player.networkHandler.getPlayerListEntry(this.client.player.getUuid());
+                this.canLocationBeRegenerated = true;
             }
         }
         this.locationsList.clear();
@@ -364,7 +369,7 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
             }
             this.backgroundWidth = 218;
             if (this.teleporterBlock.getTeleportationMode() == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS) {
-                this.backgroundHeight = 147;//158;
+                this.backgroundHeight = 171;//147;
                 this.calculateUnlockedAndVisibleLocations(true);
             } else {
                 this.backgroundHeight = 47;
@@ -388,6 +393,10 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
         this.confirmChooseTeamMember2Button = this.addDrawableChild(ButtonWidget.builder(CHOOSE_BUTTON_LABEL_TEXT, button -> this.chooseTargetOwner(2)).dimensions(this.x + this.backgroundWidth - 57, this.y + 116, 50, 20).build());
         this.confirmChooseTeamMember3Button = this.addDrawableChild(ButtonWidget.builder(CHOOSE_BUTTON_LABEL_TEXT, button -> this.chooseTargetOwner(3)).dimensions(this.x + this.backgroundWidth - 57, this.y + 140, 50, 20).build());
         this.cancelChooseTargetOwnerButton = this.addDrawableChild(ButtonWidget.builder(CANCEL_BUTTON_LABEL_TEXT, button -> this.cancelChooseCurrentTargetOwner()).dimensions(this.x + 7, this.y + this.backgroundHeight - 27, this.backgroundWidth - 14, 20).build());
+
+        this.openDungeonRegenerationScreenButton = this.addDrawableChild(ButtonWidget.builder(EDIT_BUTTON_LABEL_TEXT, button -> this.openDungeonRegenerationConfirmScreen()).dimensions(this.x + 7, this.y + this.backgroundHeight - 51, this.backgroundWidth - 14, 20).build());
+        this.confirmDungeonRegenerationButton = this.addDrawableChild(ButtonWidget.builder(CHOOSE_BUTTON_LABEL_TEXT, button -> this.confirmDungeonRegeneration()).dimensions(this.x + 7, this.y + this.backgroundHeight - 27, (this.backgroundWidth - 18) / 2, 20).build());
+        this.cancelDungeonRegenerationButton = this.addDrawableChild(ButtonWidget.builder(CANCEL_BUTTON_LABEL_TEXT, button -> this.cancelDungeonRegeneration()).dimensions(this.x + this.backgroundWidth / 2 + 2, this.y + this.backgroundHeight - 27, (this.backgroundWidth - 18) / 2, 20).build());
 
         this.teleportButton = this.addDrawableChild(ButtonWidget.builder(Text.translatable(this.teleporterBlock.getTeleportButtonLabel()), button -> this.teleport()).dimensions(this.x + 7, this.y + this.backgroundHeight - 27, 100, 20).build());
         this.cancelTeleportButton = this.addDrawableChild(ButtonWidget.builder(Text.translatable(this.teleporterBlock.getCancelTeleportButtonLabel()), button -> this.cancelTeleport()).dimensions(this.x + this.backgroundWidth - 107, this.y + this.backgroundHeight - 27, 100, 20).build());
@@ -592,6 +601,10 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
         this.confirmChooseTeamMember3Button.visible = false;
         this.cancelChooseTargetOwnerButton.visible = false;
 
+        this.openDungeonRegenerationScreenButton.visible = false;
+        this.confirmDungeonRegenerationButton.visible = false;
+        this.cancelDungeonRegenerationButton.visible = false;
+
         this.teleportButton.visible = false;
         this.cancelTeleportButton.visible = false;
 
@@ -780,9 +793,12 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
                     }
                 }
 
+                this.openDungeonRegenerationScreenButton.visible = true;
+
                 this.teleportButton.visible = true;
                 this.cancelTeleportButton.visible = true;
 
+                this.openDungeonRegenerationScreenButton.active = this.isRegenerateButtonActive;
                 this.teleportButton.active = this.isTeleportButtonActive;
             }
         }
@@ -894,6 +910,8 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
                         bl = false;
                     }
                 }
+
+                this.isRegenerateButtonActive = this.isCurrentLocationUnlocked && this.canLocationBeRegenerated && this.currentTargetOwner != null;
 
                 this.isTeleportButtonActive = this.isCurrentLocationUnlocked && bl;
             }
@@ -1264,6 +1282,11 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
     }
 
     private boolean tryDungeonRegeneration() {
+        BetterAdventureMode.info("tryDungeonRegeneration");
+        if (this.canLocationBeRegenerated) {
+            BetterAdventureMode.info("canLocationBeRegenerated: " + true);
+            return true;
+        }
 //        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
 ////        buf.writeString(component(LabelComponent.class, "currentTeleportationTargetEntryLabel").text().getString());
 //        buf.writeString(this.client.player.getName().getString());
@@ -1278,7 +1301,7 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
 //        buf.writeBlockPos(this.teleporterBlock.getRegenerateTargetDungeonTriggerBlockPosition());
 ////
 //        this.client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModeCoreServerPacket.REGENERATE_DIMENSION_FROM_TELEPORTER_BLOCK, buf));
-        return true;
+        return false;
     }
 
     private void teleport() {

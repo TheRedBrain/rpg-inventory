@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.block.entity;
 
-import com.github.theredbrain.betteradventuremode.api.util.BlockRotationUtils;
+import com.github.theredbrain.betteradventuremode.util.BlockRotationUtils;
 import com.github.theredbrain.betteradventuremode.block.RotatedBlockWithEntity;
 import com.github.theredbrain.betteradventuremode.registry.StatusEffectsRegistry;
 import com.github.theredbrain.betteradventuremode.registry.BlockRegistry;

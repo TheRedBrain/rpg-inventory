@@ -1,7 +1,7 @@
 package com.github.theredbrain.betteradventuremode.network.packet;
 
-import com.github.theredbrain.betteradventuremode.api.json_files_backend.CraftingRecipe;
-import com.github.theredbrain.betteradventuremode.api.util.ItemUtils;
+import com.github.theredbrain.betteradventuremode.data.CraftingRecipe;
+import com.github.theredbrain.betteradventuremode.util.ItemUtils;
 import com.github.theredbrain.betteradventuremode.registry.CraftingRecipeRegistry;
 import com.github.theredbrain.betteradventuremode.screen.CraftingBenchBlockScreenHandler;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;

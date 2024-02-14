@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.screen;
 
-import com.github.theredbrain.betteradventuremode.api.json_files_backend.CraftingRecipe;
+import com.github.theredbrain.betteradventuremode.data.CraftingRecipe;
 import com.github.theredbrain.betteradventuremode.client.network.DuckClientAdvancementManagerMixin;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.betteradventuremode.network.packet.CraftFromCraftingBenchPacket;

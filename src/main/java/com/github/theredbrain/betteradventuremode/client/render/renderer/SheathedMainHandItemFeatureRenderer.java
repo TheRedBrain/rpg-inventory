@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.client.render.renderer;
 
-import com.github.theredbrain.betteradventuremode.api.item.BasicWeaponItem;
+import com.github.theredbrain.betteradventuremode.item.BasicWeaponItem;
 import com.github.theredbrain.betteradventuremode.entity.IRenderEquippedTrinkets;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

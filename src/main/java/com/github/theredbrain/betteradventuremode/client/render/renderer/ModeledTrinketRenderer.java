@@ -1,10 +1,9 @@
 package com.github.theredbrain.betteradventuremode.client.render.renderer;
 
-import com.github.theredbrain.betteradventuremode.api.item.ArmorTrinketItem;
-import com.github.theredbrain.betteradventuremode.api.util.ItemUtils;
+import com.github.theredbrain.betteradventuremode.item.ArmorTrinketItem;
+import com.github.theredbrain.betteradventuremode.util.ItemUtils;
 import com.github.theredbrain.betteradventuremode.azurelib.BetterAdventureModeDataTickets;
 import com.github.theredbrain.betteradventuremode.azurelib.Trinket;
-import dev.emi.trinkets.api.SlotReference;
 import mod.azure.azurelib.common.api.client.model.GeoModel;
 import mod.azure.azurelib.common.api.client.renderer.layer.GeoRenderLayer;
 import mod.azure.azurelib.common.api.client.renderer.layer.GeoRenderLayersContainer;

@@ -1,7 +1,7 @@
 package com.github.theredbrain.betteradventuremode.network.packet;
 
-import com.github.theredbrain.betteradventuremode.api.json_files_backend.Shop;
-import com.github.theredbrain.betteradventuremode.api.util.ItemUtils;
+import com.github.theredbrain.betteradventuremode.data.Shop;
+import com.github.theredbrain.betteradventuremode.util.ItemUtils;
 import com.github.theredbrain.betteradventuremode.registry.ShopsRegistry;
 import com.github.theredbrain.betteradventuremode.screen.ShopBlockScreenHandler;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;

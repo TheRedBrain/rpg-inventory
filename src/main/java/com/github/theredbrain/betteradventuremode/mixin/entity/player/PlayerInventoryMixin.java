@@ -1,9 +1,9 @@
 package com.github.theredbrain.betteradventuremode.mixin.entity.player;
 
-import com.github.theredbrain.betteradventuremode.api.item.ArmorTrinketItem;
+import com.github.theredbrain.betteradventuremode.item.ArmorTrinketItem;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerInventoryMixin;
-import com.github.theredbrain.betteradventuremode.api.util.ItemUtils;
+import com.github.theredbrain.betteradventuremode.util.ItemUtils;
 import com.github.theredbrain.betteradventuremode.registry.StatusEffectsRegistry;
 import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketsApi;

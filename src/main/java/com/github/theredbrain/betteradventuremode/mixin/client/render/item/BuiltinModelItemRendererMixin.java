@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.mixin.client.render.item;
 
-import com.github.theredbrain.betteradventuremode.api.item.BasicShieldItem;
+import com.github.theredbrain.betteradventuremode.item.BasicShieldItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumer;

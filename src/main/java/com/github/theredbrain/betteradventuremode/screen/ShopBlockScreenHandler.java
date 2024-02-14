@@ -1,7 +1,7 @@
 package com.github.theredbrain.betteradventuremode.screen;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
-import com.github.theredbrain.betteradventuremode.api.json_files_backend.Shop;
+import com.github.theredbrain.betteradventuremode.data.Shop;
 import com.github.theredbrain.betteradventuremode.block.entity.ShopBlockEntity;
 import com.github.theredbrain.betteradventuremode.client.network.DuckClientAdvancementManagerMixin;
 import com.github.theredbrain.betteradventuremode.network.packet.TradeWithShopPacket;

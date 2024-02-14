@@ -2,8 +2,8 @@ package com.github.theredbrain.betteradventuremode.registry;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.BetterAdventureModeClient;
-import com.github.theredbrain.betteradventuremode.api.json_files_backend.CraftingRecipe;
-import com.github.theredbrain.betteradventuremode.api.json_files_backend.CraftingRecipeHelper;
+import com.github.theredbrain.betteradventuremode.data.CraftingRecipe;
+import com.github.theredbrain.betteradventuremode.data.CraftingRecipeHelper;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;

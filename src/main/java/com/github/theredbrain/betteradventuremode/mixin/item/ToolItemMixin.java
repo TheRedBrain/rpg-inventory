@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.mixin.item;
 
-import com.github.theredbrain.betteradventuremode.api.util.ItemUtils;
+import com.github.theredbrain.betteradventuremode.util.ItemUtils;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ToolItem;

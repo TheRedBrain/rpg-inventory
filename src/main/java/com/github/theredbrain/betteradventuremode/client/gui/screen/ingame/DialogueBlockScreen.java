@@ -1,9 +1,9 @@
 package com.github.theredbrain.betteradventuremode.client.gui.screen.ingame;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
-import com.github.theredbrain.betteradventuremode.api.json_files_backend.Dialogue;
-import com.github.theredbrain.betteradventuremode.api.json_files_backend.DialogueAnswer;
-import com.github.theredbrain.betteradventuremode.api.util.ItemUtils;
+import com.github.theredbrain.betteradventuremode.data.Dialogue;
+import com.github.theredbrain.betteradventuremode.data.DialogueAnswer;
+import com.github.theredbrain.betteradventuremode.util.ItemUtils;
 import com.github.theredbrain.betteradventuremode.block.entity.DialogueBlockEntity;
 import com.github.theredbrain.betteradventuremode.client.network.DuckClientAdvancementManagerMixin;
 import com.github.theredbrain.betteradventuremode.network.packet.UpdateDialogueBlockPacket;

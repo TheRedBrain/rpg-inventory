@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.mixin.entity.damage;
 
-import com.github.theredbrain.betteradventuremode.api.item.BasicWeaponItem;
+import com.github.theredbrain.betteradventuremode.item.BasicWeaponItem;
 import com.github.theredbrain.betteradventuremode.entity.damage.DuckDamageSourcesMixin;
 import com.github.theredbrain.betteradventuremode.registry.DamageTypesRegistry;
 import com.github.theredbrain.betteradventuremode.registry.StatusEffectsRegistry;
@@ -8,13 +8,11 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageSources;
 import net.minecraft.entity.damage.DamageType;
-import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.RegistryKey;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

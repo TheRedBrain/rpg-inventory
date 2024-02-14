@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.mixin.item;
 
-import com.github.theredbrain.betteradventuremode.api.util.ItemUtils;
+import com.github.theredbrain.betteradventuremode.util.ItemUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;

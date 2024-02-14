@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.mixin.client.network;
 
-import com.github.theredbrain.betteradventuremode.api.json_files_backend.Dialogue;
+import com.github.theredbrain.betteradventuremode.data.Dialogue;
 import com.github.theredbrain.betteradventuremode.block.entity.*;
 import com.github.theredbrain.betteradventuremode.client.gui.screen.ingame.*;
 import com.github.theredbrain.betteradventuremode.entity.DuckLivingEntityMixin;

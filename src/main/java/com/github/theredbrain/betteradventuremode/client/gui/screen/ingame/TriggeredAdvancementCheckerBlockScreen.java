@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.client.gui.screen.ingame;
 
-import com.github.theredbrain.betteradventuremode.api.util.ItemUtils;
+import com.github.theredbrain.betteradventuremode.util.ItemUtils;
 import com.github.theredbrain.betteradventuremode.block.entity.TriggeredAdvancementCheckerBlockEntity;
 import com.github.theredbrain.betteradventuremode.network.packet.UpdateTriggeredAdvancementCheckerBlockPacket;
 import net.fabricmc.api.EnvType;

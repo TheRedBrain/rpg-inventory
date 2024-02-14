@@ -1,7 +1,7 @@
 package com.github.theredbrain.betteradventuremode.client.gui.screen.ingame;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
-import com.github.theredbrain.betteradventuremode.api.util.ItemUtils;
+import com.github.theredbrain.betteradventuremode.util.ItemUtils;
 import com.github.theredbrain.betteradventuremode.block.entity.TriggeredSpawnerBlockEntity;
 import com.github.theredbrain.betteradventuremode.network.packet.UpdateTriggeredSpawnerBlockPacket;
 import com.google.common.collect.Maps;

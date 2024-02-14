@@ -1,8 +1,7 @@
 package com.github.theredbrain.betteradventuremode.registry;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
-import com.github.theredbrain.betteradventuremode.api.effect.AuraStatusEffect;
-import com.github.theredbrain.betteradventuremode.api.item.*;
+import com.github.theredbrain.betteradventuremode.effect.AuraStatusEffect;
 import com.github.theredbrain.betteradventuremode.item.*;
 import dev.emi.trinkets.api.TrinketItem;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;

@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.entity.decoration;
 
-import com.github.theredbrain.betteradventuremode.api.util.MathUtils;
+import com.github.theredbrain.betteradventuremode.util.MathUtils;
 import com.github.theredbrain.betteradventuremode.client.render.entity.MannequinModelPart;
 import com.github.theredbrain.betteradventuremode.entity.IRenderEquippedTrinkets;
 import com.github.theredbrain.betteradventuremode.registry.DataHandlerRegistry;

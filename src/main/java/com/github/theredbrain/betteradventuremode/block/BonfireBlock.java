@@ -1,6 +1,5 @@
 package com.github.theredbrain.betteradventuremode.block;
 
-import com.github.theredbrain.betteradventuremode.api.block.AbstractSetSpawnBlock;
 import com.github.theredbrain.betteradventuremode.block.entity.BonfireBlockBlockEntity;
 import com.github.theredbrain.betteradventuremode.registry.EntityRegistry;
 import com.mojang.serialization.MapCodec;

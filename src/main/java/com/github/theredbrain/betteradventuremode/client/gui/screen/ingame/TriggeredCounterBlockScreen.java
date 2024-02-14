@@ -1,7 +1,7 @@
 package com.github.theredbrain.betteradventuremode.client.gui.screen.ingame;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
-import com.github.theredbrain.betteradventuremode.api.util.ItemUtils;
+import com.github.theredbrain.betteradventuremode.util.ItemUtils;
 import com.github.theredbrain.betteradventuremode.block.entity.TriggeredCounterBlockEntity;
 import com.github.theredbrain.betteradventuremode.network.packet.UpdateTriggeredCounterBlockPacket;
 import net.fabricmc.api.EnvType;
