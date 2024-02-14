@@ -1,5 +1,6 @@
 package com.github.theredbrain.betteradventuremode.block.entity;
 
+import com.github.theredbrain.betteradventuremode.block.Resetable;
 import com.github.theredbrain.betteradventuremode.util.BlockRotationUtils;
 import com.github.theredbrain.betteradventuremode.block.RotatedBlockWithEntity;
 import com.github.theredbrain.betteradventuremode.block.Triggerable;
@@ -9,6 +10,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
@@ -20,13 +22,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class LocationControlBlockEntity extends RotatedBlockEntity {
+public class LocationControlBlockEntity extends RotatedBlockEntity implements Resetable {
     private MutablePair<BlockPos, MutablePair<Double, Double>> mainEntrance = new MutablePair<>(new BlockPos(0, 1, 0), new MutablePair<>(0.0, 0.0));
     private HashMap<String, MutablePair<BlockPos, MutablePair<Double, Double>>> sideEntrances = new HashMap<>(Map.of());
     private BlockPos triggeredBlockPositionOffset = new BlockPos(0, 1, 0);
     public LocationControlBlockEntity(BlockPos pos, BlockState state) {
         super(EntityRegistry.LOCATION_CONTROL_BLOCK_ENTITY, pos, state);
     }
+
+    private boolean manualReset = false;
+    private int initialResetTimer = -1;
 
     @Override
     protected void writeNbt(NbtCompound nbt) {
@@ -53,6 +58,10 @@ public class LocationControlBlockEntity extends RotatedBlockEntity {
         nbt.putInt("triggeredBlockPositionOffsetX", this.triggeredBlockPositionOffset.getX());
         nbt.putInt("triggeredBlockPositionOffsetY", this.triggeredBlockPositionOffset.getY());
         nbt.putInt("triggeredBlockPositionOffsetZ", this.triggeredBlockPositionOffset.getZ());
+
+        nbt.putBoolean("manualReset", this.manualReset);
+
+        nbt.putInt("initialResetTimer", this.initialResetTimer);
 
         super.writeNbt(nbt);
     }
@@ -84,6 +93,10 @@ public class LocationControlBlockEntity extends RotatedBlockEntity {
         int p = MathHelper.clamp(nbt.getInt("triggeredBlockPositionOffsetY"), -48, 48);
         int q = MathHelper.clamp(nbt.getInt("triggeredBlockPositionOffsetZ"), -48, 48);
         this.triggeredBlockPositionOffset = new BlockPos(o, p, q);
+
+        this.manualReset = nbt.getBoolean("manualReset");
+
+        this.initialResetTimer = nbt.contains("initialResetTimer", NbtElement.INT_TYPE) ? nbt.getInt("initialResetTimer") : -1;
 
         super.readNbt(nbt);
     }
@@ -148,6 +161,7 @@ public class LocationControlBlockEntity extends RotatedBlockEntity {
     }
 
     public void trigger() {
+        this.manualReset = false;
         if (this.world != null) {
             BlockEntity blockEntity = world.getBlockEntity(new BlockPos(this.pos.getX() + this.triggeredBlockPositionOffset.getX(), this.pos.getY() + this.triggeredBlockPositionOffset.getY(), this.pos.getZ() + this.triggeredBlockPositionOffset.getZ()));
             if (blockEntity instanceof Triggerable triggerable) {
@@ -157,8 +171,27 @@ public class LocationControlBlockEntity extends RotatedBlockEntity {
     }
 
     public boolean shouldReset() {
-        // TODO implement reset timer
-        return false;
+        // TODO
+        //  implement reset timer
+        //  make sure resets only happen when no players are in location
+        return this.manualReset;
+    }
+
+    @Override
+    public void reset() {
+        this.manualReset = true;
+    }
+
+    public void setManualReset(boolean manualReset) {
+        this.manualReset = manualReset;
+    }
+
+    public int getInitialResetTimer() {
+        return this.initialResetTimer;
+    }
+
+    public void setInitialResetTimer(int initialResetTimer) {
+        this.initialResetTimer = initialResetTimer;
     }
 
     @Override

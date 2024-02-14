@@ -80,6 +80,8 @@ public class ServerPacketRegistry {
 
         ServerPlayNetworking.registerGlobalReceiver(UpdateLocationControlBlockPacket.TYPE, new UpdateLocationControlBlockPacketReceiver());
 
+        ServerPlayNetworking.registerGlobalReceiver(SetManualResetLocationControlBlockPacket.TYPE, new SetManualResetLocationControlBlockPacketReceiver());
+
         ServerPlayNetworking.registerGlobalReceiver(CraftFromCraftingBenchPacket.TYPE, new CraftFromCraftingBenchPacketReceiver());
 
         ServerPlayNetworking.registerGlobalReceiver(ToggleUseStashForCraftingPacket.TYPE, new ToggleUseStashForCraftingPacketReceiver());

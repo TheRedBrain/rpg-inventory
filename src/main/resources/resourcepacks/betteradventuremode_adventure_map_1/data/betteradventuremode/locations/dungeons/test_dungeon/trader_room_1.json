@@ -11,5 +11,8 @@
   "showLockAdvancement": false,
   "publicLocation": false,
   "playerLocation": true,
+  "canOwnerBeChosen": false,
+  "stayInCurrentDimension": true,
+  "showAdventureScreen": false,
   "consumeKey": false
 }

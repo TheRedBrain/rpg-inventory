@@ -156,7 +156,7 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
                             String forceLoadRemoveAllCommand = "execute in " + targetWorld.getRegistryKey().getValue() + " run forceload remove " + (blockPos.getX() - 16) + " " + (blockPos.getZ() - 16) + " " + (blockPos.getX() + 31) + " " + (blockPos.getZ() + 31);
                             server.getCommandManager().executeWithPrefix(server.getCommandSource(), forceLoadRemoveAllCommand);
 
-                            blockEntity = null;
+//                            blockEntity = null;
                             locationWasReset = true;
                         }
                     }
@@ -219,6 +219,9 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
             serverPlayerEntity.teleport(targetWorld, (targetPos.getX() + 0.5), (targetPos.getY() + 0.01), (targetPos.getZ() + 0.5), (float) targetYaw, (float) targetPitch);
             if (BetterAdventureModeClient.clientConfig.show_debug_messages) {
                 serverPlayerEntity.sendMessage(Text.of("Teleport to world: " + targetWorld.getRegistryKey().getValue() + " at position: " + (targetPos.getX() + 0.5) + ", " + (targetPos.getY() + 0.01) + ", " + (targetPos.getZ() + 0.5) + ", with yaw: " + targetYaw + " and pitch: " + targetPitch));
+                if (targetWorld != server.getOverworld()) {
+                    serverPlayerEntity.sendMessage(Text.of("World owned by: " + targetDimensionOwnerName));
+                }
             }
             ClientPlayNetworking.send(new SuccessfulTeleportPacket());
         } else {

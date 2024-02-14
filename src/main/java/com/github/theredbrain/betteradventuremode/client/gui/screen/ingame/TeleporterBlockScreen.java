@@ -2,6 +2,7 @@ package com.github.theredbrain.betteradventuremode.client.gui.screen.ingame;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.data.Location;
+import com.github.theredbrain.betteradventuremode.network.packet.SetManualResetLocationControlBlockPacket;
 import com.github.theredbrain.betteradventuremode.util.ItemUtils;
 import com.github.theredbrain.betteradventuremode.block.entity.TeleporterBlockBlockEntity;
 import com.github.theredbrain.betteradventuremode.client.network.DuckClientAdvancementManagerMixin;
@@ -12,6 +13,7 @@ import com.github.theredbrain.betteradventuremode.registry.LocationsRegistry;
 import com.github.theredbrain.betteradventuremode.registry.StatusEffectsRegistry;
 import com.github.theredbrain.betteradventuremode.screen.DuckSlotMixin;
 import com.github.theredbrain.betteradventuremode.screen.TeleporterBlockScreenHandler;
+import com.github.theredbrain.betteradventuremode.util.UUIDUtilities;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -156,6 +158,7 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
     private boolean showChooseTargetIdentifierScreen;
     private boolean showRegenerationConfirmScreen;
     private boolean showActivationArea;
+    private boolean canOwnerBeChosen;
     private boolean showAdventureScreen;
     private boolean setAccessPosition;
 
@@ -371,6 +374,9 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
             if (this.teleporterBlock.getTeleportationMode() == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS) {
                 this.backgroundHeight = 171;//147;
                 this.calculateUnlockedAndVisibleLocations(true);
+                if (!this.showAdventureScreen) {
+                    this.teleport();
+                }
             } else {
                 this.backgroundHeight = 47;
             }
@@ -725,7 +731,7 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
 
         } else {
 
-            if (showChooseTargetIdentifierScreen) {
+            if (this.showChooseTargetIdentifierScreen) {
 
                 int index = 0;
                 for (int i = 0; i < Math.min(4, this.visibleLocationsList.size()); i++) {
@@ -743,7 +749,7 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
 
                 this.cancelChooseTargetIdentifierButton.visible = true;
 
-            } else if (showChooseTargetOwnerScreen) {
+            } else if (this.showChooseTargetOwnerScreen) {
 
                 if (this.isCurrentLocationPublic) {
                     this.confirmChooseCurrentPlayerButton.setY(this.y + 44);
@@ -779,21 +785,23 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
                 }
                 this.cancelChooseTargetOwnerButton.visible = true;
 
-            } else if (showRegenerationConfirmScreen) {
+            } else if (this.showRegenerationConfirmScreen) {
 
                 this.confirmDungeonRegenerationButton.visible = true;
                 this.cancelDungeonRegenerationButton.visible = true;
 
-            } else {
+            } else if (this.showAdventureScreen) {
 
                 if (this.teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS) {
-                    this.openChooseTargetIdentifierScreenButton.visible = true;
-                    if (this.isCurrentLocationPlayer) {
-                        this.openChooseTargetOwnerScreenButton.visible = true;
-                    }
-                }
 
-                this.openDungeonRegenerationScreenButton.visible = true;
+                    this.openChooseTargetIdentifierScreenButton.visible = true;
+
+                    if (this.isCurrentLocationPlayer) {
+                        this.openChooseTargetOwnerScreenButton.visible = this.canOwnerBeChosen;
+                    }
+
+                    this.openDungeonRegenerationScreenButton.visible = true;
+                }
 
                 this.teleportButton.visible = true;
                 this.cancelTeleportButton.visible = true;
@@ -867,6 +875,20 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
             this.isCurrentLocationPlayer = location.playerLocation();
             this.consumeKeyItem = location.consumeKeyAtEntrance(this.currentTargetEntrance);
             this.currentKeyVirtualItemStack = location.getKeyForEntrance(this.currentTargetEntrance);
+            this.canOwnerBeChosen = location.canOwnerBeChosen();
+            if (location.stayInCurrentDimension()) {
+                if (this.teleporterBlock.getWorld() != null) {
+                    String currentWorld = this.teleporterBlock.getWorld().getRegistryKey().getValue().toString();
+                    if (UUIDUtilities.isStringValidUUID(currentWorld)) {
+                        UUID newTargetOwnerUuid = UUID.fromString(currentWorld);
+                        if (this.client != null && this.client.player != null) {
+                            this.currentTargetOwner = this.client.player.networkHandler.getPlayerListEntry(newTargetOwnerUuid);
+                        }
+                    }
+                }
+                this.canOwnerBeChosen = false;
+            }
+            this.showAdventureScreen = location.showAdventureScreen();
             if (advancementHandler != null) {
                 AdvancementEntry lockAdvancementEntry = null;
                 if (!lockAdvancementIdentifier.equals("")) {
@@ -1116,14 +1138,14 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
 
             } else if (this.showChooseTargetOwnerScreen) {
                 if (this.isCurrentLocationPublic) {
-
+                    // TODO
                 }
                 if (this.isCurrentLocationPlayer) {
-
+                    // TODO
                 }
             } else if (this.showRegenerationConfirmScreen) {
-
-            } else {
+                // TODO
+            } else if (this.showAdventureScreen) {
 
                 Text teleporterName = Text.translatable(this.teleporterBlock.getTeleporterName());
                 int teleporterNameOffset = this.backgroundWidth / 2 - this.textRenderer.getWidth(teleporterName) / 2;
@@ -1178,7 +1200,7 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
 
     @Override
     protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
-        if (!this.showCreativeTab) {
+        if (!this.showCreativeTab && this.showAdventureScreen) {
             int i = this.x;
             int j = this.y;
             if (this.teleporterBlock.getTeleportationMode() == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS) {
@@ -1282,25 +1304,16 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
     }
 
     private boolean tryDungeonRegeneration() {
-        BetterAdventureMode.info("tryDungeonRegeneration");
         if (this.canLocationBeRegenerated) {
-            BetterAdventureMode.info("canLocationBeRegenerated: " + true);
-            return true;
+            Location location = LocationsRegistry.getLocation(Identifier.tryParse(this.currentTargetIdentifier));
+            if (location != null) {
+                ClientPlayNetworking.send(new SetManualResetLocationControlBlockPacket(
+                        location.controlBlockPos(),
+                        true
+                ));
+                return true;
+            }
         }
-//        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-////        buf.writeString(component(LabelComponent.class, "currentTeleportationTargetEntryLabel").text().getString());
-//        buf.writeString(this.client.player.getName().getString());
-//
-//        buf.writeString(this.teleporterBlock.getOutgoingTeleportDimension());
-//
-//        buf.writeString(this.teleporterBlock.getTargetDungeonStructureIdentifier());
-//        buf.writeBlockPos(this.teleporterBlock.getTargetDungeonStructureStartPosition());
-//
-//        buf.writeInt(this.teleporterBlock.getTargetDungeonChunkX());
-//        buf.writeInt(this.teleporterBlock.getTargetDungeonChunkZ());
-//        buf.writeBlockPos(this.teleporterBlock.getRegenerateTargetDungeonTriggerBlockPosition());
-////
-//        this.client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(BetterAdventureModeCoreServerPacket.REGENERATE_DIMENSION_FROM_TELEPORTER_BLOCK, buf));
         return false;
     }
 
