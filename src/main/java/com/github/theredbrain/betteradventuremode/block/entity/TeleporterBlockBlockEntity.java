@@ -35,13 +35,16 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
 
     private boolean calculateActivationBox = true;
     private Box activationArea = null;
-    private boolean showAdventureScreen = true; //
+    private boolean showAdventureScreen = true;
     private boolean showActivationArea = false;
     private Vec3i activationAreaDimensions = Vec3i.ZERO;
     private BlockPos activationAreaPositionOffset = new BlockPos(0, 1, 0);
-    private BlockPos accessPositionOffset = new BlockPos(0, 0, 0);
 
-    private boolean setAccessPosition = false; //
+    private BlockPos accessPositionOffset = new BlockPos(0, 0, 0);
+    private boolean setAccessPosition = false;
+
+    private boolean onlyTeleportDimensionOwner = false;
+    private boolean teleportTeam = false;
 
     private TeleportationMode teleportationMode = TeleportationMode.DIRECT;
 
@@ -87,6 +90,10 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
         nbt.putInt("accessPositionOffsetZ", this.accessPositionOffset.getZ());
 
         nbt.putBoolean("setAccessPosition", this.setAccessPosition);
+
+        nbt.putBoolean("onlyTeleportDimensionOwner", this.onlyTeleportDimensionOwner);
+
+        nbt.putBoolean("teleportTeam", this.teleportTeam);
 
         nbt.putString("teleportationMode", this.teleportationMode.asString());
 
@@ -147,6 +154,10 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
 
         this.setAccessPosition = nbt.getBoolean("setAccessPosition");
 
+        this.onlyTeleportDimensionOwner = nbt.getBoolean("onlyTeleportDimensionOwner");
+
+        this.teleportTeam = nbt.getBoolean("teleportTeam");
+
         this.teleportationMode = TeleportationMode.byName(nbt.getString("teleportationMode")).orElseGet(() -> TeleportationMode.DIRECT);
 
         this.directTeleportPositionOffset = new BlockPos(
@@ -188,26 +199,24 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
     }
 
     public static void tick(World world, BlockPos pos, BlockState state, TeleporterBlockBlockEntity blockEntity) {
-
-//        if (!world.isClient && world.getTime() % 20L == 0L) {
-            TeleporterBlockBlockEntity.tryOpenScreenRemotely(world, pos, state, blockEntity);
-//        }
+        TeleporterBlockBlockEntity.tryOpenScreenRemotely(world, pos, state, blockEntity);
     }
 
-    private static void tryOpenScreenRemotely(World world, BlockPos pos, BlockState state, TeleporterBlockBlockEntity blockEntity) {
+    private static void tryOpenScreenRemotely(World world, BlockPos pos, BlockState state, TeleporterBlockBlockEntity teleporterBlockBlockEntity) {
         if (world.isClient) {
             return;
         }
-        if (state.isOf(BlockRegistry.TELEPORTER_BLOCK) && world.getBlockEntity(pos) != null && world.getBlockEntity(pos).getType() == blockEntity.getType()) {
-            if (blockEntity.calculateActivationBox || blockEntity.activationArea == null) {
-                BlockPos activationAreaPositionOffset = blockEntity.getActivationAreaPositionOffset();
-                Vec3i activationAreaDimensions = blockEntity.getActivationAreaDimensions();
+        if (state.isOf(BlockRegistry.TELEPORTER_BLOCK)) {
+            if (teleporterBlockBlockEntity.calculateActivationBox || teleporterBlockBlockEntity.activationArea == null) {
+                BlockPos activationAreaPositionOffset = teleporterBlockBlockEntity.getActivationAreaPositionOffset();
+                Vec3i activationAreaDimensions = teleporterBlockBlockEntity.getActivationAreaDimensions();
                 Vec3d activationAreaStart = new Vec3d(pos.getX() + activationAreaPositionOffset.getX(), pos.getY() + activationAreaPositionOffset.getY(), pos.getZ() + activationAreaPositionOffset.getZ());
                 Vec3d activationAreaEnd = new Vec3d(activationAreaStart.getX() + activationAreaDimensions.getX(), activationAreaStart.getY() + activationAreaDimensions.getY(), activationAreaStart.getZ() + activationAreaDimensions.getZ());
-                blockEntity.activationArea = new Box(activationAreaStart, activationAreaEnd);
-                blockEntity.calculateActivationBox = false;
+                teleporterBlockBlockEntity.activationArea = new Box(activationAreaStart, activationAreaEnd);
+                teleporterBlockBlockEntity.calculateActivationBox = false;
             }
-            List<PlayerEntity> list = world.getNonSpectatingEntities(PlayerEntity.class, blockEntity.activationArea);
+            List<PlayerEntity> list = world.getNonSpectatingEntities(PlayerEntity.class, teleporterBlockBlockEntity.activationArea);
+            String worldName = world.getRegistryKey().getValue().getPath();
             for (PlayerEntity playerEntity : list) {
                 if (!playerEntity.hasStatusEffect(StatusEffectsRegistry.PORTAL_RESISTANCE_EFFECT) && !playerEntity.isCreative()) {
                     // prevents continuous opening of a screen
@@ -222,7 +231,11 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
                             ),
                             playerEntity
                     );
-                    playerEntity.openHandledScreen(state.createScreenHandlerFactory(world, pos));
+                    if (!teleporterBlockBlockEntity.onlyTeleportDimensionOwner || playerEntity.getUuid().toString().equals(worldName)) {
+                        playerEntity.openHandledScreen(state.createScreenHandlerFactory(world, pos));
+                    } else {
+                        playerEntity.sendMessage(Text.translatable("Only the dimension owner can teleport (WIP)"));
+                    }
                 }
             }
         }
@@ -233,9 +246,8 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
         return teleporterName;
     }
 
-    public boolean setTeleporterName(String teleporterName) {
+    public void setTeleporterName(String teleporterName) {
         this.teleporterName = teleporterName;
-        return true;
     }
 
     /**
@@ -246,50 +258,42 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
         return showAdventureScreen;
     }
 
-    public boolean setShowAdventureScreen(boolean showAdventureScreen) {
+    public void setShowAdventureScreen(boolean showAdventureScreen) {
         this.showAdventureScreen = showAdventureScreen;
-        return true;
     }
 
     public boolean getShowActivationArea() {
         return showActivationArea;
     }
 
-    public boolean setShowActivationArea(boolean showActivationArea) {
+    public void setShowActivationArea(boolean showActivationArea) {
         this.showActivationArea = showActivationArea;
-        return true;
     }
 
     public Vec3i getActivationAreaDimensions() {
         return activationAreaDimensions;
     }
 
-    // TODO check if input is valid
-    public boolean setActivationAreaDimensions(Vec3i activationAreaDimensions) {
+    public void setActivationAreaDimensions(Vec3i activationAreaDimensions) {
         this.activationAreaDimensions = activationAreaDimensions;
         this.calculateActivationBox = true;
-        return true;
     }
 
     public BlockPos getActivationAreaPositionOffset() {
         return activationAreaPositionOffset;
     }
 
-    // TODO check if input is valid
-    public boolean setActivationAreaPositionOffset(BlockPos activationAreaPositionOffset) {
+    public void setActivationAreaPositionOffset(BlockPos activationAreaPositionOffset) {
         this.activationAreaPositionOffset = activationAreaPositionOffset;
         this.calculateActivationBox = true;
-        return true;
     }
 
     public BlockPos getAccessPositionOffset() {
         return accessPositionOffset;
     }
 
-    // TODO check if input is valid
-    public boolean setAccessPositionOffset(BlockPos accessPositionOffset) {
+    public void setAccessPositionOffset(BlockPos accessPositionOffset) {
         this.accessPositionOffset = accessPositionOffset;
-        return true;
     }
 
     /**
@@ -300,29 +304,40 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
         return setAccessPosition;
     }
 
-    // TODO check if input is valid
-    public boolean setSetAccessPosition(boolean setAccessPosition) {
+    public void setSetAccessPosition(boolean setAccessPosition) {
         this.setAccessPosition = setAccessPosition;
-        return true;
+    }
+
+    public boolean onlyTeleportDimensionOwner() {
+        return onlyTeleportDimensionOwner;
+    }
+
+    public void setOnlyTeleportDimensionOwner(boolean onlyTeleportDimensionOwner) {
+        this.onlyTeleportDimensionOwner = onlyTeleportDimensionOwner;
+    }
+
+    public boolean teleportTeam() {
+        return teleportTeam;
+    }
+
+    public void setTeleportTeam(boolean teleportTeam) {
+        this.teleportTeam = teleportTeam;
     }
 
     public TeleportationMode getTeleportationMode() {
         return teleportationMode;
     }
 
-    public boolean setTeleportationMode(TeleportationMode teleportationMode) {
+    public void setTeleportationMode(TeleportationMode teleportationMode) {
         this.teleportationMode = teleportationMode;
-        return true;
     }
 
     public BlockPos getDirectTeleportPositionOffset() {
         return directTeleportPositionOffset;
     }
 
-    // TODO check if input is valid
-    public boolean setDirectTeleportPositionOffset(BlockPos directTeleportPositionOffset) {
+    public void setDirectTeleportPositionOffset(BlockPos directTeleportPositionOffset) {
         this.directTeleportPositionOffset = directTeleportPositionOffset;
-        return true;
     }
 
     public double getDirectTeleportOrientationYaw() {
@@ -349,15 +364,15 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
         return spawnPointType;
     }
 
-    public boolean setLocationType(SpawnPointType spawnPointType) {
+    public void setLocationType(SpawnPointType spawnPointType) {
         this.spawnPointType = spawnPointType;
-        return true;
     }
 
     public List<Pair<String, String>> getLocationsList() {
         return this.locationsList;
     }
 
+    // TODO check if input is valid
     public boolean setLocationsList(List<Pair<String, String>> dungeonLocationsList) {
         this.locationsList = dungeonLocationsList;
         return true;
@@ -367,38 +382,32 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
         return this.currentTargetIdentifierLabel;
     }
 
-    // TODO check if input is valid
-    public boolean setCurrentTargetIdentifierLabel(String currentTargetIdentifierLabel) {
+    public void setCurrentTargetIdentifierLabel(String currentTargetIdentifierLabel) {
         this.currentTargetIdentifierLabel = currentTargetIdentifierLabel;
-        return true;
     }
 
     public String getCurrentTargetOwnerLabel() {
         return this.currentTargetOwnerLabel;
     }
 
-    // TODO check if input is valid
-    public boolean setCurrentTargetOwnerLabel(String currentTargetOwnerLabel) {
+    public void setCurrentTargetOwnerLabel(String currentTargetOwnerLabel) {
         this.currentTargetOwnerLabel = currentTargetOwnerLabel;
-        return true;
     }
 
     public String getTeleportButtonLabel() {
         return this.teleportButtonLabel;
     }
 
-    public boolean setTeleportButtonLabel(String teleportButtonLabel) {
+    public void setTeleportButtonLabel(String teleportButtonLabel) {
         this.teleportButtonLabel = teleportButtonLabel;
-        return true;
     }
 
     public String getCancelTeleportButtonLabel() {
         return this.cancelTeleportButtonLabel;
     }
 
-    public boolean setCancelTeleportButtonLabel(String cancelTeleportButtonLabel) {
+    public void setCancelTeleportButtonLabel(String cancelTeleportButtonLabel) {
         this.cancelTeleportButtonLabel = cancelTeleportButtonLabel;
-        return true;
     }
     //endregion
 

@@ -30,9 +30,12 @@ public class UpdateTeleporterBlockPacketReceiver implements ServerPlayNetworking
 
         Vec3i activationAreaDimensions = packet.activationAreaDimensions;
         BlockPos activationAreaPositionOffset = packet.activationAreaPositionOffset;
-        BlockPos accessPositionOffset = packet.accessPositionOffset;
 
+        BlockPos accessPositionOffset = packet.accessPositionOffset;
         boolean setAccessPosition = packet.setAccessPosition;
+
+        boolean onlyTeleportDimensionOwner = packet.onlyTeleportDimensionOwner;
+        boolean teleportTeam = packet.teleportTeam;
 
         TeleporterBlockBlockEntity.TeleportationMode teleportationMode = packet.teleportationMode;
 
@@ -58,39 +61,17 @@ public class UpdateTeleporterBlockPacketReceiver implements ServerPlayNetworking
         BlockState blockState = world.getBlockState(teleportBlockPosition);
 
         if (blockEntity instanceof TeleporterBlockBlockEntity teleporterBlockBlockEntity) {
-            if (!teleporterBlockBlockEntity.setShowAdventureScreen(showAdventureScreen)) {
-                player.sendMessage(Text.translatable("teleporter_block.showAdventureScreen.invalid"), false);
-                updateSuccessful = false;
-            }
-            if (!teleporterBlockBlockEntity.setShowActivationArea(showActivationArea)) {
-                player.sendMessage(Text.translatable("teleporter_block.showActivationArea.invalid"), false);
-                updateSuccessful = false;
-            }
-            if (!teleporterBlockBlockEntity.setActivationAreaDimensions(activationAreaDimensions)) {
-                player.sendMessage(Text.translatable("teleporter_block.activationAreaDimensions.invalid"), false);
-                updateSuccessful = false;
-            }
-            if (!teleporterBlockBlockEntity.setActivationAreaPositionOffset(activationAreaPositionOffset)) {
-                player.sendMessage(Text.translatable("teleporter_block.activationAreaPositionOffset.invalid"), false);
-                updateSuccessful = false;
-            }
-            if (!teleporterBlockBlockEntity.setAccessPositionOffset(accessPositionOffset)) {
-                player.sendMessage(Text.translatable("teleporter_block.accessPositionOffset.invalid"), false);
-                updateSuccessful = false;
-            }
-            if (!teleporterBlockBlockEntity.setSetAccessPosition(setAccessPosition)) {
-                player.sendMessage(Text.translatable("teleporter_block.setAccessPosition.invalid"), false);
-                updateSuccessful = false;
-            }
-            if (!teleporterBlockBlockEntity.setTeleportationMode(teleportationMode)) {
-                player.sendMessage(Text.translatable("teleporter_block.teleportationMode.invalid"), false);
-                updateSuccessful = false;
-            }
+            teleporterBlockBlockEntity.setShowAdventureScreen(showAdventureScreen);
+            teleporterBlockBlockEntity.setShowActivationArea(showActivationArea);
+            teleporterBlockBlockEntity.setActivationAreaDimensions(activationAreaDimensions);
+            teleporterBlockBlockEntity.setActivationAreaPositionOffset(activationAreaPositionOffset);
+            teleporterBlockBlockEntity.setAccessPositionOffset(accessPositionOffset);
+            teleporterBlockBlockEntity.setSetAccessPosition(setAccessPosition);
+            teleporterBlockBlockEntity.setOnlyTeleportDimensionOwner(onlyTeleportDimensionOwner);
+            teleporterBlockBlockEntity.setTeleportTeam(teleportTeam);
+            teleporterBlockBlockEntity.setTeleportationMode(teleportationMode);
             if (teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DIRECT) {
-                if (!teleporterBlockBlockEntity.setDirectTeleportPositionOffset(directTeleportPositionOffset)) {
-                    player.sendMessage(Text.translatable("teleporter_block.directTeleportPositionOffset.invalid"), false);
-                    updateSuccessful = false;
-                }
+                teleporterBlockBlockEntity.setDirectTeleportPositionOffset(directTeleportPositionOffset);
                 if (!teleporterBlockBlockEntity.setDirectTeleportOrientationYaw(directTeleportOrientationYaw)) {
                     player.sendMessage(Text.translatable("teleporter_block.directTeleportOrientationYaw.invalid"), false);
                     updateSuccessful = false;
@@ -100,36 +81,19 @@ public class UpdateTeleporterBlockPacketReceiver implements ServerPlayNetworking
                     updateSuccessful = false;
                 }
             } else if (teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.SPAWN_POINTS) {
-                if (!teleporterBlockBlockEntity.setLocationType(spawnPointType)) {
-                    player.sendMessage(Text.translatable("teleporter_block.specificLocationType.invalid"), false);
-                    updateSuccessful = false;
-                }
+                teleporterBlockBlockEntity.setLocationType(spawnPointType);
             } else if (teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS) {
                 if (!teleporterBlockBlockEntity.setLocationsList(locationsList)) {
                     player.sendMessage(Text.translatable("teleporter_block.locationsList.invalid"), false);
                     updateSuccessful = false;
                 }
             }
-            if (!teleporterBlockBlockEntity.setTeleporterName(teleporterName)) {
-                player.sendMessage(Text.translatable("teleporter_block.teleporterName.invalid"), false);
-                updateSuccessful = false;
-            }
-            if (!teleporterBlockBlockEntity.setCurrentTargetIdentifierLabel(currentTargetIdentifierLabel)) {
-                player.sendMessage(Text.translatable("teleporter_block.currentTargetIdentifierLabel.invalid"), false);
-                updateSuccessful = false;
-            }
-            if (!teleporterBlockBlockEntity.setCurrentTargetOwnerLabel(currentTargetOwnerLabel)) {
-                player.sendMessage(Text.translatable("teleporter_block.currentTargetOwnerLabel.invalid"), false);
-                updateSuccessful = false;
-            }
-            if (!teleporterBlockBlockEntity.setTeleportButtonLabel(teleportButtonLabel)) {
-                player.sendMessage(Text.translatable("teleporter_block.teleportButtonLabel.invalid"), false);
-                updateSuccessful = false;
-            }
-            if (!teleporterBlockBlockEntity.setCancelTeleportButtonLabel(cancelTeleportButtonLabel)) {
-                player.sendMessage(Text.translatable("teleporter_block.cancelTeleportButtonLabel.invalid"), false);
-                updateSuccessful = false;
-            }
+            teleporterBlockBlockEntity.setTeleporterName(teleporterName);
+            teleporterBlockBlockEntity.setCurrentTargetIdentifierLabel(currentTargetIdentifierLabel);
+            teleporterBlockBlockEntity.setCurrentTargetOwnerLabel(currentTargetOwnerLabel);
+            teleporterBlockBlockEntity.setTeleportButtonLabel(teleportButtonLabel);
+            teleporterBlockBlockEntity.setCancelTeleportButtonLabel(cancelTeleportButtonLabel);
+
             if (updateSuccessful) {
                 player.sendMessage(Text.translatable("teleporter_block.update_successful"), true);
             }

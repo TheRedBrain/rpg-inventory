@@ -8,15 +8,19 @@ import com.github.theredbrain.betteradventuremode.block.entity.LocationControlBl
 import com.github.theredbrain.betteradventuremode.block.entity.TeleporterBlockBlockEntity;
 import com.github.theredbrain.betteradventuremode.registry.ComponentsRegistry;
 import com.github.theredbrain.betteradventuremode.registry.LocationsRegistry;
+import com.github.theredbrain.betteradventuremode.util.UUIDUtilities;
 import com.github.theredbrain.betteradventuremode.world.DimensionsManager;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.scoreboard.Team;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -27,6 +31,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.MutablePair;
 
+import java.util.UUID;
+
+import static net.fabricmc.fabric.impl.networking.client.ClientNetworkingImpl.createC2SPacket;
+
 public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetworking.PlayPacketHandler<TeleportFromTeleporterBlockPacket> {
     @Override
     public void receive(TeleportFromTeleporterBlockPacket packet, ServerPlayerEntity serverPlayerEntity, PacketSender responseSender) {
@@ -36,6 +44,8 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
         String accessPositionDimension = packet.accessPositionDimension;
         BlockPos accessPositionOffset = packet.accessPositionOffset;
         boolean setAccessPosition = packet.setAccessPosition;
+
+        boolean teleportTeam = packet.teleportTeam;
 
         TeleporterBlockBlockEntity.TeleportationMode teleportationMode = packet.teleportationMode;
 
@@ -92,7 +102,10 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
 //            BetterAdventureMode.info("targetLocation: " + targetLocation);
 
             if (location != null) {
-                if (location.playerLocation() && targetDimensionOwner != null) {
+
+                if (location.isPublic()) {
+                    targetWorld = server.getOverworld();
+                } else if (targetDimensionOwner != null) {
 //                BetterAdventureMode.info("targetDimensionOwner: " + targetDimensionOwner);
                     Identifier targetDimensionId = Identifier.tryParse(targetDimensionOwner.getUuidAsString());
 //                BetterAdventureMode.info("targetDimensionId: " + targetDimensionId);
@@ -110,10 +123,6 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
                         }
 
                     }
-                }
-
-                if (location.publicLocation() && targetDimensionOwner == null) {
-                    targetWorld = server.getOverworld();
                 }
 //                BetterAdventureMode.info("targetWorld: " + targetWorld);
 
@@ -224,6 +233,20 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
                 }
             }
             ClientPlayNetworking.send(new SuccessfulTeleportPacket());
+
+            if (teleportTeam) {
+                Team team = serverPlayerEntity.getScoreboardTeam();
+                if (team != null) {
+                    for (String playerString : team.getPlayerList()) {
+                        if (UUIDUtilities.isStringValidUUID(playerString)) {
+                            Entity entity = serverWorld.getEntity(UUID.fromString(playerString));
+                            if (entity instanceof ServerPlayerEntity teamServerPlayerEntity) {
+                                ServerPlayNetworking.send(teamServerPlayerEntity, new TeleportToTeamPacket(targetWorld.getRegistryKey().getValue(), targetPos, targetYaw, targetPitch));
+                            }
+                        }
+                    }
+                }
+            }
         } else {
             if (BetterAdventureModeClient.clientConfig.show_debug_messages) {
                 serverPlayerEntity.sendMessage(Text.of("Teleport failed"));

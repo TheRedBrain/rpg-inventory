@@ -24,9 +24,12 @@ public class UpdateTeleporterBlockPacket implements FabricPacket {
     public final boolean showAdventureScreen;
     public final Vec3i activationAreaDimensions;
     public final BlockPos activationAreaPositionOffset;
-    public final BlockPos accessPositionOffset;
 
+    public final BlockPos accessPositionOffset;
     public final boolean setAccessPosition;
+
+    public final boolean onlyTeleportDimensionOwner;
+    public final boolean teleportTeam;
 
     public final TeleporterBlockBlockEntity.TeleportationMode teleportationMode;
 
@@ -44,7 +47,7 @@ public class UpdateTeleporterBlockPacket implements FabricPacket {
     public final String teleportButtonLabel;
     public final String cancelTeleportButtonLabel;
 
-    public UpdateTeleporterBlockPacket(BlockPos teleportBlockPosition, boolean showActivationArea, boolean showAdventureScreen, Vec3i activationAreaDimensions, BlockPos activationAreaPositionOffset, BlockPos accessPositionOffset, boolean setAccessPosition, String teleportationMode, BlockPos directTeleportPositionOffset, double directTeleportOrientationYaw, double directTeleportOrientationPitch, String locationType, List<Pair<String, String>> locationsList, String teleporterName, String currentTargetIdentifierLabel, String currentTargetOwnerLabel, String teleportButtonLabel, String cancelTeleportButtonLabel) {
+    public UpdateTeleporterBlockPacket(BlockPos teleportBlockPosition, boolean showActivationArea, boolean showAdventureScreen, Vec3i activationAreaDimensions, BlockPos activationAreaPositionOffset, BlockPos accessPositionOffset, boolean setAccessPosition, boolean onlyTeleportDimensionOwner, boolean teleportTeam, String teleportationMode, BlockPos directTeleportPositionOffset, double directTeleportOrientationYaw, double directTeleportOrientationPitch, String locationType, List<Pair<String, String>> locationsList, String teleporterName, String currentTargetIdentifierLabel, String currentTargetOwnerLabel, String teleportButtonLabel, String cancelTeleportButtonLabel) {
         this.teleportBlockPosition = teleportBlockPosition;
 
         this.showActivationArea = showActivationArea;
@@ -52,9 +55,12 @@ public class UpdateTeleporterBlockPacket implements FabricPacket {
 
         this.activationAreaDimensions = activationAreaDimensions;
         this.activationAreaPositionOffset = activationAreaPositionOffset;
-        this.accessPositionOffset = accessPositionOffset;
 
+        this.accessPositionOffset = accessPositionOffset;
         this.setAccessPosition = setAccessPosition;
+
+        this.onlyTeleportDimensionOwner = onlyTeleportDimensionOwner;
+        this.teleportTeam = teleportTeam;
 
         this.teleportationMode = TeleporterBlockBlockEntity.TeleportationMode.byName(teleportationMode).orElseGet(() -> TeleporterBlockBlockEntity.TeleportationMode.DIRECT);
         this.directTeleportPositionOffset = directTeleportPositionOffset;
@@ -85,6 +91,8 @@ public class UpdateTeleporterBlockPacket implements FabricPacket {
                 buf.readBlockPos(),
                 buf.readBlockPos(),
                 buf.readBoolean(),
+                buf.readBoolean(),
+                buf.readBoolean(),
                 buf.readString(),
                 buf.readBlockPos(),
                 buf.readDouble(),
@@ -114,9 +122,12 @@ public class UpdateTeleporterBlockPacket implements FabricPacket {
         buf.writeInt(this.activationAreaDimensions.getY());
         buf.writeInt(this.activationAreaDimensions.getZ());
         buf.writeBlockPos(this.activationAreaPositionOffset);
-        buf.writeBlockPos(this.accessPositionOffset);
 
+        buf.writeBlockPos(this.accessPositionOffset);
         buf.writeBoolean(this.setAccessPosition);
+
+        buf.writeBoolean(this.onlyTeleportDimensionOwner);
+        buf.writeBoolean(this.teleportTeam);
 
         buf.writeString(this.teleportationMode.asString());
 

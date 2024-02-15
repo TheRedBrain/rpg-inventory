@@ -19,16 +19,22 @@ public final class Location {
     private final boolean showLockedLocation;
     private final boolean showUnlockAdvancement;
     private final boolean showLockAdvancement;
-    private final boolean publicLocation;
-    private final boolean playerLocation;
+
+    // TODO merge
+    private final boolean isPublic;
+//    private final boolean playerLocation;
+
     private final boolean canOwnerBeChosen;
-    private final boolean stayInCurrentDimension;
+
+    // TODO necessary?
+//    private final boolean stayInCurrentDimension;
+
     private final boolean showAdventureScreen;
     private final boolean consumeKey;
     private final @Nullable ItemUtils.VirtualItemStack key;
     private final @Nullable Map<String, SideEntrance> side_entrances;
 
-    public Location(int controlBlockPosX, int controlBlockPosY, int controlBlockPosZ, String structureIdentifier, String unlockAdvancement, String lockAdvancement, String displayName, boolean showLockedLocation, boolean showUnlockAdvancement, boolean showLockAdvancement, boolean publicLocation, boolean playerLocation, boolean canOwnerBeChosen, boolean stayInCurrentDimension, boolean showAdventureScreen, boolean consumeKey, @Nullable ItemUtils.VirtualItemStack key, @Nullable Map<String, SideEntrance> side_entrances) {
+    public Location(int controlBlockPosX, int controlBlockPosY, int controlBlockPosZ, String structureIdentifier, String unlockAdvancement, String lockAdvancement, String displayName, boolean showLockedLocation, boolean showUnlockAdvancement, boolean showLockAdvancement, boolean isPublic, boolean canOwnerBeChosen, boolean showAdventureScreen, boolean consumeKey, @Nullable ItemUtils.VirtualItemStack key, @Nullable Map<String, SideEntrance> side_entrances) {
         this.controlBlockPosX = controlBlockPosX;
         this.controlBlockPosY = controlBlockPosY;
         this.controlBlockPosZ = controlBlockPosZ;
@@ -39,10 +45,10 @@ public final class Location {
         this.showLockedLocation = showLockedLocation;
         this.showUnlockAdvancement = showUnlockAdvancement;
         this.showLockAdvancement = showLockAdvancement;
-        this.publicLocation = publicLocation;
-        this.playerLocation = playerLocation;
+        this.isPublic = isPublic;
+//        this.playerLocation = playerLocation;
         this.canOwnerBeChosen = canOwnerBeChosen;
-        this.stayInCurrentDimension = stayInCurrentDimension;
+//        this.stayInCurrentDimension = stayInCurrentDimension;
         this.showAdventureScreen = showAdventureScreen;
         this.consumeKey = consumeKey;
         this.key = key;
@@ -89,21 +95,21 @@ public final class Location {
         return this.showLockAdvancement;
     }
 
-    public boolean publicLocation() {
-        return this.publicLocation;
+    public boolean isPublic() {
+        return this.isPublic;
     }
 
-    public boolean playerLocation() {
-        return playerLocation;
-    }
+//    public boolean playerLocation() {
+//        return playerLocation;
+//    }
 
     public boolean canOwnerBeChosen() {
         return canOwnerBeChosen;
     }
 
-    public boolean stayInCurrentDimension() {
-        return stayInCurrentDimension;
-    }
+//    public boolean stayInCurrentDimension() {
+//        return stayInCurrentDimension;
+//    }
 
     public boolean showAdventureScreen() {
         return showAdventureScreen;
@@ -199,17 +205,15 @@ public final class Location {
                 && this.showLockedLocation == that.showLockedLocation
                 && this.showUnlockAdvancement == that.showUnlockAdvancement
                 && this.showLockAdvancement == that.showLockAdvancement
-                && this.publicLocation == that.publicLocation
-                && this.playerLocation == that.playerLocation
+                && this.isPublic == that.isPublic
                 && this.canOwnerBeChosen == that.canOwnerBeChosen
-                && this.stayInCurrentDimension == that.stayInCurrentDimension
                 && this.showAdventureScreen == that.showAdventureScreen
                 && this.consumeKey == that.consumeKey;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.controlBlockPosX, this.controlBlockPosY, this.controlBlockPosZ, this.structureIdentifier, this.displayName, this.unlockAdvancement, this.lockAdvancement, this.showLockedLocation, this.showUnlockAdvancement, this.showLockAdvancement, this.publicLocation, this.playerLocation, this.canOwnerBeChosen, this.stayInCurrentDimension, this.showAdventureScreen, this.consumeKey);
+        return Objects.hash(this.controlBlockPosX, this.controlBlockPosY, this.controlBlockPosZ, this.structureIdentifier, this.displayName, this.unlockAdvancement, this.lockAdvancement, this.showLockedLocation, this.showUnlockAdvancement, this.showLockAdvancement, this.isPublic, this.canOwnerBeChosen, this.showAdventureScreen, this.consumeKey);
     }
 
     @Override
@@ -225,10 +229,8 @@ public final class Location {
                 "showLockedDungeon=" + this.showLockedLocation + ", " +
                 "showUnlockAdvancement=" + this.showUnlockAdvancement + ", " +
                 "showLockAdvancement=" + this.showLockAdvancement + ", " +
-                "publicLocation=" + this.publicLocation + ", " +
-                "playerLocation=" + this.playerLocation + ", " +
+                "publicLocation=" + this.isPublic + ", " +
                 "canOwnerBeChosen=" + this.canOwnerBeChosen + ", " +
-                "stayInCurrentDimension=" + this.stayInCurrentDimension + ", " +
                 "showAdventureScreen=" + this.showAdventureScreen + ", " +
                 "consumeKey=" + this.consumeKey + "]";
     }

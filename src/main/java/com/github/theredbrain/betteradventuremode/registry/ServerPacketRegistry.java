@@ -44,8 +44,6 @@ public class ServerPacketRegistry {
 
         ServerPlayNetworking.registerGlobalReceiver(ResetHouseHousingBlockPacket.TYPE, new ResetHouseHousingBlockPacketReceiver());
 
-        ServerPlayNetworking.registerGlobalReceiver(UpdateTeleporterBlockPacket.TYPE, new UpdateTeleporterBlockPacketReceiver());
-
         ServerPlayNetworking.registerGlobalReceiver(UpdateJigsawPlacerBlockPacket.TYPE, new UpdateJigsawPlacerBlockPacketReceiver());
 
         ServerPlayNetworking.registerGlobalReceiver(UpdateRedstoneTriggerBlockPacket.TYPE, new UpdateRedstoneTriggerBlockPacketReceiver());
@@ -59,8 +57,6 @@ public class ServerPacketRegistry {
         ServerPlayNetworking.registerGlobalReceiver(UpdateDelayTriggerBlockPacket.TYPE, new UpdateDelayTriggerBlockPacketReceiver());
 
         ServerPlayNetworking.registerGlobalReceiver(UpdateUseRelayBlockPacket.TYPE, new UpdateUseRelayBlockPacketReceiver());
-
-        ServerPlayNetworking.registerGlobalReceiver(TeleportFromTeleporterBlockPacket.TYPE, new TeleportFromTeleporterBlockPacketReceiver());
 
         ServerPlayNetworking.registerGlobalReceiver(LeaveHouseFromHousingScreenPacket.TYPE, new LeaveHouseFromHousingScreenPacketReceiver());
 
@@ -80,8 +76,6 @@ public class ServerPacketRegistry {
 
         ServerPlayNetworking.registerGlobalReceiver(UpdateLocationControlBlockPacket.TYPE, new UpdateLocationControlBlockPacketReceiver());
 
-        ServerPlayNetworking.registerGlobalReceiver(SetManualResetLocationControlBlockPacket.TYPE, new SetManualResetLocationControlBlockPacketReceiver());
-
         ServerPlayNetworking.registerGlobalReceiver(CraftFromCraftingBenchPacket.TYPE, new CraftFromCraftingBenchPacketReceiver());
 
         ServerPlayNetworking.registerGlobalReceiver(ToggleUseStashForCraftingPacket.TYPE, new ToggleUseStashForCraftingPacketReceiver());
@@ -93,6 +87,16 @@ public class ServerPacketRegistry {
         ServerPlayNetworking.registerGlobalReceiver(UpdateStatusEffectApplierBlockPacket.TYPE, new UpdateStatusEffectApplierBlockPacketReceiver());
 
         ServerPlayNetworking.registerGlobalReceiver(UpdateTriggeredAdvancementCheckerBlockPacket.TYPE, new UpdateTriggeredAdvancementCheckerBlockPacketReceiver());
+
+        // --- teleporter packets
+
+        ServerPlayNetworking.registerGlobalReceiver(UpdateTeleporterBlockPacket.TYPE, new UpdateTeleporterBlockPacketReceiver());
+
+        ServerPlayNetworking.registerGlobalReceiver(SetManualResetLocationControlBlockPacket.TYPE, new SetManualResetLocationControlBlockPacketReceiver());
+
+        ServerPlayNetworking.registerGlobalReceiver(TeleportFromTeleporterBlockPacket.TYPE, new TeleportFromTeleporterBlockPacketReceiver());
+
+        ServerPlayNetworking.registerGlobalReceiver(TeleportToTeamPacket.TYPE, new TeleportToTeamPacketReceiver());
 
         // --- shop packets
 

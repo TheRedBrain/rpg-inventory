@@ -19,6 +19,8 @@ public class TeleportFromTeleporterBlockPacket implements FabricPacket {
     public final BlockPos accessPositionOffset;
     public final boolean setAccessPosition;
 
+    public final boolean teleportTeam;
+
     public final TeleporterBlockBlockEntity.TeleportationMode teleportationMode;
 
     public final BlockPos directTeleportPositionOffset;
@@ -31,11 +33,12 @@ public class TeleportFromTeleporterBlockPacket implements FabricPacket {
     public final String targetLocation;
     public final String targetLocationEntrance;
 
-    public TeleportFromTeleporterBlockPacket(BlockPos teleportBlockPosition, String accessPositionDimension, BlockPos accessPositionOffset, boolean setAccessPosition, String teleportationMode, BlockPos directTeleportPositionOffset, double directTeleportOrientationYaw, double directTeleportOrientationPitch, String locationType, String targetDimensionOwnerName, String targetLocation, String targetLocationEntrance) {
+    public TeleportFromTeleporterBlockPacket(BlockPos teleportBlockPosition, String accessPositionDimension, BlockPos accessPositionOffset, boolean setAccessPosition, boolean teleportTeam, String teleportationMode, BlockPos directTeleportPositionOffset, double directTeleportOrientationYaw, double directTeleportOrientationPitch, String locationType, String targetDimensionOwnerName, String targetLocation, String targetLocationEntrance) {
         this.teleportBlockPosition = teleportBlockPosition;
         this.accessPositionDimension = accessPositionDimension;
         this.accessPositionOffset = accessPositionOffset;
         this.setAccessPosition = setAccessPosition;
+        this.teleportTeam = teleportTeam;
         this.teleportationMode = TeleporterBlockBlockEntity.TeleportationMode.byName(teleportationMode).orElseGet(() -> TeleporterBlockBlockEntity.TeleportationMode.DIRECT);
         this.directTeleportPositionOffset = directTeleportPositionOffset;
         this.directTeleportOrientationYaw = directTeleportOrientationYaw;
@@ -47,7 +50,7 @@ public class TeleportFromTeleporterBlockPacket implements FabricPacket {
     }
 
     public TeleportFromTeleporterBlockPacket(PacketByteBuf buf) {
-        this(buf.readBlockPos(), buf.readString(), buf.readBlockPos(), buf.readBoolean(), buf.readString(), buf.readBlockPos(), buf.readDouble(), buf.readDouble(), buf.readString(), buf.readString(), buf.readString(), buf.readString());
+        this(buf.readBlockPos(), buf.readString(), buf.readBlockPos(), buf.readBoolean(), buf.readBoolean(), buf.readString(), buf.readBlockPos(), buf.readDouble(), buf.readDouble(), buf.readString(), buf.readString(), buf.readString(), buf.readString());
     }
     @Override
     public PacketType<?> getType() {
@@ -59,6 +62,7 @@ public class TeleportFromTeleporterBlockPacket implements FabricPacket {
         buf.writeString(this.accessPositionDimension);
         buf.writeBlockPos(this.accessPositionOffset);
         buf.writeBoolean(this.setAccessPosition);
+        buf.writeBoolean(this.teleportTeam);
         buf.writeString(this.teleportationMode.asString());
         buf.writeBlockPos(this.directTeleportPositionOffset);
         buf.writeDouble(this.directTeleportOrientationYaw);
