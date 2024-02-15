@@ -3,7 +3,7 @@
     {
       "element": {
         "element_type": "minecraft:single_pool_element",
-        "location": "betteradventuremode:locations/towns/town_1/town_1_start",
+        "location": "betteradventuremode:locations/towns/town_1/town_start_initial",
         "processors": {
           "processors": []
         },

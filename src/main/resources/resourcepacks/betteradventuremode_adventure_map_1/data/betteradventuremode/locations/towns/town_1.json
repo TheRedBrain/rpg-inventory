@@ -10,9 +10,7 @@
   "showUnlockAdvancement": true,
   "showLockAdvancement": false,
   "publicLocation": true,
-  "playerLocation": false,
   "canOwnerBeChosen": false,
-  "stayInCurrentDimension": false,
   "showAdventureScreen": true,
   "consumeKey": false,
   "side_entrances": {

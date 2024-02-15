@@ -41,7 +41,7 @@
     "absolute": -63
   },
   "start_jigsaw_name": "betteradventuremode:location_anchor",
-  "start_pool": "betteradventuremode:locations/towns/town_1/town_1_start",
+  "start_pool": "betteradventuremode:locations/towns/town_1/initial_pool",
   "step": "surface_structures",
   "use_expansion_hack": false
 }

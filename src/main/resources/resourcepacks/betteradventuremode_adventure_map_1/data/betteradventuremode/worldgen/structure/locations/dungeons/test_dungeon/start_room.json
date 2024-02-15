@@ -2,7 +2,7 @@
   "type": "minecraft:jigsaw",
   "biomes": "betteradventuremode:player_locations_biome",
   "max_distance_from_center": 116,
-  "size": 7,
+  "size": 20,
   "spawn_overrides": {
     "ambient": {
       "bounding_box": "full",
@@ -41,7 +41,7 @@
     "absolute": -63
   },
   "start_jigsaw_name": "betteradventuremode:location_anchor",
-  "start_pool": "betteradventuremode:locations/dungeons/test_dungeon/start_room/start_pool",
+  "start_pool": "betteradventuremode:locations/dungeons/test_dungeon/start_room/initial_pool",
   "step": "surface_structures",
   "use_expansion_hack": false
 }
