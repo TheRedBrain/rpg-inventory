@@ -16,13 +16,16 @@ public class UpdateRedstoneTriggerBlockPacket implements FabricPacket {
 
     public final BlockPos triggeredBlockPositionOffset;
 
-    public UpdateRedstoneTriggerBlockPacket(BlockPos redstoneTriggerBlockPosition, BlockPos triggeredBlockPositionOffset) {
+    public final boolean triggeredBlockResets;
+
+    public UpdateRedstoneTriggerBlockPacket(BlockPos redstoneTriggerBlockPosition, BlockPos triggeredBlockPositionOffset, boolean triggeredBlockResets) {
         this.redstoneTriggerBlockPosition = redstoneTriggerBlockPosition;
         this.triggeredBlockPositionOffset = triggeredBlockPositionOffset;
+        this.triggeredBlockResets = triggeredBlockResets;
     }
 
     public UpdateRedstoneTriggerBlockPacket(PacketByteBuf buf) {
-        this(buf.readBlockPos(), buf.readBlockPos());
+        this(buf.readBlockPos(), buf.readBlockPos(), buf.readBoolean());
     }
     @Override
     public PacketType<?> getType() {
@@ -32,6 +35,7 @@ public class UpdateRedstoneTriggerBlockPacket implements FabricPacket {
     public void write(PacketByteBuf buf) {
         buf.writeBlockPos(this.redstoneTriggerBlockPosition);
         buf.writeBlockPos(this.triggeredBlockPositionOffset);
+        buf.writeBoolean(this.triggeredBlockResets);
     }
 
 }

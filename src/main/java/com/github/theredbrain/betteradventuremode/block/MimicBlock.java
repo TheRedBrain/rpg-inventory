@@ -25,7 +25,7 @@ public class MimicBlock extends RotatedBlockWithEntity {
 
     public MimicBlock(Settings settings) {
         super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState().with(TRIGGERED, false));
+        this.setDefaultState(this.stateManager.getDefaultState().with(ROTATED, 0).with(X_MIRRORED, false).with(Z_MIRRORED, false).with(TRIGGERED, false));
     }
 
     // TODO Block Codecs

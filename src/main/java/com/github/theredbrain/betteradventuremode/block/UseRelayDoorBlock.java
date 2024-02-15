@@ -42,7 +42,7 @@ public class UseRelayDoorBlock extends RotatedBlockWithEntity {
 
     public UseRelayDoorBlock(Settings settings) {
         super(settings);
-        this.setDefaultState((BlockState)((BlockState)((BlockState)((BlockState)((BlockState)((BlockState)this.stateManager.getDefaultState()).with(FACING, Direction.NORTH)).with(OPEN, false)).with(HINGE, DoorHinge.LEFT))).with(HALF, DoubleBlockHalf.LOWER));
+        this.setDefaultState((BlockState)((BlockState)((BlockState)((BlockState)((BlockState)((BlockState)this.stateManager.getDefaultState()).with(ROTATED, 0).with(X_MIRRORED, false).with(Z_MIRRORED, false).with(FACING, Direction.NORTH)).with(OPEN, false)).with(HINGE, DoorHinge.LEFT))).with(HALF, DoubleBlockHalf.LOWER));
     }
 
     // TODO Block Codecs

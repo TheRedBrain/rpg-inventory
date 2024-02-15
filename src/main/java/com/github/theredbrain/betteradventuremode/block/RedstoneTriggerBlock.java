@@ -23,7 +23,7 @@ public class RedstoneTriggerBlock extends RotatedBlockWithEntity {
     public static final BooleanProperty TRIGGERED = Properties.TRIGGERED;
     public RedstoneTriggerBlock(Settings settings) {
         super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState().with(TRIGGERED, false));
+        this.setDefaultState(this.stateManager.getDefaultState().with(ROTATED, 0).with(X_MIRRORED, false).with(Z_MIRRORED, false).with(TRIGGERED, false));
     }
 
     // TODO Block Codecs

@@ -5,7 +5,7 @@ import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 
 @Config(
-        name = "server"
+        name = "gamePlayBalance"
 )
 public class GamePlayBalanceConfig implements ConfigData {
     // TODO write a wiki page with an in-depth explanation

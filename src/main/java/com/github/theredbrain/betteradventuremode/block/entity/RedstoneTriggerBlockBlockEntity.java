@@ -1,5 +1,7 @@
 package com.github.theredbrain.betteradventuremode.block.entity;
 
+import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
+import com.github.theredbrain.betteradventuremode.block.Resetable;
 import com.github.theredbrain.betteradventuremode.util.BlockRotationUtils;
 import com.github.theredbrain.betteradventuremode.block.RotatedBlockWithEntity;
 import com.github.theredbrain.betteradventuremode.block.Triggerable;
@@ -14,9 +16,11 @@ import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import org.apache.commons.lang3.tuple.MutablePair;
 
 public class RedstoneTriggerBlockBlockEntity extends RotatedBlockEntity {
-    private BlockPos triggeredBlockPositionOffset = new BlockPos(0, 1, 0);
+    private MutablePair<BlockPos, Boolean> triggeredBlock = new MutablePair<>(new BlockPos(0, 0, 0), false);
+
     public RedstoneTriggerBlockBlockEntity(BlockPos pos, BlockState state) {
         super(EntityRegistry.REDSTONE_TRIGGER_BLOCK_ENTITY, pos, state);
     }
@@ -24,9 +28,10 @@ public class RedstoneTriggerBlockBlockEntity extends RotatedBlockEntity {
     @Override
     protected void writeNbt(NbtCompound nbt) {
 
-        nbt.putInt("triggeredBlockPositionOffsetX", this.triggeredBlockPositionOffset.getX());
-        nbt.putInt("triggeredBlockPositionOffsetY", this.triggeredBlockPositionOffset.getY());
-        nbt.putInt("triggeredBlockPositionOffsetZ", this.triggeredBlockPositionOffset.getZ());
+        nbt.putInt("triggeredBlockPositionOffsetX", this.triggeredBlock.getLeft().getX());
+        nbt.putInt("triggeredBlockPositionOffsetY", this.triggeredBlock.getLeft().getY());
+        nbt.putInt("triggeredBlockPositionOffsetZ", this.triggeredBlock.getLeft().getZ());
+        nbt.putBoolean("triggeredBlockResets", this.triggeredBlock.getRight());
 
         super.writeNbt(nbt);
     }
@@ -37,7 +42,7 @@ public class RedstoneTriggerBlockBlockEntity extends RotatedBlockEntity {
         int x = MathHelper.clamp(nbt.getInt("triggeredBlockPositionOffsetX"), -48, 48);
         int y = MathHelper.clamp(nbt.getInt("triggeredBlockPositionOffsetY"), -48, 48);
         int z = MathHelper.clamp(nbt.getInt("triggeredBlockPositionOffsetZ"), -48, 48);
-        this.triggeredBlockPositionOffset = new BlockPos(x, y, z);
+        this.triggeredBlock = new MutablePair<>(new BlockPos(x, y, z), nbt.getBoolean("triggeredBlockResets"));
 
         super.readNbt(nbt);
     }
@@ -56,26 +61,30 @@ public class RedstoneTriggerBlockBlockEntity extends RotatedBlockEntity {
             return false;
         }
         if (player.getEntityWorld().isClient) {
-            ((DuckPlayerEntityMixin)player).betteradventuremode$openRedstoneTriggerBlockScreen(this);
+            ((DuckPlayerEntityMixin) player).betteradventuremode$openRedstoneTriggerBlockScreen(this);
         }
         return true;
     }
 
-    public BlockPos getTriggeredBlockPositionOffset() {
-        return this.triggeredBlockPositionOffset;
+    public MutablePair<BlockPos, Boolean> getTriggeredBlock() {
+        return this.triggeredBlock;
     }
 
-    // TODO check if input is valid
-    public boolean setTriggeredBlockPositionOffset(BlockPos triggeredBlockPositionOffset) {
-        this.triggeredBlockPositionOffset = triggeredBlockPositionOffset;
-        return true;
+    public void setTriggeredBlock(MutablePair<BlockPos, Boolean> triggeredBlock) {
+        this.triggeredBlock = triggeredBlock;
     }
 
     public void trigger() {
         if (this.world != null) {
-            BlockEntity blockEntity = world.getBlockEntity(new BlockPos(this.pos.getX() + this.triggeredBlockPositionOffset.getX(), this.pos.getY() + this.triggeredBlockPositionOffset.getY(), this.pos.getZ() + this.triggeredBlockPositionOffset.getZ()));
-            if (blockEntity instanceof Triggerable triggerable) {
-                triggerable.trigger();
+            BlockEntity blockEntity = world.getBlockEntity(new BlockPos(this.pos.getX() + this.triggeredBlock.getLeft().getX(), this.pos.getY() + this.triggeredBlock.getLeft().getY(), this.pos.getZ() + this.triggeredBlock.getLeft().getZ()));
+            if (blockEntity != this) {
+                BetterAdventureMode.info("trigger");
+                boolean triggeredBlockResets = this.triggeredBlock.getRight();
+                if (triggeredBlockResets && blockEntity instanceof Resetable resetable) {
+                    resetable.reset();
+                } else if (!triggeredBlockResets && blockEntity instanceof Triggerable triggerable) {
+                    triggerable.trigger();
+                }
             }
         }
     }
@@ -85,15 +94,15 @@ public class RedstoneTriggerBlockBlockEntity extends RotatedBlockEntity {
         if (state.getBlock() instanceof RotatedBlockWithEntity) {
             if (state.get(RotatedBlockWithEntity.ROTATED) != this.rotated) {
                 BlockRotation blockRotation = BlockRotationUtils.calculateRotationFromDifferentRotatedStates(state.get(RotatedBlockWithEntity.ROTATED), this.rotated);
-                this.triggeredBlockPositionOffset = BlockRotationUtils.rotateOffsetBlockPos(this.triggeredBlockPositionOffset, blockRotation);
+                this.triggeredBlock.setLeft(BlockRotationUtils.rotateOffsetBlockPos(this.triggeredBlock.getLeft(), blockRotation));
                 this.rotated = state.get(RotatedBlockWithEntity.ROTATED);
             }
             if (state.get(RotatedBlockWithEntity.X_MIRRORED) != this.x_mirrored) {
-                this.triggeredBlockPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.triggeredBlockPositionOffset, BlockMirror.FRONT_BACK);
+                this.triggeredBlock.setLeft(BlockRotationUtils.mirrorOffsetBlockPos(this.triggeredBlock.getLeft(), BlockMirror.FRONT_BACK));
                 this.x_mirrored = state.get(RotatedBlockWithEntity.X_MIRRORED);
             }
             if (state.get(RotatedBlockWithEntity.Z_MIRRORED) != this.z_mirrored) {
-                this.triggeredBlockPositionOffset = BlockRotationUtils.mirrorOffsetBlockPos(this.triggeredBlockPositionOffset, BlockMirror.LEFT_RIGHT);
+                this.triggeredBlock.setLeft(BlockRotationUtils.mirrorOffsetBlockPos(this.triggeredBlock.getLeft(), BlockMirror.LEFT_RIGHT));
                 this.z_mirrored = state.get(RotatedBlockWithEntity.Z_MIRRORED);
             }
         }

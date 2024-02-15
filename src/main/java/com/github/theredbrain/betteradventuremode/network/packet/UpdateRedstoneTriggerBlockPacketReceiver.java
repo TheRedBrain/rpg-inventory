@@ -10,6 +10,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.tuple.MutablePair;
 
 public class UpdateRedstoneTriggerBlockPacketReceiver implements ServerPlayNetworking.PlayPacketHandler<UpdateRedstoneTriggerBlockPacket> {
     @Override
@@ -23,21 +24,16 @@ public class UpdateRedstoneTriggerBlockPacketReceiver implements ServerPlayNetwo
 
         BlockPos triggeredBlockPositionOffset = packet.triggeredBlockPositionOffset;
 
-        World world = player.getWorld();
+        boolean triggeredBlockResets = packet.triggeredBlockResets;
 
-        boolean updateSuccessful = true;
+        World world = player.getWorld();
 
         BlockEntity blockEntity = world.getBlockEntity(redstoneTriggerBlockPosition);
         BlockState blockState = world.getBlockState(redstoneTriggerBlockPosition);
 
         if (blockEntity instanceof RedstoneTriggerBlockBlockEntity redstoneTriggerBlockBlockEntity) {
-            if (!redstoneTriggerBlockBlockEntity.setTriggeredBlockPositionOffset(triggeredBlockPositionOffset)) {
-                player.sendMessage(Text.translatable("triggered_block.triggeredBlockPositionOffset.invalid"), false);
-                updateSuccessful = false;
-            }
-            if (updateSuccessful) {
-                player.sendMessage(Text.translatable("redstone_trigger_block.update_successful"), true);
-            }
+            redstoneTriggerBlockBlockEntity.setTriggeredBlock(new MutablePair<>(triggeredBlockPositionOffset, triggeredBlockResets));
+            player.sendMessage(Text.translatable("redstone_trigger_block.update_successful"), true);
             redstoneTriggerBlockBlockEntity.markDirty();
             world.updateListeners(redstoneTriggerBlockPosition, blockState, blockState, Block.NOTIFY_ALL);
         }

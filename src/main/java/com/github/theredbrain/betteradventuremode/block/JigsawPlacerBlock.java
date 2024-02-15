@@ -23,7 +23,7 @@ public class JigsawPlacerBlock extends RotatedBlockWithEntity implements Operato
     public static final EnumProperty<Orientation> ORIENTATION = Properties.ORIENTATION;
     public JigsawPlacerBlock(Settings settings) {
         super(settings);
-        this.setDefaultState((BlockState)((BlockState)this.stateManager.getDefaultState()).with(ORIENTATION, Orientation.NORTH_UP));
+        this.setDefaultState((BlockState)((BlockState)this.stateManager.getDefaultState()).with(ROTATED, 0).with(X_MIRRORED, false).with(Z_MIRRORED, false).with(ORIENTATION, Orientation.NORTH_UP));
     }
 
     // TODO Block Codecs

@@ -10,6 +10,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.CyclingButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.NarratorManager;
 import net.minecraft.screen.ScreenTexts;
@@ -24,6 +25,8 @@ public class RedstoneTriggerBlockScreen extends Screen {
     private TextFieldWidget triggeredBlockPositionOffsetXField;
     private TextFieldWidget triggeredBlockPositionOffsetYField;
     private TextFieldWidget triggeredBlockPositionOffsetZField;
+    private CyclingButtonWidget<Boolean> toggleTriggeredBlockResetsButton;
+    private boolean triggeredBlockResets;
 
     public RedstoneTriggerBlockScreen(RedstoneTriggerBlockBlockEntity redstoneTriggerBlock) {
         super(NarratorManager.EMPTY);
@@ -42,18 +45,23 @@ public class RedstoneTriggerBlockScreen extends Screen {
 
     @Override
     protected void init() {
-        this.triggeredBlockPositionOffsetXField = new TextFieldWidget(this.textRenderer, this.width / 2 - 154, 115, 100, 20, Text.translatable(""));
+        this.triggeredBlockPositionOffsetXField = new TextFieldWidget(this.textRenderer, this.width / 2 - 154, 115, 50, 20, Text.translatable(""));
         this.triggeredBlockPositionOffsetXField.setMaxLength(128);
-        this.triggeredBlockPositionOffsetXField.setText(Integer.toString(this.redstoneTriggerBlock.getTriggeredBlockPositionOffset().getX()));
+        this.triggeredBlockPositionOffsetXField.setText(Integer.toString(this.redstoneTriggerBlock.getTriggeredBlock().getLeft().getX()));
         this.addSelectableChild(this.triggeredBlockPositionOffsetXField);
-        this.triggeredBlockPositionOffsetYField = new TextFieldWidget(this.textRenderer, this.width / 2 - 50, 115, 100, 20, Text.translatable(""));
+        this.triggeredBlockPositionOffsetYField = new TextFieldWidget(this.textRenderer, this.width / 2 - 100, 115, 50, 20, Text.translatable(""));
         this.triggeredBlockPositionOffsetYField.setMaxLength(128);
-        this.triggeredBlockPositionOffsetYField.setText(Integer.toString(this.redstoneTriggerBlock.getTriggeredBlockPositionOffset().getY()));
+        this.triggeredBlockPositionOffsetYField.setText(Integer.toString(this.redstoneTriggerBlock.getTriggeredBlock().getLeft().getY()));
         this.addSelectableChild(this.triggeredBlockPositionOffsetYField);
-        this.triggeredBlockPositionOffsetZField = new TextFieldWidget(this.textRenderer, this.width / 2 + 54, 115, 100, 20, Text.translatable(""));
+        this.triggeredBlockPositionOffsetZField = new TextFieldWidget(this.textRenderer, this.width / 2 - 46, 115, 50, 20, Text.translatable(""));
         this.triggeredBlockPositionOffsetZField.setMaxLength(128);
-        this.triggeredBlockPositionOffsetZField.setText(Integer.toString(this.redstoneTriggerBlock.getTriggeredBlockPositionOffset().getZ()));
+        this.triggeredBlockPositionOffsetZField.setText(Integer.toString(this.redstoneTriggerBlock.getTriggeredBlock().getLeft().getZ()));
         this.addSelectableChild(this.triggeredBlockPositionOffsetZField);
+        this.triggeredBlockResets = this.redstoneTriggerBlock.getTriggeredBlock().getRight();
+        this.toggleTriggeredBlockResetsButton = this.addDrawableChild(CyclingButtonWidget.onOffBuilder(Text.translatable("gui.teleporter_block.toggle_triggered_block_resets_button_label.on"), Text.translatable("gui.teleporter_block.toggle_triggered_block_resets_button_label.off")).initially(this.triggeredBlockResets).omitKeyText().build(this.width / 2 + 8, 115, 150, 20, Text.empty(), (button, triggeredBlockResets) -> {
+            this.triggeredBlockResets = triggeredBlockResets;
+        }));
+
         this.addDrawableChild(ButtonWidget.builder(ScreenTexts.DONE, button -> this.done()).dimensions(this.width / 2 - 4 - 150, 145, 150, 20).build());
         this.addDrawableChild(ButtonWidget.builder(ScreenTexts.CANCEL, button -> this.cancel()).dimensions(this.width / 2 + 4, 145, 150, 20).build());
         this.setInitialFocus(this.triggeredBlockPositionOffsetXField);
@@ -86,7 +94,8 @@ public class RedstoneTriggerBlockScreen extends Screen {
                         ItemUtils.parseInt(this.triggeredBlockPositionOffsetXField.getText()),
                         ItemUtils.parseInt(this.triggeredBlockPositionOffsetYField.getText()),
                         ItemUtils.parseInt(this.triggeredBlockPositionOffsetZField.getText())
-                )
+                ),
+                this.triggeredBlockResets
         ));
         return true;
     }

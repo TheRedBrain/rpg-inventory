@@ -43,7 +43,7 @@ protected static final VoxelShape EAST_SHAPE = Block.createCuboidShape(0.0, 0.0,
 
     public UseRelayTrapdoorBlock(Settings settings) {
         super(settings);
-        this.setDefaultState((BlockState)((BlockState)((BlockState)((BlockState)((BlockState)((BlockState)this.stateManager.getDefaultState()).with(FACING, Direction.NORTH)).with(OPEN, false)).with(HALF, BlockHalf.BOTTOM))).with(WATERLOGGED, false));
+        this.setDefaultState((BlockState)((BlockState)((BlockState)((BlockState)((BlockState)((BlockState)this.stateManager.getDefaultState()).with(ROTATED, 0).with(X_MIRRORED, false).with(Z_MIRRORED, false).with(FACING, Direction.NORTH)).with(OPEN, false)).with(HALF, BlockHalf.BOTTOM))).with(WATERLOGGED, false));
     }
 
     // TODO Block Codecs
