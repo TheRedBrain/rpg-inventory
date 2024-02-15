@@ -43,6 +43,7 @@ public class LocationControlBlockScreen extends Screen {
     private TextFieldWidget mainEntrancePositionOffsetZField;
     private TextFieldWidget mainEntranceOrientationYawField;
     private TextFieldWidget mainEntranceOrientationPitchField;
+    private CyclingButtonWidget<Boolean> toggleShouldAlwaysResetButton;
     private ButtonWidget removeSideEntranceButton0;
     private ButtonWidget removeSideEntranceButton1;
     private ButtonWidget removeSideEntranceButton2;
@@ -60,6 +61,7 @@ public class LocationControlBlockScreen extends Screen {
     private ButtonWidget cancelButton;
     private ScreenPage screenPage;
     private List<MutablePair<String, MutablePair<BlockPos, MutablePair<Double, Double>>>> sideEntranceList = new ArrayList<>();
+    private boolean shouldAlwaysReset;
     private int scrollPosition = 0;
     private float scrollAmount = 0.0f;
     private boolean mouseClicked = false;
@@ -163,6 +165,11 @@ public class LocationControlBlockScreen extends Screen {
         this.mainEntranceOrientationPitchField.setText(Double.toString(this.locationControlBlock.getMainEntrance().getRight().getRight()));
         this.addSelectableChild(this.mainEntranceOrientationPitchField);
 
+        this.shouldAlwaysReset = this.locationControlBlock.shouldAlwaysReset();
+        this.toggleShouldAlwaysResetButton = this.addDrawableChild(CyclingButtonWidget.onOffBuilder(Text.translatable("gui.location_controller_block.toggle_should_always_reset_button_label.on"), Text.translatable("gui.location_controller_block.toggle_should_always_reset_button_label.off")).initially(this.shouldAlwaysReset).omitKeyText().build(this.width / 2 - 154, 150, 300, 20, Text.empty(), (button, shouldAlwaysReset) -> {
+            this.shouldAlwaysReset = shouldAlwaysReset;
+        }));
+
         // --- side entrances page ---
 
         this.removeSideEntranceButton0 = this.addDrawableChild(ButtonWidget.builder(REMOVE_LIST_ENTRY_BUTTON_LABEL_TEXT, button -> this.removeSideEntrance(0)).dimensions(this.width / 2 + 104, 44, 50, 20).build());
@@ -229,6 +236,8 @@ public class LocationControlBlockScreen extends Screen {
         this.mainEntranceOrientationYawField.setVisible(false);
         this.mainEntranceOrientationPitchField.setVisible(false);
 
+        this.toggleShouldAlwaysResetButton.visible = false;
+
         this.removeSideEntranceButton0.visible = false;
         this.removeSideEntranceButton1.visible = false;
         this.removeSideEntranceButton2.visible = false;
@@ -257,6 +266,8 @@ public class LocationControlBlockScreen extends Screen {
             this.mainEntrancePositionOffsetZField.setVisible(true);
             this.mainEntranceOrientationYawField.setVisible(true);
             this.mainEntranceOrientationPitchField.setVisible(true);
+
+            this.toggleShouldAlwaysResetButton.visible = true;
 
         } else if (this.screenPage == ScreenPage.SIDE_ENTRANCES) {
 
@@ -299,6 +310,7 @@ public class LocationControlBlockScreen extends Screen {
         ScreenPage var = this.screenPage;
         int number = this.scrollPosition;
         float number1 =  this.scrollAmount;
+        boolean bl = this.shouldAlwaysReset;
         String string = this.mainEntrancePositionOffsetXField.getText();
         String string1 = this.mainEntrancePositionOffsetYField.getText();
         String string2 = this.mainEntrancePositionOffsetZField.getText();
@@ -319,6 +331,7 @@ public class LocationControlBlockScreen extends Screen {
         this.screenPage = var;
         this.scrollPosition = number;
         this.scrollAmount = number1;
+        this.shouldAlwaysReset = bl;
         this.mainEntrancePositionOffsetXField.setText(string);
         this.mainEntrancePositionOffsetYField.setText(string1);
         this.mainEntrancePositionOffsetZField.setText(string2);
@@ -456,7 +469,8 @@ public class LocationControlBlockScreen extends Screen {
                         ItemUtils.parseInt(this.triggeredBlockPositionOffsetXField.getText()),
                         ItemUtils.parseInt(this.triggeredBlockPositionOffsetYField.getText()),
                         ItemUtils.parseInt(this.triggeredBlockPositionOffsetZField.getText())
-                )
+                ),
+                this.shouldAlwaysReset
         ));
         return true;
     }

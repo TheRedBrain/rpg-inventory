@@ -22,14 +22,16 @@ public class UpdateLocationControlBlockPacket implements FabricPacket {
     public final double mainEntrancePitch;
     public final List<MutablePair<String, MutablePair<BlockPos, MutablePair<Double, Double>>>> sideEntrancesList;
     public final BlockPos triggeredBlockPositionOffset;
+    public final boolean shouldAlwaysReset;
 
-    public UpdateLocationControlBlockPacket(BlockPos locationControlBlockPosition, BlockPos mainEntrancePositionOffset, double mainEntranceYaw, double mainEntrancePitch, List<MutablePair<String, MutablePair<BlockPos, MutablePair<Double, Double>>>> sideEntrancesList, BlockPos triggeredBlockPositionOffset) {
+    public UpdateLocationControlBlockPacket(BlockPos locationControlBlockPosition, BlockPos mainEntrancePositionOffset, double mainEntranceYaw, double mainEntrancePitch, List<MutablePair<String, MutablePair<BlockPos, MutablePair<Double, Double>>>> sideEntrancesList, BlockPos triggeredBlockPositionOffset, boolean shouldAlwaysReset) {
         this.locationControlBlockPosition = locationControlBlockPosition;
         this.mainEntrancePositionOffset = mainEntrancePositionOffset;
         this.mainEntranceYaw = mainEntranceYaw;
         this.mainEntrancePitch = mainEntrancePitch;
         this.sideEntrancesList = sideEntrancesList;
         this.triggeredBlockPositionOffset = triggeredBlockPositionOffset;
+        this.shouldAlwaysReset = shouldAlwaysReset;
     }
 
     public UpdateLocationControlBlockPacket(PacketByteBuf buf) {
@@ -39,7 +41,8 @@ public class UpdateLocationControlBlockPacket implements FabricPacket {
                 buf.readDouble(),
                 buf.readDouble(),
                 buf.readList(new PacketByteBufUtils.MutablePairStringMutablePairBlockPosMutablePairDoubleDoubleReader()),
-                buf.readBlockPos()
+                buf.readBlockPos(),
+                buf.readBoolean()
         );
     }
 
@@ -56,5 +59,6 @@ public class UpdateLocationControlBlockPacket implements FabricPacket {
         buf.writeDouble(this.mainEntrancePitch);
         buf.writeCollection(this.sideEntrancesList, new PacketByteBufUtils.MutablePairStringMutablePairBlockPosMutablePairDoubleDoubleWriter());
         buf.writeBlockPos(this.triggeredBlockPositionOffset);
+        buf.writeBoolean(this.shouldAlwaysReset);
     }
 }

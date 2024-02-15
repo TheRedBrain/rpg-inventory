@@ -37,30 +37,21 @@ public class UpdateLocationControlBlockPacketReceiver implements ServerPlayNetwo
 
         BlockPos triggeredBlockPositionOffset = packet.triggeredBlockPositionOffset;
 
-        World world = player.getWorld();
+        boolean shouldAlwaysReset = packet.shouldAlwaysReset;
 
-        boolean updateSuccessful = true;
+        World world = player.getWorld();
 
         BlockEntity blockEntity = world.getBlockEntity(locationControlBlockPosition);
         BlockState blockState = world.getBlockState(locationControlBlockPosition);
 
         if (blockEntity instanceof LocationControlBlockEntity locationControlBlockEntity) {
 
-            if (!locationControlBlockEntity.setMainEntrance(new MutablePair<>(mainEntrancePositionOffset, new MutablePair<>(mainEntranceYaw, mainEntrancePitch)))) {
-                player.sendMessage(Text.translatable("location_control_block.mainEntrance.invalid"), false);
-                updateSuccessful = false;
-            }
-            if (!locationControlBlockEntity.setSideEntrances(sideEntrances)) {
-                player.sendMessage(Text.translatable("location_control_block.sideEntrances.invalid"), false);
-                updateSuccessful = false;
-            }
-            if (!locationControlBlockEntity.setTriggeredBlockPositionOffset(triggeredBlockPositionOffset)) {
-                player.sendMessage(Text.translatable("location_control_block.triggeredBlockPositionOffset.invalid"), false);
-                updateSuccessful = false;
-            }
-            if (updateSuccessful) {
-                player.sendMessage(Text.translatable("location_control_block.update_successful"), true);
-            }
+            locationControlBlockEntity.setMainEntrance(new MutablePair<>(mainEntrancePositionOffset, new MutablePair<>(mainEntranceYaw, mainEntrancePitch)));
+            locationControlBlockEntity.setSideEntrances(sideEntrances);
+            locationControlBlockEntity.setTriggeredBlockPositionOffset(triggeredBlockPositionOffset);
+            locationControlBlockEntity.setShouldAlwaysReset(shouldAlwaysReset);
+
+            player.sendMessage(Text.translatable("location_control_block.update_successful"), true);
             locationControlBlockEntity.markDirty();
             world.updateListeners(locationControlBlockPosition, blockState, blockState, Block.NOTIFY_ALL);
         }

@@ -31,6 +31,7 @@ public class LocationControlBlockEntity extends RotatedBlockEntity implements Re
     }
 
     private boolean manualReset = false;
+    private boolean shouldAlwaysReset = false;
     private int initialResetTimer = -1;
 
     @Override
@@ -60,6 +61,8 @@ public class LocationControlBlockEntity extends RotatedBlockEntity implements Re
         nbt.putInt("triggeredBlockPositionOffsetZ", this.triggeredBlockPositionOffset.getZ());
 
         nbt.putBoolean("manualReset", this.manualReset);
+
+        nbt.putBoolean("shouldAlwaysReset", this.shouldAlwaysReset);
 
         nbt.putInt("initialResetTimer", this.initialResetTimer);
 
@@ -96,6 +99,8 @@ public class LocationControlBlockEntity extends RotatedBlockEntity implements Re
 
         this.manualReset = nbt.getBoolean("manualReset");
 
+        this.shouldAlwaysReset = nbt.getBoolean("shouldAlwaysReset");
+
         this.initialResetTimer = nbt.contains("initialResetTimer", NbtElement.INT_TYPE) ? nbt.getInt("initialResetTimer") : -1;
 
         super.readNbt(nbt);
@@ -124,9 +129,8 @@ public class LocationControlBlockEntity extends RotatedBlockEntity implements Re
         return mainEntrance;
     }
 
-    public boolean setMainEntrance(MutablePair<BlockPos, MutablePair<Double, Double>> mainEntrance) {
+    public void setMainEntrance(MutablePair<BlockPos, MutablePair<Double, Double>> mainEntrance) {
         this.mainEntrance = mainEntrance;
-        return true;
     }
 
     public MutablePair<BlockPos, MutablePair<Double, Double>> getTargetEntrance(String entrance) {
@@ -144,10 +148,9 @@ public class LocationControlBlockEntity extends RotatedBlockEntity implements Re
         return sideEntrances;
     }
 
-    public boolean setSideEntrances(HashMap<String, MutablePair<BlockPos, MutablePair<Double, Double>>> sideEntrances) {
+    public void setSideEntrances(HashMap<String, MutablePair<BlockPos, MutablePair<Double, Double>>> sideEntrances) {
         this.sideEntrances.clear();
         this.sideEntrances.putAll(sideEntrances);
-        return true;
     }
 
     public BlockPos getTriggeredBlockPositionOffset() {
@@ -155,9 +158,8 @@ public class LocationControlBlockEntity extends RotatedBlockEntity implements Re
     }
 
     // TODO check if input is valid
-    public boolean setTriggeredBlockPositionOffset(BlockPos triggeredBlockPositionOffset) {
+    public void setTriggeredBlockPositionOffset(BlockPos triggeredBlockPositionOffset) {
         this.triggeredBlockPositionOffset = triggeredBlockPositionOffset;
-        return true;
     }
 
     public void trigger() {
@@ -174,7 +176,7 @@ public class LocationControlBlockEntity extends RotatedBlockEntity implements Re
         // TODO
         //  implement reset timer
         //  make sure resets only happen when no players are in location
-        return this.manualReset;
+        return this.manualReset || this.shouldAlwaysReset;
     }
 
     @Override
@@ -184,6 +186,14 @@ public class LocationControlBlockEntity extends RotatedBlockEntity implements Re
 
     public void setManualReset(boolean manualReset) {
         this.manualReset = manualReset;
+    }
+
+    public boolean shouldAlwaysReset() {
+        return shouldAlwaysReset;
+    }
+
+    public void setShouldAlwaysReset(boolean shouldAlwaysReset) {
+        this.shouldAlwaysReset = shouldAlwaysReset;
     }
 
     public int getInitialResetTimer() {
