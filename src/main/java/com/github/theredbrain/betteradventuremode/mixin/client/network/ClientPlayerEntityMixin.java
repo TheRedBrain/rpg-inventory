@@ -54,20 +54,20 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
 
     @Override
     public void betteradventuremode$openHousingScreen() {
-        HousingBlockBlockEntity housingBlockBlockEntity = null;
-        if (this.client.getServer() != null && this.client.world != null && this.client.world.getBlockEntity(ComponentsRegistry.CURRENT_HOUSING_BLOCK_POS.get(this).getValue()) instanceof HousingBlockBlockEntity housingBlockBlockEntity1) {
-            housingBlockBlockEntity = housingBlockBlockEntity1;
+        HousingBlockEntity housingBlockEntity = null;
+        if (this.client.getServer() != null && this.client.world != null && this.client.world.getBlockEntity(ComponentsRegistry.CURRENT_HOUSING_BLOCK_POS.get(this).getValue()) instanceof HousingBlockEntity housingBlockEntity1) {
+            housingBlockEntity = housingBlockEntity1;
         }
         int currentPermissionLevel;
-        if (this.hasStatusEffect(StatusEffectsRegistry.HOUSING_OWNER_EFFECT) && housingBlockBlockEntity != null) {
+        if (this.hasStatusEffect(StatusEffectsRegistry.HOUSING_OWNER_EFFECT) && housingBlockEntity != null) {
             currentPermissionLevel = 0;
-        } else if (this.hasStatusEffect(StatusEffectsRegistry.HOUSING_CO_OWNER_EFFECT) && housingBlockBlockEntity != null) {
+        } else if (this.hasStatusEffect(StatusEffectsRegistry.HOUSING_CO_OWNER_EFFECT) && housingBlockEntity != null) {
             currentPermissionLevel = 1;
-        } else if (this.hasStatusEffect(StatusEffectsRegistry.HOUSING_TRUSTED_EFFECT) && housingBlockBlockEntity != null) {
+        } else if (this.hasStatusEffect(StatusEffectsRegistry.HOUSING_TRUSTED_EFFECT) && housingBlockEntity != null) {
             currentPermissionLevel = 2;
-        } else if (this.hasStatusEffect(StatusEffectsRegistry.HOUSING_GUEST_EFFECT) && housingBlockBlockEntity != null) {
+        } else if (this.hasStatusEffect(StatusEffectsRegistry.HOUSING_GUEST_EFFECT) && housingBlockEntity != null) {
             currentPermissionLevel = 3;
-        } else if (this.hasStatusEffect(StatusEffectsRegistry.HOUSING_STRANGER_EFFECT) && housingBlockBlockEntity != null) {
+        } else if (this.hasStatusEffect(StatusEffectsRegistry.HOUSING_STRANGER_EFFECT) && housingBlockEntity != null) {
             currentPermissionLevel = 4;
         } else if (this.isCreative()) {
             currentPermissionLevel = 5;
@@ -75,21 +75,21 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
             this.sendMessage(Text.translatable("gui.housing_screen.not_in_a_house"), true);
             return;
         }
-        this.client.setScreen(new HousingScreen(housingBlockBlockEntity, currentPermissionLevel, this.isCreative()));
+        this.client.setScreen(new HousingScreen(housingBlockEntity, currentPermissionLevel, this.isCreative()));
     }
 
     @Override
-    public void betteradventuremode$openJigsawPlacerBlockScreen(JigsawPlacerBlockBlockEntity jigsawPlacerBlock) {
+    public void betteradventuremode$openJigsawPlacerBlockScreen(JigsawPlacerBlockEntity jigsawPlacerBlock) {
         this.client.setScreen(new JigsawPlacerBlockScreen(jigsawPlacerBlock));
     }
 
     @Override
-    public void betteradventuremode$openRedstoneTriggerBlockScreen(RedstoneTriggerBlockBlockEntity redstoneTriggerBlock) {
+    public void betteradventuremode$openRedstoneTriggerBlockScreen(RedstoneTriggerBlockEntity redstoneTriggerBlock) {
         this.client.setScreen(new RedstoneTriggerBlockScreen(redstoneTriggerBlock));
     }
 
     @Override
-    public void betteradventuremode$openRelayTriggerBlockScreen(RelayTriggerBlockBlockEntity relayTriggerBlock) {
+    public void betteradventuremode$openRelayTriggerBlockScreen(RelayTriggerBlockEntity relayTriggerBlock) {
         this.client.setScreen(new RelayTriggerBlockScreen(relayTriggerBlock));
     }
 
@@ -104,7 +104,7 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
     }
 
     @Override
-    public void betteradventuremode$openDelayTriggerBlockScreen(DelayTriggerBlockBlockEntity delayTriggerBlock) {
+    public void betteradventuremode$openDelayTriggerBlockScreen(DelayTriggerBlockEntity delayTriggerBlock) {
         this.client.setScreen(new DelayTriggerBlockScreen(delayTriggerBlock));
     }
 

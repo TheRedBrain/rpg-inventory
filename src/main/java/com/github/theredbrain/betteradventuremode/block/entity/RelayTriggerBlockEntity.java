@@ -18,9 +18,9 @@ import net.minecraft.util.math.MathHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RelayTriggerBlockBlockEntity extends RotatedBlockEntity implements Triggerable {
+public class RelayTriggerBlockEntity extends RotatedBlockEntity implements Triggerable {
     private List<BlockPos> triggeredBlocks = new ArrayList<>(List.of());
-    public RelayTriggerBlockBlockEntity(BlockPos pos, BlockState state) {
+    public RelayTriggerBlockEntity(BlockPos pos, BlockState state) {
         super(EntityRegistry.RELAY_TRIGGER_BLOCK_ENTITY, pos, state);
     }
 

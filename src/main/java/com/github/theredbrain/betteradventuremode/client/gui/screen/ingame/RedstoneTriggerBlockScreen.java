@@ -1,7 +1,7 @@
 package com.github.theredbrain.betteradventuremode.client.gui.screen.ingame;
 
 import com.github.theredbrain.betteradventuremode.util.ItemUtils;
-import com.github.theredbrain.betteradventuremode.block.entity.RedstoneTriggerBlockBlockEntity;
+import com.github.theredbrain.betteradventuremode.block.entity.RedstoneTriggerBlockEntity;
 import com.github.theredbrain.betteradventuremode.network.packet.UpdateRedstoneTriggerBlockPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -21,14 +21,14 @@ import org.lwjgl.glfw.GLFW;
 @Environment(value= EnvType.CLIENT)
 public class RedstoneTriggerBlockScreen extends Screen {
     private static final Text TRIGGERED_BLOCK_POSITION_TEXT = Text.translatable("gui.triggered_block.triggeredBlockPositionOffset");
-    private final RedstoneTriggerBlockBlockEntity redstoneTriggerBlock;
+    private final RedstoneTriggerBlockEntity redstoneTriggerBlock;
     private TextFieldWidget triggeredBlockPositionOffsetXField;
     private TextFieldWidget triggeredBlockPositionOffsetYField;
     private TextFieldWidget triggeredBlockPositionOffsetZField;
     private CyclingButtonWidget<Boolean> toggleTriggeredBlockResetsButton;
     private boolean triggeredBlockResets;
 
-    public RedstoneTriggerBlockScreen(RedstoneTriggerBlockBlockEntity redstoneTriggerBlock) {
+    public RedstoneTriggerBlockScreen(RedstoneTriggerBlockEntity redstoneTriggerBlock) {
         super(NarratorManager.EMPTY);
         this.redstoneTriggerBlock = redstoneTriggerBlock;
     }
@@ -45,6 +45,7 @@ public class RedstoneTriggerBlockScreen extends Screen {
 
     @Override
     protected void init() {
+
         this.triggeredBlockPositionOffsetXField = new TextFieldWidget(this.textRenderer, this.width / 2 - 154, 115, 50, 20, Text.translatable(""));
         this.triggeredBlockPositionOffsetXField.setMaxLength(128);
         this.triggeredBlockPositionOffsetXField.setText(Integer.toString(this.redstoneTriggerBlock.getTriggeredBlock().getLeft().getX()));
@@ -58,7 +59,7 @@ public class RedstoneTriggerBlockScreen extends Screen {
         this.triggeredBlockPositionOffsetZField.setText(Integer.toString(this.redstoneTriggerBlock.getTriggeredBlock().getLeft().getZ()));
         this.addSelectableChild(this.triggeredBlockPositionOffsetZField);
         this.triggeredBlockResets = this.redstoneTriggerBlock.getTriggeredBlock().getRight();
-        this.toggleTriggeredBlockResetsButton = this.addDrawableChild(CyclingButtonWidget.onOffBuilder(Text.translatable("gui.teleporter_block.toggle_triggered_block_resets_button_label.on"), Text.translatable("gui.teleporter_block.toggle_triggered_block_resets_button_label.off")).initially(this.triggeredBlockResets).omitKeyText().build(this.width / 2 + 8, 115, 150, 20, Text.empty(), (button, triggeredBlockResets) -> {
+        this.toggleTriggeredBlockResetsButton = this.addDrawableChild(CyclingButtonWidget.onOffBuilder(Text.translatable("gui.triggered_block.toggle_triggered_block_resets_button_label.on"), Text.translatable("gui.triggered_block.toggle_triggered_block_resets_button_label.off")).initially(this.triggeredBlockResets).omitKeyText().build(this.width / 2 + 8, 115, 150, 20, Text.empty(), (button, triggeredBlockResets) -> {
             this.triggeredBlockResets = triggeredBlockResets;
         }));
 
@@ -72,10 +73,12 @@ public class RedstoneTriggerBlockScreen extends Screen {
         String string2 = this.triggeredBlockPositionOffsetXField.getText();
         String string3 = this.triggeredBlockPositionOffsetYField.getText();
         String string4 = this.triggeredBlockPositionOffsetZField.getText();
+        boolean bl = this.triggeredBlockResets;
         this.init(client, width, height);
         this.triggeredBlockPositionOffsetXField.setText(string2);
         this.triggeredBlockPositionOffsetYField.setText(string3);
         this.triggeredBlockPositionOffsetZField.setText(string4);
+        this.triggeredBlockResets = bl;
     }
 
     @Override

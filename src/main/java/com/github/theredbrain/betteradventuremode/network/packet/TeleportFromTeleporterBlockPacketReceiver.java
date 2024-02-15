@@ -5,7 +5,7 @@ import com.github.theredbrain.betteradventuremode.data.Location;
 import com.github.theredbrain.betteradventuremode.util.ItemUtils;
 import com.github.theredbrain.betteradventuremode.block.entity.EntranceDelegationBlockEntity;
 import com.github.theredbrain.betteradventuremode.block.entity.LocationControlBlockEntity;
-import com.github.theredbrain.betteradventuremode.block.entity.TeleporterBlockBlockEntity;
+import com.github.theredbrain.betteradventuremode.block.entity.TeleporterBlockEntity;
 import com.github.theredbrain.betteradventuremode.registry.ComponentsRegistry;
 import com.github.theredbrain.betteradventuremode.registry.LocationsRegistry;
 import com.github.theredbrain.betteradventuremode.util.UUIDUtilities;
@@ -15,7 +15,6 @@ import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.RegistryKey;
@@ -47,13 +46,13 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
 
         boolean teleportTeam = packet.teleportTeam;
 
-        TeleporterBlockBlockEntity.TeleportationMode teleportationMode = packet.teleportationMode;
+        TeleporterBlockEntity.TeleportationMode teleportationMode = packet.teleportationMode;
 
         BlockPos directTeleportPositionOffset = packet.directTeleportPositionOffset;
         double directTeleportOrientationYaw = packet.directTeleportOrientationYaw;
         double directTeleportOrientationPitch = packet.directTeleportOrientationPitch;
 
-        TeleporterBlockBlockEntity.SpawnPointType spawnPointType = packet.spawnPointType;
+        TeleporterBlockEntity.SpawnPointType spawnPointType = packet.spawnPointType;
 
         String targetDimensionOwnerName = packet.targetDimensionOwnerName;
         String targetLocation = packet.targetLocation;
@@ -71,20 +70,20 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
         boolean playerHadKeyItem = true;
         boolean locationWasReset = false;
 
-        if (teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DIRECT) {
+        if (teleportationMode == TeleporterBlockEntity.TeleportationMode.DIRECT) {
             targetWorld = serverWorld;
             targetPos = new BlockPos(teleportBlockPosition.getX() + directTeleportPositionOffset.getX(), teleportBlockPosition.getY() + directTeleportPositionOffset.getY(), teleportBlockPosition.getZ() + directTeleportPositionOffset.getZ());
             targetYaw = directTeleportOrientationYaw;
             targetPitch = directTeleportOrientationPitch;
-        } else if (teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.SPAWN_POINTS) {
+        } else if (teleportationMode == TeleporterBlockEntity.TeleportationMode.SPAWN_POINTS) {
             Pair<Pair<String, BlockPos>, Boolean> housing_access_pos = ComponentsRegistry.PLAYER_LOCATION_ACCESS_POS.get(serverPlayerEntity).getValue();
-            if (spawnPointType == TeleporterBlockBlockEntity.SpawnPointType.PLAYER_LOCATION_ACCESS_POSITION && housing_access_pos.getRight()) {
+            if (spawnPointType == TeleporterBlockEntity.SpawnPointType.PLAYER_LOCATION_ACCESS_POSITION && housing_access_pos.getRight()) {
                 targetWorld = server.getWorld(RegistryKey.of(RegistryKeys.WORLD, new Identifier(housing_access_pos.getLeft().getLeft())));
                 targetPos = housing_access_pos.getLeft().getRight();
                 if (targetWorld != null && targetPos != null) {
                     ComponentsRegistry.PLAYER_LOCATION_ACCESS_POS.get(serverPlayerEntity).deactivate();
                 }
-            } else if (spawnPointType == TeleporterBlockBlockEntity.SpawnPointType.PLAYER_SPAWN) {
+            } else if (spawnPointType == TeleporterBlockEntity.SpawnPointType.PLAYER_SPAWN) {
                 targetWorld = server.getWorld(serverPlayerEntity.getSpawnPointDimension());
                 targetPos = serverPlayerEntity.getSpawnPointPosition();
                 targetYaw = serverPlayerEntity.getSpawnAngle();
@@ -93,7 +92,7 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
                 targetPos = server.getOverworld().getSpawnPos();
                 targetYaw = server.getOverworld().getSpawnAngle();
             }
-        } else if (teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS) {
+        } else if (teleportationMode == TeleporterBlockEntity.TeleportationMode.LOCATIONS) {
 
             Location location = LocationsRegistry.getLocation(Identifier.tryParse(targetLocation));
 

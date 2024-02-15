@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.block;
 
-import com.github.theredbrain.betteradventuremode.block.entity.JigsawPlacerBlockBlockEntity;
+import com.github.theredbrain.betteradventuremode.block.entity.JigsawPlacerBlockEntity;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -46,14 +46,14 @@ public class JigsawPlacerBlock extends RotatedBlockWithEntity implements Operato
 
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new JigsawPlacerBlockBlockEntity(pos, state);
+        return new JigsawPlacerBlockEntity(pos, state);
     }
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof JigsawPlacerBlockBlockEntity) {
-            return ((JigsawPlacerBlockBlockEntity)blockEntity).openScreen(player) ? ActionResult.success(world.isClient) : ActionResult.PASS;
+        if (blockEntity instanceof JigsawPlacerBlockEntity) {
+            return ((JigsawPlacerBlockEntity)blockEntity).openScreen(player) ? ActionResult.success(world.isClient) : ActionResult.PASS;
         }
         return ActionResult.PASS;
     }

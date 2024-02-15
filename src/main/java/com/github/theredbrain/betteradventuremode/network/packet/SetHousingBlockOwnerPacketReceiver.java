@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.network.packet;
 
-import com.github.theredbrain.betteradventuremode.block.entity.HousingBlockBlockEntity;
+import com.github.theredbrain.betteradventuremode.block.entity.HousingBlockEntity;
 import com.github.theredbrain.betteradventuremode.registry.StatusEffectsRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -29,24 +29,24 @@ public class SetHousingBlockOwnerPacketReceiver implements ServerPlayNetworking.
         BlockEntity blockEntity = world.getBlockEntity(housingBlockPosition);
         BlockState blockState = world.getBlockState(housingBlockPosition);
 
-        if (blockEntity instanceof HousingBlockBlockEntity housingBlockBlockEntity) {
+        if (blockEntity instanceof HousingBlockEntity housingBlockEntity) {
 
-            if (!housingBlockBlockEntity.setOwnerUuid(owner)) {
+            if (!housingBlockEntity.setOwnerUuid(owner)) {
                 player.sendMessage(Text.translatable("housing_block.owner.invalid"), false);
                 updateSuccessful = false;
             }
             if (updateSuccessful) {
                 if (Objects.equals(owner, "")) {
-                    housingBlockBlockEntity.setIsOwnerSet(false);
+                    housingBlockEntity.setIsOwnerSet(false);
                     player.sendMessage(Text.translatable("housing_block.unclaimed_successful"), true);
                     player.removeStatusEffect(StatusEffectsRegistry.HOUSING_OWNER_EFFECT);
                     player.removeStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT);
                 } else {
-                    housingBlockBlockEntity.setIsOwnerSet(true);
+                    housingBlockEntity.setIsOwnerSet(true);
                     player.sendMessage(Text.translatable("housing_block.claimed_successful"), true);
                 }
             }
-            housingBlockBlockEntity.markDirty();
+            housingBlockEntity.markDirty();
             world.updateListeners(housingBlockPosition, blockState, blockState, Block.NOTIFY_ALL);
         }
     }

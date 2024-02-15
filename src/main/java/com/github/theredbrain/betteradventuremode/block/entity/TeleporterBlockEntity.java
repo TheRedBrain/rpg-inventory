@@ -31,7 +31,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements ExtendedScreenHandlerFactory {
+public class TeleporterBlockEntity extends RotatedBlockEntity implements ExtendedScreenHandlerFactory {
 
     private boolean calculateActivationBox = true;
     private Box activationArea = null;
@@ -65,7 +65,7 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
     private String teleportButtonLabel = "gui.teleporter_block.teleport_button.label";
     private String cancelTeleportButtonLabel = "gui.teleporter_block.cancel_teleport_button.label";
 
-    public TeleporterBlockBlockEntity(BlockPos pos, BlockState state) {
+    public TeleporterBlockEntity(BlockPos pos, BlockState state) {
         super(EntityRegistry.TELEPORTER_BLOCK_ENTITY, pos, state);
     }
 
@@ -198,24 +198,24 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
         return this.createNbt();
     }
 
-    public static void tick(World world, BlockPos pos, BlockState state, TeleporterBlockBlockEntity blockEntity) {
-        TeleporterBlockBlockEntity.tryOpenScreenRemotely(world, pos, state, blockEntity);
+    public static void tick(World world, BlockPos pos, BlockState state, TeleporterBlockEntity blockEntity) {
+        TeleporterBlockEntity.tryOpenScreenRemotely(world, pos, state, blockEntity);
     }
 
-    private static void tryOpenScreenRemotely(World world, BlockPos pos, BlockState state, TeleporterBlockBlockEntity teleporterBlockBlockEntity) {
+    private static void tryOpenScreenRemotely(World world, BlockPos pos, BlockState state, TeleporterBlockEntity teleporterBlockEntity) {
         if (world.isClient) {
             return;
         }
         if (state.isOf(BlockRegistry.TELEPORTER_BLOCK)) {
-            if (teleporterBlockBlockEntity.calculateActivationBox || teleporterBlockBlockEntity.activationArea == null) {
-                BlockPos activationAreaPositionOffset = teleporterBlockBlockEntity.getActivationAreaPositionOffset();
-                Vec3i activationAreaDimensions = teleporterBlockBlockEntity.getActivationAreaDimensions();
+            if (teleporterBlockEntity.calculateActivationBox || teleporterBlockEntity.activationArea == null) {
+                BlockPos activationAreaPositionOffset = teleporterBlockEntity.getActivationAreaPositionOffset();
+                Vec3i activationAreaDimensions = teleporterBlockEntity.getActivationAreaDimensions();
                 Vec3d activationAreaStart = new Vec3d(pos.getX() + activationAreaPositionOffset.getX(), pos.getY() + activationAreaPositionOffset.getY(), pos.getZ() + activationAreaPositionOffset.getZ());
                 Vec3d activationAreaEnd = new Vec3d(activationAreaStart.getX() + activationAreaDimensions.getX(), activationAreaStart.getY() + activationAreaDimensions.getY(), activationAreaStart.getZ() + activationAreaDimensions.getZ());
-                teleporterBlockBlockEntity.activationArea = new Box(activationAreaStart, activationAreaEnd);
-                teleporterBlockBlockEntity.calculateActivationBox = false;
+                teleporterBlockEntity.activationArea = new Box(activationAreaStart, activationAreaEnd);
+                teleporterBlockEntity.calculateActivationBox = false;
             }
-            List<PlayerEntity> list = world.getNonSpectatingEntities(PlayerEntity.class, teleporterBlockBlockEntity.activationArea);
+            List<PlayerEntity> list = world.getNonSpectatingEntities(PlayerEntity.class, teleporterBlockEntity.activationArea);
             String worldName = world.getRegistryKey().getValue().getPath();
             for (PlayerEntity playerEntity : list) {
                 if (!playerEntity.hasStatusEffect(StatusEffectsRegistry.PORTAL_RESISTANCE_EFFECT) && !playerEntity.isCreative()) {
@@ -231,7 +231,7 @@ public class TeleporterBlockBlockEntity extends RotatedBlockEntity implements Ex
                             ),
                             playerEntity
                     );
-                    if (!teleporterBlockBlockEntity.onlyTeleportDimensionOwner || playerEntity.getUuid().toString().equals(worldName)) {
+                    if (!teleporterBlockEntity.onlyTeleportDimensionOwner || playerEntity.getUuid().toString().equals(worldName)) {
                         playerEntity.openHandledScreen(state.createScreenHandlerFactory(world, pos));
                     } else {
                         playerEntity.sendMessage(Text.translatable("Only the dimension owner can teleport (WIP)"));

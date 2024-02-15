@@ -3,7 +3,7 @@
  */
 package com.github.theredbrain.betteradventuremode.client.render.block.entity;
 
-import com.github.theredbrain.betteradventuremode.block.entity.HousingBlockBlockEntity;
+import com.github.theredbrain.betteradventuremode.block.entity.HousingBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -22,12 +22,12 @@ import net.minecraft.world.World;
 // TODO clean up
 @Environment(value=EnvType.CLIENT)
 public class HousingBlockBlockEntityRenderer
-implements BlockEntityRenderer<HousingBlockBlockEntity> {
+implements BlockEntityRenderer<HousingBlockEntity> {
     public HousingBlockBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
     }
 
     @Override
-    public void render(HousingBlockBlockEntity housingBlockBlockEntity, float f, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, int j) {
+    public void render(HousingBlockEntity housingBlockEntity, float f, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, int j) {
         double o;
         double n;
         double m;
@@ -35,8 +35,8 @@ implements BlockEntityRenderer<HousingBlockBlockEntity> {
         if (!MinecraftClient.getInstance().player.isCreativeLevelTwoOp() && !MinecraftClient.getInstance().player.isSpectator()) {
             return;
         }
-        BlockPos blockPos = housingBlockBlockEntity.getRestrictBlockBreakingAreaPositionOffset();
-        Vec3i vec3i = housingBlockBlockEntity.getInfluenceAreaDimensions();
+        BlockPos blockPos = housingBlockEntity.getRestrictBlockBreakingAreaPositionOffset();
+        Vec3i vec3i = housingBlockEntity.getInfluenceAreaDimensions();
         if (vec3i.getX() < 1 || vec3i.getY() < 1 || vec3i.getZ() < 1) {
             return;
         }
@@ -98,16 +98,16 @@ implements BlockEntityRenderer<HousingBlockBlockEntity> {
         float r = 0.9f;
         float s = 0.5f;
         VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getLines());
-        if (housingBlockBlockEntity.getShowInfluenceArea()) {
+        if (housingBlockEntity.getShowInfluenceArea()) {
             WorldRenderer.drawBox(matrixStack, vertexConsumer, m, g, n, o, h, p, 0.9f, 0.9f, 0.9f, 1.0f, 0.5f, 0.5f, 0.5f);
-            this.renderInvisibleBlocks(housingBlockBlockEntity, vertexConsumer, blockPos, matrixStack);
+            this.renderInvisibleBlocks(housingBlockEntity, vertexConsumer, blockPos, matrixStack);
         }
 //        if (housingBlockBlockEntity.getMode() == StructureBlockMode.SAVE && housingBlockBlockEntity.shouldShowAir()) {
 //            this.renderInvisibleBlocks(housingBlockBlockEntity, vertexConsumer, blockPos, matrixStack);
 //        }
     }
 
-    private void renderInvisibleBlocks(HousingBlockBlockEntity entity, VertexConsumer vertices, BlockPos pos, MatrixStack matrices) {
+    private void renderInvisibleBlocks(HousingBlockEntity entity, VertexConsumer vertices, BlockPos pos, MatrixStack matrices) {
         World blockView = entity.getWorld();
         BlockPos blockPos = entity.getPos();
         BlockPos blockPos2 = blockPos.add(pos);
@@ -145,7 +145,7 @@ implements BlockEntityRenderer<HousingBlockBlockEntity> {
     }
 
     @Override
-    public boolean rendersOutsideBoundingBox(HousingBlockBlockEntity housingBlockBlockEntity) {
+    public boolean rendersOutsideBoundingBox(HousingBlockEntity housingBlockEntity) {
         return true;
     }
 

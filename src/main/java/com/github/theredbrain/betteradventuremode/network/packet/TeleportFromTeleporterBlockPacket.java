@@ -1,7 +1,7 @@
 package com.github.theredbrain.betteradventuremode.network.packet;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
-import com.github.theredbrain.betteradventuremode.block.entity.TeleporterBlockBlockEntity;
+import com.github.theredbrain.betteradventuremode.block.entity.TeleporterBlockEntity;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.minecraft.network.PacketByteBuf;
@@ -21,13 +21,13 @@ public class TeleportFromTeleporterBlockPacket implements FabricPacket {
 
     public final boolean teleportTeam;
 
-    public final TeleporterBlockBlockEntity.TeleportationMode teleportationMode;
+    public final TeleporterBlockEntity.TeleportationMode teleportationMode;
 
     public final BlockPos directTeleportPositionOffset;
     public final double directTeleportOrientationYaw;
     public final double directTeleportOrientationPitch;
 
-    public final TeleporterBlockBlockEntity.SpawnPointType spawnPointType;
+    public final TeleporterBlockEntity.SpawnPointType spawnPointType;
 
     public final String targetDimensionOwnerName;
     public final String targetLocation;
@@ -39,11 +39,11 @@ public class TeleportFromTeleporterBlockPacket implements FabricPacket {
         this.accessPositionOffset = accessPositionOffset;
         this.setAccessPosition = setAccessPosition;
         this.teleportTeam = teleportTeam;
-        this.teleportationMode = TeleporterBlockBlockEntity.TeleportationMode.byName(teleportationMode).orElseGet(() -> TeleporterBlockBlockEntity.TeleportationMode.DIRECT);
+        this.teleportationMode = TeleporterBlockEntity.TeleportationMode.byName(teleportationMode).orElseGet(() -> TeleporterBlockEntity.TeleportationMode.DIRECT);
         this.directTeleportPositionOffset = directTeleportPositionOffset;
         this.directTeleportOrientationYaw = directTeleportOrientationYaw;
         this.directTeleportOrientationPitch = directTeleportOrientationPitch;
-        this.spawnPointType = TeleporterBlockBlockEntity.SpawnPointType.byName(locationType).orElseGet(() -> TeleporterBlockBlockEntity.SpawnPointType.WORLD_SPAWN);
+        this.spawnPointType = TeleporterBlockEntity.SpawnPointType.byName(locationType).orElseGet(() -> TeleporterBlockEntity.SpawnPointType.WORLD_SPAWN);
         this.targetDimensionOwnerName = targetDimensionOwnerName;
         this.targetLocation = targetLocation;
         this.targetLocationEntrance = targetLocationEntrance;

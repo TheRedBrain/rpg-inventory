@@ -1,6 +1,5 @@
 package com.github.theredbrain.betteradventuremode.block.entity;
 
-import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.block.Resetable;
 import com.github.theredbrain.betteradventuremode.util.BlockRotationUtils;
 import com.github.theredbrain.betteradventuremode.block.RotatedBlockWithEntity;
@@ -18,10 +17,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import org.apache.commons.lang3.tuple.MutablePair;
 
-public class RedstoneTriggerBlockBlockEntity extends RotatedBlockEntity {
+public class RedstoneTriggerBlockEntity extends RotatedBlockEntity {
     private MutablePair<BlockPos, Boolean> triggeredBlock = new MutablePair<>(new BlockPos(0, 0, 0), false);
 
-    public RedstoneTriggerBlockBlockEntity(BlockPos pos, BlockState state) {
+    public RedstoneTriggerBlockEntity(BlockPos pos, BlockState state) {
         super(EntityRegistry.REDSTONE_TRIGGER_BLOCK_ENTITY, pos, state);
     }
 
@@ -78,7 +77,7 @@ public class RedstoneTriggerBlockBlockEntity extends RotatedBlockEntity {
         if (this.world != null) {
             BlockEntity blockEntity = world.getBlockEntity(new BlockPos(this.pos.getX() + this.triggeredBlock.getLeft().getX(), this.pos.getY() + this.triggeredBlock.getLeft().getY(), this.pos.getZ() + this.triggeredBlock.getLeft().getZ()));
             if (blockEntity != this) {
-                BetterAdventureMode.info("trigger");
+//                BetterAdventureMode.info("trigger");
                 boolean triggeredBlockResets = this.triggeredBlock.getRight();
                 if (triggeredBlockResets && blockEntity instanceof Resetable resetable) {
                     resetable.reset();

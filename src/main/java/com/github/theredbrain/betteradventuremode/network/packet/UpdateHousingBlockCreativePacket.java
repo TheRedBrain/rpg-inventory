@@ -1,7 +1,7 @@
 package com.github.theredbrain.betteradventuremode.network.packet;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
-import com.github.theredbrain.betteradventuremode.block.entity.HousingBlockBlockEntity;
+import com.github.theredbrain.betteradventuremode.block.entity.HousingBlockEntity;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.minecraft.network.PacketByteBuf;
@@ -19,7 +19,7 @@ public class UpdateHousingBlockCreativePacket implements FabricPacket {
     public final Vec3i restrictBlockBreakingAreaDimensions;
     public final BlockPos restrictBlockBreakingAreaPositionOffset;
     public final BlockPos triggeredBlockPositionOffset;
-    public final HousingBlockBlockEntity.OwnerMode ownerMode;
+    public final HousingBlockEntity.OwnerMode ownerMode;
 
     public UpdateHousingBlockCreativePacket(BlockPos housingBlockPosition, boolean showRestrictBlockBreakingArea, Vec3i restrictBlockBreakingAreaDimensions, BlockPos restrictBlockBreakingAreaPositionOffset, BlockPos triggeredBlockPositionOffset, String ownerMode) {
         this.housingBlockPosition = housingBlockPosition;
@@ -27,7 +27,7 @@ public class UpdateHousingBlockCreativePacket implements FabricPacket {
         this.restrictBlockBreakingAreaDimensions = restrictBlockBreakingAreaDimensions;
         this.restrictBlockBreakingAreaPositionOffset = restrictBlockBreakingAreaPositionOffset;
         this.triggeredBlockPositionOffset = triggeredBlockPositionOffset;
-        this.ownerMode = HousingBlockBlockEntity.OwnerMode.byName(ownerMode).orElseGet(() -> HousingBlockBlockEntity.OwnerMode.DIMENSION_OWNER);
+        this.ownerMode = HousingBlockEntity.OwnerMode.byName(ownerMode).orElseGet(() -> HousingBlockEntity.OwnerMode.DIMENSION_OWNER);
     }
 
     public UpdateHousingBlockCreativePacket(PacketByteBuf buf) {

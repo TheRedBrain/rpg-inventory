@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.network.packet;
 
-import com.github.theredbrain.betteradventuremode.block.entity.RedstoneTriggerBlockBlockEntity;
+import com.github.theredbrain.betteradventuremode.block.entity.RedstoneTriggerBlockEntity;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
@@ -31,10 +31,10 @@ public class UpdateRedstoneTriggerBlockPacketReceiver implements ServerPlayNetwo
         BlockEntity blockEntity = world.getBlockEntity(redstoneTriggerBlockPosition);
         BlockState blockState = world.getBlockState(redstoneTriggerBlockPosition);
 
-        if (blockEntity instanceof RedstoneTriggerBlockBlockEntity redstoneTriggerBlockBlockEntity) {
-            redstoneTriggerBlockBlockEntity.setTriggeredBlock(new MutablePair<>(triggeredBlockPositionOffset, triggeredBlockResets));
+        if (blockEntity instanceof RedstoneTriggerBlockEntity redstoneTriggerBlockEntity) {
+            redstoneTriggerBlockEntity.setTriggeredBlock(new MutablePair<>(triggeredBlockPositionOffset, triggeredBlockResets));
             player.sendMessage(Text.translatable("redstone_trigger_block.update_successful"), true);
-            redstoneTriggerBlockBlockEntity.markDirty();
+            redstoneTriggerBlockEntity.markDirty();
             world.updateListeners(redstoneTriggerBlockPosition, blockState, blockState, Block.NOTIFY_ALL);
         }
     }

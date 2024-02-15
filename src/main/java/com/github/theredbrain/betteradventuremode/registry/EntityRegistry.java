@@ -23,9 +23,9 @@ public class EntityRegistry {
             FabricEntityTypeBuilder.create(SpawnGroup.MISC, MannequinEntity::new).dimensions(new EntityDimensions(0.6F, 1.8F, false)).build());
 
     //region Content Blocks
-    public static final BlockEntityType<BonfireBlockBlockEntity> BONFIRE_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
+    public static final BlockEntityType<BonfireBlockEntity> BONFIRE_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
             BetterAdventureMode.identifier("bonfire"),
-            FabricBlockEntityTypeBuilder.create(BonfireBlockBlockEntity::new, BlockRegistry.BONFIRE_BLOCK).build());
+            FabricBlockEntityTypeBuilder.create(BonfireBlockEntity::new, BlockRegistry.BONFIRE_BLOCK).build());
     //endregion Content Blocks
 
     //region Script Blocks
@@ -47,27 +47,27 @@ public class EntityRegistry {
     public static final BlockEntityType<LocationControlBlockEntity> LOCATION_CONTROL_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
             BetterAdventureMode.identifier("location_control_block"),
             FabricBlockEntityTypeBuilder.create(LocationControlBlockEntity::new, BlockRegistry.LOCATION_CONTROL_BLOCK).build());
-    public static final BlockEntityType<HousingBlockBlockEntity> HOUSING_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
+    public static final BlockEntityType<HousingBlockEntity> HOUSING_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
             BetterAdventureMode.identifier("housing_block"),
-            FabricBlockEntityTypeBuilder.create(HousingBlockBlockEntity::new, BlockRegistry.HOUSING_BLOCK).build());
-    public static final BlockEntityType<TeleporterBlockBlockEntity> TELEPORTER_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
+            FabricBlockEntityTypeBuilder.create(HousingBlockEntity::new, BlockRegistry.HOUSING_BLOCK).build());
+    public static final BlockEntityType<TeleporterBlockEntity> TELEPORTER_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
             BetterAdventureMode.identifier("teleporter_block"),
-            FabricBlockEntityTypeBuilder.create(TeleporterBlockBlockEntity::new, BlockRegistry.TELEPORTER_BLOCK).build());
-    public static final BlockEntityType<JigsawPlacerBlockBlockEntity> STRUCTURE_PLACER_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
+            FabricBlockEntityTypeBuilder.create(TeleporterBlockEntity::new, BlockRegistry.TELEPORTER_BLOCK).build());
+    public static final BlockEntityType<JigsawPlacerBlockEntity> STRUCTURE_PLACER_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
             BetterAdventureMode.identifier("structure_placer_block"),
-            FabricBlockEntityTypeBuilder.create(JigsawPlacerBlockBlockEntity::new, BlockRegistry.JIGSAW_PLACER_BLOCK).build());
-    public static final BlockEntityType<RedstoneTriggerBlockBlockEntity> REDSTONE_TRIGGER_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
+            FabricBlockEntityTypeBuilder.create(JigsawPlacerBlockEntity::new, BlockRegistry.JIGSAW_PLACER_BLOCK).build());
+    public static final BlockEntityType<RedstoneTriggerBlockEntity> REDSTONE_TRIGGER_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
             BetterAdventureMode.identifier("redstone_trigger_block"),
-            FabricBlockEntityTypeBuilder.create(RedstoneTriggerBlockBlockEntity::new, BlockRegistry.REDSTONE_TRIGGER_BLOCK).build());
-    public static final BlockEntityType<RelayTriggerBlockBlockEntity> RELAY_TRIGGER_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
+            FabricBlockEntityTypeBuilder.create(RedstoneTriggerBlockEntity::new, BlockRegistry.REDSTONE_TRIGGER_BLOCK).build());
+    public static final BlockEntityType<RelayTriggerBlockEntity> RELAY_TRIGGER_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
             BetterAdventureMode.identifier("relay_trigger_block"),
-            FabricBlockEntityTypeBuilder.create(RelayTriggerBlockBlockEntity::new, BlockRegistry.RELAY_TRIGGER_BLOCK).build());
+            FabricBlockEntityTypeBuilder.create(RelayTriggerBlockEntity::new, BlockRegistry.RELAY_TRIGGER_BLOCK).build());
     public static final BlockEntityType<ResetTriggerBlockEntity> RESET_TRIGGER_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
             BetterAdventureMode.identifier("reset_trigger_block"),
             FabricBlockEntityTypeBuilder.create(ResetTriggerBlockEntity::new, BlockRegistry.RESET_TRIGGER_BLOCK).build());
-    public static final BlockEntityType<DelayTriggerBlockBlockEntity> DELAY_TRIGGER_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
+    public static final BlockEntityType<DelayTriggerBlockEntity> DELAY_TRIGGER_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
             BetterAdventureMode.identifier("delay_trigger_block"),
-            FabricBlockEntityTypeBuilder.create(DelayTriggerBlockBlockEntity::new, BlockRegistry.DELAY_TRIGGER_BLOCK).build());
+            FabricBlockEntityTypeBuilder.create(DelayTriggerBlockEntity::new, BlockRegistry.DELAY_TRIGGER_BLOCK).build());
     public static final BlockEntityType<EntranceDelegationBlockEntity> ENTRANCE_DELEGATION_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
             BetterAdventureMode.identifier("entrance_delegation_block"),
             FabricBlockEntityTypeBuilder.create(EntranceDelegationBlockEntity::new, BlockRegistry.ENTRANCE_DELEGATION_BLOCK).build());

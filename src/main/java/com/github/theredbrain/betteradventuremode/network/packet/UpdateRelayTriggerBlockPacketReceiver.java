@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.network.packet;
 
-import com.github.theredbrain.betteradventuremode.block.entity.RelayTriggerBlockBlockEntity;
+import com.github.theredbrain.betteradventuremode.block.entity.RelayTriggerBlockEntity;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
@@ -32,15 +32,15 @@ public class UpdateRelayTriggerBlockPacketReceiver implements ServerPlayNetworki
         BlockEntity blockEntity = world.getBlockEntity(relayTriggerBlockPos);
         BlockState blockState = world.getBlockState(relayTriggerBlockPos);
 
-        if (blockEntity instanceof RelayTriggerBlockBlockEntity relayTriggerBlockBlockEntity) {
-            if (!relayTriggerBlockBlockEntity.setTriggeredBlocks(triggeredBlocks)) {
+        if (blockEntity instanceof RelayTriggerBlockEntity relayTriggerBlockEntity) {
+            if (!relayTriggerBlockEntity.setTriggeredBlocks(triggeredBlocks)) {
                 player.sendMessage(Text.translatable("triggered_block.triggeredBlocks.invalid"), false);
                 updateSuccessful = false;
             }
             if (updateSuccessful) {
                 player.sendMessage(Text.translatable("relay_trigger_block.update_successful"), true);
             }
-            relayTriggerBlockBlockEntity.markDirty();
+            relayTriggerBlockEntity.markDirty();
             world.updateListeners(relayTriggerBlockPos, blockState, blockState, Block.NOTIFY_ALL);
         }
     }

@@ -1,7 +1,7 @@
 package com.github.theredbrain.betteradventuremode.client.gui.screen.ingame;
 
 import com.github.theredbrain.betteradventuremode.util.ItemUtils;
-import com.github.theredbrain.betteradventuremode.block.entity.JigsawPlacerBlockBlockEntity;
+import com.github.theredbrain.betteradventuremode.block.entity.JigsawPlacerBlockEntity;
 import com.github.theredbrain.betteradventuremode.network.packet.UpdateJigsawPlacerBlockPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -27,17 +27,19 @@ public class JigsawPlacerBlockScreen extends Screen {
     private static final Text POOL_TEXT = Text.translatable("jigsaw_block.pool");
     private static final Text TARGET_TEXT = Text.translatable("jigsaw_block.target");
     private static final Text TRIGGERED_BLOCK_POSITION_TEXT = Text.translatable("gui.triggered_block.triggeredBlockPositionOffset");
-    private final JigsawPlacerBlockBlockEntity jigsawPlacerBlock;
+    private final JigsawPlacerBlockEntity jigsawPlacerBlock;
     private TextFieldWidget targetField;
     private TextFieldWidget poolField;
     private CyclingButtonWidget<JigsawBlockEntity.Joint> jointRotationButton;
     private TextFieldWidget triggeredBlockPositionOffsetXField;
     private TextFieldWidget triggeredBlockPositionOffsetYField;
     private TextFieldWidget triggeredBlockPositionOffsetZField;
+    private CyclingButtonWidget<Boolean> toggleTriggeredBlockResetsButton;
     private ButtonWidget doneButton;
     private JigsawBlockEntity.Joint joint;
+    private boolean triggeredBlockResets;
 
-    public JigsawPlacerBlockScreen(JigsawPlacerBlockBlockEntity jigsawPlacerBlock) {
+    public JigsawPlacerBlockScreen(JigsawPlacerBlockEntity jigsawPlacerBlock) {
         super(NarratorManager.EMPTY);
         this.jigsawPlacerBlock = jigsawPlacerBlock;
     }
@@ -72,21 +74,24 @@ public class JigsawPlacerBlockScreen extends Screen {
         }));
         this.jointRotationButton.active = bl = JigsawBlock.getFacing(this.jigsawPlacerBlock.getCachedState()).getAxis().isVertical();
         this.jointRotationButton.visible = bl;
-        this.triggeredBlockPositionOffsetXField = new TextFieldWidget(this.textRenderer, this.width / 2 - 154, 150, 100, 20, Text.translatable("jigsaw_block.target"));
+
+        this.triggeredBlockPositionOffsetXField = new TextFieldWidget(this.textRenderer, this.width / 2 - 154, 150, 50, 20, Text.translatable(""));
         this.triggeredBlockPositionOffsetXField.setMaxLength(128);
-        this.triggeredBlockPositionOffsetXField.setText(Integer.toString(this.jigsawPlacerBlock.getTriggeredBlockPositionOffset().getX()));
-        this.triggeredBlockPositionOffsetXField.setChangedListener(target -> this.updateDoneButtonState());
+        this.triggeredBlockPositionOffsetXField.setText(Integer.toString(this.jigsawPlacerBlock.getTriggeredBlock().getLeft().getX()));
         this.addSelectableChild(this.triggeredBlockPositionOffsetXField);
-        this.triggeredBlockPositionOffsetYField = new TextFieldWidget(this.textRenderer, this.width / 2 - 50, 150, 100, 20, Text.translatable("jigsaw_block.target"));
+        this.triggeredBlockPositionOffsetYField = new TextFieldWidget(this.textRenderer, this.width / 2 - 100, 150, 50, 20, Text.translatable(""));
         this.triggeredBlockPositionOffsetYField.setMaxLength(128);
-        this.triggeredBlockPositionOffsetYField.setText(Integer.toString(this.jigsawPlacerBlock.getTriggeredBlockPositionOffset().getY()));
-        this.triggeredBlockPositionOffsetYField.setChangedListener(target -> this.updateDoneButtonState());
+        this.triggeredBlockPositionOffsetYField.setText(Integer.toString(this.jigsawPlacerBlock.getTriggeredBlock().getLeft().getY()));
         this.addSelectableChild(this.triggeredBlockPositionOffsetYField);
-        this.triggeredBlockPositionOffsetZField = new TextFieldWidget(this.textRenderer, this.width / 2 + 54, 150, 100, 20, Text.translatable("jigsaw_block.target"));
+        this.triggeredBlockPositionOffsetZField = new TextFieldWidget(this.textRenderer, this.width / 2 - 46, 150, 50, 20, Text.translatable(""));
         this.triggeredBlockPositionOffsetZField.setMaxLength(128);
-        this.triggeredBlockPositionOffsetZField.setText(Integer.toString(this.jigsawPlacerBlock.getTriggeredBlockPositionOffset().getZ()));
-        this.triggeredBlockPositionOffsetZField.setChangedListener(target -> this.updateDoneButtonState());
+        this.triggeredBlockPositionOffsetZField.setText(Integer.toString(this.jigsawPlacerBlock.getTriggeredBlock().getLeft().getZ()));
         this.addSelectableChild(this.triggeredBlockPositionOffsetZField);
+        this.triggeredBlockResets = this.jigsawPlacerBlock.getTriggeredBlock().getRight();
+        this.toggleTriggeredBlockResetsButton = this.addDrawableChild(CyclingButtonWidget.onOffBuilder(Text.translatable("gui.triggered_block.toggle_triggered_block_resets_button_label.on"), Text.translatable("gui.triggered_block.toggle_triggered_block_resets_button_label.off")).initially(this.triggeredBlockResets).omitKeyText().build(this.width / 2 + 8, 150, 150, 20, Text.empty(), (button, triggeredBlockResets) -> {
+            this.triggeredBlockResets = triggeredBlockResets;
+        }));
+
         this.doneButton = this.addDrawableChild(ButtonWidget.builder(ScreenTexts.DONE, button -> this.done()).dimensions(this.width / 2 - 4 - 150, 180, 150, 20).build());
         this.addDrawableChild(ButtonWidget.builder(ScreenTexts.CANCEL, button -> this.cancel()).dimensions(this.width / 2 + 4, 180, 150, 20).build());
         this.setInitialFocus(this.poolField);
@@ -105,6 +110,7 @@ public class JigsawPlacerBlockScreen extends Screen {
         String string3 = this.triggeredBlockPositionOffsetYField.getText();
         String string4 = this.triggeredBlockPositionOffsetZField.getText();
         JigsawBlockEntity.Joint joint = this.joint;
+        boolean bl = this.triggeredBlockResets;
         this.init(client, width, height);
         this.targetField.setText(string);
         this.poolField.setText(string1);
@@ -113,6 +119,7 @@ public class JigsawPlacerBlockScreen extends Screen {
         this.triggeredBlockPositionOffsetZField.setText(string4);
         this.joint = joint;
         this.jointRotationButton.setValue(joint);
+        this.triggeredBlockResets = bl;
     }
 
     @Override
@@ -137,7 +144,8 @@ public class JigsawPlacerBlockScreen extends Screen {
                         ItemUtils.parseInt(this.triggeredBlockPositionOffsetXField.getText()),
                         ItemUtils.parseInt(this.triggeredBlockPositionOffsetYField.getText()),
                         ItemUtils.parseInt(this.triggeredBlockPositionOffsetZField.getText())
-                )
+                ),
+                this.triggeredBlockResets
         ));
         return true;
     }

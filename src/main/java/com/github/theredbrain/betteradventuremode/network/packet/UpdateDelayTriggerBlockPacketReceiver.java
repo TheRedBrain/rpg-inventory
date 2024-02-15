@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.network.packet;
 
-import com.github.theredbrain.betteradventuremode.block.entity.DelayTriggerBlockBlockEntity;
+import com.github.theredbrain.betteradventuremode.block.entity.DelayTriggerBlockEntity;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
@@ -32,19 +32,19 @@ public class UpdateDelayTriggerBlockPacketReceiver implements ServerPlayNetworki
         BlockEntity blockEntity = world.getBlockEntity(delayTriggerBlockPosition);
         BlockState blockState = world.getBlockState(delayTriggerBlockPosition);
 
-        if (blockEntity instanceof DelayTriggerBlockBlockEntity delayTriggerBlockBlockEntity) {
-            if (!delayTriggerBlockBlockEntity.setTriggeredBlockPositionOffset(triggeredBlockPositionOffset)) {
+        if (blockEntity instanceof DelayTriggerBlockEntity delayTriggerBlockEntity) {
+            if (!delayTriggerBlockEntity.setTriggeredBlockPositionOffset(triggeredBlockPositionOffset)) {
                 player.sendMessage(Text.translatable("triggered_block.triggeredBlockPositionOffset.invalid"), false);
                 updateSuccessful = false;
             }
-            if (!delayTriggerBlockBlockEntity.setTriggerDelay(triggerDelay)) {
+            if (!delayTriggerBlockEntity.setTriggerDelay(triggerDelay)) {
                 player.sendMessage(Text.translatable("delay_trigger_block.triggerDelay.invalid"), false);
                 updateSuccessful = false;
             }
             if (updateSuccessful) {
                 player.sendMessage(Text.translatable("delay_trigger_block.update_successful"), true);
             }
-            delayTriggerBlockBlockEntity.markDirty();
+            delayTriggerBlockEntity.markDirty();
             world.updateListeners(delayTriggerBlockPosition, blockState, blockState, Block.NOTIFY_ALL);
         }
     }

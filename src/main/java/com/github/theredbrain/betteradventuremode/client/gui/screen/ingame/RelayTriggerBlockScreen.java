@@ -2,7 +2,7 @@ package com.github.theredbrain.betteradventuremode.client.gui.screen.ingame;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.util.ItemUtils;
-import com.github.theredbrain.betteradventuremode.block.entity.RelayTriggerBlockBlockEntity;
+import com.github.theredbrain.betteradventuremode.block.entity.RelayTriggerBlockEntity;
 import com.github.theredbrain.betteradventuremode.network.packet.UpdateRelayTriggerBlockPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -33,7 +33,7 @@ public class RelayTriggerBlockScreen extends Screen {
     private static final Text ADD_BUTTON_LABEL_TEXT = Text.translatable("gui.add");
     private static final Identifier TRIGGERED_BLOCKS_LIST_SCROLLER_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("scroll_bar/scroll_bar_background_8_116");
     private static final Identifier SCROLLER_TEXTURE = BetterAdventureMode.identifier("scroll_bar/scroller_vertical_6_7");
-    private final RelayTriggerBlockBlockEntity relayTriggerBlock;
+    private final RelayTriggerBlockEntity relayTriggerBlock;
     private ButtonWidget removeListEntryButton0;
     private ButtonWidget removeListEntryButton1;
     private ButtonWidget removeListEntryButton2;
@@ -50,7 +50,7 @@ public class RelayTriggerBlockScreen extends Screen {
     private float scrollAmount = 0.0f;
     private boolean mouseClicked = false;
 
-    public RelayTriggerBlockScreen(RelayTriggerBlockBlockEntity relayTriggerBlock) {
+    public RelayTriggerBlockScreen(RelayTriggerBlockEntity relayTriggerBlock) {
         super(NarratorManager.EMPTY);
         this.relayTriggerBlock = relayTriggerBlock;
     }

@@ -16,14 +16,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
-public class DelayTriggerBlockBlockEntity extends RotatedBlockEntity implements Triggerable {
+public class DelayTriggerBlockEntity extends RotatedBlockEntity implements Triggerable {
     private BlockPos triggeredBlockPositionOffset = new BlockPos(0, 1, 0);
 
     private int triggerDelay = 0;
 
     private boolean ticking = false;
     private int remainingTicks = 0;
-    public DelayTriggerBlockBlockEntity(BlockPos pos, BlockState state) {
+    public DelayTriggerBlockEntity(BlockPos pos, BlockState state) {
         super(EntityRegistry.DELAY_TRIGGER_BLOCK_ENTITY, pos, state);
     }
 
@@ -59,7 +59,7 @@ public class DelayTriggerBlockBlockEntity extends RotatedBlockEntity implements 
         return this.createNbt();
     }
 
-    public static void tick(World world, BlockPos pos, BlockState state, DelayTriggerBlockBlockEntity blockEntity) {
+    public static void tick(World world, BlockPos pos, BlockState state, DelayTriggerBlockEntity blockEntity) {
 
         if (!world.isClient && blockEntity.ticking) {
             blockEntity.remainingTicks--;

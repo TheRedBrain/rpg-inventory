@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.block;
 
-import com.github.theredbrain.betteradventuremode.block.entity.RedstoneTriggerBlockBlockEntity;
+import com.github.theredbrain.betteradventuremode.block.entity.RedstoneTriggerBlockEntity;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -40,7 +40,7 @@ public class RedstoneTriggerBlock extends RotatedBlockWithEntity {
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new RedstoneTriggerBlockBlockEntity(pos, state);
+        return new RedstoneTriggerBlockEntity(pos, state);
     }
 
     @Override
@@ -51,8 +51,8 @@ public class RedstoneTriggerBlock extends RotatedBlockWithEntity {
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof RedstoneTriggerBlockBlockEntity) {
-            return ((RedstoneTriggerBlockBlockEntity)blockEntity).openScreen(player) ? ActionResult.success(world.isClient) : ActionResult.PASS;
+        if (blockEntity instanceof RedstoneTriggerBlockEntity) {
+            return ((RedstoneTriggerBlockEntity)blockEntity).openScreen(player) ? ActionResult.success(world.isClient) : ActionResult.PASS;
         }
         return ActionResult.PASS;
     }
@@ -75,8 +75,8 @@ public class RedstoneTriggerBlock extends RotatedBlockWithEntity {
     }
 
     private void trigger(ServerWorld world, BlockPos pos) {
-        if (world.getBlockEntity(pos) instanceof RedstoneTriggerBlockBlockEntity redstoneTriggerBlockBlockEntity) {
-            redstoneTriggerBlockBlockEntity.trigger();
+        if (world.getBlockEntity(pos) instanceof RedstoneTriggerBlockEntity redstoneTriggerBlockEntity) {
+            redstoneTriggerBlockEntity.trigger();
         }
     }
 }

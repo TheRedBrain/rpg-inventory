@@ -2,7 +2,7 @@ package com.github.theredbrain.betteradventuremode.client.gui.screen.ingame;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.util.ItemUtils;
-import com.github.theredbrain.betteradventuremode.block.entity.HousingBlockBlockEntity;
+import com.github.theredbrain.betteradventuremode.block.entity.HousingBlockEntity;
 import com.github.theredbrain.betteradventuremode.network.packet.*;
 import com.github.theredbrain.betteradventuremode.registry.StatusEffectsRegistry;
 import net.fabricmc.api.EnvType;
@@ -72,7 +72,7 @@ public class HousingScreen extends Screen {
     private static final Identifier PLAYER_LISTS_SCROLLER_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("container/housing_screen/player_lists_scroller_background");
     private static final Identifier SCROLLER_TEXTURE = BetterAdventureMode.identifier("container/scroller");
     @Nullable
-    private final HousingBlockBlockEntity housingBlockBlockEntity;
+    private final HousingBlockEntity housingBlockEntity;
 
     //region adventure widgets
     private ButtonWidget leaveCurrentHouseButton;
@@ -128,7 +128,7 @@ public class HousingScreen extends Screen {
     private TextFieldWidget triggeredBlockPositionOffsetXField;
     private TextFieldWidget triggeredBlockPositionOffsetYField;
     private TextFieldWidget triggeredBlockPositionOffsetZField;
-    private CyclingButtonWidget<HousingBlockBlockEntity.OwnerMode> toggleOwnerModeButton;
+    private CyclingButtonWidget<HousingBlockEntity.OwnerMode> toggleOwnerModeButton;
     private ButtonWidget resetOwnerButton;
     private ButtonWidget saveCreativeButton;
     private ButtonWidget cancelCreativeButton;
@@ -151,11 +151,11 @@ public class HousingScreen extends Screen {
     private int scrollPosition = 0;
     private float scrollAmount = 0.0f;
     private boolean mouseClicked = false;
-    private HousingBlockBlockEntity.OwnerMode ownerMode = HousingBlockBlockEntity.OwnerMode.DIMENSION_OWNER;
+    private HousingBlockEntity.OwnerMode ownerMode = HousingBlockEntity.OwnerMode.DIMENSION_OWNER;
 
-    public HousingScreen(@Nullable HousingBlockBlockEntity housingBlockBlockEntity, int currentPermissionLevel, boolean showCreativeTab) {
+    public HousingScreen(@Nullable HousingBlockEntity housingBlockEntity, int currentPermissionLevel, boolean showCreativeTab) {
         super(NarratorManager.EMPTY);
-        this.housingBlockBlockEntity = housingBlockBlockEntity;
+        this.housingBlockEntity = housingBlockEntity;
         this.currentPermissionLevel = currentPermissionLevel;
         this.showCreativeTab = showCreativeTab;
         this.creativeScreenPage = CreativeScreenPage.INFLUENCE;
@@ -240,12 +240,12 @@ public class HousingScreen extends Screen {
         this.coOwnerList.clear();
         this.trustedPersonsList.clear();
         this.guestList.clear();
-        if (this.housingBlockBlockEntity != null) {
-            this.coOwnerList.addAll(this.housingBlockBlockEntity.getCoOwnerList());
-            this.trustedPersonsList.addAll(this.housingBlockBlockEntity.getTrustedList());
-            this.guestList.addAll(this.housingBlockBlockEntity.getGuestList());
-            this.showInfluenceArea = housingBlockBlockEntity.getShowInfluenceArea();
-            this.ownerMode = housingBlockBlockEntity.getOwnerMode();
+        if (this.housingBlockEntity != null) {
+            this.coOwnerList.addAll(this.housingBlockEntity.getCoOwnerList());
+            this.trustedPersonsList.addAll(this.housingBlockEntity.getTrustedList());
+            this.guestList.addAll(this.housingBlockEntity.getGuestList());
+            this.showInfluenceArea = housingBlockEntity.getShowInfluenceArea();
+            this.ownerMode = housingBlockEntity.getOwnerMode();
         }
         if (this.currentPermissionLevel == 0) {
             this.backgroundWidth = 218;
@@ -264,7 +264,7 @@ public class HousingScreen extends Screen {
             this.y = (this.height - this.backgroundHeight) / 2;
         } else {
             this.backgroundWidth = 218;
-            this.backgroundHeight = this.ownerMode == HousingBlockBlockEntity.OwnerMode.INTERACTION ? 95 : 71;
+            this.backgroundHeight = this.ownerMode == HousingBlockEntity.OwnerMode.INTERACTION ? 95 : 71;
             this.x = (this.width - this.backgroundWidth) / 2;
             this.y = (this.height - this.backgroundHeight) / 2;
         }
@@ -344,54 +344,54 @@ public class HousingScreen extends Screen {
 
         this.restrictBlockBreakingAreaDimensionsXField = new TextFieldWidget(this.textRenderer, this.width / 2 - 154, 80, 100, 20, Text.empty());
         this.restrictBlockBreakingAreaDimensionsXField.setMaxLength(128);
-        this.restrictBlockBreakingAreaDimensionsXField.setText(Integer.toString(this.housingBlockBlockEntity != null ? this.housingBlockBlockEntity.getInfluenceAreaDimensions().getX() : 0));
+        this.restrictBlockBreakingAreaDimensionsXField.setText(Integer.toString(this.housingBlockEntity != null ? this.housingBlockEntity.getInfluenceAreaDimensions().getX() : 0));
         this.addSelectableChild(this.restrictBlockBreakingAreaDimensionsXField);
 
         this.restrictBlockBreakingAreaDimensionsYField = new TextFieldWidget(this.textRenderer, this.width / 2 - 50, 80, 100, 20, Text.empty());
         this.restrictBlockBreakingAreaDimensionsYField.setMaxLength(128);
-        this.restrictBlockBreakingAreaDimensionsYField.setText(Integer.toString(this.housingBlockBlockEntity != null ? this.housingBlockBlockEntity.getInfluenceAreaDimensions().getY() : 0));
+        this.restrictBlockBreakingAreaDimensionsYField.setText(Integer.toString(this.housingBlockEntity != null ? this.housingBlockEntity.getInfluenceAreaDimensions().getY() : 0));
         this.addSelectableChild(this.restrictBlockBreakingAreaDimensionsYField);
 
         this.restrictBlockBreakingAreaDimensionsZField = new TextFieldWidget(this.textRenderer, this.width / 2 + 54, 80, 100, 20, Text.empty());
         this.restrictBlockBreakingAreaDimensionsZField.setMaxLength(128);
-        this.restrictBlockBreakingAreaDimensionsZField.setText(Integer.toString(this.housingBlockBlockEntity != null ? this.housingBlockBlockEntity.getInfluenceAreaDimensions().getZ() : 0));
+        this.restrictBlockBreakingAreaDimensionsZField.setText(Integer.toString(this.housingBlockEntity != null ? this.housingBlockEntity.getInfluenceAreaDimensions().getZ() : 0));
         this.addSelectableChild(this.restrictBlockBreakingAreaDimensionsZField);
 
         this.restrictBlockBreakingAreaPositionOffsetXField = new TextFieldWidget(this.textRenderer, this.width / 2 - 154, 115, 100, 20, Text.empty());
         this.restrictBlockBreakingAreaPositionOffsetXField.setMaxLength(128);
-        this.restrictBlockBreakingAreaPositionOffsetXField.setText(Integer.toString(this.housingBlockBlockEntity != null ? this.housingBlockBlockEntity.getRestrictBlockBreakingAreaPositionOffset().getX() : 0));
+        this.restrictBlockBreakingAreaPositionOffsetXField.setText(Integer.toString(this.housingBlockEntity != null ? this.housingBlockEntity.getRestrictBlockBreakingAreaPositionOffset().getX() : 0));
         this.addSelectableChild(this.restrictBlockBreakingAreaPositionOffsetXField);
 
         this.restrictBlockBreakingAreaPositionOffsetYField = new TextFieldWidget(this.textRenderer, this.width / 2 - 50, 115, 100, 20, Text.empty());
         this.restrictBlockBreakingAreaPositionOffsetYField.setMaxLength(128);
-        this.restrictBlockBreakingAreaPositionOffsetYField.setText(Integer.toString(this.housingBlockBlockEntity != null ? this.housingBlockBlockEntity.getRestrictBlockBreakingAreaPositionOffset().getY() : 0));
+        this.restrictBlockBreakingAreaPositionOffsetYField.setText(Integer.toString(this.housingBlockEntity != null ? this.housingBlockEntity.getRestrictBlockBreakingAreaPositionOffset().getY() : 0));
         this.addSelectableChild(this.restrictBlockBreakingAreaPositionOffsetYField);
 
         this.restrictBlockBreakingAreaPositionOffsetZField = new TextFieldWidget(this.textRenderer, this.width / 2 + 54, 115, 100, 20, Text.empty());
         this.restrictBlockBreakingAreaPositionOffsetZField.setMaxLength(128);
-        this.restrictBlockBreakingAreaPositionOffsetZField.setText(Integer.toString(this.housingBlockBlockEntity != null ? this.housingBlockBlockEntity.getRestrictBlockBreakingAreaPositionOffset().getZ() : 0));
+        this.restrictBlockBreakingAreaPositionOffsetZField.setText(Integer.toString(this.housingBlockEntity != null ? this.housingBlockEntity.getRestrictBlockBreakingAreaPositionOffset().getZ() : 0));
         this.addSelectableChild(this.restrictBlockBreakingAreaPositionOffsetZField);
 
         // --- triggered block page ---
 
         this.triggeredBlockPositionOffsetXField = new TextFieldWidget(this.textRenderer, this.width / 2 - 154, 80, 100, 20, Text.empty());
         this.triggeredBlockPositionOffsetXField.setMaxLength(128);
-        this.triggeredBlockPositionOffsetXField.setText(Integer.toString(this.housingBlockBlockEntity != null ? this.housingBlockBlockEntity.getTriggeredBlockPositionOffset().getX() : 0));
+        this.triggeredBlockPositionOffsetXField.setText(Integer.toString(this.housingBlockEntity != null ? this.housingBlockEntity.getTriggeredBlockPositionOffset().getX() : 0));
         this.addSelectableChild(this.triggeredBlockPositionOffsetXField);
 
         this.triggeredBlockPositionOffsetYField = new TextFieldWidget(this.textRenderer, this.width / 2 - 50, 80, 100, 20, Text.empty());
         this.triggeredBlockPositionOffsetYField.setMaxLength(128);
-        this.triggeredBlockPositionOffsetYField.setText(Integer.toString(this.housingBlockBlockEntity != null ? this.housingBlockBlockEntity.getTriggeredBlockPositionOffset().getY() : 0));
+        this.triggeredBlockPositionOffsetYField.setText(Integer.toString(this.housingBlockEntity != null ? this.housingBlockEntity.getTriggeredBlockPositionOffset().getY() : 0));
         this.addSelectableChild(this.triggeredBlockPositionOffsetYField);
 
         this.triggeredBlockPositionOffsetZField = new TextFieldWidget(this.textRenderer, this.width / 2 + 54, 80, 100, 20, Text.empty());
         this.triggeredBlockPositionOffsetZField.setMaxLength(128);
-        this.triggeredBlockPositionOffsetZField.setText(Integer.toString(this.housingBlockBlockEntity != null ? this.housingBlockBlockEntity.getTriggeredBlockPositionOffset().getZ() : 0));
+        this.triggeredBlockPositionOffsetZField.setText(Integer.toString(this.housingBlockEntity != null ? this.housingBlockEntity.getTriggeredBlockPositionOffset().getZ() : 0));
         this.addSelectableChild(this.triggeredBlockPositionOffsetZField);
 
         // --- owner page ---
 
-        this.toggleOwnerModeButton = this.addDrawableChild(CyclingButtonWidget.builder(HousingBlockBlockEntity.OwnerMode::asText).values((HousingBlockBlockEntity.OwnerMode[])HousingBlockBlockEntity.OwnerMode.values()).initially(this.ownerMode).omitKeyText().build(this.width / 2 - 153, 70, 300, 20, Text.empty(), (button, ownerMode) -> {
+        this.toggleOwnerModeButton = this.addDrawableChild(CyclingButtonWidget.builder(HousingBlockEntity.OwnerMode::asText).values((HousingBlockEntity.OwnerMode[]) HousingBlockEntity.OwnerMode.values()).initially(this.ownerMode).omitKeyText().build(this.width / 2 - 153, 70, 300, 20, Text.empty(), (button, ownerMode) -> {
             this.ownerMode = ownerMode;
         }));
 
@@ -585,7 +585,7 @@ public class HousingScreen extends Screen {
 
                     this.openResetHouseScreenButton.visible = true;
 
-                    if (this.housingBlockBlockEntity != null && this.housingBlockBlockEntity.getOwnerMode() == HousingBlockBlockEntity.OwnerMode.INTERACTION) {
+                    if (this.housingBlockEntity != null && this.housingBlockEntity.getOwnerMode() == HousingBlockEntity.OwnerMode.INTERACTION) {
                         this.unclaimHouseButton.visible = true;
                     }
 
@@ -595,7 +595,7 @@ public class HousingScreen extends Screen {
 
                 } else if (this.currentPermissionLevel == 4) {
 
-                    if (this.housingBlockBlockEntity != null && this.housingBlockBlockEntity.getOwnerMode() == HousingBlockBlockEntity.OwnerMode.INTERACTION && !this.housingBlockBlockEntity.isOwnerSet()) {
+                    if (this.housingBlockEntity != null && this.housingBlockEntity.getOwnerMode() == HousingBlockEntity.OwnerMode.INTERACTION && !this.housingBlockEntity.isOwnerSet()) {
                         this.claimHouseButton.visible = true;
                     }
 
@@ -614,7 +614,7 @@ public class HousingScreen extends Screen {
         List<String> list1 = new ArrayList<>(this.trustedPersonsList);
         List<String> list2 = new ArrayList<>(this.guestList);
         boolean bool = this.showInfluenceArea;
-        HousingBlockBlockEntity.OwnerMode var = this.ownerMode;
+        HousingBlockEntity.OwnerMode var = this.ownerMode;
         int number = this.scrollPosition;
         float number1 =  this.scrollAmount;
         String string = this.newCoOwnerField.getText();
@@ -840,7 +840,7 @@ public class HousingScreen extends Screen {
             int j = this.y;
             if (this.currentPermissionLevel == 0) {
                 context.drawTexture(BACKGROUND_218_215_TEXTURE, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
-            } else if (this.currentPermissionLevel == 1 || this.ownerMode == HousingBlockBlockEntity.OwnerMode.INTERACTION) {
+            } else if (this.currentPermissionLevel == 1 || this.ownerMode == HousingBlockEntity.OwnerMode.INTERACTION) {
                 context.drawTexture(BACKGROUND_218_95_TEXTURE, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
             } else {
                 context.drawTexture(BACKGROUND_218_71_TEXTURE, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
@@ -850,8 +850,8 @@ public class HousingScreen extends Screen {
 
     private boolean updateHousingBlockCreative() {
         BlockPos housingBlockPos = new BlockPos(0, 0, 0);
-        if (this.housingBlockBlockEntity != null) {
-            housingBlockPos = this.housingBlockBlockEntity.getPos();
+        if (this.housingBlockEntity != null) {
+            housingBlockPos = this.housingBlockEntity.getPos();
         }
         ClientPlayNetworking.send(new UpdateHousingBlockCreativePacket(
                 housingBlockPos,
@@ -877,9 +877,9 @@ public class HousingScreen extends Screen {
     }
 
     private void updateHousingBlockAdventure() {
-        if (this.housingBlockBlockEntity != null) {
+        if (this.housingBlockEntity != null) {
             ClientPlayNetworking.send(new UpdateHousingBlockAdventurePacket(
-                    this.housingBlockBlockEntity.getPos(),
+                    this.housingBlockEntity.getPos(),
                     this.coOwnerList,
                     this.trustedPersonsList,
                     this.guestList
@@ -901,18 +901,18 @@ public class HousingScreen extends Screen {
     }
 
     private void resetHouse() {
-        if (this.housingBlockBlockEntity != null) {
+        if (this.housingBlockEntity != null) {
             ClientPlayNetworking.send(new ResetHouseHousingBlockPacket(
-                    this.housingBlockBlockEntity.getPos()
+                    this.housingBlockEntity.getPos()
             ));
         }
         this.close();
     }
 
     private void trySetHouseOwner(boolean claim) {
-        if (this.housingBlockBlockEntity != null && this.client != null && this.client.player != null) {
+        if (this.housingBlockEntity != null && this.client != null && this.client.player != null) {
             ClientPlayNetworking.send(new SetHousingBlockOwnerPacket(
-                    this.housingBlockBlockEntity.getPos(),
+                    this.housingBlockEntity.getPos(),
                     claim ? this.client.player.getUuidAsString() : ""
             ));
         }

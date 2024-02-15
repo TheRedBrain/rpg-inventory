@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.network.packet;
 
-import com.github.theredbrain.betteradventuremode.block.entity.JigsawPlacerBlockBlockEntity;
+import com.github.theredbrain.betteradventuremode.block.entity.JigsawPlacerBlockEntity;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
@@ -11,6 +11,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.tuple.MutablePair;
 
 public class UpdateJigsawPlacerBlockPacketReceiver implements ServerPlayNetworking.PlayPacketHandler<UpdateJigsawPlacerBlockPacket> {
     @Override
@@ -29,6 +30,8 @@ public class UpdateJigsawPlacerBlockPacketReceiver implements ServerPlayNetworki
 
         BlockPos triggeredBlockPositionOffset = packet.triggeredBlockPositionOffset;
 
+        boolean triggeredBlockResets = packet.triggeredBlockResets;
+
         World world = player.getWorld();
 
         boolean updateSuccessful = true;
@@ -36,27 +39,21 @@ public class UpdateJigsawPlacerBlockPacketReceiver implements ServerPlayNetworki
         BlockEntity blockEntity = world.getBlockEntity(jigsawPlacerBlockPosition);
         BlockState blockState = world.getBlockState(jigsawPlacerBlockPosition);
 
-        if (blockEntity instanceof JigsawPlacerBlockBlockEntity jigsawPlacerBlockBlockEntity) {
-            if (!jigsawPlacerBlockBlockEntity.setTarget(target)) {
+        if (blockEntity instanceof JigsawPlacerBlockEntity jigsawPlacerBlockEntity) {
+            if (!jigsawPlacerBlockEntity.setTarget(target)) {
                 player.sendMessage(Text.translatable("jigsaw_placer_block.target.invalid"), false);
                 updateSuccessful = false;
             }
-            if (!jigsawPlacerBlockBlockEntity.setPool(pool)) {
+            if (!jigsawPlacerBlockEntity.setPool(pool)) {
                 player.sendMessage(Text.translatable("jigsaw_placer_block.pool.invalid"), false);
                 updateSuccessful = false;
             }
-            if (!jigsawPlacerBlockBlockEntity.setJoint(joint)) {
-                player.sendMessage(Text.translatable("jigsaw_placer_block.joint.invalid"), false);
-                updateSuccessful = false;
-            }
-            if (!jigsawPlacerBlockBlockEntity.setTriggeredBlockPositionOffset(triggeredBlockPositionOffset)) {
-                player.sendMessage(Text.translatable("triggered_block.triggeredBlockPositionOffset.invalid"), false);
-                updateSuccessful = false;
-            }
+            jigsawPlacerBlockEntity.setJoint(joint);
+            jigsawPlacerBlockEntity.setTriggeredBlock(new MutablePair<>(triggeredBlockPositionOffset, triggeredBlockResets));
             if (updateSuccessful) {
                 player.sendMessage(Text.translatable("jigsaw_placer_block.update_successful"), true);
             }
-            jigsawPlacerBlockBlockEntity.markDirty();
+            jigsawPlacerBlockEntity.markDirty();
             world.updateListeners(jigsawPlacerBlockPosition, blockState, blockState, Block.NOTIFY_ALL);
         }
     }

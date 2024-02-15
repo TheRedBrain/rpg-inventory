@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.network.packet;
 
-import com.github.theredbrain.betteradventuremode.block.entity.HousingBlockBlockEntity;
+import com.github.theredbrain.betteradventuremode.block.entity.HousingBlockEntity;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
@@ -28,7 +28,7 @@ public class UpdateHousingBlockCreativePacketReceiver implements ServerPlayNetwo
         BlockPos restrictBlockBreakingAreaPositionOffset = packet.restrictBlockBreakingAreaPositionOffset;
         BlockPos triggeredBlockPositionOffset = packet.triggeredBlockPositionOffset;
 
-        HousingBlockBlockEntity.OwnerMode ownerMode = packet.ownerMode;
+        HousingBlockEntity.OwnerMode ownerMode = packet.ownerMode;
 
         World world = player.getWorld();
 
@@ -37,32 +37,32 @@ public class UpdateHousingBlockCreativePacketReceiver implements ServerPlayNetwo
         BlockEntity blockEntity = world.getBlockEntity(housingBlockPosition);
         BlockState blockState = world.getBlockState(housingBlockPosition);
 
-        if (blockEntity instanceof HousingBlockBlockEntity housingBlockBlockEntity) {
+        if (blockEntity instanceof HousingBlockEntity housingBlockEntity) {
 
-            if (!housingBlockBlockEntity.setShowInfluenceArea(showRestrictBlockBreakingArea)) {
+            if (!housingBlockEntity.setShowInfluenceArea(showRestrictBlockBreakingArea)) {
                 player.sendMessage(Text.translatable("housing_block.showRestrictBlockBreakingArea.invalid"), false);
                 updateSuccessful = false;
             }
-            if (!housingBlockBlockEntity.setInfluenceAreaDimensions(restrictBlockBreakingAreaDimensions)) {
+            if (!housingBlockEntity.setInfluenceAreaDimensions(restrictBlockBreakingAreaDimensions)) {
                 player.sendMessage(Text.translatable("housing_block.restrictBlockBreakingAreaDimensions.invalid"), false);
                 updateSuccessful = false;
             }
-            if (!housingBlockBlockEntity.setRestrictBlockBreakingAreaPositionOffset(restrictBlockBreakingAreaPositionOffset)) {
+            if (!housingBlockEntity.setRestrictBlockBreakingAreaPositionOffset(restrictBlockBreakingAreaPositionOffset)) {
                 player.sendMessage(Text.translatable("housing_block.restrictBlockBreakingAreaPositionOffset.invalid"), false);
                 updateSuccessful = false;
             }
-            if (!housingBlockBlockEntity.setTriggeredBlockPositionOffset(triggeredBlockPositionOffset)) {
+            if (!housingBlockEntity.setTriggeredBlockPositionOffset(triggeredBlockPositionOffset)) {
                 player.sendMessage(Text.translatable("housing_block.triggeredBlockPositionOffset.invalid"), false);
                 updateSuccessful = false;
             }
-            if (!housingBlockBlockEntity.setOwnerMode(ownerMode)) {
+            if (!housingBlockEntity.setOwnerMode(ownerMode)) {
                 player.sendMessage(Text.translatable("housing_block.ownerMode.invalid"), false);
                 updateSuccessful = false;
             }
             if (updateSuccessful) {
                 player.sendMessage(Text.translatable("housing_block.update_successful"), true);
             }
-            housingBlockBlockEntity.markDirty();
+            housingBlockEntity.markDirty();
             world.updateListeners(housingBlockPosition, blockState, blockState, Block.NOTIFY_ALL);
         }
     }

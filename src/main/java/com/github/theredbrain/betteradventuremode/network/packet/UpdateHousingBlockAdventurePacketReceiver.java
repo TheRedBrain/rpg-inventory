@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.network.packet;
 
-import com.github.theredbrain.betteradventuremode.block.entity.HousingBlockBlockEntity;
+import com.github.theredbrain.betteradventuremode.block.entity.HousingBlockEntity;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
@@ -34,24 +34,24 @@ public class UpdateHousingBlockAdventurePacketReceiver implements ServerPlayNetw
         BlockEntity blockEntity = world.getBlockEntity(housingBlockPosition);
         BlockState blockState = world.getBlockState(housingBlockPosition);
 
-        if (blockEntity instanceof HousingBlockBlockEntity housingBlockBlockEntity) {
+        if (blockEntity instanceof HousingBlockEntity housingBlockEntity) {
 
-            if (!housingBlockBlockEntity.setCoOwnerList(coOwnerList)) {
+            if (!housingBlockEntity.setCoOwnerList(coOwnerList)) {
                 player.sendMessage(Text.translatable("housing_block.coOwnerList.invalid"), false);
                 updateSuccessful = false;
             }
-            if (!housingBlockBlockEntity.setTrustedList(trustedList)) {
+            if (!housingBlockEntity.setTrustedList(trustedList)) {
                 player.sendMessage(Text.translatable("housing_block.trustedList.invalid"), false);
                 updateSuccessful = false;
             }
-            if (!housingBlockBlockEntity.setGuestList(guestList)) {
+            if (!housingBlockEntity.setGuestList(guestList)) {
                 player.sendMessage(Text.translatable("housing_block.guestList.invalid"), false);
                 updateSuccessful = false;
             }
             if (updateSuccessful) {
                 player.sendMessage(Text.translatable("housing_block.update_successful"), true);
             }
-            housingBlockBlockEntity.markDirty();
+            housingBlockEntity.markDirty();
             world.updateListeners(housingBlockPosition, blockState, blockState, Block.NOTIFY_ALL);
         }
     }

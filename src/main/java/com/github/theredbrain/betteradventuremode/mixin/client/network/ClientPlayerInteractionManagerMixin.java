@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.mixin.client.network;
 
-import com.github.theredbrain.betteradventuremode.block.entity.HousingBlockBlockEntity;
+import com.github.theredbrain.betteradventuremode.block.entity.HousingBlockEntity;
 import com.github.theredbrain.betteradventuremode.registry.ComponentsRegistry;
 import com.github.theredbrain.betteradventuremode.registry.StatusEffectsRegistry;
 import net.fabricmc.api.EnvType;
@@ -67,7 +67,7 @@ public abstract class ClientPlayerInteractionManagerMixin {
         if (this.gameMode == GameMode.ADVENTURE && this.client.player != null && this.client.player.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT)) {
             BlockPos housingBlockPos = ComponentsRegistry.CURRENT_HOUSING_BLOCK_POS.get(this.client.player).getValue();
             boolean bl = false;
-            if (!Objects.equals(housingBlockPos, new BlockPos(0, 0, 0)) && this.client.world != null && this.client.world.getBlockEntity(housingBlockPos) instanceof HousingBlockBlockEntity housingBlockEntity) {
+            if (!Objects.equals(housingBlockPos, new BlockPos(0, 0, 0)) && this.client.world != null && this.client.world.getBlockEntity(housingBlockPos) instanceof HousingBlockEntity housingBlockEntity) {
                 bl = housingBlockEntity.influenceAreaContains(pos);
             }
             if (bl) {
@@ -90,7 +90,7 @@ public abstract class ClientPlayerInteractionManagerMixin {
             this.syncSelectedSlot();
             BlockPos housingBlockPos = ComponentsRegistry.CURRENT_HOUSING_BLOCK_POS.get(player).getValue();
             boolean bl = false;
-            if (!Objects.equals(housingBlockPos, new BlockPos(0, 0, 0)) && this.client.world != null && this.client.world.getBlockEntity(housingBlockPos) instanceof HousingBlockBlockEntity housingBlockEntity) {
+            if (!Objects.equals(housingBlockPos, new BlockPos(0, 0, 0)) && this.client.world != null && this.client.world.getBlockEntity(housingBlockPos) instanceof HousingBlockEntity housingBlockEntity) {
                 bl = housingBlockEntity.influenceAreaContains(hitResult.getBlockPos().offset(hitResult.getSide()));
             }
             if (!bl) {

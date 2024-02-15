@@ -3,7 +3,7 @@
  */
 package com.github.theredbrain.betteradventuremode.client.render.block.entity;
 
-import com.github.theredbrain.betteradventuremode.block.entity.TeleporterBlockBlockEntity;
+import com.github.theredbrain.betteradventuremode.block.entity.TeleporterBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -22,12 +22,12 @@ import net.minecraft.world.World;
 // TODO clean up
 @Environment(value=EnvType.CLIENT)
 public class TeleporterBlockBlockEntityRenderer
-implements BlockEntityRenderer<TeleporterBlockBlockEntity> {
+implements BlockEntityRenderer<TeleporterBlockEntity> {
     public TeleporterBlockBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
     }
 
     @Override
-    public void render(TeleporterBlockBlockEntity teleporterBlockBlockEntity, float f, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, int j) {
+    public void render(TeleporterBlockEntity teleporterBlockEntity, float f, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, int j) {
         double o;
         double n;
         double m;
@@ -36,8 +36,8 @@ implements BlockEntityRenderer<TeleporterBlockBlockEntity> {
             return;
         }
 //        BlockPos incomingTeleportPositionOffset = teleporterBlockBlockEntity.getIncomingTeleportPositionOffset();
-        BlockPos blockPos = teleporterBlockBlockEntity.getActivationAreaPositionOffset();
-        Vec3i vec3i = teleporterBlockBlockEntity.getActivationAreaDimensions();
+        BlockPos blockPos = teleporterBlockEntity.getActivationAreaPositionOffset();
+        Vec3i vec3i = teleporterBlockEntity.getActivationAreaDimensions();
         if (vec3i.getX() < 1 || vec3i.getY() < 1 || vec3i.getZ() < 1) {
             return;
         }
@@ -102,17 +102,17 @@ implements BlockEntityRenderer<TeleporterBlockBlockEntity> {
         float r = 0.9f;
         float s = 0.5f;
         VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getLines());
-        if (teleporterBlockBlockEntity.getShowActivationArea()) {
+        if (teleporterBlockEntity.getShowActivationArea()) {
             WorldRenderer.drawBox(matrixStack, vertexConsumer, m, g, n, o, h, p, 0.9f, 0.9f, 0.9f, 1.0f, 0.5f, 0.5f, 0.5f);
 //            WorldRenderer.drawBox(matrixStack, vertexConsumer, x, y, z, x + 1, y + 1, z + 1,  0.0f, 1.0f, 0.0f, 1.0f, 0.5f, 0.5f, 0.5f);
-            this.renderInvisibleBlocks(teleporterBlockBlockEntity, vertexConsumer, blockPos, matrixStack);
+            this.renderInvisibleBlocks(teleporterBlockEntity, vertexConsumer, blockPos, matrixStack);
         }
 //        if (teleporterBlockBlockEntity.getMode() == StructureBlockMode.SAVE && teleporterBlockBlockEntity.shouldShowAir()) {
 //            this.renderInvisibleBlocks(teleporterBlockBlockEntity, vertexConsumer, blockPos, matrixStack);
 //        }
     }
 
-    private void renderInvisibleBlocks(TeleporterBlockBlockEntity entity, VertexConsumer vertices, BlockPos pos, MatrixStack matrices) {
+    private void renderInvisibleBlocks(TeleporterBlockEntity entity, VertexConsumer vertices, BlockPos pos, MatrixStack matrices) {
         World blockView = entity.getWorld();
         BlockPos blockPos = entity.getPos();
         BlockPos blockPos2 = blockPos.add(pos);
@@ -150,7 +150,7 @@ implements BlockEntityRenderer<TeleporterBlockBlockEntity> {
     }
 
     @Override
-    public boolean rendersOutsideBoundingBox(TeleporterBlockBlockEntity teleporterBlockBlockEntity) {
+    public boolean rendersOutsideBoundingBox(TeleporterBlockEntity teleporterBlockEntity) {
         return true;
     }
 

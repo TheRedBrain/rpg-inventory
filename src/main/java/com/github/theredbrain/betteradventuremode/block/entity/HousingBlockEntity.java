@@ -27,7 +27,7 @@ import org.apache.commons.lang3.tuple.MutablePair;
 
 import java.util.*;
 
-public class HousingBlockBlockEntity extends RotatedBlockEntity {
+public class HousingBlockEntity extends RotatedBlockEntity {
     private String ownerUuid = "";
     private boolean isOwnerSet;
     private List<String> coOwnerList = new ArrayList<>(List.of());
@@ -36,9 +36,9 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
     private boolean showInfluenceArea = false;
     private Vec3i influenceAreaDimensions = Vec3i.ZERO;
     private BlockPos influenceAreaPositionOffset = new BlockPos(0, 1, 0);
-    private HousingBlockBlockEntity.OwnerMode ownerMode = OwnerMode.DIMENSION_OWNER;
+    private HousingBlockEntity.OwnerMode ownerMode = OwnerMode.DIMENSION_OWNER;
     private BlockPos triggeredBlockPositionOffset = new BlockPos(0, 1, 0);
-    public HousingBlockBlockEntity(BlockPos pos, BlockState state) {
+    public HousingBlockEntity(BlockPos pos, BlockState state) {
         super(EntityRegistry.HOUSING_BLOCK_ENTITY, pos, state);
         this.isOwnerSet = false;
     }
@@ -121,7 +121,7 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
         int n = MathHelper.clamp(nbt.getInt("influenceAreaPositionOffsetZ"), -48, 48);
         this.influenceAreaPositionOffset = new BlockPos(l, m, n);
 
-        this.ownerMode = HousingBlockBlockEntity.OwnerMode.byName(nbt.getString("ownerMode")).orElseGet(() -> OwnerMode.DIMENSION_OWNER);
+        this.ownerMode = HousingBlockEntity.OwnerMode.byName(nbt.getString("ownerMode")).orElseGet(() -> OwnerMode.DIMENSION_OWNER);
 
         int o = MathHelper.clamp(nbt.getInt("triggeredBlockPositionOffsetX"), -48, 48);
         int p = MathHelper.clamp(nbt.getInt("triggeredBlockPositionOffsetY"), -48, 48);
@@ -140,7 +140,7 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
         return this.createNbt();
     }
 
-    public static void tick(World world, BlockPos pos, BlockState state, HousingBlockBlockEntity blockEntity) {
+    public static void tick(World world, BlockPos pos, BlockState state, HousingBlockEntity blockEntity) {
         if (world.getTime() % 20L == 0L) {
             if (blockEntity.hasWorld() && !blockEntity.isOwnerSet && blockEntity.ownerMode == OwnerMode.DIMENSION_OWNER) {
                 blockEntity.ownerUuid = initOwner(blockEntity.world);
@@ -265,11 +265,11 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
         return true;
     }
 
-    public HousingBlockBlockEntity.OwnerMode getOwnerMode() {
+    public HousingBlockEntity.OwnerMode getOwnerMode() {
         return this.ownerMode;
     }
 
-    public boolean setOwnerMode(HousingBlockBlockEntity.OwnerMode ownerMode) {
+    public boolean setOwnerMode(HousingBlockEntity.OwnerMode ownerMode) {
         this.ownerMode = ownerMode;
         return true;
     }
@@ -356,8 +356,8 @@ public class HousingBlockBlockEntity extends RotatedBlockEntity {
             return this.name;
         }
 
-        public static Optional<HousingBlockBlockEntity.OwnerMode> byName(String name) {
-            return Arrays.stream(HousingBlockBlockEntity.OwnerMode.values()).filter(ownerMode -> ownerMode.asString().equals(name)).findFirst();
+        public static Optional<HousingBlockEntity.OwnerMode> byName(String name) {
+            return Arrays.stream(HousingBlockEntity.OwnerMode.values()).filter(ownerMode -> ownerMode.asString().equals(name)).findFirst();
         }
 
         public Text asText() {

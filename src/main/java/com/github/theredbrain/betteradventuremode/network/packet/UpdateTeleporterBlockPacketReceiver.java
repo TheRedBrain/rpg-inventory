@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.network.packet;
 
-import com.github.theredbrain.betteradventuremode.block.entity.TeleporterBlockBlockEntity;
+import com.github.theredbrain.betteradventuremode.block.entity.TeleporterBlockEntity;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
@@ -37,13 +37,13 @@ public class UpdateTeleporterBlockPacketReceiver implements ServerPlayNetworking
         boolean onlyTeleportDimensionOwner = packet.onlyTeleportDimensionOwner;
         boolean teleportTeam = packet.teleportTeam;
 
-        TeleporterBlockBlockEntity.TeleportationMode teleportationMode = packet.teleportationMode;
+        TeleporterBlockEntity.TeleportationMode teleportationMode = packet.teleportationMode;
 
         BlockPos directTeleportPositionOffset = packet.directTeleportPositionOffset;
         double directTeleportOrientationYaw = packet.directTeleportOrientationYaw;
         double directTeleportOrientationPitch = packet.directTeleportOrientationPitch;
 
-        TeleporterBlockBlockEntity.SpawnPointType spawnPointType = packet.spawnPointType;
+        TeleporterBlockEntity.SpawnPointType spawnPointType = packet.spawnPointType;
 
         List<Pair<String, String>> locationsList = packet.locationsList;
 
@@ -60,44 +60,44 @@ public class UpdateTeleporterBlockPacketReceiver implements ServerPlayNetworking
         BlockEntity blockEntity = world.getBlockEntity(teleportBlockPosition);
         BlockState blockState = world.getBlockState(teleportBlockPosition);
 
-        if (blockEntity instanceof TeleporterBlockBlockEntity teleporterBlockBlockEntity) {
-            teleporterBlockBlockEntity.setShowAdventureScreen(showAdventureScreen);
-            teleporterBlockBlockEntity.setShowActivationArea(showActivationArea);
-            teleporterBlockBlockEntity.setActivationAreaDimensions(activationAreaDimensions);
-            teleporterBlockBlockEntity.setActivationAreaPositionOffset(activationAreaPositionOffset);
-            teleporterBlockBlockEntity.setAccessPositionOffset(accessPositionOffset);
-            teleporterBlockBlockEntity.setSetAccessPosition(setAccessPosition);
-            teleporterBlockBlockEntity.setOnlyTeleportDimensionOwner(onlyTeleportDimensionOwner);
-            teleporterBlockBlockEntity.setTeleportTeam(teleportTeam);
-            teleporterBlockBlockEntity.setTeleportationMode(teleportationMode);
-            if (teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.DIRECT) {
-                teleporterBlockBlockEntity.setDirectTeleportPositionOffset(directTeleportPositionOffset);
-                if (!teleporterBlockBlockEntity.setDirectTeleportOrientationYaw(directTeleportOrientationYaw)) {
+        if (blockEntity instanceof TeleporterBlockEntity teleporterBlockEntity) {
+            teleporterBlockEntity.setShowAdventureScreen(showAdventureScreen);
+            teleporterBlockEntity.setShowActivationArea(showActivationArea);
+            teleporterBlockEntity.setActivationAreaDimensions(activationAreaDimensions);
+            teleporterBlockEntity.setActivationAreaPositionOffset(activationAreaPositionOffset);
+            teleporterBlockEntity.setAccessPositionOffset(accessPositionOffset);
+            teleporterBlockEntity.setSetAccessPosition(setAccessPosition);
+            teleporterBlockEntity.setOnlyTeleportDimensionOwner(onlyTeleportDimensionOwner);
+            teleporterBlockEntity.setTeleportTeam(teleportTeam);
+            teleporterBlockEntity.setTeleportationMode(teleportationMode);
+            if (teleportationMode == TeleporterBlockEntity.TeleportationMode.DIRECT) {
+                teleporterBlockEntity.setDirectTeleportPositionOffset(directTeleportPositionOffset);
+                if (!teleporterBlockEntity.setDirectTeleportOrientationYaw(directTeleportOrientationYaw)) {
                     player.sendMessage(Text.translatable("teleporter_block.directTeleportOrientationYaw.invalid"), false);
                     updateSuccessful = false;
                 }
-                if (!teleporterBlockBlockEntity.setDirectTeleportOrientationPitch(directTeleportOrientationPitch)) {
+                if (!teleporterBlockEntity.setDirectTeleportOrientationPitch(directTeleportOrientationPitch)) {
                     player.sendMessage(Text.translatable("teleporter_block.directTeleportOrientationPitch.invalid"), false);
                     updateSuccessful = false;
                 }
-            } else if (teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.SPAWN_POINTS) {
-                teleporterBlockBlockEntity.setLocationType(spawnPointType);
-            } else if (teleportationMode == TeleporterBlockBlockEntity.TeleportationMode.LOCATIONS) {
-                if (!teleporterBlockBlockEntity.setLocationsList(locationsList)) {
+            } else if (teleportationMode == TeleporterBlockEntity.TeleportationMode.SPAWN_POINTS) {
+                teleporterBlockEntity.setLocationType(spawnPointType);
+            } else if (teleportationMode == TeleporterBlockEntity.TeleportationMode.LOCATIONS) {
+                if (!teleporterBlockEntity.setLocationsList(locationsList)) {
                     player.sendMessage(Text.translatable("teleporter_block.locationsList.invalid"), false);
                     updateSuccessful = false;
                 }
             }
-            teleporterBlockBlockEntity.setTeleporterName(teleporterName);
-            teleporterBlockBlockEntity.setCurrentTargetIdentifierLabel(currentTargetIdentifierLabel);
-            teleporterBlockBlockEntity.setCurrentTargetOwnerLabel(currentTargetOwnerLabel);
-            teleporterBlockBlockEntity.setTeleportButtonLabel(teleportButtonLabel);
-            teleporterBlockBlockEntity.setCancelTeleportButtonLabel(cancelTeleportButtonLabel);
+            teleporterBlockEntity.setTeleporterName(teleporterName);
+            teleporterBlockEntity.setCurrentTargetIdentifierLabel(currentTargetIdentifierLabel);
+            teleporterBlockEntity.setCurrentTargetOwnerLabel(currentTargetOwnerLabel);
+            teleporterBlockEntity.setTeleportButtonLabel(teleportButtonLabel);
+            teleporterBlockEntity.setCancelTeleportButtonLabel(cancelTeleportButtonLabel);
 
             if (updateSuccessful) {
                 player.sendMessage(Text.translatable("teleporter_block.update_successful"), true);
             }
-            teleporterBlockBlockEntity.markDirty();
+            teleporterBlockEntity.markDirty();
             world.updateListeners(teleportBlockPosition, blockState, blockState, Block.NOTIFY_ALL);
         }
     }

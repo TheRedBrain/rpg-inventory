@@ -1,7 +1,7 @@
 package com.github.theredbrain.betteradventuremode.client.gui.screen.ingame;
 
 import com.github.theredbrain.betteradventuremode.util.ItemUtils;
-import com.github.theredbrain.betteradventuremode.block.entity.DelayTriggerBlockBlockEntity;
+import com.github.theredbrain.betteradventuremode.block.entity.DelayTriggerBlockEntity;
 import com.github.theredbrain.betteradventuremode.network.packet.UpdateDelayTriggerBlockPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -21,13 +21,13 @@ import org.lwjgl.glfw.GLFW;
 public class DelayTriggerBlockScreen extends Screen {
     private static final Text TRIGGERED_BLOCK_POSITION_OFFSET_LABEL_TEXT = Text.translatable("gui.triggered_block.triggeredBlockPositionOffset");
     private static final Text TRIGGER_DELAY_LABEL_TEXT = Text.translatable("gui.delay_trigger_block.triggeredBlockTriggerDelay");
-    private final DelayTriggerBlockBlockEntity delayTriggerBlock;
+    private final DelayTriggerBlockEntity delayTriggerBlock;
     private TextFieldWidget triggeredBlockPositionOffsetXField;
     private TextFieldWidget triggeredBlockPositionOffsetYField;
     private TextFieldWidget triggeredBlockPositionOffsetZField;
     private TextFieldWidget triggerDelayField;
 
-    public DelayTriggerBlockScreen(DelayTriggerBlockBlockEntity delayTriggerBlock) {
+    public DelayTriggerBlockScreen(DelayTriggerBlockEntity delayTriggerBlock) {
         super(NarratorManager.EMPTY);
         this.delayTriggerBlock = delayTriggerBlock;
     }

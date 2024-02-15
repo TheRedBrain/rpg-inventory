@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.network.packet;
 
-import com.github.theredbrain.betteradventuremode.block.entity.HousingBlockBlockEntity;
+import com.github.theredbrain.betteradventuremode.block.entity.HousingBlockEntity;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.entity.BlockEntity;
@@ -19,8 +19,8 @@ public class ResetHouseHousingBlockPacketReceiver implements ServerPlayNetworkin
         BlockEntity blockEntity = world.getBlockEntity(housingBlockPosition);
 
         // TODO teleport all players inside to their spawn?
-        if (blockEntity instanceof HousingBlockBlockEntity housingBlockBlockEntity) {
-            housingBlockBlockEntity.trigger();
+        if (blockEntity instanceof HousingBlockEntity housingBlockEntity) {
+            housingBlockEntity.trigger();
         }
     }
 }

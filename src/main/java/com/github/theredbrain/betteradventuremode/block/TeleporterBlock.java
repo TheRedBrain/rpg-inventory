@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.block;
 
-import com.github.theredbrain.betteradventuremode.block.entity.TeleporterBlockBlockEntity;
+import com.github.theredbrain.betteradventuremode.block.entity.TeleporterBlockEntity;
 import com.github.theredbrain.betteradventuremode.registry.EntityRegistry;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.block.BlockRenderType;
@@ -30,13 +30,13 @@ public class TeleporterBlock extends RotatedBlockWithEntity implements OperatorB
 
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new TeleporterBlockBlockEntity(pos, state);
+        return new TeleporterBlockEntity(pos, state);
     }
 
     @Override
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return validateTicker(type, EntityRegistry.TELEPORTER_BLOCK_ENTITY, TeleporterBlockBlockEntity::tick);
+        return validateTicker(type, EntityRegistry.TELEPORTER_BLOCK_ENTITY, TeleporterBlockEntity::tick);
     }
 
     @Override

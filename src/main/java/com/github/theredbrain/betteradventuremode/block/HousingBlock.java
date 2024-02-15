@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.block;
 
-import com.github.theredbrain.betteradventuremode.block.entity.HousingBlockBlockEntity;
+import com.github.theredbrain.betteradventuremode.block.entity.HousingBlockEntity;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.betteradventuremode.registry.ComponentsRegistry;
 import com.github.theredbrain.betteradventuremode.registry.EntityRegistry;
@@ -31,13 +31,13 @@ public class HousingBlock extends RotatedBlockWithEntity {
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new HousingBlockBlockEntity(pos, state);
+        return new HousingBlockEntity(pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return validateTicker(type, EntityRegistry.HOUSING_BLOCK_ENTITY, HousingBlockBlockEntity::tick);
+        return validateTicker(type, EntityRegistry.HOUSING_BLOCK_ENTITY, HousingBlockEntity::tick);
     }
 
     @Override
@@ -48,8 +48,8 @@ public class HousingBlock extends RotatedBlockWithEntity {
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof HousingBlockBlockEntity housingBlockBlockEntity && player.isCreative()) {
-            ComponentsRegistry.CURRENT_HOUSING_BLOCK_POS.get(player).setValue(housingBlockBlockEntity.getPos());
+        if (blockEntity instanceof HousingBlockEntity housingBlockEntity && player.isCreative()) {
+            ComponentsRegistry.CURRENT_HOUSING_BLOCK_POS.get(player).setValue(housingBlockEntity.getPos());
             if (world.isClient) {
                 ((DuckPlayerEntityMixin) player).betteradventuremode$openHousingScreen();
                 return ActionResult.SUCCESS;

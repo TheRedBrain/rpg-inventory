@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.block;
 
-import com.github.theredbrain.betteradventuremode.block.entity.RelayTriggerBlockBlockEntity;
+import com.github.theredbrain.betteradventuremode.block.entity.RelayTriggerBlockEntity;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -27,7 +27,7 @@ public class RelayTriggerBlock extends RotatedBlockWithEntity {
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new RelayTriggerBlockBlockEntity(pos, state);
+        return new RelayTriggerBlockEntity(pos, state);
     }
 
     @Override
@@ -38,8 +38,8 @@ public class RelayTriggerBlock extends RotatedBlockWithEntity {
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof RelayTriggerBlockBlockEntity) {
-            return ((RelayTriggerBlockBlockEntity)blockEntity).openScreen(player) ? ActionResult.success(world.isClient) : ActionResult.PASS;
+        if (blockEntity instanceof RelayTriggerBlockEntity) {
+            return ((RelayTriggerBlockEntity)blockEntity).openScreen(player) ? ActionResult.success(world.isClient) : ActionResult.PASS;
         }
         return ActionResult.PASS;
     }

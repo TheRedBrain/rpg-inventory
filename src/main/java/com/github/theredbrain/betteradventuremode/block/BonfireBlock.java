@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.block;
 
-import com.github.theredbrain.betteradventuremode.block.entity.BonfireBlockBlockEntity;
+import com.github.theredbrain.betteradventuremode.block.entity.BonfireBlockEntity;
 import com.github.theredbrain.betteradventuremode.registry.EntityRegistry;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.block.Block;
@@ -34,12 +34,12 @@ public class BonfireBlock extends AbstractSetSpawnBlock implements BlockEntityPr
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new BonfireBlockBlockEntity(pos, state);
+        return new BonfireBlockEntity(pos, state);
     }
 
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return world.isClient ? checkType(type, EntityRegistry.BONFIRE_BLOCK_ENTITY, BonfireBlockBlockEntity::clientTick) : checkType(type, EntityRegistry.BONFIRE_BLOCK_ENTITY, BonfireBlockBlockEntity::serverTick);
+        return world.isClient ? checkType(type, EntityRegistry.BONFIRE_BLOCK_ENTITY, BonfireBlockEntity::clientTick) : checkType(type, EntityRegistry.BONFIRE_BLOCK_ENTITY, BonfireBlockEntity::serverTick);
     }
 
     @Nullable

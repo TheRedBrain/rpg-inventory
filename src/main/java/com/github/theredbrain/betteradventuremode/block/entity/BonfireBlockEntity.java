@@ -18,12 +18,12 @@ import net.minecraft.world.World;
 import java.util.Iterator;
 import java.util.List;
 
-public class BonfireBlockBlockEntity extends BlockEntity {
-    public BonfireBlockBlockEntity(BlockPos pos, BlockState state) {
+public class BonfireBlockEntity extends BlockEntity {
+    public BonfireBlockEntity(BlockPos pos, BlockState state) {
         super(EntityRegistry.BONFIRE_BLOCK_ENTITY, pos, state);
     }
 
-    public static void clientTick(World world, BlockPos pos, BlockState state, BonfireBlockBlockEntity blockEntity) {
+    public static void clientTick(World world, BlockPos pos, BlockState state, BonfireBlockEntity blockEntity) {
         if (state.get(BonfireBlock.ACTIVE)) {
             Random random = world.random;
             int i;
@@ -35,7 +35,7 @@ public class BonfireBlockBlockEntity extends BlockEntity {
         }
     }
 
-    public static void serverTick(World world, BlockPos pos, BlockState state, BonfireBlockBlockEntity blockEntity) {
+    public static void serverTick(World world, BlockPos pos, BlockState state, BonfireBlockEntity blockEntity) {
         if (world.getTime() % 80L == 0L && state.get(BonfireBlock.ACTIVE)) {
             if (!world.isClient) {
                 Box box = (new Box(pos)).expand(10);
