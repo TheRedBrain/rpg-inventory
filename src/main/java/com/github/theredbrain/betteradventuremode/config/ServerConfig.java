@@ -32,7 +32,10 @@ public class ServerConfig implements ConfigData {
     public List<Integer> worldSpawnZList = new ArrayList<>();
     @Comment("The radius crafting root blocks search for tab provider blocks")
     public int crafting_root_block_reach_radius = 10;
-//    public List<Double> worldSpawnAngleList = new ArrayList<>();
+    @Comment("Set to 'true' for the vanilla behaviour")
+    public boolean shouldJigSawGenerationBeDeterministic = false;
+    @Comment("Set to 'true' for the vanilla behaviour")
+    public boolean shouldJigSawStructuresBeRandomlyRotated = false;
     public ServerConfig() {
 
     }
