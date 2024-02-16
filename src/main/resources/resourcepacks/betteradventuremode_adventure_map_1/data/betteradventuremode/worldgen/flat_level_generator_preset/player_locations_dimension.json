@@ -11,6 +11,7 @@
       }
     ],
     "structure_overrides": [
+      "betteradventuremode:house_1",
       "betteradventuremode:test_dungeon_boss_room_1",
       "betteradventuremode:test_dungeon_combat_room_1",
       "betteradventuremode:test_dungeon_combat_room_2",

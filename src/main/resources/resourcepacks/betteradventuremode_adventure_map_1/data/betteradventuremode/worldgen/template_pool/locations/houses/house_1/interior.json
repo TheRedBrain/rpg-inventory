@@ -3,7 +3,7 @@
     {
       "element": {
         "element_type": "minecraft:single_pool_element",
-        "location": "betteradventuremode:locations/houses/house_1/house_1_entrance",
+        "location": "betteradventuremode:locations/houses/house_1/interior",
         "processors": {
           "processors": []
         },

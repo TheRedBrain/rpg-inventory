@@ -9,25 +9,17 @@
   "showLockedLocation": true,
   "showUnlockAdvancement": true,
   "showLockAdvancement": false,
-  "publicLocation": true,
+  "isPublic": true,
   "canOwnerBeChosen": false,
   "showAdventureScreen": true,
   "consumeKey": false,
   "side_entrances": {
-    "east_entrance": {
-      "name": "locations.towns.town_1.east_entrance",
+    "dungeon": {
+      "name": "locations.towns.town_1.dungeon",
       "consumeKey": false
     },
-    "south_entrance": {
-      "name": "locations.towns.town_1.south_entrance",
-      "consumeKey": false
-    },
-    "west_entrance": {
-      "name": "locations.towns.town_1.west_entrance",
-      "consumeKey": false
-    },
-    "north_entrance": {
-      "name": "locations.towns.town_1.north_entrance",
+    "house_1": {
+      "name": "locations.towns.town_1.house_1",
       "consumeKey": false
     }
   }
