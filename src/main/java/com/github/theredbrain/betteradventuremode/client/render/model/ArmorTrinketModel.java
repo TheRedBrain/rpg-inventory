@@ -7,20 +7,22 @@ import net.minecraft.util.Identifier;
 
 public class ArmorTrinketModel extends GeoModel<ArmorTrinketItem> {
     private final Identifier assetSubpath;
+    private final boolean slim;
 
-    public ArmorTrinketModel(Identifier assetSubpath) {
+    public ArmorTrinketModel(Identifier assetSubpath, boolean slim) {
         super();
         this.assetSubpath = assetSubpath;
+        this.slim = slim;
     }
 
     @Override
     public Identifier getModelResource(ArmorTrinketItem animatable) {
-        return BetterAdventureMode.identifier("geo/item/" + assetSubpath.getPath() + ".geo.json");
+        return BetterAdventureMode.identifier("geo/item/" + assetSubpath.getPath() + (slim ? "_slim" : "") + ".geo.json");
     }
 
     @Override
     public Identifier getTextureResource(ArmorTrinketItem animatable) {
-        return BetterAdventureMode.identifier("textures/item/" + assetSubpath.getPath() + ".png");
+        return BetterAdventureMode.identifier("textures/item/" + assetSubpath.getPath() + (slim ? "_slim" : "") + ".png");
     }
 
     @Override

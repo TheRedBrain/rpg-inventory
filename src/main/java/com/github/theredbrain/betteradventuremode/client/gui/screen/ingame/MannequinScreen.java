@@ -172,6 +172,7 @@ public class MannequinScreen extends HandledScreen<MannequinScreenHandler> {
     // endregion settings
 
     private ScreenPage screenPage;
+    private boolean canEdit;
 
     /*TODO
         export build/import build (player trinket itemStacks <-> mannequin trinket itemStacks)
@@ -232,6 +233,7 @@ public class MannequinScreen extends HandledScreen<MannequinScreenHandler> {
         this.backgroundHeight = 233;
         this.playerInventoryTitleY = 132;
         super.init();
+        this.canEdit = this.handler.canEdit();
 
         this.toggleScreenPageButton = this.addDrawableChild(CyclingButtonWidget.builder(ScreenPage::asText).values((ScreenPage[]) ScreenPage.values()).initially(this.screenPage).omitKeyText().build(this.x + 252, this.y + 18, 75, 20, Text.empty(), (button, screenPage) -> {
             this.screenPage = screenPage;
@@ -814,6 +816,66 @@ public class MannequinScreen extends HandledScreen<MannequinScreenHandler> {
 
                 this.exportEquipmentButton.visible = true;
                 this.importEquipmentButton.visible = true;
+
+                if (this.canEdit) {
+                    
+                    this.toggleScreenPageButton.active = true;
+
+                    this.updateTrinketButton0.active = true;
+                    this.updateTrinketButton1.active = true;
+                    this.updateTrinketButton2.active = true;
+                    this.updateTrinketButton3.active = true;
+                    this.updateTrinketButton4.active = true;
+                    this.updateTrinketButton5.active = true;
+                    this.updateTrinketButton6.active = true;
+                    this.updateTrinketButton7.active = true;
+                    this.updateTrinketButton8.active = true;
+                    this.updateTrinketButton9.active = true;
+                    this.updateTrinketButton10.active = true;
+                    this.updateTrinketButton11.active = true;
+                    this.updateTrinketButton12.active = true;
+                    this.updateTrinketButton13.active = true;
+                    this.updateTrinketButton14.active = true;
+                    this.updateTrinketButton15.active = true;
+                    this.updateTrinketButton16.active = true;
+                    this.updateTrinketButton17.active = true;
+                    this.updateTrinketButton18.active = true;
+                    this.updateTrinketButton19.active = true;
+                    this.updateTrinketButton20.active = true;
+                    this.updateTrinketButton21.active = true;
+
+                    this.importEquipmentButton.active = true;
+                    
+                } else {
+
+                    this.toggleScreenPageButton.active = false;
+
+                    this.updateTrinketButton0.active = false;
+                    this.updateTrinketButton1.active = false;
+                    this.updateTrinketButton2.active = false;
+                    this.updateTrinketButton3.active = false;
+                    this.updateTrinketButton4.active = false;
+                    this.updateTrinketButton5.active = false;
+                    this.updateTrinketButton6.active = false;
+                    this.updateTrinketButton7.active = false;
+                    this.updateTrinketButton8.active = false;
+                    this.updateTrinketButton9.active = false;
+                    this.updateTrinketButton10.active = false;
+                    this.updateTrinketButton11.active = false;
+                    this.updateTrinketButton12.active = false;
+                    this.updateTrinketButton13.active = false;
+                    this.updateTrinketButton14.active = false;
+                    this.updateTrinketButton15.active = false;
+                    this.updateTrinketButton16.active = false;
+                    this.updateTrinketButton17.active = false;
+                    this.updateTrinketButton18.active = false;
+                    this.updateTrinketButton19.active = false;
+                    this.updateTrinketButton20.active = false;
+                    this.updateTrinketButton21.active = false;
+
+                    this.importEquipmentButton.active = false;
+
+                } 
                 
             }
         } else if (this.screenPage == ScreenPage.MODEL_PARTS) {

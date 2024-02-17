@@ -304,11 +304,12 @@ public class MannequinEntity extends LivingEntity implements IRenderEquippedTrin
     @Override
     public void equipStack(EquipmentSlot slot, ItemStack stack) {}
 
-    // TODO add boolean canInteract
     @Override
     public ActionResult interact(PlayerEntity player, Hand hand) {
-        player.openHandledScreen(createMannequinScreenHandlerFactory(this.getId(), player.isCreativeLevelTwoOp() || player.hasStatusEffect(StatusEffectsRegistry.HOUSING_OWNER_EFFECT) || player.hasStatusEffect(StatusEffectsRegistry.HOUSING_CO_OWNER_EFFECT) || player.hasStatusEffect(StatusEffectsRegistry.HOUSING_TRUSTED_EFFECT)));
-
+        boolean canEdit = player.isCreativeLevelTwoOp() || player.hasStatusEffect(StatusEffectsRegistry.HOUSING_OWNER_EFFECT) || player.hasStatusEffect(StatusEffectsRegistry.HOUSING_CO_OWNER_EFFECT);
+        if (canEdit || player.hasStatusEffect(StatusEffectsRegistry.HOUSING_TRUSTED_EFFECT)) {
+            player.openHandledScreen(createMannequinScreenHandlerFactory(this.getId(), canEdit));
+        }
         if (!player.getWorld().isClient) {
             return ActionResult.CONSUME;
         }
@@ -826,9 +827,9 @@ public class MannequinEntity extends LivingEntity implements IRenderEquippedTrin
     public boolean setGlovesStack(ItemStack itemStack) {
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(this);
         if (trinkets.isPresent()) {
-            if (trinkets.get().getInventory().get("boots") != null) {
-                if (trinkets.get().getInventory().get("boots").get("boots") != null) {
-                    trinkets.get().getInventory().get("boots").get("boots").setStack(0, itemStack);
+            if (trinkets.get().getInventory().get("gloves") != null) {
+                if (trinkets.get().getInventory().get("gloves").get("gloves") != null) {
+                    trinkets.get().getInventory().get("gloves").get("gloves").setStack(0, itemStack);
                     return true;
                 }
             }
@@ -852,9 +853,9 @@ public class MannequinEntity extends LivingEntity implements IRenderEquippedTrin
     public boolean setShouldersStack(ItemStack itemStack) {
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(this);
         if (trinkets.isPresent()) {
-            if (trinkets.get().getInventory().get("boots") != null) {
-                if (trinkets.get().getInventory().get("boots").get("boots") != null) {
-                    trinkets.get().getInventory().get("boots").get("boots").setStack(0, itemStack);
+            if (trinkets.get().getInventory().get("shoulders") != null) {
+                if (trinkets.get().getInventory().get("shoulders").get("shoulders") != null) {
+                    trinkets.get().getInventory().get("shoulders").get("shoulders").setStack(0, itemStack);
                     return true;
                 }
             }

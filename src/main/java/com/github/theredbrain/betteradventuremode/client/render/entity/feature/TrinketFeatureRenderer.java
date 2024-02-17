@@ -29,27 +29,29 @@ public class TrinketFeatureRenderer<T extends LivingEntity, M extends BipedEntit
         extends FeatureRenderer<T, M> {
     private static final Map<String, Identifier> TRINKET_TEXTURE_CACHE = Maps.newHashMap();
     private final A model;
+    private final boolean slim;
 
-    public TrinketFeatureRenderer(FeatureRendererContext<T, M> context, A model) {
+    public TrinketFeatureRenderer(FeatureRendererContext<T, M> context, A model, boolean slim) {
         super(context);
         this.model = model;
+        this.slim = slim;
     }
 
     @Override
     public void render(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, T livingEntity, float f, float g, float h, float j, float k, float l) {
-        this.renderTrinkets(matrixStack, vertexConsumerProvider, livingEntity, "helmets" , "helmet", this.model, i);
-        this.renderTrinkets(matrixStack, vertexConsumerProvider, livingEntity, "chest_plates" , "chest_plate", this.model, i);
-        this.renderTrinkets(matrixStack, vertexConsumerProvider, livingEntity, "leggings" , "leggings", this.model, i);
-        this.renderTrinkets(matrixStack, vertexConsumerProvider, livingEntity, "boots" , "boots", this.model, i);
-        this.renderTrinkets(matrixStack, vertexConsumerProvider, livingEntity, "gloves" , "gloves", this.model, i);
-        this.renderTrinkets(matrixStack, vertexConsumerProvider, livingEntity, "shoulders" , "shoulders", this.model, i);
-        this.renderTrinkets(matrixStack, vertexConsumerProvider, livingEntity, "rings_1" , "ring", this.model, i);
-        this.renderTrinkets(matrixStack, vertexConsumerProvider, livingEntity, "rings_2" , "ring", this.model, i);
-        this.renderTrinkets(matrixStack, vertexConsumerProvider, livingEntity, "necklaces" , "necklace", this.model, i);
-        this.renderTrinkets(matrixStack, vertexConsumerProvider, livingEntity, "belts" , "belt", this.model, i);
+        this.renderTrinkets(matrixStack, vertexConsumerProvider, livingEntity, "helmets" , "helmet", this.model, this.slim, i);
+        this.renderTrinkets(matrixStack, vertexConsumerProvider, livingEntity, "chest_plates" , "chest_plate", this.model, this.slim, i);
+        this.renderTrinkets(matrixStack, vertexConsumerProvider, livingEntity, "leggings" , "leggings", this.model, this.slim, i);
+        this.renderTrinkets(matrixStack, vertexConsumerProvider, livingEntity, "boots" , "boots", this.model, this.slim, i);
+        this.renderTrinkets(matrixStack, vertexConsumerProvider, livingEntity, "gloves" , "gloves", this.model, this.slim, i);
+        this.renderTrinkets(matrixStack, vertexConsumerProvider, livingEntity, "shoulders" , "shoulders", this.model, this.slim, i);
+        this.renderTrinkets(matrixStack, vertexConsumerProvider, livingEntity, "rings_1" , "ring", this.model, this.slim, i);
+        this.renderTrinkets(matrixStack, vertexConsumerProvider, livingEntity, "rings_2" , "ring", this.model, this.slim, i);
+        this.renderTrinkets(matrixStack, vertexConsumerProvider, livingEntity, "necklaces" , "necklace", this.model, this.slim, i);
+        this.renderTrinkets(matrixStack, vertexConsumerProvider, livingEntity, "belts" , "belt", this.model, this.slim, i);
     }
 
-    private void renderTrinkets(MatrixStack matrices, VertexConsumerProvider vertexConsumers, T entity, String slotGroup, String slotName, A model, int light) {
+    private void renderTrinkets(MatrixStack matrices, VertexConsumerProvider vertexConsumers, T entity, String slotGroup, String slotName, A model, boolean slim, int light) {
         ItemStack itemStack = ItemStack.EMPTY;
 
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(entity);
@@ -65,16 +67,16 @@ public class TrinketFeatureRenderer<T extends LivingEntity, M extends BipedEntit
             return;
         }
 
-        this.renderTrinket(matrices, vertexConsumers, entity, slotGroup, slotName, light, itemStack, model, 1.0f, 1.0f, 1.0f);
+        this.renderTrinket(matrices, vertexConsumers, entity, slotGroup, slotName, light, itemStack, model, slim, 1.0f, 1.0f, 1.0f);
     }
 
-    private void renderTrinket(MatrixStack matrices, VertexConsumerProvider vertexConsumers, T entity, String slotGroup, String slotName, int light, ItemStack itemStack, A model, float red, float green, float blue) {
-        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getArmorCutoutNoCull(this.getTrinketTexture(((ModeledTrinketItem)itemStack.getItem()))));
-        BetterAdventureModeRenderProvider.of(itemStack).getGenericTrinketModel(entity, itemStack, slotGroup, slotName, (BipedEntityModel<LivingEntity>)model).render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV, red, green, blue, 1.0f);
+    private void renderTrinket(MatrixStack matrices, VertexConsumerProvider vertexConsumers, T entity, String slotGroup, String slotName, int light, ItemStack itemStack, A model, boolean slim, float red, float green, float blue) {
+        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getArmorCutoutNoCull(this.getTrinketTexture((ModeledTrinketItem)itemStack.getItem(), slim)));
+        BetterAdventureModeRenderProvider.of(itemStack).getGenericTrinketModel(entity, itemStack, slotGroup, slotName, (BipedEntityModel<LivingEntity>)model, slim).render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV, red, green, blue, 1.0f);
     }
 
-    private Identifier getTrinketTexture(ModeledTrinketItem modeledTrinketItem) {
-        String string = modeledTrinketItem.assetSubpath.getNamespace() + ":textures/item/" + modeledTrinketItem.assetSubpath.getPath() + ".png";
+    private Identifier getTrinketTexture(ModeledTrinketItem modeledTrinketItem, boolean slim) {
+        String string = modeledTrinketItem.assetSubpath.getNamespace() + ":textures/item/" + modeledTrinketItem.assetSubpath.getPath() + (slim ? "_slim" : "") + ".png";
         return TRINKET_TEXTURE_CACHE.computeIfAbsent(string, Identifier::new);
     }
 }

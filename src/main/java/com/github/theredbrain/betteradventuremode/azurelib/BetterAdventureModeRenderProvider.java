@@ -23,7 +23,7 @@ public interface BetterAdventureModeRenderProvider extends RenderProvider {
         return BETTER_ADVENTURE_MODE_DEFAULT;
     }
 
-    default Model getGenericTrinketModel(LivingEntity livingEntity, ItemStack itemStack, String slotGroup, String slotName,  BipedEntityModel<LivingEntity> original) {
+    default Model getGenericTrinketModel(LivingEntity livingEntity, ItemStack itemStack, String slotGroup, String slotName,  BipedEntityModel<LivingEntity> original, boolean slim) {
         BipedEntityModel<LivingEntity> replacement = getHumanoidTrinketModel(livingEntity, itemStack, slotGroup, slotName, original);
 
         if (replacement != original) {

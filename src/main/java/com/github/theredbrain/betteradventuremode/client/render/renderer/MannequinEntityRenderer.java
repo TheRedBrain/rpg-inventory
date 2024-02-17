@@ -31,7 +31,7 @@ public class MannequinEntityRenderer extends LivingEntityRenderer<MannequinEntit
         this.addFeature(new ArmorFeatureRenderer<>(this, new ArmorEntityModel<>(ctx.getPart(EntityModelLayers.PLAYER_INNER_ARMOR)), new ArmorEntityModel<>(ctx.getPart(EntityModelLayers.PLAYER_OUTER_ARMOR)), ctx.getModelManager()));
         this.addFeature(new HeldItemFeatureRenderer<>(this, ctx.getHeldItemRenderer()));
         this.addFeature(new HeadFeatureRenderer<>(this, ctx.getModelLoader(), ctx.getHeldItemRenderer()));
-        this.addFeature(new TrinketFeatureRenderer<>(this, this.model));
+        this.addFeature(new TrinketFeatureRenderer<>(this, this.model, false));
         this.addFeature(new SheathedMainHandItemFeatureRenderer<>(this, ctx.getHeldItemRenderer()));
         this.addFeature(new SheathedOffHandItemFeatureRenderer<>(this, ctx.getHeldItemRenderer()));
     }

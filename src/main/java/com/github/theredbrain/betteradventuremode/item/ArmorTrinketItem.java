@@ -82,9 +82,9 @@ public class ArmorTrinketItem extends ModeledTrinketItem {
         consumer.accept(new BetterAdventureModeRenderProvider() {
             private ModeledTrinketRenderer<?> renderer;
             @Override
-            public BipedEntityModel<LivingEntity> getGenericTrinketModel(LivingEntity livingEntity, ItemStack itemStack, String slotGroup, String slotName, BipedEntityModel<LivingEntity> original) {
+            public BipedEntityModel<LivingEntity> getGenericTrinketModel(LivingEntity livingEntity, ItemStack itemStack, String slotGroup, String slotName, BipedEntityModel<LivingEntity> original, boolean slim) {
                 if (this.renderer == null) {
-                    this.renderer = new ArmorTrinketRenderer(ArmorTrinketItem.this.assetSubpath);
+                    this.renderer = new ArmorTrinketRenderer(ArmorTrinketItem.this.assetSubpath, slim);
                 }
                 this.renderer.prepForRender(livingEntity, itemStack, slotGroup, slotName, original);
                 return this.renderer;

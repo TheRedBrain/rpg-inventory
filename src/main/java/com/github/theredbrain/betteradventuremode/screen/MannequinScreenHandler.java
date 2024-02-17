@@ -210,4 +210,8 @@ public class MannequinScreenHandler extends ScreenHandler {
     public MannequinEntity getMannequinEntity() {
         return mannequinEntity;
     }
+
+    public boolean canEdit() {
+        return canEdit;
+    }
 }

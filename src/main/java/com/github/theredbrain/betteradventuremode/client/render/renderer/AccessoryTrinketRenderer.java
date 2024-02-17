@@ -5,7 +5,7 @@ import com.github.theredbrain.betteradventuremode.client.render.model.AccessoryT
 import net.minecraft.util.Identifier;
 
 public class AccessoryTrinketRenderer extends ModeledTrinketRenderer<AccessoryTrinketItem>{
-    public AccessoryTrinketRenderer(Identifier assetSubPath) {
-        super(new AccessoryTrinketModel(assetSubPath));
+    public AccessoryTrinketRenderer(Identifier assetSubPath, boolean slim) {
+        super(new AccessoryTrinketModel(assetSubPath, slim));
     }
 }

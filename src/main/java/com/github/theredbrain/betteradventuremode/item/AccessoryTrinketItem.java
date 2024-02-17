@@ -5,6 +5,7 @@ import com.github.theredbrain.betteradventuremode.client.render.renderer.Accesso
 import com.github.theredbrain.betteradventuremode.client.render.renderer.ModeledTrinketRenderer;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 
@@ -21,9 +22,9 @@ public class AccessoryTrinketItem extends ModeledTrinketItem {
         consumer.accept(new BetterAdventureModeRenderProvider() {
             private ModeledTrinketRenderer<?> renderer;
             @Override
-            public BipedEntityModel<LivingEntity> getGenericTrinketModel(LivingEntity livingEntity, ItemStack itemStack, String slotGroup, String slotName, BipedEntityModel<LivingEntity> original) {
+            public BipedEntityModel<LivingEntity> getGenericTrinketModel(LivingEntity livingEntity, ItemStack itemStack, String slotGroup, String slotName, BipedEntityModel<LivingEntity> original, boolean slim) {
                 if (this.renderer == null) {
-                    this.renderer = new AccessoryTrinketRenderer(AccessoryTrinketItem.this.assetSubpath);
+                    this.renderer = new AccessoryTrinketRenderer(AccessoryTrinketItem.this.assetSubpath, slim);
                 }
                 this.renderer.prepForRender(livingEntity, itemStack, slotGroup, slotName, original);
                 return this.renderer;

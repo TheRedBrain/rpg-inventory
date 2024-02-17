@@ -77,23 +77,23 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 //                this.slots.get(i + 36).y = 204;
                 ((DuckSlotMixin)this.slots.get(i + 36)).betteradventuremode$setY(196);
             }
+
+            // disable vanilla crafting slots
+            ((DuckSlotMixin)this.slots.get(0)).betteradventuremode$setDisabledOverride(true);
+            ((DuckSlotMixin)this.slots.get(1)).betteradventuremode$setDisabledOverride(true);
+            ((DuckSlotMixin)this.slots.get(2)).betteradventuremode$setDisabledOverride(true);
+            ((DuckSlotMixin)this.slots.get(3)).betteradventuremode$setDisabledOverride(true);
+            ((DuckSlotMixin)this.slots.get(4)).betteradventuremode$setDisabledOverride(true);
+
+            // disable vanilla armor slots
+            ((DuckSlotMixin)this.slots.get(5)).betteradventuremode$setDisabledOverride(true);
+            ((DuckSlotMixin)this.slots.get(6)).betteradventuremode$setDisabledOverride(true);
+            ((DuckSlotMixin)this.slots.get(7)).betteradventuremode$setDisabledOverride(true);
+            ((DuckSlotMixin)this.slots.get(8)).betteradventuremode$setDisabledOverride(true);
+
+            // disable vanilla offhand slot
+            ((DuckSlotMixin)this.slots.get(45)).betteradventuremode$setDisabledOverride(true);
         }
-
-        // disable vanilla crafting slots
-        ((DuckSlotMixin)this.slots.get(0)).betteradventuremode$setDisabledOverride(true);
-        ((DuckSlotMixin)this.slots.get(1)).betteradventuremode$setDisabledOverride(true);
-        ((DuckSlotMixin)this.slots.get(2)).betteradventuremode$setDisabledOverride(true);
-        ((DuckSlotMixin)this.slots.get(3)).betteradventuremode$setDisabledOverride(true);
-        ((DuckSlotMixin)this.slots.get(4)).betteradventuremode$setDisabledOverride(true);
-
-        // disable vanilla armor slots
-        ((DuckSlotMixin)this.slots.get(5)).betteradventuremode$setDisabledOverride(true);
-        ((DuckSlotMixin)this.slots.get(6)).betteradventuremode$setDisabledOverride(true);
-        ((DuckSlotMixin)this.slots.get(7)).betteradventuremode$setDisabledOverride(true);
-        ((DuckSlotMixin)this.slots.get(8)).betteradventuremode$setDisabledOverride(true);
-
-        // disable vanilla offhand slot
-        ((DuckSlotMixin)this.slots.get(45)).betteradventuremode$setDisabledOverride(true);
     }
 
     @Override

@@ -36,7 +36,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
 
     @Inject(method = "<init>", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILSOFT)
     private void betteradventuremode$init(EntityRendererFactory.Context ctx, boolean slim, CallbackInfo info) {
-        this.addFeature(new TrinketFeatureRenderer<>(this, this.model));
+        this.addFeature(new TrinketFeatureRenderer<>(this, this.model, slim));
         this.addFeature(new SheathedMainHandItemFeatureRenderer<>(this, ctx.getHeldItemRenderer()));
         this.addFeature(new SheathedOffHandItemFeatureRenderer<>(this, ctx.getHeldItemRenderer()));
     } 

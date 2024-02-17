@@ -5,7 +5,7 @@ import com.github.theredbrain.betteradventuremode.client.render.model.ArmorTrink
 import net.minecraft.util.Identifier;
 
 public class ArmorTrinketRenderer extends ModeledTrinketRenderer<ArmorTrinketItem>{
-    public ArmorTrinketRenderer(Identifier assetSubPath) {
-        super(new ArmorTrinketModel(assetSubPath));
+    public ArmorTrinketRenderer(Identifier assetSubPath, boolean slim) {
+        super(new ArmorTrinketModel(assetSubPath, slim));
     }
 }
