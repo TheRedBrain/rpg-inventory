@@ -41,6 +41,9 @@ public class EntityRegistry {
     public static final BlockEntityType<MimicBlockEntity> MIMIC_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
             BetterAdventureMode.identifier("mimic_block"),
             FabricBlockEntityTypeBuilder.create(MimicBlockEntity::new, BlockRegistry.MIMIC_BLOCK).build());
+    public static final BlockEntityType<TriggeredMessageBlockEntity> TRIGGERED_MESSAGE_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
+            BetterAdventureMode.identifier("triggered_message_block"),
+            FabricBlockEntityTypeBuilder.create(TriggeredMessageBlockEntity::new, BlockRegistry.TRIGGERED_MESSAGE_BLOCK).build());
     public static final BlockEntityType<TriggeredSpawnerBlockEntity> TRIGGERED_SPAWNER_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
             BetterAdventureMode.identifier("triggered_spawner_block"),
             FabricBlockEntityTypeBuilder.create(TriggeredSpawnerBlockEntity::new, BlockRegistry.TRIGGERED_SPAWNER_BLOCK).build());

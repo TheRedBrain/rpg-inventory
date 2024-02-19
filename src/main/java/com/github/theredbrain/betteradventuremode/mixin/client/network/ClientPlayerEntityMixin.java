@@ -114,6 +114,11 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
     }
 
     @Override
+    public void betteradventuremode$openTriggeredMessageBlockScreen(TriggeredMessageBlockEntity triggeredMessageBlock) {
+        this.client.setScreen(new TriggeredMessageBlockScreen(triggeredMessageBlock));
+    }
+
+    @Override
     public void betteradventuremode$openTriggeredSpawnerBlockScreen(TriggeredSpawnerBlockEntity triggeredSpawnerBlock) {
         this.client.setScreen(new TriggeredSpawnerBlockScreen(triggeredSpawnerBlock));
     }

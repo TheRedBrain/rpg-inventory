@@ -238,6 +238,17 @@
 	"gui.dialogue_screen.creativeScreenPage.starting_dialogues": "Starting Dialogues",
 
 
+	"gui.triggered_message_block.toggle_show_message_area_button_label.on": "Show Message Area: On",
+	"gui.triggered_message_block.toggle_show_message_area_button_label.off": "Show Message Area: Off",
+	"gui.triggered_message_block.message_area_dimensions_label": "Activation Area Dimensions",
+	"gui.triggered_message_block.message_area_position_offset_label": "Activation Area Offset",
+	"gui.triggered_message_block.toggle_overlay_button_label.on": "Overlay",
+	"gui.triggered_message_block.toggle_overlay_button_label.off": "Chat",
+
+	"gui.triggered_message_block.trigger_mode.continuous": "Trigger Mode: Continuous",
+	"gui.triggered_message_block.trigger_mode.once": "Trigger Mode: Once",
+
+
 	"gui.triggered_spawner_block.spawner_bound_entity_name_field_label": "Name",
 	"gui.triggered_spawner_block.spawner_bound_entity_model_identifier_field_label": "Model Identifier",
 	"gui.triggered_spawner_block.spawner_bound_entity_texture_identifier_field_label": "Texture Identifier",

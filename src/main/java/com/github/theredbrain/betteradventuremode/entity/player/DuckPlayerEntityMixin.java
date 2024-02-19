@@ -31,6 +31,7 @@ public interface DuckPlayerEntityMixin {
     void betteradventuremode$openResetTriggerBlockScreen(ResetTriggerBlockEntity resetTriggerBlock);
     void betteradventuremode$openDelayTriggerBlockScreen(DelayTriggerBlockEntity delayTriggerBlock);
     void betteradventuremode$openUseRelayBlockScreen(UseRelayBlockEntity useRelayBlock);
+    void betteradventuremode$openTriggeredMessageBlockScreen(TriggeredMessageBlockEntity triggeredMessageBlock);
     void betteradventuremode$openTriggeredSpawnerBlockScreen(TriggeredSpawnerBlockEntity triggeredSpawnerBlock);
     void betteradventuremode$openMimicBlockScreen(MimicBlockEntity mimicBlock);
     void betteradventuremode$openLocationControlBlockScreen(LocationControlBlockEntity locationControlBlock);
