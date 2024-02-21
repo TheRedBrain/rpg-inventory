@@ -56,4 +56,9 @@ public abstract class DamageSourcesMixin implements DuckDamageSourcesMixin {
     public DamageSource betteradventuremode$shocked() {
         return this.create(DamageTypesRegistry.SHOCKED_DAMAGE_TYPE);
     }
+
+    @Override
+    public DamageSource betteradventuremode$lava() {
+        return this.create(DamageTypesRegistry.LAVA_DAMAGE_TYPE);
+    }
 }

@@ -7,6 +7,7 @@ import net.minecraft.registry.RegistryKeys;
 
 public class DamageTypesRegistry {
 
+    public static final RegistryKey<DamageType> LAVA_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("lava_damage_type"));
     public static final RegistryKey<DamageType> BASHING_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("bashing_damage_type"));
     public static final RegistryKey<DamageType> PIERCING_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("piercing_damage_type"));
     public static final RegistryKey<DamageType> SLASHING_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("slashing_damage_type"));

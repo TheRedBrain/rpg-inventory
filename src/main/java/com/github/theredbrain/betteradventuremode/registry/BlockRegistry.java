@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.MapColor;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.item.BlockItem;
@@ -75,6 +76,7 @@ public class BlockRegistry {
 
     // interactive food blocks
 //    public static final Block INTERACTIVE_CHICKEN_MEAL_BLOCK = registerBlock("interactive_chicken_meal", new InteractiveAdventureFoodBlock(new StatusEffectInstance(StatusEffectsRegistry.CHICKEN_MEAL_FOOD_EFFECT, 600, 0, false, false, true), 1,/*TODO play test*/ FabricBlockSettings.create().mapColor(MapColor.CLEAR).pistonBehavior(PistonBehavior.DESTROY).ticksRandomly().sounds(BlockSoundGroup.WOOL)), ItemGroupRegistry.BAM_BLOCK);
+    public static final Block LAVA_BLOCK = registerBlock("lava_block", new LavaBlock(FabricBlockSettings.create().mapColor(MapColor.DARK_RED).jumpVelocityMultiplier(0.0f).luminance(state -> 15).emissiveLighting(Blocks::always)), ItemGroupRegistry.SCRIPT_BLOCKS);
     //endregion Content Blocks
 
     //region Script Blocks
