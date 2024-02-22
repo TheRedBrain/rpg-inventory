@@ -17,7 +17,7 @@ public class EntityRegistry {
 
     public static final EntityType<SpawnerBoundEntity> SPAWNER_BOUND_ENTITY = Registry.register(Registries.ENTITY_TYPE,
             BetterAdventureMode.identifier("spawner_bound_entity"),
-            FabricEntityTypeBuilder.create(SpawnGroup.MISC, SpawnerBoundEntity::new).build());
+            FabricEntityTypeBuilder.create(SpawnGroup.MISC, SpawnerBoundEntity::new).dimensions(new EntityDimensions(0.6F, 1.8F, false)).build());
     public static final EntityType<MannequinEntity> MANNEQUIN_ENTITY = Registry.register(Registries.ENTITY_TYPE,
             BetterAdventureMode.identifier("mannequin"),
             FabricEntityTypeBuilder.create(SpawnGroup.MISC, MannequinEntity::new).dimensions(new EntityDimensions(0.6F, 1.8F, false)).build());
@@ -74,9 +74,9 @@ public class EntityRegistry {
     public static final BlockEntityType<EntranceDelegationBlockEntity> ENTRANCE_DELEGATION_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
             BetterAdventureMode.identifier("entrance_delegation_block"),
             FabricBlockEntityTypeBuilder.create(EntranceDelegationBlockEntity::new, BlockRegistry.ENTRANCE_DELEGATION_BLOCK).build());
-    public static final BlockEntityType<StatusEffectApplierBlockEntity> STATUS_EFFECT_APPLIER_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
-            BetterAdventureMode.identifier("status_effect_applier_block"),
-            FabricBlockEntityTypeBuilder.create(StatusEffectApplierBlockEntity::new, BlockRegistry.STATUS_EFFECT_APPLIER_BLOCK).build());
+    public static final BlockEntityType<AreaBlockEntity> AREA_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
+            BetterAdventureMode.identifier("area_block"),
+            FabricBlockEntityTypeBuilder.create(AreaBlockEntity::new, BlockRegistry.AREA_BLOCK).build());
     public static final BlockEntityType<TriggeredAdvancementCheckerBlockEntity> TRIGGERED_ADVANCEMENT_CHECKER_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
             BetterAdventureMode.identifier("triggered_advancement_checker_block"),
             FabricBlockEntityTypeBuilder.create(TriggeredAdvancementCheckerBlockEntity::new, BlockRegistry.TRIGGERED_ADVANCEMENT_CHECKER_BLOCK).build());

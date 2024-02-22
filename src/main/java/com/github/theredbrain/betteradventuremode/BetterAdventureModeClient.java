@@ -93,7 +93,7 @@ public class BetterAdventureModeClient implements ClientModInitializer {
     private void registerBlockEntityRenderer() {
         BlockEntityRendererFactories.register(EntityRegistry.HOUSING_BLOCK_ENTITY, HousingBlockBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(EntityRegistry.MIMIC_BLOCK_ENTITY, MimicBlockEntityRenderer::new);
-        BlockEntityRendererFactories.register(EntityRegistry.STATUS_EFFECT_APPLIER_BLOCK_ENTITY, StatusEffectApplierBlockEntityRenderer::new);
+        BlockEntityRendererFactories.register(EntityRegistry.AREA_BLOCK_ENTITY, StatusEffectApplierBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(EntityRegistry.TELEPORTER_BLOCK_ENTITY, TeleporterBlockBlockEntityRenderer::new);
     }
 

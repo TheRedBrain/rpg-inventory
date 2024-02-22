@@ -86,7 +86,7 @@ public class ServerPacketRegistry {
 
         ServerPlayNetworking.registerGlobalReceiver(UpdateEntranceDelegationBlockPacket.TYPE, new UpdateEntranceDelegationBlockPacketReceiver());
 
-        ServerPlayNetworking.registerGlobalReceiver(UpdateStatusEffectApplierBlockPacket.TYPE, new UpdateStatusEffectApplierBlockPacketReceiver());
+        ServerPlayNetworking.registerGlobalReceiver(UpdateAreaBlockPacket.TYPE, new UpdateAreaBlockPacketReceiver());
 
         ServerPlayNetworking.registerGlobalReceiver(UpdateTriggeredAdvancementCheckerBlockPacket.TYPE, new UpdateTriggeredAdvancementCheckerBlockPacketReceiver());
 

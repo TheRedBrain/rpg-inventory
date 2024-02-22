@@ -34,6 +34,18 @@
 	"gui.adventureInventory.toggleAttributeScreenButton.off": "Show Attribute Screen",
 	"gui.adventureInventory.toggleAttributeScreenButton.off.tooltip": "Show Attribute Screen",
 
+
+	"gui.triggered_message_block.toggle_show_message_area_button_label.on": "Show Message Area: On",
+	"gui.triggered_message_block.toggle_show_message_area_button_label.off": "Show Message Area: Off",
+	"gui.triggered_message_block.message_area_dimensions_label": "Activation Area Dimensions",
+	"gui.triggered_message_block.message_area_position_offset_label": "Activation Area Offset",
+	"gui.triggered_message_block.toggle_overlay_button_label.on": "Overlay",
+	"gui.triggered_message_block.toggle_overlay_button_label.off": "Chat",
+
+	"gui.triggered_message_block.trigger_mode.continuous": "Trigger Mode: Continuous",
+	"gui.triggered_message_block.trigger_mode.once": "Trigger Mode: Once",
+
+
 	"gui.housing_screen.creativeScreenPage.influence": "Influence Settings",
 	"gui.housing_screen.creativeScreenPage.entrance": "Entrance Settings",
 	"gui.housing_screen.creativeScreenPage.triggered_block": "Triggered Block Settings",
@@ -105,6 +117,7 @@
 	"gui.delay_trigger_block.triggeredBlockTriggerDelay": "Trigger Delay in ticks",
 
 
+
 	"gui.teleporter_block.regeneration_confirm_screen.title": "Do you want to regenerate this dungeon?",
 	"gui.teleporter_block.confirmDungeonRegenerationButton": "Yes",
 	"gui.teleporter_block.cancelDungeonRegenerationButton": "No",
@@ -123,10 +136,10 @@
 	"gui.teleporter_block.cancel_teleport_button.label": "Cancel Teleport",
 	"gui.teleporter_block.cancel_teleport_button.place_holder": "Cancel Teleport Button Label",
 
-	"gui.teleporter_block.key_item_is_consumed_text": "will be consumed.",
-	"gui.teleporter_block.key_item_is_required_text": "is required.",
+	"gui.teleporter_block.key_item_is_consumed": "will be consumed.",
+	"gui.teleporter_block.key_item_is_required": "is required.",
 
-	"gui.teleporter_block.location_is_public_text": "This instance is public",
+	"gui.teleporter_block.location_is_public": "This instance is public",
 
 	"gui.teleporter_block.regenerateDungeonButton": "Regenerate",
 	"gui.teleporter_block.regenerateDungeonButton.tooltip.active": "Regenerate the selected dungeon instance",
@@ -155,12 +168,12 @@
 	"gui.teleporter_block.teleportation_mode_label": "Teleportation Mode",
 	"gui.teleporter_block.teleportation_mode.direct": "Direct",
 	"gui.teleporter_block.teleportation_mode.spawn_points": "Spawn Points",
-	"gui.teleporter_block.teleportation_mode.player_locations": "Player Locations",
+	"gui.teleporter_block.teleportation_mode.locations": "Locations",
 
 	"gui.teleporter_block.spawn_point_type_label": "Spawn Point Type",
 	"gui.teleporter_block.spawn_point_type.world_spawn": "World Spawn",
 	"gui.teleporter_block.spawn_point_type.player_spawn": "Player Spawn",
-	"gui.teleporter_block.spawn_point_type.player_location_access_position": "Player Location Access Position",
+	"gui.teleporter_block.spawn_point_type.player_location_access_position": "Location Access Position",
 
 	"gui.teleporter_block.direct_teleport_position_offset_label": "Teleportation Target Position Offset",
 	"gui.teleporter_block.direct_teleport_orientation_label": "Teleportation Target Orientation",
@@ -171,46 +184,6 @@
 	"gui.teleporter_block.add_new_location_button_label": "Add new entry",
 	"gui.teleporter_block.remove_location_button_label": "Remove entry",
 	"gui.teleporter_block.consume_key_itemstack_label": "Consume Key Itemstack",
-
-	"gui.teleporter_block.toggleShowActivationAreaButton.on": "Show Activation Area: Yes",
-	"gui.teleporter_block.toggleShowActivationAreaButton.on.tooltip": "Enables Rendering the Outline of the Activation Area",
-	"gui.teleporter_block.toggleShowActivationAreaButton.off": "Show Activation Area: No",
-	"gui.teleporter_block.toggleShowActivationAreaButton.off.tooltip": "Disables Rendering the Outline of the Activation Area",
-	"gui.teleporter_block.activationAreaDimensionsY.tooltip": "Activation Area Dimensions: Y",
-	"gui.teleporter_block.activationAreaDimensionsZ.tooltip": "Activation Area Dimensions: Z",
-	"gui.teleporter_block.activationAreaPositionOffsetY.tooltip": "Activation Area Offset: Y",
-	"gui.teleporter_block.activationAreaPositionOffsetZ.tooltip": "Activation Area Offset: Z",
-
-	"gui.teleporter_block.switchDimensionModeButton.static": "Static",
-	"gui.teleporter_block.switchDimensionModeButton.static.tooltip": "Teleports to the specified dimension",
-	"gui.teleporter_block.switchDimensionModeButton.dynamic": "Dynamic",
-	"gui.teleporter_block.switchDimensionModeButton.dynamic.tooltip": "Teleports to a player-specific dimension in the specified tag (WIP)",
-	"gui.teleporter_block.switchDimensionModeButton.current": "Current",
-	"gui.teleporter_block.switchDimensionModeButton.current.tooltip": "Teleports to the current dimension",
-
-	"gui.teleporter_block.outgoingTeleportDimensionGroup.tooltip": "Identifier of target dimension tag (WIP)",
-	"gui.teleporter_block.outgoingTeleportDimension.tooltip": "Identifier of target dimension",
-
-	"gui.teleporter_block.toggleIndirectTeleportationModeButton.on": "Indirect",
-	"gui.teleporter_block.toggleIndirectTeleportationModeButton.on.tooltip": "Teleports to the 'Incoming Teleport Position' of the Teleporter Block found at the 'Target Teleporter Position'. 'Outgoing Target Position' is used if no Teleporter Block is found. Best practice is to set it to the Overworld Spawn Point.",
-	"gui.teleporter_block.toggleIndirectTeleportationModeButton.off": "Direct",
-	"gui.teleporter_block.toggleIndirectTeleportationModeButton.off.tooltip": "Teleports to the 'Outgoing Target Position'",
-
-	"gui.teleporter_block.outgoingTeleportTeleporterPositionX.tooltip": "Target Teleporter Position: X",
-	"gui.teleporter_block.outgoingTeleportTeleporterPositionY.tooltip": "Target Teleporter Position: Y",
-	"gui.teleporter_block.outgoingTeleportTeleporterPositionZ.tooltip": "Target Teleporter Position: Z",
-
-	"gui.teleporter_block.incomingTeleportPositionOffsetX.tooltip": "Incoming Target Position Offset: X",
-	"gui.teleporter_block.incomingTeleportPositionOffsetY.tooltip": "Incoming Target Position Offset: Y",
-	"gui.teleporter_block.incomingTeleportPositionOffsetZ.tooltip": "Incoming Target Position Offset: Z",
-	"gui.teleporter_block.incomingTeleportPositionYaw.tooltip": "Incoming Target Yaw",
-	"gui.teleporter_block.incomingTeleportPositionPitch.tooltip": "Incoming Target Pitch",
-
-	"gui.teleporter_block.outgoingTeleportPositionX.tooltip": "Outgoing Target Position: X",
-	"gui.teleporter_block.outgoingTeleportPositionY.tooltip": "Outgoing Target Position: Y",
-	"gui.teleporter_block.outgoingTeleportPositionZ.tooltip": "Outgoing Target Position: Z",
-	"gui.teleporter_block.outgoingTeleportPositionYaw.tooltip": "Outgoing Target Yaw",
-	"gui.teleporter_block.outgoingTeleportPositionPitch.tooltip": "Outgoing Target Pitch",
 
 	"gui.teleporter_block.requiredItemStackSlot.tooltip": "Item required for Teleportation",
 	"gui.teleporter_block.keyItemButton.yes": "Use Item: Yes",
@@ -236,17 +209,6 @@
 	"gui.dialogue_screen.creativeScreenPage.dialogue_used_blocks": "Used Blocks",
 	"gui.dialogue_screen.creativeScreenPage.dialogue_triggered_blocks": "Triggered Blocks",
 	"gui.dialogue_screen.creativeScreenPage.starting_dialogues": "Starting Dialogues",
-
-
-	"gui.triggered_message_block.toggle_show_message_area_button_label.on": "Show Message Area: On",
-	"gui.triggered_message_block.toggle_show_message_area_button_label.off": "Show Message Area: Off",
-	"gui.triggered_message_block.message_area_dimensions_label": "Activation Area Dimensions",
-	"gui.triggered_message_block.message_area_position_offset_label": "Activation Area Offset",
-	"gui.triggered_message_block.toggle_overlay_button_label.on": "Overlay",
-	"gui.triggered_message_block.toggle_overlay_button_label.off": "Chat",
-
-	"gui.triggered_message_block.trigger_mode.continuous": "Trigger Mode: Continuous",
-	"gui.triggered_message_block.trigger_mode.once": "Trigger Mode: Once",
 
 
 	"gui.triggered_spawner_block.spawner_bound_entity_name_field_label": "Name",
@@ -281,8 +243,7 @@
 
 	"gui.triggered_block.newTriggeredBlockPositionOffset": "New Triggered Block Position Offset",
 	"gui.triggered_block.triggeredBlockPositionOffset": "Triggered Block Position Offset",
-	
-	
+
 	"gui.triggered_block.triggeredBlockPositionOffsetX.placeholder": "X",
 	"gui.triggered_block.triggeredBlockPositionOffsetY.placeholder": "Y",
 	"gui.triggered_block.triggeredBlockPositionOffsetZ.placeholder": "Z",
@@ -428,6 +389,7 @@
 	"gui.entity_attribute_modifier.operation.addition": "Addition",
 	"gui.entity_attribute_modifier.operation.multiply_base": "Multiply Base",
 	"gui.entity_attribute_modifier.operation.multiply_total": "Multiply Total",
+
 
 	"block.betteradventuremode.crafting_root_block": "Work Bench",
 	"block.betteradventuremode.storage_provider_block": "Stash",
@@ -632,6 +594,7 @@
 	"item.betteradventuremode.block_position_distance_meter.info": "Offset is %s, %s, %s.",
 
 	"item.betteradventuremode.default_empty_hand_weapon": "",
+
 
 	"itemGroup.betteradventuremode.bam_block": "Better Adventure Mode - Blocks",
 	"itemGroup.betteradventuremode.bam_equipment": "Better Adventure Mode - Equipment",

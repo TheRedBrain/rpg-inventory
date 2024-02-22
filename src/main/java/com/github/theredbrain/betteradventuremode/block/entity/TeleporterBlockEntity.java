@@ -498,7 +498,7 @@ public class TeleporterBlockEntity extends RotatedBlockEntity implements Extende
     public static enum SpawnPointType implements StringIdentifiable {
         WORLD_SPAWN("world_spawn"),
         PLAYER_SPAWN("player_spawn"),
-        PLAYER_LOCATION_ACCESS_POSITION("player_location_access_position");
+        LOCATION_ACCESS_POSITION("location_access_position");
 
         private final String name;
 

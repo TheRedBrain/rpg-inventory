@@ -70,6 +70,7 @@ public class StatusEffectsRegistry {
     public static final StatusEffect WEAPONS_SHEATHED_EFFECT = new NeutralStatusEffect();
     public static final StatusEffect TWO_HANDED_EFFECT = new NeutralStatusEffect();
     public static final StatusEffect PORTAL_RESISTANCE_EFFECT = new NeutralStatusEffect();
+    public static final StatusEffect LAVA_IMMUNE = new BeneficialStatusEffect();
     public static final StatusEffect STAGGERED = new HarmfulStatusEffect();
     public static final StatusEffect BLEEDING = new BleedingStatusEffect();
     public static final StatusEffect BURNING = new BurningStatusEffect();
@@ -118,6 +119,9 @@ public class StatusEffectsRegistry {
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("weapons_sheathed_effect"), WEAPONS_SHEATHED_EFFECT);
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("two_handed_effect"), TWO_HANDED_EFFECT);
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("portal_resistance_effect"), PORTAL_RESISTANCE_EFFECT);
+
+
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("lava_immune"), LAVA_IMMUNE);
 
 
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("overburdened_effect"), OVERBURDENED_EFFECT);

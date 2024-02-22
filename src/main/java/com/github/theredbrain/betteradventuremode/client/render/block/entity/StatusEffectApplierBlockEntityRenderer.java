@@ -3,7 +3,7 @@
  */
 package com.github.theredbrain.betteradventuremode.client.render.block.entity;
 
-import com.github.theredbrain.betteradventuremode.block.entity.StatusEffectApplierBlockEntity;
+import com.github.theredbrain.betteradventuremode.block.entity.AreaBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -23,12 +23,12 @@ import net.minecraft.world.World;
 // TODO clean up
 @Environment(value=EnvType.CLIENT)
 public class StatusEffectApplierBlockEntityRenderer
-implements BlockEntityRenderer<StatusEffectApplierBlockEntity> {
+implements BlockEntityRenderer<AreaBlockEntity> {
     public StatusEffectApplierBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
     }
 
     @Override
-    public void render(StatusEffectApplierBlockEntity statusEffectApplierBlockEntity, float f, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, int j) {
+    public void render(AreaBlockEntity areaBlockEntity, float f, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, int j) {
         double o;
         double n;
         double m;
@@ -36,8 +36,8 @@ implements BlockEntityRenderer<StatusEffectApplierBlockEntity> {
         if (!MinecraftClient.getInstance().player.isCreativeLevelTwoOp() && !MinecraftClient.getInstance().player.isSpectator()) {
             return;
         }
-        BlockPos blockPos = statusEffectApplierBlockEntity.getApplicationAreaPositionOffset();
-        Vec3i vec3i = statusEffectApplierBlockEntity.getApplicationAreaDimensions();
+        BlockPos blockPos = areaBlockEntity.getAreaPositionOffset();
+        Vec3i vec3i = areaBlockEntity.getAreaDimensions();
         if (vec3i.getX() < 1 || vec3i.getY() < 1 || vec3i.getZ() < 1) {
             return;
         }
@@ -52,17 +52,17 @@ implements BlockEntityRenderer<StatusEffectApplierBlockEntity> {
         o = m + k; // temp
         double p = n + l; // temp
         VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getLines());
-        if (statusEffectApplierBlockEntity.getShowApplicationArea()) {
+        if (areaBlockEntity.showArea()) {
             WorldRenderer.drawBox(matrixStack, vertexConsumer, m, g, n, o, h, p, 0.9f, 0.9f, 0.9f, 1.0f, 0.5f, 0.5f, 0.5f);
-            this.renderInvisibleBlocks(statusEffectApplierBlockEntity, vertexConsumer, blockPos, matrixStack);
+            this.renderInvisibleBlocks(areaBlockEntity, vertexConsumer, blockPos, matrixStack);
         }
     }
 
-    private void renderInvisibleBlocks(StatusEffectApplierBlockEntity entity, VertexConsumer vertices, BlockPos pos, MatrixStack matrices) {
+    private void renderInvisibleBlocks(AreaBlockEntity entity, VertexConsumer vertices, BlockPos pos, MatrixStack matrices) {
         World blockView = entity.getWorld();
         BlockPos blockPos = entity.getPos();
         BlockPos blockPos2 = blockPos.add(pos);
-        for (BlockPos blockPos3 : BlockPos.iterate(blockPos2, blockPos2.add(entity.getApplicationAreaDimensions()).add(-1, -1, -1))) {
+        for (BlockPos blockPos3 : BlockPos.iterate(blockPos2, blockPos2.add(entity.getAreaDimensions()).add(-1, -1, -1))) {
             boolean bl5;
             BlockState blockState = blockView.getBlockState(blockPos3);
             boolean bl = blockState.isAir();
@@ -96,7 +96,7 @@ implements BlockEntityRenderer<StatusEffectApplierBlockEntity> {
     }
 
     @Override
-    public boolean rendersOutsideBoundingBox(StatusEffectApplierBlockEntity statusEffectApplierBlockEntity) {
+    public boolean rendersOutsideBoundingBox(AreaBlockEntity areaBlockEntity) {
         return true;
     }
 

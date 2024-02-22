@@ -70,7 +70,7 @@ public class EntityAttributesRegistry {
 
     public static void registerEntityAttributes() {
 
-        FabricDefaultAttributeRegistry.register(EntityRegistry.SPAWNER_BOUND_ENTITY, SpawnerBoundEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(EntityRegistry.SPAWNER_BOUND_ENTITY, SpawnerBoundEntity.createLivingAttributes());
         FabricDefaultAttributeRegistry.register(EntityRegistry.MANNEQUIN_ENTITY, MannequinEntity.createLivingAttributes());
     }
 }

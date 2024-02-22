@@ -7,15 +7,15 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 
-public class UpdateStatusEffectApplierBlockPacket implements FabricPacket {
-    public static final PacketType<UpdateStatusEffectApplierBlockPacket> TYPE = PacketType.create(
-            BetterAdventureMode.identifier("update_status_effect_applier_block"),
-            UpdateStatusEffectApplierBlockPacket::new
+public class UpdateAreaBlockPacket implements FabricPacket {
+    public static final PacketType<UpdateAreaBlockPacket> TYPE = PacketType.create(
+            BetterAdventureMode.identifier("update_area_block"),
+            UpdateAreaBlockPacket::new
     );
 
     public final BlockPos statusEffectApplierBlockPosition;
     public final boolean triggered;
-    public final boolean showApplicationArea;
+    public final boolean showArea;
     public final Vec3i applicationAreaDimensions;
     public final BlockPos applicationAreaPositionOffset;
     public final String appliedStatusEffectIdentifier;
@@ -24,10 +24,10 @@ public class UpdateStatusEffectApplierBlockPacket implements FabricPacket {
     public final boolean appliedStatusEffectShowParticles;
     public final boolean appliedStatusEffectShowIcon;
 
-    public UpdateStatusEffectApplierBlockPacket(BlockPos statusEffectApplierBlockPosition, boolean triggered, boolean showApplicationArea, Vec3i applicationAreaDimensions, BlockPos applicationAreaPositionOffset, String appliedStatusEffectIdentifier, int appliedStatusEffectAmplifier, boolean appliedStatusEffectAmbient, boolean appliedStatusEffectShowParticles, boolean appliedStatusEffectShowIcon) {
+    public UpdateAreaBlockPacket(BlockPos statusEffectApplierBlockPosition, boolean triggered, boolean showArea, Vec3i applicationAreaDimensions, BlockPos applicationAreaPositionOffset, String appliedStatusEffectIdentifier, int appliedStatusEffectAmplifier, boolean appliedStatusEffectAmbient, boolean appliedStatusEffectShowParticles, boolean appliedStatusEffectShowIcon) {
         this.statusEffectApplierBlockPosition = statusEffectApplierBlockPosition;
         this.triggered = triggered;
-        this.showApplicationArea = showApplicationArea;
+        this.showArea = showArea;
         this.applicationAreaDimensions = applicationAreaDimensions;
         this.applicationAreaPositionOffset = applicationAreaPositionOffset;
         this.appliedStatusEffectIdentifier = appliedStatusEffectIdentifier;
@@ -37,7 +37,7 @@ public class UpdateStatusEffectApplierBlockPacket implements FabricPacket {
         this.appliedStatusEffectShowIcon = appliedStatusEffectShowIcon;
     }
 
-    public UpdateStatusEffectApplierBlockPacket(PacketByteBuf buf) {
+    public UpdateAreaBlockPacket(PacketByteBuf buf) {
         this(
                 buf.readBlockPos(),
                 buf.readBoolean(),
@@ -63,7 +63,7 @@ public class UpdateStatusEffectApplierBlockPacket implements FabricPacket {
     public void write(PacketByteBuf buf) {
         buf.writeBlockPos(this.statusEffectApplierBlockPosition);
         buf.writeBoolean(this.triggered);
-        buf.writeBoolean(this.showApplicationArea);
+        buf.writeBoolean(this.showArea);
         buf.writeInt(this.applicationAreaDimensions.getX());
         buf.writeInt(this.applicationAreaDimensions.getY());
         buf.writeInt(this.applicationAreaDimensions.getZ());

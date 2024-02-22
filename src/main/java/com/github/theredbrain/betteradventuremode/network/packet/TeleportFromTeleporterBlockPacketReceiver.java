@@ -77,7 +77,7 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
             targetPitch = directTeleportOrientationPitch;
         } else if (teleportationMode == TeleporterBlockEntity.TeleportationMode.SPAWN_POINTS) {
             Pair<Pair<String, BlockPos>, Boolean> housing_access_pos = ComponentsRegistry.PLAYER_LOCATION_ACCESS_POS.get(serverPlayerEntity).getValue();
-            if (spawnPointType == TeleporterBlockEntity.SpawnPointType.PLAYER_LOCATION_ACCESS_POSITION && housing_access_pos.getRight()) {
+            if (spawnPointType == TeleporterBlockEntity.SpawnPointType.LOCATION_ACCESS_POSITION && housing_access_pos.getRight()) {
                 targetWorld = server.getWorld(RegistryKey.of(RegistryKeys.WORLD, new Identifier(housing_access_pos.getLeft().getLeft())));
                 targetPos = housing_access_pos.getLeft().getRight();
                 if (targetWorld != null && targetPos != null) {

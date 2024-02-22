@@ -37,6 +37,6 @@ public interface DuckPlayerEntityMixin {
     void betteradventuremode$openLocationControlBlockScreen(LocationControlBlockEntity locationControlBlock);
     void betteradventuremode$openDialogueScreen(DialogueBlockEntity dialogueBlockEntity, @Nullable Dialogue dialogue);
     void betteradventuremode$openEntranceDelegationBlockScreen(EntranceDelegationBlockEntity entranceDelegationBlockEntity);
-    void betteradventuremode$openStatusEffectApplierBlockScreen(StatusEffectApplierBlockEntity statusEffectApplierBlockEntity);
+    void betteradventuremode$openAreaBlockScreen(AreaBlockEntity areaBlockEntity);
     void betteradventuremode$openTriggeredAdvancementCheckerBlockScreen(TriggeredAdvancementCheckerBlockEntity triggeredAdvancementCheckerBlock);
 }

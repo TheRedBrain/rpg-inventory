@@ -50,6 +50,7 @@ public class TriggeredSpawnerBlockScreen extends Screen {
     private static final Text NEW_ENTITY_ATTRIBUTE_MODIFIER_NAME_FIELD_PLACEHOLDER_TEXT = Text.translatable("gui.triggered_spawner_block.new_entity_attribute_modifier_name_label");
     private static final Text NEW_ENTITY_ATTRIBUTE_MODIFIER_VALUE_FIELD_PLACEHOLDER_TEXT = Text.translatable("gui.triggered_spawner_block.new_entity_attribute_modifier_value_label");
     private static final Text CLOSE_SPAWNER_BOUND_ENTITY_CONFIG_SCREEN_BUTTON_LABEL_TEXT = Text.translatable("gui.close");
+    private static final Text USE_RELAY_BLOCK_POSITION_OFFSET_LABEL_TEXT = Text.translatable("gui.triggered_spawner_block.useRelayBlockPositionOffset");
     private static final Text TRIGGERED_BLOCK_POSITION_OFFSET_LABEL_TEXT = Text.translatable("gui.triggered_block.triggeredBlockPositionOffset");
 
     private static final Identifier SCROLL_BAR_BACKGROUND_8_92_TEXTURE = BetterAdventureMode.identifier("scroll_bar/scroll_bar_background_8_92");
@@ -86,6 +87,10 @@ public class TriggeredSpawnerBlockScreen extends Screen {
     private TextFieldWidget newEntityAttributeModifierValueField;
     private ButtonWidget newEntityAttributeModifierOperationButton;
     private ButtonWidget addNewEntityAttributeModifierButton;
+
+    private TextFieldWidget useRelayBlockPositionOffsetXField;
+    private TextFieldWidget useRelayBlockPositionOffsetYField;
+    private TextFieldWidget useRelayBlockPositionOffsetZField;
 
     private TextFieldWidget triggeredBlockPositionOffsetXField;
     private TextFieldWidget triggeredBlockPositionOffsetYField;
@@ -264,6 +269,21 @@ public class TriggeredSpawnerBlockScreen extends Screen {
 
         // --- triggered block page ---
 
+        this.useRelayBlockPositionOffsetXField = new TextFieldWidget(this.textRenderer, this.width / 2 - 154, 95, 100, 20, Text.empty());
+        this.useRelayBlockPositionOffsetXField.setMaxLength(128);
+        this.useRelayBlockPositionOffsetXField.setText(Integer.toString(this.triggeredSpawnerBlock.getUseRelayBlockPositionOffset().getX()));
+        this.addSelectableChild(this.useRelayBlockPositionOffsetXField);
+        this.useRelayBlockPositionOffsetYField = new TextFieldWidget(this.textRenderer, this.width / 2 - 50, 95, 100, 20, Text.empty());
+        this.useRelayBlockPositionOffsetYField.setMaxLength(128);
+        this.useRelayBlockPositionOffsetYField.setText(Integer.toString(this.triggeredSpawnerBlock.getUseRelayBlockPositionOffset().getY()));
+        this.addSelectableChild(this.useRelayBlockPositionOffsetYField);
+        this.useRelayBlockPositionOffsetZField = new TextFieldWidget(this.textRenderer, this.width / 2 + 54, 95, 100, 20, Text.empty());
+        this.useRelayBlockPositionOffsetZField.setMaxLength(128);
+        this.useRelayBlockPositionOffsetZField.setText(Integer.toString(this.triggeredSpawnerBlock.getUseRelayBlockPositionOffset().getZ()));
+        this.addSelectableChild(this.useRelayBlockPositionOffsetZField);
+
+        // --- triggered block page ---
+
         this.triggeredBlockPositionOffsetXField = new TextFieldWidget(this.textRenderer, this.width / 2 - 154, 95, 100, 20, Text.empty());
         this.triggeredBlockPositionOffsetXField.setMaxLength(128);
         this.triggeredBlockPositionOffsetXField.setText(Integer.toString(this.triggeredSpawnerBlock.getTriggeredBlockPositionOffset().getX()));
@@ -315,6 +335,10 @@ public class TriggeredSpawnerBlockScreen extends Screen {
         this.newEntityAttributeModifierValueField.setVisible(false);
         this.newEntityAttributeModifierOperationButton.visible = false;
         this.addNewEntityAttributeModifierButton.visible = false;
+
+        this.useRelayBlockPositionOffsetXField.setVisible(false);
+        this.useRelayBlockPositionOffsetYField.setVisible(false);
+        this.useRelayBlockPositionOffsetZField.setVisible(false);
 
         this.triggeredBlockPositionOffsetXField.setVisible(false);
         this.triggeredBlockPositionOffsetYField.setVisible(false);
@@ -378,6 +402,12 @@ public class TriggeredSpawnerBlockScreen extends Screen {
                 this.newEntityAttributeModifierOperationButton.visible = true;
                 this.addNewEntityAttributeModifierButton.visible = true;
 
+            } else if (this.creativeScreenPage == CreativeScreenPage.USE_RELAY_BLOCK) {
+
+                this.useRelayBlockPositionOffsetXField.setVisible(true);
+                this.useRelayBlockPositionOffsetYField.setVisible(true);
+                this.useRelayBlockPositionOffsetZField.setVisible(true);
+
             } else if (this.creativeScreenPage == CreativeScreenPage.TRIGGERED_BLOCK) {
 
                 this.triggeredBlockPositionOffsetXField.setVisible(true);
@@ -401,9 +431,12 @@ public class TriggeredSpawnerBlockScreen extends Screen {
         String string2 = this.entitySpawnPositionOffsetZField.getText();
         String string3 = this.spawningMode.asString();
         String string4 = this.entityTypeIdField.getText();
-        String string5 = this.triggeredBlockPositionOffsetXField.getText();
-        String string6 = this.triggeredBlockPositionOffsetYField.getText();
-        String string7 = this.triggeredBlockPositionOffsetZField.getText();
+        String string5 = this.useRelayBlockPositionOffsetXField.getText();
+        String string6 = this.useRelayBlockPositionOffsetYField.getText();
+        String string7 = this.useRelayBlockPositionOffsetZField.getText();
+        String string8 = this.triggeredBlockPositionOffsetXField.getText();
+        String string9 = this.triggeredBlockPositionOffsetYField.getText();
+        String string10 = this.triggeredBlockPositionOffsetZField.getText();
         this.init(client, width, height);
         this.entityAttributeModifiersList = list;
         this.entitySpawnPositionOffsetXField.setText(string);
@@ -411,9 +444,12 @@ public class TriggeredSpawnerBlockScreen extends Screen {
         this.entitySpawnPositionOffsetZField.setText(string2);
         this.spawningMode = TriggeredSpawnerBlockEntity.SpawningMode.byName(string3).orElseGet(() -> TriggeredSpawnerBlockEntity.SpawningMode.ONCE);
         this.entityTypeIdField.setText(string4);
-        this.triggeredBlockPositionOffsetXField.setText(string5);
-        this.triggeredBlockPositionOffsetYField.setText(string6);
-        this.triggeredBlockPositionOffsetZField.setText(string7);
+        this.useRelayBlockPositionOffsetXField.setText(string5);
+        this.useRelayBlockPositionOffsetYField.setText(string6);
+        this.useRelayBlockPositionOffsetZField.setText(string7);
+        this.triggeredBlockPositionOffsetXField.setText(string8);
+        this.triggeredBlockPositionOffsetYField.setText(string9);
+        this.triggeredBlockPositionOffsetZField.setText(string10);
     }
 
     @Override
@@ -475,8 +511,8 @@ public class TriggeredSpawnerBlockScreen extends Screen {
                         this.spawnerBoundEntityModelIdentifierField.getText(),
                         this.spawnerBoundEntityTextureIdentifierField.getText(),
                         this.spawnerBoundEntityAnimationsIdentifierField.getText(),
-                        ItemUtils.parseDouble(this.spawnerBoundEntityBoundingBoxHeightField.getText()),
-                        ItemUtils.parseDouble(this.spawnerBoundEntityBoundingBoxWidthField.getText()),
+                        ItemUtils.parseFloat(this.spawnerBoundEntityBoundingBoxHeightField.getText()),
+                        ItemUtils.parseFloat(this.spawnerBoundEntityBoundingBoxWidthField.getText()),
                         this.spawnerBoundEntityLootTableIdentifierField.getText(),
                         new BlockPos(
                                 ItemUtils.parseInt(this.entitySpawnPositionOffsetXField.getText()),
@@ -491,6 +527,11 @@ public class TriggeredSpawnerBlockScreen extends Screen {
                                 ItemUtils.parseInt(this.triggeredBlockPositionOffsetXField.getText()),
                                 ItemUtils.parseInt(this.triggeredBlockPositionOffsetYField.getText()),
                                 ItemUtils.parseInt(this.triggeredBlockPositionOffsetZField.getText())
+                        ),
+                        new BlockPos(
+                                ItemUtils.parseInt(this.useRelayBlockPositionOffsetXField.getText()),
+                                ItemUtils.parseInt(this.useRelayBlockPositionOffsetYField.getText()),
+                                ItemUtils.parseInt(this.useRelayBlockPositionOffsetZField.getText())
                         )
                 )
         );
@@ -550,6 +591,11 @@ public class TriggeredSpawnerBlockScreen extends Screen {
                 this.newEntityAttributeModifierNameField.render(context, mouseX, mouseY, delta);
                 this.newEntityAttributeModifierValueField.render(context, mouseX, mouseY, delta);
 
+            } else if (this.creativeScreenPage == CreativeScreenPage.USE_RELAY_BLOCK) {
+                context.drawTextWithShadow(this.textRenderer, USE_RELAY_BLOCK_POSITION_OFFSET_LABEL_TEXT, this.width / 2 - 153, 85, 0xA0A0A0);
+                this.useRelayBlockPositionOffsetXField.render(context, mouseX, mouseY, delta);
+                this.useRelayBlockPositionOffsetYField.render(context, mouseX, mouseY, delta);
+                this.useRelayBlockPositionOffsetZField.render(context, mouseX, mouseY, delta);
             } else if (this.creativeScreenPage == CreativeScreenPage.TRIGGERED_BLOCK) {
                 context.drawTextWithShadow(this.textRenderer, TRIGGERED_BLOCK_POSITION_OFFSET_LABEL_TEXT, this.width / 2 - 153, 85, 0xA0A0A0);
                 this.triggeredBlockPositionOffsetXField.render(context, mouseX, mouseY, delta);
@@ -568,6 +614,7 @@ public class TriggeredSpawnerBlockScreen extends Screen {
     {
         MISC("misc"),
         ENTITY_ATTRIBUTE_MODIFIER("entity_attribute_modifier"),
+        USE_RELAY_BLOCK("use_relay_block"),
         TRIGGERED_BLOCK("triggered_block");
 
         private final String name;

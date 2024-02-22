@@ -144,8 +144,8 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
     }
 
     @Override
-    public void betteradventuremode$openStatusEffectApplierBlockScreen(StatusEffectApplierBlockEntity statusEffectApplierBlockEntity) {
-        this.client.setScreen(new StatusEffectApplierBlockScreen(statusEffectApplierBlockEntity));
+    public void betteradventuremode$openAreaBlockScreen(AreaBlockEntity areaBlockEntity) {
+        this.client.setScreen(new AreaBlockScreen(areaBlockEntity));
     }
 
     @Override

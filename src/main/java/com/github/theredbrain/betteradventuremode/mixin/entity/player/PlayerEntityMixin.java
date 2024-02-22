@@ -591,7 +591,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     }
 
     @Override
-    public void betteradventuremode$openStatusEffectApplierBlockScreen(StatusEffectApplierBlockEntity statusEffectApplierBlockEntity) {
+    public void betteradventuremode$openAreaBlockScreen(AreaBlockEntity areaBlockEntity) {
     }
 
     @Override

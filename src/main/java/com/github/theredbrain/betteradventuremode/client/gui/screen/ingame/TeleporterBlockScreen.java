@@ -71,9 +71,9 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
     private static final Text EDIT_BUTTON_LABEL_TEXT = Text.translatable("gui.edit");
     private static final Text CANCEL_BUTTON_LABEL_TEXT = Text.translatable("gui.cancel");
     private static final Text CHOOSE_BUTTON_LABEL_TEXT = Text.translatable("gui.choose");
-    private static final Text KEY_ITEM_IS_CONSUMED_TEXT = Text.translatable("gui.teleporter_block.key_item_is_consumed_text");
-    private static final Text KEY_ITEM_IS_REQUIRED_TEXT = Text.translatable("gui.teleporter_block.key_item_is_required_text");
-    private static final Text LOCATION_IS_PUBLIC_TEXT = Text.translatable("gui.teleporter_block.location_is_public_text");
+    private static final Text KEY_ITEM_IS_CONSUMED_TEXT = Text.translatable("gui.teleporter_block.key_item_is_consumed");
+    private static final Text KEY_ITEM_IS_REQUIRED_TEXT = Text.translatable("gui.teleporter_block.key_item_is_required");
+    private static final Text LOCATION_IS_PUBLIC_TEXT = Text.translatable("gui.teleporter_block.location_is_public");
     private static final Identifier SCROLL_BAR_BACKGROUND_8_70_TEXTURE = BetterAdventureMode.identifier("scroll_bar/scroll_bar_background_8_70");
     private static final Identifier CREATIVE_HOUSING_SCROLLER_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("scroll_bar/scroll_bar_background_8_95");
     private static final Identifier SCROLLER_TEXTURE = BetterAdventureMode.identifier("scroll_bar/scroller_vertical_6_7");

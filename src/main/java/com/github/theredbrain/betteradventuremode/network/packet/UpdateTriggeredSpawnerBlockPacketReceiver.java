@@ -37,8 +37,8 @@ public class UpdateTriggeredSpawnerBlockPacketReceiver implements ServerPlayNetw
         String spawnerBoundEntityModelIdentifier = packet.spawnerBoundEntityModelIdentifier;
         String spawnerBoundEntityTextureIdentifier = packet.spawnerBoundEntityTextureIdentifier;
         String spawnerBoundEntityAnimationsIdentifier = packet.spawnerBoundEntityAnimationsIdentifier;
-        double spawnerBoundEntityBoundingBoxHeight = packet.spawnerBoundEntityBoundingBoxHeight;
-        double spawnerBoundEntityBoundingBoxWidth = packet.spawnerBoundEntityBoundingBoxWidth;
+        float spawnerBoundEntityBoundingBoxHeight = packet.spawnerBoundEntityBoundingBoxHeight;
+        float spawnerBoundEntityBoundingBoxWidth = packet.spawnerBoundEntityBoundingBoxWidth;
         String spawnerBoundEntityLootTableIdentifier = packet.spawnerBoundEntityLootTableIdentifier;
 
         BlockPos entitySpawnPositionOffset = packet.entitySpawnPositionOffset;
@@ -60,6 +60,8 @@ public class UpdateTriggeredSpawnerBlockPacketReceiver implements ServerPlayNetw
             optional.ifPresent(entityAttribute -> entityAttributeModifiers.put(entityAttribute, entityAttributeModifiersListEntry.getRight()));
         }
 
+        BlockPos useRelayBlockPositionOffset = packet.useRelayBlockPositionOffset;
+
         BlockPos triggeredBlockPositionOffset = packet.triggeredBlockPositionOffset;
 
         World world = player.getWorld();
@@ -70,10 +72,7 @@ public class UpdateTriggeredSpawnerBlockPacketReceiver implements ServerPlayNetw
         BlockState blockState = world.getBlockState(triggeredSpawnerBlockPosition);
 
         if (blockEntity instanceof TriggeredSpawnerBlockEntity triggeredSpawnerBlockEntity) {
-            if (!triggeredSpawnerBlockEntity.setSpawnerBoundEntityName(spawnerBoundEntityName)) {
-                player.sendMessage(Text.translatable("triggered_spawner_block.spawnerBoundEntityName.invalid"), false);
-                updateSuccessful = false;
-            }
+            triggeredSpawnerBlockEntity.setSpawnerBoundEntityName(spawnerBoundEntityName);
             if (!triggeredSpawnerBlockEntity.setSpawnerBoundEntityModelIdentifier(spawnerBoundEntityModelIdentifier)) {
                 player.sendMessage(Text.translatable("triggered_spawner_block.spawnerBoundEntityModelIdentifier.invalid"), false);
                 updateSuccessful = false;
@@ -118,10 +117,8 @@ public class UpdateTriggeredSpawnerBlockPacketReceiver implements ServerPlayNetw
                 player.sendMessage(Text.translatable("triggered_spawner_block.entityAttributeModifiers.invalid"), false);
                 updateSuccessful = false;
             }
-            if (!triggeredSpawnerBlockEntity.setTriggeredBlockPositionOffset(triggeredBlockPositionOffset)) {
-                player.sendMessage(Text.translatable("triggered_block.triggeredBlockPositionOffset.invalid"), false);
-                updateSuccessful = false;
-            }
+            triggeredSpawnerBlockEntity.setTriggeredBlockPositionOffset(triggeredBlockPositionOffset);
+            triggeredSpawnerBlockEntity.setUseRelayBlockPositionOffset(useRelayBlockPositionOffset);
             if (updateSuccessful) {
                 player.sendMessage(Text.translatable("triggered_spawner_block.update_successful"), true);
             }
