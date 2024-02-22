@@ -72,8 +72,6 @@ public class ServerPacketRegistry {
 
         ServerPlayNetworking.registerGlobalReceiver(ExportImportMannequinEquipmentPacket.TYPE, new ExportImportMannequinEquipmentPacketReceiver());
 
-        ServerPlayNetworking.registerGlobalReceiver(UpdateTriggeredMessageBlockPacket.TYPE, new UpdateTriggeredMessageBlockPacketReceiver());
-
         ServerPlayNetworking.registerGlobalReceiver(UpdateTriggeredSpawnerBlockPacket.TYPE, new UpdateTriggeredSpawnerBlockPacketReceiver());
 
         ServerPlayNetworking.registerGlobalReceiver(UpdateLocationControlBlockPacket.TYPE, new UpdateLocationControlBlockPacketReceiver());

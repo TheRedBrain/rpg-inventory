@@ -42,26 +42,26 @@ public class UpdateAreaBlockPacketReceiver implements ServerPlayNetworking.PlayP
             areaBlockEntity.setWasTriggered(triggered);
             areaBlockEntity.setShowArea(showArea);
             if (!areaBlockEntity.setAreaDimensions(areaDimensions)) {
-                player.sendMessage(Text.translatable("status_effect_applier_block.areaDimensions.invalid"), false);
+                player.sendMessage(Text.translatable("area_block.areaDimensions.invalid"), false);
                 updateSuccessful = false;
             }
             if (!areaBlockEntity.setAreaPositionOffset(areaPositionOffset)) {
-                player.sendMessage(Text.translatable("status_effect_applier_block.areaPositionOffset.invalid"), false);
+                player.sendMessage(Text.translatable("area_block.areaPositionOffset.invalid"), false);
                 updateSuccessful = false;
             }
             if (!areaBlockEntity.setAppliedStatusEffectIdentifier(appliedStatusEffectIdentifier)) {
-                player.sendMessage(Text.translatable("status_effect_applier_block.appliedStatusEffectIdentifier.invalid"), false);
+                player.sendMessage(Text.translatable("area_block.appliedStatusEffectIdentifier.invalid"), false);
                 updateSuccessful = false;
             }
             if (!areaBlockEntity.setAppliedStatusEffectAmplifier(appliedStatusEffectAmplifier)) {
-                player.sendMessage(Text.translatable("status_effect_applier_block.appliedStatusEffectAmplifier.invalid"), false);
+                player.sendMessage(Text.translatable("area_block.appliedStatusEffectAmplifier.invalid"), false);
                 updateSuccessful = false;
             }
             areaBlockEntity.setAppliedStatusEffectAmbient(appliedStatusEffectAmbient);
             areaBlockEntity.setAppliedStatusEffectShowParticles(appliedStatusEffectShowParticles);
             areaBlockEntity.setAppliedStatusEffectShowIcon(appliedStatusEffectShowIcon);
             if (updateSuccessful) {
-                player.sendMessage(Text.translatable("status_effect_applier_block.update_successful"), true);
+                player.sendMessage(Text.translatable("area_block.update_successful"), true);
             }
             areaBlockEntity.markDirty();
             world.updateListeners(statusEffectApplierBlockPosition, blockState, blockState, Block.NOTIFY_ALL);

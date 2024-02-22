@@ -33,25 +33,26 @@ public class AreaBlockEntity extends RotatedBlockEntity implements Triggerable, 
     private boolean showArea = false;
     private Vec3i areaDimensions = Vec3i.ZERO;
     private BlockPos areaPositionOffset = new BlockPos(0, 1, 0);
+
     private String appliedStatusEffectIdentifier = "";
     private int appliedStatusEffectAmplifier = 0;
     private boolean appliedStatusEffectAmbient = false;
     private boolean appliedStatusEffectShowParticles = false;
     private boolean appliedStatusEffectShowIcon = false;
 
-    private MutablePair<BlockPos, Boolean> triggeredBlock = new MutablePair<>(new BlockPos(0, 0, 0), false);
-
-    private boolean overlay = false;
-    String message = "";
-
     private boolean hasTriggered = false;
     private boolean wasTriggered = false;
     private TriggerMode triggerMode = TriggerMode.ALWAYS;
     private TriggeredMode triggeredMode = TriggeredMode.ONCE;
+    private MutablePair<BlockPos, Boolean> triggeredBlock = new MutablePair<>(new BlockPos(0, 0, 0), false);
+
+    private MessageMode messageMode = MessageMode.OVERLAY;
+    private String joinMessage = "";
+    private String leaveMessage = "";
+    private String triggeredMessage = "";
+
     private ArrayList<PlayerEntity> playerList = new ArrayList<>();
     private HashMap<UUID, Integer> playerMap = new HashMap<>();
-    private String leaveMessage = "";
-    private String joinMessage = "";
 
     public AreaBlockEntity(BlockPos pos, BlockState state) {
         super(EntityRegistry.AREA_BLOCK_ENTITY, pos, state);
@@ -62,6 +63,15 @@ public class AreaBlockEntity extends RotatedBlockEntity implements Triggerable, 
 
         nbt.putBoolean("showArea", this.showArea);
 
+        if (this.area != null) {
+            nbt.putDouble("areaMinX", this.area.minX);
+            nbt.putDouble("areaMaxX", this.area.maxX);
+            nbt.putDouble("areaMinY", this.area.minY);
+            nbt.putDouble("areaMaxY", this.area.maxY);
+            nbt.putDouble("areaMinZ", this.area.minZ);
+            nbt.putDouble("areaMaxZ", this.area.maxZ);
+        }
+
         nbt.putInt("areaDimensionsX", this.areaDimensions.getX());
         nbt.putInt("areaDimensionsY", this.areaDimensions.getY());
         nbt.putInt("areaDimensionsZ", this.areaDimensions.getZ());
@@ -69,6 +79,7 @@ public class AreaBlockEntity extends RotatedBlockEntity implements Triggerable, 
         nbt.putInt("areaPositionOffsetX", this.areaPositionOffset.getX());
         nbt.putInt("areaPositionOffsetY", this.areaPositionOffset.getY());
         nbt.putInt("areaPositionOffsetZ", this.areaPositionOffset.getZ());
+
 
         nbt.putString("appliedStatusEffectIdentifier", this.appliedStatusEffectIdentifier);
 
@@ -80,21 +91,32 @@ public class AreaBlockEntity extends RotatedBlockEntity implements Triggerable, 
 
         nbt.putBoolean("appliedStatusEffectShowIcon", this.appliedStatusEffectShowIcon);
 
-        nbt.putBoolean("triggered", this.wasTriggered);
 
-        if (this.area != null) {
-            nbt.putDouble("areaMinX", this.area.minX);
-            nbt.putDouble("areaMaxX", this.area.maxX);
-            nbt.putDouble("areaMinY", this.area.minY);
-            nbt.putDouble("areaMaxY", this.area.maxY);
-            nbt.putDouble("areaMinZ", this.area.minZ);
-            nbt.putDouble("areaMaxZ", this.area.maxZ);
-        }
+        nbt.putBoolean("hasTriggered", this.hasTriggered);
+
+        nbt.putBoolean("wasTriggered", this.wasTriggered);
+
+        nbt.putString("triggerMode", this.triggerMode.asString());
+
+        nbt.putString("triggeredMode", this.triggeredMode.asString());
 
         nbt.putInt("triggeredBlockPositionOffsetX", this.triggeredBlock.getLeft().getX());
         nbt.putInt("triggeredBlockPositionOffsetY", this.triggeredBlock.getLeft().getY());
         nbt.putInt("triggeredBlockPositionOffsetZ", this.triggeredBlock.getLeft().getZ());
         nbt.putBoolean("triggeredBlockResets", this.triggeredBlock.getRight());
+
+
+        nbt.putString("messageMode", this.messageMode.asString());
+
+        nbt.putString("joinMessage", this.joinMessage);
+
+        nbt.putString("leaveMessage", this.leaveMessage);
+
+        nbt.putString("triggeredMessage", this.triggeredMessage);
+
+
+        int playerListSize = this.playerList.size();
+        nbt.putInt("playerListSize", playerListSize);
 
         super.writeNbt(nbt);
 
@@ -104,6 +126,11 @@ public class AreaBlockEntity extends RotatedBlockEntity implements Triggerable, 
     public void readNbt(NbtCompound nbt) {
 
         this.showArea = nbt.getBoolean("showArea");
+
+        if (nbt.contains("areaMinX") && nbt.contains("areaMinY") && nbt.contains("areaMinZ") && nbt.contains("areaMaxX") && nbt.contains("areaMaxY") && nbt.contains("areaMaxZ")) {
+            this.area = new Box(nbt.getDouble("areaMinX"), nbt.getDouble("areaMinY"), nbt.getDouble("areaMinZ"), nbt.getDouble("areaMaxX"), nbt.getDouble("areaMaxY"), nbt.getDouble("areaMaxZ"));
+            this.calculateAreaBox = true;
+        }
 
         int i = MathHelper.clamp(nbt.getInt("areaDimensionsX"), 0, 48);
         int j = MathHelper.clamp(nbt.getInt("areaDimensionsY"), 0, 48);
@@ -115,6 +142,7 @@ public class AreaBlockEntity extends RotatedBlockEntity implements Triggerable, 
         int n = MathHelper.clamp(nbt.getInt("areaPositionOffsetZ"), -48, 48);
         this.areaPositionOffset = new BlockPos(l, m, n);
 
+
         this.appliedStatusEffectIdentifier = nbt.getString("appliedStatusEffectIdentifier");
 
         this.appliedStatusEffectAmplifier = nbt.getInt("appliedStatusEffectAmplifier");
@@ -125,17 +153,28 @@ public class AreaBlockEntity extends RotatedBlockEntity implements Triggerable, 
 
         this.appliedStatusEffectShowIcon = nbt.getBoolean("appliedStatusEffectShowIcon");
 
-        this.wasTriggered = nbt.getBoolean("triggered");
 
-        if (nbt.contains("areaMinX") && nbt.contains("areaMinY") && nbt.contains("areaMinZ") && nbt.contains("areaMaxX") && nbt.contains("areaMaxY") && nbt.contains("areaMaxZ")) {
-            this.area = new Box(nbt.getDouble("areaMinX"), nbt.getDouble("areaMinY"), nbt.getDouble("areaMinZ"), nbt.getDouble("areaMaxX"), nbt.getDouble("areaMaxY"), nbt.getDouble("areaMaxZ"));
-            this.calculateAreaBox = true;
-        }
+        this.hasTriggered = nbt.getBoolean("hasTriggered");
+
+        this.wasTriggered = nbt.getBoolean("wasTriggered");
+
+        this.triggerMode = TriggerMode.byName(nbt.getString("triggerMode")).orElse(TriggerMode.ALWAYS);
+
+        this.triggeredMode = TriggeredMode.byName(nbt.getString("triggeredMode")).orElse(TriggeredMode.ONCE);
 
         int x = MathHelper.clamp(nbt.getInt("triggeredBlockPositionOffsetX"), -48, 48);
         int y = MathHelper.clamp(nbt.getInt("triggeredBlockPositionOffsetY"), -48, 48);
         int z = MathHelper.clamp(nbt.getInt("triggeredBlockPositionOffsetZ"), -48, 48);
         this.triggeredBlock = new MutablePair<>(new BlockPos(x, y, z), nbt.getBoolean("triggeredBlockResets"));
+
+
+        this.messageMode = MessageMode.byName(nbt.getString("messageMode")).orElse(MessageMode.OVERLAY);
+
+        this.joinMessage = nbt.getString("joinMessage");
+
+        this.leaveMessage = nbt.getString("leaveMessage");
+
+        this.triggeredMessage = nbt.getString("triggeredMessage");
 
         super.readNbt(nbt);
     }
@@ -170,6 +209,8 @@ public class AreaBlockEntity extends RotatedBlockEntity implements Triggerable, 
                 areaBlockEntity.calculateAreaBox = false;
             }
 
+            boolean shouldTriggerBlock = false;
+
             StatusEffect statusEffect = Registries.STATUS_EFFECT.get(Identifier.tryParse(areaBlockEntity.appliedStatusEffectIdentifier));
 
             List<PlayerEntity> newPlayerList = world.getNonSpectatingEntities(PlayerEntity.class, areaBlockEntity.area);
@@ -197,14 +238,22 @@ public class AreaBlockEntity extends RotatedBlockEntity implements Triggerable, 
                     }
                 } else {
                     if (!areaBlockEntity.leaveMessage.equals("")) {
-                        playerEntity.sendMessage(Text.translatable(areaBlockEntity.leaveMessage), areaBlockEntity.overlay);
+                        if (areaBlockEntity.messageMode == MessageMode.ANNOUNCEMENT) {
+                            ((DuckPlayerEntityMixin)playerEntity).betteradventuremode$sendAnnouncement(Text.translatable(areaBlockEntity.leaveMessage));
+                        } else {
+                            playerEntity.sendMessage(Text.translatable(areaBlockEntity.leaveMessage), areaBlockEntity.messageMode == MessageMode.OVERLAY);
+                        }
                     }
                 }
             }
             while (newPlayerListIterator.hasNext()) {
                 playerEntity = (PlayerEntity) newPlayerListIterator.next();
                 if (!areaBlockEntity.joinMessage.equals("")) {
-                    playerEntity.sendMessage(Text.translatable(areaBlockEntity.joinMessage), areaBlockEntity.overlay);
+                    if (areaBlockEntity.messageMode == MessageMode.ANNOUNCEMENT) {
+                        ((DuckPlayerEntityMixin)playerEntity).betteradventuremode$sendAnnouncement(Text.translatable(areaBlockEntity.joinMessage));
+                    } else {
+                        playerEntity.sendMessage(Text.translatable(areaBlockEntity.joinMessage), areaBlockEntity.messageMode == MessageMode.OVERLAY);
+                    }
                 }
                 if (statusEffect != null) {
                     playerEntity.addStatusEffect(
@@ -218,12 +267,19 @@ public class AreaBlockEntity extends RotatedBlockEntity implements Triggerable, 
                             )
                     );
                 }
+                shouldTriggerBlock = true;
+            }
+            if (shouldTriggerBlock) {
+                areaBlockEntity.triggerBlock();
             }
         }
     }
 
     @Override
     public void reset() {
+        if (this.hasTriggered) {
+            this.hasTriggered = false;
+        }
         if (this.wasTriggered) {
             this.wasTriggered = false;
         }
@@ -232,7 +288,7 @@ public class AreaBlockEntity extends RotatedBlockEntity implements Triggerable, 
     @Override
     public void trigger() {
         if ((this.triggeredMode == TriggeredMode.ONCE && !this.wasTriggered) || this.triggeredMode == TriggeredMode.CONTINUOUS) {
-            this.sendMessage();
+            this.sendMessage(this.triggeredMessage);
         }
         if (!this.wasTriggered) {
             this.wasTriggered = true;
@@ -256,7 +312,7 @@ public class AreaBlockEntity extends RotatedBlockEntity implements Triggerable, 
         }
     }
 
-    private void sendMessage() {
+    private void sendMessage(String message) {
         if (this.world instanceof ServerWorld) {
             if (this.calculateAreaBox || this.area == null) {
                 BlockPos messageAreaPositionOffset = this.areaPositionOffset;
@@ -268,7 +324,11 @@ public class AreaBlockEntity extends RotatedBlockEntity implements Triggerable, 
             }
             List<PlayerEntity> list = world.getNonSpectatingEntities(PlayerEntity.class, this.area);
             for (PlayerEntity playerEntity : list) {
-                playerEntity.sendMessage(Text.translatable(this.message), this.overlay);
+                if (this.messageMode == MessageMode.ANNOUNCEMENT) {
+                    ((DuckPlayerEntityMixin)playerEntity).betteradventuremode$sendAnnouncement(Text.translatable(message));
+                } else {
+                    playerEntity.sendMessage(Text.translatable(message), this.messageMode == MessageMode.OVERLAY);
+                }
             }
         }
     }
@@ -367,6 +427,54 @@ public class AreaBlockEntity extends RotatedBlockEntity implements Triggerable, 
     public void setWasTriggered(boolean wasTriggered) {
         this.wasTriggered = wasTriggered;
     }
+
+    public String getJoinMessage() {
+        return this.joinMessage;
+    }
+
+    public void setJoinMessage(String joinMessage) {
+        this.joinMessage = joinMessage;
+    }
+
+    public String getLeaveMessage() {
+        return this.leaveMessage;
+    }
+
+    public void setLeaveMessage(String leaveMessage) {
+        this.leaveMessage = leaveMessage;
+    }
+
+    public String getTriggeredMessage() {
+        return this.triggeredMessage;
+    }
+
+    public void setTriggeredMessage(String triggeredMessage) {
+        this.triggeredMessage = triggeredMessage;
+    }
+
+    public MessageMode getMessageMode() {
+        return this.messageMode;
+    }
+
+    public void setMessageMode(MessageMode messageMode) {
+        this.messageMode = messageMode;
+    }
+
+    public TriggerMode getTriggerMode() {
+        return this.triggerMode;
+    }
+
+    public void setTriggerMode(TriggerMode triggerMode) {
+        this.triggerMode = triggerMode;
+    }
+
+    public TriggeredMode getTriggeredMode() {
+        return this.triggeredMode;
+    }
+
+    public void setTriggeredMode(TriggeredMode triggeredMode) {
+        this.triggeredMode = triggeredMode;
+    }
     //endregion --- getter & setter ---
 
     @Override
@@ -403,6 +511,32 @@ public class AreaBlockEntity extends RotatedBlockEntity implements Triggerable, 
 
                 this.z_mirrored = state.get(RotatedBlockWithEntity.Z_MIRRORED);
             }
+        }
+    }
+
+    public static enum MessageMode implements StringIdentifiable
+    {
+        ANNOUNCEMENT("announcement"),
+        CHAT("chat"),
+        OVERLAY("overlay");
+
+        private final String name;
+
+        private MessageMode(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String asString() {
+            return this.name;
+        }
+
+        public static Optional<MessageMode> byName(String name) {
+            return Arrays.stream(MessageMode.values()).filter(messageMode -> messageMode.asString().equals(name)).findFirst();
+        }
+
+        public Text asText() {
+            return Text.translatable("gui.area_block.message_mode." + this.name);
         }
     }
 

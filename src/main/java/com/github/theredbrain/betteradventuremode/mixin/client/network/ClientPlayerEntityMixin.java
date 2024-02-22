@@ -1,5 +1,6 @@
 package com.github.theredbrain.betteradventuremode.mixin.client.network;
 
+import com.github.theredbrain.betteradventuremode.client.network.message.DuckMessageHandlerMixin;
 import com.github.theredbrain.betteradventuremode.data.Dialogue;
 import com.github.theredbrain.betteradventuremode.block.entity.*;
 import com.github.theredbrain.betteradventuremode.client.gui.screen.ingame.*;
@@ -50,6 +51,11 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
     @Overwrite
     public void applyDamage(DamageSource source, float amount) {
         super.applyDamage(source, amount);
+    }
+
+    @Override
+    public void betteradventuremode$sendAnnouncement(Text announcement) {
+        ((DuckMessageHandlerMixin)this.client.getMessageHandler()).betteradventuremode$onAnnouncement(announcement);
     }
 
     @Override
@@ -111,11 +117,6 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
     @Override
     public void betteradventuremode$openUseRelayBlockScreen(UseRelayBlockEntity useRelayBlock) {
         this.client.setScreen(new UseRelayBlockScreen(useRelayBlock));
-    }
-
-    @Override
-    public void betteradventuremode$openTriggeredMessageBlockScreen(TriggeredMessageBlockEntity triggeredMessageBlock) {
-        this.client.setScreen(new TriggeredMessageBlockScreen(triggeredMessageBlock));
     }
 
     @Override

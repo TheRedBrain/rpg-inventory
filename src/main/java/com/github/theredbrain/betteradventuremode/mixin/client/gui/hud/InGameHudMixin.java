@@ -2,6 +2,7 @@ package com.github.theredbrain.betteradventuremode.mixin.client.gui.hud;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.BetterAdventureModeClient;
+import com.github.theredbrain.betteradventuremode.client.gui.hud.DuckInGameHudMixin;
 import com.github.theredbrain.betteradventuremode.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerInventoryMixin;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -15,9 +16,12 @@ import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.option.AttackIndicator;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.Text;
 import net.minecraft.util.Arm;
+import net.minecraft.util.Colors;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -25,10 +29,11 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Environment(EnvType.CLIENT)
 @Mixin(InGameHud.class)
-public abstract class InGameHudMixin {
+public abstract class InGameHudMixin implements DuckInGameHudMixin {
 
     @Shadow protected abstract PlayerEntity getCameraPlayer();
 
@@ -46,6 +51,10 @@ public abstract class InGameHudMixin {
     @Shadow @Final private static Identifier HOTBAR_ATTACK_INDICATOR_PROGRESS_TEXTURE;
 
     @Shadow public abstract TextRenderer getTextRenderer();
+
+    @Shadow protected abstract void drawTextBackground(DrawContext context, TextRenderer textRenderer, int yOffset, int width, int color);
+
+    @Shadow public abstract void setCanShowChatDisabledScreen(boolean canShowChatDisabledScreen);
 
     @Unique
     private static final Identifier BLEEDING_BUILD_UP_BAR_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("boss_bar/short_red_background");
@@ -87,6 +96,40 @@ public abstract class InGameHudMixin {
     private static final Identifier STAMINA_BAR_BACKGROUND_TEXTURE = new Identifier("boss_bar/green_background");
     @Unique
     private static final Identifier STAMINA_BAR_PROGRESS_TEXTURE = new Identifier("boss_bar/green_progress");
+    @Unique
+    @Nullable
+    private Text announcementMessage;
+    @Unique
+    private int announcementRemaining;
+    @Inject(method = "render", at = @At("TAIL"))
+    public void betteradventuremode$render(DrawContext context, float tickDelta, CallbackInfo ci) {
+
+        if (!this.client.options.hudHidden) {
+            if (this.announcementMessage != null && this.announcementRemaining > 0) {
+                TextRenderer textRenderer = this.getTextRenderer();
+                this.client.getProfiler().push("announcementMessage");
+                float h = (float)this.announcementRemaining - tickDelta;
+                int l = (int)(h * 255.0F / 20.0F);
+                if (l > 255) {
+                    l = 255;
+                }
+
+                if (l > 8) {
+                    context.getMatrices().push();
+                    context.getMatrices().translate((float)(this.scaledWidth / 2), (float)(this.client.getWindow().getY() + 68), 0.0F);
+                    int k = 16777215;
+
+                    int m = l << 24 & Colors.BLACK;
+                    int n = textRenderer.getWidth(this.announcementMessage);
+                    this.drawTextBackground(context, textRenderer, -4, n, 16777215 | m);
+                    context.drawTextWithShadow(textRenderer, this.announcementMessage, -n / 2, -4, k | m);
+                    context.getMatrices().pop();
+                }
+
+                this.client.getProfiler().pop();
+            }
+        }
+    }
 
     @Inject(method = "renderHotbar", at = @At("HEAD"), cancellable = true)
     private void betteradventuremode$renderHotbar(float tickDelta, DrawContext context, CallbackInfo ci) {
@@ -323,5 +366,24 @@ public abstract class InGameHudMixin {
             this.client.getProfiler().pop();
             ci.cancel();
         }
+    }
+
+    @Inject(method = "tick()V", at = @At("HEAD"))
+    private void betteradventuremode$tick(CallbackInfo ci) {
+        if (this.announcementRemaining > 0) {
+            --this.announcementRemaining;
+        }
+    }
+
+    @Override
+    public void betteradventuremode$setAnnouncementMessage(Text message) {
+        this.setCanShowChatDisabledScreen(false);
+        this.announcementMessage = message;
+        this.announcementRemaining = 60;
+    }
+
+    @Inject(method = "shouldShowChatDisabledScreen", at = @At("RETURN"), cancellable = true)
+    public void betteradventuremode$shouldShowChatDisabledScreen(CallbackInfoReturnable<Boolean> cir) {
+        cir.setReturnValue(cir.getReturnValue() && this.announcementRemaining > 0);
     }
 }

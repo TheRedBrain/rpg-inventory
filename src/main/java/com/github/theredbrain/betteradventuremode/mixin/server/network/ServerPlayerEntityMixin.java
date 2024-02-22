@@ -4,6 +4,7 @@ import com.github.theredbrain.betteradventuremode.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.betteradventuremode.network.event.PlayerDeathCallback;
+import com.github.theredbrain.betteradventuremode.network.packet.SendAnnouncementPacket;
 import com.github.theredbrain.betteradventuremode.registry.ServerPacketRegistry;
 import com.github.theredbrain.betteradventuremode.registry.GameRulesRegistry;
 import com.github.theredbrain.betteradventuremode.registry.StatusEffectsRegistry;
@@ -22,6 +23,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.network.ServerPlayerInteractionManager;
 import net.minecraft.server.world.ServerWorld;
@@ -214,6 +216,11 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Du
             }
 
         }
+    }
+
+    @Override
+    public void betteradventuremode$sendAnnouncement(Text announcement) {
+        ServerPlayNetworking.send((ServerPlayerEntity) (Object) this, new SendAnnouncementPacket(announcement));
     }
 
     @Override

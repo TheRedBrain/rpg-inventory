@@ -1,6 +1,5 @@
 package com.github.theredbrain.betteradventuremode.client.gui.screen.ingame;
 
-import com.github.theredbrain.betteradventuremode.block.entity.TeleporterBlockEntity;
 import com.github.theredbrain.betteradventuremode.util.ItemUtils;
 import com.github.theredbrain.betteradventuremode.block.entity.AreaBlockEntity;
 import com.github.theredbrain.betteradventuremode.network.packet.UpdateAreaBlockPacket;
@@ -40,7 +39,7 @@ public class AreaBlockScreen extends Screen {
     private static final Text HIDE_ICON_LABEL_TEXT = Text.translatable("gui.area_block.hide_icon_label");
     private static final Text SHOW_ICON_LABEL_TEXT = Text.translatable("gui.area_block.show_icon_label");
     private final AreaBlockEntity areaBlock;
-    private CyclingButtonWidget<Boolean> toggleTriggeredButton;
+    private CyclingButtonWidget<Boolean> toggleWasTriggeredButton;
     private CyclingButtonWidget<Boolean> toggleShowAreaButton;
     private TextFieldWidget areaDimensionsXField;
     private TextFieldWidget areaDimensionsYField;
@@ -58,11 +57,12 @@ public class AreaBlockScreen extends Screen {
     private boolean appliedStatusEffectAmbient;
     private boolean appliedStatusEffectShowParticles;
     private boolean appliedStatusEffectShowIcon;
-    private boolean triggered;
+    private boolean wasTriggered;
 
     public AreaBlockScreen(AreaBlockEntity areaBlock) {
         super(NarratorManager.EMPTY);
         this.areaBlock = areaBlock;
+        this.screenPage = ScreenPage.AREA;
     }
 
     private void done() {
@@ -76,7 +76,7 @@ public class AreaBlockScreen extends Screen {
         this.areaBlock.setAppliedStatusEffectAmbient(this.appliedStatusEffectAmbient);
         this.areaBlock.setAppliedStatusEffectShowParticles(this.appliedStatusEffectShowParticles);
         this.areaBlock.setAppliedStatusEffectShowIcon(this.appliedStatusEffectShowIcon);
-        this.areaBlock.setWasTriggered(this.triggered);
+        this.areaBlock.setWasTriggered(this.wasTriggered);
         this.close();
     }
 
@@ -117,9 +117,9 @@ public class AreaBlockScreen extends Screen {
         this.areaPositionOffsetZField.setText(Integer.toString(this.areaBlock.getAreaPositionOffset().getZ()));
         this.addSelectableChild(this.areaPositionOffsetZField);
 
-        this.triggered = this.areaBlock.getWasTriggered();
-        this.toggleTriggeredButton = this.addDrawableChild(CyclingButtonWidget.onOffBuilder(TRIGGERED_TRUE_LABEL_TEXT, TRIGGERED_FALSE_LABEL_TEXT).initially(this.triggered).omitKeyText().build(this.width / 2 - 154, 124, 150, 20, Text.empty(), (button, triggered) -> {
-            this.triggered = triggered;
+        this.wasTriggered = this.areaBlock.getWasTriggered();
+        this.toggleWasTriggeredButton = this.addDrawableChild(CyclingButtonWidget.onOffBuilder(TRIGGERED_TRUE_LABEL_TEXT, TRIGGERED_FALSE_LABEL_TEXT).initially(this.wasTriggered).omitKeyText().build(this.width / 2 - 154, 124, 150, 20, Text.empty(), (button, triggered) -> {
+            this.wasTriggered = triggered;
         }));
 
         this.showArea = this.areaBlock.showArea();
@@ -142,22 +142,23 @@ public class AreaBlockScreen extends Screen {
         }));
 
         this.appliedStatusEffectShowParticles = this.areaBlock.getAppliedStatusEffectShowParticles();
-        this.toggleAppliedStatusEffectShowParticlesButton = this.addDrawableChild(CyclingButtonWidget.onOffBuilder(HIDE_PARTICLES_LABEL_TEXT, SHOW_PARTICLES_LABEL_TEXT).initially(this.appliedStatusEffectShowParticles).omitKeyText().build(this.width / 2 - 154, 135, 150, 20, Text.empty(), (button, appliedStatusEffectShowParticles) -> {
+        this.toggleAppliedStatusEffectShowParticlesButton = this.addDrawableChild(CyclingButtonWidget.onOffBuilder(HIDE_PARTICLES_LABEL_TEXT, SHOW_PARTICLES_LABEL_TEXT).initially(this.appliedStatusEffectShowParticles).omitKeyText().build(this.width / 2 - 154, 124, 150, 20, Text.empty(), (button, appliedStatusEffectShowParticles) -> {
             this.appliedStatusEffectShowParticles = appliedStatusEffectShowParticles;
         }));
 
         this.appliedStatusEffectShowIcon = this.areaBlock.getAppliedStatusEffectShowIcon();
-        this.toggleAppliedStatusEffectShowIconButton = this.addDrawableChild(CyclingButtonWidget.onOffBuilder(HIDE_ICON_LABEL_TEXT, SHOW_ICON_LABEL_TEXT).initially(this.appliedStatusEffectShowIcon).omitKeyText().build(this.width / 2 + 4, 135, 150, 20, Text.empty(), (button, appliedStatusEffectShowIcon) -> {
+        this.toggleAppliedStatusEffectShowIconButton = this.addDrawableChild(CyclingButtonWidget.onOffBuilder(HIDE_ICON_LABEL_TEXT, SHOW_ICON_LABEL_TEXT).initially(this.appliedStatusEffectShowIcon).omitKeyText().build(this.width / 2 + 4, 124, 150, 20, Text.empty(), (button, appliedStatusEffectShowIcon) -> {
             this.appliedStatusEffectShowIcon = appliedStatusEffectShowIcon;
         }));
 
         this.addDrawableChild(ButtonWidget.builder(ScreenTexts.DONE, button -> this.done()).dimensions(this.width / 2 - 4 - 150, 207, 150, 20).build());
         this.addDrawableChild(ButtonWidget.builder(ScreenTexts.CANCEL, button -> this.cancel()).dimensions(this.width / 2 + 4, 207, 150, 20).build());
+        this.updateWidgets();
     }
 
     private void updateWidgets() {
 
-        this.toggleTriggeredButton.visible = false;
+        this.toggleWasTriggeredButton.visible = false;
         
         this.toggleShowAreaButton.visible = false;
         this.areaDimensionsXField.visible = false;
@@ -176,7 +177,7 @@ public class AreaBlockScreen extends Screen {
 
         if (this.screenPage == ScreenPage.AREA) {
 
-            this.toggleTriggeredButton.visible = true;
+            this.toggleWasTriggeredButton.visible = true;
 
             this.toggleShowAreaButton.visible = true;
             this.areaDimensionsXField.visible = true;
@@ -223,18 +224,18 @@ public class AreaBlockScreen extends Screen {
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
         if (this.screenPage == ScreenPage.AREA) {
-            context.drawTextWithShadow(this.textRenderer, AREA_DIMENSIONS_LABEL_TEXT, this.width / 2 - 153, 20, 0xA0A0A0);
+            context.drawTextWithShadow(this.textRenderer, AREA_DIMENSIONS_LABEL_TEXT, this.width / 2 - 153, 55, 0xA0A0A0);
             this.areaDimensionsXField.render(context, mouseX, mouseY, delta);
             this.areaDimensionsYField.render(context, mouseX, mouseY, delta);
             this.areaDimensionsZField.render(context, mouseX, mouseY, delta);
-            context.drawTextWithShadow(this.textRenderer, AREA_POSITION_OFFET_LABEL_TEXT, this.width / 2 - 153, 55, 0xA0A0A0);
+            context.drawTextWithShadow(this.textRenderer, AREA_POSITION_OFFET_LABEL_TEXT, this.width / 2 - 153, 90, 0xA0A0A0);
             this.areaPositionOffsetXField.render(context, mouseX, mouseY, delta);
             this.areaPositionOffsetYField.render(context, mouseX, mouseY, delta);
             this.areaPositionOffsetZField.render(context, mouseX, mouseY, delta);
         } else if (this.screenPage == ScreenPage.APPLIED_EFFECT) {
-            context.drawTextWithShadow(this.textRenderer, STATUS_EFFECT_IDENTIFIER_LABEL_TEXT, this.width / 2 - 153, 114, 0xA0A0A0);
+            context.drawTextWithShadow(this.textRenderer, STATUS_EFFECT_IDENTIFIER_LABEL_TEXT, this.width / 2 - 153, 55, 0xA0A0A0);
             this.appliedStatusEffectIdentifierField.render(context, mouseX, mouseY, delta);
-            context.drawTextWithShadow(this.textRenderer, STATUS_EFFECT_AMPLIFIER_LABEL_TEXT, this.width / 2 - 153, 149, 0xA0A0A0);
+            context.drawTextWithShadow(this.textRenderer, STATUS_EFFECT_AMPLIFIER_LABEL_TEXT, this.width / 2 - 153, 90, 0xA0A0A0);
             this.appliedStatusEffectAmplifierField.render(context, mouseX, mouseY, delta);
         }
     }
@@ -247,7 +248,7 @@ public class AreaBlockScreen extends Screen {
     private boolean updateStatusEffectApplierBlock() {
         ClientPlayNetworking.send(new UpdateAreaBlockPacket(
                 this.areaBlock.getPos(),
-                this.triggered,
+                this.wasTriggered,
                 this.showArea,
                 new Vec3i(
                         ItemUtils.parseInt(this.areaDimensionsXField.getText()),
@@ -270,7 +271,9 @@ public class AreaBlockScreen extends Screen {
 
     public static enum ScreenPage implements StringIdentifiable {
         AREA("area"),
-        APPLIED_EFFECT("applied_effect");
+        APPLIED_EFFECT("applied_effect"),
+        TRIGGER_SETTINGS("trigger_settings"),
+        MESSAGES("messages");
 
         private final String name;
 

@@ -5,6 +5,7 @@ import com.github.theredbrain.betteradventuremode.block.entity.*;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 
 public interface DuckPlayerEntityMixin {
@@ -23,6 +24,8 @@ public interface DuckPlayerEntityMixin {
     SimpleInventory betteradventuremode$getStashInventory();
     void betteradventuremode$setStashInventory(SimpleInventory stashInventory);
 
+    void betteradventuremode$sendAnnouncement(Text announcement);
+
     void betteradventuremode$openHousingScreen();
     void betteradventuremode$openJigsawPlacerBlockScreen(JigsawPlacerBlockEntity jigsawPlacerBlock);
     void betteradventuremode$openRedstoneTriggerBlockScreen(RedstoneTriggerBlockEntity redstoneTriggerBlock);
@@ -31,7 +34,6 @@ public interface DuckPlayerEntityMixin {
     void betteradventuremode$openResetTriggerBlockScreen(ResetTriggerBlockEntity resetTriggerBlock);
     void betteradventuremode$openDelayTriggerBlockScreen(DelayTriggerBlockEntity delayTriggerBlock);
     void betteradventuremode$openUseRelayBlockScreen(UseRelayBlockEntity useRelayBlock);
-    void betteradventuremode$openTriggeredMessageBlockScreen(TriggeredMessageBlockEntity triggeredMessageBlock);
     void betteradventuremode$openTriggeredSpawnerBlockScreen(TriggeredSpawnerBlockEntity triggeredSpawnerBlock);
     void betteradventuremode$openMimicBlockScreen(MimicBlockEntity mimicBlock);
     void betteradventuremode$openLocationControlBlockScreen(LocationControlBlockEntity locationControlBlock);
