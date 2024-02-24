@@ -36,6 +36,10 @@ public class ServerConfig implements ConfigData {
     public boolean shouldJigSawGenerationBeDeterministic = false;
     @Comment("Set to 'true' for the vanilla behaviour")
     public boolean shouldJigSawStructuresBeRandomlyRotated = false;
+    @Comment("Additional debug log is shown in the console.")
+    public boolean show_debug_log = true;
+    @Comment("Additional debug messages are send in game.")
+    public boolean show_debug_messages = true;
     public ServerConfig() {
 
     }

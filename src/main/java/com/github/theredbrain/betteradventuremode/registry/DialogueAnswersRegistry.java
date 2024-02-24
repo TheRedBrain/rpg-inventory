@@ -69,7 +69,7 @@ public class DialogueAnswersRegistry {
         PacketByteBuf buffer = PacketByteBufs.create();
         var gson = new Gson();
         var json = gson.toJson(registeredDialogueAnswers);
-        if (BetterAdventureModeClient.clientConfig.show_debug_log) {
+        if (BetterAdventureMode.serverConfig.show_debug_log) {
             BetterAdventureMode.LOGGER.info("Dialogue Answers registry loaded: " + json);
         }
 
@@ -84,7 +84,7 @@ public class DialogueAnswersRegistry {
             buffer.writeString(chunk);
         }
 
-        if (BetterAdventureModeClient.clientConfig.show_debug_log) {
+        if (BetterAdventureMode.serverConfig.show_debug_log) {
             BetterAdventureMode.LOGGER.info("Encoded Dialogue Answers registry size (with package overhead): " + buffer.readableBytes()
                     + " bytes (in " + chunks.size() + " string chunks with the size of " + chunkSize + ")");
         }
@@ -97,7 +97,7 @@ public class DialogueAnswersRegistry {
         for (int i = 0; i < chunkCount; ++i) {
             json = json.concat(buffer.readString());
         }
-        if (BetterAdventureModeClient.clientConfig.show_debug_log) {
+        if (BetterAdventureMode.serverConfig.show_debug_log) {
             BetterAdventureMode.LOGGER.info("Decoded Dialogue Answers registry in " + chunkCount + " string chunks");
             BetterAdventureMode.LOGGER.info("Dialogue Answers registry received: " + json);
         }

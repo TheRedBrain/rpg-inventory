@@ -1,20 +1,18 @@
 package com.github.theredbrain.betteradventuremode.network.packet;
 
-import com.github.theredbrain.betteradventuremode.BetterAdventureModeClient;
+import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.data.Location;
+import com.github.theredbrain.betteradventuremode.registry.StatusEffectsRegistry;
 import com.github.theredbrain.betteradventuremode.util.ItemUtils;
 import com.github.theredbrain.betteradventuremode.block.entity.EntranceDelegationBlockEntity;
 import com.github.theredbrain.betteradventuremode.block.entity.LocationControlBlockEntity;
 import com.github.theredbrain.betteradventuremode.block.entity.TeleporterBlockEntity;
 import com.github.theredbrain.betteradventuremode.registry.ComponentsRegistry;
 import com.github.theredbrain.betteradventuremode.registry.LocationsRegistry;
-import com.github.theredbrain.betteradventuremode.util.UUIDUtilities;
 import com.github.theredbrain.betteradventuremode.world.DimensionsManager;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.RegistryKey;
@@ -29,10 +27,6 @@ import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.MutablePair;
-
-import java.util.UUID;
-
-import static net.fabricmc.fabric.impl.networking.client.ClientNetworkingImpl.createC2SPacket;
 
 public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetworking.PlayPacketHandler<TeleportFromTeleporterBlockPacket> {
     @Override
@@ -129,7 +123,6 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
 //                    BetterAdventureMode.info("targetWorld != null && location != null");
 
                     BlockPos blockPos = location.controlBlockPos();
-
                     BlockEntity blockEntity = targetWorld.getBlockEntity(blockPos);
 
                     if (!(blockEntity instanceof LocationControlBlockEntity)) {
@@ -225,29 +218,37 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
 
             serverPlayerEntity.fallDistance = 0;
             serverPlayerEntity.teleport(targetWorld, (targetPos.getX() + 0.5), (targetPos.getY() + 0.01), (targetPos.getZ() + 0.5), (float) targetYaw, (float) targetPitch);
-            if (BetterAdventureModeClient.clientConfig.show_debug_messages) {
+            if (BetterAdventureMode.serverConfig.show_debug_messages) {
                 serverPlayerEntity.sendMessage(Text.of("Teleport to world: " + targetWorld.getRegistryKey().getValue() + " at position: " + (targetPos.getX() + 0.5) + ", " + (targetPos.getY() + 0.01) + ", " + (targetPos.getZ() + 0.5) + ", with yaw: " + targetYaw + " and pitch: " + targetPitch));
                 if (targetWorld != server.getOverworld()) {
                     serverPlayerEntity.sendMessage(Text.of("World owned by: " + targetDimensionOwnerName));
                 }
             }
-            ClientPlayNetworking.send(new SuccessfulTeleportPacket());
+            ServerPlayNetworking.send(serverPlayerEntity, new SuccessfulTeleportPacket());
+            serverPlayerEntity.removeStatusEffect(StatusEffectsRegistry.PORTAL_RESISTANCE_EFFECT);
 
             if (teleportTeam) {
                 Team team = serverPlayerEntity.getScoreboardTeam();
                 if (team != null) {
                     for (String playerString : team.getPlayerList()) {
-                        if (UUIDUtilities.isStringValidUUID(playerString)) {
-                            Entity entity = serverWorld.getEntity(UUID.fromString(playerString));
-                            if (entity instanceof ServerPlayerEntity teamServerPlayerEntity) {
-                                ServerPlayNetworking.send(teamServerPlayerEntity, new TeleportToTeamPacket(targetWorld.getRegistryKey().getValue(), targetPos, targetYaw, targetPitch));
+                        ServerPlayerEntity teamServerPlayerEntity = server.getPlayerManager().getPlayer(playerString);
+                        if (teamServerPlayerEntity != null && teamServerPlayerEntity != serverPlayerEntity) {
+                            teamServerPlayerEntity.fallDistance = 0;
+                            teamServerPlayerEntity.teleport(targetWorld, (targetPos.getX() + 0.5), (targetPos.getY() + 0.01), (targetPos.getZ() + 0.5), (float) targetYaw, (float) targetPitch);
+                            if (BetterAdventureMode.serverConfig.show_debug_messages) {
+                                teamServerPlayerEntity.sendMessage(Text.of("Teleport to world: " + targetWorld.getRegistryKey().getValue() + " at position: " + (targetPos.getX() + 0.5) + ", " + (targetPos.getY() + 0.01) + ", " + (targetPos.getZ() + 0.5) + ", with yaw: " + targetYaw + " and pitch: " + targetPitch));
+                                if (targetWorld != server.getOverworld()) {
+                                    teamServerPlayerEntity.sendMessage(Text.of("World owned by: " + targetDimensionOwnerName));
+                                }
                             }
+                            ServerPlayNetworking.send(teamServerPlayerEntity, new SuccessfulTeleportPacket());
+                            teamServerPlayerEntity.removeStatusEffect(StatusEffectsRegistry.PORTAL_RESISTANCE_EFFECT);
                         }
                     }
                 }
             }
         } else {
-            if (BetterAdventureModeClient.clientConfig.show_debug_messages) {
+            if (BetterAdventureMode.serverConfig.show_debug_log) {
                 serverPlayerEntity.sendMessage(Text.of("Teleport failed"));
                 if (targetWorld == null) {
                     serverPlayerEntity.sendMessage(Text.of("targetWorld == null"));

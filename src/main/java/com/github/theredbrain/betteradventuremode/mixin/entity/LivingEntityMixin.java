@@ -607,7 +607,7 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
 
         float vanilla_amount = 0;
         if (source.isIn(Tags.IS_VANILLA)) {
-            if (BetterAdventureModeClient.clientConfig.show_debug_log) {
+            if (BetterAdventureMode.serverConfig.show_debug_log) {
                 BetterAdventureMode.info("This vanilla damage type was used: " + source.getType().toString());
             }
             vanilla_amount = amount;

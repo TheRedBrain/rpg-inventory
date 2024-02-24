@@ -70,7 +70,7 @@ public class LocationsRegistry {
         PacketByteBuf buffer = PacketByteBufs.create();
         var gson = new Gson();
         var json = gson.toJson(registeredLocations);
-        if (BetterAdventureModeClient.clientConfig.show_debug_log) {
+        if (BetterAdventureMode.serverConfig.show_debug_log) {
             BetterAdventureMode.LOGGER.info("Locations registry loaded: " + json);
         }
 
@@ -85,7 +85,7 @@ public class LocationsRegistry {
             buffer.writeString(chunk);
         }
 
-        if (BetterAdventureModeClient.clientConfig.show_debug_log) {
+        if (BetterAdventureMode.serverConfig.show_debug_log) {
             BetterAdventureMode.LOGGER.info("Encoded Locations registry size (with package overhead): " + buffer.readableBytes()
                     + " bytes (in " + chunks.size() + " string chunks with the size of " + chunkSize + ")");
         }
@@ -98,7 +98,7 @@ public class LocationsRegistry {
         for (int i = 0; i < chunkCount; ++i) {
             json = json.concat(buffer.readString());
         }
-        if (BetterAdventureModeClient.clientConfig.show_debug_log) {
+        if (BetterAdventureMode.serverConfig.show_debug_log) {
             BetterAdventureMode.info("Decoded Locations registry in " + chunkCount + " string chunks");
             BetterAdventureMode.info("Locations registry received: " + json);
         }

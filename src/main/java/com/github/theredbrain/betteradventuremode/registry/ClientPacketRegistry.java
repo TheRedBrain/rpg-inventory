@@ -2,10 +2,7 @@ package com.github.theredbrain.betteradventuremode.registry;
 
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerInventoryMixin;
 //import net.bettercombat.api.MinecraftClient_BetterCombat;
-import com.github.theredbrain.betteradventuremode.network.packet.OpenDialogueScreenPacket;
-import com.github.theredbrain.betteradventuremode.network.packet.OpenDialogueScreenPacketReceiver;
-import com.github.theredbrain.betteradventuremode.network.packet.SendAnnouncementPacket;
-import com.github.theredbrain.betteradventuremode.network.packet.SendAnnouncementPacketReceiver;
+import com.github.theredbrain.betteradventuremode.network.packet.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -19,6 +16,8 @@ public class ClientPacketRegistry {
         ClientPlayNetworking.registerGlobalReceiver(OpenDialogueScreenPacket.TYPE, new OpenDialogueScreenPacketReceiver());
 
         ClientPlayNetworking.registerGlobalReceiver(SendAnnouncementPacket.TYPE, new SendAnnouncementPacketReceiver());
+
+        ClientPlayNetworking.registerGlobalReceiver(SuccessfulTeleportPacket.TYPE, new SuccessfulTeleportPacketReceiver());
 
         ClientPlayNetworking.registerGlobalReceiver(ServerPacketRegistry.SWAPPED_HAND_ITEMS_PACKET, (client, handler, buffer, responseSender) -> { // TODO convert to packet
             int entityId = buffer.readInt();

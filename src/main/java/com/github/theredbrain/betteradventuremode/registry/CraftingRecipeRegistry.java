@@ -78,7 +78,7 @@ public class CraftingRecipeRegistry {
         PacketByteBuf buffer = PacketByteBufs.create();
         var gson = new Gson();
         var json = gson.toJson(registeredCraftingRecipes);
-        if (BetterAdventureModeClient.clientConfig.show_debug_log) {
+        if (BetterAdventureMode.serverConfig.show_debug_log) {
             BetterAdventureMode.LOGGER.info("Crafting Recipes registry loaded: " + json);
         }
 
@@ -93,7 +93,7 @@ public class CraftingRecipeRegistry {
             buffer.writeString(chunk);
         }
 
-        if (BetterAdventureModeClient.clientConfig.show_debug_log) {
+        if (BetterAdventureMode.serverConfig.show_debug_log) {
             BetterAdventureMode.LOGGER.info("Encoded Crafting Recipes registry size (with package overhead): " + buffer.readableBytes()
                     + " bytes (in " + chunks.size() + " string chunks with the size of " + chunkSize + ")");
         }
@@ -106,7 +106,7 @@ public class CraftingRecipeRegistry {
         for (int i = 0; i < chunkCount; ++i) {
             json = json.concat(buffer.readString());
         }
-        if (BetterAdventureModeClient.clientConfig.show_debug_log) {
+        if (BetterAdventureMode.serverConfig.show_debug_log) {
             BetterAdventureMode.info("Decoded Crafting Recipes registry in " + chunkCount + " string chunks");
             BetterAdventureMode.info("Crafting Recipes registry received: " + json);
         }

@@ -238,12 +238,12 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 
                         } else if (order == 23) {
                             // these include empty hand slots which are necessary but should not be interacted with by the player
-                            if (!Objects.equals(group.getName(), "empty_main_hand") && !Objects.equals(group.getName(), "empty_off_hand") && BetterAdventureModeClient.clientConfig.show_debug_log) {
+                            if (!Objects.equals(group.getName(), "empty_main_hand") && !Objects.equals(group.getName(), "empty_off_hand") && BetterAdventureMode.serverConfig.show_debug_log) {
                                 BetterAdventureMode.warn("Trinket Slots with order == 23 can not be interacted with by the player. This applies to group " + group.getName());
                             }
                             continue;
                         } else {
-                            if (BetterAdventureModeClient.clientConfig.show_debug_log) {
+                            if (BetterAdventureMode.serverConfig.show_debug_log) {
                                 BetterAdventureMode.warn("Trinket slot groups with order <= 0 or order > 23 are ignored. This applies to group " + group.getName());
                             }
                             continue;
@@ -252,7 +252,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
                         groupNums.put(group, groupNum);
                         groupNum++;
 
-                        if (presentGroups.getOrDefault(order, false) && BetterAdventureModeClient.clientConfig.show_debug_log) {
+                        if (presentGroups.getOrDefault(order, false) && BetterAdventureMode.serverConfig.show_debug_log) {
                             BetterAdventureMode.warn("Multiple slot groups with order " + order + " are defined. This may lead to unexpected behaviour. This applies to group " + group.getName());
                         } else {
                             presentGroups.put(order, true);
@@ -314,7 +314,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
                         if (stacks.size() == 0) {
                             continue;
                         }
-                        if (stacks.size() > 1 && BetterAdventureModeClient.clientConfig.show_debug_log) {
+                        if (stacks.size() > 1 && BetterAdventureMode.serverConfig.show_debug_log) {
                             BetterAdventureMode.warn("Multiple slots are defined for slot group " + slot.getKey() + ". This may lead to unexpected behaviour");
                         }
                         int x = groupPos.get(group).x();

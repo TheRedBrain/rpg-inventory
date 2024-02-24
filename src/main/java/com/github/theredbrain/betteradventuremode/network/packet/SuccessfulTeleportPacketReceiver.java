@@ -1,15 +1,12 @@
 package com.github.theredbrain.betteradventuremode.network.packet;
 
-import com.github.theredbrain.betteradventuremode.registry.StatusEffectsRegistry;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.client.network.ClientPlayerEntity;
 
-public class SuccessfulTeleportPacketReceiver implements ServerPlayNetworking.PlayPacketHandler<SuccessfulTeleportPacket> {
+public class SuccessfulTeleportPacketReceiver implements ClientPlayNetworking.PlayPacketHandler<SuccessfulTeleportPacket> {
     @Override
-    public void receive(SuccessfulTeleportPacket packet, ServerPlayerEntity player, PacketSender responseSender) {
-
-        player.removeStatusEffect(StatusEffectsRegistry.PORTAL_RESISTANCE_EFFECT);
+    public void receive(SuccessfulTeleportPacket packet, ClientPlayerEntity player, PacketSender responseSender) {
         player.closeHandledScreen();
     }
 }
