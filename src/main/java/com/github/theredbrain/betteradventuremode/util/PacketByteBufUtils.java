@@ -88,6 +88,23 @@ public class PacketByteBufUtils {
         }
     }
 
+    public static class MutablePairBlockPosBooleanReader implements PacketByteBuf.PacketReader<MutablePair<BlockPos, Boolean>> {
+        @Override
+        public MutablePair<BlockPos, Boolean> apply(PacketByteBuf packetByteBuf) {
+            return new MutablePair<>(new BlockPos(packetByteBuf.readInt(), packetByteBuf.readInt(), packetByteBuf.readInt()), packetByteBuf.readBoolean());
+        }
+    }
+
+    public static class MutablePairBlockPosBooleanWriter implements PacketByteBuf.PacketWriter<MutablePair<BlockPos, Boolean>> {
+        @Override
+        public void accept(PacketByteBuf packetByteBuf, MutablePair<BlockPos, Boolean> pairBlockPosBoolean) {
+            packetByteBuf.writeInt(pairBlockPosBoolean.getLeft().getX());
+            packetByteBuf.writeInt(pairBlockPosBoolean.getLeft().getY());
+            packetByteBuf.writeInt(pairBlockPosBoolean.getLeft().getZ());
+            packetByteBuf.writeBoolean(pairBlockPosBoolean.getRight());
+        }
+    }
+
     public static class MutablePairIntegerBlockPosReader implements PacketByteBuf.PacketReader<MutablePair<Integer, BlockPos>> {
         @Override
         public MutablePair<Integer, BlockPos> apply(PacketByteBuf packetByteBuf) {
