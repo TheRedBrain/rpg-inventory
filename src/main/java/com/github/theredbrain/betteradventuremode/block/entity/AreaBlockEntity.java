@@ -1,5 +1,6 @@
 package com.github.theredbrain.betteradventuremode.block.entity;
 
+import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.util.BlockRotationUtils;
 import com.github.theredbrain.betteradventuremode.block.Resetable;
 import com.github.theredbrain.betteradventuremode.block.RotatedBlockWithEntity;
@@ -12,14 +13,12 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
-import net.minecraft.util.BlockMirror;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.*;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.MutablePair;
@@ -51,8 +50,10 @@ public class AreaBlockEntity extends RotatedBlockEntity implements Triggerable, 
     private String leaveMessage = "";
     private String triggeredMessage = "";
 
-    private ArrayList<PlayerEntity> playerList = new ArrayList<>();
+    private ArrayList<UUID> playerList = new ArrayList<>();
+    private ArrayList<UUID> playerList2 = new ArrayList<>();
     private HashMap<UUID, Integer> playerMap = new HashMap<>();
+    private int maxTimer = 1;
 
     public AreaBlockEntity(BlockPos pos, BlockState state) {
         super(EntityRegistry.AREA_BLOCK_ENTITY, pos, state);
@@ -61,7 +62,11 @@ public class AreaBlockEntity extends RotatedBlockEntity implements Triggerable, 
     @Override
     protected void writeNbt(NbtCompound nbt) {
 
-        nbt.putBoolean("showArea", this.showArea);
+        if (this.showArea) {
+            nbt.putBoolean("showArea", true);
+        } else {
+            nbt.remove("showArea");
+        }
 
         if (this.area != null) {
             nbt.putDouble("areaMinX", this.area.minX);
@@ -70,53 +75,182 @@ public class AreaBlockEntity extends RotatedBlockEntity implements Triggerable, 
             nbt.putDouble("areaMaxY", this.area.maxY);
             nbt.putDouble("areaMinZ", this.area.minZ);
             nbt.putDouble("areaMaxZ", this.area.maxZ);
+        } else {
+            nbt.remove("areaMinX");
+            nbt.remove("areaMaxX");
+            nbt.remove("areaMinY");
+            nbt.remove("areaMaxY");
+            nbt.remove("areaMinZ");
+            nbt.remove("areaMaxZ");
         }
 
-        nbt.putInt("areaDimensionsX", this.areaDimensions.getX());
-        nbt.putInt("areaDimensionsY", this.areaDimensions.getY());
-        nbt.putInt("areaDimensionsZ", this.areaDimensions.getZ());
+        if (this.areaDimensions.getX() != 0) {
+            nbt.putInt("areaDimensionsX", this.areaDimensions.getX());
+        } else {
+            nbt.remove("areaDimensionsX");
+        }
 
-        nbt.putInt("areaPositionOffsetX", this.areaPositionOffset.getX());
-        nbt.putInt("areaPositionOffsetY", this.areaPositionOffset.getY());
-        nbt.putInt("areaPositionOffsetZ", this.areaPositionOffset.getZ());
+        if (this.areaDimensions.getY() != 0) {
+            nbt.putInt("areaDimensionsY", this.areaDimensions.getY());
+        } else {
+            nbt.remove("areaDimensionsY");
+        }
 
+        if (this.areaDimensions.getZ() != 0) {
+            nbt.putInt("areaDimensionsZ", this.areaDimensions.getZ());
+        } else {
+            nbt.remove("areaDimensionsZ");
+        }
 
-        nbt.putString("appliedStatusEffectIdentifier", this.appliedStatusEffectIdentifier);
+        if (this.areaPositionOffset.getX() != 0) {
+            nbt.putInt("areaPositionOffsetX", this.areaPositionOffset.getX());
+        } else {
+            nbt.remove("areaPositionOffsetX");
+        }
 
-        nbt.putInt("appliedStatusEffectAmplifier", this.appliedStatusEffectAmplifier);
+        if (this.areaPositionOffset.getY() != 0) {
+            nbt.putInt("areaPositionOffsetY", this.areaPositionOffset.getY());
+        } else {
+            nbt.remove("areaPositionOffsetY");
+        }
 
-        nbt.putBoolean("appliedStatusEffectAmbient", this.appliedStatusEffectAmbient);
-
-        nbt.putBoolean("appliedStatusEffectShowParticles", this.appliedStatusEffectShowParticles);
-
-        nbt.putBoolean("appliedStatusEffectShowIcon", this.appliedStatusEffectShowIcon);
-
-
-        nbt.putBoolean("hasTriggered", this.hasTriggered);
-
-        nbt.putBoolean("wasTriggered", this.wasTriggered);
-
-        nbt.putString("triggerMode", this.triggerMode.asString());
-
-        nbt.putString("triggeredMode", this.triggeredMode.asString());
-
-        nbt.putInt("triggeredBlockPositionOffsetX", this.triggeredBlock.getLeft().getX());
-        nbt.putInt("triggeredBlockPositionOffsetY", this.triggeredBlock.getLeft().getY());
-        nbt.putInt("triggeredBlockPositionOffsetZ", this.triggeredBlock.getLeft().getZ());
-        nbt.putBoolean("triggeredBlockResets", this.triggeredBlock.getRight());
-
-
-        nbt.putString("messageMode", this.messageMode.asString());
-
-        nbt.putString("joinMessage", this.joinMessage);
-
-        nbt.putString("leaveMessage", this.leaveMessage);
-
-        nbt.putString("triggeredMessage", this.triggeredMessage);
+        if (this.areaPositionOffset.getZ() != 0) {
+            nbt.putInt("areaPositionOffsetZ", this.areaPositionOffset.getZ());
+        } else {
+            nbt.remove("areaPositionOffsetZ");
+        }
 
 
-        int playerListSize = this.playerList.size();
+        if (!this.appliedStatusEffectIdentifier.equals("")) {
+            nbt.putString("appliedStatusEffectIdentifier", this.appliedStatusEffectIdentifier);
+        } else {
+            nbt.remove("appliedStatusEffectIdentifier");
+        }
+
+        if (this.appliedStatusEffectAmplifier != 0) {
+            nbt.putInt("appliedStatusEffectAmplifier", this.appliedStatusEffectAmplifier);
+        } else {
+            nbt.remove("appliedStatusEffectAmplifier");
+        }
+
+        if (this.appliedStatusEffectAmbient) {
+            nbt.putBoolean("appliedStatusEffectAmbient", true);
+        } else {
+            nbt.remove("appliedStatusEffectAmbient");
+        }
+
+        if (this.appliedStatusEffectShowParticles) {
+            nbt.putBoolean("appliedStatusEffectShowParticles", true);
+        } else {
+            nbt.remove("appliedStatusEffectShowParticles");
+        }
+
+        if (this.appliedStatusEffectShowIcon) {
+            nbt.putBoolean("appliedStatusEffectShowIcon", true);
+        } else {
+            nbt.remove("appliedStatusEffectShowIcon");
+        }
+
+
+        if (this.messageMode != MessageMode.OVERLAY) {
+            nbt.putString("messageMode", this.messageMode.asString());
+        } else {
+            nbt.remove("messageMode");
+        }
+
+        if (!this.joinMessage.equals("")) {
+            nbt.putString("joinMessage", this.joinMessage);
+        } else {
+            nbt.remove("joinMessage");
+        }
+
+        if (!this.leaveMessage.equals("")) {
+            nbt.putString("leaveMessage", this.leaveMessage);
+        } else {
+            nbt.remove("leaveMessage");
+        }
+
+        if (!this.triggeredMessage.equals("")) {
+            nbt.putString("triggeredMessage", this.triggeredMessage);
+        } else {
+            nbt.remove("triggeredMessage");
+        }
+
+
+        if (this.hasTriggered) {
+            nbt.putBoolean("hasTriggered", true);
+        } else {
+            nbt.remove("hasTriggered");
+        }
+
+        if (this.wasTriggered) {
+            nbt.putBoolean("wasTriggered", true);
+        } else {
+            nbt.remove("wasTriggered");
+        }
+
+        if (this.triggerMode != TriggerMode.ALWAYS) {
+            nbt.putString("triggerMode", this.triggerMode.asString());
+        } else {
+            nbt.remove("triggerMode");
+        }
+
+        if (this.triggeredMode != TriggeredMode.ONCE) {
+            nbt.putString("triggeredMode", this.triggeredMode.asString());
+        } else {
+            nbt.remove("triggeredMode");
+        }
+
+        if (this.maxTimer > 1) {
+            nbt.putInt("maxTimer", this.maxTimer);
+        } else {
+            nbt.remove("maxTimer");
+        }
+
+        if (this.triggeredBlock.getLeft().getX() != 0) {
+            nbt.putInt("triggeredBlockPositionOffsetX", this.triggeredBlock.getLeft().getX());
+        } else {
+            nbt.remove("triggeredBlockPositionOffsetX");
+        }
+
+        if (this.triggeredBlock.getLeft().getX() != 0) {
+            nbt.putInt("triggeredBlockPositionOffsetY", this.triggeredBlock.getLeft().getX());
+        } else {
+            nbt.remove("triggeredBlockPositionOffsetY");
+        }
+
+        if (this.triggeredBlock.getLeft().getX() != 0) {
+            nbt.putInt("triggeredBlockPositionOffsetZ", this.triggeredBlock.getLeft().getX());
+        } else {
+            nbt.remove("triggeredBlockPositionOffsetZ");
+        }
+
+        if (this.triggeredBlock.getRight()) {
+            nbt.putBoolean("triggeredBlockResets", true);
+        } else {
+            nbt.remove("triggeredBlockResets");
+        }
+
+        int playerListSize = playerList.size();
         nbt.putInt("playerListSize", playerListSize);
+        for (int i = 0; i<playerListSize; i++) {
+            nbt.putUuid("playerListEntry_" + i, this.playerList.get(i));
+        }
+
+        int playerList2Size = playerList2.size();
+        nbt.putInt("playerList2Size", playerList2Size);
+        for (int i = 0; i<playerList2Size; i++) {
+            nbt.putUuid("playerList2Entry_" + i, this.playerList2.get(i));
+        }
+
+        List<UUID> keyList = this.playerMap.keySet().stream().toList();
+        int playerMapSize = this.playerMap.keySet().size();
+        nbt.putInt("playerMapSize", playerMapSize);
+        for (int i = 0; i < playerMapSize; i++) {
+            UUID key = keyList.get(i);
+            nbt.putUuid("key_" + i, key);
+            nbt.putInt("timer_" + i, this.playerMap.get(key));
+        }
 
         super.writeNbt(nbt);
 
@@ -154,6 +288,15 @@ public class AreaBlockEntity extends RotatedBlockEntity implements Triggerable, 
         this.appliedStatusEffectShowIcon = nbt.getBoolean("appliedStatusEffectShowIcon");
 
 
+        this.messageMode = MessageMode.byName(nbt.getString("messageMode")).orElse(MessageMode.OVERLAY);
+
+        this.joinMessage = nbt.getString("joinMessage");
+
+        this.leaveMessage = nbt.getString("leaveMessage");
+
+        this.triggeredMessage = nbt.getString("triggeredMessage");
+
+
         this.hasTriggered = nbt.getBoolean("hasTriggered");
 
         this.wasTriggered = nbt.getBoolean("wasTriggered");
@@ -162,19 +305,34 @@ public class AreaBlockEntity extends RotatedBlockEntity implements Triggerable, 
 
         this.triggeredMode = TriggeredMode.byName(nbt.getString("triggeredMode")).orElse(TriggeredMode.ONCE);
 
+        if (nbt.contains("maxTimer", NbtElement.INT_TYPE)) {
+            this.maxTimer = nbt.getInt("maxTimer");
+        } else {
+            this.maxTimer = 1;
+        }
+
         int x = MathHelper.clamp(nbt.getInt("triggeredBlockPositionOffsetX"), -48, 48);
         int y = MathHelper.clamp(nbt.getInt("triggeredBlockPositionOffsetY"), -48, 48);
         int z = MathHelper.clamp(nbt.getInt("triggeredBlockPositionOffsetZ"), -48, 48);
         this.triggeredBlock = new MutablePair<>(new BlockPos(x, y, z), nbt.getBoolean("triggeredBlockResets"));
 
+        int playerListSize = nbt.getInt("playerListSize");
+        for (i = 0; i<playerListSize; i++) {
+            this.playerList.add(nbt.getUuid("playerListSize" + i));
+        }
 
-        this.messageMode = MessageMode.byName(nbt.getString("messageMode")).orElse(MessageMode.OVERLAY);
+        int playerList2Size = nbt.getInt("playerList2Size");
+        for (i = 0; i<playerList2Size; i++) {
+            this.playerList2.add(nbt.getUuid("playerList2Size" + i));
+        }
 
-        this.joinMessage = nbt.getString("joinMessage");
-
-        this.leaveMessage = nbt.getString("leaveMessage");
-
-        this.triggeredMessage = nbt.getString("triggeredMessage");
+        int playerMapSize = nbt.getInt("playerMapSize");
+        this.playerMap = new HashMap<>();
+        for (i = 0; i < playerMapSize; i++) {
+            UUID key = nbt.getUuid("key_" + i);
+            int timer = nbt.getInt("timer_" + i);
+            this.playerMap.put(key, timer);
+        }
 
         super.readNbt(nbt);
     }
@@ -199,7 +357,7 @@ public class AreaBlockEntity extends RotatedBlockEntity implements Triggerable, 
     }
 
     public static void tick(World world, BlockPos pos, BlockState state, AreaBlockEntity areaBlockEntity) {
-        if (!world.isClient && world.getTime() % 80L == 0L && areaBlockEntity.wasTriggered) {
+        if (!world.isClient && world.getTime() % 20L == 0L && areaBlockEntity.wasTriggered) {
             if (areaBlockEntity.calculateAreaBox || areaBlockEntity.area == null) {
                 BlockPos areaPositionOffset = areaBlockEntity.areaPositionOffset;
                 Vec3i areaDimensions = areaBlockEntity.areaDimensions;
@@ -214,17 +372,80 @@ public class AreaBlockEntity extends RotatedBlockEntity implements Triggerable, 
             StatusEffect statusEffect = Registries.STATUS_EFFECT.get(Identifier.tryParse(areaBlockEntity.appliedStatusEffectIdentifier));
 
             List<PlayerEntity> newPlayerList = world.getNonSpectatingEntities(PlayerEntity.class, areaBlockEntity.area);
-            List<PlayerEntity> tempList = new ArrayList<>();
+            List<UUID> newPLayerUuidList = new ArrayList<>();
+            for (PlayerEntity player : newPlayerList) {
+                newPLayerUuidList.add(player.getUuid());
+            }
+            ArrayList<UUID> tempList = new ArrayList<>();
 
-            Iterator<PlayerEntity> playerListIterator = areaBlockEntity.playerList.iterator();
-            Iterator<PlayerEntity> newPlayerListIterator = newPlayerList.iterator();
+            Iterator<UUID> playerListIterator = areaBlockEntity.playerList.iterator();
             PlayerEntity playerEntity;
+            UUID uuid;
+
+            // old list
             while (playerListIterator.hasNext()) {
-                playerEntity = (PlayerEntity) playerListIterator.next();
-                if (newPlayerList.contains(playerEntity)) {
-                    tempList.add(playerEntity);
-                    newPlayerList.remove(playerEntity);
-                    if (statusEffect != null && areaBlockEntity.wasTriggered) {
+                uuid = playerListIterator.next();
+                playerEntity = world.getPlayerByUuid(uuid);
+
+                if (playerEntity != null) {
+                    if (newPLayerUuidList.contains(uuid)) {
+                        tempList.add(uuid);
+                        newPLayerUuidList.remove(uuid);
+                        if (statusEffect != null && areaBlockEntity.wasTriggered) {
+                            playerEntity.addStatusEffect(
+                                    new StatusEffectInstance(
+                                            statusEffect,
+                                            100,
+                                            areaBlockEntity.appliedStatusEffectAmplifier,
+                                            areaBlockEntity.appliedStatusEffectAmbient,
+                                            areaBlockEntity.appliedStatusEffectShowParticles,
+                                            areaBlockEntity.appliedStatusEffectShowIcon
+                                    )
+                            );
+                        }
+                    } else {
+                        if (areaBlockEntity.triggerMode == TriggerMode.ALWAYS) {
+                            areaBlockEntity.playerList2.clear();
+                        }
+                        if (!areaBlockEntity.playerList2.contains(uuid)) {
+                            if (!areaBlockEntity.leaveMessage.equals("")) {
+                                if (areaBlockEntity.messageMode == MessageMode.ANNOUNCEMENT) {
+                                    ((DuckPlayerEntityMixin) playerEntity).betteradventuremode$sendAnnouncement(Text.translatable(areaBlockEntity.leaveMessage));
+                                } else {
+                                    playerEntity.sendMessage(Text.translatable(areaBlockEntity.leaveMessage), areaBlockEntity.messageMode == MessageMode.OVERLAY);
+                                }
+                            }
+                            if (areaBlockEntity.triggerMode != TriggerMode.ALWAYS) {
+                                areaBlockEntity.playerList2.add(playerEntity.getUuid());
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (areaBlockEntity.triggerMode == TriggerMode.TIMED) {
+                HashMap<UUID, Integer> newPlayerMap = new HashMap<>();
+                areaBlockEntity.playerMap.forEach((uuid1, integer) -> {
+                    int newInteger = --integer;
+                    if (newInteger > 0) {
+                        newPlayerMap.put(uuid1, newInteger);
+                    }
+                });
+                areaBlockEntity.playerMap.clear();
+                areaBlockEntity.playerMap.putAll(newPlayerMap);
+            } else if (areaBlockEntity.triggerMode == TriggerMode.ALWAYS) {
+                areaBlockEntity.playerMap.clear();
+            }
+
+            Iterator<UUID> newPlayerListIterator = newPLayerUuidList.iterator();
+            // new list
+            while (newPlayerListIterator.hasNext()) {
+                UUID uuid2 = newPlayerListIterator.next();
+                playerEntity = world.getPlayerByUuid(uuid2);
+
+                if (playerEntity != null) {
+                    tempList.add(uuid2);
+                    if (statusEffect != null) {
                         playerEntity.addStatusEffect(
                                 new StatusEffectInstance(
                                         statusEffect,
@@ -236,41 +457,30 @@ public class AreaBlockEntity extends RotatedBlockEntity implements Triggerable, 
                                 )
                         );
                     }
-                } else {
-                    if (!areaBlockEntity.leaveMessage.equals("")) {
+                    if (areaBlockEntity.triggerMode != TriggerMode.ALWAYS && areaBlockEntity.playerMap.containsKey(playerEntity.getUuid())) {
+                        continue;
+                    }
+                    if (!areaBlockEntity.joinMessage.equals("")) {
                         if (areaBlockEntity.messageMode == MessageMode.ANNOUNCEMENT) {
-                            ((DuckPlayerEntityMixin)playerEntity).betteradventuremode$sendAnnouncement(Text.translatable(areaBlockEntity.leaveMessage));
+                            ((DuckPlayerEntityMixin) playerEntity).betteradventuremode$sendAnnouncement(Text.translatable(areaBlockEntity.joinMessage));
                         } else {
-                            playerEntity.sendMessage(Text.translatable(areaBlockEntity.leaveMessage), areaBlockEntity.messageMode == MessageMode.OVERLAY);
+                            playerEntity.sendMessage(Text.translatable(areaBlockEntity.joinMessage), areaBlockEntity.messageMode == MessageMode.OVERLAY);
                         }
                     }
-                }
-            }
-            while (newPlayerListIterator.hasNext()) {
-                playerEntity = (PlayerEntity) newPlayerListIterator.next();
-                if (!areaBlockEntity.joinMessage.equals("")) {
-                    if (areaBlockEntity.messageMode == MessageMode.ANNOUNCEMENT) {
-                        ((DuckPlayerEntityMixin)playerEntity).betteradventuremode$sendAnnouncement(Text.translatable(areaBlockEntity.joinMessage));
-                    } else {
-                        playerEntity.sendMessage(Text.translatable(areaBlockEntity.joinMessage), areaBlockEntity.messageMode == MessageMode.OVERLAY);
+                    areaBlockEntity.playerList2.remove(playerEntity.getUuid());
+                    if (areaBlockEntity.triggerMode != TriggerMode.ALWAYS) {
+                        areaBlockEntity.playerMap.put(playerEntity.getUuid(), areaBlockEntity.triggerMode == TriggerMode.ONCE ? 1 : areaBlockEntity.maxTimer);
                     }
+                    shouldTriggerBlock = true;
                 }
-                if (statusEffect != null) {
-                    playerEntity.addStatusEffect(
-                            new StatusEffectInstance(
-                                    statusEffect,
-                                    100,
-                                    areaBlockEntity.appliedStatusEffectAmplifier,
-                                    areaBlockEntity.appliedStatusEffectAmbient,
-                                    areaBlockEntity.appliedStatusEffectShowParticles,
-                                    areaBlockEntity.appliedStatusEffectShowIcon
-                            )
-                    );
-                }
-                shouldTriggerBlock = true;
             }
-            if (shouldTriggerBlock) {
+
+            areaBlockEntity.playerList.clear();
+            areaBlockEntity.playerList.addAll(tempList);
+
+            if (shouldTriggerBlock && (areaBlockEntity.triggerMode == TriggerMode.ALWAYS || !areaBlockEntity.hasTriggered)) {
                 areaBlockEntity.triggerBlock();
+                areaBlockEntity.hasTriggered = true;
             }
         }
     }
@@ -283,19 +493,21 @@ public class AreaBlockEntity extends RotatedBlockEntity implements Triggerable, 
         if (this.wasTriggered) {
             this.wasTriggered = false;
         }
+        this.playerMap.clear();
+        this.playerList.clear();
+        this.playerList2.clear();
     }
 
     @Override
     public void trigger() {
         if ((this.triggeredMode == TriggeredMode.ONCE && !this.wasTriggered) || this.triggeredMode == TriggeredMode.CONTINUOUS) {
             this.sendMessage(this.triggeredMessage);
-        }
-        if (!this.wasTriggered) {
             this.wasTriggered = true;
         }
     }
 
     private void triggerBlock() {
+        BetterAdventureMode.info("triggerBlock");
         int x = this.triggeredBlock.getLeft().getX();
         int y = this.triggeredBlock.getLeft().getY();
         int z = this.triggeredBlock.getLeft().getZ();
@@ -314,6 +526,7 @@ public class AreaBlockEntity extends RotatedBlockEntity implements Triggerable, 
 
     private void sendMessage(String message) {
         if (this.world instanceof ServerWorld) {
+            BetterAdventureMode.info("sendMessage");
             if (this.calculateAreaBox || this.area == null) {
                 BlockPos messageAreaPositionOffset = this.areaPositionOffset;
                 Vec3i messageAreaDimensions = this.areaDimensions;
@@ -369,7 +582,7 @@ public class AreaBlockEntity extends RotatedBlockEntity implements Triggerable, 
     }
 
     public boolean setAppliedStatusEffectIdentifier(String appliedStatusEffectIdentifier) {
-        if (Registries.STATUS_EFFECT.get(Identifier.tryParse(appliedStatusEffectIdentifier)) != null) {
+        if (Registries.STATUS_EFFECT.get(Identifier.tryParse(appliedStatusEffectIdentifier)) != null || appliedStatusEffectIdentifier.equals("")) {
             this.appliedStatusEffectIdentifier = appliedStatusEffectIdentifier;
             return true;
         }
@@ -474,6 +687,14 @@ public class AreaBlockEntity extends RotatedBlockEntity implements Triggerable, 
 
     public void setTriggeredMode(TriggeredMode triggeredMode) {
         this.triggeredMode = triggeredMode;
+    }
+
+    public int getMaxTimer() {
+        return this.maxTimer;
+    }
+
+    public void setMaxTimer(int maxTimer) {
+        this.maxTimer = maxTimer;
     }
     //endregion --- getter & setter ---
 

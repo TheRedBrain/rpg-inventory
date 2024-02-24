@@ -18,6 +18,7 @@
 	"gui.list_entry.add": "Add new entry",
 	"gui.list_entry.remove": "Remove entry",
 	"gui.edit_teleporter_title": "Edit Teleporter",
+
 	"gui.adventureInventory": "Inventory",
 	"gui.adventureInventory.equipmentSlots": "Equipment",
 	"gui.adventureInventory.spellSlots": "Spells",
@@ -33,6 +34,46 @@
 	"gui.adventureInventory.toggleAttributeScreenButton.on.tooltip": "Hide Attribute Screen",
 	"gui.adventureInventory.toggleAttributeScreenButton.off": "Show Attribute Screen",
 	"gui.adventureInventory.toggleAttributeScreenButton.off.tooltip": "Show Attribute Screen",
+
+
+	"gui.area_block.triggered_true_label": "Triggered Override: True",
+	"gui.area_block.triggered_false_label": "Triggered Override: False",
+	"gui.area_block.hide_area_label": "Hide Area",
+	"gui.area_block.show_area_label": "Show Area",
+	"gui.area_block.area_dimensions_label": "Area Dimensions",
+	"gui.area_block.area_position_offset_label": "Area Position Offset",
+
+	"gui.area_block.status_effect_identifier_label": "Effect Identifier",
+	"gui.area_block.status_effect_amplifier_label": "Effect Amplifier",
+	"gui.area_block.ambient_true_label": "Effect Is Ambient: True",
+	"gui.area_block.ambient_false_label": "Effect Is Ambient: False",
+	"gui.area_block.hide_particles_label": "Effect Hides Particles",
+	"gui.area_block.show_particles_label": "Effect Shows Particles",
+	"gui.area_block.hide_icon_label": "Effect Hides Icon",
+	"gui.area_block.show_icon_label": "Effect Shows Icon",
+
+	"gui.area_block.join_message_label": "Join Message",
+	"gui.area_block.leave_message_label": "Leave Message",
+	"gui.area_block.triggered_message_label": "Triggered Message",
+
+	"gui.area_block.pre_timer_label": "X = ",
+	"gui.area_block.post_timer_label": " Seconds",
+
+	"gui.area_block.screenPage.area": "Area",
+	"gui.area_block.screenPage.applied_effect": "Applied Effect",
+	"gui.area_block.screenPage.messages": "Messages",
+	"gui.area_block.screenPage.trigger_settings": "Trigger Settings",
+
+	"gui.area_block.message_mode.announcement": "Show messages as announcement.",
+	"gui.area_block.message_mode.chat": "Show messages in chat.",
+	"gui.area_block.message_mode.overlay": "Show messages as overlay.",
+
+	"gui.area_block.trigger_mode.always": "Can always trigger.",
+	"gui.area_block.trigger_mode.once": "Can trigger once per player.",
+	"gui.area_block.trigger_mode.timed": "Can trigger once every X seconds per player.",
+
+	"gui.area_block.triggered_mode.continuous": "Gets triggered every time.",
+	"gui.area_block.triggered_mode.once": "Gets triggered once.",
 
 
 	"gui.triggered_message_block.toggle_show_message_area_button_label.on": "Show Message Area: On",
@@ -247,6 +288,9 @@
 	"gui.triggered_block.triggeredBlockPositionOffsetX.placeholder": "X",
 	"gui.triggered_block.triggeredBlockPositionOffsetY.placeholder": "Y",
 	"gui.triggered_block.triggeredBlockPositionOffsetZ.placeholder": "Z",
+	
+	"gui.triggered_block.toggle_triggered_block_resets_button_label.on": "Is Reset",
+	"gui.triggered_block.toggle_triggered_block_resets_button_label.off": "Is Triggered",
 
 
 	"gui.shop_block.trade_button_label": "Trade",
