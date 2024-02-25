@@ -1,0 +1,8 @@
+{
+  "spell_ids": [
+    "wizards:arcane_beam",
+    "wizards:arcane_blast",
+    "wizards:arcane_bolt",
+    "wizards:arcane_missile"
+  ]
+}

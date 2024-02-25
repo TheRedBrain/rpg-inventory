@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/handheld",
   "textures": {
-    "layer0": "minecraft:item/book"
+    "layer0": "minecraft:item/blaze_powder"
   }
 }

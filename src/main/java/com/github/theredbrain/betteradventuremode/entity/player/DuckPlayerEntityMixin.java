@@ -21,6 +21,8 @@ public interface DuckPlayerEntityMixin {
 
     boolean betteradventuremode$useStashForCrafting();
     void betteradventuremode$setUseStashForCrafting(boolean useStashForCrafting);
+    int betteradventuremode$oldActiveSpellSlotAmount();
+    void betteradventuremode$setOldActiveSpellSlotAmount(int useStashForCrafting);
     SimpleInventory betteradventuremode$getStashInventory();
     void betteradventuremode$setStashInventory(SimpleInventory stashInventory);
 

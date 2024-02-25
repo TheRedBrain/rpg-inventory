@@ -1,12 +1,16 @@
 {
   "values": [
+    "betteradventuremode:arcane_beam_spell_book",
+    "betteradventuremode:arcane_blast_spell_book",
+    "betteradventuremode:arcane_bolt_spell_book",
+    "betteradventuremode:arcane_missile_spell_book",
+    "betteradventuremode:fire_breath_spell_book",
+    "betteradventuremode:fire_meteor_spell_book",
+    "betteradventuremode:fire_scorch_spell_book",
     "betteradventuremode:fireball_spell_book",
-    "betteradventuremode:dragons_breath_spell_book",
-    "betteradventuremode:ring_of_fire_spell_book",
-    "betteradventuremode:frost_shards_spell_book",
-    "betteradventuremode:glacier_spell_book",
-    "betteradventuremode:cold_snap_spell_book",
-    "betteradventuremode:lightning_strike_spell_book",
-    "betteradventuremode:water_spray_spell_book"
+    "betteradventuremode:frost_bolt_spell_book",
+    "betteradventuremode:frost_nova_spell_book",
+    "betteradventuremode:frost_shield_spell_book",
+    "betteradventuremode:ice_lance_spell_book"
   ]
 }

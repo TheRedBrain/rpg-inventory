@@ -48,6 +48,7 @@
     "q_misc_util": ">=3.3.7",
     "cardinal-components-base": ">=5.2.2",
     "cardinal-components-entity": ">=5.2.2",
-    "azurelib": ">=1.0.3"
+    "azurelib": ">=1.0.3",
+    "spell_engine": ">=0.12.5"
   }
 }

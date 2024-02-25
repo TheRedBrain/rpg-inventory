@@ -9,10 +9,17 @@ import org.spongepowered.asm.mixin.Unique;
 public class SpellImpactActionDamageMixin implements DuckSpellImpactActionDamageMixin {
     @Unique
     private double direct_damage = 0.0;
+    @Unique
+    private String damage_type_override = "";
 
     @Override
     public double betteradventuremode$getDirectDamage() {
         return direct_damage;
+    }
+
+    @Override
+    public String betteradventuremode$getDamageTypeOverride() {
+        return damage_type_override;
     }
 
     @Override

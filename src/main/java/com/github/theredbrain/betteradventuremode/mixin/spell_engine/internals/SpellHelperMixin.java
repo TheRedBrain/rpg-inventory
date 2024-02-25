@@ -10,11 +10,16 @@ import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageType;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.Identifier;
@@ -36,6 +41,7 @@ import net.spell_engine.utils.TargetHelper;
 import net.spell_power.api.MagicSchool;
 import net.spell_power.api.SpellDamageSource;
 import net.spell_power.api.SpellPower;
+import net.spell_power.mixin.DamageSourcesAccessor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -127,7 +133,23 @@ public abstract class SpellHelperMixin {
 
                         particleMultiplier = power.criticalDamage() + (double)vulnerability.criticalDamageBonus();
                         caster.onAttacking((Entity)target);
-                        ((Entity)target).damage(SpellDamageSource.create(school, caster), (float)amount);
+
+                        // damage type override
+                        DamageSource damageSource = null;
+                        String damageTypeOverride = ((DuckSpellImpactActionDamageMixin) damageData).betteradventuremode$getDamageTypeOverride();
+                        if (!damageTypeOverride.equals("") && Identifier.isValid(damageTypeOverride)) {
+                            Identifier damageTypeOverrideId = Identifier.tryParse(damageTypeOverride);
+                            if (damageTypeOverrideId != null) {
+                                RegistryKey<DamageType> key = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, damageTypeOverrideId);
+                                Registry<DamageType> registry = ((DamageSourcesAccessor)caster.getDamageSources()).getRegistry();
+                                damageSource =  new DamageSource(registry.entryOf(key), caster);
+                            }
+                        }
+                        if (damageSource == null) {
+                            damageSource =  SpellDamageSource.create(school, caster);
+                        }
+                        ((Entity)target).damage(damageSource, (float)amount);
+
                         if (target instanceof LivingEntity) {
                             LivingEntity livingEntity = (LivingEntity)target;
                             ((ConfigurableKnockback)livingEntity).popKnockbackMultiplier_SpellEngine();

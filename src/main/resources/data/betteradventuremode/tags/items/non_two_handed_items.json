@@ -1,8 +1,7 @@
 {
   "values": [
     "betteradventuremode:default_empty_hand_weapon",
-    "betteradventuremode:elemental_fire_wand",
-    "betteradventuremode:elemental_ice_wand",
-    "betteradventuremode:test_wand"
+    "betteradventuremode:elemental_flame",
+    "betteradventuremode:arcane_encyclopedia"
   ]
 }

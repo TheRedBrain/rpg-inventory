@@ -88,25 +88,27 @@ public class ItemRegistry {
     public static final Item THREE_SPELL_SLOT_RING = registerItem("three_spell_slot_ring", new ModifyEntityAttributeRingItem(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT, "active_spell_slot_amount", 3, EntityAttributeModifier.Operation.ADDITION, BetterAdventureMode.identifier("model/accessory/ring_basic"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT);
     public static final Item ARMOR_TOUGHNESS_RING = registerItem("armor_toughness_ring", new ModifyEntityAttributeRingItem(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, "armor_toughness", 0.25, EntityAttributeModifier.Operation.ADDITION, BetterAdventureMode.identifier("model/accessory/ring_basic"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT);
 
-    // elemental spell books
-    // TODO SpellEngine
-    public static final Item FIREBALL_SPELL_BOOK = registerSpellContainerItem("fireball_spell_book", new MultiSlotSpellBookItem(-1, BetterAdventureMode.identifier("fireball"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT, List.of("betteradventuremode:fireball"));
-    public static final Item DRAGONS_BREATH_SPELL_BOOK = registerSpellContainerItem("dragons_breath_spell_book", new SpellBookItem(BetterAdventureMode.identifier("dragons_breath"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT, List.of("betteradventuremode:dragons_breath"));
-    public static final Item RING_OF_FIRE_SPELL_BOOK = registerSpellContainerItem("ring_of_fire_spell_book", new MultiSlotSpellBookItem(-1, BetterAdventureMode.identifier("ring_of_fire"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT, List.of("betteradventuremode:ring_of_fire"));
-    public static final Item FROST_SHARDS_SPELL_BOOK = registerSpellContainerItem("frost_shards_spell_book", new SpellBookItem(BetterAdventureMode.identifier("frost_shards"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT, List.of("betteradventuremode:frost_shards"));
-    public static final Item GLACIER_SPELL_BOOK = registerSpellContainerItem("glacier_spell_book", new MultiSlotSpellBookItem(-1, BetterAdventureMode.identifier("glacier"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT, List.of("betteradventuremode:glacier"));
-    public static final Item COLD_SNAP_SPELL_BOOK = registerSpellContainerItem("cold_snap_spell_book", new SpellBookItem(BetterAdventureMode.identifier("cold_snap"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT, List.of("betteradventuremode:cold_snap"));
-    public static final Item LIGHTNING_STRIKE_SPELL_BOOK = registerSpellContainerItem("lightning_strike_spell_book", new MultiSlotSpellBookItem(-1, BetterAdventureMode.identifier("lightning_strike"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT, List.of("betteradventuremode:lightning_strike"));
-    public static final Item WATER_SPRAY_SPELL_BOOK = registerSpellContainerItem("water_spray_spell_book", new SpellBookItem(BetterAdventureMode.identifier("water_spray"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT, List.of("betteradventuremode:water_spray"));
+    // Wizards spell books
+    public static final Item ARCANE_BEAM_SPELL_BOOK = registerSpellContainerItem("arcane_beam_spell_book", new MultiSlotSpellBookItem(-1, BetterAdventureMode.identifier("arcane_beam"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT, List.of("wizards:arcane_beam"));
+    public static final Item ARCANE_BLAST_SPELL_BOOK = registerSpellContainerItem("arcane_blast_spell_book", new SpellBookItem(BetterAdventureMode.identifier("arcane_blast"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT, List.of("wizards:arcane_blast"));
+    public static final Item ARCANE_BOLT_SPELL_BOOK = registerSpellContainerItem("arcane_bolt_spell_book", new SpellBookItem(BetterAdventureMode.identifier("arcane_bolt"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT, List.of("wizards:arcane_bolt"));
+    public static final Item ARCANE_MISSILE_SPELL_BOOK = registerSpellContainerItem("arcane_missile_spell_book", new SpellBookItem(BetterAdventureMode.identifier("arcane_missile"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT, List.of("wizards:arcane_missile"));
+    public static final Item FIRE_BREATH_SPELL_BOOK = registerSpellContainerItem("fire_breath_spell_book", new SpellBookItem(BetterAdventureMode.identifier("fire_breath"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT, List.of("wizards:fire_breath"));
+    public static final Item FIRE_METEOR_SPELL_BOOK = registerSpellContainerItem("fire_meteor_spell_book", new MultiSlotSpellBookItem(-1, BetterAdventureMode.identifier("fire_meteor"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT, List.of("wizards:fire_meteor"));
+    public static final Item FIRE_SCORCH_SPELL_BOOK = registerSpellContainerItem("fire_scorch_spell_book", new SpellBookItem(BetterAdventureMode.identifier("fire_scorch"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT, List.of("wizards:fire_scorch"));
+    public static final Item FIREBALL_SPELL_BOOK = registerSpellContainerItem("fireball_spell_book", new SpellBookItem(BetterAdventureMode.identifier("fireball"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT, List.of("wizards:fireball"));
+    public static final Item FROST_BOLT_SPELL_BOOK = registerSpellContainerItem("frost_bolt_spell_book", new SpellBookItem(BetterAdventureMode.identifier("frost_bolt"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT, List.of("wizards:frost_bolt"));
+    public static final Item FROST_NOVA_SPELL_BOOK = registerSpellContainerItem("frost_nova_spell_book", new SpellBookItem(BetterAdventureMode.identifier("frost_nova"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT, List.of("wizards:frost_nova"));
+    public static final Item FROST_SHIELD_SPELL_BOOK = registerSpellContainerItem("frost_shield_spell_book", new MultiSlotSpellBookItem(-1, BetterAdventureMode.identifier("frost_shield"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT, List.of("wizards:frost_shield"));
+    public static final Item ICE_LANCE_BOOK = registerSpellContainerItem("ice_lance_spell_book", new SpellBookItem(BetterAdventureMode.identifier("ice_lance"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT, List.of("wizards:ice_lance"));
 
-    // divine spell books
-    // TODO SpellEngine
-    public static final Item SINGLE_TARGET_HEAL_SPELL_BOOK = registerSpellContainerItem("single_target_heal_spell_book", new SpellBookItem(BetterAdventureMode.identifier("single_target_heal"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT, List.of("betteradventuremode:frost_nova"));
+    // Paladins & Priests spell books
+//    public static final Item SINGLE_TARGET_HEAL_SPELL_BOOK = registerSpellContainerItem("single_target_heal_spell_book", new SpellBookItem(BetterAdventureMode.identifier("single_target_heal"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT, List.of("betteradventuremode:frost_nova"));
     //endregion Accessories
 
     //region Hotbar Items
     // spell scrolls
-    public static final Item FIREBALL_SPELL_SCROLL = registerItem("fireball_spell_scroll", new Item(new FabricItemSettings().maxCount(16)), ItemGroupRegistry.BAM_EQUIPMENT);
+//    public static final Item FIREBALL_SPELL_SCROLL = registerItem("fireball_spell_scroll", new Item(new FabricItemSettings().maxCount(16)), ItemGroupRegistry.BAM_EQUIPMENT);
 
     // food
     public static final Item SWEET_BERRIES = registerItem("sweet_berries", new AdventureFoodConsumable(new FabricItemSettings().maxCount(16).food(AdventureFoodComponents.SWEET_BERRIES)), ItemGroupRegistry.BAM_FOOD);
@@ -117,8 +119,9 @@ public class ItemRegistry {
     
     // weapons
     // TODO SpellEngine
-    public static final Item ELEMENTAL_FIRE_WAND = registerFilteredSpellProxyItem("elemental_fire_wand", new StaffItem(ToolMaterials.WOOD, new FabricItemSettings().maxDamage(50)), ItemGroupRegistry.BAM_EQUIPMENT, List.of("betteradventuremode:burning_touch"), "betteradventuremode:elemental_fire_wand_pool");
-    public static final Item ELEMENTAL_ICE_WAND = registerFilteredSpellProxyItem("elemental_ice_wand", new StaffItem(ToolMaterials.WOOD, new FabricItemSettings().maxDamage(50)), ItemGroupRegistry.BAM_EQUIPMENT, List.of("betteradventuremode:chilling_touch"), "betteradventuremode:elemental_ice_wand_pool");
+    public static final Item ELEMENTAL_FLAME = registerFilteredSpellProxyItem("elemental_flame", new StaffItem(ToolMaterials.WOOD, new FabricItemSettings().maxDamage(50)), ItemGroupRegistry.BAM_EQUIPMENT, List.of(), "betteradventuremode:fire_spell_pool");
+    public static final Item ARCANE_ENCYCLOPEDIA = registerFilteredSpellProxyItem("arcane_encyclopedia", new StaffItem(ToolMaterials.WOOD, new FabricItemSettings().maxDamage(50)), ItemGroupRegistry.BAM_EQUIPMENT, List.of(), "betteradventuremode:arcane_spell_pool");
+    public static final Item ICE_STAFF = registerFilteredSpellProxyItem("ice_staff", new StaffItem(ToolMaterials.WOOD, new FabricItemSettings().maxDamage(50)), ItemGroupRegistry.BAM_EQUIPMENT, List.of(), "betteradventuremode:frost_spell_pool");
 
 //    public static final Item ZWEIHANDER = registerItem("zweihander", new BetterAdventureMode_BasicWeaponItem(DamageTypes.PLAYER_ATTACK, DamageTypes.PLAYER_ATTACK,7, -3.5F, 5, 5,  new Item.Settings().maxDamage(336)), ItemGroupRegistry.BAM_EQUIPMENT);
     public static final Item WOODEN_SWORD = registerItem("wooden_sword", new BasicWeaponItem(DamageTypesRegistry.SLASHING_DAMAGE_TYPE, DamageTypesRegistry.PIERCING_DAMAGE_TYPE,3, -2.4F, 1, 1,  new Item.Settings().maxDamage(50)), ItemGroupRegistry.BAM_EQUIPMENT);
@@ -149,7 +152,7 @@ public class ItemRegistry {
     public static final Item BLOCK_POSITION_DISTANCE_METER = registerItem("block_position_distance_meter", new BlockPositionDistanceMeterItem(new FabricItemSettings().maxCount(1)), ItemGroupRegistry.SCRIPT_BLOCKS);
 
     // TODO SpellEngine
-    public static final Item TEST_WAND = registerFilteredSpellProxyItem("test_wand", new StaffItem(ToolMaterials.WOOD, new FabricItemSettings().maxDamage(50)), ItemGroups.OPERATOR, List.of(), "betteradventuremode:test_wand_pool");
+//    public static final Item TEST_WAND = registerFilteredSpellProxyItem("test_wand", new StaffItem(ToolMaterials.WOOD, new FabricItemSettings().maxDamage(50)), ItemGroups.OPERATOR, List.of(), "betteradventuremode:test_wand_pool");
     public static final Item TEST_BELT = registerItem("test_belt", new AccessoryTrinketItem(BetterAdventureMode.identifier("model/accessory/belt_basic"), new FabricItemSettings().maxCount(1)), ItemGroups.OPERATOR);
     public static final Item TEST_RING = registerItem("test_ring", new AccessoryTrinketItem(BetterAdventureMode.identifier("model/accessory/ring_basic"), new FabricItemSettings().maxCount(1)), ItemGroups.OPERATOR);
     public static final Item MANA_TEST_BELT = registerItem("mana_test_belt", new ManaTestBeltItem(new FabricItemSettings().maxCount(1)), ItemGroups.OPERATOR);

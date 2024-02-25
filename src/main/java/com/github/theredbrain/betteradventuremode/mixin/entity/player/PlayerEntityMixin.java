@@ -89,7 +89,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     private static final TrackedData<Boolean> USE_STASH_FOR_CRAFTING = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
     @Unique
-    private int oldActiveSpellSlotAmount = 0;
+    private static final TrackedData<Integer> OLD_ACTIVE_SPELL_SLOT_AMOUNT = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
 
     @Unique
     protected SimpleInventory stashInventory = new SimpleInventory(34);
@@ -108,16 +108,16 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
     @Inject(method = "createPlayerAttributes", at = @At("RETURN"), cancellable = true)
     private static void betteradventuremode$createPlayerAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
-        cir.setReturnValue(cir.getReturnValue()
+        cir.getReturnValue()
                 .add(EntityAttributesRegistry.MAX_EQUIPMENT_WEIGHT, 10.0F) // TODO balance
                 .add(EntityAttributesRegistry.EQUIPMENT_WEIGHT, 0.0F)
-                .add(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT, 2.0F) // TODO balance
-        );
+                .add(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT, 2.0F); // TODO balance
     }
 
     @Inject(method = "initDataTracker", at = @At("RETURN"))
     protected void betteradventuremode$initDataTracker(CallbackInfo ci) {
         this.dataTracker.startTracking(USE_STASH_FOR_CRAFTING, true);
+        this.dataTracker.startTracking(OLD_ACTIVE_SPELL_SLOT_AMOUNT, -1);
 
     }
 
@@ -193,6 +193,10 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         if (nbt.contains("use_stash_for_crafting", NbtElement.BYTE_TYPE)) {
             this.betteradventuremode$setUseStashForCrafting(nbt.getBoolean("use_stash_for_crafting"));
         }
+
+        if (nbt.contains("old_active_spell_slot_amount", NbtElement.INT_TYPE)) {
+            this.betteradventuremode$setOldActiveSpellSlotAmount(nbt.getInt("old_active_spell_slot_amount"));
+        }
     }
 
     @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
@@ -201,6 +205,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         nbt.put("stash_items", this.stashInventory.toNbtList());
 
         nbt.putBoolean("use_stash_for_crafting", this.betteradventuremode$useStashForCrafting());
+
+        nbt.putInt("old_active_spell_slot_amount", this.betteradventuremode$oldActiveSpellSlotAmount());
     }
 
 //    // TODO move to bamentity
@@ -496,6 +502,16 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     }
 
     @Override
+    public int betteradventuremode$oldActiveSpellSlotAmount() {
+        return this.dataTracker.get(OLD_ACTIVE_SPELL_SLOT_AMOUNT);
+    }
+
+    @Override
+    public void betteradventuremode$setOldActiveSpellSlotAmount(int oldActiveSpellSlotAmount) {
+        this.dataTracker.set(OLD_ACTIVE_SPELL_SLOT_AMOUNT, oldActiveSpellSlotAmount);
+    }
+
+    @Override
     public SimpleInventory betteradventuremode$getStashInventory() {
         return this.stashInventory;
     }
@@ -509,8 +525,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     private void ejectItemsFromInactiveSpellSlots() {
         int activeSpellSlotAmount = (int) this.getAttributeInstance(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT).getValue();
 
-        if (this.oldActiveSpellSlotAmount != activeSpellSlotAmount) {
-            for (int j = activeSpellSlotAmount; j < 8; j++) {
+        if (this.betteradventuremode$oldActiveSpellSlotAmount() != activeSpellSlotAmount) {
+            for (int j = activeSpellSlotAmount + 1; j < 9; j++) {
                 PlayerInventory playerInventory = this.getInventory();
 
                 if (!((DuckPlayerInventoryMixin)playerInventory).betteradventuremode$getSpellSlotStack(j).isEmpty()) {
@@ -521,7 +537,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
                 }
             }
 
-            this.oldActiveSpellSlotAmount = activeSpellSlotAmount;
+            this.betteradventuremode$setOldActiveSpellSlotAmount(activeSpellSlotAmount);
         }
     }
 
