@@ -1,6 +1,7 @@
 package com.github.theredbrain.betteradventuremode.block;
 
 import com.github.theredbrain.betteradventuremode.block.entity.DelayTriggerBlockEntity;
+import com.github.theredbrain.betteradventuremode.block.entity.HousingBlockEntity;
 import com.github.theredbrain.betteradventuremode.registry.EntityRegistry;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.block.BlockRenderType;
@@ -36,7 +37,8 @@ public class DelayTriggerBlock extends RotatedBlockWithEntity {
     @Override
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return validateTicker(type, EntityRegistry.DELAY_TRIGGER_BLOCK_ENTITY, DelayTriggerBlockEntity::tick);
+//        return validateTicker(type, EntityRegistry.DELAY_TRIGGER_BLOCK_ENTITY, DelayTriggerBlockEntity::tick);
+        return checkType(type, EntityRegistry.DELAY_TRIGGER_BLOCK_ENTITY, DelayTriggerBlockEntity::tick);
     }
 
     @Override

@@ -1,12 +1,12 @@
 package com.github.theredbrain.betteradventuremode.spell_engine;
 
 public interface DuckSpellCostMixin {
-    float getManaCost();
-    void setManaCost(float manaCost);
-    float getHealthCost();
-    void setHealthCost(float healthCost);
-    float getStaminaCost();
-    void setStaminaCost(float staminaCost);
-    boolean isConsumeSelf();
-    void setConsumeSelf(boolean consumeSelf);
+    float betteradventuremode$getManaCost();
+    void betteradventuremode$setManaCost(float manaCost);
+    float betteradventuremode$getHealthCost();
+    void betteradventuremode$setHealthCost(float healthCost);
+    float betteradventuremode$getStaminaCost();
+    void betteradventuremode$setStaminaCost(float staminaCost);
+    boolean betteradventuremode$isConsumeSelf();
+    void betteradventuremode$setConsumeSelf(boolean consumeSelf);
 }

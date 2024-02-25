@@ -1,7 +1,9 @@
 package com.github.theredbrain.betteradventuremode.azurelib;
 
-import mod.azure.azurelib.common.api.common.animatable.GeoItem;
-import mod.azure.azurelib.common.internal.client.RenderProvider;
+//import mod.azure.azurelib.common.api.common.animatable.GeoItem;
+//import mod.azure.azurelib.common.internal.client.RenderProvider;
+import mod.azure.azurelib.animatable.GeoItem;
+import mod.azure.azurelib.animatable.client.RenderProvider;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.entity.LivingEntity;

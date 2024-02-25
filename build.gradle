@@ -70,20 +70,20 @@ dependencies {
 	// Cloth Config
 	modImplementation ("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config}")
 
-//	// Player Animation Lib
-//	modImplementation("dev.kosmx.player-anim:player-animation-lib-fabric:${project.player_anim}")
-//
-//	// Better Combat
-//	modImplementation "maven.modrinth:better-combat:${project.better_combat}"
-//
+	// Player Animation Lib
+	modImplementation("dev.kosmx.player-anim:player-animation-lib-fabric:${project.player_anim}")
+
+	// Better Combat
+	modImplementation "maven.modrinth:better-combat:${project.better_combat}"
+
 //	// Combat Roll
 //	modImplementation "maven.modrinth:combat-roll:${project.combat_roll_version}"
-//
-//	// Spell Engine
-//	modImplementation("maven.modrinth:spell-engine:${project.spell_engine_version}")
-//
-//	// Spell Power
-//	modImplementation("maven.modrinth:spell-power:${project.spell_power_version}")
+
+	// Spell Engine
+	modImplementation("maven.modrinth:spell-engine:${project.spell_engine_version}")
+
+	// Spell Power
+	modImplementation("maven.modrinth:spell-power:${project.spell_power_version}")
 
 	// Projectile Damage Attribute
 //	modImplementation "maven.modrinth:projectile-damage-attribute:${project.projectile_damage_attribute_version}"
@@ -91,14 +91,17 @@ dependencies {
 	// Trinkets
 	modImplementation "dev.emi:trinkets:${project.trinkets_version}"
 
-//	// Tiny Config
-//	implementation include("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}")
+	// Tiny Config
+	implementation include("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}")
 
-//	// Revelationary
-//	modImplementation "maven.modrinth:Revelationary:${project.revelationary_version}"
+	// Revelationary
+	modImplementation "maven.modrinth:Revelationary:${project.revelationary_version}"
 
-	// DimLib
-	modImplementation ("com.github.iPortalTeam:DimLib:${dimlib_version}")
+	// Immersive Portals Core
+	modImplementation "com.github.iPortalTeam.ImmersivePortalsMod:imm_ptl_core:${project.q_misc_util_version}"
+
+	// Miscellaneous Utility Library
+	modImplementation "com.github.iPortalTeam.ImmersivePortalsMod:q_misc_util:${project.q_misc_util_version}"
 
 	// Cardinal Components
 	modImplementation ("dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cca_version}")
@@ -117,7 +120,6 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-	// Minecraft 1.18 (1.18-pre2) upwards uses Java 17.
 	it.options.release = 17
 }
 

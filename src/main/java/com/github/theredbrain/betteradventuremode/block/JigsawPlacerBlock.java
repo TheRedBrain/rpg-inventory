@@ -4,7 +4,8 @@ import com.github.theredbrain.betteradventuremode.block.entity.JigsawPlacerBlock
 import com.mojang.serialization.MapCodec;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.enums.Orientation;
+//import net.minecraft.block.enums.Orientation;
+import net.minecraft.block.enums.JigsawOrientation;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
@@ -20,10 +21,11 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
 public class JigsawPlacerBlock extends RotatedBlockWithEntity implements OperatorBlock {
-    public static final EnumProperty<Orientation> ORIENTATION = Properties.ORIENTATION;
+//    public static final EnumProperty<Orientation> ORIENTATION = Properties.ORIENTATION;
+    public static final EnumProperty<JigsawOrientation> ORIENTATION = Properties.ORIENTATION;
     public JigsawPlacerBlock(Settings settings) {
         super(settings);
-        this.setDefaultState((BlockState)((BlockState)this.stateManager.getDefaultState()).with(ROTATED, 0).with(X_MIRRORED, false).with(Z_MIRRORED, false).with(ORIENTATION, Orientation.NORTH_UP));
+        this.setDefaultState((BlockState)((BlockState)this.stateManager.getDefaultState()).with(ROTATED, 0).with(X_MIRRORED, false).with(Z_MIRRORED, false).with(ORIENTATION, JigsawOrientation.NORTH_UP));
     }
 
     // TODO Block Codecs
@@ -41,7 +43,8 @@ public class JigsawPlacerBlock extends RotatedBlockWithEntity implements Operato
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         Direction direction = ctx.getSide();
         Direction direction2 = direction.getAxis() == Direction.Axis.Y ? ctx.getHorizontalPlayerFacing().getOpposite() : Direction.UP;
-        return (BlockState)this.getDefaultState().with(ORIENTATION, Orientation.byDirections(direction, direction2));
+//        return (BlockState)this.getDefaultState().with(ORIENTATION, Orientation.byDirections(direction, direction2));
+        return (BlockState)this.getDefaultState().with(ORIENTATION, JigsawOrientation.byDirections(direction, direction2));
     }
 
     @Override

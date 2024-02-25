@@ -7,7 +7,8 @@ import com.github.theredbrain.betteradventuremode.network.packet.CraftFromCrafti
 import com.github.theredbrain.betteradventuremode.registry.CraftingRecipeRegistry;
 import com.github.theredbrain.betteradventuremode.registry.ScreenHandlerTypesRegistry;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.advancement.AdvancementEntry;
+//import net.minecraft.advancement.AdvancementEntry;
+import net.minecraft.advancement.Advancement;
 import net.minecraft.client.network.ClientAdvancementManager;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -288,11 +289,13 @@ public class CraftingBenchBlockScreenHandler extends ScreenHandler {
                 CraftingRecipe craftingRecipe = CraftingRecipeRegistry.getCraftingRecipe(this.craftingRecipesIdentifierList.get(i));
                 unlockAdvancementIdentifier = craftingRecipe.getUnlockAdvancement();
 
-                AdvancementEntry unlockAdvancementEntry = null;
+//                AdvancementEntry unlockAdvancementEntry = null;
+                Advancement unlockAdvancement = null;
                 if (!unlockAdvancementIdentifier.equals("")) {
-                    unlockAdvancementEntry = advancementHandler.get(Identifier.tryParse(unlockAdvancementIdentifier));
+                    unlockAdvancement = advancementHandler.getManager().get(Identifier.tryParse(unlockAdvancementIdentifier));
                 }
-                boolean bl = !this.world.getGameRules().getBoolean(GameRules.DO_LIMITED_CRAFTING) || unlockAdvancementIdentifier.equals("") || (unlockAdvancementEntry != null && ((DuckClientAdvancementManagerMixin) advancementHandler.getManager()).betteradventuremode$getAdvancementProgress(unlockAdvancementEntry).isDone());
+//                boolean bl = !this.world.getGameRules().getBoolean(GameRules.DO_LIMITED_CRAFTING) || unlockAdvancementIdentifier.equals("") || (unlockAdvancementEntry != null && ((DuckClientAdvancementManagerMixin) advancementHandler.getManager()).betteradventuremode$getAdvancementProgress(unlockAdvancementEntry).isDone());
+                boolean bl = !this.world.getGameRules().getBoolean(GameRules.DO_LIMITED_CRAFTING) || unlockAdvancementIdentifier.equals("") || (unlockAdvancement != null && ((DuckClientAdvancementManagerMixin) advancementHandler.getManager()).betteradventuremode$getAdvancementProgress(unlockAdvancement).isDone());
 
                 if (bl) {
                     int tab = craftingRecipe.getTab();

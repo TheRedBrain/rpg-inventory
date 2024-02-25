@@ -1,10 +1,12 @@
 package com.github.theredbrain.betteradventuremode.network.packet;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
+import dev.kosmx.playerAnim.core.util.Vec3f;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.Vec3d;
+import org.joml.Vector3f;
 
 public class UpdateMannequinSettingsPacket implements FabricPacket {
     public static final PacketType<UpdateMannequinSettingsPacket> TYPE = PacketType.create(
@@ -26,7 +28,8 @@ public class UpdateMannequinSettingsPacket implements FabricPacket {
     public final String textureIdentifierString;
     public final String sheathedWeaponMode;
     public final float entityYaw;
-    public final Vec3d entityPos;
+//    public final Vec3d entityPos;
+    public final Vector3f entityPos;
 
     public UpdateMannequinSettingsPacket(
             int mannequinEntityId,
@@ -43,7 +46,8 @@ public class UpdateMannequinSettingsPacket implements FabricPacket {
             String textureIdentifierString,
             String sheathedWeaponMode,
             float entityYaw,
-            Vec3d entityPos
+//            Vec3d entityPos
+            Vector3f entityPos
     ) {
         this.mannequinEntityId = mannequinEntityId;
         this.isLeftHanded = isLeftHanded;
@@ -78,7 +82,8 @@ public class UpdateMannequinSettingsPacket implements FabricPacket {
                 buf.readString(),
                 buf.readString(),
                 buf.readFloat(),
-                buf.readVec3d()
+//                buf.readVec3d()
+                buf.readVector3f()
         );
     }
     @Override
@@ -101,7 +106,7 @@ public class UpdateMannequinSettingsPacket implements FabricPacket {
         buf.writeString(this.textureIdentifierString);
         buf.writeString(this.sheathedWeaponMode);
         buf.writeFloat(this.entityYaw);
-        buf.writeVec3d(this.entityPos);
+        buf.writeVector3f(this.entityPos);
     }
 
 }

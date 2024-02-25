@@ -17,7 +17,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.advancement.Advancement;
-import net.minecraft.advancement.AdvancementEntry;
+//import net.minecraft.advancement.AdvancementEntry;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -207,7 +207,8 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
     private void openChooseCurrentTargetOwnerScreen() {
         this.partyMemberList.clear();
         if (this.client != null && this.client.player != null) {
-            Team team = this.client.player.getScoreboardTeam();
+//            Team team = this.client.player.getScoreboardTeam();
+            Team team = this.client.player.getScoreboard().getPlayerTeam(String.valueOf(this.client.player.getName()));
             if (team != null) {
                 for (String name : team.getPlayerList()) {
                     if (!this.client.player.getName().getString().equals(name)) {
@@ -846,13 +847,17 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
                     showLockedLocation = location.showLockedDungeon();
 
                     if (advancementHandler != null) {
-                        AdvancementEntry lockAdvancementEntry = null;
+//                        AdvancementEntry lockAdvancementEntry = null;
+                        Advancement lockAdvancementEntry = null;
                         if (!lockAdvancementIdentifier.equals("")) {
-                            lockAdvancementEntry = advancementHandler.get(Identifier.tryParse(lockAdvancementIdentifier));
+//                            lockAdvancementEntry = advancementHandler.get(Identifier.tryParse(lockAdvancementIdentifier));
+                            lockAdvancementEntry = advancementHandler.getManager().get(Identifier.tryParse(lockAdvancementIdentifier));
                         }
-                        AdvancementEntry unlockAdvancementEntry = null;
+//                        AdvancementEntry unlockAdvancementEntry = null;
+                        Advancement unlockAdvancementEntry = null;
                         if (!unlockAdvancementIdentifier.equals("")) {
-                            unlockAdvancementEntry = advancementHandler.get(Identifier.tryParse(unlockAdvancementIdentifier));
+//                            unlockAdvancementEntry = advancementHandler.get(Identifier.tryParse(unlockAdvancementIdentifier));
+                            unlockAdvancementEntry = advancementHandler.getManager().get(Identifier.tryParse(unlockAdvancementIdentifier));
                         }
                         if ((lockAdvancementIdentifier.equals("") || (lockAdvancementEntry != null && !((DuckClientAdvancementManagerMixin) advancementHandler).betteradventuremode$getAdvancementProgress(lockAdvancementEntry).isDone())) && (unlockAdvancementIdentifier.equals("") || (unlockAdvancementEntry != null && ((DuckClientAdvancementManagerMixin) advancementHandler).betteradventuremode$getAdvancementProgress(unlockAdvancementEntry).isDone()))) {
                             this.unlockedLocationsList.add(stringStringPair);
@@ -902,19 +907,25 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
 //            }
             this.showAdventureScreen = location.showAdventureScreen();
             if (advancementHandler != null) {
-                AdvancementEntry lockAdvancementEntry = null;
+//                AdvancementEntry lockAdvancementEntry = null;
+                Advancement lockAdvancementEntry = null;
                 if (!lockAdvancementIdentifier.equals("")) {
-                    lockAdvancementEntry = advancementHandler.get(Identifier.tryParse(lockAdvancementIdentifier));
+//                    lockAdvancementEntry = advancementHandler.get(Identifier.tryParse(lockAdvancementIdentifier));
+                    lockAdvancementEntry = advancementHandler.getManager().get(Identifier.tryParse(lockAdvancementIdentifier));
                 }
-                AdvancementEntry unlockAdvancementEntry = null;
+//                AdvancementEntry unlockAdvancementEntry = null;
+                Advancement unlockAdvancementEntry = null;
                 if (!unlockAdvancementIdentifier.equals("")) {
-                    unlockAdvancementEntry = advancementHandler.get(Identifier.tryParse(unlockAdvancementIdentifier));
+//                    unlockAdvancementEntry = advancementHandler.get(Identifier.tryParse(unlockAdvancementIdentifier));
+                    unlockAdvancementEntry = advancementHandler.getManager().get(Identifier.tryParse(unlockAdvancementIdentifier));
                 }
                 if (lockAdvancementEntry != null) {
-                    this.currentLockAdvancement = lockAdvancementEntry.value();
+//                    this.currentLockAdvancement = lockAdvancementEntry.value();
+                    this.currentLockAdvancement = lockAdvancementEntry;
                 }
                 if (unlockAdvancementEntry != null) {
-                    this.currentUnlockAdvancement = unlockAdvancementEntry.value();
+//                    this.currentUnlockAdvancement = unlockAdvancementEntry.value();
+                    this.currentUnlockAdvancement = unlockAdvancementEntry;
                 }
 
                 Inventory inventory = new SimpleInventory(36);
@@ -1037,7 +1048,7 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+    public boolean mouseScrolled(double mouseX, double mouseY/*, double horizontalAmount*/, double verticalAmount) {
         // TODO
         if (this.showCreativeTab
                 && this.creativeScreenPage == CreativeScreenPage.TELEPORTATION_MODE
@@ -1061,7 +1072,7 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
             this.visibleLocationsListScrollAmount = MathHelper.clamp(this.visibleLocationsListScrollAmount - f, 0.0f, 1.0f);
             this.visibleLocationsListScrollPosition = (int) ((double) (this.visibleLocationsListScrollAmount * (float) i));
         }
-        return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
+        return super.mouseScrolled(mouseX, mouseY/*, horizontalAmount*/, verticalAmount);
     }
 
     @Override
@@ -1113,9 +1124,11 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
                         context.drawTextWithShadow(this.textRenderer, text, this.width / 2 - 141, 76 + ((i - this.creativeLocationsListScrollPosition) * 25), 0xA0A0A0);
                     }
                     if (this.locationsList.size() > 3) {
-                        context.drawGuiTexture(SCROLL_BAR_BACKGROUND_8_70_TEXTURE, this.width / 2 - 153, 70, 8, 70);
+//                        context.drawGuiTexture(SCROLL_BAR_BACKGROUND_8_70_TEXTURE, this.width / 2 - 153, 70, 8, 70);
+                        context.drawTexture(SCROLL_BAR_BACKGROUND_8_70_TEXTURE, this.width / 2 - 153, 70, 0, 0, 8, 70);
                         int k = (int) (61.0f * this.creativeLocationsListScrollAmount);
-                        context.drawGuiTexture(SCROLLER_TEXTURE, this.width / 2 - 152, 70 + 1 + k, 6, 7);
+//                        context.drawGuiTexture(SCROLLER_TEXTURE, this.width / 2 - 152, 70 + 1 + k, 6, 7);
+                        context.drawTexture(SCROLLER_TEXTURE, this.width / 2 - 152, 70 + 1 + k, 0, 0, 6, 7);
                     }
                     this.newLocationIdentifierField.render(context, mouseX, mouseY, delta);
                     this.newLocationEntranceField.render(context, mouseX, mouseY, delta);
@@ -1144,9 +1157,11 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
                     context.drawText(this.textRenderer, this.visibleLocationsList.get(i).getLeft(), this.x + 19, this.y + 26 + ((i - this.visibleLocationsListScrollPosition) * 24), 0x404040, false);
                 }
                 if (this.visibleLocationsList.size() > 4) {
-                    context.drawGuiTexture(CREATIVE_HOUSING_SCROLLER_BACKGROUND_TEXTURE, this.x + 7, this.y + 20, 8, 92);
+//                    context.drawGuiTexture(CREATIVE_HOUSING_SCROLLER_BACKGROUND_TEXTURE, this.x + 7, this.y + 20, 8, 92);
+                    context.drawTexture(CREATIVE_HOUSING_SCROLLER_BACKGROUND_TEXTURE, this.x + 7, this.y + 20, 0, 0, 8, 92);
                     int k = (int) (83.0f * this.visibleLocationsListScrollAmount);
-                    context.drawGuiTexture(SCROLLER_TEXTURE, this.x + 8, this.y + 20 + 1 + k, 6, 7);
+//                    context.drawGuiTexture(SCROLLER_TEXTURE, this.x + 8, this.y + 20 + 1 + k, 6, 7);
+                    context.drawTexture(SCROLLER_TEXTURE, this.x + 8, this.y + 20 + 1 + k, 0, 0, 6, 7);
                 }
 
             } else if (this.showChooseTargetOwnerScreen) {
@@ -1185,7 +1200,8 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
                     } else if (this.currentTargetOwner != null) {
                         context.drawText(this.textRenderer, Text.translatable(this.teleporterBlock.getCurrentTargetOwnerLabel()), this.x + 8, this.y + 58, 0x404040, false);
 
-                        context.drawTexture(currentTargetOwner.getSkinTextures().texture(), this.x + 7, this.y + 77, 8, 8, 8, 8, 8, 8, 64, 64);
+//                        context.drawTexture(currentTargetOwner.getSkinTextures().texture(), this.x + 7, this.y + 77, 8, 8, 8, 8, 8, 8, 64, 64);
+                        context.drawTexture(currentTargetOwner.getSkinTexture(), this.x + 7, this.y + 77, 8, 8, 8, 8, 8, 8, 64, 64);
                         context.drawText(this.textRenderer, currentTargetOwner.getProfile().getName(), this.x + 19, this.y + 77, 0x404040, false);
                     }
 
@@ -1195,7 +1211,7 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
                         int x = this.x + 8;
                         int y = this.y + 95;
                         int k = x + y * this.backgroundWidth;
-                        context.drawItemWithoutEntity(currentKey, x, y, k);
+                        context.drawItemWithoutEntity(currentKey, x, y/*, k*/);
                         context.drawItemInSlot(this.textRenderer, currentKey, x, y);
                         context.drawText(this.textRenderer, this.consumeKeyItem ? KEY_ITEM_IS_CONSUMED_TEXT : KEY_ITEM_IS_REQUIRED_TEXT, x + 18, y + 5, 0x404040, false);
                     }

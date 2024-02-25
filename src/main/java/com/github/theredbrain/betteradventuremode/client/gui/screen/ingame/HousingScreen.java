@@ -704,7 +704,7 @@ public class HousingScreen extends Screen {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+    public boolean mouseScrolled(double mouseX, double mouseY/*, double horizontalAmount*/, double verticalAmount) {
         if (!this.showCreativeTab
                 && this.showCoOwnerListScreen
                 && this.coOwnerList.size() > 5
@@ -735,7 +735,7 @@ public class HousingScreen extends Screen {
             this.scrollAmount = MathHelper.clamp(this.scrollAmount - f, 0.0f, 1.0f);
             this.scrollPosition = (int)((double)(this.scrollAmount * (float)i));
         }
-        return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
+        return super.mouseScrolled(mouseX, mouseY/*, horizontalAmount*/, verticalAmount);
     }
 
     @Override
@@ -776,9 +776,11 @@ public class HousingScreen extends Screen {
                     context.drawText(this.textRenderer, text, this.x + 19, this.y + 39 + ((i - this.scrollPosition) * 24), 0x404040, false);
                 }
                 if (this.coOwnerList.size() > 5) {
-                    context.drawGuiTexture(PLAYER_LISTS_SCROLLER_BACKGROUND_TEXTURE, this.x + 7, this.y + 33, 8, 116);
+//                    context.drawGuiTexture(PLAYER_LISTS_SCROLLER_BACKGROUND_TEXTURE, this.x + 7, this.y + 33, 8, 116);
+                    context.drawTexture(PLAYER_LISTS_SCROLLER_BACKGROUND_TEXTURE, this.x + 7, this.y + 33, 0, 0, 8, 116);
                     int k = (int)(107.0f * this.scrollAmount);
-                    context.drawGuiTexture(SCROLLER_TEXTURE, this.x + 8, this.y + 33 + 1 + k, 6, 7);
+//                    context.drawGuiTexture(SCROLLER_TEXTURE, this.x + 8, this.y + 33 + 1 + k, 6, 7);
+                    context.drawTexture(SCROLLER_TEXTURE, this.x + 8, this.y + 33 + 1 + k, 0, 0, 6, 7);
                 }
                 this.newCoOwnerField.render(context, mouseX, mouseY, delta);
             } else if (this.showTrustedListScreen) {
@@ -789,9 +791,11 @@ public class HousingScreen extends Screen {
                     context.drawText(this.textRenderer, text, this.x + 19, this.y + 39 + ((i - this.scrollPosition) * 24), 0x404040, false);
                 }
                 if (this.trustedPersonsList.size() > 5) {
-                    context.drawGuiTexture(PLAYER_LISTS_SCROLLER_BACKGROUND_TEXTURE, this.x + 7, this.y + 33, 8, 116);
+//                    context.drawGuiTexture(PLAYER_LISTS_SCROLLER_BACKGROUND_TEXTURE, this.x + 7, this.y + 33, 8, 116);
+                    context.drawTexture(PLAYER_LISTS_SCROLLER_BACKGROUND_TEXTURE, this.x + 7, this.y + 33, 0, 0, 8, 116);
                     int k = (int)(107.0f * this.scrollAmount);
-                    context.drawGuiTexture(SCROLLER_TEXTURE, this.x + 8, this.y + 33 + 1 + k, 6, 7);
+//                    context.drawGuiTexture(SCROLLER_TEXTURE, this.x + 8, this.y + 33 + 1 + k, 6, 7);
+                    context.drawTexture(SCROLLER_TEXTURE, this.x + 8, this.y + 33 + 1 + k, 0, 0, 6, 7);
                 }
                 this.newTrustedPersonField.render(context, mouseX, mouseY, delta);
             } else if (this.showGuestListScreen) {
@@ -802,9 +806,11 @@ public class HousingScreen extends Screen {
                     context.drawText(this.textRenderer, text, this.x + 19, this.y + 39 + ((i - this.scrollPosition) * 24), 0x404040, false);
                 }
                 if (this.guestList.size() > 5) {
-                    context.drawGuiTexture(PLAYER_LISTS_SCROLLER_BACKGROUND_TEXTURE, this.x + 7, this.y + 33, 8, 116);
+//                    context.drawGuiTexture(PLAYER_LISTS_SCROLLER_BACKGROUND_TEXTURE, this.x + 7, this.y + 33, 8, 116);
+                    context.drawTexture(PLAYER_LISTS_SCROLLER_BACKGROUND_TEXTURE, this.x + 7, this.y + 33, 0, 0, 8, 116);
                     int k = (int)(107.0f * this.scrollAmount);
-                    context.drawGuiTexture(SCROLLER_TEXTURE, this.x + 8, this.y + 33 + 1 + k, 6, 7);
+//                    context.drawGuiTexture(SCROLLER_TEXTURE, this.x + 8, this.y + 33 + 1 + k, 6, 7);
+                    context.drawTexture(SCROLLER_TEXTURE, this.x + 8, this.y + 33 + 1 + k, 0, 0, 6, 7);
                 }
                 this.newGuestField.render(context, mouseX, mouseY, delta);
             } else {
@@ -829,12 +835,12 @@ public class HousingScreen extends Screen {
     }
 
     @Override
-    public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
-        super.renderBackground(context, mouseX, mouseY, delta);
-        this.drawBackground(context, delta, mouseX, mouseY);
+    public void renderBackground(DrawContext context/*, int mouseX, int mouseY, float delta*/) {
+        super.renderBackground(context/*, mouseX, mouseY, delta*/);
+        this.drawBackground(context/*, delta, mouseX, mouseY*/);
     }
 
-    public void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
+    public void drawBackground(DrawContext context/*, float delta, int mouseX, int mouseY*/) {
         if (!this.showCreativeTab) {
             int i = this.x;
             int j = this.y;

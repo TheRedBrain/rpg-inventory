@@ -1,10 +1,12 @@
 package com.github.theredbrain.betteradventuremode.util;
 
 import com.github.theredbrain.betteradventuremode.registry.Tags;
+import com.github.theredbrain.betteradventuremode.spell_engine.DuckSpellContainerMixin;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
+import net.spell_engine.api.spell.SpellContainer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,11 +22,10 @@ public class ItemUtils {
         return stack.getDamage() < stack.getMaxDamage() - 1 || stack.isIn(Tags.EMPTY_HAND_WEAPONS);
     }
 
-    // TODO SpellEngine 1.20.2
-//    public static SpellContainer setProxyPool(SpellContainer spellContainer, String proxyPool) {
-//        ((DuckSpellContainerMixin)spellContainer).setProxyPool(proxyPool);
-//        return spellContainer;
-//    }
+    public static SpellContainer setProxyPool(SpellContainer spellContainer, String proxyPool) {
+        ((DuckSpellContainerMixin)spellContainer).betteradventuremode$setProxyPool(proxyPool);
+        return spellContainer;
+    }
 
     public static ItemStack getItemStackFromVirtualItemStack(ItemUtils.VirtualItemStack virtualItemStack) {
         NbtCompound nbt = new NbtCompound();

@@ -1015,10 +1015,10 @@ public class MannequinScreen extends HandledScreen<MannequinScreenHandler> {
                 this.textureIdentifierStringField.getText(),
                 this.sheathedWeaponMode.asString(),
                 ItemUtils.parseFloat(this.entityYawField.getText()),
-                new Vec3d(
-                        ItemUtils.parseDouble(this.entityPosXField.getText()),
-                        ItemUtils.parseDouble(this.entityPosYField.getText()),
-                        ItemUtils.parseDouble(this.entityPosZField.getText())
+                new Vector3f(
+                        ItemUtils.parseFloat(this.entityPosXField.getText()),
+                        ItemUtils.parseFloat(this.entityPosYField.getText()),
+                        ItemUtils.parseFloat(this.entityPosZField.getText())
 
                 )
         ));
@@ -1227,7 +1227,8 @@ public class MannequinScreen extends HandledScreen<MannequinScreenHandler> {
             context.drawTexture(MANNEQUIN_SETTINGS_BACKGROUND_TEXTURE, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
         }
         this.mannequinEntity.setCustomNameVisible(false);
-        InventoryScreen.drawEntity(context, i + 253, j + 43, i + 326, j + 160, 50, 0.0625f, mouseX, mouseY, this.mannequinEntity);
+//        InventoryScreen.drawEntity(context, i + 253, j + 43, i + 326, j + 160, 50, 0.0625f, mouseX, mouseY, this.mannequinEntity);
+        InventoryScreen.drawEntity(context, i + 290, j + 157, 30, (float)(i + 290) - mouseX, (float)(j + 157 - 50) - mouseY, this.mannequinEntity);
     }
 
     private Identifier getSlotBackGroundByIndex(int index) {

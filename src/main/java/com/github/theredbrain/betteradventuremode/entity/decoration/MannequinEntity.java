@@ -343,7 +343,7 @@ public class MannequinEntity extends LivingEntity implements IRenderEquippedTrin
         if (clientPlayNetworkHandler != null) {
             playerListEntry = clientPlayNetworkHandler.getPlayerListEntry(this.getTextureIdentifierString());
         }
-        return playerListEntry != null ? playerListEntry.getSkinTextures().texture() : !this.getTextureIdentifierString().equals("") && Identifier.isValid(this.getTextureIdentifierString()) ? Identifier.tryParse(this.getTextureIdentifierString()) : getRandomDefaultTexture(this.getUuid());
+        return playerListEntry != null ? playerListEntry.getSkinTexture()/*.getSkinTextures().texture()*/ : !this.getTextureIdentifierString().equals("") && Identifier.isValid(this.getTextureIdentifierString()) ? Identifier.tryParse(this.getTextureIdentifierString()) : getRandomDefaultTexture(this.getUuid());
     }
 
     private static Identifier getRandomDefaultTexture(UUID uuid) {

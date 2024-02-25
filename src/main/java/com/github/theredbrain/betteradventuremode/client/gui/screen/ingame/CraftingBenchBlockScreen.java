@@ -529,7 +529,7 @@ public class CraftingBenchBlockScreen extends HandledScreen<CraftingBenchBlockSc
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+    public boolean mouseScrolled(double mouseX, double mouseY/*, double horizontalAmount*/, double verticalAmount) {
         if (this.shouldScroll()) {
             int i = this.getMaxScroll();
             float f = (float)verticalAmount / (float)i;
@@ -587,8 +587,9 @@ public class CraftingBenchBlockScreen extends HandledScreen<CraftingBenchBlockSc
                     } else {
                         identifier = RECIPE_TEXTURE;
                     }
-                    context.drawGuiTexture(identifier, x, y, 18, 18);
-                    context.drawItemWithoutEntity(resultItemStack, x + 1, y + 1, k);
+//                    context.drawGuiTexture(identifier, x, y, 18, 18);
+                    context.drawTexture(identifier, x, y, 0, 0, 18, 18);
+                    context.drawItemWithoutEntity(resultItemStack, x + 1, y + 1/*, k*/);
                     context.drawItemInSlot(this.textRenderer, resultItemStack, x + 1, y + 1);
 
                     index++;
@@ -598,7 +599,8 @@ public class CraftingBenchBlockScreen extends HandledScreen<CraftingBenchBlockSc
             y = this.y;
             k = (int)(65.0F * this.scrollAmount);
             Identifier identifier = this.shouldScroll() ? SCROLLER_VERTICAL_6_7_TEXTURE : SCROLLER_VERTICAL_6_7_DISABLED_TEXTURE;
-            context.drawGuiTexture(identifier, x + 119, y + 63 + k, 6, 7);
+//            context.drawGuiTexture(identifier, x + 119, y + 63 + k, 6, 7);
+            context.drawTexture(identifier, x + 119, y + 63 + k, 0, 0, 6, 7);
 
             int selectedRecipe = this.handler.getSelectedRecipe();
             if (selectedRecipe != -1) {
@@ -608,7 +610,7 @@ public class CraftingBenchBlockScreen extends HandledScreen<CraftingBenchBlockSc
                 x = this.x + 135;
                 y = this.y + 20;
                 k = x + y * this.backgroundWidth;
-                context.drawItemWithoutEntity(resultItemStack, x, y, k);
+                context.drawItemWithoutEntity(resultItemStack, x, y/*, k*/);
                 context.drawItemInSlot(this.textRenderer, resultItemStack, x, y);
 
                 context.drawText(this.textRenderer, resultItemStack.getName(), x + 20, y + 4, 4210752, false);

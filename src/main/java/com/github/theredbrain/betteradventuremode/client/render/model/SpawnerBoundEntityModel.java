@@ -2,7 +2,8 @@ package com.github.theredbrain.betteradventuremode.client.render.model;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.entity.mob.SpawnerBoundEntity;
-import mod.azure.azurelib.common.api.client.model.GeoModel;
+//import mod.azure.azurelib.common.api.client.model.GeoModel;
+import mod.azure.azurelib.model.GeoModel;
 import net.minecraft.util.Identifier;
 
 public class SpawnerBoundEntityModel extends GeoModel<SpawnerBoundEntity> {

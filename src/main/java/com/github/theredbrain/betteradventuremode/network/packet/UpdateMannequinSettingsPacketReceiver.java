@@ -1,12 +1,14 @@
 package com.github.theredbrain.betteradventuremode.network.packet;
 
 import com.github.theredbrain.betteradventuremode.entity.decoration.MannequinEntity;
+import dev.kosmx.playerAnim.core.util.Vec3f;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.joml.Vector3f;
 
 public class UpdateMannequinSettingsPacketReceiver implements ServerPlayNetworking.PlayPacketHandler<UpdateMannequinSettingsPacket> {
     @Override
@@ -27,7 +29,8 @@ public class UpdateMannequinSettingsPacketReceiver implements ServerPlayNetworki
         String textureIdentifierString = packet.textureIdentifierString;
         String sheathedWeaponMode = packet.sheathedWeaponMode;
         float entityYaw = packet.entityYaw;
-        Vec3d entityPos = packet.entityPos;
+        Vector3f vector3f = packet.entityPos;
+        Vec3d entityPos = new Vec3d(vector3f.x, vector3f.y, vector3f.z);
 
         World world = player.getWorld();
 

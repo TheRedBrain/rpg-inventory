@@ -1,6 +1,6 @@
 package com.github.theredbrain.betteradventuremode.spell_engine;
 
 public interface DuckSpellContainerMixin {
-    String getProxyPool();
-    void setProxyPool(String proxyPool);
+    String betteradventuremode$getProxyPool();
+    void betteradventuremode$setProxyPool(String proxyPool);
 }

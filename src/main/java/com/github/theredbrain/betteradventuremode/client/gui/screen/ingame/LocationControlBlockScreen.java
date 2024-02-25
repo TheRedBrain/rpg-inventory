@@ -377,7 +377,7 @@ public class LocationControlBlockScreen extends Screen {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+    public boolean mouseScrolled(double mouseX, double mouseY/*, double horizontalAmount*/, double verticalAmount) {
         if (this.screenPage == ScreenPage.SIDE_ENTRANCES
                 && this.sideEntranceList.size() > 3
                 && mouseX >= (double)(this.width / 2 - 152) && mouseX <= (double)(this.width / 2 + 100)
@@ -387,7 +387,7 @@ public class LocationControlBlockScreen extends Screen {
             this.scrollAmount = MathHelper.clamp(this.scrollAmount - f, 0.0f, 1.0f);
             this.scrollPosition = (int)((double)(this.scrollAmount * (float)i));
         }
-        return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
+        return super.mouseScrolled(mouseX, mouseY/*, horizontalAmount*/, verticalAmount);
     }
 
     @Override
@@ -419,9 +419,11 @@ public class LocationControlBlockScreen extends Screen {
                 context.drawTextWithShadow(this.textRenderer, text, this.width / 2 - 141, 50 + ((i - this.scrollPosition) * 24), 0xA0A0A0);
             }
             if (this.sideEntranceList.size() > 3) {
-                context.drawGuiTexture(SCROLL_BAR_BACKGROUND_8_70_TEXTURE, this.width / 2 - 153, 44, 8, 70);
+//                context.drawGuiTexture(SCROLL_BAR_BACKGROUND_8_70_TEXTURE, this.width / 2 - 153, 44, 8, 70);
+                context.drawTexture(SCROLL_BAR_BACKGROUND_8_70_TEXTURE, this.width / 2 - 153, 44, 0, 0, 8, 70);
                 int k = (int)(61.0f * this.scrollAmount);
-                context.drawGuiTexture(SCROLLER_TEXTURE, this.width / 2 - 152, 44 + 1 + k, 6, 7);
+//                context.drawGuiTexture(SCROLLER_TEXTURE, this.width / 2 - 152, 44 + 1 + k, 6, 7);
+                context.drawTexture(SCROLLER_TEXTURE, this.width / 2 - 152, 44 + 1 + k, 0, 0, 6, 7);
             }
             context.drawTextWithShadow(this.textRenderer, NEW_SIDE_ENTRANCE_POSITION_OFFSET_LABEL_TEXT, this.width / 2 - 153, 116, 0xA0A0A0);
             this.newSideEntrancePositionOffsetXField.render(context, mouseX, mouseY, delta);
@@ -446,12 +448,12 @@ public class LocationControlBlockScreen extends Screen {
     }
 
     @Override
-    public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
-        super.renderBackground(context, mouseX, mouseY, delta);
-        this.drawBackground(context, delta, mouseX, mouseY);
+    public void renderBackground(DrawContext context/*, int mouseX, int mouseY, float delta*/) {
+        super.renderBackground(context/*, mouseX, mouseY, delta*/);
+        this.drawBackground(context/*, delta, mouseX, mouseY*/);
     }
 
-    public void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
+    public void drawBackground(DrawContext context/*, float delta, int mouseX, int mouseY*/) {
     }
 
     private boolean updateLocationControlBlock() {

@@ -228,7 +228,8 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
             serverPlayerEntity.removeStatusEffect(StatusEffectsRegistry.PORTAL_RESISTANCE_EFFECT);
 
             if (teleportTeam) {
-                Team team = serverPlayerEntity.getScoreboardTeam();
+//                Team team = serverPlayerEntity.getScoreboardTeam();
+                Team team = serverPlayerEntity.getScoreboard().getPlayerTeam(serverPlayerEntity.getEntityName())/*.getScoreboardTeam()*/;
                 if (team != null) {
                     for (String playerString : team.getPlayerList()) {
                         ServerPlayerEntity teamServerPlayerEntity = server.getPlayerManager().getPlayer(playerString);

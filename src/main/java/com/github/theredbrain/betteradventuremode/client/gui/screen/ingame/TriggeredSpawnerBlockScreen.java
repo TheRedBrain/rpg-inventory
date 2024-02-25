@@ -144,7 +144,8 @@ public class TriggeredSpawnerBlockScreen extends Screen {
         } else if (this.newEntityAttributeModifierOperation == EntityAttributeModifier.Operation.MULTIPLY_TOTAL) {
             this.newEntityAttributeModifierOperation = EntityAttributeModifier.Operation.ADDITION;
         }
-        this.newEntityAttributeModifierOperationButton.setMessage(Text.translatable("gui.entity_attribute_modifier.operation." + this.newEntityAttributeModifierOperation.asString()));
+//        this.newEntityAttributeModifierOperationButton.setMessage(Text.translatable("gui.entity_attribute_modifier.operation." + this.newEntityAttributeModifierOperation.asString()));
+        this.newEntityAttributeModifierOperationButton.setMessage(Text.translatable("gui.entity_attribute_modifier.operation." + this.newEntityAttributeModifierOperation.getId()));
         updateWidgets();
     }
 
@@ -264,7 +265,8 @@ public class TriggeredSpawnerBlockScreen extends Screen {
         this.newEntityAttributeModifierValueField = new TextFieldWidget(this.textRenderer, this.width / 2 - 154, 188, 100, 20, Text.translatable(""));
         this.newEntityAttributeModifierValueField.setPlaceholder(NEW_ENTITY_ATTRIBUTE_MODIFIER_VALUE_FIELD_PLACEHOLDER_TEXT);
         this.addSelectableChild(this.newEntityAttributeModifierValueField);
-        this.newEntityAttributeModifierOperationButton = this.addDrawableChild(ButtonWidget.builder(Text.translatable("gui.entity_attribute_modifier.operation." + this.newEntityAttributeModifierOperation.asString()), button -> this.cycleNewEntityAttributeModifierOperationButton()).dimensions(this.width / 2 - 50, 188, 100, 20).build());
+//        this.newEntityAttributeModifierOperationButton = this.addDrawableChild(ButtonWidget.builder(Text.translatable("gui.entity_attribute_modifier.operation." + this.newEntityAttributeModifierOperation.asString()), button -> this.cycleNewEntityAttributeModifierOperationButton()).dimensions(this.width / 2 - 50, 188, 100, 20).build());
+        this.newEntityAttributeModifierOperationButton = this.addDrawableChild(ButtonWidget.builder(Text.translatable("gui.entity_attribute_modifier.operation." + this.newEntityAttributeModifierOperation.getId()), button -> this.cycleNewEntityAttributeModifierOperationButton()).dimensions(this.width / 2 - 50, 188, 100, 20).build());
         this.addNewEntityAttributeModifierButton = this.addDrawableChild(ButtonWidget.builder(Text.translatable("gui.list_entry.add"), button -> this.addNewEntityAttributeModifier()).dimensions(this.width / 2 + 54, 188, 100, 20).build());
 
         // --- triggered block page ---
@@ -480,7 +482,7 @@ public class TriggeredSpawnerBlockScreen extends Screen {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+    public boolean mouseScrolled(double mouseX, double mouseY/*, double horizontalAmount*/, double verticalAmount) {
         if (this.creativeScreenPage == CreativeScreenPage.ENTITY_ATTRIBUTE_MODIFIER
                 && this.entityAttributeModifiersList.size() > 3
                 && mouseX >= (double)(this.width / 2 - 152) && mouseX <= (double)(this.width / 2 + 50)
@@ -490,7 +492,7 @@ public class TriggeredSpawnerBlockScreen extends Screen {
             this.scrollAmount = MathHelper.clamp(this.scrollAmount - f, 0.0f, 1.0f);
             this.scrollPosition = (int)((double)(this.scrollAmount * (float)i));
         }
-        return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
+        return super.mouseScrolled(mouseX, mouseY/*, horizontalAmount*/, verticalAmount);
     }
 
     @Override
@@ -582,9 +584,11 @@ public class TriggeredSpawnerBlockScreen extends Screen {
                     context.drawTextWithShadow(this.textRenderer, entityAttributeModifier.getValue() + ", " + entityAttributeModifier.getOperation(), this.width / 2 - 141, 59 + ((i - this.scrollPosition) * 34), 0xA0A0A0);
                 }
                 if (this.entityAttributeModifiersList.size() > 3) {
-                    context.drawGuiTexture(SCROLL_BAR_BACKGROUND_8_92_TEXTURE, this.width / 2 - 153, 45, 8, 92);
+//                    context.drawGuiTexture(SCROLL_BAR_BACKGROUND_8_92_TEXTURE, this.width / 2 - 153, 45, 8, 92);
+                    context.drawTexture(SCROLL_BAR_BACKGROUND_8_92_TEXTURE, this.width / 2 - 153, 45, 0, 0, 8, 92);
                     int k = (int)(83.0f * this.scrollAmount);
-                    context.drawGuiTexture(SCROLLER_VERTICAL_6_7_TEXTURE, this.width / 2 - 152, 45 + 1 + k, 6, 7);
+//                    context.drawGuiTexture(SCROLLER_VERTICAL_6_7_TEXTURE, this.width / 2 - 152, 45 + 1 + k, 6, 7);
+                    context.drawTexture(SCROLLER_VERTICAL_6_7_TEXTURE, this.width / 2 - 152, 45 + 1 + k, 0, 0, 6, 7);
                 }
 
                 this.newEntityAttributeModifierIdentifierField.render(context, mouseX, mouseY, delta);

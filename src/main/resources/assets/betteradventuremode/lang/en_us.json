@@ -433,6 +433,9 @@
 	"gui.entity_attribute_modifier.operation.addition": "Addition",
 	"gui.entity_attribute_modifier.operation.multiply_base": "Multiply Base",
 	"gui.entity_attribute_modifier.operation.multiply_total": "Multiply Total",
+	"gui.entity_attribute_modifier.operation.0": "Addition",
+	"gui.entity_attribute_modifier.operation.1": "Multiply Base",
+	"gui.entity_attribute_modifier.operation.2": "Multiply Total",
 
 
 	"block.betteradventuremode.crafting_root_block": "Work Bench",

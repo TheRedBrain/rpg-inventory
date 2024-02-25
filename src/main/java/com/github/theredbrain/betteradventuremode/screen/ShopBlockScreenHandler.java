@@ -8,7 +8,8 @@ import com.github.theredbrain.betteradventuremode.network.packet.TradeWithShopPa
 import com.github.theredbrain.betteradventuremode.registry.ScreenHandlerTypesRegistry;
 import com.github.theredbrain.betteradventuremode.registry.ShopsRegistry;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.advancement.AdvancementEntry;
+//import net.minecraft.advancement.AdvancementEntry;
+import net.minecraft.advancement.Advancement;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.network.ClientAdvancementManager;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -251,16 +252,18 @@ public class ShopBlockScreenHandler extends ScreenHandler {
                 lockAdvancementIdentifier = deal.getLockAdvancement();
                 unlockAdvancementIdentifier = deal.getUnlockAdvancement();
 
-                AdvancementEntry lockAdvancementEntry = null;
+//                AdvancementEntry lockAdvancementEntry = null;
+                Advancement lockAdvancement = null;
                 if (!lockAdvancementIdentifier.equals("")) {
-                    lockAdvancementEntry = advancementHandler.get(Identifier.tryParse(lockAdvancementIdentifier));
+                    lockAdvancement = advancementHandler.getManager().get(Identifier.tryParse(lockAdvancementIdentifier));
                 }
-                AdvancementEntry unlockAdvancementEntry = null;
+//                AdvancementEntry unlockAdvancementEntry = null;
+                Advancement unlockAdvancement = null;
                 if (!unlockAdvancementIdentifier.equals("")) {
-                    unlockAdvancementEntry = advancementHandler.get(Identifier.tryParse(unlockAdvancementIdentifier));
+                    unlockAdvancement = advancementHandler.getManager().get(Identifier.tryParse(unlockAdvancementIdentifier));
                 }
-                if ((lockAdvancementIdentifier.equals("") || (lockAdvancementEntry != null && !((DuckClientAdvancementManagerMixin) advancementHandler.getManager()).betteradventuremode$getAdvancementProgress(lockAdvancementEntry).isDone())) &&
-                        (unlockAdvancementIdentifier.equals("") || (unlockAdvancementEntry != null && ((DuckClientAdvancementManagerMixin) advancementHandler.getManager()).betteradventuremode$getAdvancementProgress(unlockAdvancementEntry).isDone()))) {
+                if ((lockAdvancementIdentifier.equals("") || (lockAdvancement != null && !((DuckClientAdvancementManagerMixin) advancementHandler.getManager()).betteradventuremode$getAdvancementProgress(lockAdvancement).isDone())) &&
+                        (unlockAdvancementIdentifier.equals("") || (unlockAdvancement != null && ((DuckClientAdvancementManagerMixin) advancementHandler.getManager()).betteradventuremode$getAdvancementProgress(unlockAdvancement).isDone()))) {
                     this.unlockedDealsList.add(deal);
                     this.unlockedDealsCounter++;
                 } else {

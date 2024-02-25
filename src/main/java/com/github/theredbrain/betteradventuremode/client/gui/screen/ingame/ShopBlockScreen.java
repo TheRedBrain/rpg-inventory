@@ -263,7 +263,7 @@ public class ShopBlockScreen extends HandledScreen<ShopBlockScreenHandler> {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+    public boolean mouseScrolled(double mouseX, double mouseY/*, double horizontalAmount*/, double verticalAmount) {
         if (!this.showCreativeScreen
                 && this.handler.getUnlockedDealsCounter() > 3
                 && mouseX >= (double) (this.x + 7) && mouseX <= (double) (this.x + this.backgroundWidth - 7)
@@ -273,7 +273,7 @@ public class ShopBlockScreen extends HandledScreen<ShopBlockScreenHandler> {
             this.scrollAmount = MathHelper.clamp(this.scrollAmount - f, 0.0f, 1.0f);
             this.scrollPosition = (int) ((double) (this.scrollAmount * (float) i));
         }
-        return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
+        return super.mouseScrolled(mouseX, mouseY/*, horizontalAmount*/, verticalAmount);
     }
 
     @Override
@@ -305,24 +305,27 @@ public class ShopBlockScreen extends HandledScreen<ShopBlockScreenHandler> {
                     x = this.x + 85;
                     y = this.y + 18 + (index * 24);
                     k = x + y * this.backgroundWidth;
-                    context.drawItemWithoutEntity(offerItemStack, x, y, k);
+                    context.drawItemWithoutEntity(offerItemStack, x, y/*, k*/);
                     context.drawItemInSlot(this.textRenderer, offerItemStack, x, y);
                     for (int j = 0; j < deal.getPriceList().size(); j++) {
                         ItemStack priceItemStack = ItemUtils.getItemStackFromVirtualItemStack(deal.getPriceList().get(j));
                         x = this.x + 8 + (j * 18);
                         y = this.y + 18 + (index * 24);
                         k = x + y * this.backgroundWidth;
-                        context.drawItemWithoutEntity(priceItemStack, x, y, k);
+                        context.drawItemWithoutEntity(priceItemStack, x, y/*, k*/);
                         context.drawItemInSlot(this.textRenderer, priceItemStack, x, y);
                     }
-                    context.drawGuiTexture(this.handler.getStockedDealsList().get(i) != null ? HAS_STOCK_TEXTURE : OUT_OF_STOCK_TEXTURE, this.x + 55, this.y + 16 + (index * 24), 28, 21);
+//                    context.drawGuiTexture(this.handler.getStockedDealsList().get(i) != null ? HAS_STOCK_TEXTURE : OUT_OF_STOCK_TEXTURE, this.x + 55, this.y + 16 + (index * 24), 28, 21);
+                    context.drawTexture(this.handler.getStockedDealsList().get(i) != null ? HAS_STOCK_TEXTURE : OUT_OF_STOCK_TEXTURE, this.x + 55, this.y + 16 + (index * 24), 0, 0, 28, 21);
                     index++;
                 }
             }
             if (this.handler.getUnlockedDealsCounter() > 3) {
-                context.drawGuiTexture(SCROLL_BAR_BACKGROUND_8_68_TEXTURE, this.x + 161, this.y + 16, 8, 68);
+//                context.drawGuiTexture(SCROLL_BAR_BACKGROUND_8_68_TEXTURE, this.x + 161, this.y + 16, 8, 68);
+                context.drawTexture(SCROLL_BAR_BACKGROUND_8_68_TEXTURE, this.x + 161, this.y + 16, 0, 0, 8, 68);
                 k = (int) (59.0f * this.scrollAmount);
-                context.drawGuiTexture(SCROLLER_VERTICAL_6_7_TEXTURE, this.x + 161 + 1, this.y + 16 + 1 + k, 6, 7);
+//                context.drawGuiTexture(SCROLLER_VERTICAL_6_7_TEXTURE, this.x + 161 + 1, this.y + 16 + 1 + k, 6, 7);
+                context.drawTexture(SCROLLER_VERTICAL_6_7_TEXTURE, this.x + 161 + 1, this.y + 16 + 1 + k, 0, 0, 6, 7);
             }
         }
     }
@@ -334,11 +337,11 @@ public class ShopBlockScreen extends HandledScreen<ShopBlockScreenHandler> {
         context.drawText(this.textRenderer, this.playerInventoryTitle, this.playerInventoryTitleX, this.playerInventoryTitleY, 4210752, false);
     }
 
-    @Override
-    public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
-        super.renderBackground(context, mouseX, mouseY, delta);
-        this.drawBackground(context, delta, mouseX, mouseY);
-    }
+//    @Override
+//    public void renderBackground(DrawContext context/*, int mouseX, int mouseY, float delta*/) {
+//        super.renderBackground(context/*, mouseX, mouseY, delta*/);
+//        this.drawBackground(context/*, delta, mouseX, mouseY*/);
+//    }
 
     @Override
     public void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {

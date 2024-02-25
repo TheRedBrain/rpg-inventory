@@ -1,10 +1,14 @@
 package com.github.theredbrain.betteradventuremode.item;
 
 import dev.emi.trinkets.api.TrinketItem;
-import mod.azure.azurelib.common.api.common.animatable.GeoItem;
-import mod.azure.azurelib.common.internal.common.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.common.internal.common.core.animation.AnimatableManager;
-import mod.azure.azurelib.common.internal.common.util.AzureLibUtil;
+//import mod.azure.azurelib.common.api.common.animatable.GeoItem;
+//import mod.azure.azurelib.common.internal.common.core.animatable.instance.AnimatableInstanceCache;
+//import mod.azure.azurelib.common.internal.common.core.animation.AnimatableManager;
+//import mod.azure.azurelib.common.internal.common.util.AzureLibUtil;
+import mod.azure.azurelib.animatable.GeoItem;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.util.AzureLibUtil;
 import net.minecraft.util.Identifier;
 
 import java.util.function.Supplier;

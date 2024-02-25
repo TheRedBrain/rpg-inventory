@@ -40,14 +40,14 @@
 
   "depends": {
     "java": ">=17",
-    "minecraft": "1.20.4",
+    "minecraft": "1.20.1",
     "fabricloader": ">=0.14.20",
     "fabric-api": "*",
-    "cloth-config": ">=13.0.121",
+    "cloth-config": ">=11.1.106",
     "trinkets": ">=3.7.1",
-    "dimlib": ">=1.0.2",
-    "cardinal-components-base": ">=5.4.0",
-    "cardinal-components-entity": ">=5.4.0",
+    "q_misc_util": ">=3.3.7",
+    "cardinal-components-base": ">=5.2.2",
+    "cardinal-components-entity": ">=5.2.2",
     "azurelib": ">=1.0.3"
   }
 }

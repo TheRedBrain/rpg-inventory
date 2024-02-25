@@ -1,10 +1,14 @@
 package com.github.theredbrain.betteradventuremode.azurelib;
 
 import com.github.theredbrain.betteradventuremode.client.render.renderer.ModeledTrinketRenderer;
-import mod.azure.azurelib.common.api.client.renderer.layer.GeoRenderLayer;
-import mod.azure.azurelib.common.internal.client.renderer.GeoRenderer;
-import mod.azure.azurelib.common.internal.common.cache.object.BakedGeoModel;
-import mod.azure.azurelib.common.internal.common.event.GeoRenderEvent;
+//import mod.azure.azurelib.common.api.client.renderer.layer.GeoRenderLayer;
+//import mod.azure.azurelib.common.internal.client.renderer.GeoRenderer;
+//import mod.azure.azurelib.common.internal.common.cache.object.BakedGeoModel;
+//import mod.azure.azurelib.common.internal.common.event.GeoRenderEvent;
+import mod.azure.azurelib.cache.object.BakedGeoModel;
+import mod.azure.azurelib.event.GeoRenderEvent;
+import mod.azure.azurelib.renderer.GeoRenderer;
+import mod.azure.azurelib.renderer.layer.GeoRenderLayer;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.client.render.VertexConsumerProvider;

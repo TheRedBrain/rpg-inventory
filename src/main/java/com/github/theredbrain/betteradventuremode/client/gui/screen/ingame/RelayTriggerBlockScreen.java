@@ -191,7 +191,7 @@ public class RelayTriggerBlockScreen extends Screen {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+    public boolean mouseScrolled(double mouseX, double mouseY/*, double horizontalAmount*/, double verticalAmount) {
         if (this.triggeredBlocks.size() > 5
                 && mouseX >= (double)(this.width / 2 - 152) && mouseX <= (double)(this.width / 2 + 50)
                 && mouseY >= 20 && mouseY <= 135) {
@@ -200,7 +200,7 @@ public class RelayTriggerBlockScreen extends Screen {
             this.scrollAmount = MathHelper.clamp(this.scrollAmount - f, 0.0f, 1.0f);
             this.scrollPosition = (int)((double)(this.scrollAmount * (float)i));
         }
-        return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
+        return super.mouseScrolled(mouseX, mouseY/*, horizontalAmount*/, verticalAmount);
     }
 
     @Override
@@ -228,9 +228,11 @@ public class RelayTriggerBlockScreen extends Screen {
             context.drawTextWithShadow(this.textRenderer, this.triggeredBlocks.get(i).toString(), this.width / 2 - 141, 26 + ((i - this.scrollPosition) * 24), 0xA0A0A0);
         }
         if (this.triggeredBlocks.size() > 5) {
-            context.drawGuiTexture(TRIGGERED_BLOCKS_LIST_SCROLLER_BACKGROUND_TEXTURE, this.width / 2 - 153, 20, 8, 116);
+//            context.drawGuiTexture(TRIGGERED_BLOCKS_LIST_SCROLLER_BACKGROUND_TEXTURE, this.width / 2 - 153, 20, 8, 116);
+            context.drawTexture(TRIGGERED_BLOCKS_LIST_SCROLLER_BACKGROUND_TEXTURE, this.width / 2 - 153, 20, 0, 0, 8, 116);
             int k = (int)(107.0f * this.scrollAmount);
-            context.drawGuiTexture(SCROLLER_TEXTURE, this.width / 2 - 152, 20 + 1 + k, 6, 7);
+//            context.drawGuiTexture(SCROLLER_TEXTURE, this.width / 2 - 152, 20 + 1 + k, 6, 7);
+            context.drawTexture(SCROLLER_TEXTURE, this.width / 2 - 152, 20 + 1 + k, 0, 0, 6, 7);
         }
         context.drawTextWithShadow(this.textRenderer, NEW_TRIGGERED_BLOCK_POSITION_TEXT, this.width / 2 - 153, 140, 0xA0A0A0);
         this.newTriggeredBlockPositionOffsetXField.render(context, mouseX, mouseY, delta);

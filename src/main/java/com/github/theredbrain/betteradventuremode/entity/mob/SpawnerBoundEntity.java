@@ -1,10 +1,14 @@
 package com.github.theredbrain.betteradventuremode.entity.mob;
 
 import com.github.theredbrain.betteradventuremode.block.entity.TriggeredSpawnerBlockEntity;
-import mod.azure.azurelib.common.api.common.animatable.GeoEntity;
-import mod.azure.azurelib.common.internal.common.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.common.internal.common.core.animation.AnimatableManager;
-import mod.azure.azurelib.common.internal.common.util.AzureLibUtil;
+//import mod.azure.azurelib.common.api.common.animatable.GeoEntity;
+//import mod.azure.azurelib.common.internal.common.core.animatable.instance.AnimatableInstanceCache;
+//import mod.azure.azurelib.common.internal.common.core.animation.AnimatableManager;
+//import mod.azure.azurelib.common.internal.common.util.AzureLibUtil;
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.util.AzureLibUtil;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;

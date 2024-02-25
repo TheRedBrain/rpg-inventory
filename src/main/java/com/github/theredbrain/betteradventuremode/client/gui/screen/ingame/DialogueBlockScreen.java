@@ -12,7 +12,8 @@ import com.github.theredbrain.betteradventuremode.registry.DialoguesRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.advancement.AdvancementEntry;
+//import net.minecraft.advancement.AdvancementEntry;
+import net.minecraft.advancement.Advancement;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
@@ -190,13 +191,15 @@ public class DialogueBlockScreen extends Screen {
             showLockedAnswer = dialogueAnswer.showLockedAnswer();
 
             if (advancementHandler != null) {
-                AdvancementEntry lockAdvancementEntry = null;
+//                AdvancementEntry lockAdvancementEntry = null;
+                Advancement lockAdvancementEntry = null;
                 if (!lockAdvancementIdentifier.equals("")) {
-                    lockAdvancementEntry = advancementHandler.get(Identifier.tryParse(lockAdvancementIdentifier));
+                    lockAdvancementEntry = advancementHandler.getManager().get(Identifier.tryParse(lockAdvancementIdentifier));
                 }
-                AdvancementEntry unlockAdvancementEntry = null;
+//                AdvancementEntry unlockAdvancementEntry = null;
+                Advancement unlockAdvancementEntry = null;
                 if (!unlockAdvancementIdentifier.equals("")) {
-                    unlockAdvancementEntry = advancementHandler.get(Identifier.tryParse(unlockAdvancementIdentifier));
+                    unlockAdvancementEntry = advancementHandler.getManager().get(Identifier.tryParse(unlockAdvancementIdentifier));
                 }
                 if ((lockAdvancementIdentifier.equals("") || (lockAdvancementEntry != null && !((DuckClientAdvancementManagerMixin)advancementHandler.getManager()).betteradventuremode$getAdvancementProgress(lockAdvancementEntry).isDone())) &&
                     (unlockAdvancementIdentifier.equals("") || (unlockAdvancementEntry != null && ((DuckClientAdvancementManagerMixin)advancementHandler.getManager()).betteradventuremode$getAdvancementProgress(unlockAdvancementEntry).isDone()))) {
@@ -312,13 +315,13 @@ public class DialogueBlockScreen extends Screen {
             Identifier newStartingDialogueUnlockAdvancementIdentifier = Identifier.tryParse(this.newStartingDialogueUnlockAdvancementIdentifierField.getText());
             if (advancementHandler != null) {
                 if (newStartingDialogueLockAdvancementIdentifier != null) {
-                    AdvancementEntry advancementEntry = advancementHandler.get(newStartingDialogueLockAdvancementIdentifier);
+                    Advancement advancementEntry = advancementHandler.getManager().get(newStartingDialogueLockAdvancementIdentifier);
                     if (advancementEntry == null && !this.newStartingDialogueLockAdvancementIdentifierField.getText().equals("")) {
                         message = "gui.dialogue_block.newStartingDialogueLockAdvancementIdentifier_invalid";
                     }
                 }
                 if (newStartingDialogueUnlockAdvancementIdentifier != null) {
-                    AdvancementEntry advancementEntry = advancementHandler.get(newStartingDialogueUnlockAdvancementIdentifier);
+                    Advancement advancementEntry = advancementHandler.getManager().get(newStartingDialogueUnlockAdvancementIdentifier);
                     if (advancementEntry == null && !this.newStartingDialogueUnlockAdvancementIdentifierField.getText().equals("")) {
                         message = "gui.dialogue_block.newStartingDialogueUnlockAdvancementIdentifier_invalid";
                     }
@@ -779,7 +782,7 @@ public class DialogueBlockScreen extends Screen {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+    public boolean mouseScrolled(double mouseX, double mouseY/*, double horizontalAmount*/, double verticalAmount) {
         if (!this.showCreativeScreen
                 && this.dialogueTextList.size() > 7
                 && mouseX >= (double)(this.x + 7) && mouseX <= (double)(this.x + this.backgroundWidth - 7)
@@ -828,7 +831,7 @@ public class DialogueBlockScreen extends Screen {
             this.scrollAmount = MathHelper.clamp(this.scrollAmount - f, 0.0f, 1.0f);
             this.scrollPosition = (int)((double)(this.scrollAmount * (float)i));
         }
-        return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
+        return super.mouseScrolled(mouseX, mouseY/*, horizontalAmount*/, verticalAmount);
     }
 
     @Override
@@ -850,9 +853,11 @@ public class DialogueBlockScreen extends Screen {
                     context.drawTextWithShadow(this.textRenderer, this.dialogueUsedBlocksList.get(i).getLeft() + ": " + this.dialogueUsedBlocksList.get(i).getRight().toString(), x, 48 + ((i - this.scrollPosition) * 24), 0xA0A0A0);
                 }
                 if (this.dialogueUsedBlocksList.size() > 4) {
-                    context.drawGuiTexture(SCROLL_BAR_BACKGROUND_8_96_TEXTURE, this.width / 2 - 154, 42, 8, 96);
+//                    context.drawGuiTexture(SCROLL_BAR_BACKGROUND_8_96_TEXTURE, this.width / 2 - 154, 42, 8, 96);
+                    context.drawTexture(SCROLL_BAR_BACKGROUND_8_96_TEXTURE, this.width / 2 - 154, 42, 0, 0, 8, 96);
                     int k = (int)(85.0f * this.scrollAmount);
-                    context.drawGuiTexture(SCROLLER_VERTICAL_6_7_TEXTURE, this.width / 2 - 153, 42 + 1 + k, 6, 7);
+//                    context.drawGuiTexture(SCROLLER_VERTICAL_6_7_TEXTURE, this.width / 2 - 153, 42 + 1 + k, 6, 7);
+                    context.drawTexture(SCROLLER_VERTICAL_6_7_TEXTURE, this.width / 2 - 153, 42 + 1 + k, 0, 0, 6, 7);
                 }
                 this.newDialogueUsedBlockIdentifierField.render(context, mouseX, mouseY, delta);
                 this.newDialogueUsedBlockPositionOffsetXField.render(context, mouseX, mouseY, delta);
@@ -864,9 +869,11 @@ public class DialogueBlockScreen extends Screen {
                     context.drawTextWithShadow(this.textRenderer, this.dialogueTriggeredBlocksList.get(i).getLeft() + ": " + this.dialogueTriggeredBlocksList.get(i).getRight().toString(), x, 48 + ((i - this.scrollPosition) * 24), 0xA0A0A0);
                 }
                 if (this.dialogueTriggeredBlocksList.size() > 4) {
-                    context.drawGuiTexture(SCROLL_BAR_BACKGROUND_8_96_TEXTURE, this.width / 2 - 154, 42, 8, 96);
+//                    context.drawGuiTexture(SCROLL_BAR_BACKGROUND_8_96_TEXTURE, this.width / 2 - 154, 42, 8, 96);
+                    context.drawTexture(SCROLL_BAR_BACKGROUND_8_96_TEXTURE, this.width / 2 - 154, 42, 0, 0, 8, 96);
                     int k = (int)(85.0f * this.scrollAmount);
-                    context.drawGuiTexture(SCROLLER_VERTICAL_6_7_TEXTURE, this.width / 2 - 153, 42 + 1 + k, 6, 7);
+//                    context.drawGuiTexture(SCROLLER_VERTICAL_6_7_TEXTURE, this.width / 2 - 153, 42 + 1 + k, 6, 7);
+                    context.drawTexture(SCROLLER_VERTICAL_6_7_TEXTURE, this.width / 2 - 153, 42 + 1 + k, 0, 0, 6, 7);
                 }
                 this.newDialogueTriggeredBlockIdentifierField.render(context, mouseX, mouseY, delta);
                 this.newDialogueTriggeredBlockPositionOffsetXField.render(context, mouseX, mouseY, delta);
@@ -880,9 +887,11 @@ public class DialogueBlockScreen extends Screen {
                     context.drawTextWithShadow(this.textRenderer, Text.translatable(this.startingDialogueList.get(i).getRight().getRight()), x, 97, 0xA0A0A0);
                 }
                 if (this.startingDialogueList.size() > 1) {
-                    context.drawGuiTexture(SCROLL_BAR_BACKGROUND_8_35_TEXTURE, this.width / 2 - 154, 71, 8, 35);
+//                    context.drawGuiTexture(SCROLL_BAR_BACKGROUND_8_35_TEXTURE, this.width / 2 - 154, 71, 8, 35);
+                    context.drawTexture(SCROLL_BAR_BACKGROUND_8_35_TEXTURE, this.width / 2 - 154, 71, 0, 0, 8, 35);
                     int k = (int)(26.0f * this.scrollAmount);
-                    context.drawGuiTexture(SCROLLER_VERTICAL_6_7_TEXTURE, this.width / 2 - 153, 71 + 1 + k, 6, 7);
+//                    context.drawGuiTexture(SCROLLER_VERTICAL_6_7_TEXTURE, this.width / 2 - 153, 71 + 1 + k, 6, 7);
+                    context.drawTexture(SCROLLER_VERTICAL_6_7_TEXTURE, this.width / 2 - 153, 71 + 1 + k, 0, 0, 6, 7);
                 }
                 this.newStartingDialogueIdentifierField.render(context, mouseX, mouseY, delta);
                 this.newStartingDialogueLockAdvancementIdentifierField.render(context, mouseX, mouseY, delta);
@@ -895,9 +904,11 @@ public class DialogueBlockScreen extends Screen {
                 context.drawText(this.textRenderer, Text.translatable(text), this.x + 8, this.y + 7 + ((i - this.dialogueTextScrollPosition) * 13), 0x404040, false);
             }
             if (this.dialogueTextList.size() > 7) {
-                context.drawGuiTexture(SCROLL_BAR_BACKGROUND_8_87_TEXTURE, this.x + this.backgroundWidth - 15, this.y + 7, 8, 87);
+//                context.drawGuiTexture(SCROLL_BAR_BACKGROUND_8_87_TEXTURE, this.x + this.backgroundWidth - 15, this.y + 7, 8, 87);
+                context.drawTexture(SCROLL_BAR_BACKGROUND_8_87_TEXTURE, this.x + this.backgroundWidth - 15, this.y + 7, 0, 0, 8, 87);
                 int k = (int)(78.0f * this.dialogueTextScrollAmount);
-                context.drawGuiTexture(SCROLLER_VERTICAL_6_7_TEXTURE, this.x + this.backgroundWidth - 14, this.y + 7 + 1 + k, 6, 7);
+//                context.drawGuiTexture(SCROLLER_VERTICAL_6_7_TEXTURE, this.x + this.backgroundWidth - 14, this.y + 7 + 1 + k, 6, 7);
+                context.drawTexture(SCROLLER_VERTICAL_6_7_TEXTURE, this.x + this.backgroundWidth - 14, this.y + 7 + 1 + k, 0, 0, 6, 7);
             }
             int index = 0;
             for (int i = this.answersScrollPosition; i < Math.min(this.answersScrollPosition + 4, this.visibleAnswersList.size()); i++) {
@@ -915,9 +926,11 @@ public class DialogueBlockScreen extends Screen {
                 index++;
             }
             if (this.visibleAnswersList.size() > 4) {
-                context.drawGuiTexture(SCROLL_BAR_BACKGROUND_8_92_TEXTURE, this.x + this.backgroundWidth - 15, this.y + 98, 8, 92);
+//                context.drawGuiTexture(SCROLL_BAR_BACKGROUND_8_92_TEXTURE, this.x + this.backgroundWidth - 15, this.y + 98, 8, 92);
+                context.drawTexture(SCROLL_BAR_BACKGROUND_8_92_TEXTURE, this.x + this.backgroundWidth - 15, this.y + 98, 0, 0, 8, 92);
                 int k = (int)(83.0f * this.answersScrollAmount);
-                context.drawGuiTexture(SCROLLER_VERTICAL_6_7_TEXTURE, this.x + this.backgroundWidth - 14, this.y + 98 + 1 + k, 6, 7);
+//                context.drawGuiTexture(SCROLLER_VERTICAL_6_7_TEXTURE, this.x + this.backgroundWidth - 14, this.y + 98 + 1 + k, 6, 7);
+                context.drawTexture(SCROLLER_VERTICAL_6_7_TEXTURE, this.x + this.backgroundWidth - 14, this.y + 98 + 1 + k, 0, 0, 6, 7);
             }
         }
     }
@@ -933,12 +946,12 @@ public class DialogueBlockScreen extends Screen {
     }
 
     @Override
-    public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
-        super.renderBackground(context, mouseX, mouseY, delta);
-        this.drawBackground(context, delta, mouseX, mouseY);
+    public void renderBackground(DrawContext context/*, int mouseX, int mouseY, float delta*/) {
+        super.renderBackground(context/*, mouseX, mouseY, delta*/);
+        this.drawBackground(context/*, delta, mouseX, mouseY*/);
     }
 
-    public void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
+    public void drawBackground(DrawContext context/*, float delta, int mouseX, int mouseY*/) {
         if (!this.showCreativeScreen) {
             int i = this.x;
             int j = this.y;

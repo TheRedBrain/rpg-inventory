@@ -6,7 +6,8 @@ import com.github.theredbrain.betteradventuremode.block.RotatedBlockWithEntity;
 import com.github.theredbrain.betteradventuremode.block.Triggerable;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.betteradventuremode.registry.EntityRegistry;
-import net.minecraft.advancement.AdvancementEntry;
+import net.minecraft.advancement.Advancement;
+//import net.minecraft.advancement.AdvancementEntry;
 import net.minecraft.advancement.PlayerAdvancementTracker;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -125,7 +126,7 @@ public class TriggeredAdvancementCheckerBlockEntity extends RotatedBlockEntity i
                 if (serverPlayerEntity != null) {
                     PlayerAdvancementTracker advancementTracker = server.getPlayerManager().getAdvancementTracker(serverPlayerEntity);
                     if (advancementTracker != null) {
-                        AdvancementEntry checkedAdvancementEntry = server.getAdvancementLoader().get(Identifier.tryParse(this.checkedAdvancementIdentifier));
+                        Advancement checkedAdvancementEntry = server.getAdvancementLoader().get(Identifier.tryParse(this.checkedAdvancementIdentifier));
                         if (checkedAdvancementEntry != null && advancementTracker.getProgress(checkedAdvancementEntry).isDone()) {
                             triggeredBlockPos = new BlockPos(this.pos.getX() + this.firstTriggeredBlockPositionOffset.getX(), this.pos.getY() + this.firstTriggeredBlockPositionOffset.getY(), this.pos.getZ() + this.firstTriggeredBlockPositionOffset.getZ());
                         }

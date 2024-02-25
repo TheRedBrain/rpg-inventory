@@ -208,7 +208,8 @@ public class AdventureInventoryScreen extends HandledScreen<PlayerScreenHandler>
             context.drawTexture(ADVENTURE_INVENTORY_SIDES_BACKGROUND_TEXTURE, i - 130, j, 0, 0, 130, this.backgroundHeight, 130, this.backgroundHeight);
         }
         if (this.client != null && this.client.player != null) {
-            InventoryScreen.drawEntity(context, i + 26, j + 36, i + 75, j + 106, 30, 0.0625f, this.mouseX, this.mouseY, this.client.player);
+//            InventoryScreen.drawEntity(context, i + 26, j + 36, i + 75, j + 106, 30, 0.0625f, this.mouseX, this.mouseY, this.client.player);
+            InventoryScreen.drawEntity(context, i + 51, j + 103, 30, (float)(i + 51) - this.mouseX, (float)(j + 103 - 50) - this.mouseY, this.client.player);
         }
     }
 
@@ -246,9 +247,11 @@ public class AdventureInventoryScreen extends HandledScreen<PlayerScreenHandler>
                 drawStatusEffectTexturesAndToolTips(context, i, j, k, mouseX, mouseY, this.foodEffectsList.get(k));
             }
             if (this.foodEffectsRowAmount > 1) {
-                context.drawGuiTexture(EFFECT_SCROLLER_BACKGROUND_TEXTURE, i + 109, j, 8, 32);
+//                context.drawGuiTexture(EFFECT_SCROLLER_BACKGROUND_TEXTURE, i + 109, j, 8, 32);
+                context.drawTexture(EFFECT_SCROLLER_BACKGROUND_TEXTURE, i + 109, j, 0, 0, 8, 32);
                 int k = (int)(23.0f * this.foodScrollAmount);
-                context.drawGuiTexture(EFFECT_SCROLLER_TEXTURE, i + 110, j + 1 + k, 6, 7);
+//                context.drawGuiTexture(EFFECT_SCROLLER_TEXTURE, i + 110, j + 1 + k, 6, 7);
+                context.drawTexture(EFFECT_SCROLLER_TEXTURE, i + 110, j + 1 + k, 0, 0, 6, 7);
             }
             j += 37;
         } else {
@@ -262,9 +265,11 @@ public class AdventureInventoryScreen extends HandledScreen<PlayerScreenHandler>
                 drawStatusEffectTexturesAndToolTips(context, i, j, k, mouseX, mouseY, this.negativeEffectsList.get(k));
             }
             if (this.negativeEffectsRowAmount > 1) {
-                context.drawGuiTexture(EFFECT_SCROLLER_BACKGROUND_TEXTURE, i + 109, j, 8, 32);
+//                context.drawGuiTexture(EFFECT_SCROLLER_BACKGROUND_TEXTURE, i + 109, j, 8, 32);
+                context.drawTexture(EFFECT_SCROLLER_BACKGROUND_TEXTURE, i + 109, j, 0, 0, 8, 32);
                 int k = (int)(23.0f * this.negativeScrollAmount);
-                context.drawGuiTexture(EFFECT_SCROLLER_TEXTURE, i + 110, j + 1 + k, 6, 7);
+//                context.drawGuiTexture(EFFECT_SCROLLER_TEXTURE, i + 110, j + 1 + k, 6, 7);
+                context.drawTexture(EFFECT_SCROLLER_TEXTURE, i + 110, j + 1 + k, 0, 0, 6, 7);
             }
             j += 37;
         } else {
@@ -278,9 +283,11 @@ public class AdventureInventoryScreen extends HandledScreen<PlayerScreenHandler>
                 drawStatusEffectTexturesAndToolTips(context, i, j, k, mouseX, mouseY, this.positiveEffectsList.get(k));
             }
             if (this.positiveEffectsRowAmount > 1) {
-                context.drawGuiTexture(EFFECT_SCROLLER_BACKGROUND_TEXTURE, i + 109, j, 8, 32);
+//                context.drawGuiTexture(EFFECT_SCROLLER_BACKGROUND_TEXTURE, i + 109, j, 8, 32);
+                context.drawTexture(EFFECT_SCROLLER_BACKGROUND_TEXTURE, i + 109, j, 0, 0, 8, 32);
                 int k = (int)(23.0f * this.positiveScrollAmount);
-                context.drawGuiTexture(EFFECT_SCROLLER_TEXTURE, i + 110, j + 1 + k, 6, 7);
+//                context.drawGuiTexture(EFFECT_SCROLLER_TEXTURE, i + 110, j + 1 + k, 6, 7);
+                context.drawTexture(EFFECT_SCROLLER_TEXTURE, i + 110, j + 1 + k, 0, 0, 6, 7);
             }
             j += 37;
         } else {
@@ -294,9 +301,11 @@ public class AdventureInventoryScreen extends HandledScreen<PlayerScreenHandler>
                 drawStatusEffectTexturesAndToolTips(context, i, j, k, mouseX, mouseY, this.neutralEffectsList.get(k));
             }
             if (this.neutralEffectsRowAmount > 1) {
-                context.drawGuiTexture(EFFECT_SCROLLER_BACKGROUND_TEXTURE, i + 109, j, 8, 32);
+//                context.drawGuiTexture(EFFECT_SCROLLER_BACKGROUND_TEXTURE, i + 109, j, 8, 32);
+                context.drawTexture(EFFECT_SCROLLER_BACKGROUND_TEXTURE, i + 109, j, 0, 0, 8, 32);
                 int k = (int)(23.0f * this.neutralScrollAmount);
-                context.drawGuiTexture(EFFECT_SCROLLER_TEXTURE, i + 110, j + 1 + k, 6, 7);
+//                context.drawGuiTexture(EFFECT_SCROLLER_TEXTURE, i + 110, j + 1 + k, 6, 7);
+                context.drawTexture(EFFECT_SCROLLER_TEXTURE, i + 110, j + 1 + k, 0, 0, 6, 7);
             }
         }
 
@@ -305,7 +314,8 @@ public class AdventureInventoryScreen extends HandledScreen<PlayerScreenHandler>
     private void drawStatusEffectTexturesAndToolTips(DrawContext context, int x, int y, int z, int mouseX, int mouseY, StatusEffectInstance statusEffectInstance) {
         StatusEffectSpriteManager statusEffectSpriteManager = this.client.getStatusEffectSpriteManager();
         int i = x + 3 + ((z % 3) * 35);
-        context.drawGuiTexture(EFFECT_BACKGROUND_SMALL_TEXTURE, i, y, 32, 32);
+//        context.drawGuiTexture(EFFECT_BACKGROUND_SMALL_TEXTURE, i, y, 32, 32);
+        context.drawTexture(EFFECT_BACKGROUND_SMALL_TEXTURE, i, y, 0, 0, 32, 32);
         Sprite sprite = statusEffectSpriteManager.getSprite(statusEffectInstance.getEffectType());
         context.drawSprite(i + 7, y + 7, 0, 18, 18, sprite);
         if (mouseX >= i && mouseX <= i + 32 && mouseY >= y && mouseY <= y + 32) {
@@ -318,7 +328,7 @@ public class AdventureInventoryScreen extends HandledScreen<PlayerScreenHandler>
         if (statusEffectInstance.isInfinite()) {
             return List.of(getStatusEffectName(statusEffectInstance), getStatusEffectDescription(statusEffectInstance));
         }
-        return List.of(getStatusEffectName(statusEffectInstance), StatusEffectUtil.getDurationText(statusEffectInstance, 1.0f, this.client.world.getTickManager().getTickRate()), getStatusEffectDescription(statusEffectInstance));
+        return List.of(getStatusEffectName(statusEffectInstance), StatusEffectUtil.getDurationText(statusEffectInstance, 1.0f/*, this.client.world.getTickManager().getTickRate()*/), getStatusEffectDescription(statusEffectInstance));
     }
 
     private Text getStatusEffectName(StatusEffectInstance statusEffectInstance) {
@@ -398,7 +408,7 @@ public class AdventureInventoryScreen extends HandledScreen<PlayerScreenHandler>
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+    public boolean mouseScrolled(double mouseX, double mouseY/*, double horizontalAmount*/, double verticalAmount) {
         if (this.foodEffectsRowAmount > 1 && mouseX >= this.x - 123 && mouseX <= this.x - 4 && mouseY >= this.y + 33 && mouseY <= this.y + 65) {
             int i = this.foodEffectsRowAmount - 1;
             float f = (float)verticalAmount / (float)i;

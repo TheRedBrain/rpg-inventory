@@ -141,7 +141,7 @@ public class HousingBlockEntity extends RotatedBlockEntity {
     }
 
     public static void tick(World world, BlockPos pos, BlockState state, HousingBlockEntity blockEntity) {
-        if (world.getTime() % 20L == 0L) {
+        if (!world.isClient && world.getTime() % 20L == 0L) {
             if (blockEntity.hasWorld() && !blockEntity.isOwnerSet && blockEntity.ownerMode == OwnerMode.DIMENSION_OWNER) {
                 blockEntity.ownerUuid = initOwner(blockEntity.world);
                 if (UUIDUtilities.isStringValidUUID(blockEntity.ownerUuid)) {

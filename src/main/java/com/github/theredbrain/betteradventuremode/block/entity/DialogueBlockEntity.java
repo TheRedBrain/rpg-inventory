@@ -9,7 +9,8 @@ import com.github.theredbrain.betteradventuremode.network.packet.*;
 import com.github.theredbrain.betteradventuremode.registry.DialoguesRegistry;
 import com.github.theredbrain.betteradventuremode.registry.EntityRegistry;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.advancement.AdvancementEntry;
+import net.minecraft.advancement.Advancement;
+//import net.minecraft.advancement.AdvancementEntry;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.network.ClientAdvancementManager;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -134,23 +135,25 @@ public class DialogueBlockEntity extends RotatedBlockEntity {
             advancementHandler = clientPlayerEntity.networkHandler.getAdvancementHandler();
         }
         Dialogue startingDialogue = null;
-        String lockAdvancement;
-        String unlockAdvancement;
+        String lockAdvancementString;
+        String unlockAdvancementString;
 
         for (MutablePair<String, MutablePair<String, String>> dialogueEntry : dialogueBlockEntity.startingDialogueList) {
-            lockAdvancement = dialogueEntry.getRight().getLeft();
-            unlockAdvancement = dialogueEntry.getRight().getRight();
+            lockAdvancementString = dialogueEntry.getRight().getLeft();
+            unlockAdvancementString = dialogueEntry.getRight().getRight();
 
             if (advancementHandler != null) {
-                AdvancementEntry lockAdvancementEntry = null;
-                if (!lockAdvancement.equals("")) {
-                    lockAdvancementEntry = advancementHandler.get(Identifier.tryParse(lockAdvancement));
+//                AdvancementEntry lockAdvancementEntry = null;
+                Advancement lockAdvancement = null;
+                if (!lockAdvancementString.equals("")) {
+                    lockAdvancement = advancementHandler.getManager().get(Identifier.tryParse(lockAdvancementString));
                 }
-                AdvancementEntry unlockAdvancementEntry = null;
-                if (!unlockAdvancement.equals("")) {
-                    unlockAdvancementEntry = advancementHandler.get(Identifier.tryParse(unlockAdvancement));
+//                AdvancementEntry unlockAdvancementEntry = null;
+                Advancement unlockAdvancement = null;
+                if (!unlockAdvancementString.equals("")) {
+                    unlockAdvancement = advancementHandler.getManager().get(Identifier.tryParse(unlockAdvancementString));
                 }
-                if ((lockAdvancement.equals("") || (lockAdvancementEntry != null && !((DuckClientAdvancementManagerMixin)advancementHandler.getManager()).betteradventuremode$getAdvancementProgress(lockAdvancementEntry).isDone())) && (unlockAdvancement.equals("") || (unlockAdvancementEntry != null && ((DuckClientAdvancementManagerMixin)advancementHandler.getManager()).betteradventuremode$getAdvancementProgress(unlockAdvancementEntry).isDone()))) {
+                if ((lockAdvancementString.equals("") || (lockAdvancement != null && !((DuckClientAdvancementManagerMixin)advancementHandler.getManager()).betteradventuremode$getAdvancementProgress(lockAdvancement).isDone())) && (unlockAdvancementString.equals("") || (unlockAdvancement != null && ((DuckClientAdvancementManagerMixin)advancementHandler.getManager()).betteradventuremode$getAdvancementProgress(unlockAdvancement).isDone()))) {
                     startingDialogue = DialoguesRegistry.getDialogue(Identifier.tryParse(dialogueEntry.getLeft()));
                     if (startingDialogue != null) {
                         break;

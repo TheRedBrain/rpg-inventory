@@ -45,10 +45,10 @@ public abstract class InGameHudMixin implements DuckInGameHudMixin {
 
     @Shadow protected abstract void renderHotbarItem(DrawContext context, int x, int y, float f, PlayerEntity player, ItemStack stack, int seed);
 
-    @Shadow @Final private static Identifier HOTBAR_TEXTURE;
-    @Shadow @Final private static Identifier HOTBAR_SELECTION_TEXTURE;
-    @Shadow @Final private static Identifier HOTBAR_ATTACK_INDICATOR_BACKGROUND_TEXTURE;
-    @Shadow @Final private static Identifier HOTBAR_ATTACK_INDICATOR_PROGRESS_TEXTURE;
+//    @Shadow @Final private static Identifier HOTBAR_TEXTURE;
+//    @Shadow @Final private static Identifier HOTBAR_SELECTION_TEXTURE;
+//    @Shadow @Final private static Identifier HOTBAR_ATTACK_INDICATOR_BACKGROUND_TEXTURE;
+//    @Shadow @Final private static Identifier HOTBAR_ATTACK_INDICATOR_PROGRESS_TEXTURE;
 
     @Shadow public abstract TextRenderer getTextRenderer();
 
@@ -56,46 +56,48 @@ public abstract class InGameHudMixin implements DuckInGameHudMixin {
 
     @Shadow public abstract void setCanShowChatDisabledScreen(boolean canShowChatDisabledScreen);
 
+    @Shadow @Final private static Identifier WIDGETS_TEXTURE;
+    @Shadow @Final private static Identifier ICONS;
     @Unique
-    private static final Identifier BLEEDING_BUILD_UP_BAR_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("boss_bar/short_red_background");
+    private static final Identifier BLEEDING_BUILD_UP_BAR_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("textures/gui/sprites/boss_bar/short_red_background.png");
     @Unique
-    private static final Identifier BLEEDING_BUILD_UP_BAR_PROGRESS_TEXTURE = BetterAdventureMode.identifier("boss_bar/short_red_progress");
+    private static final Identifier BLEEDING_BUILD_UP_BAR_PROGRESS_TEXTURE = BetterAdventureMode.identifier("textures/gui/sprites/boss_bar/short_red_progress.png");
     @Unique
-    private static final Identifier BURNING_BUILD_UP_BAR_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("boss_bar/short_red_background");
+    private static final Identifier BURNING_BUILD_UP_BAR_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("textures/gui/sprites/boss_bar/short_red_background.png");
     @Unique
-    private static final Identifier BURNING_BUILD_UP_BAR_PROGRESS_TEXTURE = BetterAdventureMode.identifier("boss_bar/short_red_progress");
+    private static final Identifier BURNING_BUILD_UP_BAR_PROGRESS_TEXTURE = BetterAdventureMode.identifier("textures/gui/sprites/boss_bar/short_red_progress.png");
     @Unique
-    private static final Identifier FREEZE_BUILD_UP_BAR_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("boss_bar/short_blue_background");
+    private static final Identifier FREEZE_BUILD_UP_BAR_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("textures/gui/sprites/boss_bar/short_blue_background.png");
     @Unique
-    private static final Identifier FREEZE_BUILD_UP_BAR_PROGRESS_TEXTURE = BetterAdventureMode.identifier("boss_bar/short_blue_progress");
+    private static final Identifier FREEZE_BUILD_UP_BAR_PROGRESS_TEXTURE = BetterAdventureMode.identifier("textures/gui/sprites/boss_bar/short_blue_progress.png");
     @Unique
-    private static final Identifier HOTBAR_HAND_SLOTS_TEXTURE = BetterAdventureMode.identifier("hud/hotbar_hand_slots");
+    private static final Identifier HOTBAR_HAND_SLOTS_TEXTURE = BetterAdventureMode.identifier("textures/gui/sprites/hud/hotbar_hand_slots.png");
     @Unique
-    private static final Identifier HOTBAR_ALTERNATE_HAND_SLOTS_TEXTURE = BetterAdventureMode.identifier("hud/hotbar_alternate_hand_slots");
+    private static final Identifier HOTBAR_ALTERNATE_HAND_SLOTS_TEXTURE = BetterAdventureMode.identifier("textures/gui/sprites/hud/hotbar_alternate_hand_slots.png");
     @Unique
-    private static final Identifier HEALTH_BAR_BACKGROUND_TEXTURE = new Identifier("boss_bar/red_background");
+    private static final Identifier HEALTH_BAR_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("textures/gui/sprites/boss_bar/red_background.png");
     @Unique
-    private static final Identifier HEALTH_BAR_PROGRESS_TEXTURE = new Identifier("boss_bar/red_progress");
+    private static final Identifier HEALTH_BAR_PROGRESS_TEXTURE = BetterAdventureMode.identifier("textures/gui/sprites/boss_bar/red_progress.png");
     @Unique
-    private static final Identifier MANA_BAR_BACKGROUND_TEXTURE = new Identifier("boss_bar/blue_background");
+    private static final Identifier MANA_BAR_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("textures/gui/sprites/boss_bar/blue_background.png");
     @Unique
-    private static final Identifier MANA_BAR_PROGRESS_TEXTURE = new Identifier("boss_bar/blue_progress");
+    private static final Identifier MANA_BAR_PROGRESS_TEXTURE = BetterAdventureMode.identifier("textures/gui/sprites/boss_bar/blue_progress.png");
     @Unique
-    private static final Identifier POISON_BUILD_UP_BAR_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("boss_bar/short_green_background");
+    private static final Identifier POISON_BUILD_UP_BAR_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("textures/gui/sprites/boss_bar/short_green_background.png");
     @Unique
-    private static final Identifier POISON_BUILD_UP_BAR_PROGRESS_TEXTURE = BetterAdventureMode.identifier("boss_bar/short_green_progress");
+    private static final Identifier POISON_BUILD_UP_BAR_PROGRESS_TEXTURE = BetterAdventureMode.identifier("textures/gui/sprites/boss_bar/short_green_progress.png");
     @Unique
-    private static final Identifier SHOCK_BUILD_UP_BAR_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("boss_bar/short_white_background");
+    private static final Identifier SHOCK_BUILD_UP_BAR_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("textures/gui/sprites/boss_bar/short_white_background.png");
     @Unique
-    private static final Identifier SHOCK_BUILD_UP_BAR_PROGRESS_TEXTURE = BetterAdventureMode.identifier("boss_bar/short_white_progress");
+    private static final Identifier SHOCK_BUILD_UP_BAR_PROGRESS_TEXTURE = BetterAdventureMode.identifier("textures/gui/sprites/boss_bar/short_white_progress.png");
     @Unique
-    private static final Identifier STAGGER_BAR_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("boss_bar/short_yellow_background");
+    private static final Identifier STAGGER_BAR_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("textures/gui/sprites/boss_bar/short_yellow_background.png");
     @Unique
-    private static final Identifier STAGGER_BAR_PROGRESS_TEXTURE = BetterAdventureMode.identifier("boss_bar/short_yellow_progress");
+    private static final Identifier STAGGER_BAR_PROGRESS_TEXTURE = BetterAdventureMode.identifier("textures/gui/sprites/boss_bar/short_yellow_progress.png");
     @Unique
-    private static final Identifier STAMINA_BAR_BACKGROUND_TEXTURE = new Identifier("boss_bar/green_background");
+    private static final Identifier STAMINA_BAR_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("textures/gui/sprites/boss_bar/green_background.png");
     @Unique
-    private static final Identifier STAMINA_BAR_PROGRESS_TEXTURE = new Identifier("boss_bar/green_progress");
+    private static final Identifier STAMINA_BAR_PROGRESS_TEXTURE = BetterAdventureMode.identifier("textures/gui/sprites/boss_bar/green_progress.png");
     @Unique
     @Nullable
     private Text announcementMessage;
@@ -150,12 +152,16 @@ public abstract class InGameHudMixin implements DuckInGameHudMixin {
 
             context.getMatrices().push();
             context.getMatrices().translate(0.0F, 0.0F, -90.0F);
-            context.drawGuiTexture(HOTBAR_TEXTURE, i - 91, this.scaledHeight - 22 - raisedDistance, 182, 22);
-            context.drawGuiTexture(HOTBAR_SELECTION_TEXTURE, i - 91 - 1 + playerEntity.getInventory().selectedSlot * 20, this.scaledHeight - 22 - 1 - raisedDistance, 24, 24);
+//            context.drawGuiTexture(HOTBAR_TEXTURE, i - 91, this.scaledHeight - 22 - raisedDistance, 182, 22);
+            context.drawTexture(WIDGETS_TEXTURE, i - 91, this.scaledHeight - 22 - raisedDistance, 0, 0, 182, 22);
+//            context.drawGuiTexture(HOTBAR_SELECTION_TEXTURE, i - 91 - 1 + playerEntity.getInventory().selectedSlot * 20, this.scaledHeight - 22 - 1 - raisedDistance, 24, 24);
+            context.drawTexture(WIDGETS_TEXTURE, i - 91 - 1 + playerEntity.getInventory().selectedSlot * 20, this.scaledHeight - 22 - 1 - raisedDistance, 0, 22, 24, 24);
 
             // slots for all hand items
-            context.drawGuiTexture(HOTBAR_HAND_SLOTS_TEXTURE, i - 91 - 49, this.scaledHeight - 23 - raisedDistance, 49, 24);
-            context.drawGuiTexture(HOTBAR_ALTERNATE_HAND_SLOTS_TEXTURE, i + 91, this.scaledHeight - 23 - raisedDistance, 49, 24);
+//            context.drawGuiTexture(HOTBAR_HAND_SLOTS_TEXTURE, i - 91 - 49, this.scaledHeight - 23 - raisedDistance, 49, 24);
+            context.drawTexture(HOTBAR_HAND_SLOTS_TEXTURE, i - 91 - 49, this.scaledHeight - 23 - raisedDistance, 0, 0, 49, 24, 49, 24);
+//            context.drawGuiTexture(HOTBAR_ALTERNATE_HAND_SLOTS_TEXTURE, i + 91, this.scaledHeight - 23 - raisedDistance, 49, 24);
+            context.drawTexture(HOTBAR_ALTERNATE_HAND_SLOTS_TEXTURE, i + 91, this.scaledHeight - 23 - raisedDistance, 0, 0, 49, 24, 49, 24);
 
             context.getMatrices().pop();
             int l = 1;
@@ -194,10 +200,10 @@ public abstract class InGameHudMixin implements DuckInGameHudMixin {
                     }
 
                     int p = (int)(f * 19.0F);
-//                    context.drawTexture(ICONS, o, n, 0, 94, 18, 18);
-//                    context.drawTexture(ICONS, o, n + 18 - p, 18, 112 - p, 18, p);
-                    context.drawGuiTexture(HOTBAR_ATTACK_INDICATOR_BACKGROUND_TEXTURE, o, n, 18, 18);
-                    context.drawGuiTexture(HOTBAR_ATTACK_INDICATOR_PROGRESS_TEXTURE, 18, 18, 0, 18 - p, o, n + 18 - p, 18, p);
+//                    context.drawGuiTexture(HOTBAR_ATTACK_INDICATOR_BACKGROUND_TEXTURE, o, n, 18, 18);
+                    context.drawTexture(ICONS, o, n, 0, 94, 18, 18);
+//                    context.drawGuiTexture(HOTBAR_ATTACK_INDICATOR_PROGRESS_TEXTURE, 18, 18, 0, 18 - p, o, n + 18 - p, 18, p);
+                    context.drawTexture(ICONS, o, n + 18 - p, 18, 112 - p, 18, p);
                 }
             }
 
@@ -252,9 +258,11 @@ public abstract class InGameHudMixin implements DuckInGameHudMixin {
             int normalizedShockBuildUpRatio = (int) (((double) shockBuildUp / Math.max(maxShockBuildUp, 1)) * 62);
 
             this.client.getProfiler().push("health_bar");
-            context.drawGuiTexture(HEALTH_BAR_BACKGROUND_TEXTURE, attributeBarX, attributeBarY, 182, 5);
+//            context.drawGuiTexture(HEALTH_BAR_BACKGROUND_TEXTURE, attributeBarX, attributeBarY, 182, 5);
+            context.drawTexture(HEALTH_BAR_BACKGROUND_TEXTURE, attributeBarX, attributeBarY, 0, 0, 182, 5, 182, 5);
             if (normalizedHealthRatio > 0) {
-                context.drawGuiTexture(HEALTH_BAR_PROGRESS_TEXTURE, attributeBarX, attributeBarY, normalizedHealthRatio, 5);
+//                context.drawGuiTexture(HEALTH_BAR_PROGRESS_TEXTURE, attributeBarX, attributeBarY, normalizedHealthRatio, 5);
+                context.drawTexture(HEALTH_BAR_PROGRESS_TEXTURE, attributeBarX, attributeBarY, 0, 0, normalizedHealthRatio, 5, 182, 5);
             }
             if (BetterAdventureModeClient.clientConfig.show_resource_bar_numbers) {
                 this.client.getProfiler().swap("health_bar_number");
@@ -269,9 +277,11 @@ public abstract class InGameHudMixin implements DuckInGameHudMixin {
             }
 
             this.client.getProfiler().swap("stamina_bar");
-            context.drawGuiTexture(STAMINA_BAR_BACKGROUND_TEXTURE, attributeBarX, attributeBarY - 9, 182, 5);
+//            context.drawGuiTexture(STAMINA_BAR_BACKGROUND_TEXTURE, attributeBarX, attributeBarY - 9, 182, 5);
+            context.drawTexture(STAMINA_BAR_BACKGROUND_TEXTURE, attributeBarX, attributeBarY - 9, 0, 0, 182, 5, 182, 5);
             if (normalizedStaminaRatio > 0) {
-                context.drawGuiTexture(STAMINA_BAR_PROGRESS_TEXTURE, attributeBarX, attributeBarY - 9, normalizedStaminaRatio, 5);
+//                context.drawGuiTexture(STAMINA_BAR_PROGRESS_TEXTURE, attributeBarX, attributeBarY - 9, normalizedStaminaRatio, 5);
+                context.drawTexture(STAMINA_BAR_PROGRESS_TEXTURE, attributeBarX, attributeBarY - 9, 0, 0, normalizedStaminaRatio, 5, 182, 5);
             }
             if (BetterAdventureModeClient.clientConfig.show_resource_bar_numbers) {
                 this.client.getProfiler().swap("stamina_bar_number");
@@ -287,9 +297,11 @@ public abstract class InGameHudMixin implements DuckInGameHudMixin {
 
             if (maxMana > 0) {
                 this.client.getProfiler().swap("mana_bar");
-                context.drawGuiTexture(MANA_BAR_BACKGROUND_TEXTURE, attributeBarX, attributeBarY - 18, 182, 5);
+//                context.drawGuiTexture(MANA_BAR_BACKGROUND_TEXTURE, attributeBarX, attributeBarY - 18, 182, 5);
+                context.drawTexture(MANA_BAR_BACKGROUND_TEXTURE, attributeBarX, attributeBarY - 18, 0, 0, 182, 5, 182, 5);
                 if (normalizedManaRatio > 0) {
-                    context.drawGuiTexture(MANA_BAR_PROGRESS_TEXTURE, attributeBarX, attributeBarY - 18, normalizedManaRatio, 5);
+//                    context.drawGuiTexture(MANA_BAR_PROGRESS_TEXTURE, attributeBarX, attributeBarY - 18, normalizedManaRatio, 5);
+                    context.drawTexture(MANA_BAR_PROGRESS_TEXTURE, attributeBarX, attributeBarY - 18, 0, 0, normalizedManaRatio, 5, 182, 5);
                 }
                 if (BetterAdventureModeClient.clientConfig.show_resource_bar_numbers) {
                     this.client.getProfiler().swap("mana_bar_number");
@@ -308,9 +320,11 @@ public abstract class InGameHudMixin implements DuckInGameHudMixin {
             attributeBarY = this.scaledHeight / 2 - 7 + 25;
             if (staggerBuildUp > 0) {
                 this.client.getProfiler().swap("stagger_bar");
-                context.drawGuiTexture(STAGGER_BAR_BACKGROUND_TEXTURE, attributeBarX, attributeBarY, 62, 5);
+//                context.drawGuiTexture(STAGGER_BAR_BACKGROUND_TEXTURE, attributeBarX, attributeBarY, 62, 5);
+                context.drawTexture(STAGGER_BAR_BACKGROUND_TEXTURE, attributeBarX, attributeBarY, 0, 0, 62, 5, 62, 5);
                 if (normalizedStaggerBuildUpRatio > 0) {
-                    context.drawGuiTexture(STAGGER_BAR_PROGRESS_TEXTURE, attributeBarX, attributeBarY, normalizedStaggerBuildUpRatio, 5);
+//                    context.drawGuiTexture(STAGGER_BAR_PROGRESS_TEXTURE, attributeBarX, attributeBarY, normalizedStaggerBuildUpRatio, 5);
+                    context.drawTexture(STAGGER_BAR_PROGRESS_TEXTURE, attributeBarX, attributeBarY, 0, 0, normalizedStaggerBuildUpRatio, 5, 62, 5);
                 }
                 attributeBarY = attributeBarY + 6;
             }
@@ -318,9 +332,11 @@ public abstract class InGameHudMixin implements DuckInGameHudMixin {
             // bleeding build up
             if (bleedingBuildUp > 0) {
                 this.client.getProfiler().swap("bleeding_build_up_bar");
-                context.drawGuiTexture(BLEEDING_BUILD_UP_BAR_BACKGROUND_TEXTURE, attributeBarX, attributeBarY, 62, 5);
+//                context.drawGuiTexture(BLEEDING_BUILD_UP_BAR_BACKGROUND_TEXTURE, attributeBarX, attributeBarY, 62, 5);
+                context.drawTexture(BLEEDING_BUILD_UP_BAR_BACKGROUND_TEXTURE, attributeBarX, attributeBarY, 0, 0, 62, 5, 62, 5);
                 if (normalizedBleedingBuildUpRatio > 0) {
-                    context.drawGuiTexture(BLEEDING_BUILD_UP_BAR_PROGRESS_TEXTURE, attributeBarX, attributeBarY, normalizedBleedingBuildUpRatio, 5);
+//                    context.drawGuiTexture(BLEEDING_BUILD_UP_BAR_PROGRESS_TEXTURE, attributeBarX, attributeBarY, normalizedBleedingBuildUpRatio, 5);
+                    context.drawTexture(BLEEDING_BUILD_UP_BAR_PROGRESS_TEXTURE, attributeBarX, attributeBarY, 0, 0, normalizedBleedingBuildUpRatio, 5, 62, 5);
                 }
                 attributeBarY = attributeBarY + 6;
             }
@@ -328,9 +344,11 @@ public abstract class InGameHudMixin implements DuckInGameHudMixin {
             // burn build up
             if (burnBuildUp > 0) {
                 this.client.getProfiler().swap("burn_build_up_bar");
-                context.drawGuiTexture(BURNING_BUILD_UP_BAR_BACKGROUND_TEXTURE, attributeBarX, attributeBarY, 62, 5);
+//                context.drawGuiTexture(BURNING_BUILD_UP_BAR_BACKGROUND_TEXTURE, attributeBarX, attributeBarY, 62, 5);
+                context.drawTexture(BURNING_BUILD_UP_BAR_BACKGROUND_TEXTURE, attributeBarX, attributeBarY, 0, 0, 62, 5, 62, 5);
                 if (normalizedBurnBuildUpRatio > 0) {
-                    context.drawGuiTexture(BURNING_BUILD_UP_BAR_PROGRESS_TEXTURE, attributeBarX, attributeBarY, normalizedBurnBuildUpRatio, 5);
+//                    context.drawGuiTexture(BURNING_BUILD_UP_BAR_PROGRESS_TEXTURE, attributeBarX, attributeBarY, normalizedBurnBuildUpRatio, 5);
+                    context.drawTexture(BURNING_BUILD_UP_BAR_PROGRESS_TEXTURE, attributeBarX, attributeBarY, 0, 0, normalizedBurnBuildUpRatio, 5, 62, 5);
                 }
                 attributeBarY = attributeBarY + 6;
             }
@@ -338,9 +356,11 @@ public abstract class InGameHudMixin implements DuckInGameHudMixin {
             // freeze build up
             if (freezeBuildUp > 0) {
                 this.client.getProfiler().swap("freeze_build_up_bar");
-                context.drawGuiTexture(FREEZE_BUILD_UP_BAR_BACKGROUND_TEXTURE, attributeBarX, attributeBarY, 62, 5);
+//                context.drawGuiTexture(FREEZE_BUILD_UP_BAR_BACKGROUND_TEXTURE, attributeBarX, attributeBarY, 62, 5);
+                context.drawTexture(FREEZE_BUILD_UP_BAR_BACKGROUND_TEXTURE, attributeBarX, attributeBarY, 0, 0, 62, 5, 62, 5);
                 if (normalizedFreezeBuildUpRatio > 0) {
-                    context.drawGuiTexture(FREEZE_BUILD_UP_BAR_PROGRESS_TEXTURE, attributeBarX, attributeBarY, normalizedFreezeBuildUpRatio, 5);
+//                    context.drawGuiTexture(FREEZE_BUILD_UP_BAR_PROGRESS_TEXTURE, attributeBarX, attributeBarY, normalizedFreezeBuildUpRatio, 5);
+                    context.drawTexture(FREEZE_BUILD_UP_BAR_PROGRESS_TEXTURE, attributeBarX, attributeBarY, 0, 0, normalizedFreezeBuildUpRatio, 5, 62, 5);
                 }
                 attributeBarY = attributeBarY + 6;
             }
@@ -348,9 +368,11 @@ public abstract class InGameHudMixin implements DuckInGameHudMixin {
             // poison build up
             if (poisonBuildUp > 0) {
                 this.client.getProfiler().swap("poison_build_up_bar");
-                context.drawGuiTexture(POISON_BUILD_UP_BAR_BACKGROUND_TEXTURE, attributeBarX, attributeBarY, 62, 5);
+//                context.drawGuiTexture(POISON_BUILD_UP_BAR_BACKGROUND_TEXTURE, attributeBarX, attributeBarY, 62, 5);
+                context.drawTexture(POISON_BUILD_UP_BAR_BACKGROUND_TEXTURE, attributeBarX, attributeBarY, 0, 0, 62, 5, 62, 5);
                 if (normalizedPoisonBuildUpRatio > 0) {
-                    context.drawGuiTexture(POISON_BUILD_UP_BAR_PROGRESS_TEXTURE, attributeBarX, attributeBarY, normalizedPoisonBuildUpRatio, 5);
+//                    context.drawGuiTexture(POISON_BUILD_UP_BAR_PROGRESS_TEXTURE, attributeBarX, attributeBarY, normalizedPoisonBuildUpRatio, 5);
+                    context.drawTexture(POISON_BUILD_UP_BAR_PROGRESS_TEXTURE, attributeBarX, attributeBarY, 0, 0, normalizedPoisonBuildUpRatio, 5, 62, 5);
                 }
                 attributeBarY = attributeBarY + 6;
             }
@@ -358,9 +380,11 @@ public abstract class InGameHudMixin implements DuckInGameHudMixin {
             // shock build up
             if (shockBuildUp > 0) {
                 this.client.getProfiler().swap("shock_build_up_bar");
-                context.drawGuiTexture(SHOCK_BUILD_UP_BAR_BACKGROUND_TEXTURE, attributeBarX, attributeBarY, 62, 5);
+//                context.drawGuiTexture(SHOCK_BUILD_UP_BAR_BACKGROUND_TEXTURE, attributeBarX, attributeBarY, 62, 5);
+                context.drawTexture(SHOCK_BUILD_UP_BAR_BACKGROUND_TEXTURE, attributeBarX, attributeBarY, 0, 0, 62, 5, 62, 5);
                 if (normalizedShockBuildUpRatio > 0) {
-                    context.drawGuiTexture(SHOCK_BUILD_UP_BAR_PROGRESS_TEXTURE, attributeBarX, attributeBarY, normalizedShockBuildUpRatio, 5);
+//                    context.drawGuiTexture(SHOCK_BUILD_UP_BAR_PROGRESS_TEXTURE, attributeBarX, attributeBarY, normalizedShockBuildUpRatio, 5);
+                    context.drawTexture(SHOCK_BUILD_UP_BAR_PROGRESS_TEXTURE, attributeBarX, attributeBarY, 0, 0, normalizedShockBuildUpRatio, 5, 62, 5);
                 }
             }
             this.client.getProfiler().pop();

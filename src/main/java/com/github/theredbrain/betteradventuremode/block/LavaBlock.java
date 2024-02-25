@@ -16,7 +16,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 public class LavaBlock extends Block {
-    public static final MapCodec<LavaBlock> CODEC = createCodec(LavaBlock::new);
+//    public static final MapCodec<LavaBlock> CODEC = createCodec(LavaBlock::new);
     protected static final VoxelShape COLLISION_SHAPE = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 10.0, 16.0);
     protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 14.0, 16.0);
 
@@ -24,10 +24,10 @@ public class LavaBlock extends Block {
         super(settings);
     }
 
-    @Override
-    public MapCodec<LavaBlock> getCodec() {
-        return CODEC;
-    }
+//    @Override
+//    public MapCodec<LavaBlock> getCodec() {
+//        return CODEC;
+//    }
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {

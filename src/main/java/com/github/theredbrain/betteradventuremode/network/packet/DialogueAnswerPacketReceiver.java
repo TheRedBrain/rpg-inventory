@@ -7,7 +7,8 @@ import com.github.theredbrain.betteradventuremode.block.entity.DialogueBlockEnti
 import com.github.theredbrain.betteradventuremode.registry.DialogueAnswersRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.advancement.AdvancementEntry;
+//import net.minecraft.advancement.AdvancementEntry;
+import net.minecraft.advancement.Advancement;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
@@ -133,7 +134,8 @@ public class DialogueAnswerPacketReceiver implements ServerPlayNetworking.PlayPa
             Identifier advancementIdentifier = dialogueAnswer.getGrantedAdvancement();
             String criterionName = dialogueAnswer.getCriterionName();
             if (advancementIdentifier != null && criterionName != null) {
-                AdvancementEntry advancementEntry = server.getAdvancementLoader().get(advancementIdentifier);
+//                AdvancementEntry advancementEntry = server.getAdvancementLoader().get(advancementIdentifier);
+                Advancement advancementEntry = server.getAdvancementLoader().get(advancementIdentifier);
                 if (advancementEntry != null) {
                     player.getAdvancementTracker().grantCriterion(advancementEntry, criterionName);
                 }
