@@ -227,652 +227,175 @@ public abstract class SpellHelperMixin {
      */
     @Overwrite
     public static void performSpell(World world, PlayerEntity player, Identifier spellId, List<Entity> targets, SpellCast.Action action, float progress) {
-        Spell spell = SpellRegistry.getSpell(spellId);
-        if (spell != null) {
-            SpellInfo spellInfo = new SpellInfo(spell, spellId);
-            ItemStack itemStack = player.getMainHandStack();
-            SpellCast.Attempt attempt = SpellHelper.attemptCasting(player, itemStack, spellId);
-            if (attempt.isSuccess()) {
-                float castingSpeed = ((SpellCasterEntity)player).getCurrentCastingSpeed();
-                progress = Math.max(Math.min(progress, 1.0F), 0.0F);
-                float channelMultiplier = 1.0F;
-                boolean shouldPerformImpact = true;
-                Supplier<Collection<ServerPlayerEntity>> trackingPlayers = Suppliers.memoize(() -> {
-                    return PlayerLookup.tracking(player);
-                });
-                switch (action) {
-                    case CHANNEL:
-                        channelMultiplier = SpellHelper.channelValueMultiplier(spell);
-                        break;
-                    case RELEASE:
-                        if (SpellHelper.isChanneled(spell)) {
-                            shouldPerformImpact = false;
-                            channelMultiplier = 1.0F;
-                        } else {
-                            channelMultiplier = progress >= 1.0F ? 1.0F : 0.0F;
-                        }
-
-                        SpellCastSyncHelper.clearCasting(player);
-                }
-
-                SpellHelper.AmmoResult ammoResult = SpellHelper.ammoForSpell(player, spell, itemStack);
-                if (channelMultiplier > 0.0F && ammoResult.satisfied()) {
-                    Spell.Release.Target targeting = spell.release.target;
-                    boolean released = action == SpellCast.Action.RELEASE;
-                    if (shouldPerformImpact) {
-                        SpellHelper.ImpactContext context = new SpellHelper.ImpactContext(channelMultiplier, 1.0F, (Vec3d)null, SpellPower.getSpellPower(spell.school, player), SpellHelper.impactTargetingMode(spell));
-                        if (spell.release.custom_impact) {
-                            Function<CustomSpellHandler.Data, Boolean> handler = (Function)CustomSpellHandler.handlers.get(spellId);
-                            released = false;
-                            if (handler != null) {
-                                released = (Boolean)handler.apply(new CustomSpellHandler.Data(player, targets, itemStack, action, progress, context));
+        if (!player.isSpectator()) {
+            Spell spell = SpellRegistry.getSpell(spellId);
+            if (spell != null) {
+                SpellInfo spellInfo = new SpellInfo(spell, spellId);
+                ItemStack itemStack = player.getMainHandStack();
+                SpellCast.Attempt attempt = SpellHelper.attemptCasting(player, itemStack, spellId);
+                if (attempt.isSuccess()) {
+                    float castingSpeed = ((SpellCasterEntity) player).getCurrentCastingSpeed();
+                    progress = Math.max(Math.min(progress, 1.0F), 0.0F);
+                    float channelMultiplier = 1.0F;
+                    boolean shouldPerformImpact = true;
+                    Supplier<Collection<ServerPlayerEntity>> trackingPlayers = Suppliers.memoize(() -> {
+                        return PlayerLookup.tracking(player);
+                    });
+                    switch (action) {
+                        case CHANNEL:
+                            channelMultiplier = SpellHelper.channelValueMultiplier(spell);
+                            break;
+                        case RELEASE:
+                            if (SpellHelper.isChanneled(spell)) {
+                                shouldPerformImpact = false;
+                                channelMultiplier = 1.0F;
+                            } else {
+                                channelMultiplier = progress >= 1.0F ? 1.0F : 0.0F;
                             }
-                        } else {
-                            Optional optionalTarget;
-                            Entity targetEntity = null;
-                            switch (targeting.type) {
-                                case AREA:
-                                    Vec3d center = player.getPos().add(0.0, (double)(player.getHeight() / 2.0F), 0.0);
-                                    Spell.Release.Target.Area area = spell.release.target.area;
-                                    applyAreaImpact(world, player, targets, spell.range, area, spell, context.position(center), true);
-                                    break;
-                                case BEAM:
-                                    beamImpact(world, player, targets, spell, context);
-                                    break;
-                                case CLOUD:
-                                    SpellHelper.placeCloud(world, player, spellInfo, context);
-                                    released = true;
-                                    break;
-                                case CURSOR:
-                                    optionalTarget = targets.stream().findFirst();
-                                    if (optionalTarget.isPresent()) {
-                                        directImpact(world, player, (Entity)optionalTarget.get(), spell, context);
-                                    } else {
-                                        released = false;
-                                    }
-                                    break;
-                                case PROJECTILE:
-                                    Optional<Entity> entityFound = targets.stream().findFirst();
-                                    if (entityFound.isPresent()) {
-                                        targetEntity = (Entity)entityFound.get();
-                                    }
 
-                                    SpellHelper.shootProjectile(world, player, targetEntity, spellInfo, context);
-                                    break;
-                                case METEOR:
-                                    optionalTarget = targets.stream().findFirst();
-                                    if (optionalTarget.isPresent()) {
-                                        SpellHelper.fallProjectile(world, player, (Entity)optionalTarget.get(), spellInfo, context);
-                                    } else {
-                                        released = false;
-                                    }
-                                    break;
-                                case SELF:
-                                    directImpact(world, player, player, spell, context);
-                                    released = true;
-                                    break;
-                                case SHOOT_ARROW:
-                                    ArrowHelper.shootArrow(world, player, spellInfo, context);
-                                    released = true;
-                            }
-                        }
+                            SpellCastSyncHelper.clearCasting(player);
                     }
 
-                    if (released) {
-                        ParticleHelper.sendBatches(player, spell.release.particles);
-                        SoundHelper.playSound(world, player, spell.release.sound);
-                        AnimationHelper.sendAnimation(player, (Collection)trackingPlayers.get(), SpellCast.Animation.RELEASE, spell.release.animation, castingSpeed);
-                        SpellHelper.imposeCooldown(player, spellId, spell, progress);
-                        player.addExhaustion(spell.cost.exhaust * SpellEngineMod.config.spell_cost_exhaust_multiplier);
+                    SpellHelper.AmmoResult ammoResult = SpellHelper.ammoForSpell(player, spell, itemStack);
+                    if (channelMultiplier > 0.0F && ammoResult.satisfied()) {
+                        Spell.Release.Target targeting = spell.release.target;
+                        boolean released = action == SpellCast.Action.RELEASE;
+                        if (shouldPerformImpact) {
+                            SpellHelper.ImpactContext context = new SpellHelper.ImpactContext(channelMultiplier, 1.0F, (Vec3d) null, SpellPower.getSpellPower(spell.school, player), SpellHelper.impactTargetingMode(spell));
+                            if (spell.release.custom_impact) {
+                                Function<CustomSpellHandler.Data, Boolean> handler = (Function) CustomSpellHandler.handlers.get(spellId);
+                                released = false;
+                                if (handler != null) {
+                                    released = (Boolean) handler.apply(new CustomSpellHandler.Data(player, targets, itemStack, action, progress, context));
+                                }
+                            } else {
+                                Optional optionalTarget;
+                                Entity targetEntity = null;
+                                switch (targeting.type) {
+                                    case AREA:
+                                        Vec3d center = player.getPos().add(0.0, (double) (player.getHeight() / 2.0F), 0.0);
+                                        Spell.Release.Target.Area area = spell.release.target.area;
+                                        applyAreaImpact(world, player, targets, spell.range, area, spell, context.position(center), true);
+                                        break;
+                                    case BEAM:
+                                        beamImpact(world, player, targets, spell, context);
+                                        break;
+                                    case CLOUD:
+                                        SpellHelper.placeCloud(world, player, spellInfo, context);
+                                        released = true;
+                                        break;
+                                    case CURSOR:
+                                        optionalTarget = targets.stream().findFirst();
+                                        if (optionalTarget.isPresent()) {
+                                            directImpact(world, player, (Entity) optionalTarget.get(), spell, context);
+                                        } else {
+                                            released = false;
+                                        }
+                                        break;
+                                    case PROJECTILE:
+                                        Optional<Entity> entityFound = targets.stream().findFirst();
+                                        if (entityFound.isPresent()) {
+                                            targetEntity = (Entity) entityFound.get();
+                                        }
 
-                        // health cost
-                        float healthCost = ((DuckSpellCostMixin) spell.cost).betteradventuremode$getHealthCost();
-                        if (healthCost > 0.0F) {
-                            player.heal(-healthCost);
-                        }
-
-                        // mana cost
-                        float manaCost = ((DuckSpellCostMixin) spell.cost).betteradventuremode$getManaCost();
-                        if (manaCost > 0.0F) {
-                            ((DuckLivingEntityMixin)player).betteradventuremode$addMana(-manaCost);
-                        }
-
-                        // stamina cost
-                        float staminaCost = ((DuckSpellCostMixin) spell.cost).betteradventuremode$getStaminaCost();
-                        if (staminaCost > 0.0F) {
-                            ((DuckLivingEntityMixin)player).betteradventuremode$addStamina(-staminaCost);
-                        }
-
-                        // consume spell casting item (used for spell scrolls)
-                        if (((DuckSpellCostMixin) spell.cost).betteradventuremode$isConsumeSelf() && !player.isCreative()) {
-                            player.incrementStat(Stats.USED.getOrCreateStat(itemStack.getItem()));
-                            if (!player.isCreative()) {
-                                itemStack.decrement(1);
-                            }
-                        }
-
-                        if (SpellEngineMod.config.spell_cost_durability_allowed && spell.cost.durability > 0) {
-                            itemStack.damage(spell.cost.durability, player, (playerObj) -> {
-                                playerObj.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND);
-                                playerObj.sendEquipmentBreakStatus(EquipmentSlot.OFFHAND);
-                            });
-                        }
-
-                        if (ammoResult.ammo() != null && spell.cost.consume_item) {
-                            for(int i = 0; i < player.getInventory().size(); ++i) {
-                                ItemStack stack = player.getInventory().getStack(i);
-                                if (stack.isOf(ammoResult.ammo().getItem())) {
-                                    stack.decrement(1);
-                                    if (stack.isEmpty()) {
-                                        player.getInventory().removeOne(stack);
-                                    }
-                                    break;
+                                        SpellHelper.shootProjectile(world, player, targetEntity, spellInfo, context);
+                                        break;
+                                    case METEOR:
+                                        optionalTarget = targets.stream().findFirst();
+                                        if (optionalTarget.isPresent()) {
+                                            SpellHelper.fallProjectile(world, player, (Entity) optionalTarget.get(), spellInfo, context);
+                                        } else {
+                                            released = false;
+                                        }
+                                        break;
+                                    case SELF:
+                                        directImpact(world, player, player, spell, context);
+                                        released = true;
+                                        break;
+                                    case SHOOT_ARROW:
+                                        ArrowHelper.shootArrow(world, player, spellInfo, context);
+                                        released = true;
                                 }
                             }
                         }
 
-//                        if (spell.cost.effect_id != null) {
-//                            StatusEffect effect = (StatusEffect)Registries.STATUS_EFFECT.get(new Identifier(spell.cost.effect_id));
-//                            player.removeStatusEffect(effect);
-//                        }
-                        if (spell.cost.effect_id != null) {
-                            StatusEffect effect = (StatusEffect) Registries.STATUS_EFFECT.get(new Identifier(spell.cost.effect_id));
-                            int newAmplifier = -1;
-                            StatusEffectInstance statusEffectInstance = player.getStatusEffect(effect);
-                            if (statusEffectInstance != null) {
-                                int oldAmplifier = statusEffectInstance.getAmplifier();
-                                newAmplifier = oldAmplifier - 1;
+                        if (released) {
+                            ParticleHelper.sendBatches(player, spell.release.particles);
+                            SoundHelper.playSound(world, player, spell.release.sound);
+                            AnimationHelper.sendAnimation(player, (Collection) trackingPlayers.get(), SpellCast.Animation.RELEASE, spell.release.animation, castingSpeed);
+                            SpellHelper.imposeCooldown(player, spellId, spell, progress);
+                            player.addExhaustion(spell.cost.exhaust * SpellEngineMod.config.spell_cost_exhaust_multiplier);
+
+                            // health cost
+                            float healthCost = ((DuckSpellCostMixin) spell.cost).betteradventuremode$getHealthCost();
+                            if (healthCost > 0.0F) {
+                                player.heal(-healthCost);
                             }
-                            if (newAmplifier < 0) {
-                                player.removeStatusEffect(effect);
-                            } else {
-                                // TODO remove old instance?
-                                player.addStatusEffect(new StatusEffectInstance(effect, statusEffectInstance.getDuration(), newAmplifier, statusEffectInstance.isAmbient(), statusEffectInstance.shouldShowParticles(), statusEffectInstance.shouldShowIcon()));
+
+                            // mana cost
+                            float manaCost = ((DuckSpellCostMixin) spell.cost).betteradventuremode$getManaCost();
+                            if (manaCost > 0.0F) {
+                                ((DuckLivingEntityMixin) player).betteradventuremode$addMana(-manaCost);
+                            }
+
+                            // stamina cost
+                            float staminaCost = ((DuckSpellCostMixin) spell.cost).betteradventuremode$getStaminaCost();
+                            if (staminaCost > 0.0F) {
+                                ((DuckLivingEntityMixin) player).betteradventuremode$addStamina(-staminaCost);
+                            }
+
+                            // consume spell casting item (used for spell scrolls)
+                            if (((DuckSpellCostMixin) spell.cost).betteradventuremode$isConsumeSelf() && !player.isCreative()) {
+                                player.incrementStat(Stats.USED.getOrCreateStat(itemStack.getItem()));
+                                if (!player.isCreative()) {
+                                    itemStack.decrement(1);
+                                }
+                            }
+
+                            if (SpellEngineMod.config.spell_cost_durability_allowed && spell.cost.durability > 0) {
+                                itemStack.damage(spell.cost.durability, player, (playerObj) -> {
+                                    playerObj.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND);
+                                    playerObj.sendEquipmentBreakStatus(EquipmentSlot.OFFHAND);
+                                });
+                            }
+
+                            if (ammoResult.ammo() != null && spell.cost.consume_item) {
+                                for (int i = 0; i < player.getInventory().size(); ++i) {
+                                    ItemStack stack = player.getInventory().getStack(i);
+                                    if (stack.isOf(ammoResult.ammo().getItem())) {
+                                        stack.decrement(1);
+                                        if (stack.isEmpty()) {
+                                            player.getInventory().removeOne(stack);
+                                        }
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (spell.cost.effect_id != null) {
+                                StatusEffect effect = (StatusEffect) Registries.STATUS_EFFECT.get(new Identifier(spell.cost.effect_id));
+                                if (effect != null) {
+                                    if (((DuckSpellCostMixin) spell.cost).betteradventuremode$isDecrementEffect()) {
+                                        int newAmplifier = -1;
+                                        StatusEffectInstance statusEffectInstance = player.getStatusEffect(effect);
+                                        if (statusEffectInstance != null) {
+                                            int oldAmplifier = statusEffectInstance.getAmplifier();
+                                            newAmplifier = oldAmplifier - 1;
+                                        }
+                                        player.removeStatusEffect(effect);
+                                        if (newAmplifier >= 0) {
+                                            player.addStatusEffect(new StatusEffectInstance(effect, statusEffectInstance.getDuration(), newAmplifier, statusEffectInstance.isAmbient(), statusEffectInstance.shouldShowParticles(), statusEffectInstance.shouldShowIcon()));
+                                        }
+                                    } else {
+                                        player.removeStatusEffect(effect);
+                                    }
+                                }
                             }
                         }
                     }
-                }
 
+                }
             }
         }
     }
-//    public static void performSpell(World world, PlayerEntity player, Identifier spellId, List<Entity> targets, SpellCast.Action action, float progress) {
-//        Spell spell = SpellRegistry.getSpell(spellId);
-//        if (spell != null) {
-//            SpellInfo spellInfo = new SpellInfo(spell, spellId);
-//            ItemStack itemStack = player.getMainHandStack();
-//            SpellCast.Attempt attempt = SpellHelper.attemptCasting(player, itemStack, spellId);
-//            if (attempt.isSuccess()) {
-//                float castingSpeed = ((SpellCasterEntity)player).getCurrentCastingSpeed();
-//                progress = Math.max(Math.min(progress, 1.0F), 0.0F);
-//                float channelMultiplier = 1.0F;
-//                boolean shouldPerformImpact = true;
-//                Supplier<Collection<ServerPlayerEntity>> trackingPlayers = Suppliers.memoize(() -> {
-//                    return PlayerLookup.tracking(player);
-//                });
-//                switch (action) {
-//                    case CHANNEL:
-//                        channelMultiplier = SpellHelper.channelValueMultiplier(spell);
-//                        break;
-//                    case RELEASE:
-//                        if (SpellHelper.isChanneled(spell)) {
-//                            shouldPerformImpact = false;
-//                            channelMultiplier = 1.0F;
-//                        } else {
-//                            channelMultiplier = progress >= 1.0F ? 1.0F : 0.0F;
-//                        }
-//
-//                        SpellCastSyncHelper.clearCasting(player);
-//                }
-//
-//                SpellHelper.AmmoResult ammoResult = SpellHelper.ammoForSpell(player, spell, itemStack);
-//                if (channelMultiplier > 0.0F && ammoResult.satisfied()) {
-//                    Spell.Release.Target targeting = spell.release.target;
-//                    boolean released = action == SpellCast.Action.RELEASE;
-//                    if (shouldPerformImpact) {
-//                        SpellHelper.ImpactContext context = new SpellHelper.ImpactContext(channelMultiplier, 1.0F, (Vec3d)null, SpellPower.getSpellPower(spell.school, player), SpellHelper.impactTargetingMode(spell));
-//                        if (spell.release.custom_impact) {
-//                            Function<CustomSpellHandler.Data, Boolean> handler = (Function)CustomSpellHandler.handlers.get(spellId);
-//                            released = false;
-//                            if (handler != null) {
-//                                released = (Boolean)handler.apply(new CustomSpellHandler.Data(player, targets, itemStack, action, progress, context));
-//                            }
-//                        } else {
-//                            Optional optionalTarget;
-//                            Entity targetEntity = null;
-//                            switch (targeting.type) {
-//                                case AREA:
-//                                    Vec3d center = player.getPos().add(0.0, (double)(player.getHeight() / 2.0F), 0.0);
-//                                    Spell.Release.Target.Area area = spell.release.target.area;
-//                                    areaImpact(world, player, targets, center, spell.range, area, false, spell, context);
-//                                    break;
-//                                case BEAM:
-//                                    beamImpact(world, player, targets, spell, context);
-//                                    break;
-//                                case CURSOR:
-//                                    optionalTarget = targets.stream().findFirst();
-//                                    if (optionalTarget.isPresent()) {
-//                                        directImpact(world, player, (Entity)optionalTarget.get(), spell, context);
-//                                    } else {
-//                                        released = false;
-//                                    }
-//                                    break;
-//                                case PROJECTILE:
-//                                    optionalTarget = targets.stream().findFirst();
-//                                    if (optionalTarget.isPresent()) {
-//                                        targetEntity = (Entity) optionalTarget.get();
-//                                    }
-//
-//                                    SpellHelper.shootProjectile(world, player, targetEntity, spellInfo, context);
-//                                    break;
-//                                case METEOR:
-//                                    optionalTarget = targets.stream().findFirst();
-//                                    if (optionalTarget.isPresent()) {
-//                                        SpellHelper.fallProjectile(world, player, (Entity)optionalTarget.get(), spellInfo, context);
-//                                    } else {
-//                                        released = false;
-//                                    }
-//                                    break;
-//                                case SELF:
-//                                    directImpact(world, player, player, spell, context);
-//                                    released = true;
-//                            }
-//                        }
-//                    }
-//
-//                    if (released) {
-//                        ParticleHelper.sendBatches(player, spell.release.particles);
-//                        SoundHelper.playSound(world, player, spell.release.sound);
-//                        AnimationHelper.sendAnimation(player, (Collection)trackingPlayers.get(), SpellCast.Animation.RELEASE, spell.release.animation, castingSpeed);
-//                        SpellHelper.imposeCooldown(player, spellId, spell, progress);
-//                        player.addExhaustion(spell.cost.exhaust * SpellEngineMod.config.spell_cost_exhaust_multiplier);
-//
-//                        // health cost
-//                        float healthCost = ((DuckSpellCostMixin) spell.cost).getHealthCost();
-//                        if (healthCost > 0.0F) {
-//                            player.heal(-healthCost);
-//                        }
-//
-//                        // mana cost
-//                        float manaCost = ((DuckSpellCostMixin) spell.cost).getManaCost();
-//                        if (manaCost > 0.0F) {
-//                            ((DuckPlayerEntityMixin)player).bamcore$addMana(-manaCost);
-//                        }
-//
-//                        // stamina cost
-//                        float staminaCost = ((DuckSpellCostMixin) spell.cost).getStaminaCost();
-//                        if (staminaCost > 0.0F) {
-//                            ((DuckPlayerEntityMixin)player).bamcore$addStamina(-staminaCost);
-//                        }
-//
-//                        // consume spell casting item (used for spell scrolls)
-//                        if (((DuckSpellCostMixin) spell.cost).isConsumeSelf() && !player.isCreative()) {
-//                            player.incrementStat(Stats.USED.getOrCreateStat(itemStack.getItem()));
-//                            if (!player.isCreative()) {
-//                                itemStack.decrement(1);
-//                            }
-//                        }
-//
-//                        if (SpellEngineMod.config.spell_cost_durability_allowed && spell.cost.durability > 0) {
-//                            itemStack.damage(spell.cost.durability, player, (playerObj) -> {
-//                                playerObj.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND);
-//                                playerObj.sendEquipmentBreakStatus(EquipmentSlot.OFFHAND);
-//                            });
-//                        }
-//
-//                        if (ammoResult.ammo() != null) {
-//                            for(int i = 0; i < player.getInventory().size(); ++i) {
-//                                ItemStack stack = player.getInventory().getStack(i);
-//                                if (stack.isOf(ammoResult.ammo().getItem())) {
-//                                    stack.decrement(1);
-//                                    if (stack.isEmpty()) {
-//                                        player.getInventory().removeOne(stack);
-//                                    }
-//                                    break;
-//                                }
-//                            }
-//                        }
-//
-////                        if (spell.cost.effect_id != null) {
-////                            StatusEffect effect = (StatusEffect)Registries.STATUS_EFFECT.get(new Identifier(spell.cost.effect_id));
-////                            player.removeStatusEffect(effect);
-////                        }
-//                        if (spell.cost.effect_id != null) {
-//                            StatusEffect effect = (StatusEffect) Registries.STATUS_EFFECT.get(new Identifier(spell.cost.effect_id));
-//                            int newAmplifier = -1;
-//                            StatusEffectInstance statusEffectInstance = player.getStatusEffect(effect);
-//                            if (statusEffectInstance != null) {
-//                                int oldAmplifier = statusEffectInstance.getAmplifier();
-//                                newAmplifier = oldAmplifier - 1;
-//                            }
-//                            if (newAmplifier < 0) {
-//                                player.removeStatusEffect(effect);
-//                            } else {
-//                                // TODO remove old instance?
-//                                player.addStatusEffect(new StatusEffectInstance(effect, statusEffectInstance.getDuration(), newAmplifier, statusEffectInstance.isAmbient(), statusEffectInstance.shouldShowParticles(), statusEffectInstance.shouldShowIcon()));
-//                            }
-//                        }
-//                    }
-//                }
-//
-//            }
-//        }
-//    }
-//    public static void performSpell(World world, PlayerEntity player, Identifier spellId, List<Entity> targets, SpellCast.Action action, float progress) {
-//        Spell spell = SpellRegistry.getSpell(spellId);
-//        if (spell != null) {
-//            SpellInfo spellInfo = new SpellInfo(spell, spellId);
-//            SpellCasterEntity caster = (SpellCasterEntity)player;
-//            if (!caster.getCooldownManager().isCoolingDown(spellId)) {
-//                float progress = SpellHelper.getCastProgress(player, remainingUseTicks, spell);
-//                float channelMultiplier = 1.0F;
-//                boolean shouldPerformImpact = true;
-//                Supplier<Collection<ServerPlayerEntity>> trackingPlayers = Suppliers.memoize(() -> {
-//                    return PlayerLookup.tracking(player);
-//                });
-//                switch (action) {
-//                    case START:
-//                        SoundHelper.playSound(player.getWorld(), player, spell.cast.start_sound);
-//                        SpellCastSyncHelper.setCasting(player, hand, spellId, (Collection)trackingPlayers.get());
-//                        return;
-//                    case CHANNEL:
-//                        channelMultiplier = SpellHelper.channelValueMultiplier(spell);
-//                        break;
-//                    case RELEASE:
-//                        if (SpellHelper.isChanneled(spell)) {
-//                            shouldPerformImpact = false;
-//                            channelMultiplier = 1.0F;
-//                        } else {
-//                            channelMultiplier = progress >= 1.0F ? 1.0F : 0.0F;
-//                        }
-//
-//                        SpellCastSyncHelper.clearCasting(player, (Collection)trackingPlayers.get());
-//                }
-//
-//                SpellHelper.AmmoResult ammoResult = SpellHelper.ammoForSpell(player, spell, itemStack);
-//                if (channelMultiplier > 0.0F && ammoResult.satisfied()) {
-//                    Spell.Release.Target targeting = spell.release.target;
-//                    boolean released = action == SpellCast.Action.RELEASE;
-//                    if (shouldPerformImpact) {
-//                        SpellHelper.ImpactContext context = new SpellHelper.ImpactContext(channelMultiplier, 1.0F, (Vec3d)null, SpellPower.getSpellPower(spell.school, player), SpellHelper.impactTargetingMode(spell));
-//                        if (spell.release.custom_impact) {
-//                            Function<CustomSpellHandler.Data, Boolean> handler = (Function)CustomSpellHandler.handlers.get(spellId);
-//                            released = false;
-//                            if (handler != null) {
-//                                released = (Boolean)handler.apply(new CustomSpellHandler.Data(player, targets, itemStack, action, hand, remainingUseTicks, context));
-//                            }
-//                        } else {
-//                            Optional target;
-//                            switch (targeting.type) {
-//                                case AREA:
-//                                    Vec3d center = player.getPos().add(0.0, (double)(player.getHeight() / 2.0F), 0.0);
-//                                    Spell.Release.Target.Area area = spell.release.target.area;
-//                                    areaImpact(world, player, targets, center, spell.range, area, false, spell, context);
-//                                    break;
-//                                case BEAM:
-//                                    beamImpact(world, player, targets, spell, context);
-//                                    break;
-//                                case CURSOR:
-//                                    target = targets.stream().findFirst();
-//                                    if (target.isPresent()) {
-//                                        directImpact(world, player, (Entity)target.get(), spell, context);
-//                                    } else {
-//                                        released = false;
-//                                    }
-//                                    break;
-//                                case PROJECTILE:
-//                                    Entity targetEntity = null;
-//                                    Optional<Entity> entityFound = targets.stream().findFirst();
-//                                    if (entityFound.isPresent()) {
-//                                        targetEntity = (Entity)entityFound.get();
-//                                    }
-//
-//                                    SpellHelper.shootProjectile(world, player, targetEntity, spellInfo, context);
-//                                    break;
-//                                case METEOR:
-//                                    target = targets.stream().findFirst();
-//                                    if (target.isPresent()) {
-//                                        SpellHelper.fallProjectile(world, player, (Entity)target.get(), spellInfo, context);
-//                                    } else {
-//                                        released = false;
-//                                    }
-//                                    break;
-//                                case SELF:
-//                                    directImpact(world, player, player, spell, context);
-//                                    released = true;
-//                            }
-//                        }
-//                    }
-//
-//                    if (released) {
-//                        ParticleHelper.sendBatches(player, spell.release.particles);
-//                        SoundHelper.playSound(world, player, spell.release.sound);
-//                        AnimationHelper.sendAnimation(player, (Collection)trackingPlayers.get(), SpellCast.Animation.RELEASE, spell.release.animation);
-//                        float duration = cooldownToSet(player, spell, progress);
-//                        if (duration > 0.0F) {
-//                            ((SpellCasterEntity)player).getCooldownManager().set(spellId, Math.round(duration * 20.0F));
-//                        }
-//
-//                        player.addExhaustion(spell.cost.exhaust * SpellEngineMod.config.spell_cost_exhaust_multiplier);
-//
-//                        // health cost
-//                        float healthCost = ((DuckSpellCostMixin) spell.cost).getHealthCost();
-//                        if (healthCost > 0.0F) {
-//                            player.heal(-healthCost);
-//                        }
-//
-//                        // mana cost
-//                        float manaCost = ((DuckSpellCostMixin) spell.cost).getManaCost();
-//                        if (manaCost > 0.0F) {
-//                            ((DuckPlayerEntityMixin)player).bamcore$addMana(-manaCost);
-//                        }
-//
-//                        // consume spell casting item (used for spell scrolls)
-//                        if (((DuckSpellCostMixin) spell.cost).isConsumeSelf() && !player.isCreative()) {
-//                            player.incrementStat(Stats.USED.getOrCreateStat(itemStack.getItem()));
-//                            if (!player.isCreative()) {
-//                                itemStack.decrement(1);
-//                            }
-//                        }
-//
-//                        if (SpellEngineMod.config.spell_cost_durability_allowed && spell.cost.durability > 0) {
-//                            itemStack.damage(spell.cost.durability, player, (playerObj) -> {
-//                                playerObj.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND);
-//                                playerObj.sendEquipmentBreakStatus(EquipmentSlot.OFFHAND);
-//                            });
-//                        }
-//
-//                        if (ammoResult.ammo() != null) {
-//                            for(int i = 0; i < player.getInventory().size(); ++i) {
-//                                ItemStack stack = player.getInventory().getStack(i);
-//                                if (stack.isOf(ammoResult.ammo().getItem())) {
-//                                    stack.decrement(1);
-//                                    if (stack.isEmpty()) {
-//                                        player.getInventory().removeOne(stack);
-//                                    }
-//                                    break;
-//                                }
-//                            }
-//                        }
-//
-////                        if (spell.cost.effect_id != null) {
-////                            StatusEffect effect = (StatusEffect)Registries.STATUS_EFFECT.get(new Identifier(spell.cost.effect_id));
-////                            player.removeStatusEffect(effect);
-////                        }
-//                        if (spell.cost.effect_id != null) {
-//                            StatusEffect effect = (StatusEffect) Registries.STATUS_EFFECT.get(new Identifier(spell.cost.effect_id));
-//                            int newAmplifier = -1;
-//                            StatusEffectInstance statusEffectInstance = player.getStatusEffect(effect);
-//                            if (statusEffectInstance != null) {
-//                                int oldAmplifier = statusEffectInstance.getAmplifier();
-//                                newAmplifier = oldAmplifier - 1;
-//                            }
-//                            if (newAmplifier < 0) {
-//                                player.removeStatusEffect(effect);
-//                            } else {
-//                                // TODO remove old instance?
-//                                player.addStatusEffect(new StatusEffectInstance(effect, statusEffectInstance.getDuration(), newAmplifier, statusEffectInstance.isAmbient(), statusEffectInstance.shouldShowParticles(), statusEffectInstance.shouldShowIcon()), (Entity) caster);
-//                            }
-//                        }
-//                    }
-//                }
-//
-//            }
-//        }
-//    }
-//    public static void performSpell(World world, PlayerEntity player, Identifier spellId, List<Entity> targets, ItemStack itemStack, SpellCast.Action action, Hand hand, int remainingUseTicks) {
-//        Spell spell = SpellRegistry.getSpell(spellId);
-//        if (spell != null) {
-//            SpellCasterEntity caster = (SpellCasterEntity)player;
-//            if (!caster.getCooldownManager().isCoolingDown(spellId)) {
-//                float progress = SpellHelper.getCastProgress(player, remainingUseTicks, spell);
-//                float channelMultiplier = 1.0F;
-//                boolean shouldPerformImpact = true;
-//                Supplier<Collection<ServerPlayerEntity>> trackingPlayers = Suppliers.memoize(() -> {
-//                    return PlayerLookup.tracking(player);
-//                });
-//                switch (action) {
-//                    case START:
-//                        SoundHelper.playSound(player.getWorld(), player, spell.cast.start_sound);
-//                        SpellCastSyncHelper.setCasting(player, hand, spellId, (Collection)trackingPlayers.get());
-//                        return;
-//                    case CHANNEL:
-//                        channelMultiplier = SpellHelper.channelValueMultiplier(spell);
-//                        break;
-//                    case RELEASE:
-//                        if (SpellHelper.isChanneled(spell)) {
-//                            shouldPerformImpact = false;
-//                            channelMultiplier = 1.0F;
-//                        } else {
-//                            channelMultiplier = progress >= 1.0F ? 1.0F : 0.0F;
-//                        }
-//
-//                        SpellCastSyncHelper.clearCasting(player, (Collection)trackingPlayers.get());
-//                }
-//
-//                SpellHelper.AmmoResult ammoResult = SpellHelper.ammoForSpell(player, spell, itemStack);
-//                if (channelMultiplier > 0.0F && ammoResult.satisfied()) {
-//                    Spell.Release.Target targeting = spell.release.target;
-//                    boolean released = action == SpellCast.Action.RELEASE;
-//                    if (shouldPerformImpact) {
-//                        SpellHelper.ImpactContext context = new SpellHelper.ImpactContext(channelMultiplier, 1.0F, (Vec3d)null, SpellPower.getSpellPower(spell.school, player), SpellHelper.impactTargetingMode(spell));
-//                        if (spell.release.custom_impact) {
-//                            Function<CustomSpellHandler.Data, Boolean> handler = (Function)CustomSpellHandler.handlers.get(spellId);
-//                            released = false;
-//                            if (handler != null) {
-//                                released = (Boolean)handler.apply(new CustomSpellHandler.Data(player, targets, itemStack, action, hand, remainingUseTicks, context));
-//                            }
-//                        } else {
-//                            Optional target;
-//                            switch (targeting.type) {
-//                                case AREA:
-//                                    Vec3d center = player.getPos().add(0.0, (double)(player.getHeight() / 2.0F), 0.0);
-//                                    Spell.Release.Target.Area area = spell.release.target.area;
-//                                    areaImpact(world, player, targets, center, spell.range, area, false, spell, context);
-//                                    break;
-//                                case BEAM:
-//                                    beamImpact(world, player, targets, spell, context);
-//                                    break;
-//                                case CURSOR:
-//                                    target = targets.stream().findFirst();
-//                                    if (target.isPresent()) {
-//                                        directImpact(world, player, (Entity)target.get(), spell, context);
-//                                    } else {
-//                                        released = false;
-//                                    }
-//                                    break;
-//                                case PROJECTILE:
-//                                    Entity targetEntity = null;
-//                                    Optional<Entity> entityFound = targets.stream().findFirst();
-//                                    if (entityFound.isPresent()) {
-//                                        targetEntity = (Entity)entityFound.get();
-//                                    }
-//
-//                                    shootProjectile(world, player, targetEntity, spell, context);
-//                                    break;
-//                                case METEOR:
-//                                    target = targets.stream().findFirst();
-//                                    if (target.isPresent()) {
-//                                        fallProjectile(world, player, (Entity)target.get(), spell, context);
-//                                    } else {
-//                                        released = false;
-//                                    }
-//                                    break;
-//                                case SELF:
-//                                    directImpact(world, player, player, spell, context);
-//                                    released = true;
-//                            }
-//                        }
-//                    }
-//
-//                    if (released) {
-//                        ParticleHelper.sendBatches(player, spell.release.particles);
-//                        SoundHelper.playSound(world, player, spell.release.sound);
-//                        AnimationHelper.sendAnimation(player, (Collection)trackingPlayers.get(), SpellCast.Animation.RELEASE, spell.release.animation);
-//                        float duration = cooldownToSet(player, spell, progress);
-//                        if (duration > 0.0F) {
-//                            ((SpellCasterEntity)player).getCooldownManager().set(spellId, Math.round(duration * 20.0F));
-//                        }
-//
-//                        player.addExhaustion(spell.cost.exhaust * SpellEngineMod.config.spell_cost_exhaust_multiplier);
-//
-//                        // health cost
-//                        float healthCost = ((DuckSpellCostMixin) spell.cost).getHealthCost();
-//                        if (healthCost > 0.0F) {
-//                            player.heal(-healthCost);
-//                        }
-//
-//                        // mana cost
-//                        float manaCost = ((DuckSpellCostMixin) spell.cost).getManaCost();
-//                        if (manaCost > 0.0F) {
-//                            ((DuckPlayerEntityMixin)player).bam$addMana(-manaCost);
-//                        }
-//
-//                        if (((DuckSpellCostMixin) spell.cost).isConsumeSelf() && !player.isCreative()) {
-//                            player.incrementStat(Stats.USED.getOrCreateStat(itemStack.getItem()));
-//                            if (!player.isCreative()) {
-//                                itemStack.decrement(1);
-//                            }
-//                        }
-//
-//                        if (SpellEngineMod.config.spell_cost_durability_allowed && spell.cost.durability > 0) {
-//                            itemStack.damage(spell.cost.durability, player, (playerObj) -> {
-//                                playerObj.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND);
-//                                playerObj.sendEquipmentBreakStatus(EquipmentSlot.OFFHAND);
-//                            });
-//                        }
-//
-//                        if (ammoResult.ammo() != null) {
-//                            for(int i = 0; i < player.getInventory().size(); ++i) {
-//                                ItemStack stack = player.getInventory().getStack(i);
-//                                if (stack.isOf(ammoResult.ammo().getItem())) {
-//                                    stack.decrement(1);
-//                                    if (stack.isEmpty()) {
-//                                        player.getInventory().removeOne(stack);
-//                                    }
-//                                    break;
-//                                }
-//                            }
-//                        }
-//
-//                        if (spell.cost.effect_id != null) {
-//                            StatusEffect effect = (StatusEffect) Registries.STATUS_EFFECT.get(new Identifier(spell.cost.effect_id));
-//                            int newAmplifier = -1;
-//                            StatusEffectInstance statusEffectInstance = player.getStatusEffect(effect);
-//                            if (statusEffectInstance != null) {
-//                                int oldAmplifier = statusEffectInstance.getAmplifier();
-//                                newAmplifier = oldAmplifier - 1;
-//                            }
-//                            if (newAmplifier < 0) {
-//                                player.removeStatusEffect(effect);
-//                            } else {
-//                                player.addStatusEffect(new StatusEffectInstance(effect, statusEffectInstance.getDuration(), newAmplifier, statusEffectInstance.isAmbient(), statusEffectInstance.shouldShowParticles(), statusEffectInstance.shouldShowIcon()), (Entity) caster);
-//                            }
-//                        }
-//                    }
-//                }
-//
-//            }
-//        }
-//    }
 }

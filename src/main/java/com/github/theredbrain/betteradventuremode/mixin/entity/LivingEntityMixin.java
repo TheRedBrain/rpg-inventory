@@ -1,7 +1,6 @@
 package com.github.theredbrain.betteradventuremode.mixin.entity;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
-import com.github.theredbrain.betteradventuremode.BetterAdventureModeClient;
 import com.github.theredbrain.betteradventuremode.item.BasicShieldItem;
 import com.github.theredbrain.betteradventuremode.registry.EntityAttributesRegistry;
 import com.github.theredbrain.betteradventuremode.registry.StatusEffectsRegistry;
@@ -10,7 +9,6 @@ import com.github.theredbrain.betteradventuremode.registry.GameRulesRegistry;
 import com.github.theredbrain.betteradventuremode.registry.Tags;
 import dev.emi.trinkets.api.*;
 import dev.emi.trinkets.api.event.TrinketDropCallback;
-import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -24,13 +22,11 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.registry.tag.DamageTypeTags;
-import net.minecraft.registry.tag.EntityTypeTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.stat.Stats;
@@ -48,79 +44,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-@Mixin(value = LivingEntity.class, priority = 950)
+@Mixin(value = LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements DuckLivingEntityMixin {
 
     @Shadow
     public abstract float getMaxHealth();
 
     @Shadow
-    private @Nullable DamageSource lastDamageSource;
-    @Shadow
-    private long lastDamageTime;
-
-    @Shadow
-    protected abstract void playHurtSound(DamageSource source);
-
-    @Shadow
-    public abstract void onDeath(DamageSource damageSource);
-
-    @Shadow
-    protected abstract @Nullable SoundEvent getDeathSound();
-
-    @Shadow
-    public abstract boolean isDead();
-
-    @Shadow
-    protected abstract boolean tryUseTotem(DamageSource source);
-
-    @Shadow
-    protected abstract float getSoundVolume();
-
-    @Shadow
-    public abstract float getSoundPitch();
-
-    @Shadow
-    public abstract void tiltScreen(double deltaX, double deltaZ);
-
-    @Shadow
-    public abstract void takeKnockback(double strength, double x, double z);
-
-    @Shadow
     public abstract boolean hasStatusEffect(StatusEffect effect);
-
-    @Shadow
-    public abstract boolean isSleeping();
-
-    @Shadow
-    public abstract void wakeUp();
-
-    @Shadow
-    protected int despawnCounter;
-    @Shadow
-    @Final
-    public LimbAnimator limbAnimator;
-    @Shadow
-    protected float lastDamageTaken;
-    @Shadow
-    public int hurtTime;
-    @Shadow
-    public int maxHurtTime;
-
-    @Shadow
-    public abstract ItemStack getEquippedStack(EquipmentSlot var1);
-
-    @Shadow
-    public abstract void damageHelmet(DamageSource source, float amount);
-
-    @Shadow
-    protected int playerHitTimer;
-    @Shadow
-    @Nullable
-    protected PlayerEntity attackingPlayer;
-
-    @Shadow
-    public abstract void setAttacker(@Nullable LivingEntity attacker);
 
     @Shadow
     public abstract boolean addStatusEffect(StatusEffectInstance effect);
@@ -151,9 +82,6 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
 
     @Shadow
     public abstract boolean isBlocking();
-
-    @Shadow
-    public abstract boolean blockedByShield(DamageSource source);
 
     @Shadow
     public abstract void stopUsingItem();
@@ -238,9 +166,9 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
 
     }
 
-    @Inject(method = "createLivingAttributes", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "createLivingAttributes", at = @At("RETURN"))
     private static void betteradventuremode$createLivingAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
-        cir.setReturnValue(cir.getReturnValue()
+        cir.getReturnValue()
                 .add(EntityAttributesRegistry.HEALTH_REGENERATION, 0.0F) // TODO balance
                 .add(EntityAttributesRegistry.MANA_REGENERATION, 0.0F) // TODO balance
                 .add(EntityAttributesRegistry.STAMINA_REGENERATION, 1.0F) // TODO balance
@@ -263,8 +191,7 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
                 .add(EntityAttributesRegistry.POISON_RESISTANCE, 0.0F)
                 .add(EntityAttributesRegistry.FIRE_RESISTANCE, 0.0F)
                 .add(EntityAttributesRegistry.FROST_RESISTANCE, 0.0F)
-                .add(EntityAttributesRegistry.LIGHTNING_RESISTANCE, 0.0F)
-        );
+                .add(EntityAttributesRegistry.LIGHTNING_RESISTANCE, 0.0F);
     }
 
     @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
@@ -414,131 +341,8 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
      * @reason
      */
     @Overwrite
-    public boolean damage(DamageSource source, float amount) {
-        boolean bl3;
-        Entity entity2;
-        if (this.isInvulnerableTo(source)) {
-            return false;
-        }
-        if (this.getWorld().isClient) {
-            return false;
-        }
-        if (this.isDead()) {
-            return false;
-        }
-        if (source.isIn(DamageTypeTags.IS_FIRE) && this.hasStatusEffect(StatusEffects.FIRE_RESISTANCE)) {
-            return false;
-        }
-        if (this.isSleeping() && !this.getWorld().isClient) {
-            this.wakeUp();
-        }
-        this.despawnCounter = 0;
-        float f = amount;
-        boolean bl = false;
-
-        // rework shields
-//        float g = 0.0f;
-//        if (amount > 0.0f && this.blockedByShield(source)) {
-//            Entity entity;
-//            this.damageShield(amount);
-//            g = amount;
-//            amount = 0.0f;
-//            if (!source.isIn(DamageTypeTags.IS_PROJECTILE) && (entity = source.getSource()) instanceof LivingEntity) {
-//                LivingEntity livingEntity = (LivingEntity)entity;
-//                this.takeShieldHit(livingEntity);
-//            }
-//            bl = true;
-//        }
-
-
-        if (source.isIn(DamageTypeTags.IS_FREEZING) && this.getType().isIn(EntityTypeTags.FREEZE_HURTS_EXTRA_TYPES)) {
-            amount *= 5.0f;
-        }
-        this.limbAnimator.setSpeed(1.5f);
-        boolean bl2 = true;
-
-        if ((float) this.timeUntilRegen > 10.0f && !source.isIn(DamageTypeTags.BYPASSES_COOLDOWN)) {
-            if (amount <= this.lastDamageTime) {
-                return false;
-            }
-            this.applyDamage(source, amount - this.lastDamageTaken);
-            this.lastDamageTaken = amount;
-            bl2 = false;
-        } else {
-            this.lastDamageTaken = amount;
-            this.timeUntilRegen = 20;
-            this.applyDamage(source, amount);
-            this.hurtTime = this.maxHurtTime = 10;
-        }
-        if (source.isIn(DamageTypeTags.DAMAGES_HELMET) && !this.getEquippedStack(EquipmentSlot.HEAD).isEmpty()) {
-            this.damageHelmet(source, amount);
-            amount *= 0.75f;
-        }
-        if ((entity2 = source.getAttacker()) != null) {
-            WolfEntity wolfEntity;
-            if (entity2 instanceof LivingEntity livingEntity2) {
-                if (!source.isIn(DamageTypeTags.NO_ANGER)) {
-                    this.setAttacker(livingEntity2);
-                }
-            }
-            if (entity2 instanceof PlayerEntity playerEntity) {
-                this.playerHitTimer = 100;
-                this.attackingPlayer = playerEntity;
-            } else if (entity2 instanceof WolfEntity && (wolfEntity = (WolfEntity) entity2).isTamed()) {
-                PlayerEntity playerEntity2;
-                this.playerHitTimer = 100;
-                LivingEntity livingEntity = wolfEntity.getOwner();
-                this.attackingPlayer = livingEntity instanceof PlayerEntity ? (playerEntity2 = (PlayerEntity) livingEntity) : null;
-            }
-        }
-        if (bl2) {
-            if (bl) {
-                this.getWorld().sendEntityStatus(this, EntityStatuses.BLOCK_WITH_SHIELD);
-            } else {
-                this.getWorld().sendEntityDamage(this, source);
-            }
-            if (!(source.isIn(DamageTypeTags.NO_IMPACT) || bl && !(amount > 0.0f))) {
-                this.scheduleVelocityUpdate();
-            }
-            if (entity2 != null && !source.isIn(DamageTypeTags.IS_EXPLOSION)) {
-                double d = entity2.getX() - this.getX();
-                double e = entity2.getZ() - this.getZ();
-                while (d * d + e * e < 1.0E-4) {
-                    d = (Math.random() - Math.random()) * 0.01;
-                    e = (Math.random() - Math.random()) * 0.01;
-                }
-                this.takeKnockback(0.4f, d, e);
-                if (!bl) {
-                    this.tiltScreen(d, e);
-                }
-            }
-        }
-        if (this.isDead()) {
-            if (!this.tryUseTotem(source)) {
-                SoundEvent soundEvent = this.getDeathSound();
-                if (bl2 && soundEvent != null) {
-                    this.playSound(soundEvent, this.getSoundVolume(), this.getSoundPitch());
-                }
-                this.onDeath(source);
-            }
-        } else if (bl2) {
-            this.playHurtSound(source);
-        }
-        boolean bl4 = bl3 = !bl || amount > 0.0f;
-        if (bl3) {
-            this.lastDamageSource = source;
-            this.lastDamageTime = this.getWorld().getTime();
-        }
-        if (((LivingEntity) (Object) this) instanceof ServerPlayerEntity) {
-            Criteria.ENTITY_HURT_PLAYER.trigger(((ServerPlayerEntity) (Object) this), source, f, amount, bl);
-//            if (g > 0.0f && g < 3.4028235E37f) {
-//                ((ServerPlayerEntity) (Object) this).increaseStat(Stats.DAMAGE_BLOCKED_BY_SHIELD, Math.round(g * 10.0f));
-//            }
-        }
-        if (entity2 instanceof ServerPlayerEntity) {
-            Criteria.PLAYER_HURT_ENTITY.trigger((ServerPlayerEntity) entity2, this, source, f, amount, bl);
-        }
-        return bl3;
+    public boolean blockedByShield(DamageSource source) {
+        return false;
     }
 
     /**

@@ -10,6 +10,8 @@ public class SpellCostMixin implements DuckSpellCostMixin {
     @Unique
     private boolean consumeSelf = false;
     @Unique
+    private boolean decrementEffect = false;
+    @Unique
     private float manaCost = 0.0F;
     @Unique
     private float healthCost = 0.0F;
@@ -46,5 +48,13 @@ public class SpellCostMixin implements DuckSpellCostMixin {
 
     public void betteradventuremode$setConsumeSelf(boolean consumeSelf) {
         this.consumeSelf = consumeSelf;
+    }
+
+    public boolean betteradventuremode$isDecrementEffect() {
+        return decrementEffect;
+    }
+
+    public void betteradventuremode$setDecrementEffect(boolean decrementEffect) {
+        this.decrementEffect = decrementEffect;
     }
 }

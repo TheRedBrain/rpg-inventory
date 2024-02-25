@@ -9,4 +9,6 @@ public interface DuckSpellCostMixin {
     void betteradventuremode$setStaminaCost(float staminaCost);
     boolean betteradventuremode$isConsumeSelf();
     void betteradventuremode$setConsumeSelf(boolean consumeSelf);
+    boolean betteradventuremode$isDecrementEffect();
+    void betteradventuremode$setDecrementEffect(boolean decrementEffect);
 }
