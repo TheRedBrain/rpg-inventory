@@ -1,5 +1,6 @@
 package com.github.theredbrain.betteradventuremode.mixin.server.network;
 
+import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.betteradventuremode.registry.ServerPacketRegistry;
 import io.netty.buffer.Unpooled;
@@ -36,6 +37,20 @@ public class EntityTrackerEntryMixin {
                 data.writeInt(serverPlayer.getId());
                 data.writeBoolean(false);
                 ServerPlayNetworking.send((ServerPlayerEntity) player, ServerPacketRegistry.SWAPPED_HAND_ITEMS_PACKET, data); // TODO convert to packet
+            }
+            if (!((DuckPlayerInventoryMixin)serverPlayer.getInventory()).betteradventuremode$getMainHand().isEmpty()) {
+                PacketByteBuf data = new PacketByteBuf(Unpooled.buffer());
+                data.writeInt(serverPlayer.getId());
+                data.writeBoolean(true);
+                data.writeBoolean(((DuckPlayerEntityMixin)player).betteradventuremode$isMainHandStackSheathed());
+                ServerPlayNetworking.send((ServerPlayerEntity) player, ServerPacketRegistry.SHEATHED_WEAPONS_PACKET, data);
+            }
+            if (!((DuckPlayerInventoryMixin)serverPlayer.getInventory()).betteradventuremode$getOffHand().isEmpty()) {
+                PacketByteBuf data = new PacketByteBuf(Unpooled.buffer());
+                data.writeInt(serverPlayer.getId());
+                data.writeBoolean(false);
+                data.writeBoolean(((DuckPlayerEntityMixin)player).betteradventuremode$isMainHandStackSheathed());
+                ServerPlayNetworking.send((ServerPlayerEntity) player, ServerPacketRegistry.SHEATHED_WEAPONS_PACKET, data);
             }
         }
     }

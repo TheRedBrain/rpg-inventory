@@ -16,6 +16,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
@@ -24,28 +25,40 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public class BasicWeaponItem extends Item {
+public class BasicWeaponItem extends Item implements IMakesEquipSound {
 
     private final RegistryKey<DamageType> damageTypeRegistryKey;
-    @Nullable
     private final RegistryKey<DamageType> twoHandedDamageTypeRegistryKey;
     private final float attackDamage;
     private final float attackSpeed;
     private final int staminaCost;
+    private final int twoHandedStaminaCost;
     private final float weight;
     private final Multimap<EntityAttribute, EntityAttributeModifier> attributeModifiers;
     @Nullable
     private String translationKeyBroken;
+    @Nullable
+    private final SoundEvent equipSound;
 
-    public BasicWeaponItem(RegistryKey<DamageType> damageTypeRegistryKey, @Nullable RegistryKey<DamageType> twoHandedDamageTypeRegistryKey, float attackDamage, float attackSpeed, int staminaCost, float weight, Settings settings) {
+    public BasicWeaponItem(RegistryKey<DamageType> damageTypeRegistryKey, RegistryKey<DamageType> twoHandedDamageTypeRegistryKey, float attackDamage, float attackSpeed, int staminaCost, int twoHandedStaminaCost, float weight, @Nullable SoundEvent equipSound, Settings settings) {
         super(settings);
         this.damageTypeRegistryKey = damageTypeRegistryKey;
         this.twoHandedDamageTypeRegistryKey = twoHandedDamageTypeRegistryKey;
         this.attackDamage = attackDamage;
         this.attackSpeed = attackSpeed;
         this.staminaCost = staminaCost;
+        this.twoHandedStaminaCost = twoHandedStaminaCost;
         this.weight = weight;
+        this.equipSound = equipSound;
         this.attributeModifiers = buildModifiers();
+    }
+
+    public BasicWeaponItem(RegistryKey<DamageType> damageTypeRegistryKey, float attackDamage, float attackSpeed, int staminaCost, float weight, SoundEvent equipSound, Settings settings) {
+        this(damageTypeRegistryKey, damageTypeRegistryKey, attackDamage, attackSpeed, staminaCost, staminaCost, weight, equipSound, settings);
+    }
+
+    public BasicWeaponItem(RegistryKey<DamageType> damageTypeRegistryKey, float attackDamage, float attackSpeed, int staminaCost, float weight, Settings settings) {
+        this(damageTypeRegistryKey, damageTypeRegistryKey, attackDamage, attackSpeed, staminaCost, staminaCost, weight, null, settings);
     }
 
     /**
@@ -111,14 +124,22 @@ public class BasicWeaponItem extends Item {
         return builder.build();
     }
 
-    public int getStaminaCost() {
+    public int getStaminaCost(boolean twoHanded) {
+        if (twoHanded) {
+            return this.twoHandedStaminaCost;
+        }
         return staminaCost;
     }
 
     public RegistryKey<DamageType> getDamageTypeRegistryKey(boolean twoHanded) {
-        if (twoHanded && this.twoHandedDamageTypeRegistryKey != null) {
+        if (twoHanded) {
             return this.twoHandedDamageTypeRegistryKey;
         }
         return damageTypeRegistryKey;
+    }
+
+    @Override
+    public @Nullable SoundEvent getEquipSound() {
+        return this.equipSound;
     }
 }

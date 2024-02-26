@@ -1,5 +1,6 @@
 package com.github.theredbrain.betteradventuremode.mixin.entity.damage;
 
+import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.betteradventuremode.item.BasicWeaponItem;
 import com.github.theredbrain.betteradventuremode.entity.damage.DuckDamageSourcesMixin;
 import com.github.theredbrain.betteradventuremode.registry.DamageTypesRegistry;
@@ -32,7 +33,7 @@ public abstract class DamageSourcesMixin implements DuckDamageSourcesMixin {
     public void betteradventuremode$playerAttack(PlayerEntity attacker, CallbackInfoReturnable<DamageSource> cir) {
         ItemStack mainHandStack = attacker.getMainHandStack();
         if (mainHandStack.getItem() instanceof BasicWeaponItem) {
-            cir.setReturnValue(this.create(DamageTypesRegistry.getPlayerVariant(((BasicWeaponItem) mainHandStack.getItem()).getDamageTypeRegistryKey(attacker.hasStatusEffect(StatusEffectsRegistry.TWO_HANDED_EFFECT))), attacker));
+            cir.setReturnValue(this.create(DamageTypesRegistry.getPlayerVariant(((BasicWeaponItem) mainHandStack.getItem()).getDamageTypeRegistryKey(!((DuckPlayerEntityMixin)attacker).betteradventuremode$isMainHandStackSheathed() && ((DuckPlayerEntityMixin)attacker).betteradventuremode$isOffHandStackSheathed())), attacker));
             cir.cancel();
         }
     }

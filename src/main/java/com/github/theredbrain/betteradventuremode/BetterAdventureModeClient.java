@@ -24,7 +24,6 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.item.DyeableItem;
 import net.minecraft.util.Identifier;
-//import net.spell_engine.api.render.CustomModels;
 
 
 public class BetterAdventureModeClient implements ClientModInitializer {
@@ -43,13 +42,14 @@ public class BetterAdventureModeClient implements ClientModInitializer {
         // Registry
         KeyBindingsRegistry.registerKeyBindings();
         registerTransparency();
-        registerSpellModels();
         registerBlockEntityRenderer();
         registerEntityRenderer();
         registerScreens();
         registerModelPredicateProviders();
         registerColors();
         EventsRegistry.initializeClientEvents();
+        registerCustomModelStatusEffectRenderers();
+        registerSpellModels();
     }
 
     private void registerTransparency() {
@@ -83,13 +83,6 @@ public class BetterAdventureModeClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(BlockRegistry.USE_RELAY_WARPED_TRAPDOOR, RenderLayer.getCutout());
     }
 
-    private void registerSpellModels() {
-        // TODO SpellEngine 1.20.2
-//        CustomModels.registerModelIds(List.of(
-//                BetterAdventureModeCore.identifier("projectile/test_spell_projectile")
-//        ));
-    }
-
     private void registerBlockEntityRenderer() {
         BlockEntityRendererFactories.register(EntityRegistry.HOUSING_BLOCK_ENTITY, HousingBlockBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(EntityRegistry.MIMIC_BLOCK_ENTITY, MimicBlockEntityRenderer::new);
@@ -117,5 +110,15 @@ public class BetterAdventureModeClient implements ClientModInitializer {
         ModelPredicateProviderRegistry.register(ItemRegistry.TEST_BUCKLER, new Identifier("blocking"), (stack, world, entity, seed) -> entity != null && entity.isUsingItem() && entity.getActiveItem() == stack ? 1.0f : 0.0f);
         ModelPredicateProviderRegistry.register(ItemRegistry.TEST_NORMAL_SHIELD, new Identifier("blocking"), (stack, world, entity, seed) -> entity != null && entity.isUsingItem() && entity.getActiveItem() == stack ? 1.0f : 0.0f);
         ModelPredicateProviderRegistry.register(ItemRegistry.TEST_TOWER_SHIELD, new Identifier("blocking"), (stack, world, entity, seed) -> entity != null && entity.isUsingItem() && entity.getActiveItem() == stack ? 1.0f : 0.0f);
+    }
+
+    private void registerCustomModelStatusEffectRenderers() {
+//        CustomModelStatusEffect.register(StatusEffectsRegistry.WEAPONS_SHEATHED_EFFECT, new WeaponsSheathedRenderer());
+    }
+
+    private void registerSpellModels() {
+//        CustomModels.registerModelIds(List.of(
+//                BetterAdventureModeCore.identifier("projectile/test_spell_projectile")
+//        ));
     }
 }

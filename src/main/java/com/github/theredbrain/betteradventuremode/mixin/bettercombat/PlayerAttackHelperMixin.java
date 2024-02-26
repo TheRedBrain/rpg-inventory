@@ -1,5 +1,6 @@
 package com.github.theredbrain.betteradventuremode.mixin.bettercombat;
 
+import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.betteradventuremode.item.BasicShieldItem;
 import com.github.theredbrain.betteradventuremode.registry.StatusEffectsRegistry;
 import com.github.theredbrain.betteradventuremode.registry.Tags;
@@ -32,72 +33,9 @@ public class PlayerAttackHelperMixin {
         cir.cancel();
     }
 
-    /*private static boolean evaluateCondition(WeaponAttributes.Condition condition, PlayerEntity player, boolean isOffHandAttack) {
-        if (condition == null) {
-            return true;
-        } else {
-            ItemStack offhandStack;
-            if (condition == WeaponAttributes.Condition.NOT_DUAL_WIELDING) {
-                return !isDualWielding(player);
-            } else if (condition == WeaponAttributes.Condition.DUAL_WIELDING_ANY) {
-                return isDualWielding(player);
-            } else if (condition == WeaponAttributes.Condition.DUAL_WIELDING_SAME) {
-                return isDualWielding(player) && player.getMainHandStack().getItem() == player.getOffHandStack().getItem();
-            } else if (condition == WeaponAttributes.Condition.DUAL_WIELDING_SAME_CATEGORY) {
-                if (!isDualWielding(player)) {
-                    return false;
-                } else {
-                    WeaponAttributes mainHandAttributes = WeaponRegistry.getAttributes(player.getMainHandStack());
-                    WeaponAttributes offHandAttributes = WeaponRegistry.getAttributes(player.getOffHandStack());
-                    if (mainHandAttributes.category() != null && !mainHandAttributes.category().isEmpty() && offHandAttributes.category() != null && !offHandAttributes.category().isEmpty()) {
-                        return mainHandAttributes.category().equals(offHandAttributes.category());
-                    }
-
-                    return false;
-                }
-            } else if (condition == WeaponAttributes.Condition.NO_OFFHAND_ITEM) {
-                RPGMod.LOGGER.info("NO_OFFHAND_ITEM");
-                offhandStack = player.getOffHandStack();
-                if (offhandStack != null && !(offhandStack.isEmpty() || offhandStack.isIn(Tags.EMPTY_HAND_WEAPONS))) {
-                    RPGMod.LOGGER.info("false");
-                    return false;
-                }
-                RPGMod.LOGGER.info("true");
-                return true;
-            } else if (condition == WeaponAttributes.Condition.OFFHAND_ITEM) {
-                RPGMod.LOGGER.info("OFFHAND_ITEM");
-                offhandStack = player.getOffHandStack();
-                if (offhandStack != null && (offhandStack.isEmpty() || offhandStack.isIn(Tags.EMPTY_HAND_WEAPONS))) {
-                    RPGMod.LOGGER.info("false");
-                    return false;
-                }
-                RPGMod.LOGGER.info("true");
-                return true;
-            } else if (condition == WeaponAttributes.Condition.OFF_HAND_SHIELD) {
-                offhandStack = player.getOffHandStack();
-                if (offhandStack == null || !(offhandStack.getItem() instanceof ShieldItem)) {
-                    return false;
-                }
-
-                return true;
-            } else if (condition == WeaponAttributes.Condition.MAIN_HAND_ONLY) {
-                return !isOffHandAttack;
-            } else if (condition == WeaponAttributes.Condition.OFF_HAND_ONLY) {
-                return isOffHandAttack;
-            } else if (condition == WeaponAttributes.Condition.MOUNTED) {
-                return player.getVehicle() != null;
-            } else if (condition == WeaponAttributes.Condition.NOT_MOUNTED) {
-                return player.getVehicle() == null;
-            } else {
-                return true;
-            }
-        }
-    }*/
-
-
     /**
      * @author TheRedBrain
-     * @reason account for empty hand weapons
+     * @reason account for empty hand weapons and toggleable two-handing
      */
     @Overwrite
     private static boolean evaluateCondition(Condition condition, PlayerEntity player, boolean isOffHandAttack) {
@@ -144,10 +82,10 @@ public class PlayerAttackHelperMixin {
                     return isOffHandAttack;
                 case MOUNTED:
                     // repurposed for two-handed attacks
-                    return player.hasStatusEffect(StatusEffectsRegistry.TWO_HANDED_EFFECT);
+                    return !((DuckPlayerEntityMixin)player).betteradventuremode$isMainHandStackSheathed() && ((DuckPlayerEntityMixin)player).betteradventuremode$isOffHandStackSheathed();
                 case NOT_MOUNTED:
                     // repurposed for non-two-handed attacks
-                    return !player.hasStatusEffect(StatusEffectsRegistry.TWO_HANDED_EFFECT);
+                    return ((DuckPlayerEntityMixin)player).betteradventuremode$isMainHandStackSheathed() || !((DuckPlayerEntityMixin)player).betteradventuremode$isOffHandStackSheathed();
                 default:
                     return true;
             }

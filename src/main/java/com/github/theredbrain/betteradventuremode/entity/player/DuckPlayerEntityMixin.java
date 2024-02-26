@@ -19,6 +19,10 @@ public interface DuckPlayerEntityMixin {
     boolean betteradventuremode$isAdventure();
 
 
+    boolean betteradventuremode$isMainHandStackSheathed();
+    void betteradventuremode$setIsMainHandStackSheathed(boolean isMainHandStackSheathed);
+    boolean betteradventuremode$isOffHandStackSheathed();
+    void betteradventuremode$setIsOffHandStackSheathed(boolean isOffHandStackSheathed);
     boolean betteradventuremode$useStashForCrafting();
     void betteradventuremode$setUseStashForCrafting(boolean useStashForCrafting);
     int betteradventuremode$oldActiveSpellSlotAmount();

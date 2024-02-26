@@ -524,19 +524,19 @@ public class MannequinEntity extends LivingEntity implements IRenderEquippedTrin
     }
 
     // region IRenderEquippedTrinkets
-    public boolean isMainHandItemSheathed() {
+    public boolean betteradventuremode$isMainHandItemSheathed() {
         return this.getSheathedWeaponMode() == SheathedWeaponMode.BOTH;
     }
 
-    public boolean isOffHandItemSheathed() {
+    public boolean betteradventuremode$isOffHandItemSheathed() {
         return this.getSheathedWeaponMode() != SheathedWeaponMode.NONE;
     }
 
-    public ItemStack getMainHandItemStack() {
+    public ItemStack betteradventuremode$getMainHandItemStack() {
         return this.getMainHand();
     }
 
-    public ItemStack getOffHandItemStack() {
+    public ItemStack betteradventuremode$getOffHandItemStack() {
         return this.getOffHand();
     }
     // endregion IRenderEquippedTrinkets

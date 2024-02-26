@@ -60,6 +60,12 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Du
     @Unique
     ItemStack alternateOffHandSlotStack = ItemStack.EMPTY;
 
+    @Unique
+    boolean isMainHandWeaponSheathed = false;
+
+    @Unique
+    boolean isOffHandWeaponSheathed = false;
+
     @Shadow
     @Final
     public ServerPlayerInteractionManager interactionManager;
@@ -79,16 +85,25 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Du
     @Inject(method = "tick", at = @At("TAIL"))
     public void betteradventuremode$tick(CallbackInfo ci) {
         if (!this.getWorld().isClient) {
-            if (!ItemStack.areItemsEqual(mainHandSlotStack, ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getMainHand()) || !ItemStack.areItemsEqual(alternateMainHandSlotStack, ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getAlternativeMainHand())) {
+            if (!ItemStack.areItemsEqual(this.mainHandSlotStack, ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getMainHand()) || !ItemStack.areItemsEqual(this.alternateMainHandSlotStack, ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getAlternativeMainHand())) {
                 betteradventuremode$sendChangedHandSlotsPacket(true);
             }
-            mainHandSlotStack = ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getMainHand();
-            alternateMainHandSlotStack = ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getAlternativeMainHand();
-            if (!ItemStack.areItemsEqual(offHandSlotStack, ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getOffHand()) || !ItemStack.areItemsEqual(alternateOffHandSlotStack, ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getAlternativeOffHand())) {
+            this.mainHandSlotStack = ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getMainHand();
+            this.alternateMainHandSlotStack = ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getAlternativeMainHand();
+            if (!ItemStack.areItemsEqual(this.offHandSlotStack, ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getOffHand()) || !ItemStack.areItemsEqual(this.alternateOffHandSlotStack, ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getAlternativeOffHand())) {
                 betteradventuremode$sendChangedHandSlotsPacket(false);
             }
-            offHandSlotStack = ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getOffHand();
-            alternateOffHandSlotStack = ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getAlternativeOffHand();
+            this.offHandSlotStack = ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getOffHand();
+            this.alternateOffHandSlotStack = ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getAlternativeOffHand();
+
+            boolean isMainHandWeaponSheathed = this.betteradventuremode$isMainHandStackSheathed();
+            if (this.isMainHandWeaponSheathed != isMainHandWeaponSheathed) {
+                betteradventuremode$sendSheathedWeaponsPacket(true, isMainHandWeaponSheathed);
+            }
+            boolean isOffHandWeaponSheathed = this.betteradventuremode$isOffHandStackSheathed();
+            if (this.isOffHandWeaponSheathed != isOffHandWeaponSheathed) {
+                betteradventuremode$sendSheathedWeaponsPacket(false, isOffHandWeaponSheathed);
+            }
         }
     }
 
@@ -235,5 +250,15 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Du
         data.writeInt(this.getId());
         data.writeBoolean(mainHand);
         players.forEach(player -> ServerPlayNetworking.send(player, ServerPacketRegistry.SWAPPED_HAND_ITEMS_PACKET, data)); // TODO convert to packet
+    }
+
+    @Unique
+    private void betteradventuremode$sendSheathedWeaponsPacket(boolean mainHand, boolean isSheathed) {
+        Collection<ServerPlayerEntity> players = PlayerLookup.tracking((ServerWorld) this.getWorld(), this.getBlockPos());
+        PacketByteBuf data = new PacketByteBuf(Unpooled.buffer());
+        data.writeInt(this.getId());
+        data.writeBoolean(mainHand);
+        data.writeBoolean(isSheathed);
+        players.forEach(player -> ServerPlayNetworking.send(player, ServerPacketRegistry.SHEATHED_WEAPONS_PACKET, data)); // TODO convert to packet
     }
 }

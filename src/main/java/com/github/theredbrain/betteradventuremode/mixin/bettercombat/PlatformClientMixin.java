@@ -1,6 +1,7 @@
 package com.github.theredbrain.betteradventuremode.mixin.bettercombat;
 
 import com.github.theredbrain.betteradventuremode.entity.DuckLivingEntityMixin;
+import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.betteradventuremode.item.BasicWeaponItem;
 import net.bettercombat.PlatformClient;
 import net.minecraft.entity.player.PlayerEntity;
@@ -14,13 +15,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class PlatformClientMixin {
 
     @Inject(method = "onEmptyLeftClick", at = @At("HEAD"))
-    private static void onEmptyLeftClick(PlayerEntity player, CallbackInfo ci) {
+    private static void betteradventuremode$onEmptyLeftClick(PlayerEntity player, CallbackInfo ci) {
         if (player.getServer() != null) {
             PlayerEntity playerEntity = player.getServer().getPlayerManager().getPlayer(player.getUuid());
             if (playerEntity != null) {
                 ItemStack mainHandStack = playerEntity.getMainHandStack();
                 if (mainHandStack.getItem() instanceof BasicWeaponItem) {
-                    ((DuckLivingEntityMixin)playerEntity).betteradventuremode$addStamina(-((BasicWeaponItem)mainHandStack.getItem()).getStaminaCost());
+                    boolean twoHanded = !((DuckPlayerEntityMixin) playerEntity).betteradventuremode$isMainHandStackSheathed() && ((DuckPlayerEntityMixin) playerEntity).betteradventuremode$isOffHandStackSheathed();
+                    ((DuckLivingEntityMixin)playerEntity).betteradventuremode$addStamina(-((BasicWeaponItem)mainHandStack.getItem()).getStaminaCost(twoHanded));
                 }
             }
         }

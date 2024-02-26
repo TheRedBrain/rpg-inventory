@@ -1,8 +1,11 @@
 package com.github.theredbrain.betteradventuremode.registry;
 
+import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
+import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerInventoryMixin;
 //import net.bettercombat.api.MinecraftClient_BetterCombat;
 import com.github.theredbrain.betteradventuremode.network.packet.*;
+import net.bettercombat.api.MinecraftClient_BetterCombat;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -43,18 +46,37 @@ public class ClientPacketRegistry {
                 }
             });
         });
-//        // TODO BetterCombat 1.20.4
-//        ClientPlayNetworking.registerGlobalReceiver(BetterAdventureModeCoreServerPacket.CANCEL_ATTACK_PACKET, (client, handler, buffer, responseSender) -> {
-//            int entityId = buffer.readInt();
-//            client.execute(() -> {
-//                if (client.player != null && client.player.getWorld().getEntityById(entityId) != null) {
-//                    PlayerEntity player = (PlayerEntity) client.player.getWorld().getEntityById(entityId);
-//                    if (player != null && player == client.player) {
-//                        ((MinecraftClient_BetterCombat)client).cancelUpswing();
-//                    }
-//                }
-//            });
-//        });
+
+        ClientPlayNetworking.registerGlobalReceiver(ServerPacketRegistry.SHEATHED_WEAPONS_PACKET, (client, handler, buffer, responseSender) -> { // TODO convert to packet
+            int entityId = buffer.readInt();
+            boolean mainHand = buffer.readBoolean();
+            boolean isWeaponSheathed = buffer.readBoolean();
+            client.execute(() -> {
+                if (client.player != null && client.player.getWorld().getEntityById(entityId) != null) {
+                    PlayerEntity player = (PlayerEntity) client.player.getWorld().getEntityById(entityId);
+                    if (player != null && player != client.player) {
+                        BetterAdventureMode.info("SHEATHED_WEAPONS_PACKET, player: " + player.getGameProfile().getName() + ", mainHand: " + mainHand + ", isWeaponSheathed: " + isWeaponSheathed);
+                        if (mainHand) {
+                            ((DuckPlayerEntityMixin) player).betteradventuremode$setIsMainHandStackSheathed(isWeaponSheathed);
+                        } else {
+                            ((DuckPlayerEntityMixin) player).betteradventuremode$setIsOffHandStackSheathed(isWeaponSheathed);
+                        }
+                    }
+                }
+            });
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(ServerPacketRegistry.CANCEL_ATTACK_PACKET, (client, handler, buffer, responseSender) -> { // TODO convert to packet
+            int entityId = buffer.readInt();
+            client.execute(() -> {
+                if (client.player != null && client.player.getWorld().getEntityById(entityId) != null) {
+                    PlayerEntity player = (PlayerEntity) client.player.getWorld().getEntityById(entityId);
+                    if (player != null && player == client.player) {
+                        ((MinecraftClient_BetterCombat)client).cancelUpswing();
+                    }
+                }
+            });
+        });
         ClientPlayNetworking.registerGlobalReceiver(ServerPacketRegistry.SYNC_CRAFTING_RECIPES, (client, handler, buffer, responseSender) -> { // TODO convert to packet
             CraftingRecipeRegistry.decodeRegistry(buffer);
         });

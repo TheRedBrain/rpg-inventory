@@ -9,7 +9,7 @@ import net.minecraft.world.World;
 public class EmptyHandWeapon extends BasicWeaponItem {
 
     public EmptyHandWeapon(float attackDamage, float attackSpeed, int staminaCost, Settings settings) {
-        super(DamageTypesRegistry.PLAYER_UNARMED_DAMAGE_TYPE, null, attackDamage, attackSpeed, staminaCost, 0, settings);
+        super(DamageTypesRegistry.PLAYER_UNARMED_DAMAGE_TYPE, attackDamage, attackSpeed, staminaCost, 0, settings);
     }
 
     @Override

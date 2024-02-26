@@ -10,7 +10,7 @@ public class ServerPacketRegistry {
     public static final Identifier SWAPPED_HAND_ITEMS_PACKET = BetterAdventureMode.identifier("swapped_hand_items");
     public static final Identifier CANCEL_ATTACK_PACKET = BetterAdventureMode.identifier("attack_stamina_cost");
     public static final Identifier ADD_STATUS_EFFECT_PACKET = BetterAdventureMode.identifier("add_status_effect");
-//    public static final Identifier SHEATHED_WEAPONS_PACKET = RPGMod.identifier("sheathed_weapons"); // TODO if weapon sheathing is not visible in multiplayer
+    public static final Identifier SHEATHED_WEAPONS_PACKET = BetterAdventureMode.identifier("sheathed_weapons"); // TODO if weapon sheathing is not visible in multiplayer
 
     public static final Identifier SYNC_CONFIG = BetterAdventureMode.identifier("sync_config");
 //    public static final Identifier SYNC_PLAYER_HOUSES = BetterAdventureModeCore.identifier("sync_player_houses");

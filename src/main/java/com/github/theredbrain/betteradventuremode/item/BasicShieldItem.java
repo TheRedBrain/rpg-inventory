@@ -15,13 +15,14 @@ import net.minecraft.item.Equipment;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public class BasicShieldItem extends Item implements Equipment {
+public class BasicShieldItem extends Item implements Equipment, IMakesEquipSound {
     private final Multimap<EntityAttribute, EntityAttributeModifier> attributeModifiers;
     private final float physicalDamageReduction;
     private final float fireDamageReduction;
@@ -33,7 +34,9 @@ public class BasicShieldItem extends Item implements Equipment {
     @Nullable
     private String translationKeyBroken;
     private final float weight;
-    public BasicShieldItem(float physicalDamageReduction, float fireDamageReduction, float frostDamageReduction, float lightningDamageReduction, double blockForce, boolean canParry, double parryBonus, float weight, Settings settings) {
+    @Nullable
+    private SoundEvent equipSound;
+    public BasicShieldItem(float physicalDamageReduction, float fireDamageReduction, float frostDamageReduction, float lightningDamageReduction, double blockForce, boolean canParry, double parryBonus, float weight, @Nullable SoundEvent equipSound, Settings settings) {
         super(settings);
         this.physicalDamageReduction = physicalDamageReduction;
         this.fireDamageReduction = fireDamageReduction;
@@ -43,6 +46,7 @@ public class BasicShieldItem extends Item implements Equipment {
         this.canParry = canParry;
         this.parryBonus = parryBonus;
         this.weight = weight;
+        this.equipSound = equipSound;
         this.attributeModifiers = buildModifiers();
     }
 
@@ -148,5 +152,10 @@ public class BasicShieldItem extends Item implements Equipment {
     @Override
     public EquipmentSlot getSlotType() {
         return EquipmentSlot.OFFHAND;
+    }
+
+    @Override
+    public @Nullable SoundEvent getEquipSound() {
+        return this.equipSound;
     }
 }

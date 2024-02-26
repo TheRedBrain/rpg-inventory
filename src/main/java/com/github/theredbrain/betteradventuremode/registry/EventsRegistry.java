@@ -3,9 +3,11 @@ package com.github.theredbrain.betteradventuremode.registry;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.betteradventuremode.network.event.PlayerDeathCallback;
 import com.github.theredbrain.betteradventuremode.network.event.PlayerJoinCallback;
-//import net.bettercombat.api.client.BetterCombatClientEvents;
+import com.github.theredbrain.betteradventuremode.network.packet.AttackStaminaCostPacket;
+import net.bettercombat.api.client.BetterCombatClientEvents;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 
 public class EventsRegistry {
@@ -41,11 +43,10 @@ public class EventsRegistry {
     @Environment(EnvType.CLIENT)
     public static void initializeClientEvents() {
 
-//        // TODO BetterCombat 1.20.4
-//        BetterCombatClientEvents.ATTACK_START.register((clientPlayerEntity, attackHand) -> {
-//            ClientPlayNetworking.send(new AttackStaminaCostPacket(
-//                    attackHand.itemStack()
-//            ));
-//        });
+        BetterCombatClientEvents.ATTACK_START.register((clientPlayerEntity, attackHand) -> {
+            ClientPlayNetworking.send(new AttackStaminaCostPacket(
+                    attackHand.itemStack()
+            ));
+        });
     }
 }

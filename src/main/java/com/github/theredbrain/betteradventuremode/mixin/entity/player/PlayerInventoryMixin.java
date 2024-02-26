@@ -52,7 +52,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         if (!player.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT) && !player.isCreative()) {
             ItemStack emptyMainHandStack = betteradventuremode$getEmptyMainHand();
             ItemStack mainHandStack = betteradventuremode$getMainHand();
-            if (!player.hasStatusEffect(StatusEffectsRegistry.WEAPONS_SHEATHED_EFFECT)) {
+            if (!((DuckPlayerEntityMixin)player).betteradventuremode$isMainHandStackSheathed()) {
                 cir.setReturnValue(ItemUtils.isUsable(mainHandStack) ? mainHandStack : emptyMainHandStack);
                 cir.cancel();
             }
@@ -64,7 +64,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         if (!player.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT) && !player.isCreative()) {
             ItemStack emptyOffHandStack = betteradventuremode$getEmptyOffHand();
             ItemStack offHandStack = betteradventuremode$getOffHand();
-            if (!player.hasStatusEffect(StatusEffectsRegistry.WEAPONS_SHEATHED_EFFECT) && !player.hasStatusEffect(StatusEffectsRegistry.TWO_HANDED_EFFECT)) {
+            if (!((DuckPlayerEntityMixin)player).betteradventuremode$isOffHandStackSheathed()) {
                 return ItemUtils.isUsable(offHandStack) ? offHandStack : emptyOffHandStack;
             }
         }

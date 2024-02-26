@@ -7,16 +7,24 @@ import com.github.theredbrain.betteradventuremode.client.render.renderer.ArmorTr
 import com.github.theredbrain.betteradventuremode.client.render.renderer.ModeledTrinketRenderer;
 import com.github.theredbrain.betteradventuremode.registry.EntityAttributesRegistry;
 import com.google.common.collect.Multimap;
+import dev.emi.trinkets.TrinketSlot;
 import dev.emi.trinkets.api.SlotReference;
+import dev.emi.trinkets.api.TrinketComponent;
+import dev.emi.trinkets.api.TrinketInventory;
+import dev.emi.trinkets.api.TrinketsApi;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Equipment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
+import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -29,12 +37,19 @@ public class ArmorTrinketItem extends ModeledTrinketItem {
     private final double armor;
     private final double armorToughness;
     private final double weight;
+    @Nullable
+    private final SoundEvent equipSound;
 
-    public ArmorTrinketItem(double armor, double armorToughness, double weight, Identifier assetSubpath, Settings settings) {
+    public ArmorTrinketItem(double armor, double armorToughness, double weight, @Nullable SoundEvent equipSound, Identifier assetSubpath, Settings settings) {
         super(assetSubpath, settings);
         this.armor = armor;
         this.armorToughness = armorToughness;
         this.weight = weight;
+        this.equipSound = equipSound;
+    }
+
+    public ArmorTrinketItem(double armor, double armorToughness, double weight, Identifier assetSubpath, Settings settings) {
+        this(armor, armorToughness, weight, null, assetSubpath, settings);
     }
 
     @Override
@@ -91,4 +106,27 @@ public class ArmorTrinketItem extends ModeledTrinketItem {
             }
         });
     }
+
+    @Override
+    public void onEquip(ItemStack stack, SlotReference slot, LivingEntity entity) {
+        if (this.equipSound != null) {
+
+            if (!entity.getWorld().isClient() && !entity.isSilent()) {
+                entity.getWorld().playSound((PlayerEntity) null, entity.getX(), entity.getY(), entity.getZ(), this.equipSound, entity.getSoundCategory(), 1.0F, 1.0F);
+            }
+            entity.emitGameEvent(GameEvent.EQUIP);
+        }
+    }
+
+    @Override
+    public void onUnequip(ItemStack stack, SlotReference slot, LivingEntity entity) {
+        if (this.equipSound != null) {
+
+            if (!entity.getWorld().isClient() && !entity.isSilent()) {
+                entity.getWorld().playSound((PlayerEntity) null, entity.getX(), entity.getY(), entity.getZ(), this.equipSound, entity.getSoundCategory(), 1.0F, 1.0F);
+            }
+            entity.emitGameEvent(GameEvent.EQUIP);
+        }
+    }
+
 }

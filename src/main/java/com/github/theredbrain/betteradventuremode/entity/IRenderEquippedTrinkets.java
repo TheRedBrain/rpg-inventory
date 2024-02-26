@@ -4,9 +4,9 @@ import net.minecraft.item.ItemStack;
 
 public interface IRenderEquippedTrinkets {
 
-    boolean isMainHandItemSheathed();
-    boolean isOffHandItemSheathed();
+    boolean betteradventuremode$isMainHandItemSheathed();
+    boolean betteradventuremode$isOffHandItemSheathed();
 
-    ItemStack getMainHandItemStack();
-    ItemStack getOffHandItemStack();
+    ItemStack betteradventuremode$getMainHandItemStack();
+    ItemStack betteradventuremode$getOffHandItemStack();
 }

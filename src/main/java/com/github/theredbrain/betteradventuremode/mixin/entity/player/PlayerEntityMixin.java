@@ -2,6 +2,7 @@ package com.github.theredbrain.betteradventuremode.mixin.entity.player;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.block.AbstractSetSpawnBlock;
+import com.github.theredbrain.betteradventuremode.entity.IRenderEquippedTrinkets;
 import com.github.theredbrain.betteradventuremode.item.BasicWeaponItem;
 import com.github.theredbrain.betteradventuremode.effect.FoodStatusEffect;
 import com.github.theredbrain.betteradventuremode.data.Dialogue;
@@ -9,6 +10,7 @@ import com.github.theredbrain.betteradventuremode.block.entity.*;
 import com.github.theredbrain.betteradventuremode.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerInventoryMixin;
+import com.github.theredbrain.betteradventuremode.item.IMakesEquipSound;
 import com.github.theredbrain.betteradventuremode.registry.EntityAttributesRegistry;
 import com.github.theredbrain.betteradventuremode.registry.GameRulesRegistry;
 import com.github.theredbrain.betteradventuremode.registry.StatusEffectsRegistry;
@@ -32,6 +34,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.EnderChestInventory;
 import net.minecraft.inventory.SimpleInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -40,12 +43,14 @@ import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.stat.Stats;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
+import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.*;
@@ -57,7 +62,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 @Mixin(value = PlayerEntity.class, priority = 1050)
-public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlayerEntityMixin, DuckLivingEntityMixin {
+public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlayerEntityMixin, DuckLivingEntityMixin, IRenderEquippedTrinkets {
 
     @Shadow
     @Final
@@ -86,6 +91,12 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     private boolean isAdventureHotbarCleanedUp = false;
 
     @Unique
+    private static final TrackedData<Boolean> IS_MAIN_HAND_STACK_SHEATHED = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+
+    @Unique
+    private static final TrackedData<Boolean> IS_OFF_HAND_STACK_SHEATHED = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+
+    @Unique
     private static final TrackedData<Boolean> USE_STASH_FOR_CRAFTING = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
     @Unique
@@ -98,14 +109,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         super(entityType, world);
     }
 
-//    /**
-//     * @author TheRedBrain
-//     */
-//    @Inject(method = "<init>", at = @At("TAIL"))
-//    public void PlayerEntity(World world, BlockPos pos, float yaw, GameProfile gameProfile, CallbackInfo ci) {
-//        // inject into a constructor
-//    }
-
     @Inject(method = "createPlayerAttributes", at = @At("RETURN"), cancellable = true)
     private static void betteradventuremode$createPlayerAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
         cir.getReturnValue()
@@ -116,6 +119,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
     @Inject(method = "initDataTracker", at = @At("RETURN"))
     protected void betteradventuremode$initDataTracker(CallbackInfo ci) {
+        this.dataTracker.startTracking(IS_MAIN_HAND_STACK_SHEATHED, false);
+        this.dataTracker.startTracking(IS_OFF_HAND_STACK_SHEATHED, false);
         this.dataTracker.startTracking(USE_STASH_FOR_CRAFTING, true);
         this.dataTracker.startTracking(OLD_ACTIVE_SPELL_SLOT_AMOUNT, -1);
 
@@ -146,7 +151,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         } else {
             this.removeStatusEffect(StatusEffectsRegistry.NO_ATTACK_ITEMS_EFFECT);
         }
-        if (itemStackMainHand.isIn(Tags.TWO_HANDED_ITEMS) && !this.hasStatusEffect(StatusEffectsRegistry.TWO_HANDED_EFFECT) && this.betteradventuremode$isAdventure() && !this.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT)) {
+        if (itemStackMainHand.isIn(Tags.TWO_HANDED_ITEMS) && (this.betteradventuremode$isMainHandStackSheathed() || !this.betteradventuremode$isOffHandStackSheathed()) && this.betteradventuremode$isAdventure() && !this.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT)) {
             if (!this.hasStatusEffect(StatusEffectsRegistry.NEED_EMPTY_OFFHAND_EFFECT)) {
                 this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.NEED_EMPTY_OFFHAND_EFFECT, -1, 0, false, false, false));
             }
@@ -190,6 +195,14 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
             this.stashInventory.readNbtList(nbt.getList("stash_items", NbtElement.COMPOUND_TYPE));
         }
 
+        if (nbt.contains("is_main_hand_stack_sheathed", NbtElement.BYTE_TYPE)) {
+            this.betteradventuremode$setIsMainHandStackSheathed(nbt.getBoolean("is_main_hand_stack_sheathed"));
+        }
+
+        if (nbt.contains("is_off_hand_stack_sheathed", NbtElement.BYTE_TYPE)) {
+            this.betteradventuremode$setIsOffHandStackSheathed(nbt.getBoolean("is_off_hand_stack_sheathed"));
+        }
+
         if (nbt.contains("use_stash_for_crafting", NbtElement.BYTE_TYPE)) {
             this.betteradventuremode$setUseStashForCrafting(nbt.getBoolean("use_stash_for_crafting"));
         }
@@ -203,6 +216,10 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     public void betteradventuremode$writeCustomDataToNbt(NbtCompound nbt, CallbackInfo ci) {
 
         nbt.put("stash_items", this.stashInventory.toNbtList());
+
+        nbt.putBoolean("is_main_hand_stack_sheathed", this.betteradventuremode$isMainHandStackSheathed());
+
+        nbt.putBoolean("is_off_hand_stack_sheathed", this.betteradventuremode$isOffHandStackSheathed());
 
         nbt.putBoolean("use_stash_for_crafting", this.betteradventuremode$useStashForCrafting());
 
@@ -257,8 +274,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     @Inject(method = "attack", at = @At("HEAD"), cancellable = true)
     public void betteradventuremode$attack(Entity target, CallbackInfo ci) {
         ItemStack mainHandStack = this.getMainHandStack();
-        if (mainHandStack.getItem() instanceof BasicWeaponItem && this.betteradventuremode$getStamina() + ((BasicWeaponItem)mainHandStack.getItem()).getStaminaCost() <= 0) {
-            this.sendMessage(Text.translatable("hud.message.staminaTooLow"), true);
+        boolean twoHanded = !this.betteradventuremode$isMainHandStackSheathed() && this.betteradventuremode$isOffHandStackSheathed();
+        if (mainHandStack.getItem() instanceof BasicWeaponItem && this.betteradventuremode$getStamina() + ((BasicWeaponItem)mainHandStack.getItem()).getStaminaCost(twoHanded) <= 0) {
+            this.sendMessage(Text.translatable("hud.message.staminaTooLow-attackCanceled"), true);
             ci.cancel();
         }
     }
@@ -492,6 +510,70 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     public abstract boolean betteradventuremode$isAdventure();
 
     @Override
+    public boolean betteradventuremode$isMainHandItemSheathed() {
+        return this.betteradventuremode$isMainHandStackSheathed();
+    }
+
+    @Override
+    public boolean betteradventuremode$isOffHandItemSheathed() {
+        return this.betteradventuremode$isOffHandStackSheathed();
+    }
+
+    @Override
+    public ItemStack betteradventuremode$getMainHandItemStack() {
+        return ((DuckPlayerInventoryMixin) (this.getInventory())).betteradventuremode$getMainHand();
+    }
+
+    @Override
+    public ItemStack betteradventuremode$getOffHandItemStack() {
+        return ((DuckPlayerInventoryMixin) (this.getInventory())).betteradventuremode$getOffHand();
+    }
+
+    @Override
+    public boolean betteradventuremode$isMainHandStackSheathed() {
+        return this.dataTracker.get(IS_MAIN_HAND_STACK_SHEATHED);
+    }
+
+    @Override
+    public void betteradventuremode$setIsMainHandStackSheathed(boolean isMainHandStackSheathed) {
+        this.dataTracker.set(IS_MAIN_HAND_STACK_SHEATHED, isMainHandStackSheathed);
+
+        Item mainHandStackIten = this.betteradventuremode$getMainHandItemStack().getItem();
+        if (mainHandStackIten instanceof IMakesEquipSound noiseMakingItem && !this.isSpectator()) {
+            SoundEvent equipSound = noiseMakingItem.getEquipSound();
+            if (equipSound != null) {
+
+                if (!this.getWorld().isClient() && !this.isSilent()) {
+                    this.getWorld().playSound((PlayerEntity) null, this.getX(), this.getY(), this.getZ(), equipSound, this.getSoundCategory(), 1.0F, 1.0F);
+                }
+                this.emitGameEvent(GameEvent.EQUIP);
+            }
+        }
+    }
+
+    @Override
+    public boolean betteradventuremode$isOffHandStackSheathed() {
+        return this.dataTracker.get(IS_OFF_HAND_STACK_SHEATHED);
+    }
+
+    @Override
+    public void betteradventuremode$setIsOffHandStackSheathed(boolean isOffHandStackSheathed) {
+        this.dataTracker.set(IS_OFF_HAND_STACK_SHEATHED, isOffHandStackSheathed);
+
+        Item offHandStackIten = this.betteradventuremode$getOffHandItemStack().getItem();
+        if (offHandStackIten instanceof IMakesEquipSound noiseMakingItem && !this.isSpectator()) {
+            SoundEvent equipSound = noiseMakingItem.getEquipSound();
+            if (equipSound != null) {
+
+                if (!this.getWorld().isClient() && !this.isSilent()) {
+                    this.getWorld().playSound((PlayerEntity) null, this.getX(), this.getY(), this.getZ(), equipSound, this.getSoundCategory(), 1.0F, 1.0F);
+                }
+                this.emitGameEvent(GameEvent.EQUIP);
+            }
+        }
+    }
+
+    @Override
     public boolean betteradventuremode$useStashForCrafting() {
         return this.dataTracker.get(USE_STASH_FOR_CRAFTING);
     }
@@ -563,15 +645,16 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     }
 
     @Unique
-    private double getEncumbrance() {
+    private double getEncumbrance() { // TODO balance
         return this.betteradventuremode$getEquipmentWeight() / Math.max(1, this.betteradventuremode$getMaxEquipmentWeight());
     }
 
     @Override
     public float betteradventuremode$getRegeneratedHealth() { // TODO balance
+        boolean bl = this.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT);
         return (float) (
-                this.betteradventuremode$getHealthRegeneration() *
-                (this.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT) ? 5 : 1) *
+                (bl ? 1 : 0 + this.betteradventuremode$getHealthRegeneration()) *
+                (bl ? 5 : 1) *
                 (this.getEncumbrance() > 1 ? 0.75 : 1)
         );
     }
@@ -600,12 +683,12 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     }
 
     @Override
-    public int betteradventuremode$getStaggerDuration() {
+    public int betteradventuremode$getStaggerDuration() { // TODO balance
         return 200;//24;
     }
 
     @Override
-    public float betteradventuremode$getMaxStaggerBuildUp() {
+    public float betteradventuremode$getMaxStaggerBuildUp() { // TODO balance
 //        return this.getMaxHealth() * 0.4f;
         return 20.0f;
     }

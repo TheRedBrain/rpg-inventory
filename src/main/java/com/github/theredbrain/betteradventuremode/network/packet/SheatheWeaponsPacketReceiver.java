@@ -1,10 +1,9 @@
 package com.github.theredbrain.betteradventuremode.network.packet;
 
 import com.github.theredbrain.betteradventuremode.entity.DuckLivingEntityMixin;
-import com.github.theredbrain.betteradventuremode.registry.StatusEffectsRegistry;
+import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 
@@ -15,15 +14,13 @@ public class SheatheWeaponsPacketReceiver implements ServerPlayNetworking.PlayPa
         if (((DuckLivingEntityMixin) player).betteradventuremode$getStamina() <= 0) {
             player.sendMessageToClient(Text.translatable("hud.message.staminaTooLow"), true);
         } else {
-            if (player.hasStatusEffect(StatusEffectsRegistry.WEAPONS_SHEATHED_EFFECT)) {
-                player.removeStatusEffect(StatusEffectsRegistry.WEAPONS_SHEATHED_EFFECT);
+            if (((DuckPlayerEntityMixin)player).betteradventuremode$isMainHandStackSheathed() && ((DuckPlayerEntityMixin)player).betteradventuremode$isOffHandStackSheathed()) {
+                ((DuckPlayerEntityMixin)player).betteradventuremode$setIsMainHandStackSheathed(false);
+                ((DuckPlayerEntityMixin)player).betteradventuremode$setIsOffHandStackSheathed(false);
             } else {
-                player.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.WEAPONS_SHEATHED_EFFECT, -1, 0, false, false, true));
-                if (player.hasStatusEffect(StatusEffectsRegistry.TWO_HANDED_EFFECT)) {
-                    player.removeStatusEffect(StatusEffectsRegistry.TWO_HANDED_EFFECT);
-                }
+                ((DuckPlayerEntityMixin)player).betteradventuremode$setIsMainHandStackSheathed(true);
+                ((DuckPlayerEntityMixin)player).betteradventuremode$setIsOffHandStackSheathed(true);
             }
         }
-        // TODO play sounds, maybe when getting and losing the effect
     }
 }

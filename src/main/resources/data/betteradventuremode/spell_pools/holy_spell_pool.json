@@ -1,11 +1,11 @@
 {
   "spell_ids": [
-    "wizards:circle_of_healing",
-    "wizards:divine_protection",
-    "wizards:flash_heal",
-    "wizards:heal",
-    "wizards:holy_beam",
-    "wizards:holy_shock",
-    "wizards:judgement"
+    "paladins:circle_of_healing",
+    "paladins:divine_protection",
+    "paladins:flash_heal",
+    "paladins:heal",
+    "paladins:holy_beam",
+    "paladins:holy_shock",
+    "paladins:judgement"
   ]
 }

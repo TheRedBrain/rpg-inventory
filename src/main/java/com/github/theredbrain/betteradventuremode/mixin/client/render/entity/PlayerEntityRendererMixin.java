@@ -3,7 +3,7 @@ package com.github.theredbrain.betteradventuremode.mixin.client.render.entity;
 import com.github.theredbrain.betteradventuremode.client.render.entity.feature.TrinketFeatureRenderer;
 import com.github.theredbrain.betteradventuremode.client.render.renderer.SheathedMainHandItemFeatureRenderer;
 import com.github.theredbrain.betteradventuremode.client.render.renderer.SheathedOffHandItemFeatureRenderer;
-import com.github.theredbrain.betteradventuremode.registry.StatusEffectsRegistry;
+import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.betteradventuremode.registry.Tags;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -48,7 +48,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
             cir.setReturnValue(BipedEntityModel.ArmPose.EMPTY);
             cir.cancel();
         }
-        if (!player.handSwinging && player.hasStatusEffect(StatusEffectsRegistry.TWO_HANDED_EFFECT)) {
+        if (!player.handSwinging && !((DuckPlayerEntityMixin)player).betteradventuremode$isMainHandStackSheathed() && ((DuckPlayerEntityMixin)player).betteradventuremode$isOffHandStackSheathed()) {
             cir.setReturnValue(BipedEntityModel.ArmPose.CROSSBOW_HOLD);
             cir.cancel();
         }

@@ -1,5 +1,6 @@
 package com.github.theredbrain.betteradventuremode.network.packet;
 
+import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.betteradventuremode.item.BasicWeaponItem;
 import com.github.theredbrain.betteradventuremode.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.betteradventuremode.registry.ServerPacketRegistry;
@@ -22,8 +23,9 @@ public class AttackStaminaCostPacketReceiver implements ServerPlayNetworking.Pla
             data.writeInt(player.getId());
             ServerPlayNetworking.send(player, ServerPacketRegistry.CANCEL_ATTACK_PACKET, data); // TODO convert to packet
         } else {
+            boolean twoHanded = !((DuckPlayerEntityMixin) player).betteradventuremode$isMainHandStackSheathed() && ((DuckPlayerEntityMixin) player).betteradventuremode$isOffHandStackSheathed();
             if (attackHandItemStack.getItem() instanceof BasicWeaponItem weaponItem) {
-                ((DuckLivingEntityMixin) player).betteradventuremode$addStamina(-(weaponItem.getStaminaCost()));
+                ((DuckLivingEntityMixin) player).betteradventuremode$addStamina(-(weaponItem.getStaminaCost(twoHanded)));
             }
         }
     }

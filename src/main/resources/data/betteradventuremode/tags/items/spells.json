@@ -4,20 +4,20 @@
     "betteradventuremode:arcane_blast_spell_book",
     "betteradventuremode:arcane_bolt_spell_book",
     "betteradventuremode:arcane_missile_spell_book",
-    "betteradventuremode:circle_of_healing",
-    "betteradventuremode:divine_protection",
+    "betteradventuremode:circle_of_healing_spell_book",
+    "betteradventuremode:divine_protection_spell_book",
     "betteradventuremode:fire_breath_spell_book",
     "betteradventuremode:fire_meteor_spell_book",
     "betteradventuremode:fire_scorch_spell_book",
     "betteradventuremode:fireball_spell_book",
-    "betteradventuremode:flash_heal",
+    "betteradventuremode:flash_heal_spell_book",
     "betteradventuremode:frost_bolt_spell_book",
     "betteradventuremode:frost_nova_spell_book",
     "betteradventuremode:frost_shield_spell_book",
-    "betteradventuremode:heal",
-    "betteradventuremode:holy_beam",
-    "betteradventuremode:holy_shock",
+    "betteradventuremode:heal_spell_book",
+    "betteradventuremode:holy_beam_spell_book",
+    "betteradventuremode:holy_shock_spell_book",
     "betteradventuremode:ice_lance_spell_book",
-    "betteradventuremode:judgement"
+    "betteradventuremode:judgement_spell_book"
   ]
 }
