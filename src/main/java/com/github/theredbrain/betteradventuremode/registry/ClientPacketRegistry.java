@@ -1,9 +1,7 @@
 package com.github.theredbrain.betteradventuremode.registry;
 
-import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerInventoryMixin;
-//import net.bettercombat.api.MinecraftClient_BetterCombat;
 import com.github.theredbrain.betteradventuremode.network.packet.*;
 import net.bettercombat.api.MinecraftClient_BetterCombat;
 import net.fabricmc.api.EnvType;
@@ -55,7 +53,6 @@ public class ClientPacketRegistry {
                 if (client.player != null && client.player.getWorld().getEntityById(entityId) != null) {
                     PlayerEntity player = (PlayerEntity) client.player.getWorld().getEntityById(entityId);
                     if (player != null && player != client.player) {
-                        BetterAdventureMode.info("SHEATHED_WEAPONS_PACKET, player: " + player.getGameProfile().getName() + ", mainHand: " + mainHand + ", isWeaponSheathed: " + isWeaponSheathed);
                         if (mainHand) {
                             ((DuckPlayerEntityMixin) player).betteradventuremode$setIsMainHandStackSheathed(isWeaponSheathed);
                         } else {

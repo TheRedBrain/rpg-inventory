@@ -1,13 +1,11 @@
 package com.github.theredbrain.betteradventuremode.mixin.server.network;
 
-import com.github.theredbrain.betteradventuremode.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.betteradventuremode.network.event.PlayerDeathCallback;
 import com.github.theredbrain.betteradventuremode.network.packet.SendAnnouncementPacket;
 import com.github.theredbrain.betteradventuremode.registry.ServerPacketRegistry;
 import com.github.theredbrain.betteradventuremode.registry.GameRulesRegistry;
-import com.github.theredbrain.betteradventuremode.registry.StatusEffectsRegistry;
 import com.mojang.authlib.GameProfile;
 import com.mojang.datafixers.util.Either;
 import io.netty.buffer.Unpooled;
@@ -21,9 +19,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.network.ServerPlayerInteractionManager;
 import net.minecraft.server.world.ServerWorld;
@@ -99,10 +95,12 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Du
             boolean isMainHandWeaponSheathed = this.betteradventuremode$isMainHandStackSheathed();
             if (this.isMainHandWeaponSheathed != isMainHandWeaponSheathed) {
                 betteradventuremode$sendSheathedWeaponsPacket(true, isMainHandWeaponSheathed);
+                this.isMainHandWeaponSheathed = isMainHandWeaponSheathed;
             }
             boolean isOffHandWeaponSheathed = this.betteradventuremode$isOffHandStackSheathed();
             if (this.isOffHandWeaponSheathed != isOffHandWeaponSheathed) {
                 betteradventuremode$sendSheathedWeaponsPacket(false, isOffHandWeaponSheathed);
+                this.isOffHandWeaponSheathed = isOffHandWeaponSheathed;
             }
         }
     }
