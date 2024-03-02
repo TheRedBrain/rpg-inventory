@@ -26,7 +26,7 @@ public class DimensionsManager {
 
     public static void addAndSaveDynamicDimension(Identifier dimensionId, MinecraftServer server) {
         // may throw exception here
-        DynamicRegistryManager manager = MiscHelper.getServer().getRegistryManager();
+        DynamicRegistryManager manager = server.getRegistryManager();
 
         Registry<DimensionType> dimensionTypeRegistry = manager.get(RegistryKeys.DIMENSION_TYPE);
 

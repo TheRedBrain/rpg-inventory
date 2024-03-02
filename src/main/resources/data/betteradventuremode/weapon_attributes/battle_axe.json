@@ -1,0 +1,43 @@
+{
+  "attributes": {
+    "attack_range": 2.5,
+    "two_handed": false,
+    "category": "battle_axe",
+    "attacks": [
+      {
+        "conditions": ["MOUNTED"],
+        "hitbox": "HORIZONTAL_PLANE",
+        "damage_multiplier": 1,
+        "angle": 180,
+        "upswing": 0.5,
+        "animation": "bettercombat:two_handed_slash_horizontal_right",
+        "swing_sound": {
+          "id": "bettercombat:double_axe_swing"
+        }
+      },
+      {
+        "conditions": ["MOUNTED"],
+        "hitbox": "HORIZONTAL_PLANE",
+        "damage_multiplier": 1,
+        "angle": 180,
+        "upswing": 0.5,
+        "animation": "bettercombat:two_handed_slash_horizontal_left",
+        "swing_sound": {
+          "id": "bettercombat:double_axe_swing"
+        }
+      },
+      {
+        "conditions": ["NOT_MOUNTED"],
+        "hitbox": "HORIZONTAL_PLANE",
+        "damage_multiplier": 0.5,
+        "angle": 45,
+        "upswing": 0.5,
+        "animation": "bettercombat:one_handed_slash_horizontal_right",
+        "swing_sound": {
+          "id": "bettercombat:axe_slash",
+          "pitch": 0.8
+        }
+      }
+    ]
+  }
+}

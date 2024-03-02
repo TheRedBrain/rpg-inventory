@@ -22,8 +22,17 @@ import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.CrossbowItem;
 import net.minecraft.item.DyeableItem;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
+import net.spell_engine.api.render.CustomModels;
+import net.spell_engine.internals.casting.SpellCast;
+import net.spell_engine.internals.casting.SpellCasterEntity;
+
+import java.util.List;
 
 
 public class BetterAdventureModeClient implements ClientModInitializer {
@@ -107,9 +116,33 @@ public class BetterAdventureModeClient implements ClientModInitializer {
     }
 
     private void registerModelPredicateProviders() {
-        ModelPredicateProviderRegistry.register(ItemRegistry.TEST_BUCKLER, new Identifier("blocking"), (stack, world, entity, seed) -> entity != null && entity.isUsingItem() && entity.getActiveItem() == stack ? 1.0f : 0.0f);
-        ModelPredicateProviderRegistry.register(ItemRegistry.TEST_NORMAL_SHIELD, new Identifier("blocking"), (stack, world, entity, seed) -> entity != null && entity.isUsingItem() && entity.getActiveItem() == stack ? 1.0f : 0.0f);
-        ModelPredicateProviderRegistry.register(ItemRegistry.TEST_TOWER_SHIELD, new Identifier("blocking"), (stack, world, entity, seed) -> entity != null && entity.isUsingItem() && entity.getActiveItem() == stack ? 1.0f : 0.0f);
+        // shields
+        ModelPredicateProviderRegistry.register(ItemRegistry.BUCKLER, new Identifier("blocking"), (stack, world, entity, seed) -> entity != null && entity.isUsingItem() && entity.getActiveItem() == stack ? 1.0f : 0.0f);
+        ModelPredicateProviderRegistry.register(ItemRegistry.PLANK_SHIELD, new Identifier("blocking"), (stack, world, entity, seed) -> entity != null && entity.isUsingItem() && entity.getActiveItem() == stack ? 1.0f : 0.0f);
+        ModelPredicateProviderRegistry.register(ItemRegistry.GREAT_SHIELD, new Identifier("blocking"), (stack, world, entity, seed) -> entity != null && entity.isUsingItem() && entity.getActiveItem() == stack ? 1.0f : 0.0f);
+
+        // spell proxies
+        ModelPredicateProviderRegistry.register(ItemRegistry.ELEMENTAL_FLAME, new Identifier("charging"), (stack, world, entity, seed) -> isItemStackUsedForSpellCasting(stack, entity) ? 1.0f : 0.0f);
+        ModelPredicateProviderRegistry.register(ItemRegistry.ELEMENTAL_FLAME, new Identifier("charge"), (stack, world, entity, seed) -> {
+            var progress = getItemStackSpellCastingProgress(stack, entity);
+            if (progress != null) {
+                return progress.ratio();
+            }
+            return 0.0F;
+        });
+
+        // spell scrolls
+        ModelPredicateProviderRegistry.register(ItemRegistry.FIREBALL_SPELL_SCROLL, new Identifier("charging"), (stack, world, entity, seed) -> isItemStackUsedForSpellCasting(stack, entity) ? 1.0f : 0.0f);
+
+        // food
+        ModelPredicateProviderRegistry.register(ItemRegistry.BROWN_MUSHROOM, new Identifier("eating"), (stack, world, entity, seed) -> entity != null && entity.isUsingItem() && entity.getActiveItem() == stack ? 1.0f : 0.0f);
+        ModelPredicateProviderRegistry.register(ItemRegistry.BROWN_MUSHROOM, new Identifier("progress"), (stack, world, entity, seed) -> {
+            if (entity == null) {
+                return 0.0F;
+            } else {
+                return (float) (stack.getMaxUseTime() + 3 - entity.getItemUseTimeLeft()) / (float) stack.getMaxUseTime();
+            }
+        });
     }
 
     private void registerCustomModelStatusEffectRenderers() {
@@ -117,8 +150,28 @@ public class BetterAdventureModeClient implements ClientModInitializer {
     }
 
     private void registerSpellModels() {
-//        CustomModels.registerModelIds(List.of(
-//                BetterAdventureModeCore.identifier("projectile/test_spell_projectile")
-//        ));
+        CustomModels.registerModelIds(List.of(
+                BetterAdventureMode.identifier("projectile/test_spell_projectile")
+        ));
+    }
+
+    private static SpellCast.Progress getItemStackSpellCastingProgress(ItemStack itemStack, LivingEntity entity) {
+        if (entity instanceof SpellCasterEntity caster && entity.getMainHandStack() == itemStack) {
+            var process = caster.getSpellCastProcess();
+            // Watch out! This condition check is duplicated
+            if (process != null && process.spell().casting_animates_ranged_weapon) {
+                return process.progress(entity.getWorld().getTime());
+            }
+        }
+        return null;
+    }
+
+    private static boolean isItemStackUsedForSpellCasting(ItemStack itemStack, LivingEntity entity) {
+        if (entity instanceof SpellCasterEntity caster && entity.getMainHandStack() == itemStack) {
+            var process = caster.getSpellCastProcess();
+            // Watch out! This condition check is duplicated
+            return process != null && process.spell().casting_animates_ranged_weapon;
+        }
+        return false;
     }
 }

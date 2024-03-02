@@ -52,7 +52,6 @@
     "client.network.ClientPlayerInteractionManagerMixin",
     "client.network.message.MessageHandlerMixin",
     "client.render.entity.HeadFeatureRendererMixin",
-    "client.render.entity.PlayerEntityRendererMixin",
-    "client.render.item.BuiltinModelItemRendererMixin"
+    "client.render.entity.PlayerEntityRendererMixin"
   ]
 }

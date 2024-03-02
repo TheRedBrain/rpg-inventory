@@ -1,0 +1,47 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "betteradventuremode:item/elemental_flame_charge_2"
+	},
+	"elements": [
+		{
+			"from": [6, 6, 6],
+			"to": [10, 10, 10],
+			"faces": {
+				"north": {"uv": [4, 4, 8, 8], "texture": "#0"},
+				"east": {"uv": [0, 4, 4, 8], "texture": "#0"},
+				"south": {"uv": [12, 4, 16, 8], "texture": "#0"},
+				"west": {"uv": [8, 4, 12, 8], "texture": "#0"},
+				"up": {"uv": [8, 4, 4, 0], "texture": "#0"},
+				"down": {"uv": [12, 0, 8, 4], "texture": "#0"}
+			}
+		}
+	],
+	"gui_light": "front",
+	"display": {
+		"thirdperson_righthand": {
+			"translation": [0, -1.75, -3]
+		},
+		"thirdperson_lefthand": {
+			"translation": [2.5, -2, 3.75]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, -20, -20],
+			"translation": [3, -0.5, 0.25],
+			"scale": [0.85, 1, 1]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, 45, 0],
+			"translation": [3, 0, 0.25],
+			"scale": [0.85, 1, 1]
+		}
+	},
+	"groups": [
+		{
+			"name": "cube",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [0]
+		}
+	]
+}

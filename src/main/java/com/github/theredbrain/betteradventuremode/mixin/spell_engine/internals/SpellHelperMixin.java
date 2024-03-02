@@ -170,9 +170,6 @@ public abstract class SpellHelperMixin {
                             double healAmount = power.randomValue();
                             healAmount *= (double)healData.spell_power_coefficient;
                             healAmount *= (double)context.total();
-                            if (context.isChanneled()) {
-                                healAmount *= SpellPower.getHaste(caster);
-                            }
 
                             // direct heal
                             double directHealAmount = ((DuckSpellImpactActionHealMixin) healData).betteradventuremode$getDirectHeal();
@@ -180,6 +177,9 @@ public abstract class SpellHelperMixin {
                                 healAmount = directHealAmount;
                             }
 
+                            if (context.isChanneled()) {
+                                healAmount *= SpellPower.getHaste(caster);
+                            }
                             livingTarget.heal((float)healAmount);
                             success = true;
                         }

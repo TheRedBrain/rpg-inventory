@@ -24,6 +24,16 @@
     "betteradventuremode:elemental_flame",
     "betteradventuremode:arcane_encyclopedia",
     "betteradventuremode:ice_staff",
-    "betteradventuremode:blessed_talisman"
+    "betteradventuremode:blessed_talisman",
+    "betteradventuremode:dagger",
+    "betteradventuremode:short_sword",
+    "betteradventuremode:long_sword",
+    "betteradventuremode:zweihander",
+    "betteradventuremode:halberd",
+    "betteradventuremode:spear",
+    "betteradventuremode:battle_axe",
+    "betteradventuremode:war_hammer",
+    "betteradventuremode:mace",
+    "betteradventuremode:claw"
   ]
 }

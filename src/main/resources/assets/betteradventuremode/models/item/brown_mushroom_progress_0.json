@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "betteradventuremode:item/food/brown_mushroom_progress_0"
+  }
+}

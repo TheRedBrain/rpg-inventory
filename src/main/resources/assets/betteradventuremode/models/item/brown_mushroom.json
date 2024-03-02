@@ -2,5 +2,9 @@
   "parent": "minecraft:item/generated",
   "textures": {
     "layer0": "minecraft:block/brown_mushroom"
-  }
+  },
+  "overrides": [
+    {"predicate": {"eating": 1, "progress": 0.34}, "model": "betteradventuremode:item/brown_mushroom_progress_0"},
+    {"predicate": {"eating": 1, "progress": 0.67}, "model": "betteradventuremode:item/brown_mushroom_progress_1"}
+  ]
 }

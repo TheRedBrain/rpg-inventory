@@ -2,10 +2,24 @@ package com.github.theredbrain.betteradventuremode.registry;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import net.minecraft.entity.damage.DamageType;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.Identifier;
+import net.minecraft.world.gen.FlatLevelGeneratorPreset;
 
 public class DamageTypesRegistry {
+
+    // region spell damage types
+    public static final RegistryKey<DamageType> FIREBALL_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("fireball_damage_type"));
+    // endregion spell damage types
+
+    // region weapon damage types
+    public static final RegistryKey<DamageType> CLAW_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("claw_damage_type"));
+    // endregion weapon damage types
 
     public static final RegistryKey<DamageType> LAVA_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("lava_damage_type"));
     public static final RegistryKey<DamageType> BASHING_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("bashing_damage_type"));

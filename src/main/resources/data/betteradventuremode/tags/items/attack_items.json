@@ -19,6 +19,17 @@
     "betteradventuremode:diamond_sword",
     "betteradventuremode:golden_sword",
     "betteradventuremode:netherite_sword",
-    "betteradventuremode:test_sword"
+    "betteradventuremode:test_sword",
+    "betteradventuremode:dagger",
+    "betteradventuremode:short_sword",
+    "betteradventuremode:long_sword",
+    "betteradventuremode:zweihander",
+    "betteradventuremode:halberd",
+    "betteradventuremode:spear",
+    "betteradventuremode:battle_axe",
+    "betteradventuremode:war_hammer",
+    "betteradventuremode:mace",
+    "betteradventuremode:claw",
+    "betteradventuremode:elemental_flame"
   ]
 }
