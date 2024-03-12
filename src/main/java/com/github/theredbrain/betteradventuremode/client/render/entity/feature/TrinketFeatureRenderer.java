@@ -39,10 +39,6 @@ public class TrinketFeatureRenderer<T extends LivingEntity, M extends BipedEntit
 
     @Override
     public void render(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, T livingEntity, float f, float g, float h, float j, float k, float l) {
-        this.renderTrinkets(matrixStack, vertexConsumerProvider, livingEntity, "helmets" , "helmet", this.model, this.slim, i);
-        this.renderTrinkets(matrixStack, vertexConsumerProvider, livingEntity, "chest_plates" , "chest_plate", this.model, this.slim, i);
-        this.renderTrinkets(matrixStack, vertexConsumerProvider, livingEntity, "leggings" , "leggings", this.model, this.slim, i);
-        this.renderTrinkets(matrixStack, vertexConsumerProvider, livingEntity, "boots" , "boots", this.model, this.slim, i);
         this.renderTrinkets(matrixStack, vertexConsumerProvider, livingEntity, "gloves" , "gloves", this.model, this.slim, i);
         this.renderTrinkets(matrixStack, vertexConsumerProvider, livingEntity, "shoulders" , "shoulders", this.model, this.slim, i);
         this.renderTrinkets(matrixStack, vertexConsumerProvider, livingEntity, "rings_1" , "ring", this.model, this.slim, i);

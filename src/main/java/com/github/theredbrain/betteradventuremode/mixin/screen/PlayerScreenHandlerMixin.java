@@ -28,7 +28,8 @@ import java.util.*;
 
 @Mixin(value = PlayerScreenHandler.class, priority = 1050) // overrides Trinkets
 public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements TrinketPlayerScreenHandler {
-    @Shadow @Final
+    @Shadow
+    @Final
     private PlayerEntity owner;
 
     @Unique
@@ -70,29 +71,46 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
             for (int i = 0; i < 3; ++i) {
                 for (int j = 0; j < 9; ++j) {
 //                    this.slots.get(j + (i + 1) * 9).y = 146 + i * 18;
-                    ((DuckSlotMixin)this.slots.get(j + (i + 1) * 9)).betteradventuremode$setY(138 + i * 18);
+                    ((DuckSlotMixin) this.slots.get(j + (i + 1) * 9)).betteradventuremode$setY(138 + i * 18);
                 }
             }
             for (int i = 0; i < 9; ++i) {
 //                this.slots.get(i + 36).y = 204;
-                ((DuckSlotMixin)this.slots.get(i + 36)).betteradventuremode$setY(196);
+                ((DuckSlotMixin) this.slots.get(i + 36)).betteradventuremode$setY(196);
             }
 
-            // disable vanilla crafting slots
-            ((DuckSlotMixin)this.slots.get(0)).betteradventuremode$setDisabledOverride(true);
-            ((DuckSlotMixin)this.slots.get(1)).betteradventuremode$setDisabledOverride(true);
-            ((DuckSlotMixin)this.slots.get(2)).betteradventuremode$setDisabledOverride(true);
-            ((DuckSlotMixin)this.slots.get(3)).betteradventuremode$setDisabledOverride(true);
-            ((DuckSlotMixin)this.slots.get(4)).betteradventuremode$setDisabledOverride(true);
+            if (BetterAdventureMode.serverConfig.disable_inventory_crafting_slots) {
+                ((DuckSlotMixin) this.slots.get(0)).betteradventuremode$setDisabledOverride(true);
+                ((DuckSlotMixin) this.slots.get(1)).betteradventuremode$setDisabledOverride(true);
+                ((DuckSlotMixin) this.slots.get(2)).betteradventuremode$setDisabledOverride(true);
+                ((DuckSlotMixin) this.slots.get(3)).betteradventuremode$setDisabledOverride(true);
+                ((DuckSlotMixin) this.slots.get(4)).betteradventuremode$setDisabledOverride(true);
+            } else {
+//                ((DuckSlotMixin) this.slots.get(0)).betteradventuremode$setX(154);
+//                ((DuckSlotMixin) this.slots.get(0)).betteradventuremode$setY(28);
+//                ((DuckSlotMixin) this.slots.get(1)).betteradventuremode$setX(154);
+//                ((DuckSlotMixin) this.slots.get(1)).betteradventuremode$setY(28);
+//                ((DuckSlotMixin) this.slots.get(2)).betteradventuremode$setX(154);
+//                ((DuckSlotMixin) this.slots.get(2)).betteradventuremode$setY(28);
+//                ((DuckSlotMixin) this.slots.get(3)).betteradventuremode$setX(154);
+//                ((DuckSlotMixin) this.slots.get(3)).betteradventuremode$setY(28);
+//                ((DuckSlotMixin) this.slots.get(4)).betteradventuremode$setX(154);
+//                ((DuckSlotMixin) this.slots.get(4)).betteradventuremode$setY(28);
+            }
 
-            // disable vanilla armor slots
-            ((DuckSlotMixin)this.slots.get(5)).betteradventuremode$setDisabledOverride(true);
-            ((DuckSlotMixin)this.slots.get(6)).betteradventuremode$setDisabledOverride(true);
-            ((DuckSlotMixin)this.slots.get(7)).betteradventuremode$setDisabledOverride(true);
-            ((DuckSlotMixin)this.slots.get(8)).betteradventuremode$setDisabledOverride(true);
+            // reposition vanilla armor slots
+            ((DuckSlotMixin) this.slots.get(5)).betteradventuremode$setX(33);
+            ((DuckSlotMixin) this.slots.get(5)).betteradventuremode$setY(18);
+            ((DuckSlotMixin) this.slots.get(6)).betteradventuremode$setX(8);
+            ((DuckSlotMixin) this.slots.get(6)).betteradventuremode$setY(54);
+            ((DuckSlotMixin) this.slots.get(7)).betteradventuremode$setX(8);
+            ((DuckSlotMixin) this.slots.get(7)).betteradventuremode$setY(90);
+            ((DuckSlotMixin) this.slots.get(8)).betteradventuremode$setX(77);
+            ((DuckSlotMixin) this.slots.get(8)).betteradventuremode$setY(90);
 
-            // disable vanilla offhand slot
-            ((DuckSlotMixin)this.slots.get(45)).betteradventuremode$setDisabledOverride(true);
+            // reposition vanilla offhand slot
+            ((DuckSlotMixin) this.slots.get(45)).betteradventuremode$setX(26);
+            ((DuckSlotMixin) this.slots.get(45)).betteradventuremode$setY(108);
         }
     }
 
@@ -126,30 +144,31 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
                         int y;
                         // begins at 1 because order=0 is the default
                         // this way most unwanted cases are avoided
-                        if (order == 1) {
-                            // leggings
-                            x = 8;
-                            y = 90;
-
-                        } else if (order == 2) {
+//                        if (order == 1) {
+//                            // leggings
+//                            x = 8;
+//                            y = 90;
+//
+//                        } else
+                        if (order == 2) {
                             // belts
                             x = 8;
                             y = 72;
 
-                        } else if (order == 3) {
-                            // chest_plates
-                            x = 8;
-                            y = 54;
+//                        } else if (order == 3) {
+//                            // chest_plates
+//                            x = 8;
+//                            y = 54;
 
                         } else if (order == 4) {
                             // shoulders
                             x = 8;
                             y = 36;
 
-                        } else if (order == 5) {
-                            // helmets
-                            x = 33;
-                            y = 18;
+//                        } else if (order == 5) {
+//                            // helmets
+//                            x = 33;
+//                            y = 18;
 
                         } else if (order == 6) {
                             // necklaces
@@ -171,20 +190,20 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
                             x = 77;
                             y = 72;
 
-                        } else if (order == 10) {
-                            // boots
-                            x = 77;
-                            y = 90;
+//                        } else if (order == 10) {
+//                            // boots
+//                            x = 77;
+//                            y = 90;
 
                         } else if (order == 11) {
                             // main_hand
                             x = 8;
                             y = 108;
 
-                        } else if (order == 12) {
-                            // off_hand
-                            x = 26;
-                            y = 108;
+//                        } else if (order == 12) {
+//                            // off_hand
+//                            x = 26;
+//                            y = 108;
 
                         } else if (order == 13) {
                             // alternative main hand
@@ -451,7 +470,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
      * @author TheRedBrain
      * @reason
      */
-    @Overwrite
+    @Overwrite // TODO
     public ItemStack quickMove(PlayerEntity player, int index) {
         Slot slot = slots.get(index);
         boolean bl = false;

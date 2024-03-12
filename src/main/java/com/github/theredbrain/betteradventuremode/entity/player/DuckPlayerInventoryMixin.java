@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface DuckPlayerInventoryMixin {
 
-    List<ItemStack> betteradventuremode$getArmorTrinkets();
+    List<ItemStack> betteradventuremode$getArmor();
 
     ItemStack betteradventuremode$getOffHandStack();
 
@@ -17,20 +17,20 @@ public interface DuckPlayerInventoryMixin {
     ItemStack betteradventuremode$setEmptyOffHand(ItemStack itemStack);
     ItemStack betteradventuremode$getMainHand();
     ItemStack betteradventuremode$setMainHand(ItemStack itemStack);
-    ItemStack betteradventuremode$getOffHand();
-    ItemStack betteradventuremode$setOffHand(ItemStack itemStack);
+//    ItemStack betteradventuremode$getOffHand();
+//    ItemStack betteradventuremode$setOffHand(ItemStack itemStack);
     ItemStack betteradventuremode$getAlternativeMainHand();
     ItemStack betteradventuremode$setAlternativeMainHand(ItemStack itemStack);
     ItemStack betteradventuremode$getAlternativeOffHand();
     ItemStack betteradventuremode$setAlternativeOffHand(ItemStack itemStack);
-    ItemStack betteradventuremode$getHeadStack();
-    ItemStack betteradventuremode$setHeadStack(ItemStack itemStack);
-    ItemStack betteradventuremode$getChestStack();
-    ItemStack betteradventuremode$setChestStack(ItemStack itemStack);
-    ItemStack betteradventuremode$getLegsStack();
-    ItemStack betteradventuremode$setLegsStack(ItemStack itemStack);
-    ItemStack betteradventuremode$getFeetStack();
-    ItemStack betteradventuremode$setFeetStack(ItemStack itemStack);
+//    ItemStack betteradventuremode$getHeadStack();
+//    ItemStack betteradventuremode$setHeadStack(ItemStack itemStack);
+//    ItemStack betteradventuremode$getChestStack();
+//    ItemStack betteradventuremode$setChestStack(ItemStack itemStack);
+//    ItemStack betteradventuremode$getLegsStack();
+//    ItemStack betteradventuremode$setLegsStack(ItemStack itemStack);
+//    ItemStack betteradventuremode$getFeetStack();
+//    ItemStack betteradventuremode$setFeetStack(ItemStack itemStack);
     ItemStack betteradventuremode$getGlovesStack();
     ItemStack betteradventuremode$setGlovesStack(ItemStack itemStack);
     ItemStack betteradventuremode$getShouldersStack();

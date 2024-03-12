@@ -7,6 +7,7 @@ import net.bettercombat.api.MinecraftClient_BetterCombat;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 
@@ -36,9 +37,9 @@ public class ClientPacketRegistry {
                             ((DuckPlayerInventoryMixin) player.getInventory()).betteradventuremode$setMainHand(alternativeItemStack);
                         } else {
                             alternativeItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).betteradventuremode$getAlternativeOffHand().copy();
-                            itemStack = ((DuckPlayerInventoryMixin) player.getInventory()).betteradventuremode$getOffHand().copy();
+                            itemStack = player.getEquippedStack(EquipmentSlot.OFFHAND).copy();
                             ((DuckPlayerInventoryMixin) player.getInventory()).betteradventuremode$setAlternativeOffHand(itemStack);
-                            ((DuckPlayerInventoryMixin) player.getInventory()).betteradventuremode$setOffHand(alternativeItemStack);
+                            player.equipStack(EquipmentSlot.OFFHAND, alternativeItemStack);
                         }
                     }
                 }

@@ -34,9 +34,9 @@ public class SheathedMainHandItemFeatureRenderer<T extends LivingEntity> extends
 
         if (livingEntity instanceof IRenderEquippedTrinkets renderEquippedTrinkets) {
 
-            ItemStack mainHandStack = renderEquippedTrinkets.betteradventuremode$getMainHandItemStack();
+            ItemStack mainHandStack = renderEquippedTrinkets.betteradventuremode$getSheathedMainHandItemStack();
 
-            if (!mainHandStack.isEmpty() && renderEquippedTrinkets.betteradventuremode$isMainHandItemSheathed()) {
+            if (!mainHandStack.isEmpty()) {
                 matrixStack.push();
                 ModelPart modelPart = this.getContextModel().body;
                 modelPart.rotate(matrixStack);

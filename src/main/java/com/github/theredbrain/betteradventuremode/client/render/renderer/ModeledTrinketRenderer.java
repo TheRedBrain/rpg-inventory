@@ -504,18 +504,18 @@ public class ModeledTrinketRenderer<T extends Item & GeoItem> extends BipedEntit
         if (this.currentStack.getItem() instanceof ArmorTrinketItem && !ItemUtils.isUsable(this.currentStack)) return;
 
 //        SlotType slotType = currentSlotGroup.inventory().getSlotType();
-        if (currentSlotGroup.equals("helmets")/* && slotType.getName().equals("helmet")*/) {
+        /*if (currentSlotGroup.equals("helmets")*//* && slotType.getName().equals("helmet")*//*) {
             setBoneVisible(this.head, true);
-        } else if (currentSlotGroup.equals("chest_plates")/* && slotType.getName().equals("helmet")*/) {
+        } else if (currentSlotGroup.equals("chest_plates")*//* && slotType.getName().equals("helmet")*//*) {
             setBoneVisible(this.body, true);
-        } else if (currentSlotGroup.equals("leggings")/* && slotType.getName().equals("helmet")*/) {
+        } else if (currentSlotGroup.equals("leggings")*//* && slotType.getName().equals("helmet")*//*) {
             setBoneVisible(this.bodyHips, true);
             setBoneVisible(this.rightLeg, true);
             setBoneVisible(this.leftLeg, true);
-        } else if (currentSlotGroup.equals("boots")/* && slotType.getName().equals("helmet")*/) {
+        } else if (currentSlotGroup.equals("boots")*//* && slotType.getName().equals("helmet")*//*) {
             setBoneVisible(this.rightBoot, true);
             setBoneVisible(this.leftBoot, true);
-        } else if (currentSlotGroup.equals("gloves")/* && slotType.getName().equals("helmet")*/) {
+        } else */if (currentSlotGroup.equals("gloves")/* && slotType.getName().equals("helmet")*/) {
             setBoneVisible(this.rightHand, true);
             setBoneVisible(this.leftHand, true);
         } else if (currentSlotGroup.equals("shoulders")/* && slotType.getName().equals("helmet")*/) {

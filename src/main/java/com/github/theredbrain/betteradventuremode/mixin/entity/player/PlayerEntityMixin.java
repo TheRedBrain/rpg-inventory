@@ -3,6 +3,7 @@ package com.github.theredbrain.betteradventuremode.mixin.entity.player;
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.block.AbstractSetSpawnBlock;
 import com.github.theredbrain.betteradventuremode.entity.IRenderEquippedTrinkets;
+import com.github.theredbrain.betteradventuremode.entity.decoration.MannequinEntity;
 import com.github.theredbrain.betteradventuremode.item.BasicWeaponItem;
 import com.github.theredbrain.betteradventuremode.effect.FoodStatusEffect;
 import com.github.theredbrain.betteradventuremode.data.Dialogue;
@@ -46,6 +47,8 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.stat.Stats;
 import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
 import net.minecraft.world.GameRules;
@@ -86,6 +89,10 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     @Shadow public abstract void addExhaustion(float exhaustion);
 
     @Shadow public abstract void increaseStat(Identifier stat, int amount);
+
+    @Shadow public abstract ItemStack getEquippedStack(EquipmentSlot slot);
+
+    @Shadow public abstract ActionResult interact(Entity entity, Hand hand);
 
     @Unique
     private boolean isAdventureHotbarCleanedUp = false;
@@ -295,35 +302,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
     /**
      * @author TheRedBrain
-     * @reason TODO
-     */
-    @Overwrite
-    public ItemStack getEquippedStack(EquipmentSlot slot) {
-        if (slot == EquipmentSlot.MAINHAND) {
-            return this.inventory.getMainHandStack();
-        }
-        if (slot == EquipmentSlot.OFFHAND) {
-            return ((DuckPlayerInventoryMixin)this.inventory).betteradventuremode$getOffHandStack();
-        }
-        if (slot.getType() == EquipmentSlot.Type.ARMOR) {
-            ItemStack stack = ItemStack.EMPTY;
-                if (slot.getEntitySlotId() == 0) {
-                    return ((DuckPlayerInventoryMixin)this.inventory).betteradventuremode$getFeetStack();
-                } else if (slot.getEntitySlotId() == 1) {
-                    return ((DuckPlayerInventoryMixin)this.inventory).betteradventuremode$getLegsStack();
-                } else if (slot.getEntitySlotId() == 2) {
-                    return ((DuckPlayerInventoryMixin)this.inventory).betteradventuremode$getChestStack();
-                } else if (slot.getEntitySlotId() == 3) {
-                    return ((DuckPlayerInventoryMixin)this.inventory).betteradventuremode$getHeadStack();
-                }
-            return stack;
-        }
-        return ItemStack.EMPTY;
-    }
-
-    /**
-     * @author TheRedBrain
-     * @reason TODO
+     * @reason
      */
     @Overwrite
     public void equipStack(EquipmentSlot slot, ItemStack stack) {
@@ -331,18 +310,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         if (slot == EquipmentSlot.MAINHAND) {
             this.onEquipStack(slot, ((DuckPlayerInventoryMixin)this.inventory).betteradventuremode$setMainHand(stack), stack);
         } else if (slot == EquipmentSlot.OFFHAND) {
-            this.onEquipStack(slot, ((DuckPlayerInventoryMixin)this.inventory).betteradventuremode$setOffHand(stack), stack);
-        }
-        else if (slot.getType() == EquipmentSlot.Type.ARMOR) {
-            if (slot.getEntitySlotId() == 0) {
-                this.onEquipStack(slot, ((DuckPlayerInventoryMixin)this.inventory).betteradventuremode$setFeetStack(stack), stack);
-            } else if (slot.getEntitySlotId() == 1) {
-                this.onEquipStack(slot, ((DuckPlayerInventoryMixin)this.inventory).betteradventuremode$setLegsStack(stack), stack);
-            } else if (slot.getEntitySlotId() == 2) {
-                this.onEquipStack(slot, ((DuckPlayerInventoryMixin)this.inventory).betteradventuremode$setChestStack(stack), stack);
-            } else if (slot.getEntitySlotId() == 3) {
-                this.onEquipStack(slot, ((DuckPlayerInventoryMixin)this.inventory).betteradventuremode$setHeadStack(stack), stack);
-            }
+            this.onEquipStack(slot, this.inventory.offHand.set(0, stack), stack);
+        } else if (slot.getType() == EquipmentSlot.Type.ARMOR) {
+            this.onEquipStack(slot, this.inventory.armor.set(slot.getEntitySlotId(), stack), stack);
         }
     }
 
@@ -352,7 +322,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
      */
     @Overwrite
     public Iterable<ItemStack> getArmorItems() {
-        return ((DuckPlayerInventoryMixin)this.inventory).betteradventuremode$getArmorTrinkets();
+        return ((DuckPlayerInventoryMixin)this.inventory).betteradventuremode$getArmor();
     }
 
     /**
@@ -510,23 +480,15 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     public abstract boolean betteradventuremode$isAdventure();
 
     @Override
-    public boolean betteradventuremode$isMainHandItemSheathed() {
-        return this.betteradventuremode$isMainHandStackSheathed();
+    public ItemStack betteradventuremode$getSheathedMainHandItemStack() {
+        ItemStack itemStack = this.getInventory().getMainHandStack();
+        return betteradventuremode$isMainHandStackSheathed() && !itemStack.isIn(Tags.EMPTY_HAND_WEAPONS) ? itemStack : ItemStack.EMPTY;
     }
 
     @Override
-    public boolean betteradventuremode$isOffHandItemSheathed() {
-        return this.betteradventuremode$isOffHandStackSheathed();
-    }
-
-    @Override
-    public ItemStack betteradventuremode$getMainHandItemStack() {
-        return ((DuckPlayerInventoryMixin) (this.getInventory())).betteradventuremode$getMainHand();
-    }
-
-    @Override
-    public ItemStack betteradventuremode$getOffHandItemStack() {
-        return ((DuckPlayerInventoryMixin) (this.getInventory())).betteradventuremode$getOffHand();
+    public ItemStack betteradventuremode$getSheathedOffHandItemStack() {
+        ItemStack itemStack = ((DuckPlayerInventoryMixin) this.getInventory()).betteradventuremode$getOffHandStack();
+        return betteradventuremode$isOffHandStackSheathed() && !itemStack.isIn(Tags.EMPTY_HAND_WEAPONS) ? itemStack : ItemStack.EMPTY;
     }
 
     @Override
@@ -538,8 +500,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     public void betteradventuremode$setIsMainHandStackSheathed(boolean isMainHandStackSheathed) {
         this.dataTracker.set(IS_MAIN_HAND_STACK_SHEATHED, isMainHandStackSheathed);
 
-        Item mainHandStackIten = this.betteradventuremode$getMainHandItemStack().getItem();
-        if (mainHandStackIten instanceof IMakesEquipSound noiseMakingItem && !this.isSpectator()) {
+        Item mainHandStackItem = this.getInventory().getMainHandStack().getItem();
+        if (mainHandStackItem instanceof IMakesEquipSound noiseMakingItem && !this.isSpectator()) {
             SoundEvent equipSound = noiseMakingItem.getEquipSound();
             if (equipSound != null) {
 
@@ -560,8 +522,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     public void betteradventuremode$setIsOffHandStackSheathed(boolean isOffHandStackSheathed) {
         this.dataTracker.set(IS_OFF_HAND_STACK_SHEATHED, isOffHandStackSheathed);
 
-        Item offHandStackIten = this.betteradventuremode$getOffHandItemStack().getItem();
-        if (offHandStackIten instanceof IMakesEquipSound noiseMakingItem && !this.isSpectator()) {
+        Item offHandStackItem = ((DuckPlayerInventoryMixin) this.getInventory()).betteradventuremode$getOffHandStack().getItem();
+        if (offHandStackItem instanceof IMakesEquipSound noiseMakingItem && !this.isSpectator()) {
             SoundEvent equipSound = noiseMakingItem.getEquipSound();
             if (equipSound != null) {
 

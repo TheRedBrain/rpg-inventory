@@ -13,6 +13,7 @@ import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.HorizontalFacingBlock;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -81,17 +82,20 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Du
     @Inject(method = "tick", at = @At("TAIL"))
     public void betteradventuremode$tick(CallbackInfo ci) {
         if (!this.getWorld().isClient) {
-            if (!ItemStack.areItemsEqual(this.mainHandSlotStack, ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getMainHand()) || !ItemStack.areItemsEqual(this.alternateMainHandSlotStack, ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getAlternativeMainHand())) {
+            ItemStack newMainHandStack = ((DuckPlayerInventoryMixin) this.getInventory()).betteradventuremode$getMainHand();
+            ItemStack newAlternativeMainHandStack = ((DuckPlayerInventoryMixin) this.getInventory()).betteradventuremode$getAlternativeMainHand();
+            if (!ItemStack.areItemsEqual(mainHandSlotStack, newMainHandStack) || !ItemStack.areItemsEqual(alternateMainHandSlotStack, newAlternativeMainHandStack)) {
                 betteradventuremode$sendChangedHandSlotsPacket(true);
             }
-            this.mainHandSlotStack = ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getMainHand();
-            this.alternateMainHandSlotStack = ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getAlternativeMainHand();
-            if (!ItemStack.areItemsEqual(this.offHandSlotStack, ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getOffHand()) || !ItemStack.areItemsEqual(this.alternateOffHandSlotStack, ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getAlternativeOffHand())) {
+            mainHandSlotStack = newMainHandStack;
+            alternateMainHandSlotStack = newAlternativeMainHandStack;
+            ItemStack newOffHandStack = this.getEquippedStack(EquipmentSlot.OFFHAND);
+            ItemStack newAlternativeOffHandStack = ((DuckPlayerInventoryMixin) this.getInventory()).betteradventuremode$getAlternativeOffHand();
+            if (!ItemStack.areItemsEqual(offHandSlotStack, newOffHandStack) || !ItemStack.areItemsEqual(alternateOffHandSlotStack, newAlternativeOffHandStack)) {
                 betteradventuremode$sendChangedHandSlotsPacket(false);
             }
-            this.offHandSlotStack = ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getOffHand();
-            this.alternateOffHandSlotStack = ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getAlternativeOffHand();
-
+            offHandSlotStack = newOffHandStack;
+            alternateOffHandSlotStack = newAlternativeOffHandStack;
             boolean isMainHandWeaponSheathed = this.betteradventuremode$isMainHandStackSheathed();
             if (this.isMainHandWeaponSheathed != isMainHandWeaponSheathed) {
                 betteradventuremode$sendSheathedWeaponsPacket(true, isMainHandWeaponSheathed);

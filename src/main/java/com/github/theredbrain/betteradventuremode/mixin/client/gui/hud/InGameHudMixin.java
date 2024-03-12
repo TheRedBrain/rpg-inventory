@@ -14,6 +14,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.option.AttackIndicator;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
@@ -138,7 +139,7 @@ public abstract class InGameHudMixin implements DuckInGameHudMixin {
         PlayerEntity playerEntity = this.getCameraPlayer();
         if (playerEntity != null) {
             ItemStack itemStackMainHand = ((DuckPlayerInventoryMixin)playerEntity.getInventory()).betteradventuremode$getMainHand();
-            ItemStack itemStackOffHand = ((DuckPlayerInventoryMixin)playerEntity.getInventory()).betteradventuremode$getOffHand();
+            ItemStack itemStackOffHand = playerEntity.getEquippedStack(EquipmentSlot.OFFHAND);
             ItemStack itemStackAlternativeMainHand = ((DuckPlayerInventoryMixin)playerEntity.getInventory()).betteradventuremode$getAlternativeMainHand();
             ItemStack itemStackAlternativeOffHand = ((DuckPlayerInventoryMixin)playerEntity.getInventory()).betteradventuremode$getAlternativeOffHand();
             Arm arm = playerEntity.getMainArm().getOpposite();

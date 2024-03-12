@@ -37,6 +37,7 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.*;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.EulerAngle;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -87,9 +88,14 @@ public class MannequinEntity extends LivingEntity implements IRenderEquippedTrin
     public static final TrackedData<SheathedWeaponMode> SHEATHED_WEAPON_MODE;
     public static final TrackedData<Byte> MODEL_PARTS_VISIBILITY_A;
     public static final TrackedData<Byte> MODEL_PARTS_VISIBILITY_B;
+    
+    public final DefaultedList<ItemStack> armor;
+    public final DefaultedList<ItemStack> offHand;
 
     public MannequinEntity(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
+        this.armor = DefaultedList.ofSize(4, ItemStack.EMPTY);
+        this.offHand = DefaultedList.ofSize(1, ItemStack.EMPTY);
     }
 
     @Override
@@ -295,14 +301,23 @@ public class MannequinEntity extends LivingEntity implements IRenderEquippedTrin
         if (slot == EquipmentSlot.MAINHAND) {
             return this.getSheathedWeaponMode() != SheathedWeaponMode.BOTH ? this.getMainHand() : ItemStack.EMPTY;
         } else if (slot == EquipmentSlot.OFFHAND) {
-            return this.getSheathedWeaponMode() == SheathedWeaponMode.NONE ? this.getOffHand() : ItemStack.EMPTY;
+            return this.getSheathedWeaponMode() == SheathedWeaponMode.NONE ? this.offHand.get(0) : ItemStack.EMPTY;
         } else {
-            return ItemStack.EMPTY;
+            return slot.getType() == EquipmentSlot.Type.ARMOR ? this.armor.get(slot.getEntitySlotId()) : ItemStack.EMPTY;
         }
     }
 
     @Override
-    public void equipStack(EquipmentSlot slot, ItemStack stack) {}
+    public void equipStack(EquipmentSlot slot, ItemStack stack) {
+        this.processEquippedStack(stack);
+        if (slot == EquipmentSlot.MAINHAND) {
+            this.setMainHand(stack);
+        } else if (slot == EquipmentSlot.OFFHAND) {
+            this.offHand.set(0, stack);
+        } else if (slot.getType() == EquipmentSlot.Type.ARMOR) {
+            this.armor.set(slot.getEntitySlotId(), stack);
+        }
+    }
 
     @Override
     public ActionResult interact(PlayerEntity player, Hand hand) {
@@ -524,20 +539,13 @@ public class MannequinEntity extends LivingEntity implements IRenderEquippedTrin
     }
 
     // region IRenderEquippedTrinkets
-    public boolean betteradventuremode$isMainHandItemSheathed() {
-        return this.getSheathedWeaponMode() == SheathedWeaponMode.BOTH;
+
+    public ItemStack betteradventuremode$getSheathedMainHandItemStack() {
+        return this.getSheathedWeaponMode() == SheathedWeaponMode.BOTH ? this.getMainHand() : ItemStack.EMPTY;
     }
 
-    public boolean betteradventuremode$isOffHandItemSheathed() {
-        return this.getSheathedWeaponMode() != SheathedWeaponMode.NONE;
-    }
-
-    public ItemStack betteradventuremode$getMainHandItemStack() {
-        return this.getMainHand();
-    }
-
-    public ItemStack betteradventuremode$getOffHandItemStack() {
-        return this.getOffHand();
+    public ItemStack betteradventuremode$getSheathedOffHandItemStack() {
+        return this.getSheathedWeaponMode() != SheathedWeaponMode.NONE ? this.getEquippedStack(EquipmentSlot.OFFHAND) : ItemStack.EMPTY;
     }
     // endregion IRenderEquippedTrinkets
 
@@ -656,29 +664,12 @@ public class MannequinEntity extends LivingEntity implements IRenderEquippedTrin
     }
 
     public ItemStack getOffHand() {
-        ItemStack offHandStack = ItemStack.EMPTY;
-        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(this);
-        if (trinkets.isPresent()) {
-            if (trinkets.get().getInventory().get("off_hand") != null) {
-                if (trinkets.get().getInventory().get("off_hand").get("off_hand") != null) {
-                    offHandStack = trinkets.get().getInventory().get("off_hand").get("off_hand").getStack(0);
-                }
-            }
-        }
-        return offHandStack;
+        return getEquippedStack(EquipmentSlot.OFFHAND);
     }
 
     public boolean setOffHand(ItemStack itemStack) {
-        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(this);
-        if (trinkets.isPresent()) {
-            if (trinkets.get().getInventory().get("off_hand") != null) {
-                if (trinkets.get().getInventory().get("off_hand").get("off_hand") != null) {
-                    trinkets.get().getInventory().get("off_hand").get("off_hand").setStack(0, itemStack);
-                    return true;
-                }
-            }
-        }
-        return false;
+        this.equipStack(EquipmentSlot.OFFHAND, itemStack);
+        return true;
     }
 
     public ItemStack getAlternativeOffHand() {
@@ -708,107 +699,39 @@ public class MannequinEntity extends LivingEntity implements IRenderEquippedTrin
     }
 
     public ItemStack getHelmetStack() {
-        ItemStack headStack = ItemStack.EMPTY;
-        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(this);
-        if (trinkets.isPresent()) {
-            if (trinkets.get().getInventory().get("helmets") != null) {
-                if (trinkets.get().getInventory().get("helmets").get("helmet") != null) {
-                    headStack = trinkets.get().getInventory().get("helmets").get("helmet").getStack(0);
-                }
-            }
-        }
-        return headStack;
+        return getEquippedStack(EquipmentSlot.HEAD);
     }
 
     public boolean setHelmetStack(ItemStack itemStack) {
-        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(this);
-        if (trinkets.isPresent()) {
-            if (trinkets.get().getInventory().get("helmets") != null) {
-                if (trinkets.get().getInventory().get("helmets").get("helmet") != null) {
-                    trinkets.get().getInventory().get("helmets").get("helmet").setStack(0, itemStack);
-                    return true;
-                }
-            }
-        }
-        return false;
+        this.equipStack(EquipmentSlot.HEAD, itemStack);
+        return true;
     }
 
     public ItemStack getChestPlateStack() {
-        ItemStack chestStack = ItemStack.EMPTY;
-        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(this);
-        if (trinkets.isPresent()) {
-            if (trinkets.get().getInventory().get("chest_plates") != null) {
-                if (trinkets.get().getInventory().get("chest_plates").get("chest_plate") != null) {
-                    chestStack = trinkets.get().getInventory().get("chest_plates").get("chest_plate").getStack(0);
-                }
-            }
-        }
-        return chestStack;
+        return getEquippedStack(EquipmentSlot.CHEST);
     }
 
     public boolean setChestPlateStack(ItemStack itemStack) {
-        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(this);
-        if (trinkets.isPresent()) {
-            if (trinkets.get().getInventory().get("chest_plates") != null) {
-                if (trinkets.get().getInventory().get("chest_plates").get("chest_plate") != null) {
-                    trinkets.get().getInventory().get("chest_plates").get("chest_plate").setStack(0, itemStack);
-                    return true;
-                }
-            }
-        }
-        return false;
+        this.equipStack(EquipmentSlot.CHEST, itemStack);
+        return true;
     }
 
     public ItemStack getLeggingsStack() {
-        ItemStack legsStack = ItemStack.EMPTY;
-        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(this);
-        if (trinkets.isPresent()) {
-            if (trinkets.get().getInventory().get("leggings") != null) {
-                if (trinkets.get().getInventory().get("leggings").get("leggings") != null) {
-                    legsStack = trinkets.get().getInventory().get("leggings").get("leggings").getStack(0);
-                }
-            }
-        }
-        return legsStack;
+        return getEquippedStack(EquipmentSlot.LEGS);
     }
 
     public boolean setLeggingsStack(ItemStack itemStack) {
-        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(this);
-        if (trinkets.isPresent()) {
-            if (trinkets.get().getInventory().get("leggings") != null) {
-                if (trinkets.get().getInventory().get("leggings").get("leggings") != null) {
-                    trinkets.get().getInventory().get("leggings").get("leggings").setStack(0, itemStack);
-                    return true;
-                }
-            }
-        }
-        return false;
+        this.equipStack(EquipmentSlot.LEGS, itemStack);
+        return true;
     }
 
     public ItemStack getBootsStack() {
-        ItemStack feetStack = ItemStack.EMPTY;
-        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(this);
-        if (trinkets.isPresent()) {
-            if (trinkets.get().getInventory().get("boots") != null) {
-                if (trinkets.get().getInventory().get("boots").get("boots") != null) {
-                    feetStack = trinkets.get().getInventory().get("boots").get("boots").getStack(0);
-                }
-            }
-        }
-        return feetStack;
+        return getEquippedStack(EquipmentSlot.FEET);
     }
 
     public boolean setBootsStack(ItemStack itemStack) {
-        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(this);
-        if (trinkets.isPresent()) {
-            if (trinkets.get().getInventory().get("boots") != null) {
-                if (trinkets.get().getInventory().get("boots").get("boots") != null) {
-                    trinkets.get().getInventory().get("boots").get("boots").setStack(0, itemStack);
-                    return true;
-                }
-            }
-        }
-        return false;
+        this.equipStack(EquipmentSlot.FEET, itemStack);
+        return true;
     }
 
     public ItemStack getGlovesStack() {

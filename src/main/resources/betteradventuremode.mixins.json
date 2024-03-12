@@ -20,6 +20,7 @@
     "item.SwordItemMixin",
     "item.ToolItemMixin",
     "recipe.book.RecipeBookMixin",
+    "screen.PlayerScreenHandlerEquipmentSlotsMixin",
     "screen.PlayerScreenHandlerMixin",
     "screen.SlotMixin",
     "server.PlayerManagerMixin",
@@ -51,7 +52,6 @@
     "client.network.ClientPlayerEntityMixin",
     "client.network.ClientPlayerInteractionManagerMixin",
     "client.network.message.MessageHandlerMixin",
-    "client.render.entity.HeadFeatureRendererMixin",
     "client.render.entity.PlayerEntityRendererMixin"
   ]
 }

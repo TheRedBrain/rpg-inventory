@@ -1,6 +1,5 @@
 package com.github.theredbrain.betteradventuremode.client.render.renderer;
 
-import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.item.BasicShieldItem;
 import com.github.theredbrain.betteradventuremode.item.BasicWeaponItem;
 import com.github.theredbrain.betteradventuremode.entity.IRenderEquippedTrinkets;
@@ -16,7 +15,6 @@ import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ShieldItem;
@@ -37,9 +35,9 @@ public class SheathedOffHandItemFeatureRenderer<T extends LivingEntity> extends 
 
         if (livingEntity instanceof IRenderEquippedTrinkets renderEquippedTrinkets) {
 
-            ItemStack offHandStack = renderEquippedTrinkets.betteradventuremode$getOffHandItemStack();
+            ItemStack offHandStack = renderEquippedTrinkets.betteradventuremode$getSheathedOffHandItemStack();
 
-            if (!offHandStack.isEmpty() && renderEquippedTrinkets.betteradventuremode$isOffHandItemSheathed()) {
+            if (!offHandStack.isEmpty()) {
                 matrixStack.push();
                 ModelPart modelPart = this.getContextModel().body;
                 modelPart.rotate(matrixStack);

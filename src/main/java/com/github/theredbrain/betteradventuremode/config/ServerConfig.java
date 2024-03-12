@@ -11,8 +11,10 @@ import java.util.List;
         name = "server"
 )
 public class ServerConfig implements ConfigData {
-    @Comment("The player inventory screen is customized (WIP)")
+    @Comment("The player inventory screen is customized")
     public boolean use_adventure_inventory_screen = true;
+    @Comment("Set to false to enable the 2x2 crafting grid in the adventure inventory screen")
+    public boolean disable_inventory_crafting_slots = true;
     @Comment("Disables food, saturation and exhaustion")
     public boolean disable_vanilla_food_system = true;
     @Comment("Disables the recipe book")

@@ -112,7 +112,7 @@ public class BetterAdventureModeClient implements ClientModInitializer {
     }
 
     private void registerColors() {
-        ColorProviderRegistry.ITEM.register((stack, tintIndex) -> tintIndex > 0 ? -1 : ((DyeableItem)((Object)stack.getItem())).getColor(stack), ItemRegistry.LEATHER_HELMET, ItemRegistry.LEATHER_CHESTPLATE, ItemRegistry.LEATHER_LEGGINGS, ItemRegistry.LEATHER_BOOTS, ItemRegistry.LEATHER_GLOVES, ItemRegistry.LEATHER_SHOULDERS);
+        ColorProviderRegistry.ITEM.register((stack, tintIndex) -> tintIndex > 0 ? -1 : ((DyeableItem)((Object)stack.getItem())).getColor(stack), ItemRegistry.LEATHER_GLOVES, ItemRegistry.LEATHER_SHOULDERS);
     }
 
     private void registerModelPredicateProviders() {

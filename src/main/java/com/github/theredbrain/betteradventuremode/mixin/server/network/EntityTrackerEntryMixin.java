@@ -6,6 +6,7 @@ import com.github.theredbrain.betteradventuremode.registry.ServerPacketRegistry;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.EntityTrackerEntry;
@@ -32,7 +33,7 @@ public class EntityTrackerEntryMixin {
                 data.writeBoolean(true);
                 ServerPlayNetworking.send((ServerPlayerEntity) player, ServerPacketRegistry.SWAPPED_HAND_ITEMS_PACKET, data); // TODO convert to packet
             }
-            if (!((DuckPlayerInventoryMixin)serverPlayer.getInventory()).betteradventuremode$getOffHand().isEmpty() || !((DuckPlayerInventoryMixin)serverPlayer.getInventory()).betteradventuremode$getAlternativeOffHand().isEmpty()) {
+            if (!serverPlayer.getEquippedStack(EquipmentSlot.OFFHAND).isEmpty() || !((DuckPlayerInventoryMixin)serverPlayer.getInventory()).betteradventuremode$getAlternativeOffHand().isEmpty()) {
                 PacketByteBuf data = new PacketByteBuf(Unpooled.buffer());
                 data.writeInt(serverPlayer.getId());
                 data.writeBoolean(false);
@@ -45,7 +46,7 @@ public class EntityTrackerEntryMixin {
                 data.writeBoolean(((DuckPlayerEntityMixin)player).betteradventuremode$isMainHandStackSheathed());
                 ServerPlayNetworking.send((ServerPlayerEntity) player, ServerPacketRegistry.SHEATHED_WEAPONS_PACKET, data); // TODO convert to packet
             }
-            if (!((DuckPlayerInventoryMixin)serverPlayer.getInventory()).betteradventuremode$getOffHand().isEmpty()) {
+            if (!serverPlayer.getEquippedStack(EquipmentSlot.OFFHAND).isEmpty()) {
                 PacketByteBuf data = new PacketByteBuf(Unpooled.buffer());
                 data.writeInt(serverPlayer.getId());
                 data.writeBoolean(false);

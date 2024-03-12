@@ -6,6 +6,7 @@ import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketsApi;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -19,20 +20,20 @@ public class SwapHandItemsPacketReceiver implements ServerPlayNetworking.PlayPac
         boolean mainHand = packet.mainHand;
 
         ItemStack itemStack = ItemStack.EMPTY;
-        ItemStack alternateItemStack = ItemStack.EMPTY;
+        ItemStack alternativeItemStack = ItemStack.EMPTY;
 
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
             if (mainHand) {
                 itemStack = ((DuckPlayerInventoryMixin)player.getInventory()).betteradventuremode$getMainHand();
-                alternateItemStack = ((DuckPlayerInventoryMixin)player.getInventory()).betteradventuremode$getAlternativeMainHand();
+                alternativeItemStack = ((DuckPlayerInventoryMixin)player.getInventory()).betteradventuremode$getAlternativeMainHand();
             } else {
-                itemStack = ((DuckPlayerInventoryMixin)player.getInventory()).betteradventuremode$getOffHand();
-                alternateItemStack = ((DuckPlayerInventoryMixin)player.getInventory()).betteradventuremode$getAlternativeOffHand();
+                itemStack = player.getEquippedStack(EquipmentSlot.OFFHAND);
+                alternativeItemStack = ((DuckPlayerInventoryMixin)player.getInventory()).betteradventuremode$getAlternativeOffHand();
             }
         }
 
-        if (itemStack.isEmpty() && alternateItemStack.isEmpty()) {
+        if (itemStack.isEmpty() && alternativeItemStack.isEmpty()) {
             return;
         }
         if (((DuckLivingEntityMixin) player).betteradventuremode$getStamina() <= 0) {
@@ -41,10 +42,10 @@ public class SwapHandItemsPacketReceiver implements ServerPlayNetworking.PlayPac
         }
 
         if (mainHand) {
-            ((DuckPlayerInventoryMixin)player.getInventory()).betteradventuremode$setMainHand(alternateItemStack);
+            ((DuckPlayerInventoryMixin)player.getInventory()).betteradventuremode$setMainHand(alternativeItemStack);
             ((DuckPlayerInventoryMixin)player.getInventory()).betteradventuremode$setAlternativeMainHand(itemStack);
         } else {
-            ((DuckPlayerInventoryMixin)player.getInventory()).betteradventuremode$setOffHand(alternateItemStack);
+            player.equipStack(EquipmentSlot.OFFHAND, alternativeItemStack);
             ((DuckPlayerInventoryMixin)player.getInventory()).betteradventuremode$setAlternativeOffHand(itemStack);
         }
         // TODO play sounds
