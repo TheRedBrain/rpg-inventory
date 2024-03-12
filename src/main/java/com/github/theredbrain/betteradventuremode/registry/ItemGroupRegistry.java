@@ -4,6 +4,7 @@ import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -18,15 +19,15 @@ public class ItemGroupRegistry {
 
     public static void init() {
         Registry.register(Registries.ITEM_GROUP, BAM_BLOCK, FabricItemGroup.builder()
-                .icon(() -> new ItemStack(ItemRegistry.IRON_SWORD))
+                .icon(() -> new ItemStack(Items.IRON_SWORD))
                 .displayName(Text.translatable("itemGroup.betteradventuremode.bam_block"))
                 .build());
         Registry.register(Registries.ITEM_GROUP, BAM_EQUIPMENT, FabricItemGroup.builder()
-                .icon(() -> new ItemStack(ItemRegistry.IRON_SWORD))
+                .icon(() -> new ItemStack(Items.IRON_SWORD))
                 .displayName(Text.translatable("itemGroup.betteradventuremode.bam_equipment"))
                 .build());
         Registry.register(Registries.ITEM_GROUP, BAM_FOOD, FabricItemGroup.builder()
-                .icon(() -> new ItemStack(ItemRegistry.IRON_SWORD))
+                .icon(() -> new ItemStack(Items.IRON_SWORD))
                 .displayName(Text.translatable("itemGroup.betteradventuremode.bam_food"))
                 .build());
         Registry.register(Registries.ITEM_GROUP, SCRIPT_BLOCKS, FabricItemGroup.builder()
