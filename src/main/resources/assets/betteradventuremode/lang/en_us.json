@@ -449,20 +449,15 @@
 	"block.betteradventuremode.relay_trigger_block": "Relay Trigger Block",
 	"block.betteradventuremode.teleporter_block": "Teleporter Block",
 
-	"betteradventuremode.slot.belts.belts": "Belt",
-	"betteradventuremode.slot.necklaces.necklace": "Necklace",
-	"betteradventuremode.slot.rings.ring": "First Ring",
-	"betteradventuremode.slot.secondary_rings.ring": "Second Ring",
-
 	"attribute.name.generic.health_regeneration": "Health Regen",
 	"attribute.name.generic.max_stamina": "Max Stamina",
 	"attribute.name.generic.stamina_regeneration": "Stamina Regen",
 	"attribute.name.generic.max_mana": "Max Mana",
 	"attribute.name.generic.mana_regeneration": "Mana Regen",
 	"attribute.name.generic.max_poise": "Max Poise",
-	"attribute.name.generic.active_spell_slot_amount": "Spell Slot",
+	"attribute.name.generic.active_spell_slot_amount": "Active Spell Slot Amount",
 	"attribute.name.generic.equipment_weight": "Weight",
-	"attribute.name.generic.max_equipment_weight": "Spell Slot",
+	"attribute.name.generic.max_equipment_weight": "Max Equipment Weight",
 
 	"effect.betteradventuremode.civilisation_effect": "Civilisation",
 	"effect.betteradventuremode.civilisation_effect.description": "You feel safe here.",
@@ -529,45 +524,21 @@
 	"spell.betteradventuremode.water_spray.name": "Water Spray",
 	"spell.betteradventuremode.water_spray.description": "Shoots and epic energy ball that does {damage} lightning damage",
 
-	"item.betteradventuremode.leather_helmet": "Leather Helmet",
-	"item.betteradventuremode.leather_chestplate": "Leather Chestplate",
-	"item.betteradventuremode.leather_leggings": "Leather Leggings",
-	"item.betteradventuremode.leather_boots": "Leather Boots",
 	"item.betteradventuremode.leather_gloves": "Leather Gloves",
 	"item.betteradventuremode.leather_shoulders": "Leather Shoulders",
 
-	"item.betteradventuremode.chainmail_helmet": "Chainmail Helmet",
-	"item.betteradventuremode.chainmail_chestplate": "Chainmail Chestplate",
-	"item.betteradventuremode.chainmail_leggings": "Chainmail Leggings",
-	"item.betteradventuremode.chainmail_boots": "Chainmail Boots",
 	"item.betteradventuremode.chainmail_gloves": "Chainmail Gloves",
 	"item.betteradventuremode.chainmail_shoulders": "Chainmail Shoulders",
 
-	"item.betteradventuremode.iron_helmet": "Iron Helmet",
-	"item.betteradventuremode.iron_chestplate": "Iron Chestplate",
-	"item.betteradventuremode.iron_leggings": "Iron Leggings",
-	"item.betteradventuremode.iron_boots": "Iron Boots",
 	"item.betteradventuremode.iron_gloves": "Iron Gloves",
 	"item.betteradventuremode.iron_shoulders": "Iron Shoulders",
 
-	"item.betteradventuremode.diamond_helmet": "Diamond Helmet",
-	"item.betteradventuremode.diamond_chestplate": "Diamond Chestplate",
-	"item.betteradventuremode.diamond_leggings": "Diamond Leggings",
-	"item.betteradventuremode.diamond_boots": "Diamond Boots",
 	"item.betteradventuremode.diamond_gloves": "Diamond Gloves",
 	"item.betteradventuremode.diamond_shoulders": "Diamond Shoulders",
 
-	"item.betteradventuremode.golden_helmet": "Golden Helmet",
-	"item.betteradventuremode.golden_chestplate": "Golden Chestplate",
-	"item.betteradventuremode.golden_leggings": "Golden Leggings",
-	"item.betteradventuremode.golden_boots": "Golden Boots",
 	"item.betteradventuremode.golden_gloves": "Golden Gloves",
 	"item.betteradventuremode.golden_shoulders": "Golden Shoulders",
 
-	"item.betteradventuremode.netherite_helmet": "Netherite Helmet",
-	"item.betteradventuremode.netherite_chestplate": "Netherite Chestplate",
-	"item.betteradventuremode.netherite_leggings": "Netherite Leggings",
-	"item.betteradventuremode.netherite_boots": "Netherite Boots",
 	"item.betteradventuremode.netherite_gloves": "Netherite Gloves",
 	"item.betteradventuremode.netherite_shoulders": "Netherite Shoulders",
 
@@ -602,27 +573,6 @@
 
 	"item.betteradventuremode.elemental_fire_wand": "Burning Wand",
 	"item.betteradventuremode.elemental_ice_wand": "Freezing Wand",
-
-	"item.betteradventuremode.wooden_sword": "Wooden Sword",
-	"item.betteradventuremode.stone_sword": "Stone Sword",
-	"item.betteradventuremode.golden_sword": "Golden Sword",
-	"item.betteradventuremode.iron_sword": "Iron Sword",
-	"item.betteradventuremode.diamond_sword": "Diamond Sword",
-	"item.betteradventuremode.netherite_sword": "Netherite Sword",
-
-	"item.betteradventuremode.wooden_pickaxe": "Wooden Pickaxe",
-	"item.betteradventuremode.stone_pickaxe": "Stone Pickaxe",
-	"item.betteradventuremode.golden_pickaxe": "Golden Pickaxe",
-	"item.betteradventuremode.iron_pickaxe": "Iron Pickaxe",
-	"item.betteradventuremode.diamond_pickaxe": "Diamond Pickaxe",
-	"item.betteradventuremode.netherite_pickaxe": "Netherite Pickaxe",
-
-	"item.betteradventuremode.wooden_axe": "Wooden Axe",
-	"item.betteradventuremode.stone_axe": "Stone Axe",
-	"item.betteradventuremode.golden_axe": "Golden Axe",
-	"item.betteradventuremode.iron_axe": "Iron Axe",
-	"item.betteradventuremode.diamond_axe": "Diamond Axe",
-	"item.betteradventuremode.netherite_axe": "Netherite Axe",
 
 	"item.betteradventuremode.block_position_distance_meter": "Block Position Distance Meter",
 
