@@ -16,8 +16,8 @@ public class EntityAttributesRegistry {
     public static final EntityAttribute MAX_EQUIPMENT_WEIGHT = new ClampedEntityAttribute("attribute.name.player.max_equipment_weight", 1.0, 1.0, 1024.0).setTracked(true);
     public static final EntityAttribute HEALTH_REGENERATION = new ClampedEntityAttribute("attribute.name.generic.health_regeneration", 0.0, -1024.0, 1024.0).setTracked(true);
     public static final EntityAttribute MANA_REGENERATION = new ClampedEntityAttribute("attribute.name.generic.mana_regeneration", 0.0, -1024.0, 1024.0).setTracked(true);
-    public static final EntityAttribute MAX_MANA = new ClampedEntityAttribute("attribute.name.generic.max_mana", 0.0, 0.0, 1024.0).setTracked(true);
     public static final EntityAttribute STAMINA_REGENERATION = new ClampedEntityAttribute("attribute.name.generic.stamina_regeneration", 0.0, -1024.0, 1024.0).setTracked(true);
+    public static final EntityAttribute MAX_MANA = new ClampedEntityAttribute("attribute.name.generic.max_mana", 0.0, 0.0, 1024.0).setTracked(true);
     public static final EntityAttribute MAX_STAMINA = new ClampedEntityAttribute("attribute.name.generic.max_stamina", 0.0, 0.0, 1024.0).setTracked(true);
 
     public static final EntityAttribute ADDITIONAL_BASHING_DAMAGE = new ClampedEntityAttribute("attribute.name.generic.additional_bashing_damage", 0.0, -1024.0, 1024.0).setTracked(true);
