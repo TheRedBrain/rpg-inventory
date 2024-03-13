@@ -53,11 +53,34 @@ public class ClientPacketRegistry {
             client.execute(() -> {
                 if (client.player != null && client.player.getWorld().getEntityById(entityId) != null) {
                     PlayerEntity player = (PlayerEntity) client.player.getWorld().getEntityById(entityId);
+                    ItemStack itemStack;
                     if (player != null && player != client.player) {
                         if (mainHand) {
                             ((DuckPlayerEntityMixin) player).betteradventuremode$setIsMainHandStackSheathed(isWeaponSheathed);
+                            itemStack = ((DuckPlayerInventoryMixin) player.getInventory()).betteradventuremode$getMainHand().copy();
+                            if (itemStack.isEmpty()) {
+                                itemStack = ((DuckPlayerInventoryMixin) player.getInventory()).betteradventuremode$getSheathedMainHand().copy();
+                            }
+                            if (isWeaponSheathed) {
+                                ((DuckPlayerInventoryMixin) player.getInventory()).betteradventuremode$setMainHand(ItemStack.EMPTY);
+                                ((DuckPlayerInventoryMixin) player.getInventory()).betteradventuremode$setSheathedMainHand(itemStack);
+                            } else {
+                                ((DuckPlayerInventoryMixin) player.getInventory()).betteradventuremode$setMainHand(itemStack);
+                                ((DuckPlayerInventoryMixin) player.getInventory()).betteradventuremode$setSheathedMainHand(ItemStack.EMPTY);
+                            }
                         } else {
                             ((DuckPlayerEntityMixin) player).betteradventuremode$setIsOffHandStackSheathed(isWeaponSheathed);
+                            itemStack = player.getEquippedStack(EquipmentSlot.OFFHAND).copy();
+                            if (itemStack.isEmpty()) {
+                                itemStack = ((DuckPlayerInventoryMixin) player.getInventory()).betteradventuremode$getSheathedOffHand().copy();
+                            }
+                            if (isWeaponSheathed) {
+                                player.equipStack(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
+                                ((DuckPlayerInventoryMixin) player.getInventory()).betteradventuremode$setSheathedOffHand(itemStack);
+                            } else {
+                                player.equipStack(EquipmentSlot.OFFHAND, itemStack);
+                                ((DuckPlayerInventoryMixin) player.getInventory()).betteradventuremode$setSheathedOffHand(ItemStack.EMPTY);
+                            }
                         }
                     }
                 }

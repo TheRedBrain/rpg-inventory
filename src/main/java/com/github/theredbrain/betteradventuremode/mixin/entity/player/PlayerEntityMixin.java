@@ -16,6 +16,7 @@ import com.github.theredbrain.betteradventuremode.registry.EntityAttributesRegis
 import com.github.theredbrain.betteradventuremode.registry.GameRulesRegistry;
 import com.github.theredbrain.betteradventuremode.registry.StatusEffectsRegistry;
 import com.github.theredbrain.betteradventuremode.registry.Tags;
+import com.github.theredbrain.betteradventuremode.util.ItemUtils;
 import com.mojang.datafixers.util.Pair;
 import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketsApi;
@@ -116,12 +117,35 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         super(entityType, world);
     }
 
-    @Inject(method = "createPlayerAttributes", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "createPlayerAttributes", at = @At("RETURN"))
     private static void betteradventuremode$createPlayerAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
         cir.getReturnValue()
-                .add(EntityAttributesRegistry.MAX_EQUIPMENT_WEIGHT, 10.0F) // TODO balance
-                .add(EntityAttributesRegistry.EQUIPMENT_WEIGHT, 0.0F)
-                .add(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT, 2.0F); // TODO balance
+                .add(EntityAttributesRegistry.MAX_EQUIPMENT_WEIGHT, BetterAdventureMode.gamePlayBalanceConfig.active_spell_slot_amount_base_value)
+                .add(EntityAttributesRegistry.EQUIPMENT_WEIGHT, BetterAdventureMode.gamePlayBalanceConfig.equipment_weight_base_value)
+                .add(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT, BetterAdventureMode.gamePlayBalanceConfig.max_equipment_weight_base_value)
+                .add(EntityAttributesRegistry.HEALTH_REGENERATION, BetterAdventureMode.gamePlayBalanceConfig.health_regeneration_base_value)
+                .add(EntityAttributesRegistry.MANA_REGENERATION, BetterAdventureMode.gamePlayBalanceConfig.mana_regeneration_base_value)
+                .add(EntityAttributesRegistry.STAMINA_REGENERATION, BetterAdventureMode.gamePlayBalanceConfig.stamina_regeneration_base_value)
+                .add(EntityAttributesRegistry.MAX_MANA, BetterAdventureMode.gamePlayBalanceConfig.max_mana_base_value)
+                .add(EntityAttributesRegistry.MAX_STAMINA, BetterAdventureMode.gamePlayBalanceConfig.max_stamina_base_value)
+                .add(EntityAttributesRegistry.ADDITIONAL_BASHING_DAMAGE, BetterAdventureMode.gamePlayBalanceConfig.additional_bashing_base_value)
+                .add(EntityAttributesRegistry.ADDITIONAL_PIERCING_DAMAGE, BetterAdventureMode.gamePlayBalanceConfig.additional_piercing_base_value)
+                .add(EntityAttributesRegistry.ADDITIONAL_SLASHING_DAMAGE, BetterAdventureMode.gamePlayBalanceConfig.additional_slashing_base_value)
+                .add(EntityAttributesRegistry.ADDITIONAL_FIRE_DAMAGE, BetterAdventureMode.gamePlayBalanceConfig.additional_fire_base_value)
+                .add(EntityAttributesRegistry.ADDITIONAL_FROST_DAMAGE, BetterAdventureMode.gamePlayBalanceConfig.additional_frost_base_value)
+                .add(EntityAttributesRegistry.ADDITIONAL_LIGHTNING_DAMAGE, BetterAdventureMode.gamePlayBalanceConfig.additional_lighting_base_value)
+                .add(EntityAttributesRegistry.ADDITIONAL_POISON_DAMAGE, BetterAdventureMode.gamePlayBalanceConfig.additional_poison_base_value)
+                .add(EntityAttributesRegistry.INCREASED_BASHING_DAMAGE, BetterAdventureMode.gamePlayBalanceConfig.increased_bashing_base_value)
+                .add(EntityAttributesRegistry.INCREASED_PIERCING_DAMAGE, BetterAdventureMode.gamePlayBalanceConfig.increased_piercing_base_value)
+                .add(EntityAttributesRegistry.INCREASED_SLASHING_DAMAGE, BetterAdventureMode.gamePlayBalanceConfig.increased_slashing_base_value)
+                .add(EntityAttributesRegistry.INCREASED_FIRE_DAMAGE, BetterAdventureMode.gamePlayBalanceConfig.increased_fire_base_value)
+                .add(EntityAttributesRegistry.INCREASED_FROST_DAMAGE, BetterAdventureMode.gamePlayBalanceConfig.increased_frost_base_value)
+                .add(EntityAttributesRegistry.INCREASED_LIGHTNING_DAMAGE, BetterAdventureMode.gamePlayBalanceConfig.increased_lighting_base_value)
+                .add(EntityAttributesRegistry.INCREASED_POISON_DAMAGE, BetterAdventureMode.gamePlayBalanceConfig.increased_poison_base_value)
+                .add(EntityAttributesRegistry.POISON_RESISTANCE, BetterAdventureMode.gamePlayBalanceConfig.fire_resistance_value)
+                .add(EntityAttributesRegistry.FIRE_RESISTANCE, BetterAdventureMode.gamePlayBalanceConfig.frost_resistance_value)
+                .add(EntityAttributesRegistry.FROST_RESISTANCE, BetterAdventureMode.gamePlayBalanceConfig.lighting_resistance_value)
+                .add(EntityAttributesRegistry.LIGHTNING_RESISTANCE, BetterAdventureMode.gamePlayBalanceConfig.poison_resistance_value);
     }
 
     @Inject(method = "initDataTracker", at = @At("RETURN"))
@@ -481,14 +505,14 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
     @Override
     public ItemStack betteradventuremode$getSheathedMainHandItemStack() {
-        ItemStack itemStack = this.getInventory().getMainHandStack();
-        return betteradventuremode$isMainHandStackSheathed() && !itemStack.isIn(Tags.EMPTY_HAND_WEAPONS) ? itemStack : ItemStack.EMPTY;
+        ItemStack itemStack = ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getSheathedMainHand();
+        return betteradventuremode$isMainHandStackSheathed() && !itemStack.isIn(Tags.EMPTY_HAND_WEAPONS) && ItemUtils.isUsable(itemStack) ? itemStack : ItemStack.EMPTY;
     }
 
     @Override
     public ItemStack betteradventuremode$getSheathedOffHandItemStack() {
-        ItemStack itemStack = ((DuckPlayerInventoryMixin) this.getInventory()).betteradventuremode$getOffHandStack();
-        return betteradventuremode$isOffHandStackSheathed() && !itemStack.isIn(Tags.EMPTY_HAND_WEAPONS) ? itemStack : ItemStack.EMPTY;
+        ItemStack itemStack = ((DuckPlayerInventoryMixin)this.getInventory()).betteradventuremode$getSheathedOffHand();
+        return betteradventuremode$isOffHandStackSheathed() && !itemStack.isIn(Tags.EMPTY_HAND_WEAPONS) && ItemUtils.isUsable(itemStack) ? itemStack : ItemStack.EMPTY;
     }
 
     @Override
@@ -500,6 +524,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     public void betteradventuremode$setIsMainHandStackSheathed(boolean isMainHandStackSheathed) {
         this.dataTracker.set(IS_MAIN_HAND_STACK_SHEATHED, isMainHandStackSheathed);
 
+        // TODO move
         Item mainHandStackItem = this.getInventory().getMainHandStack().getItem();
         if (mainHandStackItem instanceof IMakesEquipSound noiseMakingItem && !this.isSpectator()) {
             SoundEvent equipSound = noiseMakingItem.getEquipSound();
@@ -522,6 +547,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     public void betteradventuremode$setIsOffHandStackSheathed(boolean isOffHandStackSheathed) {
         this.dataTracker.set(IS_OFF_HAND_STACK_SHEATHED, isOffHandStackSheathed);
 
+        // TODO move
         Item offHandStackItem = ((DuckPlayerInventoryMixin) this.getInventory()).betteradventuremode$getOffHandStack().getItem();
         if (offHandStackItem instanceof IMakesEquipSound noiseMakingItem && !this.isSpectator()) {
             SoundEvent equipSound = noiseMakingItem.getEquipSound();

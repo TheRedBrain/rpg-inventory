@@ -1,6 +1,7 @@
 package com.github.theredbrain.betteradventuremode.client.gui.screen.ingame;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
+import com.github.theredbrain.betteradventuremode.BetterAdventureModeClient;
 import com.github.theredbrain.betteradventuremode.effect.FoodStatusEffect;
 import com.github.theredbrain.betteradventuremode.registry.EntityAttributesRegistry;
 import com.github.theredbrain.betteradventuremode.screen.DuckSlotMixin;
@@ -46,6 +47,8 @@ public class AdventureInventoryScreen extends HandledScreen<PlayerScreenHandler>
     private static final Identifier EFFECT_BACKGROUND_SMALL_TEXTURE = new Identifier("container/inventory/effect_background_small");
     private static final Identifier EFFECT_SCROLLER_BACKGROUND_TEXTURE = BetterAdventureMode.identifier("container/adventure_inventory/scroller_background");
     private static final Identifier EFFECT_SCROLLER_TEXTURE = BetterAdventureMode.identifier("container/scroller");
+    private static final Text CRAFTING_LABEL_TEXT = Text.translatable("gui.adventure_inventory_screen.crafting_label");
+    private static final Text SPELLS_LABEL_TEXT = Text.translatable("gui.adventure_inventory_screen.spells_label");
     private float mouseX;
     private float mouseY;
     private boolean showAttributeScreen = false;
@@ -72,7 +75,7 @@ public class AdventureInventoryScreen extends HandledScreen<PlayerScreenHandler>
     private boolean neutralMouseClicked = false;
 
     public AdventureInventoryScreen(PlayerEntity player) {
-        super(player.playerScreenHandler, player.getInventory(), Text.translatable("gui.adventureInventory.equipmentSlots"));
+        super(player.playerScreenHandler, player.getInventory(), Text.translatable("gui.adventure_inventory_screen.equipment_label"));
         this.backgroundWidth = 176;
         this.backgroundHeight = 220;
         this.titleX = 8;
@@ -198,10 +201,15 @@ public class AdventureInventoryScreen extends HandledScreen<PlayerScreenHandler>
             updateEffectsLists(this.client.player);
         }
         context.drawTexture(BetterAdventureMode.identifier("textures/gui/container/adventure_inventory/adventure_inventory_main_background.png"), i, j, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
+        if (!BetterAdventureMode.serverConfig.disable_inventory_crafting_slots) {
+            context.drawText(this.textRenderer, CRAFTING_LABEL_TEXT, i + 97, j + 31, 4210752, false);
+            context.drawTexture(BetterAdventureMode.identifier("textures/gui/container/adventure_inventory/adventure_inventory_crafting_background.png"), i + 96, j + 41, 0, 0, 74, 36, 74, 36);
+        }
         if (activeSpellSlotAmount > 0) {
+            context.drawText(this.textRenderer, SPELLS_LABEL_TEXT, i + 98, j + 79, 4210752, false);
             int width = activeSpellSlotAmount < 5 ? (activeSpellSlotAmount % 5) * 18 : 72;
             int height = activeSpellSlotAmount < 5 ? 18 : 36;
-            context.drawTexture(BetterAdventureMode.identifier("textures/gui/container/adventure_inventory/adventure_inventory_spells_background_" + activeSpellSlotAmount + ".png"), this.x + 97, this.y + 89, 0, 0, width, height, width, height);
+            context.drawTexture(BetterAdventureMode.identifier("textures/gui/container/adventure_inventory/adventure_inventory_spells_background_" + activeSpellSlotAmount + ".png"), i + 97, j + 89, 0, 0, width, height, width, height);
 
         }
         if (this.oldEffectsListSize > 0) {

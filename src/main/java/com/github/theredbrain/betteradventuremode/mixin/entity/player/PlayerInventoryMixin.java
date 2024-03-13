@@ -276,6 +276,58 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         return oldStack;
     }
 
+    public ItemStack betteradventuremode$getSheathedMainHand() {
+        ItemStack sheathedMainHandStack = ItemStack.EMPTY;
+        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
+        if (trinkets.isPresent()) {
+            if (trinkets.get().getInventory().get("sheathed_main_hand") != null) {
+                if (trinkets.get().getInventory().get("sheathed_main_hand").get("sheathed_main_hand") != null) {
+                    sheathedMainHandStack = trinkets.get().getInventory().get("sheathed_main_hand").get("sheathed_main_hand").getStack(0);
+                }
+            }
+        }
+        return sheathedMainHandStack;
+    }
+
+    public ItemStack betteradventuremode$setSheathedMainHand(ItemStack itemStack) {
+        ItemStack oldStack = betteradventuremode$getSheathedMainHand();
+        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
+        if (trinkets.isPresent()) {
+            if (trinkets.get().getInventory().get("sheathed_main_hand") != null) {
+                if (trinkets.get().getInventory().get("sheathed_main_hand").get("sheathed_main_hand") != null) {
+                    trinkets.get().getInventory().get("sheathed_main_hand").get("sheathed_main_hand").setStack(0, itemStack);
+                }
+            }
+        }
+        return oldStack;
+    }
+
+    public ItemStack betteradventuremode$getSheathedOffHand() {
+        ItemStack sheathedOffHandStack = ItemStack.EMPTY;
+        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
+        if (trinkets.isPresent()) {
+            if (trinkets.get().getInventory().get("sheathed_off_hand") != null) {
+                if (trinkets.get().getInventory().get("sheathed_off_hand").get("sheathed_off_hand") != null) {
+                    sheathedOffHandStack = trinkets.get().getInventory().get("sheathed_off_hand").get("sheathed_off_hand").getStack(0);
+                }
+            }
+        }
+        return sheathedOffHandStack;
+    }
+
+    public ItemStack betteradventuremode$setSheathedOffHand(ItemStack itemStack) {
+        ItemStack oldStack = betteradventuremode$getSheathedOffHand();
+        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
+        if (trinkets.isPresent()) {
+            if (trinkets.get().getInventory().get("sheathed_off_hand") != null) {
+                if (trinkets.get().getInventory().get("sheathed_off_hand").get("sheathed_off_hand") != null) {
+                    trinkets.get().getInventory().get("sheathed_off_hand").get("sheathed_off_hand").setStack(0, itemStack);
+                }
+            }
+        }
+        return oldStack;
+    }
+
     public ItemStack betteradventuremode$getGlovesStack() {
         ItemStack glovesStack = ItemStack.EMPTY;
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);

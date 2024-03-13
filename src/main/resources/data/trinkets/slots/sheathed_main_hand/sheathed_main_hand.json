@@ -1,0 +1,6 @@
+{
+  "icon": "betteradventuremode:item/empty_armor_slot_sword",
+  "tooltip_predicates": [
+    "trinkets:none"
+  ]
+}

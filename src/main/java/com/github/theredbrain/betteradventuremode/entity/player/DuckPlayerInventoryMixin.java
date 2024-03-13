@@ -15,6 +15,10 @@ public interface DuckPlayerInventoryMixin {
     ItemStack betteradventuremode$setEmptyMainHand(ItemStack itemStack);
     ItemStack betteradventuremode$getEmptyOffHand();
     ItemStack betteradventuremode$setEmptyOffHand(ItemStack itemStack);
+    ItemStack betteradventuremode$getSheathedMainHand();
+    ItemStack betteradventuremode$setSheathedMainHand(ItemStack itemStack);
+    ItemStack betteradventuremode$getSheathedOffHand();
+    ItemStack betteradventuremode$setSheathedOffHand(ItemStack itemStack);
     ItemStack betteradventuremode$getMainHand();
     ItemStack betteradventuremode$setMainHand(ItemStack itemStack);
 //    ItemStack betteradventuremode$getOffHand();

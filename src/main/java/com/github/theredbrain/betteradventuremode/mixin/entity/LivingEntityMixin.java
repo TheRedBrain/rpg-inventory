@@ -169,29 +169,29 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
     @Inject(method = "createLivingAttributes", at = @At("RETURN"))
     private static void betteradventuremode$createLivingAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
         cir.getReturnValue()
-                .add(EntityAttributesRegistry.HEALTH_REGENERATION, 0.0F) // TODO balance
-                .add(EntityAttributesRegistry.MANA_REGENERATION, 0.0F) // TODO balance
-                .add(EntityAttributesRegistry.STAMINA_REGENERATION, 1.0F) // TODO balance
-                .add(EntityAttributesRegistry.MAX_MANA, 0.0F) // TODO balance
-                .add(EntityAttributesRegistry.MAX_STAMINA, 20.0F) // TODO balance
-                .add(EntityAttributesRegistry.ADDITIONAL_BASHING_DAMAGE, 0.0F)
-                .add(EntityAttributesRegistry.ADDITIONAL_PIERCING_DAMAGE, 0.0F)
-                .add(EntityAttributesRegistry.ADDITIONAL_SLASHING_DAMAGE, 0.0F)
-                .add(EntityAttributesRegistry.ADDITIONAL_FIRE_DAMAGE, 0.0F)
-                .add(EntityAttributesRegistry.ADDITIONAL_FROST_DAMAGE, 0.0F)
-                .add(EntityAttributesRegistry.ADDITIONAL_LIGHTNING_DAMAGE, 0.0F)
-                .add(EntityAttributesRegistry.ADDITIONAL_POISON_DAMAGE, 0.0F)
-                .add(EntityAttributesRegistry.INCREASED_BASHING_DAMAGE, 1.0F)
-                .add(EntityAttributesRegistry.INCREASED_PIERCING_DAMAGE, 1.0F)
-                .add(EntityAttributesRegistry.INCREASED_SLASHING_DAMAGE, 1.0F)
-                .add(EntityAttributesRegistry.INCREASED_FIRE_DAMAGE, 1.0F)
-                .add(EntityAttributesRegistry.INCREASED_FROST_DAMAGE, 1.0F)
-                .add(EntityAttributesRegistry.INCREASED_LIGHTNING_DAMAGE, 1.0F)
-                .add(EntityAttributesRegistry.INCREASED_POISON_DAMAGE, 1.0F)
-                .add(EntityAttributesRegistry.POISON_RESISTANCE, 0.0F)
-                .add(EntityAttributesRegistry.FIRE_RESISTANCE, 0.0F)
-                .add(EntityAttributesRegistry.FROST_RESISTANCE, 0.0F)
-                .add(EntityAttributesRegistry.LIGHTNING_RESISTANCE, 0.0F);
+                .add(EntityAttributesRegistry.HEALTH_REGENERATION)
+                .add(EntityAttributesRegistry.MANA_REGENERATION)
+                .add(EntityAttributesRegistry.STAMINA_REGENERATION)
+                .add(EntityAttributesRegistry.MAX_MANA)
+                .add(EntityAttributesRegistry.MAX_STAMINA)
+                .add(EntityAttributesRegistry.ADDITIONAL_BASHING_DAMAGE)
+                .add(EntityAttributesRegistry.ADDITIONAL_PIERCING_DAMAGE)
+                .add(EntityAttributesRegistry.ADDITIONAL_SLASHING_DAMAGE)
+                .add(EntityAttributesRegistry.ADDITIONAL_FIRE_DAMAGE)
+                .add(EntityAttributesRegistry.ADDITIONAL_FROST_DAMAGE)
+                .add(EntityAttributesRegistry.ADDITIONAL_LIGHTNING_DAMAGE)
+                .add(EntityAttributesRegistry.ADDITIONAL_POISON_DAMAGE)
+                .add(EntityAttributesRegistry.INCREASED_BASHING_DAMAGE)
+                .add(EntityAttributesRegistry.INCREASED_PIERCING_DAMAGE)
+                .add(EntityAttributesRegistry.INCREASED_SLASHING_DAMAGE)
+                .add(EntityAttributesRegistry.INCREASED_FIRE_DAMAGE)
+                .add(EntityAttributesRegistry.INCREASED_FROST_DAMAGE)
+                .add(EntityAttributesRegistry.INCREASED_LIGHTNING_DAMAGE)
+                .add(EntityAttributesRegistry.INCREASED_POISON_DAMAGE)
+                .add(EntityAttributesRegistry.POISON_RESISTANCE)
+                .add(EntityAttributesRegistry.FIRE_RESISTANCE)
+                .add(EntityAttributesRegistry.FROST_RESISTANCE)
+                .add(EntityAttributesRegistry.LIGHTNING_RESISTANCE);
     }
 
     @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))

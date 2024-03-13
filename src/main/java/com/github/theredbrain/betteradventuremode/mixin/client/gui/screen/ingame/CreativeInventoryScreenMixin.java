@@ -1,6 +1,7 @@
 package com.github.theredbrain.betteradventuremode.mixin.client.gui.screen.ingame;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
+import com.github.theredbrain.betteradventuremode.screen.DuckSlotMixin;
 import dev.emi.trinkets.*;
 import dev.emi.trinkets.api.SlotGroup;
 import net.fabricmc.api.EnvType;
@@ -31,6 +32,26 @@ public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScre
         super(null, null, null);
     }
 
+    @Inject(method = "setSelectedTab", at = @At("TAIL"))
+    private void betteradventuremode$setSelectedTab(ItemGroup group, CallbackInfo ci) {
+
+        if (selectedTab.getType() == ItemGroup.Type.INVENTORY && BetterAdventureMode.serverConfig.use_adventure_inventory_screen) {
+            // reposition vanilla armor slots
+            ((DuckSlotMixin) this.handler.slots.get(5)).betteradventuremode$setX(9);
+            ((DuckSlotMixin) this.handler.slots.get(5)).betteradventuremode$setY(6);
+            ((DuckSlotMixin) this.handler.slots.get(6)).betteradventuremode$setX(45);
+            ((DuckSlotMixin) this.handler.slots.get(6)).betteradventuremode$setY(6);
+            ((DuckSlotMixin) this.handler.slots.get(7)).betteradventuremode$setX(27);
+            ((DuckSlotMixin) this.handler.slots.get(7)).betteradventuremode$setY(33);
+            ((DuckSlotMixin) this.handler.slots.get(8)).betteradventuremode$setX(45);
+            ((DuckSlotMixin) this.handler.slots.get(8)).betteradventuremode$setY(33);
+
+            // reposition vanilla offhand slot
+            ((DuckSlotMixin) this.handler.slots.get(45)).betteradventuremode$setX(117);
+            ((DuckSlotMixin) this.handler.slots.get(45)).betteradventuremode$setY(33);
+        }
+    }
+
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/TextFieldWidget;render(Lnet/minecraft/client/gui/DrawContext;IIF)V"), method = "drawBackground")
     private void betteradventuremode$drawAdventureInventoryBackground(DrawContext context, float delta, int mouseX, int mouseY, CallbackInfo ci) {
         if (selectedTab.getType() == ItemGroup.Type.INVENTORY && BetterAdventureMode.serverConfig.use_adventure_inventory_screen) {
@@ -54,18 +75,18 @@ public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScre
         if (BetterAdventureMode.serverConfig.use_adventure_inventory_screen) {
             int order = group.getOrder();
             return switch (order) {
-                case 1 -> new Rect2i(26, 32, 17, 17);
+//                case 1 -> new Rect2i(26, 32, 17, 17);
                 case 2 -> new Rect2i(152, 5, 17, 17);
-                case 3 -> new Rect2i(44, 5, 17, 17);
+//                case 3 -> new Rect2i(44, 5, 17, 17);
                 case 4 -> new Rect2i(26, 5, 17, 17);
-                case 5 -> new Rect2i(8, 5, 17, 17);
+//                case 5 -> new Rect2i(8, 5, 17, 17);
                 case 6 -> new Rect2i(98, 5, 17, 17);
                 case 7 -> new Rect2i(116, 5, 17, 17);
                 case 8 -> new Rect2i(134, 5, 17, 17);
                 case 9 -> new Rect2i(8, 32, 17, 17);
-                case 10 -> new Rect2i(44, 32, 17, 17);
+//                case 10 -> new Rect2i(44, 32, 17, 17);
                 case 11 -> new Rect2i(98, 32, 17, 17);
-                case 12 -> new Rect2i(116, 32, 17, 17);
+//                case 12 -> new Rect2i(116, 32, 17, 17);
                 case 13 -> new Rect2i(134, 32, 17, 17);
                 case 14 -> new Rect2i(152, 32, 17, 17);
                 case 15 -> new Rect2i(-33, 5, 17, 17);

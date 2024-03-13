@@ -39,14 +39,14 @@ public class EntityTrackerEntryMixin {
                 data.writeBoolean(false);
                 ServerPlayNetworking.send((ServerPlayerEntity) player, ServerPacketRegistry.SWAPPED_HAND_ITEMS_PACKET, data); // TODO convert to packet
             }
-            if (!((DuckPlayerInventoryMixin)serverPlayer.getInventory()).betteradventuremode$getMainHand().isEmpty()) {
+            if (!((DuckPlayerInventoryMixin)serverPlayer.getInventory()).betteradventuremode$getMainHand().isEmpty() || !((DuckPlayerInventoryMixin)serverPlayer.getInventory()).betteradventuremode$getSheathedMainHand().isEmpty()) {
                 PacketByteBuf data = new PacketByteBuf(Unpooled.buffer());
                 data.writeInt(serverPlayer.getId());
                 data.writeBoolean(true);
                 data.writeBoolean(((DuckPlayerEntityMixin)player).betteradventuremode$isMainHandStackSheathed());
                 ServerPlayNetworking.send((ServerPlayerEntity) player, ServerPacketRegistry.SHEATHED_WEAPONS_PACKET, data); // TODO convert to packet
             }
-            if (!serverPlayer.getEquippedStack(EquipmentSlot.OFFHAND).isEmpty()) {
+            if (!serverPlayer.getEquippedStack(EquipmentSlot.OFFHAND).isEmpty() || !((DuckPlayerInventoryMixin)serverPlayer.getInventory()).betteradventuremode$getSheathedOffHand().isEmpty()) {
                 PacketByteBuf data = new PacketByteBuf(Unpooled.buffer());
                 data.writeInt(serverPlayer.getId());
                 data.writeBoolean(false);

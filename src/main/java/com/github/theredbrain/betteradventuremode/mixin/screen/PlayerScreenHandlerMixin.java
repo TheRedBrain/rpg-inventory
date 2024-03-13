@@ -86,16 +86,16 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
                 ((DuckSlotMixin) this.slots.get(3)).betteradventuremode$setDisabledOverride(true);
                 ((DuckSlotMixin) this.slots.get(4)).betteradventuremode$setDisabledOverride(true);
             } else {
-//                ((DuckSlotMixin) this.slots.get(0)).betteradventuremode$setX(154);
-//                ((DuckSlotMixin) this.slots.get(0)).betteradventuremode$setY(28);
-//                ((DuckSlotMixin) this.slots.get(1)).betteradventuremode$setX(154);
-//                ((DuckSlotMixin) this.slots.get(1)).betteradventuremode$setY(28);
-//                ((DuckSlotMixin) this.slots.get(2)).betteradventuremode$setX(154);
-//                ((DuckSlotMixin) this.slots.get(2)).betteradventuremode$setY(28);
-//                ((DuckSlotMixin) this.slots.get(3)).betteradventuremode$setX(154);
-//                ((DuckSlotMixin) this.slots.get(3)).betteradventuremode$setY(28);
-//                ((DuckSlotMixin) this.slots.get(4)).betteradventuremode$setX(154);
-//                ((DuckSlotMixin) this.slots.get(4)).betteradventuremode$setY(28);
+                ((DuckSlotMixin) this.slots.get(0)).betteradventuremode$setX(153);
+                ((DuckSlotMixin) this.slots.get(0)).betteradventuremode$setY(52);
+                ((DuckSlotMixin) this.slots.get(1)).betteradventuremode$setX(97);
+                ((DuckSlotMixin) this.slots.get(1)).betteradventuremode$setY(42);
+                ((DuckSlotMixin) this.slots.get(2)).betteradventuremode$setX(115);
+                ((DuckSlotMixin) this.slots.get(2)).betteradventuremode$setY(42);
+                ((DuckSlotMixin) this.slots.get(3)).betteradventuremode$setX(97);
+                ((DuckSlotMixin) this.slots.get(3)).betteradventuremode$setY(60);
+                ((DuckSlotMixin) this.slots.get(4)).betteradventuremode$setX(115);
+                ((DuckSlotMixin) this.slots.get(4)).betteradventuremode$setY(60);
             }
 
             // reposition vanilla armor slots
@@ -257,7 +257,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 
                         } else if (order == 23) {
                             // these include empty hand slots which are necessary but should not be interacted with by the player
-                            if (!Objects.equals(group.getName(), "empty_main_hand") && !Objects.equals(group.getName(), "empty_off_hand") && BetterAdventureMode.serverConfig.show_debug_log) {
+                            if (!(Objects.equals(group.getName(), "empty_main_hand") || Objects.equals(group.getName(), "empty_off_hand") || Objects.equals(group.getName(), "sheathed_main_hand") || Objects.equals(group.getName(), "sheathed_off_hand")) && BetterAdventureMode.serverConfig.show_debug_log) {
                                 BetterAdventureMode.warn("Trinket Slots with order == 23 can not be interacted with by the player. This applies to group " + group.getName());
                             }
                             continue;

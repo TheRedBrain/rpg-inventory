@@ -8,6 +8,37 @@ import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
         name = "gamePlayBalance"
 )
 public class GamePlayBalanceConfig implements ConfigData {
+    @Comment("""
+            Player Attribute Base Values
+            """)
+    public float active_spell_slot_amount_base_value = 2.0F;
+    public float equipment_weight_base_value = 0.0F;
+    public float max_equipment_weight_base_value = 10.0F;
+    public float health_regeneration_base_value = 0.0F;
+    public float mana_regeneration_base_value = 0.0F;
+    public float stamina_regeneration_base_value = 1.0F;
+    public float max_mana_base_value = 0.0F;
+    public float max_stamina_base_value = 20.0F;
+    public float additional_bashing_base_value = 0.0F;
+    public float additional_piercing_base_value = 0.0F;
+    public float additional_slashing_base_value = 0.0F;
+    public float additional_fire_base_value = 0.0F;
+    public float additional_frost_base_value = 0.0F;
+    public float additional_lighting_base_value = 0.0F;
+    public float additional_poison_base_value = 0.0F;
+    public float increased_bashing_base_value = 1.0F;
+    public float increased_piercing_base_value = 1.0F;
+    public float increased_slashing_base_value = 1.0F;
+    public float increased_fire_base_value = 1.0F;
+    public float increased_frost_base_value = 1.0F;
+    public float increased_lighting_base_value = 1.0F;
+    public float increased_poison_base_value = 1.0F;
+    public float fire_resistance_value = 0.0F;
+    public float frost_resistance_value = 0.0F;
+    public float lighting_resistance_value = 0.0F;
+    public float poison_resistance_value = 0.0F;
+
+    // TODO convert to entity attributes
     // TODO write a wiki page with an in-depth explanation
 //    @Comment("""
 //            When an entity has one of the damaging status effects (bleeding, burning, poison),
