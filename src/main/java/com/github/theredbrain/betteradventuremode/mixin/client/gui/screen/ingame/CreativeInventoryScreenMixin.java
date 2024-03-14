@@ -58,13 +58,11 @@ public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScre
             context.drawTexture(TAB_ADVENTURE_INVENTORY_TEXTURE, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
         }
     }
-//    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/InventoryScreen;drawEntity(Lnet/minecraft/client/gui/DrawContext;IIIIIFFFLnet/minecraft/entity/LivingEntity;)V"), method = "drawBackground", cancellable = true)
+
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/InventoryScreen;drawEntity(Lnet/minecraft/client/gui/DrawContext;IIIFFLnet/minecraft/entity/LivingEntity;)V"), method = "drawBackground", cancellable = true)
     private void betteradventuremode$moveDrawnPlayerEntity(DrawContext context, float delta, int mouseX, int mouseY, CallbackInfo ci) {
         if (selectedTab.getType() == ItemGroup.Type.INVENTORY && BetterAdventureMode.serverConfig.use_adventure_inventory_screen) {
-//            InventoryScreen.drawEntity(context, this.x + 64, this.y + 6, this.x + 96, this.y + 49, 20, 0.0625F, (float)mouseX, (float)mouseY, this.client.player);
-            InventoryScreen.drawEntity(context, this.x + 64, this.y + 6, 20, (float)(this.x + 64 - mouseX), (float)(this.y + 6 - 30 - mouseY), this.client.player);
-//            InventoryScreen.drawEntity(context, this.x + 79, this.y + 45, 20, this.x + 88 - mouseX, this.y + 45 - 30 - mouseY, (LivingEntity)this.client.player);
+            InventoryScreen.drawEntity(context, this.x + 80, this.y + 46, 20, (float)(this.x + 80 - mouseX), (float)(this.y + 46 - 30 - mouseY), this.client.player);
             betteradventuremode$drawExtraGroups(context, this);
             ci.cancel();
         }
@@ -75,31 +73,27 @@ public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScre
         if (BetterAdventureMode.serverConfig.use_adventure_inventory_screen) {
             int order = group.getOrder();
             return switch (order) {
-//                case 1 -> new Rect2i(26, 32, 17, 17);
-                case 2 -> new Rect2i(152, 5, 17, 17);
-//                case 3 -> new Rect2i(44, 5, 17, 17);
-                case 4 -> new Rect2i(26, 5, 17, 17);
-//                case 5 -> new Rect2i(8, 5, 17, 17);
-                case 6 -> new Rect2i(98, 5, 17, 17);
-                case 7 -> new Rect2i(116, 5, 17, 17);
-                case 8 -> new Rect2i(134, 5, 17, 17);
-                case 9 -> new Rect2i(8, 32, 17, 17);
-//                case 10 -> new Rect2i(44, 32, 17, 17);
-                case 11 -> new Rect2i(98, 32, 17, 17);
-//                case 12 -> new Rect2i(116, 32, 17, 17);
-                case 13 -> new Rect2i(134, 32, 17, 17);
-                case 14 -> new Rect2i(152, 32, 17, 17);
-                case 15 -> new Rect2i(-33, 5, 17, 17);
-                case 16 -> new Rect2i(-33, 23, 17, 17);
-                case 17 -> new Rect2i(-33, 41, 17, 17);
-                case 18 -> new Rect2i(-33, 59, 17, 17);
-                case 19 -> new Rect2i(-15, 5, 17, 17);
-                case 20 -> new Rect2i(-15, 23, 17, 17);
-                case 21 -> new Rect2i(-15, 41, 17, 17);
-                case 22 -> new Rect2i(-15, 59, 17, 17);
+                case 1 -> new Rect2i(152, 5, 17, 17);
+                case 2 -> new Rect2i(26, 5, 17, 17);
+                case 3 -> new Rect2i(98, 5, 17, 17);
+                case 4 -> new Rect2i(116, 5, 17, 17);
+                case 5 -> new Rect2i(134, 5, 17, 17);
+                case 6 -> new Rect2i(8, 32, 17, 17);
+                case 7 -> new Rect2i(98, 32, 17, 17);
+                case 8 -> new Rect2i(134, 32, 17, 17);
+                case 9 -> new Rect2i(152, 32, 17, 17);
+                case 10 -> new Rect2i(-33, 5, 17, 17);
+                case 11 -> new Rect2i(-33, 23, 17, 17);
+                case 12 -> new Rect2i(-33, 41, 17, 17);
+                case 13 -> new Rect2i(-33, 59, 17, 17);
+                case 14 -> new Rect2i(-15, 5, 17, 17);
+                case 15 -> new Rect2i(-15, 23, 17, 17);
+                case 16 -> new Rect2i(-15, 41, 17, 17);
+                case 17 -> new Rect2i(-15, 59, 17, 17);
                 default -> new Rect2i(0, 0, 0, 0);
             };
         } else {
+            // default Trinkets stuff
             int groupNum = trinkets$getHandler().trinkets$getGroupNum(group);
             if (groupNum <= 3) {
                 // Look what else do you want me to do

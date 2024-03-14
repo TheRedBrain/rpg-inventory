@@ -3,6 +3,7 @@ package com.github.theredbrain.betteradventuremode.mixin.screen;
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.BetterAdventureModeClient;
 import com.github.theredbrain.betteradventuremode.registry.EntityAttributesRegistry;
+import com.github.theredbrain.betteradventuremode.registry.StatusEffectsRegistry;
 import com.github.theredbrain.betteradventuremode.screen.DuckSlotMixin;
 import com.google.common.collect.ImmutableList;
 import dev.emi.trinkets.Point;
@@ -11,6 +12,8 @@ import dev.emi.trinkets.TrinketPlayerScreenHandler;
 import dev.emi.trinkets.TrinketsClient;
 import dev.emi.trinkets.api.*;
 import dev.emi.trinkets.mixin.accessor.ScreenHandlerAccessor;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -144,126 +147,100 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
                         int y;
                         // begins at 1 because order=0 is the default
                         // this way most unwanted cases are avoided
-//                        if (order == 1) {
-//                            // leggings
-//                            x = 8;
-//                            y = 90;
-//
-//                        } else
-                        if (order == 2) {
+                        if (order == 1) {
                             // belts
                             x = 8;
                             y = 72;
 
-//                        } else if (order == 3) {
-//                            // chest_plates
-//                            x = 8;
-//                            y = 54;
-
-                        } else if (order == 4) {
+                        } else if (order == 2) {
                             // shoulders
                             x = 8;
                             y = 36;
 
-//                        } else if (order == 5) {
-//                            // helmets
-//                            x = 33;
-//                            y = 18;
-
-                        } else if (order == 6) {
+                        } else if (order == 3) {
                             // necklaces
                             x = 52;
                             y = 18;
 
-                        } else if (order == 7) {
+                        } else if (order == 4) {
                             // rings 1
                             x = 77;
                             y = 36;
 
-                        } else if (order == 8) {
+                        } else if (order == 5) {
                             // rings 2
                             x = 77;
                             y = 54;
 
-                        } else if (order == 9) {
+                        } else if (order == 6) {
                             // gloves
                             x = 77;
                             y = 72;
 
-//                        } else if (order == 10) {
-//                            // boots
-//                            x = 77;
-//                            y = 90;
-
-                        } else if (order == 11) {
+                        } else if (order == 7) {
                             // main_hand
                             x = 8;
                             y = 108;
 
-//                        } else if (order == 12) {
-//                            // off_hand
-//                            x = 26;
-//                            y = 108;
-
-                        } else if (order == 13) {
+                        } else if (order == 8) {
                             // alternative main hand
                             x = 59;
                             y = 108;
 
-                        } else if (order == 14) {
+                        } else if (order == 9) {
                             // alternative off hand
                             x = 77;
                             y = 108;
 
-                        } else if (order == 15) {
+                        } else if (order == 10) {
                             // spell slot 1
                             x = this.spellSlotsX;
                             y = this.spellSlotsY;
 
-                        } else if (order == 16) {
+                        } else if (order == 11) {
                             // spell slot 2
                             x = this.spellSlotsX + 18;
                             y = this.spellSlotsY;
 
-                        } else if (order == 17) {
+                        } else if (order == 12) {
                             // spell slot 3
                             x = this.spellSlotsX + 36;
                             y = this.spellSlotsY;
 
-                        } else if (order == 18) {
+                        } else if (order == 13) {
                             // spell slot 4
                             x = this.spellSlotsX + 54;
                             y = this.spellSlotsY;
 
-                        } else if (order == 19) {
+                        } else if (order == 14) {
                             // spell slot 5
                             x = this.spellSlotsX;
                             y = this.spellSlotsY + 18;
 
-                        } else if (order == 20) {
+                        } else if (order == 15) {
                             // spell slot 6
                             x = this.spellSlotsX + 18;
                             y = this.spellSlotsY + 18;
 
-                        } else if (order == 21) {
+                        } else if (order == 16) {
                             // spell slot 7
                             x = this.spellSlotsX + 36;
                             y = this.spellSlotsY + 18;
 
-                        } else if (order == 22) {
+                        } else if (order == 17) {
                             // spell slot 8
                             x = this.spellSlotsX + 54;
                             y = this.spellSlotsY + 18;
 
-                        } else if (order == 23) {
+                        } else if (order == 18) {
                             // these include empty hand slots which are necessary but should not be interacted with by the player
                             if (!(Objects.equals(group.getName(), "empty_main_hand") || Objects.equals(group.getName(), "empty_off_hand") || Objects.equals(group.getName(), "sheathed_main_hand") || Objects.equals(group.getName(), "sheathed_off_hand")) && BetterAdventureMode.serverConfig.show_debug_log) {
-                                BetterAdventureMode.warn("Trinket Slots with order == 23 can not be interacted with by the player. This applies to group " + group.getName());
+                                BetterAdventureMode.warn("Trinket Slots with order == 18 can not be interacted with by the player. This applies to group " + group.getName());
                             }
                             continue;
                         } else {
                             if (BetterAdventureMode.serverConfig.show_debug_log) {
-                                BetterAdventureMode.warn("Trinket slot groups with order <= 0 or order > 23 are ignored. This applies to group " + group.getName());
+                                BetterAdventureMode.warn("Trinket slot groups with order <= 0 or order > 18 are ignored. This applies to group " + group.getName());
                             }
                             continue;
                         }
@@ -470,10 +447,10 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
      * @author TheRedBrain
      * @reason
      */
-    @Overwrite // TODO
+    @Overwrite
     public ItemStack quickMove(PlayerEntity player, int index) {
         Slot slot = slots.get(index);
-        boolean bl = false;
+        boolean bl = player.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT);
         if (slot.hasStack()) {
             ItemStack stack = slot.getStack();
             if (index >= trinketSlotStart && index < trinketSlotEnd) {
@@ -527,17 +504,43 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
         }
         ItemStack itemStack = ItemStack.EMPTY;
         if (slot.hasStack()) {
-            int i;
             ItemStack itemStack2 = slot.getStack();
             itemStack = itemStack2.copy();
+            EquipmentSlot equipmentSlot = MobEntity.getPreferredEquipmentSlot(itemStack);
             if (index == 0) {
                 if (!this.insertItem(itemStack2, 9, 45, true)) {
                     return ItemStack.EMPTY;
                 }
                 slot.onQuickTransfer(itemStack2, itemStack);
-            } else if ((index >= 9 && index < 36 ? !this.insertItem(itemStack2, 36, 45, false) : (index >= 36 && index < 45 ? !this.insertItem(itemStack2, 9, 36, false) : !this.insertItem(itemStack2, 9, 45, false))))/*)))*/ {
+            } else if (index >= 1 && index < 5) {
+                if (!this.insertItem(itemStack2, 9, 45, false)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (index >= 5 && index < 9) {
+                if (!this.insertItem(itemStack2, 9, 45, false)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (equipmentSlot.getType() == EquipmentSlot.Type.ARMOR && !((Slot)this.slots.get(8 - equipmentSlot.getEntitySlotId())).hasStack()) {
+                int i = 8 - equipmentSlot.getEntitySlotId();
+                if (!this.insertItem(itemStack2, i, i + 1, false)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (equipmentSlot == EquipmentSlot.OFFHAND && !((Slot)this.slots.get(45)).hasStack()) {
+                if (!this.insertItem(itemStack2, 45, 46, false)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (index >= 9 && index < 36) {
+                if (!this.insertItem(itemStack2, 36, 45, false)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (index >= 36 && index < 45) {
+                if (!this.insertItem(itemStack2, 9, 36, false)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (!this.insertItem(itemStack2, 9, 45, false)) {
                 return ItemStack.EMPTY;
             }
+
             if (itemStack2.isEmpty()) {
                 slot.setStack(ItemStack.EMPTY);
             } else {
