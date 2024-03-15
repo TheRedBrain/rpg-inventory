@@ -105,6 +105,24 @@ public class PacketByteBufUtils {
         }
     }
 
+    public static class MutablePairMutablePairBlockPosBooleanIntegerReader implements PacketByteBuf.PacketReader<MutablePair<MutablePair<BlockPos, Boolean>, Integer>> {
+        @Override
+        public MutablePair<MutablePair<BlockPos, Boolean>, Integer> apply(PacketByteBuf packetByteBuf) {
+            return new MutablePair<>(new MutablePair<>(new BlockPos(packetByteBuf.readInt(), packetByteBuf.readInt(), packetByteBuf.readInt()), packetByteBuf.readBoolean()), packetByteBuf.readInt());
+        }
+    }
+
+    public static class MutablePairMutablePairBlockPosBooleanIntegerWriter implements PacketByteBuf.PacketWriter<MutablePair<MutablePair<BlockPos, Boolean>, Integer>> {
+        @Override
+        public void accept(PacketByteBuf packetByteBuf, MutablePair<MutablePair<BlockPos, Boolean>, Integer> mutablePairMutablePairBlockPosBooleanInteger) {
+            packetByteBuf.writeInt(mutablePairMutablePairBlockPosBooleanInteger.getLeft().getLeft().getX());
+            packetByteBuf.writeInt(mutablePairMutablePairBlockPosBooleanInteger.getLeft().getLeft().getY());
+            packetByteBuf.writeInt(mutablePairMutablePairBlockPosBooleanInteger.getLeft().getLeft().getZ());
+            packetByteBuf.writeBoolean(mutablePairMutablePairBlockPosBooleanInteger.getLeft().getRight());
+            packetByteBuf.writeInt(mutablePairMutablePairBlockPosBooleanInteger.getRight());
+        }
+    }
+
     public static class MutablePairIntegerBlockPosReader implements PacketByteBuf.PacketReader<MutablePair<Integer, BlockPos>> {
         @Override
         public MutablePair<Integer, BlockPos> apply(PacketByteBuf packetByteBuf) {

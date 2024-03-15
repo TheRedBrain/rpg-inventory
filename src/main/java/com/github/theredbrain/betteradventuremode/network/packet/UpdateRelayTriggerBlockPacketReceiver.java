@@ -10,6 +10,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.tuple.MutablePair;
 
 import java.util.List;
 
@@ -23,23 +24,21 @@ public class UpdateRelayTriggerBlockPacketReceiver implements ServerPlayNetworki
         }
 
         BlockPos relayTriggerBlockPos = packet.relayTriggerBlockPosition;
-        List<BlockPos> triggeredBlocks = packet.triggeredBlocks;
+        List<MutablePair<MutablePair<BlockPos, Boolean>, Integer>> triggeredBlocks = packet.triggeredBlocks;
+        RelayTriggerBlockEntity.TriggerMode triggerMode = packet.triggerMode;
+        int triggerAmount = packet.triggerAmount;
 
         World world = player.getWorld();
-
-        boolean updateSuccessful = true;
 
         BlockEntity blockEntity = world.getBlockEntity(relayTriggerBlockPos);
         BlockState blockState = world.getBlockState(relayTriggerBlockPos);
 
         if (blockEntity instanceof RelayTriggerBlockEntity relayTriggerBlockEntity) {
-            if (!relayTriggerBlockEntity.setTriggeredBlocks(triggeredBlocks)) {
-                player.sendMessage(Text.translatable("triggered_block.triggeredBlocks.invalid"), false);
-                updateSuccessful = false;
-            }
-            if (updateSuccessful) {
-                player.sendMessage(Text.translatable("relay_trigger_block.update_successful"), true);
-            }
+            relayTriggerBlockEntity.setTriggeredBlocks(triggeredBlocks);
+            relayTriggerBlockEntity.setTriggerMode(triggerMode);
+            relayTriggerBlockEntity.setTriggerAmount(triggerAmount);
+            player.sendMessage(Text.translatable("relay_trigger_block.update_successful"), true);
+
             relayTriggerBlockEntity.markDirty();
             world.updateListeners(relayTriggerBlockPos, blockState, blockState, Block.NOTIFY_ALL);
         }
