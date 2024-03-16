@@ -62,4 +62,9 @@ public abstract class DamageSourcesMixin implements DuckDamageSourcesMixin {
     public DamageSource betteradventuremode$lava() {
         return this.create(DamageTypesRegistry.LAVA_DAMAGE_TYPE);
     }
+
+    @Override
+    public DamageSource betteradventuremode$bloodMagicCasting() {
+        return this.create(DamageTypesRegistry.BLOOD_MAGIC_CASTING_DAMAGE_TYPE);
+    }
 }

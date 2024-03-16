@@ -260,7 +260,7 @@ public class RelayTriggerBlockScreen extends Screen {
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
-        for (int i = this.scrollPosition; i < Math.min(this.scrollPosition + 5, this.triggeredBlocks.size()); i++) {
+        for (int i = this.scrollPosition; i < Math.min(this.scrollPosition + 4, this.triggeredBlocks.size()); i++) {
             context.drawTextWithShadow(this.textRenderer, this.triggeredBlocks.get(i).toString(), this.width / 2 - 141, 26 + ((i - this.scrollPosition) * 24), 0xA0A0A0);
         }
         if (this.triggeredBlocks.size() > 4) {

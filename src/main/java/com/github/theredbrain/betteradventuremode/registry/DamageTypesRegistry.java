@@ -15,6 +15,7 @@ public class DamageTypesRegistry {
 
     // region spell damage types
     public static final RegistryKey<DamageType> FIREBALL_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("fireball_damage_type"));
+    public static final RegistryKey<DamageType> BLOOD_MAGIC_CASTING_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("blood_magic_casting_damage_type"));
     // endregion spell damage types
 
     // region weapon damage types

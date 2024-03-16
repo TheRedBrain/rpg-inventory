@@ -33,6 +33,8 @@
     "spell_engine.api.spell.SpellCostMixin",
     "spell_engine.api.spell.SpellImpactActionDamageMixin",
     "spell_engine.api.spell.SpellImpactActionHealMixin",
+    "spell_engine.internals.SpellCastAttemptMixin",
+    "spell_engine.internals.SpellCastAttemptResultMixin",
     "spell_engine.internals.SpellContainerHelperMixin",
     "spell_engine.internals.SpellHelperMixin",
     "structure.pool.StructurePoolBasedGeneratorMixin",

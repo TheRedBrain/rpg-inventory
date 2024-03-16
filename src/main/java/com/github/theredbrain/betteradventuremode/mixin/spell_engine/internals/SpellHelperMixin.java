@@ -1,6 +1,8 @@
 package com.github.theredbrain.betteradventuremode.mixin.spell_engine.internals;
 
 import com.github.theredbrain.betteradventuremode.entity.DuckLivingEntityMixin;
+import com.github.theredbrain.betteradventuremode.entity.damage.DuckDamageSourcesMixin;
+import com.github.theredbrain.betteradventuremode.spell_engine.DuckSpellCastAttemptMixin;
 import com.github.theredbrain.betteradventuremode.spell_engine.DuckSpellCostMixin;
 import com.github.theredbrain.betteradventuremode.spell_engine.DuckSpellImpactActionDamageMixin;
 import com.github.theredbrain.betteradventuremode.spell_engine.DuckSpellImpactActionHealMixin;
@@ -71,7 +73,54 @@ public abstract class SpellHelperMixin {
 
     /**
      * @author TheRedBrain
-     * @reason adds direct damage and direct healing
+     * @reason check for custom cost
+     */
+    @Overwrite
+    public static SpellCast.Attempt attemptCasting(PlayerEntity player, ItemStack itemStack, Identifier spellId, boolean checkAmmo) {
+        SpellCasterEntity caster = (SpellCasterEntity)player;
+        Spell spell = SpellRegistry.getSpell(spellId);
+        if (spell == null) {
+            return SpellCast.Attempt.none();
+        } else if (caster.getCooldownManager().isCoolingDown(spellId)) {
+            return SpellCast.Attempt.failOnCooldown(new SpellCast.Attempt.OnCooldownInfo());
+        } else {
+            if (checkAmmo) {
+                SpellHelper.AmmoResult ammoResult = SpellHelper.ammoForSpell(player, spell, itemStack);
+                if (!ammoResult.satisfied()) {
+                    return SpellCast.Attempt.failMissingItem(new SpellCast.Attempt.MissingItemInfo(ammoResult.ammo().getItem()));
+                }
+            }
+            if (((DuckSpellCostMixin) spell.cost).betteradventuremode$checkHealthCost()) {
+                float healthCost = ((DuckSpellCostMixin) spell.cost).betteradventuremode$getHealthCost();
+                if (healthCost > 0 && healthCost > player.getHealth()) {
+                    return DuckSpellCastAttemptMixin.failCustom();
+                }
+            }
+            if (((DuckSpellCostMixin) spell.cost).betteradventuremode$checkManaCost()) {
+                float manaCost = ((DuckSpellCostMixin) spell.cost).betteradventuremode$getManaCost();
+                if (manaCost > 0 && manaCost > ((DuckLivingEntityMixin) player).betteradventuremode$getMana()) {
+                    return DuckSpellCastAttemptMixin.failCustom();
+                }
+            }
+            if (((DuckSpellCostMixin) spell.cost).betteradventuremode$checkStaminaCost()) {
+                float staminaCost = ((DuckSpellCostMixin) spell.cost).betteradventuremode$getStaminaCost();
+                if (staminaCost > 0 && staminaCost > ((DuckLivingEntityMixin) player).betteradventuremode$getStamina()) {
+                    return DuckSpellCastAttemptMixin.failCustom();
+                }
+            }
+            if (spell.cost.effect_id != null && ((DuckSpellCostMixin) spell.cost).betteradventuremode$checkSpellEffectCost()) {
+                StatusEffect effect = (StatusEffect) Registries.STATUS_EFFECT.get(new Identifier(spell.cost.effect_id));
+                if (effect != null && !player.hasStatusEffect(effect)) {
+                    return DuckSpellCastAttemptMixin.failCustom();
+                }
+            }
+            return SpellCast.Attempt.success();
+        }
+    }
+
+    /**
+     * @author TheRedBrain
+     * @reason integrate direct damage, direct healing and damage type override
      */
     @Overwrite
     private static boolean performImpact(World world, LivingEntity caster, Entity target, MagicSchool spellSchool, Spell.Impact impact, SpellHelper.ImpactContext context, Collection<ServerPlayerEntity> trackers) {
@@ -245,7 +294,7 @@ public abstract class SpellHelperMixin {
 
     /**
      * @author TheRedBrain
-     * @reason adds mana cost, health cost, reducing amplifier of status effect cost instead of removing them, self consuming of casting item
+     * @reason integrate health cost, mana cost, stamina cost, reducing amplifier of status effect cost instead of removing them, self consuming of casting item
      */
     @Overwrite
     public static void performSpell(World world, PlayerEntity player, Identifier spellId, List<Entity> targets, SpellCast.Action action, float progress) {
@@ -351,7 +400,7 @@ public abstract class SpellHelperMixin {
                             // health cost
                             float healthCost = ((DuckSpellCostMixin) spell.cost).betteradventuremode$getHealthCost();
                             if (healthCost > 0.0F) {
-                                player.heal(-healthCost);
+                                player.damage(((DuckDamageSourcesMixin) player.getDamageSources()).betteradventuremode$bloodMagicCasting(), healthCost);
                             }
 
                             // mana cost
@@ -367,7 +416,7 @@ public abstract class SpellHelperMixin {
                             }
 
                             // consume spell casting item (used for spell scrolls)
-                            if (((DuckSpellCostMixin) spell.cost).betteradventuremode$isConsumeSelf() && !player.isCreative()) {
+                            if (((DuckSpellCostMixin) spell.cost).betteradventuremode$consumeSelf() && !player.isCreative()) {
                                 player.incrementStat(Stats.USED.getOrCreateStat(itemStack.getItem()));
                                 if (!player.isCreative()) {
                                     itemStack.decrement(1);
@@ -397,7 +446,9 @@ public abstract class SpellHelperMixin {
                             if (spell.cost.effect_id != null) {
                                 StatusEffect effect = (StatusEffect) Registries.STATUS_EFFECT.get(new Identifier(spell.cost.effect_id));
                                 if (effect != null) {
-                                    if (((DuckSpellCostMixin) spell.cost).betteradventuremode$isDecrementEffect()) {
+                                    if (((DuckSpellCostMixin) spell.cost).betteradventuremode$getDecrementEffectAmount() < 0) {
+                                        player.removeStatusEffect(effect);
+                                    } else if (((DuckSpellCostMixin) spell.cost).betteradventuremode$getDecrementEffectAmount() > 0) {
                                         int newAmplifier = -1;
                                         StatusEffectInstance statusEffectInstance = player.getStatusEffect(effect);
                                         if (statusEffectInstance != null) {
@@ -408,14 +459,11 @@ public abstract class SpellHelperMixin {
                                         if (newAmplifier >= 0) {
                                             player.addStatusEffect(new StatusEffectInstance(effect, statusEffectInstance.getDuration(), newAmplifier, statusEffectInstance.isAmbient(), statusEffectInstance.shouldShowParticles(), statusEffectInstance.shouldShowIcon()));
                                         }
-                                    } else {
-                                        player.removeStatusEffect(effect);
                                     }
                                 }
                             }
                         }
                     }
-
                 }
             }
         }

@@ -8,9 +8,17 @@ import org.spongepowered.asm.mixin.Unique;
 @Mixin(Spell.Cost.class)
 public class SpellCostMixin implements DuckSpellCostMixin {
     @Unique
+    private boolean checkHealthCost = false;
+    @Unique
+    private boolean checkManaCost = true;
+    @Unique
+    private boolean checkStaminaCost = false;
+    @Unique
+    private boolean checkSpellEffectCost = false;
+    @Unique
     private boolean consumeSelf = false;
     @Unique
-    private boolean decrementEffect = false;
+    private int decrementEffectAmount = -1;
     @Unique
     private float manaCost = 0.0F;
     @Unique
@@ -18,8 +26,40 @@ public class SpellCostMixin implements DuckSpellCostMixin {
     @Unique
     private float staminaCost = 0.0F;
 
+    public boolean betteradventuremode$checkHealthCost() {
+        return this.checkHealthCost;
+    }
+
+    public void betteradventuremode$setCheckHealthCost(boolean checkHealthCost) {
+        this.checkHealthCost = checkHealthCost;
+    }
+
+    public boolean betteradventuremode$checkManaCost() {
+        return this.checkManaCost;
+    }
+
+    public void betteradventuremode$setCheckManaCost(boolean checkManaCost) {
+        this.checkManaCost = checkManaCost;
+    }
+
+    public boolean betteradventuremode$checkStaminaCost() {
+        return this.checkStaminaCost;
+    }
+
+    public void betteradventuremode$setCheckStaminaCost(boolean checkStaminaCost) {
+        this.checkStaminaCost = checkStaminaCost;
+    }
+
+    public boolean betteradventuremode$checkSpellEffectCost() {
+        return this.checkSpellEffectCost;
+    }
+
+    public void betteradventuremode$setCheckSpellEffectCost(boolean checkSpellEffectCost) {
+        this.checkSpellEffectCost = checkSpellEffectCost;
+    }
+
     public float betteradventuremode$getManaCost() {
-        return manaCost;
+        return this.manaCost;
     }
 
     public void betteradventuremode$setManaCost(float manaCost) {
@@ -27,7 +67,7 @@ public class SpellCostMixin implements DuckSpellCostMixin {
     }
 
     public float betteradventuremode$getHealthCost() {
-        return healthCost;
+        return this.healthCost;
     }
 
     public void betteradventuremode$setHealthCost(float healthCost) {
@@ -35,26 +75,26 @@ public class SpellCostMixin implements DuckSpellCostMixin {
     }
 
     public float betteradventuremode$getStaminaCost() {
-        return staminaCost;
+        return this.staminaCost;
     }
 
     public void betteradventuremode$setStaminaCost(float staminaCost) {
         this.staminaCost = staminaCost;
     }
 
-    public boolean betteradventuremode$isConsumeSelf() {
-        return consumeSelf;
+    public boolean betteradventuremode$consumeSelf() {
+        return this.consumeSelf;
     }
 
     public void betteradventuremode$setConsumeSelf(boolean consumeSelf) {
         this.consumeSelf = consumeSelf;
     }
 
-    public boolean betteradventuremode$isDecrementEffect() {
-        return decrementEffect;
+    public int betteradventuremode$getDecrementEffectAmount() {
+        return this.decrementEffectAmount;
     }
 
-    public void betteradventuremode$setDecrementEffect(boolean decrementEffect) {
-        this.decrementEffect = decrementEffect;
+    public void betteradventuremode$setDecrementEffectAmount(int decrementEffect) {
+        this.decrementEffectAmount = decrementEffect;
     }
 }

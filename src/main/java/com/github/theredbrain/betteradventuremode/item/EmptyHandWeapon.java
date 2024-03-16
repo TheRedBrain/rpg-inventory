@@ -13,11 +13,6 @@ public class EmptyHandWeapon extends BasicWeaponItem {
     }
 
     @Override
-    public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
-        return false;
-    }
-
-    @Override
     public boolean isDamageable() {
         return false;
     }

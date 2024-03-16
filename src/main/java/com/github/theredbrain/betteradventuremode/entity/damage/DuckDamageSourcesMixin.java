@@ -8,4 +8,5 @@ public interface DuckDamageSourcesMixin {
     DamageSource betteradventuremode$poison();
     DamageSource betteradventuremode$shocked();
     DamageSource betteradventuremode$lava();
+    DamageSource betteradventuremode$bloodMagicCasting();
 }
