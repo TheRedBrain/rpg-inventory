@@ -1,8 +1,13 @@
 package com.github.theredbrain.betteradventuremode.registry;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
+import com.github.theredbrain.betteradventuremode.config.GamePlayBalanceConfig;
+import com.github.theredbrain.betteradventuremode.config.ServerConfig;
 import com.github.theredbrain.betteradventuremode.network.packet.*;
+import com.google.gson.Gson;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
 public class ServerPacketRegistry {
@@ -12,7 +17,6 @@ public class ServerPacketRegistry {
     public static final Identifier ADD_STATUS_EFFECT_PACKET = BetterAdventureMode.identifier("add_status_effect");
     public static final Identifier SHEATHED_WEAPONS_PACKET = BetterAdventureMode.identifier("sheathed_weapons"); // TODO if weapon sheathing is not visible in multiplayer
 
-    public static final Identifier SYNC_CONFIG = BetterAdventureMode.identifier("sync_config");
 //    public static final Identifier SYNC_PLAYER_HOUSES = BetterAdventureModeCore.identifier("sync_player_houses");
     public static final Identifier SYNC_CRAFTING_RECIPES = BetterAdventureMode.identifier("sync_crafting_recipes");
     public static final Identifier SYNC_DIALOGUES = BetterAdventureMode.identifier("sync_dialogues");
@@ -109,5 +113,41 @@ public class ServerPacketRegistry {
         ServerPlayNetworking.registerGlobalReceiver(UpdateDialogueBlockPacket.TYPE, new UpdateDialogueBlockPacketReceiver());
 
         ServerPlayNetworking.registerGlobalReceiver(DialogueAnswerPacket.TYPE, new DialogueAnswerPacketReceiver());
+    }
+
+    public static class ServerConfigSync {
+        public static Identifier ID = BetterAdventureMode.identifier("server_config_sync");
+
+        public static PacketByteBuf write(ServerConfig serverConfig) {
+            var gson = new Gson();
+            var json = gson.toJson(serverConfig);
+            var buffer = PacketByteBufs.create();
+            buffer.writeString(json);
+            return buffer;
+        }
+
+        public static ServerConfig read(PacketByteBuf buffer) {
+            var gson = new Gson();
+            var json = buffer.readString();
+            return gson.fromJson(json, ServerConfig.class);
+        }
+    }
+
+    public static class GamePlayBalanceConfigSync {
+        public static Identifier ID = BetterAdventureMode.identifier("game_play_balance_config_sync");
+
+        public static PacketByteBuf write(GamePlayBalanceConfig gamePlayBalanceConfig) {
+            var gson = new Gson();
+            var json = gson.toJson(gamePlayBalanceConfig);
+            var buffer = PacketByteBufs.create();
+            buffer.writeString(json);
+            return buffer;
+        }
+
+        public static GamePlayBalanceConfig read(PacketByteBuf buffer) {
+            var gson = new Gson();
+            var json = buffer.readString();
+            return gson.fromJson(json, GamePlayBalanceConfig.class);
+        }
     }
 }

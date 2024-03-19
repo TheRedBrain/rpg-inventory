@@ -123,11 +123,21 @@ public class Tags {
     public static final TagKey<Item> GLOVES = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("gloves"));
     public static final TagKey<Item> BOOTS = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("boots"));
     public static final TagKey<Item> SPELLS = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("spells"));
-    public static final TagKey<Item> MANA_REGENERATING_TRINKETS = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("mana_regenerating_trinkets"));
-    public static final TagKey<Item> DEPTH_STRIDER_TRINKETS = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("depth_strider_trinkets"));
-    public static final TagKey<Item> LOOTING_TRINKETS = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("looting_trinkets"));
-    public static final TagKey<Item> UNBREAKING_TRINKETS = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("unbreaking_trinkets"));
-    public static final TagKey<Item> FEATHER_FALLING_TRINKETS = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("feather_falling_trinkets"));
+
+    // enables functionality
+    public static final TagKey<Item> ENABLES_MANA_REGENERATION = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("enables_mana_regeneration"));
+    public static final TagKey<Item> ENABLES_FIRST_PERSON_PERSPECTIVE = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("enables_first_person_perspective"));
+    public static final TagKey<Item> ENABLES_CHANGING_PITCH = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("enables_changing_pitch"));
+
+    // granting enchantments
+    public static final TagKey<Item> GRANTS_DEPTH_STRIDER_LEVEL_3 = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("grants_depth_strider_level_3"));
+    public static final TagKey<Item> GRANTS_LOOTING_LEVEL_3 = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("grants_looting_level_3"));
+    public static final TagKey<Item> GRANTS_UNBREAKING_LEVEL_3 = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("grants_unbreaking_level_3"));
+    public static final TagKey<Item> GRANTS_FEATHER_FALLING_LEVEL_4 = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("grants_feather_falling_level_4"));
+    public static final TagKey<Item> GRANTS_SWIFT_SNEAK_LEVEL_3 = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("grants_swift_sneak_level_3"));
+    public static final TagKey<Item> GRANTS_RESPIRATION_LEVEL_3 = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("grants_respiration_level_3"));
+
+    // special necklaces
     public static final TagKey<Item> TELEPORT_HOME_NECKLACES = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("teleport_home_necklaces"));
     //endregion ItemTags
 }

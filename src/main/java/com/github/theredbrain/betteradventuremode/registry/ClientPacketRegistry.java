@@ -1,5 +1,6 @@
 package com.github.theredbrain.betteradventuremode.registry;
 
+import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.betteradventuremode.network.packet.*;
@@ -112,6 +113,12 @@ public class ClientPacketRegistry {
         });
         ClientPlayNetworking.registerGlobalReceiver(ServerPacketRegistry.SYNC_SHOPS, (client, handler, buffer, responseSender) -> { // TODO convert to packet
             ShopsRegistry.decodeRegistry(buffer);
+        });
+        ClientPlayNetworking.registerGlobalReceiver(ServerPacketRegistry.ServerConfigSync.ID, (client, handler, buf, responseSender) -> {
+            BetterAdventureMode.serverConfig = ServerPacketRegistry.ServerConfigSync.read(buf);
+        });
+        ClientPlayNetworking.registerGlobalReceiver(ServerPacketRegistry.GamePlayBalanceConfigSync.ID, (client, handler, buf, responseSender) -> {
+            BetterAdventureMode.gamePlayBalanceConfig = ServerPacketRegistry.GamePlayBalanceConfigSync.read(buf);
         });
     }
 }

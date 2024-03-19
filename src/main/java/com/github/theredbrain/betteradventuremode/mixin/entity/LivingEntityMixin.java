@@ -28,7 +28,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.GameRules;
@@ -91,6 +90,8 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
 
     @Shadow
     public abstract boolean addStatusEffect(StatusEffectInstance effect, @Nullable Entity source);
+
+    @Shadow public abstract ItemStack getEquippedStack(EquipmentSlot slot);
 
     @Unique
     private int healthTickTimer = 0;
@@ -376,7 +377,7 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
         if (source.isIn(DamageTypeTags.IS_FALL)) {
             Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent((LivingEntity) (Object) this);
             if (trinkets.isPresent()) {
-                Predicate<ItemStack> predicate = stack -> stack.isIn(Tags.FEATHER_FALLING_TRINKETS);
+                Predicate<ItemStack> predicate = stack -> stack.isIn(Tags.GRANTS_FEATHER_FALLING_LEVEL_4);
                 feather_falling_trinket_equipped = trinkets.get().isEquipped(predicate);
             }
         }
@@ -393,6 +394,7 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
      */
     @Overwrite
     public void applyDamage(DamageSource source, float amount) {
+        // TODO account for fallDamage/featherFalling and resistanceEffect, also protection enchantments?
         LivingEntity attacker = null;
         if (source.getAttacker() instanceof LivingEntity) {
             attacker = (LivingEntity) source.getAttacker();
@@ -789,6 +791,28 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
     @Override
     public boolean doesRenderOnFire() {
         return super.doesRenderOnFire() || (this.hasStatusEffect(StatusEffectsRegistry.BURNING) && !this.isSpectator());
+    }
+
+    public boolean betteradventuremode$hasEquipped(Predicate<ItemStack> predicate) {
+        if (predicate.test(this.getEquippedStack(EquipmentSlot.MAINHAND))) {
+            return true;
+        }
+        if (predicate.test(this.getEquippedStack(EquipmentSlot.OFFHAND))) {
+            return true;
+        }
+        if (predicate.test(this.getEquippedStack(EquipmentSlot.FEET))) {
+            return true;
+        }
+        if (predicate.test(this.getEquippedStack(EquipmentSlot.LEGS))) {
+            return true;
+        }
+        if (predicate.test(this.getEquippedStack(EquipmentSlot.CHEST))) {
+            return true;
+        }
+        if (predicate.test(this.getEquippedStack(EquipmentSlot.HEAD))) {
+            return true;
+        }
+        return false;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.github.theredbrain.betteradventuremode.mixin.item;
 
+import com.github.theredbrain.betteradventuremode.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.betteradventuremode.item.BasicWeaponItem;
 import com.github.theredbrain.betteradventuremode.item.BasicShieldItem;
 import com.github.theredbrain.betteradventuremode.util.ItemUtils;
@@ -93,13 +94,15 @@ public abstract class ItemStackMixin {
      */
     @Overwrite
     public boolean damage(int amount, Random random, @Nullable ServerPlayerEntity player) {
-        boolean unbreaking_trinket_equipped = false;
+        boolean unbreaking_level_3_item_equipped = false;
         if (player != null) {
+            Predicate<ItemStack> predicate = stack -> stack.isIn(Tags.GRANTS_UNBREAKING_LEVEL_3);
             Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
             if (trinkets.isPresent()) {
-                Predicate<ItemStack> predicate = stack -> stack.isIn(Tags.UNBREAKING_TRINKETS);
-                unbreaking_trinket_equipped = trinkets.get().isEquipped(predicate);
+                unbreaking_level_3_item_equipped = trinkets.get().isEquipped(predicate);
             }
+            unbreaking_level_3_item_equipped = unbreaking_level_3_item_equipped || ((DuckLivingEntityMixin)player).betteradventuremode$hasEquipped(predicate);
+
         }
 
         int i;
@@ -107,7 +110,7 @@ public abstract class ItemStackMixin {
             return false;
         }
         if (amount > 0) {
-            i = unbreaking_trinket_equipped ? 3 : EnchantmentHelper.getLevel(Enchantments.UNBREAKING, (ItemStack) (Object) this);
+            i = unbreaking_level_3_item_equipped ? 3 : EnchantmentHelper.getLevel(Enchantments.UNBREAKING, (ItemStack) (Object) this);
             int j = 0;
             for (int k = 0; i > 0 && k < amount; ++k) {
                 if (!UnbreakingEnchantment.shouldPreventDamage((ItemStack) (Object) this, i, random)) continue;

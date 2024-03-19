@@ -17,6 +17,8 @@ public class ServerConfig implements ConfigData {
     public boolean disable_inventory_crafting_slots = true;
     @Comment("Disables food, saturation and exhaustion")
     public boolean disable_vanilla_food_system = true;
+    @Comment("Enables Better3rdPerson compatibility")
+    public boolean enableBetter3rdPersonCompat = true;
     @Comment("Disables the recipe book")
     public boolean disable_recipe_book = true;
     @Comment("""

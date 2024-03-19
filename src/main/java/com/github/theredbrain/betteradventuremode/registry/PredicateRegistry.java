@@ -7,7 +7,6 @@ import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.entity.player.PlayerEntity;
 
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class PredicateRegistry {
 
@@ -28,17 +27,6 @@ public class PredicateRegistry {
 //            stack.isIn(Tags.SPELLS)
 //            var map = TrinketsApi.getTrinket(stack.getItem()).getModifiers(stack, ref, entity, SlotAttributes.getUuid(ref));
             if (Objects.equals(group, "spell_slot_1")) {
-                return TriState.TRUE;
-            }
-            return TriState.FALSE;
-        });
-        TrinketsApi.registerTrinketPredicate(BetterAdventureMode.identifier("mana_regeneration_items"), (stack, ref, entity) -> {
-            AtomicBoolean bl = new AtomicBoolean(false);
-            TrinketsApi.getTrinketComponent(entity).ifPresent(comp -> {
-
-                bl.set(comp.isEquipped(stack.getItem()));
-            });
-            if (stack.isIn(Tags.MANA_REGENERATING_TRINKETS) && bl.get()) {
                 return TriState.TRUE;
             }
             return TriState.FALSE;
