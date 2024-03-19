@@ -2,6 +2,10 @@
   "values": [
     "betteradventuremode:test_ring",
     "betteradventuremode:three_spell_slot_ring",
-    "betteradventuremode:two_health_regeneration_ring"
+    "betteradventuremode:two_health_regeneration_ring",
+    {
+      "id": "#jewelry:rings",
+      "required": false
+    }
   ]
 }

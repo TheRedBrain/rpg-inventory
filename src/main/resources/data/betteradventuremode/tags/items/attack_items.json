@@ -30,6 +30,22 @@
     "betteradventuremode:war_hammer",
     "betteradventuremode:mace",
     "betteradventuremode:claw",
-    "betteradventuremode:elemental_flame"
+    "betteradventuremode:elemental_flame",
+    {
+      "id": "#archers:spears",
+      "required": false
+    },
+    {
+      "id": "#paladins:claymores",
+      "required": false
+    },
+    {
+      "id": "#paladins:great_hammers",
+      "required": false
+    },
+    {
+      "id": "#paladins:maces",
+      "required": false
+    }
   ]
 }

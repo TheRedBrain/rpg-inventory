@@ -14,6 +14,34 @@
     "minecraft:diamond_pickaxe",
     "minecraft:golden_pickaxe",
     "minecraft:netherite_pickaxe",
-    "betteradventuremode:ice_staff"
+    "betteradventuremode:ice_staff",
+    {
+      "id": "#archers:bows",
+      "required": false
+    },
+    {
+      "id": "#archers:crossbows",
+      "required": false
+    },
+    {
+      "id": "#archers:spears",
+      "required": false
+    },
+    {
+      "id": "#paladins:claymores",
+      "required": false
+    },
+    {
+      "id": "#paladins:great_hammers",
+      "required": false
+    },
+    {
+      "id": "#paladins:staves",
+      "required": false
+    },
+    {
+      "id": "#wizards:staves",
+      "required": false
+    }
   ]
 }

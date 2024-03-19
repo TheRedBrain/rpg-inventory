@@ -1,0 +1,64 @@
+{
+  "attributes": {
+    "attack_range": 2.75,
+    "category": "katana",
+    "attacks": [
+      {
+        "conditions": ["MOUNTED"],
+        "hitbox": "HORIZONTAL_PLANE",
+        "damage_multiplier": 0.8,
+        "angle": 120,
+        "upswing": 0.5,
+        "animation": "bettercombat:two_handed_slash_horizontal_right",
+        "swing_sound": {
+          "id": "bettercombat:katana_slash"
+        }
+      },
+      {
+        "conditions": ["MOUNTED"],
+        "hitbox": "VERTICAL_PLANE",
+        "damage_multiplier": 1.2,
+        "angle": 120,
+        "upswing": 0.5,
+        "animation": "bettercombat:two_handed_slash_vertical_left",
+        "swing_sound": {
+          "id": "bettercombat:katana_slash"
+        }
+      },
+      {
+        "conditions": ["MOUNTED"],
+        "hitbox": "VERTICAL_PLANE",
+        "damage_multiplier": 1.2,
+        "angle": 120,
+        "upswing": 0.5,
+        "animation": "bettercombat:two_handed_slash_vertical_right",
+        "swing_sound": {
+          "id": "bettercombat:katana_slash"
+        }
+      },
+      {
+        "conditions": ["MOUNTED"],
+        "hitbox": "HORIZONTAL_PLANE",
+        "damage_multiplier": 0.8,
+        "angle": 120,
+        "upswing": 0.5,
+        "animation": "bettercombat:two_handed_slash_horizontal_left",
+        "swing_sound": {
+          "id": "bettercombat:katana_slash"
+        }
+      },
+      {
+        "conditions": ["NOT_MOUNTED"],
+        "hitbox": "FORWARD_BOX",
+        "damage_multiplier": 1,
+        "angle": 0,
+        "upswing": 0.5,
+        "animation": "bettercombat:one_handed_stab",
+        "swing_sound": {
+          "id": "bettercombat:sword_slash",
+          "pitch": 1.2
+        }
+      }
+    ]
+  }
+}

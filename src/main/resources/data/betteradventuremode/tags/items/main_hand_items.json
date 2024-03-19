@@ -34,6 +34,46 @@
     "betteradventuremode:battle_axe",
     "betteradventuremode:war_hammer",
     "betteradventuremode:mace",
-    "betteradventuremode:claw"
+    "betteradventuremode:claw",
+    {
+      "id": "#archers:bows",
+      "required": false
+    },
+    {
+      "id": "#archers:crossbows",
+      "required": false
+    },
+    {
+      "id": "#archers:spears",
+      "required": false
+    },
+    {
+      "id": "#paladins:claymores",
+      "required": false
+    },
+    {
+      "id": "#paladins:great_hammers",
+      "required": false
+    },
+    {
+      "id": "#paladins:maces",
+      "required": false
+    },
+    {
+      "id": "#paladins:staves",
+      "required": false
+    },
+    {
+      "id": "#paladins:wands",
+      "required": false
+    },
+    {
+      "id": "#wizards:staves",
+      "required": false
+    },
+    {
+      "id": "#wizards:wands",
+      "required": false
+    }
   ]
 }

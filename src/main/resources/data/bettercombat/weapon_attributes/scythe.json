@@ -1,24 +1,26 @@
 {
   "attributes": {
-    "attack_range": 2.5,
-    "category": "axe",
+    "attack_range": 3.5,
+    "category": "scythe",
     "attacks": [
       {
         "hitbox": "HORIZONTAL_PLANE",
-        "angle": 90,
+        "damage_multiplier": 1,
+        "angle": 150,
         "upswing": 0.5,
         "animation": "bettercombat:two_handed_slash_horizontal_right",
         "swing_sound": {
-          "id": "bettercombat:axe_slash"
+          "id": "bettercombat:scythe_slash"
         }
       },
       {
         "hitbox": "HORIZONTAL_PLANE",
-        "angle": 90,
+        "damage_multiplier": 1,
+        "angle": 150,
         "upswing": 0.5,
         "animation": "bettercombat:two_handed_slash_horizontal_left",
         "swing_sound": {
-          "id": "bettercombat:axe_slash"
+          "id": "bettercombat:scythe_slash"
         }
       }
     ]

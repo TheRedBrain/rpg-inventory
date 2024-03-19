@@ -1,0 +1,6 @@
+{
+  "parent": "bettercombat:double_axe",
+  "attributes" : {
+    "category": "heavy_axe"
+  }
+}
