@@ -457,34 +457,68 @@
 	"block.betteradventuremode.relay_trigger_block": "Relay Trigger Block",
 	"block.betteradventuremode.teleporter_block": "Teleporter Block",
 
+	
 	"attribute.name.player.active_spell_slot_amount": "Active Spell Slot Amount",
 	"attribute.name.player.equipment_weight": "Weight",
 	"attribute.name.player.max_equipment_weight": "Max Equipment Weight",
 	"attribute.name.generic.health_regeneration": "Health Regen",
-	"attribute.name.generic.max_mana": "Max Mana",
 	"attribute.name.generic.mana_regeneration": "Mana Regen",
-	"attribute.name.generic.max_stamina": "Max Stamina",
 	"attribute.name.generic.stamina_regeneration": "Stamina Regen",
+	"attribute.name.generic.max_mana": "Max Mana",
+	"attribute.name.generic.max_stamina": "Max Stamina",
 	
 	"attribute.name.generic.additional_bashing_damage": "Additional Bashing Damage",
 	"attribute.name.generic.increased_bashing_damage": "Increased Bashing Damage",
+	
 	"attribute.name.generic.additional_piercing_damage": "Additional Piercing Damage",
 	"attribute.name.generic.increased_piercing_damage": "Increased Piercing Damage",
+	
 	"attribute.name.generic.additional_slashing_damage": "Additional Slashing Damage",
 	"attribute.name.generic.increased_slashing_damage": "Increased Slashing Damage",
+	
+	"attribute.name.generic.max_bleeding_build_up": "Max Bleeding Build Up",
+	"attribute.name.generic.bleeding_duration": "Bleeding Duration",
+	"attribute.name.generic.bleeding_tick_threshold": "Bleeding Tick Threshold",
+	"attribute.name.generic.bleeding_build_up_reduction": "Bleeding Build-Up Reduction",
+	
 	"attribute.name.generic.additional_frost_damage": "Additional Frost Damage",
 	"attribute.name.generic.increased_frost_damage": "Increased Frost Damage",
 	"attribute.name.generic.frost_resistance": "Frost Resistance",
+	"attribute.name.generic.max_freeze_build_up": "Max Freeze Build Up",
+	"attribute.name.generic.freeze_duration": "Freeze Duration",
+	"attribute.name.generic.freeze_tick_threshold": "Freeze Tick Threshold",
+	"attribute.name.generic.freeze_build_up_reduction": "Freeze Build-Up Reduction",
+	
 	"attribute.name.generic.additional_fire_damage": "Additional Fire Damage",
 	"attribute.name.generic.increased_fire_damage": "Increased Fire Damage",
 	"attribute.name.generic.fire_resistance": "Fire Resistance",
+	"attribute.name.generic.max_burn_build_up": "Max Burn Build Up",
+	"attribute.name.generic.burn_duration": "Burn Duration",
+	"attribute.name.generic.burn_tick_threshold": "Burn Tick Threshold",
+	"attribute.name.generic.burn_build_up_reduction": "Burn Build-Up Reduction",
+	
 	"attribute.name.generic.additional_lightning_damage": "Additional Lightning Damage",
 	"attribute.name.generic.increased_lightning_damage": "Increased Lightning Damage",
 	"attribute.name.generic.lightning_resistance": "Lightning Resistance",
+	"attribute.name.generic.max_shock_build_up": "Max Shock Build Up",
+	"attribute.name.generic.shock_duration": "Shock Duration",
+	"attribute.name.generic.shock_tick_threshold": "Shock Tick Threshold",
+	"attribute.name.generic.shock_build_up_reduction": "Shock Build-Up Reduction",
+	
 	"attribute.name.generic.additional_poison_damage": "Additional Poison Damage",
 	"attribute.name.generic.increased_poison_damage": "Increased Poison Damage",
 	"attribute.name.generic.poison_resistance": "Poison Resistance",
+	"attribute.name.generic.max_poison_build_up": "Max Poison Build Up",
+	"attribute.name.generic.poison_duration": "Poison Duration",
+	"attribute.name.generic.poison_tick_threshold": "Poison Tick Threshold",
+	"attribute.name.generic.poison_build_up_reduction": "Poison Build-Up Reduction",
 
+	"attribute.name.generic.max_stagger_build_up": "Max Stagger Build Up",
+	"attribute.name.generic.stagger_duration": "Stagger Duration",
+	"attribute.name.generic.stagger_tick_threshold": "Stagger Tick Threshold",
+	"attribute.name.generic.stagger_build_up_reduction": "Stagger Build-Up Reduction",
+	
+	
 	"effect.betteradventuremode.civilisation_effect": "Civilisation",
 	"effect.betteradventuremode.civilisation_effect.description": "You feel safe here.",
 	"effect.betteradventuremode.mana_regeneration_effect": "Mana Regeneration",

@@ -82,7 +82,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
      */
     @Overwrite
     public int getEmptySlot() {
-        for (int i = ((DuckPlayerEntityMixin)this.player).betteradventuremode$isAdventure() && !this.player.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT) ? 9 : 0; i < this.main.size(); ++i) {
+        for (int i = !this.player.isCreative() && !this.player.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT) ? 9 : 0; i < this.main.size(); ++i) {
             if (!this.main.get(i).isEmpty()) continue;
             return i;
         }
@@ -100,7 +100,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
             return this.selectedSlot;
         }
 
-        for (int i = ((DuckPlayerEntityMixin)this.player).betteradventuremode$isAdventure() && !this.player.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT) ? 9 : 0; i < this.main.size(); ++i) {
+        for (int i = !this.player.isCreative() && !this.player.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT) ? 9 : 0; i < this.main.size(); ++i) {
             if (!this.canStackAddMore(this.main.get(i), stack)) continue;
             return i;
         }

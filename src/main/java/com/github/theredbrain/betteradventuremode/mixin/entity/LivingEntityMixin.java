@@ -853,7 +853,7 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
     // region bleeding build up
     @Override
     public void betteradventuremode$addBleedingBuildUp(float amount) {
-        if (!(this.betteradventuremode$getMaxBleedingBuildUp() == -1.0f || this.hasStatusEffect(StatusEffectsRegistry.BLEEDING))) {
+        if (this.betteradventuremode$getMaxBleedingBuildUp() != -1.0f && !this.hasStatusEffect(StatusEffectsRegistry.BLEEDING)) {
             float f = this.betteradventuremode$getBleedingBuildUp();
             this.betteradventuremode$setBleedingBuildUp(f + amount);
             if (amount > 0) {
@@ -874,29 +874,29 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
 
     @Override
     public float betteradventuremode$getMaxBleedingBuildUp() {
-        return BetterAdventureMode.gamePlayBalanceConfig.default_max_bleeding_build_up;
+        return (float) this.getAttributeValue(EntityAttributesRegistry.MAX_BLEEDING_BUILD_UP);
     }
 
     @Override
     public int betteradventuremode$getBleedingDuration() {
-        return BetterAdventureMode.gamePlayBalanceConfig.default_bleeding_duration;
+        return (int) this.getAttributeValue(EntityAttributesRegistry.BLEEDING_DURATION);
     }
 
     @Override
     public int betteradventuremode$getBleedingTickThreshold() {
-        return BetterAdventureMode.gamePlayBalanceConfig.default_bleeding_tick_threshold;
+        return (int) this.getAttributeValue(EntityAttributesRegistry.BLEEDING_TICK_THRESHOLD);
     }
 
     @Override
     public int betteradventuremode$getBleedingBuildUpReduction() {
-        return BetterAdventureMode.gamePlayBalanceConfig.default_bleeding_build_up_reduction;
+        return (int) this.getAttributeValue(EntityAttributesRegistry.BLEEDING_BUILD_UP_REDUCTION);
     }
     // endregion bleeding build up
 
     // region burn build up
     @Override
     public void betteradventuremode$addBurnBuildUp(float amount) {
-        if (!(this.betteradventuremode$getMaxBurnBuildUp() == -1.0f)) {
+        if (this.betteradventuremode$getMaxBurnBuildUp() != -1.0f) {
             float f = this.betteradventuremode$getBurnBuildUp();
             this.betteradventuremode$setBurnBuildUp(f + amount);
             if (amount > 0) {
@@ -917,29 +917,29 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
 
     @Override
     public float betteradventuremode$getMaxBurnBuildUp() {
-        return BetterAdventureMode.gamePlayBalanceConfig.default_max_burning_build_up;
+        return (float) this.getAttributeValue(EntityAttributesRegistry.MAX_BURN_BUILD_UP);
     }
 
     @Override
     public int betteradventuremode$getBurnDuration() {
-        return BetterAdventureMode.gamePlayBalanceConfig.default_burning_duration;
+        return (int) this.getAttributeValue(EntityAttributesRegistry.BURN_DURATION);
     }
 
     @Override
     public int betteradventuremode$getBurnTickThreshold() {
-        return BetterAdventureMode.gamePlayBalanceConfig.default_burning_tick_threshold;
+        return (int) this.getAttributeValue(EntityAttributesRegistry.BURN_TICK_THRESHOLD);
     }
 
     @Override
     public int betteradventuremode$getBurnBuildUpReduction() {
-        return BetterAdventureMode.gamePlayBalanceConfig.default_burning_build_up_reduction;
+        return (int) this.getAttributeValue(EntityAttributesRegistry.BURN_BUILD_UP_REDUCTION);
     }
     // endregion burn build up
 
     // region freeze build up
     @Override
     public void betteradventuremode$addFreezeBuildUp(float amount) {
-        if (!(this.betteradventuremode$getMaxFreezeBuildUp() == -1.0f || this.hasStatusEffect(StatusEffectsRegistry.FROZEN))) {
+        if (this.betteradventuremode$getMaxFreezeBuildUp() != -1.0f && !this.hasStatusEffect(StatusEffectsRegistry.FROZEN)) {
             float f = this.betteradventuremode$getFreezeBuildUp();
             this.betteradventuremode$setFreezeBuildUp(f + amount);
             if (amount > 0) {
@@ -960,29 +960,29 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
 
     @Override
     public float betteradventuremode$getMaxFreezeBuildUp() {
-        return BetterAdventureMode.gamePlayBalanceConfig.default_max_freeze_build_up;
+        return (float) this.getAttributeValue(EntityAttributesRegistry.MAX_FREEZE_BUILD_UP);
     }
 
     @Override
     public int betteradventuremode$getFreezeDuration() {
-        return BetterAdventureMode.gamePlayBalanceConfig.default_freeze_duration;
+        return (int) this.getAttributeValue(EntityAttributesRegistry.FREEZE_DURATION);
     }
 
     @Override
     public int betteradventuremode$getFreezeTickThreshold() {
-        return BetterAdventureMode.gamePlayBalanceConfig.default_freeze_tick_threshold;
+        return (int) this.getAttributeValue(EntityAttributesRegistry.FREEZE_TICK_THRESHOLD);
     }
 
     @Override
     public int betteradventuremode$getFreezeBuildUpReduction() {
-        return BetterAdventureMode.gamePlayBalanceConfig.default_freeze_build_up_reduction;
+        return (int) this.getAttributeValue(EntityAttributesRegistry.FREEZE_BUILD_UP_REDUCTION);
     }
     // endregion freeze build up
 
     // region stagger build up
     @Override
     public void betteradventuremode$addStaggerBuildUp(float amount) {
-        if (!(this.betteradventuremode$getMaxStaggerBuildUp() == -1.0f || this.hasStatusEffect(StatusEffectsRegistry.STAGGERED))) {
+        if (this.betteradventuremode$getMaxStaggerBuildUp() != -1.0f && !this.hasStatusEffect(StatusEffectsRegistry.STAGGERED)) {
             float f = this.betteradventuremode$getStaggerBuildUp();
             this.betteradventuremode$setStaggerBuildUp(f + amount);
             if (amount > 0) {
@@ -1003,30 +1003,29 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
 
     @Override
     public float betteradventuremode$getMaxStaggerBuildUp() {
-//        return this.getMaxHealth() * 0.5f;
-        return BetterAdventureMode.gamePlayBalanceConfig.default_max_stagger_build_up;
+        return (float) this.getAttributeValue(EntityAttributesRegistry.MAX_STAGGER_BUILD_UP);
     }
 
     @Override
     public int betteradventuremode$getStaggerDuration() {
-        return BetterAdventureMode.gamePlayBalanceConfig.default_stagger_duration;
+        return (int) this.getAttributeValue(EntityAttributesRegistry.STAGGER_DURATION);
     }
 
     @Override
     public int betteradventuremode$getStaggerTickThreshold() {
-        return BetterAdventureMode.gamePlayBalanceConfig.default_stagger_tick_threshold;
+        return (int) this.getAttributeValue(EntityAttributesRegistry.STAGGER_TICK_THRESHOLD);
     }
 
     @Override
     public int betteradventuremode$getStaggerBuildUpReduction() {
-        return BetterAdventureMode.gamePlayBalanceConfig.default_stagger_build_up_reduction;
+        return (int) this.getAttributeValue(EntityAttributesRegistry.STAGGER_BUILD_UP_REDUCTION);
     }
     // endregion stagger build up
 
     // region poison build up
     @Override
     public void betteradventuremode$addPoisonBuildUp(float amount) {
-        if (!(this.betteradventuremode$getMaxPoisonBuildUp() == -1.0f)) {
+        if (this.betteradventuremode$getMaxPoisonBuildUp() != -1.0f) {
             float f = this.betteradventuremode$getPoisonBuildUp();
             this.betteradventuremode$setPoisonBuildUp(f + amount);
             if (amount > 0) {
@@ -1047,29 +1046,29 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
 
     @Override
     public float betteradventuremode$getMaxPoisonBuildUp() {
-        return BetterAdventureMode.gamePlayBalanceConfig.default_max_poison_build_up;
+        return (float) this.getAttributeValue(EntityAttributesRegistry.MAX_POISON_BUILD_UP);
     }
 
     @Override
     public int betteradventuremode$getPoisonDuration() {
-        return BetterAdventureMode.gamePlayBalanceConfig.default_poison_duration;
+        return (int) this.getAttributeValue(EntityAttributesRegistry.POISON_DURATION);
     }
 
     @Override
     public int betteradventuremode$getPoisonTickThreshold() {
-        return BetterAdventureMode.gamePlayBalanceConfig.default_poison_tick_threshold;
+        return (int) this.getAttributeValue(EntityAttributesRegistry.POISON_TICK_THRESHOLD);
     }
 
     @Override
     public int betteradventuremode$getPoisonBuildUpReduction() {
-        return BetterAdventureMode.gamePlayBalanceConfig.default_poison_build_up_reduction;
+        return (int) this.getAttributeValue(EntityAttributesRegistry.POISON_BUILD_UP_REDUCTION);
     }
     // endregion poison build up
 
     // region shock build up
     @Override
     public void betteradventuremode$addShockBuildUp(float amount) {
-        if (!(this.betteradventuremode$getMaxShockBuildUp() == -1.0f)) {
+        if (this.betteradventuremode$getMaxShockBuildUp() != -1.0f) {
             float f = this.betteradventuremode$getShockBuildUp();
             this.betteradventuremode$setShockBuildUp(f + amount);
             if (amount > 0) {
@@ -1090,22 +1089,22 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
 
     @Override
     public float betteradventuremode$getMaxShockBuildUp() {
-        return BetterAdventureMode.gamePlayBalanceConfig.default_max_shock_build_up;
+        return (float) this.getAttributeValue(EntityAttributesRegistry.MAX_SHOCK_BUILD_UP);
     }
 
     @Override
     public int betteradventuremode$getShockDuration() {
-        return 1;
+        return (int) this.getAttributeValue(EntityAttributesRegistry.SHOCK_DURATION);
     }
 
     @Override
     public int betteradventuremode$getShockTickThreshold() {
-        return BetterAdventureMode.gamePlayBalanceConfig.default_shock_tick_threshold;
+        return (int) this.getAttributeValue(EntityAttributesRegistry.SHOCK_TICK_THRESHOLD);
     }
 
     @Override
     public int betteradventuremode$getShockBuildUpReduction() {
-        return BetterAdventureMode.gamePlayBalanceConfig.default_shock_build_up_reduction;
+        return (int) this.getAttributeValue(EntityAttributesRegistry.SHOCK_BUILD_UP_REDUCTION);
     }
     // endregion shock build up
 
