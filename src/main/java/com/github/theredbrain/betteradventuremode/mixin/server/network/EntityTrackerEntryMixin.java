@@ -24,7 +24,7 @@ public class EntityTrackerEntryMixin {
     @Shadow @Final private Entity entity;
 
     @Inject(method = "startTracking", at = @At(value = "TAIL"))
-    public void bam$startTrackingAdditionalHandSlots(ServerPlayerEntity serverPlayer, CallbackInfo info) {
+    public void betteradventuremode$startTracking(ServerPlayerEntity serverPlayer, CallbackInfo info) {
         if (this.entity instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) entity;
             if (!((DuckPlayerInventoryMixin)serverPlayer.getInventory()).betteradventuremode$getMainHand().isEmpty() || !((DuckPlayerInventoryMixin)serverPlayer.getInventory()).betteradventuremode$getAlternativeMainHand().isEmpty()) {

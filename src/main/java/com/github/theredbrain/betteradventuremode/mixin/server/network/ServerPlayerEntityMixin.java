@@ -4,6 +4,7 @@ import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntity
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.betteradventuremode.network.event.PlayerDeathCallback;
 import com.github.theredbrain.betteradventuremode.network.packet.SendAnnouncementPacket;
+import com.github.theredbrain.betteradventuremode.registry.ItemRegistry;
 import com.github.theredbrain.betteradventuremode.registry.ServerPacketRegistry;
 import com.github.theredbrain.betteradventuremode.registry.GameRulesRegistry;
 import com.mojang.authlib.GameProfile;
@@ -82,6 +83,12 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Du
     @Inject(method = "tick", at = @At("TAIL"))
     public void betteradventuremode$tick(CallbackInfo ci) {
         if (!this.getWorld().isClient) {
+            if (!((DuckPlayerInventoryMixin) this.getInventory()).betteradventuremode$getEmptyMainHand().isOf(ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON)) {
+                ((DuckPlayerInventoryMixin) this.getInventory()).betteradventuremode$setEmptyMainHand(ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON.getDefaultStack());
+            }
+            if (!((DuckPlayerInventoryMixin) this.getInventory()).betteradventuremode$getEmptyOffHand().isOf(ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON)) {
+                ((DuckPlayerInventoryMixin) this.getInventory()).betteradventuremode$setEmptyOffHand(ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON.getDefaultStack());
+            }
             ItemStack newMainHandStack = ((DuckPlayerInventoryMixin) this.getInventory()).betteradventuremode$getMainHand();
             ItemStack newAlternativeMainHandStack = ((DuckPlayerInventoryMixin) this.getInventory()).betteradventuremode$getAlternativeMainHand();
             if (!ItemStack.areItemsEqual(mainHandSlotStack, newMainHandStack) || !ItemStack.areItemsEqual(alternateMainHandSlotStack, newAlternativeMainHandStack)) {

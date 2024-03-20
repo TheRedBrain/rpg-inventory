@@ -175,24 +175,58 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
                 .add(EntityAttributesRegistry.STAMINA_REGENERATION)
                 .add(EntityAttributesRegistry.MAX_MANA)
                 .add(EntityAttributesRegistry.MAX_STAMINA)
+                
                 .add(EntityAttributesRegistry.ADDITIONAL_BASHING_DAMAGE)
-                .add(EntityAttributesRegistry.ADDITIONAL_PIERCING_DAMAGE)
-                .add(EntityAttributesRegistry.ADDITIONAL_SLASHING_DAMAGE)
-                .add(EntityAttributesRegistry.ADDITIONAL_FIRE_DAMAGE)
-                .add(EntityAttributesRegistry.ADDITIONAL_FROST_DAMAGE)
-                .add(EntityAttributesRegistry.ADDITIONAL_LIGHTNING_DAMAGE)
-                .add(EntityAttributesRegistry.ADDITIONAL_POISON_DAMAGE)
                 .add(EntityAttributesRegistry.INCREASED_BASHING_DAMAGE)
+
+                .add(EntityAttributesRegistry.ADDITIONAL_PIERCING_DAMAGE)
                 .add(EntityAttributesRegistry.INCREASED_PIERCING_DAMAGE)
+                
+                .add(EntityAttributesRegistry.ADDITIONAL_SLASHING_DAMAGE)
                 .add(EntityAttributesRegistry.INCREASED_SLASHING_DAMAGE)
-                .add(EntityAttributesRegistry.INCREASED_FIRE_DAMAGE)
+                
+                .add(EntityAttributesRegistry.MAX_BLEEDING_BUILD_UP)
+                .add(EntityAttributesRegistry.BLEEDING_DURATION)
+                .add(EntityAttributesRegistry.BLEEDING_TICK_THRESHOLD)
+                .add(EntityAttributesRegistry.BLEEDING_BUILD_UP_REDUCTION)
+
+                .add(EntityAttributesRegistry.ADDITIONAL_FROST_DAMAGE)
                 .add(EntityAttributesRegistry.INCREASED_FROST_DAMAGE)
+                .add(EntityAttributesRegistry.FROST_RESISTANCE)
+                .add(EntityAttributesRegistry.MAX_FREEZE_BUILD_UP)
+                .add(EntityAttributesRegistry.FREEZE_DURATION)
+                .add(EntityAttributesRegistry.FREEZE_TICK_THRESHOLD)
+                .add(EntityAttributesRegistry.FREEZE_BUILD_UP_REDUCTION)
+
+                .add(EntityAttributesRegistry.ADDITIONAL_FIRE_DAMAGE)
+                .add(EntityAttributesRegistry.INCREASED_FIRE_DAMAGE)
+                .add(EntityAttributesRegistry.FIRE_RESISTANCE)
+                .add(EntityAttributesRegistry.MAX_BURN_BUILD_UP)
+                .add(EntityAttributesRegistry.BURN_DURATION)
+                .add(EntityAttributesRegistry.BURN_TICK_THRESHOLD)
+                .add(EntityAttributesRegistry.BURN_BUILD_UP_REDUCTION)
+                
+                .add(EntityAttributesRegistry.ADDITIONAL_LIGHTNING_DAMAGE)
                 .add(EntityAttributesRegistry.INCREASED_LIGHTNING_DAMAGE)
+                .add(EntityAttributesRegistry.LIGHTNING_RESISTANCE)
+                .add(EntityAttributesRegistry.MAX_SHOCK_BUILD_UP)
+                .add(EntityAttributesRegistry.SHOCK_DURATION)
+                .add(EntityAttributesRegistry.SHOCK_TICK_THRESHOLD)
+                .add(EntityAttributesRegistry.SHOCK_BUILD_UP_REDUCTION)
+                
+                .add(EntityAttributesRegistry.ADDITIONAL_POISON_DAMAGE)
                 .add(EntityAttributesRegistry.INCREASED_POISON_DAMAGE)
                 .add(EntityAttributesRegistry.POISON_RESISTANCE)
-                .add(EntityAttributesRegistry.FIRE_RESISTANCE)
-                .add(EntityAttributesRegistry.FROST_RESISTANCE)
-                .add(EntityAttributesRegistry.LIGHTNING_RESISTANCE);
+                .add(EntityAttributesRegistry.MAX_POISON_BUILD_UP)
+                .add(EntityAttributesRegistry.POISON_DURATION)
+                .add(EntityAttributesRegistry.POISON_TICK_THRESHOLD)
+                .add(EntityAttributesRegistry.POISON_BUILD_UP_REDUCTION)
+
+                .add(EntityAttributesRegistry.MAX_STAGGER_BUILD_UP)
+                .add(EntityAttributesRegistry.STAGGER_DURATION)
+                .add(EntityAttributesRegistry.STAGGER_TICK_THRESHOLD)
+                .add(EntityAttributesRegistry.STAGGER_BUILD_UP_REDUCTION)
+        ;
     }
 
     @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))

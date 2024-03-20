@@ -1,7 +1,6 @@
 package com.github.theredbrain.betteradventuremode.registry;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
-import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.betteradventuremode.network.event.PlayerDeathCallback;
 import com.github.theredbrain.betteradventuremode.network.event.PlayerJoinCallback;
 import com.github.theredbrain.betteradventuremode.network.packet.AttackStaminaCostPacket;
@@ -28,8 +27,6 @@ public class EventsRegistry {
             if (server.getGameRules().getBoolean(GameRulesRegistry.TELEPORT_TO_SPAWN_ON_LOGIN)) {
                 server.getPlayerManager().respawnPlayer(player, true);
             }
-            ((DuckPlayerInventoryMixin)player.getInventory()).betteradventuremode$setEmptyMainHand(ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON.getDefaultStack());
-            ((DuckPlayerInventoryMixin)player.getInventory()).betteradventuremode$setEmptyOffHand(ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON.getDefaultStack());
         });
         PlayerDeathCallback.EVENT.register((player, server, source) -> {
             if (server.getGameRules().getBoolean(GameRulesRegistry.RESET_ADVANCEMENTS_ON_DEATH)) {
