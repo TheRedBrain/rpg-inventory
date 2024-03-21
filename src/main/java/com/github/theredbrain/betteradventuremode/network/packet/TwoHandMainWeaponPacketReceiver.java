@@ -1,5 +1,6 @@
 package com.github.theredbrain.betteradventuremode.network.packet;
 
+import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerInventoryMixin;
@@ -29,10 +30,6 @@ public class TwoHandMainWeaponPacketReceiver implements ServerPlayNetworking.Pla
             }
         }
 
-        if (offHandItemStack.isEmpty()) {
-            return;
-        }
-
         if (((DuckLivingEntityMixin) player).betteradventuremode$getStamina() <= 0) {
             player.sendMessageToClient(Text.translatable("hud.message.staminaTooLow"), true);
         } else if (((DuckPlayerEntityMixin) player).betteradventuremode$isMainHandStackSheathed() && ((DuckPlayerEntityMixin) player).betteradventuremode$isOffHandStackSheathed()) {
@@ -40,13 +37,13 @@ public class TwoHandMainWeaponPacketReceiver implements ServerPlayNetworking.Pla
         } else if (((DuckPlayerEntityMixin) player).betteradventuremode$isOffHandStackSheathed()) {
             ((DuckPlayerEntityMixin) player).betteradventuremode$setIsOffHandStackSheathed(false);
             player.equipStack(EquipmentSlot.OFFHAND, offHandItemStack);
-            ((DuckPlayerInventoryMixin)player.getInventory()).betteradventuremode$setSheathedOffHand(ItemStack.EMPTY);
+            ((DuckPlayerInventoryMixin) player.getInventory()).betteradventuremode$setSheathedOffHand(ItemStack.EMPTY);
         } else if (player.getMainHandStack().isIn(Tags.NON_TWO_HANDED_ITEMS)) {
             player.sendMessageToClient(Text.translatable("hud.message.nonTwoHandedWeaponEquipped"), true);
         } else {
             ((DuckPlayerEntityMixin) player).betteradventuremode$setIsOffHandStackSheathed(true);
             player.equipStack(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
-            ((DuckPlayerInventoryMixin)player.getInventory()).betteradventuremode$setSheathedOffHand(offHandItemStack);
+            ((DuckPlayerInventoryMixin) player.getInventory()).betteradventuremode$setSheathedOffHand(offHandItemStack);
         }
     }
 }

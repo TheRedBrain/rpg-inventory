@@ -25,6 +25,9 @@
     ],
     "cardinal-components-entity": [
       "com.github.theredbrain.betteradventuremode.registry.ComponentsRegistry"
+    ],
+    "mixinsquared": [
+      "com.github.theredbrain.betteradventuremode.BetterAdventureModeMixinCanceller"
     ]
   },
   "custom": {

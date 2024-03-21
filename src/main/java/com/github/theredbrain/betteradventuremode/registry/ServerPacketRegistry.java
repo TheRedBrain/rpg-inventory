@@ -23,6 +23,7 @@ public class ServerPacketRegistry {
     public static final Identifier SYNC_DIALOGUE_ANSWERS = BetterAdventureMode.identifier("sync_dialogue_answers");
     public static final Identifier SYNC_LOCATIONS = BetterAdventureMode.identifier("sync_locations");
     public static final Identifier SYNC_SHOPS = BetterAdventureMode.identifier("sync_shops");
+    public static final Identifier SYNC_WEAPON_POSES = BetterAdventureMode.identifier("sync_weapon_poses");
 
     public static void init() {
         ServerPlayNetworking.registerGlobalReceiver(SwapHandItemsPacket.TYPE, new SwapHandItemsPacketReceiver());

@@ -149,19 +149,15 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     private void betteradventuremode$updateTurtleHelmet(CallbackInfo ci) {
         boolean mana_regenerating_item_equipped = false;
         boolean first_person_enabling_item_equipped = false;
-        boolean changing_pitch_enabling_item_equipped = false;
         Predicate<ItemStack> mana_regenerating_item_equipped_predicate = stack -> stack.isIn(Tags.ENABLES_MANA_REGENERATION);
         Predicate<ItemStack> first_person_enabling_item_equipped_predicate = stack -> stack.isIn(Tags.ENABLES_FIRST_PERSON_PERSPECTIVE);
-        Predicate<ItemStack> changing_pitch_enabling_item_equipped_predicate = stack -> stack.isIn(Tags.ENABLES_CHANGING_PITCH);
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(this);
         if (trinkets.isPresent()) {
             mana_regenerating_item_equipped = trinkets.get().isEquipped(mana_regenerating_item_equipped_predicate);
             first_person_enabling_item_equipped = trinkets.get().isEquipped(first_person_enabling_item_equipped_predicate);
-            changing_pitch_enabling_item_equipped = trinkets.get().isEquipped(changing_pitch_enabling_item_equipped_predicate);
         }
         mana_regenerating_item_equipped = mana_regenerating_item_equipped || betteradventuremode$hasEquipped(mana_regenerating_item_equipped_predicate);
         first_person_enabling_item_equipped = first_person_enabling_item_equipped || betteradventuremode$hasEquipped(first_person_enabling_item_equipped_predicate);
-        changing_pitch_enabling_item_equipped = changing_pitch_enabling_item_equipped || betteradventuremode$hasEquipped(changing_pitch_enabling_item_equipped_predicate);
 
         ItemStack itemStackMainHand = this.getEquippedStack(EquipmentSlot.MAINHAND);
         ItemStack itemStackOffHand = this.getEquippedStack(EquipmentSlot.OFFHAND);
@@ -174,7 +170,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         }
         if (itemStackMainHand.isIn(Tags.TWO_HANDED_ITEMS) && (this.betteradventuremode$isMainHandStackSheathed() || !this.betteradventuremode$isOffHandStackSheathed()) && !this.isCreative() && !this.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT)) {
             if (!this.hasStatusEffect(StatusEffectsRegistry.NEED_EMPTY_OFFHAND_EFFECT)) {
-                this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.NEED_EMPTY_OFFHAND_EFFECT, -1, 0, false, false, false));
+                this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.NEED_EMPTY_OFFHAND_EFFECT, -1, 0, false, false, true));
             }
         } else {
             this.removeStatusEffect(StatusEffectsRegistry.NEED_EMPTY_OFFHAND_EFFECT);
@@ -186,16 +182,16 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         } else {
             this.removeStatusEffect(StatusEffectsRegistry.MANA_REGENERATION_EFFECT);
         }
-        if (BetterAdventureMode.serverConfig.enableBetter3rdPersonCompat && changing_pitch_enabling_item_equipped) {
+        if (BetterAdventureMode.serverConfig.enableBetter3rdPersonCompat && itemStackMainHand.isIn(Tags.ENABLES_CHANGING_PITCH)) {
             if (!this.hasStatusEffect(StatusEffectsRegistry.CHANGING_PITCH_ENABLED_EFFECT)) {
-                this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.CHANGING_PITCH_ENABLED_EFFECT, -1, 0, false, false, false));
+                this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.CHANGING_PITCH_ENABLED_EFFECT, -1, 0, false, false, true));
             }
         } else {
             this.removeStatusEffect(StatusEffectsRegistry.CHANGING_PITCH_ENABLED_EFFECT);
         }
-        if (BetterAdventureMode.serverConfig.enableBetter3rdPersonCompat && changing_pitch_enabling_item_equipped && first_person_enabling_item_equipped) {
+        if (BetterAdventureMode.serverConfig.enableBetter3rdPersonCompat && itemStackMainHand.isIn(Tags.ENABLES_CHANGING_PITCH) && first_person_enabling_item_equipped) {
             if (!this.hasStatusEffect(StatusEffectsRegistry.FIRST_PERSON_PERSPECTIVE_ENABLED_EFFECT)) {
-                this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.FIRST_PERSON_PERSPECTIVE_ENABLED_EFFECT, -1, 0, false, false, false));
+                this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.FIRST_PERSON_PERSPECTIVE_ENABLED_EFFECT, -1, 0, false, false, true));
             }
         } else {
             this.removeStatusEffect(StatusEffectsRegistry.FIRST_PERSON_PERSPECTIVE_ENABLED_EFFECT);

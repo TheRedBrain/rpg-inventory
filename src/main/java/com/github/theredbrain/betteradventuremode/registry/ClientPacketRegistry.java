@@ -114,6 +114,9 @@ public class ClientPacketRegistry {
         ClientPlayNetworking.registerGlobalReceiver(ServerPacketRegistry.SYNC_SHOPS, (client, handler, buffer, responseSender) -> { // TODO convert to packet
             ShopsRegistry.decodeRegistry(buffer);
         });
+        ClientPlayNetworking.registerGlobalReceiver(ServerPacketRegistry.SYNC_WEAPON_POSES, (client, handler, buffer, responseSender) -> { // TODO convert to packet
+            WeaponPosesRegistry.decodeRegistry(buffer);
+        });
         ClientPlayNetworking.registerGlobalReceiver(ServerPacketRegistry.ServerConfigSync.ID, (client, handler, buf, responseSender) -> {
             BetterAdventureMode.serverConfig = ServerPacketRegistry.ServerConfigSync.read(buf);
         });

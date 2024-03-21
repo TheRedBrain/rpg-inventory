@@ -62,6 +62,7 @@ public class BetterAdventureMode implements ModInitializer {
 		GameRulesRegistry.init();
 		PredicateRegistry.init();
 		StructurePlacementTypesRegistry.register();
+		WeaponPosesRegistry.init();
 	}
 
 	static {

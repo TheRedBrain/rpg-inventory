@@ -37,13 +37,14 @@ public class EventsRegistry {
             }
         });
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+            sender.sendPacket(ServerPacketRegistry.ServerConfigSync.ID, serverConfigSerialized); // TODO convert to packet
+            sender.sendPacket(ServerPacketRegistry.GamePlayBalanceConfigSync.ID, gamePlayBalanceConfigSerialized); // TODO convert to packet
             sender.sendPacket(ServerPacketRegistry.SYNC_CRAFTING_RECIPES, CraftingRecipeRegistry.getEncodedRegistry()); // TODO convert to packet
             sender.sendPacket(ServerPacketRegistry.SYNC_DIALOGUES, DialoguesRegistry.getEncodedRegistry()); // TODO convert to packet
             sender.sendPacket(ServerPacketRegistry.SYNC_DIALOGUE_ANSWERS, DialogueAnswersRegistry.getEncodedRegistry()); // TODO convert to packet
             sender.sendPacket(ServerPacketRegistry.SYNC_LOCATIONS, LocationsRegistry.getEncodedRegistry()); // TODO convert to packet
             sender.sendPacket(ServerPacketRegistry.SYNC_SHOPS, ShopsRegistry.getEncodedRegistry()); // TODO convert to packet
-            sender.sendPacket(ServerPacketRegistry.ServerConfigSync.ID, serverConfigSerialized); // TODO convert to packet
-            sender.sendPacket(ServerPacketRegistry.GamePlayBalanceConfigSync.ID, gamePlayBalanceConfigSerialized); // TODO convert to packet
+            sender.sendPacket(ServerPacketRegistry.SYNC_WEAPON_POSES, WeaponPosesRegistry.getEncodedRegistry()); // TODO convert to packet
         });
     }
 

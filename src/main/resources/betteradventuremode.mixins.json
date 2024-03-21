@@ -49,6 +49,7 @@
     "client.gui.hud.InGameOverlayRendererMixin",
     "client.gui.screen.ingame.CreativeInventoryScreenMixin",
     "client.gui.screen.ingame.InventoryScreenMixin",
+    "client.network.AbstractClientPlayerEntity_BetterCombatReplacementMixin",
     "client.network.AbstractClientPlayerEntityMixin",
     "client.network.ClientAdvancementManagerMixin",
     "client.network.ClientPlayerEntityMixin",

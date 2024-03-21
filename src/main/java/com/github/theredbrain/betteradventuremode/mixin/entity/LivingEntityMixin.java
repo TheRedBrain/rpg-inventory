@@ -29,6 +29,7 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.stat.Stats;
+import net.minecraft.util.UseAction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
@@ -80,9 +81,6 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
     public abstract ItemStack getOffHandStack();
 
     @Shadow
-    public abstract boolean isBlocking();
-
-    @Shadow
     public abstract void stopUsingItem();
 
     @Shadow
@@ -93,6 +91,9 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
 
     @Shadow public abstract ItemStack getEquippedStack(EquipmentSlot slot);
 
+    @Shadow public abstract boolean isUsingItem();
+
+    @Shadow protected ItemStack activeItemStack;
     @Unique
     private int healthTickTimer = 0;
     @Unique
@@ -819,6 +820,24 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
                 this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.BURNING, oldBurnDuration - 5, 0, false, false, true));
             }
 
+        }
+    }
+
+    /**
+     * @author TheRedBrain
+     * @reason WIP
+     */
+    @Overwrite
+    public boolean isBlocking() {
+        if (this.isUsingItem() && !this.activeItemStack.isEmpty()) {
+            Item item = this.activeItemStack.getItem();
+            if (item.getUseAction(this.activeItemStack) != UseAction.BLOCK) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return false;
         }
     }
 

@@ -43,7 +43,7 @@ repositories {
 		url 'https://maven.kosmx.dev/'
 	}
 
-	// Mixin Extras, Immersive Portals
+	// Mixin Squared, Immersive Portals
 	maven {
 		url 'https://jitpack.io'
 	}
@@ -112,6 +112,10 @@ dependencies {
 
 	// Azure Lib
 	modImplementation("mod.azure.azurelib:azurelib-fabric-${project.mc_version}:${project.azure_lib_version}")
+
+	// Mixin Squared
+	include(implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:0.1.2-beta.4")))
+
 }
 
 processResources {
