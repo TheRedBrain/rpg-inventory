@@ -16,7 +16,7 @@ repositories {
 		url "https://maven.shedaniel.me/"
 	}
 
-	// Trinkets, Cloth Config
+	// Trinkets, Cloth Config, Mod Menu
 	maven {
 		name = "TerraformersMC"
 		url = "https://maven.terraformersmc.com/"
@@ -115,6 +115,9 @@ dependencies {
 
 	// Mixin Squared
 	include(implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:0.1.2-beta.4")))
+
+	// Mod Menu
+	modImplementation "com.terraformersmc:modmenu:${project.mod_menu_version}"
 
 }
 

@@ -35,7 +35,14 @@ import java.util.List;
 
 public class BetterAdventureModeClient implements ClientModInitializer {
 
+    public static BetterAdventureModeClient INSTANCE;
     public static ClientConfig clientConfig;
+    public float cameraPitch = 0.0f;
+    public float cameraYaw = 0.0f;
+
+    public BetterAdventureModeClient(){
+        BetterAdventureModeClient.INSTANCE = this;
+    }
 
     @Override
     public void onInitializeClient() {
@@ -54,6 +61,7 @@ public class BetterAdventureModeClient implements ClientModInitializer {
         registerScreens();
         registerModelPredicateProviders();
         registerColors();
+        EventsRegistry.initializeClientEvents();
         registerCustomModelStatusEffectRenderers();
         registerSpellModels();
     }

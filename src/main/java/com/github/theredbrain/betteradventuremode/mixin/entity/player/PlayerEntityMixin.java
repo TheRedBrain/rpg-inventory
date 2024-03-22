@@ -182,14 +182,14 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         } else {
             this.removeStatusEffect(StatusEffectsRegistry.MANA_REGENERATION_EFFECT);
         }
-        if (BetterAdventureMode.serverConfig.enableBetter3rdPersonCompat && itemStackMainHand.isIn(Tags.ENABLES_CHANGING_PITCH)) {
+        if (itemStackMainHand.isIn(Tags.ENABLES_CHANGING_PITCH)) {
             if (!this.hasStatusEffect(StatusEffectsRegistry.CHANGING_PITCH_ENABLED_EFFECT)) {
                 this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.CHANGING_PITCH_ENABLED_EFFECT, -1, 0, false, false, true));
             }
         } else {
             this.removeStatusEffect(StatusEffectsRegistry.CHANGING_PITCH_ENABLED_EFFECT);
         }
-        if (BetterAdventureMode.serverConfig.enableBetter3rdPersonCompat && itemStackMainHand.isIn(Tags.ENABLES_CHANGING_PITCH) && first_person_enabling_item_equipped) {
+        if ((itemStackMainHand.isIn(Tags.ENABLES_CHANGING_PITCH) || (this.isUsingItem() && this.getActiveItem().isIn(Tags.ENABLES_CHANGING_PITCH_ON_USING))) && first_person_enabling_item_equipped) {
             if (!this.hasStatusEffect(StatusEffectsRegistry.FIRST_PERSON_PERSPECTIVE_ENABLED_EFFECT)) {
                 this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.FIRST_PERSON_PERSPECTIVE_ENABLED_EFFECT, -1, 0, false, false, true));
             }

@@ -8,6 +8,7 @@ import net.bettercombat.api.MinecraftClient_BetterCombat;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.client.option.Perspective;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -119,6 +120,9 @@ public class ClientPacketRegistry {
         });
         ClientPlayNetworking.registerGlobalReceiver(ServerPacketRegistry.ServerConfigSync.ID, (client, handler, buf, responseSender) -> {
             BetterAdventureMode.serverConfig = ServerPacketRegistry.ServerConfigSync.read(buf);
+            if (BetterAdventureMode.serverConfig.disable_first_person) {
+                client.options.setPerspective(Perspective.THIRD_PERSON_BACK);
+            }
         });
         ClientPlayNetworking.registerGlobalReceiver(ServerPacketRegistry.GamePlayBalanceConfigSync.ID, (client, handler, buf, responseSender) -> {
             BetterAdventureMode.gamePlayBalanceConfig = ServerPacketRegistry.GamePlayBalanceConfigSync.read(buf);

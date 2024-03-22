@@ -1,6 +1,7 @@
 package com.github.theredbrain.betteradventuremode.mixin.client;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
+import com.github.theredbrain.betteradventuremode.client.DuckMinecraftClientMixin;
 import com.github.theredbrain.betteradventuremode.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.betteradventuremode.network.packet.AttackStaminaCostPacket;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -56,7 +57,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Mixin({MinecraftClient.class})
-public abstract class MinecraftClient_BetterCombatReplacementMixin implements MinecraftClient_BetterCombat {
+public abstract class MinecraftClient_BetterCombatReplacementMixin implements MinecraftClient_BetterCombat, DuckMinecraftClientMixin {
     @Shadow
     public ClientWorld world;
     @Shadow
@@ -457,6 +458,11 @@ public abstract class MinecraftClient_BetterCombatReplacementMixin implements Mi
     @Unique
     private AttackHand getCurrentHand() {
         return PlayerAttackHelper.getCurrentAttack(this.player, this.getComboCount());
+    }
+
+    @Override
+    public Hand betteradventuremode$getCurrentAttackHand() {
+        return getCurrentHand() != null && getCurrentHand().isOffHand() ? Hand.OFF_HAND : Hand.MAIN_HAND;
     }
 
     @Unique

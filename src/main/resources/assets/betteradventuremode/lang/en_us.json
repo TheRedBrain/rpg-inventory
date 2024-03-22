@@ -666,6 +666,17 @@
 	"itemGroup.betteradventuremode.script_blocks": "Better Adventure Mode - Script Blocks",
 
 
+	"text.autoconfig.betteradventuremode.title": "Better Adventure Mode",
+	"text.autoconfig.betteradventuremode.option.client.show_adventure_hud": "Change the HUD",
+	"text.autoconfig.betteradventuremode.option.client.show_resource_bar_numbers": "Show numeric resource values",
+	"text.autoconfig.betteradventuremode.option.client.health_bar_number_color": "Color of the health bar number",
+	"text.autoconfig.betteradventuremode.option.client.stamina_bar_number_color": "Color of the stamina bar number",
+	"text.autoconfig.betteradventuremode.option.client.mana_bar_number_color": "Color of the mana bar number",
+	"text.autoconfig.betteradventuremode.option.client.enable_360_degree_third_person": "Enable the 360 degree 3rd person camera.",
+	"text.autoconfig.betteradventuremode.option.client.attacking_towards_camera_direction": "Attack Towards Camera Direction",
+	"text.autoconfig.betteradventuremode.option.client.pick_block_towards_camera_direction": "Pick Block Towards Camera Direction",
+	"text.autoconfig.betteradventuremode.option.client.using_items_towards_camera_direction": "Use Item Towards Camera Direction",
+	"text.autoconfig.betteradventuremode.option.client.show_debug_messages": "Show debug messages",
 
 
 	"locations.dungeons.test_dungeon.boss_room_1": "Boss Room 1",

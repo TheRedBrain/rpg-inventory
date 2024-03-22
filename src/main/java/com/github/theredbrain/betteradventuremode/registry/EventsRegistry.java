@@ -1,10 +1,16 @@
 package com.github.theredbrain.betteradventuremode.registry;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
+import com.github.theredbrain.betteradventuremode.BetterAdventureModeClient;
 import com.github.theredbrain.betteradventuremode.network.event.PlayerDeathCallback;
 import com.github.theredbrain.betteradventuremode.network.event.PlayerJoinCallback;
+import net.bettercombat.api.MinecraftClient_BetterCombat;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.minecraft.client.option.Perspective;
 import net.minecraft.network.PacketByteBuf;
 
 public class EventsRegistry {
@@ -40,6 +46,50 @@ public class EventsRegistry {
             sender.sendPacket(ServerPacketRegistry.SYNC_LOCATIONS, LocationsRegistry.getEncodedRegistry()); // TODO convert to packet
             sender.sendPacket(ServerPacketRegistry.SYNC_SHOPS, ShopsRegistry.getEncodedRegistry()); // TODO convert to packet
             sender.sendPacket(ServerPacketRegistry.SYNC_WEAPON_POSES, WeaponPosesRegistry.getEncodedRegistry()); // TODO convert to packet
+        });
+    }
+
+    @Environment(EnvType.CLIENT)
+    public static void initializeClientEvents() {
+        ClientTickEvents.START_CLIENT_TICK.register(client -> {
+            boolean bl = client.options.leftKey.isPressed() || client.options.backKey.isPressed() || client.options.rightKey.isPressed();
+            boolean arePlayerYawChangesDisabledByAttacking = BetterAdventureMode.serverConfig.disable_player_yaw_changes_during_attacks && ((MinecraftClient_BetterCombat) client).isWeaponSwingInProgress();
+            if (client.options.attackKey.isPressed() && !bl &&
+                    client.player != null && BetterAdventureModeClient.clientConfig.enable_360_degree_third_person &&
+                    BetterAdventureMode.serverConfig.allow_360_degree_third_person &&
+                    client.options.getPerspective() != Perspective.FIRST_PERSON &&
+                    BetterAdventureModeClient.clientConfig.attacking_towards_camera_direction) {
+                if (!BetterAdventureMode.serverConfig.disable_player_pitch_changes) {
+                    client.player.setPitch(BetterAdventureModeClient.INSTANCE.cameraPitch);
+                }
+                if (!arePlayerYawChangesDisabledByAttacking) {
+                    client.player.setYaw(BetterAdventureModeClient.INSTANCE.cameraYaw);
+                }
+            }
+            if (client.options.pickItemKey.isPressed() && !bl &&
+                    client.player != null && BetterAdventureModeClient.clientConfig.enable_360_degree_third_person &&
+                    BetterAdventureMode.serverConfig.allow_360_degree_third_person &&
+                    client.options.getPerspective() != Perspective.FIRST_PERSON &&
+                    BetterAdventureModeClient.clientConfig.pick_block_towards_camera_direction) {
+                if (!BetterAdventureMode.serverConfig.disable_player_pitch_changes) {
+                    client.player.setPitch(BetterAdventureModeClient.INSTANCE.cameraPitch);
+                }
+                if (!arePlayerYawChangesDisabledByAttacking) {
+                    client.player.setYaw(BetterAdventureModeClient.INSTANCE.cameraYaw);
+                }
+            }
+            if (client.options.useKey.isPressed() && !bl &&
+                    client.player != null && BetterAdventureModeClient.clientConfig.enable_360_degree_third_person &&
+                    BetterAdventureMode.serverConfig.allow_360_degree_third_person &&
+                    client.options.getPerspective() != Perspective.FIRST_PERSON &&
+                    BetterAdventureModeClient.clientConfig.using_items_towards_camera_direction) {
+                if (!BetterAdventureMode.serverConfig.disable_player_pitch_changes) {
+                    client.player.setPitch(BetterAdventureModeClient.INSTANCE.cameraPitch);
+                }
+                if (!arePlayerYawChangesDisabledByAttacking) {
+                    client.player.setYaw(BetterAdventureModeClient.INSTANCE.cameraYaw);
+                }
+            }
         });
     }
 }

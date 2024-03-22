@@ -46,16 +46,20 @@
   },
   "client": [
     "client.MinecraftClient_BetterCombatReplacementMixin",
+    "client.MouseMixin",
     "client.gui.hud.InGameHudMixin",
     "client.gui.hud.InGameOverlayRendererMixin",
     "client.gui.screen.ingame.CreativeInventoryScreenMixin",
     "client.gui.screen.ingame.InventoryScreenMixin",
+    "client.input.KeyboardInputMixin",
     "client.network.AbstractClientPlayerEntity_BetterCombatReplacementMixin",
     "client.network.AbstractClientPlayerEntityMixin",
     "client.network.ClientAdvancementManagerMixin",
     "client.network.ClientPlayerEntityMixin",
     "client.network.ClientPlayerInteractionManagerMixin",
     "client.network.message.MessageHandlerMixin",
+    "client.option.PerspectiveMixin",
+    "client.render.CameraMixin",
     "client.render.entity.PlayerEntityRendererMixin"
   ]
 }

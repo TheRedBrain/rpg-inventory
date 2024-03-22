@@ -28,6 +28,9 @@
     ],
     "mixinsquared": [
       "com.github.theredbrain.betteradventuremode.BetterAdventureModeMixinCanceller"
+    ],
+    "modmenu": [
+      "com.github.theredbrain.betteradventuremode.client.compatibility.ModMenuCompatibility"
     ]
   },
   "custom": {
@@ -53,5 +56,8 @@
     "cardinal-components-entity": ">=5.2.2",
     "azurelib": ">=1.0.3",
     "spell_engine": ">=0.12.5"
+  },
+  "conflicts": {
+    "better3rdperson": "*"
   }
 }
