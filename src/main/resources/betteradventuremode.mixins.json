@@ -45,6 +45,7 @@
     "defaultRequire": 1
   },
   "client": [
+    "client.MinecraftClient_BetterCombatReplacementMixin",
     "client.gui.hud.InGameHudMixin",
     "client.gui.hud.InGameOverlayRendererMixin",
     "client.gui.screen.ingame.CreativeInventoryScreenMixin",

@@ -1,0 +1,6 @@
+{
+  "weaponPoses": {
+    "pose": "betteradventuremode:pose_one_handed_claymore",
+    "twoHandedPose": "bettercombat:pose_two_handed_sword"
+  }
+}

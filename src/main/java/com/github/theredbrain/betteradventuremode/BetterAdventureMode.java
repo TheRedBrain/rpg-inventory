@@ -69,6 +69,7 @@ public class BetterAdventureMode implements ModInitializer {
 		ModContainer modContainer = FabricLoader.getInstance().getModContainer(MOD_ID).get();
 		registerBuiltinResourcePack(new Identifier(MOD_ID, "betteradventuremode_adventure_map_1"), modContainer, Text.translatable("betteradventuremode.builtin_resource_packs.betteradventuremode_adventure_map_1"), ResourcePackActivationType.DEFAULT_ENABLED);
 		registerBuiltinResourcePack(new Identifier(MOD_ID, "betteradventuremode_testing"), modContainer, Text.translatable("betteradventuremode.builtin_resource_packs.betteradventuremode_testing"), ResourcePackActivationType.NORMAL);
+		registerBuiltinResourcePack(new Identifier(MOD_ID, "betteradventuremode_x_rpgseries"), modContainer, Text.translatable("betteradventuremode.builtin_resource_packs.betteradventuremode_x_rpgseries"), ResourcePackActivationType.NORMAL);
 	}
 
 	public static Identifier identifier(String path) {

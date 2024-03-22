@@ -23,10 +23,8 @@ import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.CrossbowItem;
 import net.minecraft.item.DyeableItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
 import net.spell_engine.api.render.CustomModels;
 import net.spell_engine.internals.casting.SpellCast;
@@ -56,7 +54,6 @@ public class BetterAdventureModeClient implements ClientModInitializer {
         registerScreens();
         registerModelPredicateProviders();
         registerColors();
-        EventsRegistry.initializeClientEvents();
         registerCustomModelStatusEffectRenderers();
         registerSpellModels();
     }

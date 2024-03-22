@@ -10,6 +10,9 @@ public class BetterAdventureModeMixinCanceller implements MixinCanceller {
         if (mixinClassName.equals("net.bettercombat.mixin.client.AbstractClientPlayerEntityMixin")) {
             return true;
         }
+        if (mixinClassName.equals("net.bettercombat.mixin.client.MinecraftClientInject")) {
+            return true;
+        }
         return false;
     }
 }

@@ -50,13 +50,13 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
         }
     }
 
-    /**
-     * @author TheRedBrain
-     */
-    @Inject(method = "getArmPose", at = @At("RETURN"), cancellable = true)
-    private static void betteradventuremode$getArmPose_return(AbstractClientPlayerEntity player, Hand hand, CallbackInfoReturnable<BipedEntityModel.ArmPose> cir) {
-        if (cir.getReturnValue() == BipedEntityModel.ArmPose.BLOCK) {
-            cir.setReturnValue(BipedEntityModel.ArmPose.EMPTY);
-        }
-    }
+//    /**
+//     * @author TheRedBrain
+//     */
+//    @Inject(method = "getArmPose", at = @At("RETURN"), cancellable = true)
+//    private static void betteradventuremode$getArmPose_return(AbstractClientPlayerEntity player, Hand hand, CallbackInfoReturnable<BipedEntityModel.ArmPose> cir) {
+//        if (cir.getReturnValue() == BipedEntityModel.ArmPose.BLOCK) {
+//            cir.setReturnValue(BipedEntityModel.ArmPose.EMPTY);
+//        }
+//    }
 }

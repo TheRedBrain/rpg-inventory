@@ -1,0 +1,6 @@
+{
+  "parent": "betteradventuremode:item/templates/template_claymore",
+  "textures": {
+    "layer0": "betteradventuremode:item/zweihander"
+  }
+}

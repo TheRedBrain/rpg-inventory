@@ -24,7 +24,6 @@ import net.bettercombat.client.animation.modifier.HarshAdjustmentModifier;
 import net.bettercombat.client.animation.modifier.TransmissionSpeedModifier;
 import net.bettercombat.compatibility.CompatibilityFlags;
 import net.bettercombat.logic.AnimatedHand;
-import net.bettercombat.mixin.LivingEntityAccessor;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.EntityPose;
@@ -80,24 +79,16 @@ public abstract class AbstractClientPlayerEntity_BetterCombatReplacementMixin ex
     public void updateAnimationsOnTick() {
         PlayerEntity player = (PlayerEntity)this;
         boolean isLeftHanded = this.isLeftHanded();
-        boolean hasActiveAttackAnimation = this.attackAnimation.base.getAnimation() != null && this.attackAnimation.base.getAnimation().isActive();
         ItemStack mainHandStack = player.getMainHandStack();
-        if (!player.handSwinging && !player.isSwimming()/* && !player.isUsingItem()*/ && !Platform.isCastingSpell(player) && !CrossbowItem.isCharged(mainHandStack)) {
+        ItemStack offHandStack = player.getOffHandStack();
+        if (!player.handSwinging && !player.isSwimming() && !player.isUsingItem() && !Platform.isCastingSpell(player) && !CrossbowItem.isCharged(mainHandStack)) {
 
-            // TODO implement remaining pose types
-            boolean isSneaking = this.isSneaking();
-            boolean isWalking = this.isWalking();
-            boolean isBlocking = this.isBlocking();
-            boolean isSprinting = this.isSprinting();
             boolean isTwoHandedWielding = ((DuckPlayerEntityMixin) this).betteradventuremode$isOffHandStackSheathed() && !(((DuckPlayerEntityMixin) this).betteradventuremode$isMainHandStackSheathed());
-            if (hasActiveAttackAnimation) {
-                ((LivingEntityAccessor)player).invokeTurnHead(player.getHeadYaw(), 0.0F);
-            }
 
             KeyframeAnimation newMainHandPose = null;
             KeyframeAnimation newOffHandPose = null;
             WeaponPoses mainHandWeaponPoses = WeaponPosesRegistry.getWeaponPoses(Registries.ITEM.getId(mainHandStack.getItem()));
-            WeaponPoses offHandWeaponPoses = WeaponPosesRegistry.getWeaponPoses(Registries.ITEM.getId(player.getOffHandStack().getItem()));
+            WeaponPoses offHandWeaponPoses = WeaponPosesRegistry.getWeaponPoses(Registries.ITEM.getId(offHandStack.getItem()));
 
             if (isTwoHandedWielding) {
 
@@ -105,11 +96,11 @@ public abstract class AbstractClientPlayerEntity_BetterCombatReplacementMixin ex
                     newMainHandPose = (KeyframeAnimation) AnimationRegistry.animations.get(mainHandWeaponPoses.twoHandedPose());
                 }
             } else {
-                if (mainHandWeaponPoses != null) {
-                    newMainHandPose = isBlocking && !isWalking && mainHandWeaponPoses.poseBlocking() != null ? (KeyframeAnimation) AnimationRegistry.animations.get(mainHandWeaponPoses.poseBlocking()) : mainHandWeaponPoses.pose() != null ? (KeyframeAnimation) AnimationRegistry.animations.get(mainHandWeaponPoses.pose()) : null;
+                if (mainHandWeaponPoses != null && mainHandWeaponPoses.pose() != null) {
+                    newMainHandPose = (KeyframeAnimation) AnimationRegistry.animations.get(mainHandWeaponPoses.pose());
                 }
-                if (offHandWeaponPoses != null) {
-                    newOffHandPose = isBlocking && !isWalking && offHandWeaponPoses.offHandPoseBlocking() != null ? (KeyframeAnimation) AnimationRegistry.animations.get(offHandWeaponPoses.offHandPoseBlocking()) : offHandWeaponPoses.offHandPose() != null ? (KeyframeAnimation) AnimationRegistry.animations.get(offHandWeaponPoses.offHandPose()) : null;
+                if (offHandWeaponPoses != null && offHandWeaponPoses.offHandPose() != null) {
+                    newOffHandPose = (KeyframeAnimation) AnimationRegistry.animations.get(offHandWeaponPoses.offHandPose());
                 }
             }
 

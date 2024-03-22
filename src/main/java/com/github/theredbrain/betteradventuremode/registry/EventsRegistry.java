@@ -3,11 +3,6 @@ package com.github.theredbrain.betteradventuremode.registry;
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.network.event.PlayerDeathCallback;
 import com.github.theredbrain.betteradventuremode.network.event.PlayerJoinCallback;
-import com.github.theredbrain.betteradventuremode.network.packet.AttackStaminaCostPacket;
-import net.bettercombat.api.client.BetterCombatClientEvents;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.network.PacketByteBuf;
@@ -45,16 +40,6 @@ public class EventsRegistry {
             sender.sendPacket(ServerPacketRegistry.SYNC_LOCATIONS, LocationsRegistry.getEncodedRegistry()); // TODO convert to packet
             sender.sendPacket(ServerPacketRegistry.SYNC_SHOPS, ShopsRegistry.getEncodedRegistry()); // TODO convert to packet
             sender.sendPacket(ServerPacketRegistry.SYNC_WEAPON_POSES, WeaponPosesRegistry.getEncodedRegistry()); // TODO convert to packet
-        });
-    }
-
-    @Environment(EnvType.CLIENT)
-    public static void initializeClientEvents() {
-
-        BetterCombatClientEvents.ATTACK_START.register((clientPlayerEntity, attackHand) -> {
-            ClientPlayNetworking.send(new AttackStaminaCostPacket(
-                    attackHand.itemStack()
-            ));
         });
     }
 }
