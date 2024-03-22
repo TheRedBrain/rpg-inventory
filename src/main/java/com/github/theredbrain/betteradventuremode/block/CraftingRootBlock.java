@@ -1,5 +1,6 @@
 package com.github.theredbrain.betteradventuremode.block;
 
+import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.betteradventuremode.registry.BlockRegistry;
 import com.github.theredbrain.betteradventuremode.registry.Tags;
@@ -43,7 +44,9 @@ public class CraftingRootBlock extends Block {
         if (world.isClient) {
             return ActionResult.SUCCESS;
         }
-        player.openHandledScreen(createCraftingRootBlockScreenHandlerFactory(state, world, pos, 0));
+        if (BetterAdventureMode.serverConfig.crafting_root_block_provides_crafting_tab) {
+            player.openHandledScreen(createCraftingRootBlockScreenHandlerFactory(state, world, pos, 0));
+        }
 //        player.incrementStat(Stats.INTERACT_WITH_CRAFTING_TABLE); // TODO stats
         return ActionResult.CONSUME;
     }
@@ -57,6 +60,7 @@ public class CraftingRootBlock extends Block {
         Set<String> craftingTab2LevelProviders = new HashSet<>();
         Set<String> craftingTab3LevelProviders = new HashSet<>();
         boolean isStorageTabProviderInReach = false;
+        boolean isCraftingTab0ProviderInReach = false;
         boolean isCraftingTab1ProviderInReach = false;
         boolean isCraftingTab2ProviderInReach = false;
         boolean isCraftingTab3ProviderInReach = false;
@@ -94,6 +98,9 @@ public class CraftingRootBlock extends Block {
 
                         isStorageTabProviderInReach = isStorageArea0ProviderInReach || isStorageArea1ProviderInReach || isStorageArea2ProviderInReach || isStorageArea3ProviderInReach || isStorageArea4ProviderInReach;
 
+                        if (blockState.isOf(BlockRegistry.CRAFTING_TAB_0_PROVIDER_BLOCK) || (BetterAdventureMode.serverConfig.crafting_root_block_provides_crafting_tab && blockState.isOf(BlockRegistry.CRAFTING_TAB_0_PROVIDER_BLOCK))) {
+                            isCraftingTab0ProviderInReach = true;
+                        }
                         if (blockState.isOf(BlockRegistry.CRAFTING_TAB_1_PROVIDER_BLOCK)) {
                             isCraftingTab1ProviderInReach = true;
                         }
@@ -126,9 +133,10 @@ public class CraftingRootBlock extends Block {
         tabLevels[3] = craftingTab3LevelProviders.size();
 
         tabProvidersInReach = (byte)(isStorageTabProviderInReach ? tabProvidersInReach | 1 << 0 : tabProvidersInReach & ~(1 << 0));
-        tabProvidersInReach = (byte)(isCraftingTab1ProviderInReach ? tabProvidersInReach | 1 << 1 : tabProvidersInReach & ~(1 << 1));
-        tabProvidersInReach = (byte)(isCraftingTab2ProviderInReach ? tabProvidersInReach | 1 << 2 : tabProvidersInReach & ~(1 << 2));
-        tabProvidersInReach = (byte)(isCraftingTab3ProviderInReach ? tabProvidersInReach | 1 << 3 : tabProvidersInReach & ~(1 << 3));
+        tabProvidersInReach = (byte)(isCraftingTab0ProviderInReach ? tabProvidersInReach | 1 << 1 : tabProvidersInReach & ~(1 << 1));
+        tabProvidersInReach = (byte)(isCraftingTab1ProviderInReach ? tabProvidersInReach | 1 << 2 : tabProvidersInReach & ~(1 << 2));
+        tabProvidersInReach = (byte)(isCraftingTab2ProviderInReach ? tabProvidersInReach | 1 << 3 : tabProvidersInReach & ~(1 << 3));
+        tabProvidersInReach = (byte)(isCraftingTab3ProviderInReach ? tabProvidersInReach | 1 << 4 : tabProvidersInReach & ~(1 << 4));
 
         storageProvidersInReach = (byte)(isStorageArea0ProviderInReach ? storageProvidersInReach | 1 << 0 : storageProvidersInReach & ~(1 << 0));
         storageProvidersInReach = (byte)(isStorageArea1ProviderInReach ? storageProvidersInReach | 1 << 1 : storageProvidersInReach & ~(1 << 1));

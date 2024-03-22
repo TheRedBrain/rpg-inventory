@@ -110,8 +110,8 @@ public class CraftingBenchBlockScreen extends HandledScreen<CraftingBenchBlockSc
         this.useStashForCrafting = ((DuckPlayerEntityMixin) this.playerEntity).betteradventuremode$useStashForCrafting();
         this.toggleUseStashForCraftingButton = this.addDrawableChild(ButtonWidget.builder(useStashForCrafting ? TOGGLE_USE_STASH_FOR_CRAFTING_ON_BUTTON_LABEL_TEXT : TOGGLE_USE_STASH_FOR_CRAFTING_OFF_BUTTON_LABEL_TEXT, button -> this.toggleUseStorageForCrafting()).dimensions(this.x + 61, this.y + 17, 104, 20).build());
 
-        this.toggleTab0Button = this.addDrawableChild(ItemButtonWidget.builder(BlockRegistry.CRAFTING_ROOT_BLOCK.asItem().getDefaultStack(), button -> this.toggleTab(0)).dimensions(this.x + 7, this.y + 17, 50, 20).build());
-        this.toggleTab0Button.setTooltip(Tooltip.of(BlockRegistry.CRAFTING_ROOT_BLOCK.getName()));
+        this.toggleTab0Button = this.addDrawableChild(ItemButtonWidget.builder(BlockRegistry.CRAFTING_TAB_0_PROVIDER_BLOCK.asItem().getDefaultStack(), button -> this.toggleTab(0)).dimensions(this.x + 7, this.y + 17, 50, 20).build());
+        this.toggleTab0Button.setTooltip(Tooltip.of(BlockRegistry.CRAFTING_TAB_0_PROVIDER_BLOCK.getName()));
 
         this.toggleTab1Button = this.addDrawableChild(ItemButtonWidget.builder(BlockRegistry.CRAFTING_TAB_1_PROVIDER_BLOCK.asItem().getDefaultStack(), button -> this.toggleTab(1)).dimensions(this.x + 7, this.y + 41, 50, 20).build());
         this.toggleTab1Button.setTooltip(Tooltip.of(BlockRegistry.CRAFTING_TAB_1_PROVIDER_BLOCK.getName()));
@@ -172,6 +172,7 @@ public class CraftingBenchBlockScreen extends HandledScreen<CraftingBenchBlockSc
         this.toggleSpecialCraftingButton.visible = false;
         this.craftButton.visible = false;
 
+        this.toggleTab0Button.visible = false;
         this.toggleTab1Button.visible = false;
         this.toggleTab2Button.visible = false;
         this.toggleTab3Button.visible = false;
@@ -183,8 +184,13 @@ public class CraftingBenchBlockScreen extends HandledScreen<CraftingBenchBlockSc
         this.toggleTab3Button.active = this.currentTab != 3;
         this.toggleStorageTabButton.active = this.currentTab != -1;
 
-        int y = this.y + 41;
+        int y = this.y + 17;
 
+        if (this.handler.isTab0ProviderInReach()) {
+            this.toggleTab0Button.visible = true;
+            this.toggleTab0Button.setY(y);
+            y += 24;
+        }
         if (this.handler.isTab1ProviderInReach()) {
             this.toggleTab1Button.visible = true;
             this.toggleTab1Button.setY(y);

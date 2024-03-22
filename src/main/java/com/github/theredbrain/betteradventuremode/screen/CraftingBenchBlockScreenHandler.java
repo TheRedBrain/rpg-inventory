@@ -37,6 +37,7 @@ public class CraftingBenchBlockScreenHandler extends ScreenHandler {
 
     private BlockPos blockPos;
     private boolean isStorageTabProviderInReach;
+    private boolean isTab0ProviderInReach;
     private boolean isTab1ProviderInReach;
     private boolean isTab2ProviderInReach;
     private boolean isTab3ProviderInReach;
@@ -78,9 +79,10 @@ public class CraftingBenchBlockScreenHandler extends ScreenHandler {
         this.currentTab = initialTab;
         this.currentRecipeType = RecipeType.STANDARD;
         this.isStorageTabProviderInReach = (tabProvidersInReach & 1 << 0) != 0;
-        this.isTab1ProviderInReach = (tabProvidersInReach & 1 << 1) != 0;
-        this.isTab2ProviderInReach = (tabProvidersInReach & 1 << 2) != 0;
-        this.isTab3ProviderInReach = (tabProvidersInReach & 1 << 3) != 0;
+        this.isTab0ProviderInReach = (tabProvidersInReach & 1 << 1) != 0;
+        this.isTab1ProviderInReach = (tabProvidersInReach & 1 << 2) != 0;
+        this.isTab2ProviderInReach = (tabProvidersInReach & 1 << 3) != 0;
+        this.isTab3ProviderInReach = (tabProvidersInReach & 1 << 4) != 0;
         this.isStorageArea0ProviderInReach = (storageProvidersInReach & 1 << 0) != 0;
         this.isStorageArea1ProviderInReach = (storageProvidersInReach & 1 << 1) != 0;
         this.isStorageArea2ProviderInReach = (storageProvidersInReach & 1 << 2) != 0;
@@ -192,6 +194,10 @@ public class CraftingBenchBlockScreenHandler extends ScreenHandler {
 
     public boolean isStorageTabProviderInReach() {
         return this.isStorageTabProviderInReach;
+    }
+
+    public boolean isTab0ProviderInReach() {
+        return this.isTab0ProviderInReach;
     }
 
     public boolean isTab1ProviderInReach() {

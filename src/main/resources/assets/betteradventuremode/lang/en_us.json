@@ -446,8 +446,9 @@
 	"gui.entity_attribute_modifier.operation.2": "Multiply Total",
 
 
-	"block.betteradventuremode.crafting_root_block": "Work Bench",
+	"block.betteradventuremode.crafting_root_block": "Crafting Root Block",
 	"block.betteradventuremode.storage_provider_block": "Stash",
+	"block.betteradventuremode.crafting_tab_0_provider_block": "Work Bench",
 	"block.betteradventuremode.crafting_tab_1_provider_block": "Smithy",
 	"block.betteradventuremode.crafting_tab_2_provider_block": "Cauldron",
 	"block.betteradventuremode.crafting_tab_3_provider_block": "Crafting Station 3",
