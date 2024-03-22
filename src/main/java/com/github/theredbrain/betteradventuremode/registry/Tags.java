@@ -128,6 +128,7 @@ public class Tags {
     public static final TagKey<Item> ENABLES_MANA_REGENERATION = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("enables_mana_regeneration"));
     public static final TagKey<Item> ENABLES_FIRST_PERSON_PERSPECTIVE = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("enables_first_person_perspective"));
     public static final TagKey<Item> ENABLES_CHANGING_PITCH = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("enables_changing_pitch"));
+    public static final TagKey<Item> IGNORES_ATTACK_MOVEMENT_PENALTY = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("ignores_attack_movement_penalty"));
 
     // granting enchantments
     public static final TagKey<Item> GRANTS_DEPTH_STRIDER_LEVEL_3 = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("grants_depth_strider_level_3"));

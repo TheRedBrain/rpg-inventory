@@ -555,6 +555,7 @@
 	"trinkets.slot.spell_slot_7.spell": "Spell Slot",
 	"trinkets.slot.spell_slot_8.spell": "Spell Slot",
 
+
 	"death.attack.player_bashing": "%s was smashed into the ground by %s",
 	"death.attack.player_bashing.item": "%s was smashed into the ground by %s using %s",
 	"death.attack.player_piercing": "%s was stabbed to death by %s",
@@ -562,6 +563,11 @@
 	"death.attack.player_slashing": "%s was cut into pieces by %s",
 	"death.attack.player_slashing.item": "%s was cut into pieces by %s using %s",
 	"death.attack.player_unarmed": "%s was beaten to death by %s using their bare hands!",
+	"death.attack.zweihander_one_handed": "%s was smashed into the ground by %s",
+	"death.attack.zweihander_one_handed.item": "%s was smashed into the ground by %s using %s",
+	"death.attack.zweihander_two_handed": "%s was cut in half by %s",
+	"death.attack.zweihander_two_handed.item": "%s was cut in half by %s using %s",
+
 
 	"spell.betteradventuremode.burning_touch.name": "Burning Touch",
 	"spell.betteradventuremode.burning_touch.description": "Shoots and epic energy ball that does {damage} lightning damage",

@@ -20,6 +20,8 @@ public class DamageTypesRegistry {
 
     // region weapon damage types
     public static final RegistryKey<DamageType> CLAW_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("claw_damage_type"));
+    public static final RegistryKey<DamageType> ZWEIHANDER_ONE_HANDED_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("zweihander_one_handed_damage_type"));
+    public static final RegistryKey<DamageType> ZWEIHANDER_TWO_HANDED_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("zweihander_two_handed_damage_type"));
     // endregion weapon damage types
 
     public static final RegistryKey<DamageType> LAVA_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("lava_damage_type"));
