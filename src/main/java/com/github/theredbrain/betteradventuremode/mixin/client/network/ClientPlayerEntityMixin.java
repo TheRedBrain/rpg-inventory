@@ -73,9 +73,9 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
             )
     )
     public void tick(CallbackInfo ci) {
-        if (BetterAdventureMode.serverConfig.allow_360_degree_third_person) {
+        if (BetterAdventureMode.serverConfig.allow_360_degree_third_person && !this.isCreative()) {
             StatusEffect first_person_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(BetterAdventureMode.serverConfig.first_person_status_effect));
-            if ((first_person_status_effect != null && this.hasStatusEffect(first_person_status_effect))/* || (this.isUsingItem() && this.getActiveItem().isIn(Tags.ENABLES_FIRST_PERSON_PERSPECTIVE_ON_USING))*/) {
+            if ((first_person_status_effect != null && this.hasStatusEffect(first_person_status_effect))) {
                 this.client.options.setPerspective(Perspective.FIRST_PERSON);
             } else if (BetterAdventureMode.serverConfig.disable_first_person) {
                 this.client.options.setPerspective(Perspective.THIRD_PERSON_BACK);
@@ -101,7 +101,7 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
             )
     )
     public void betterAdventureMode$tickMovement(CallbackInfo ci) {
-        boolean betterThirdPersonEnabled = BetterAdventureModeClient.clientConfig.enable_360_degree_third_person && BetterAdventureMode.serverConfig.allow_360_degree_third_person && this.client.options.getPerspective() != Perspective.FIRST_PERSON;
+        boolean betterThirdPersonEnabled = BetterAdventureModeClient.clientConfig.enable_360_degree_third_person && BetterAdventureMode.serverConfig.allow_360_degree_third_person && this.client.options.getPerspective() != Perspective.FIRST_PERSON && !this.isCreative();
         boolean isUsingRotationLockingItem = this.isUsingItem() && (this.activeItemStack.isIn(Tags.ROTATE_PLAYER_ON_USING) || BetterAdventureModeClient.clientConfig.using_items_towards_camera_direction);
         boolean isWeaponSwingInProgress = ((MinecraftClient_BetterCombat) this.client).isWeaponSwingInProgress();
         boolean arePlayerYawChangesDisabledByAttacking = BetterAdventureMode.serverConfig.disable_player_yaw_changes_during_attacks && isWeaponSwingInProgress;
@@ -165,7 +165,7 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
      */
     @Overwrite
     private boolean canSprint() {
-        return this.hasVehicle() || ((DuckLivingEntityMixin)this).betteradventuremode$getStamina() > 0 || this.getAbilities().allowFlying;
+        return this.hasVehicle() || ((float)this.getHungerManager().getFoodLevel() > 6.0F && !BetterAdventureMode.serverConfig.disable_vanilla_food_system) || ((DuckLivingEntityMixin)this).betteradventuremode$getStamina() > 0 || this.getAbilities().allowFlying;
     }
 
     /**

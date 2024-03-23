@@ -13,7 +13,8 @@ public class EntityAttributesRegistry {
 
     public static final EntityAttribute ACTIVE_SPELL_SLOT_AMOUNT = new ClampedEntityAttribute("attribute.name.player.active_spell_slot_amount", 0.0, 0.0, 8.0).setTracked(true);
     public static final EntityAttribute EQUIPMENT_WEIGHT = new ClampedEntityAttribute("attribute.name.player.equipment_weight", 0.0, 0.0, 1024.0).setTracked(true);
-    public static final EntityAttribute MAX_EQUIPMENT_WEIGHT = new ClampedEntityAttribute("attribute.name.player.max_equipment_weight", 1.0, 1.0, 1024.0).setTracked(true);
+    public static final EntityAttribute MAX_EQUIPMENT_WEIGHT = new ClampedEntityAttribute("attribute.name.player.max_equipment_weight", 10.0, 1.0, 1024.0).setTracked(true);
+    public static final EntityAttribute MAX_FOOD_EFFECTS = new ClampedEntityAttribute("attribute.name.player.max_food_effects", 3.0, 0.0, 1024.0).setTracked(true);
     public static final EntityAttribute HEALTH_REGENERATION = new ClampedEntityAttribute("attribute.name.generic.health_regeneration", 0.0, -1024.0, 1024.0).setTracked(true);
     public static final EntityAttribute MANA_REGENERATION = new ClampedEntityAttribute("attribute.name.generic.mana_regeneration", 0.0, -1024.0, 1024.0).setTracked(true);
     public static final EntityAttribute STAMINA_REGENERATION = new ClampedEntityAttribute("attribute.name.generic.stamina_regeneration", 0.0, -1024.0, 1024.0).setTracked(true);
@@ -74,8 +75,9 @@ public class EntityAttributesRegistry {
     public static void registerAttributes() {
 
         Registry.register(Registries.ATTRIBUTE, BetterAdventureMode.identifier("player.active_spell_slot_amount"), ACTIVE_SPELL_SLOT_AMOUNT);
-        Registry.register(Registries.ATTRIBUTE, BetterAdventureMode.identifier("player.max_equipment_weight"), MAX_EQUIPMENT_WEIGHT);
         Registry.register(Registries.ATTRIBUTE, BetterAdventureMode.identifier("player.equipment_weight"), EQUIPMENT_WEIGHT);
+        Registry.register(Registries.ATTRIBUTE, BetterAdventureMode.identifier("player.max_equipment_weight"), MAX_EQUIPMENT_WEIGHT);
+        Registry.register(Registries.ATTRIBUTE, BetterAdventureMode.identifier("player.max_food_effects"), MAX_FOOD_EFFECTS);
         Registry.register(Registries.ATTRIBUTE, BetterAdventureMode.identifier("generic.health_regeneration"), HEALTH_REGENERATION);
         Registry.register(Registries.ATTRIBUTE, BetterAdventureMode.identifier("generic.mana_regeneration"), MANA_REGENERATION);
         Registry.register(Registries.ATTRIBUTE, BetterAdventureMode.identifier("generic.stamina_regeneration"), STAMINA_REGENERATION);

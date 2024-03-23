@@ -15,6 +15,7 @@ public interface DuckPlayerEntityMixin {
 
     float betteradventuremode$getMaxEquipmentWeight();
     float betteradventuremode$getEquipmentWeight();
+    float betteradventuremode$getMaxFoodEffects();
 
     boolean betteradventuremode$isAdventure();
 

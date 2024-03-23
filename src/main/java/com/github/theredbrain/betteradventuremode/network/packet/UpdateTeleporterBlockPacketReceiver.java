@@ -50,6 +50,7 @@ public class UpdateTeleporterBlockPacketReceiver implements ServerPlayNetworking
         String teleporterName = packet.teleporterName;
         String currentTargetIdentifierLabel = packet.currentTargetIdentifierLabel;
         String currentTargetOwnerLabel = packet.currentTargetOwnerLabel;
+        boolean showRegenerateButton = packet.showRegenerateButton;
         String teleportButtonLabel = packet.teleportButtonLabel;
         String cancelTeleportButtonLabel = packet.cancelTeleportButtonLabel;
 
@@ -91,6 +92,7 @@ public class UpdateTeleporterBlockPacketReceiver implements ServerPlayNetworking
             teleporterBlockEntity.setTeleporterName(teleporterName);
             teleporterBlockEntity.setCurrentTargetIdentifierLabel(currentTargetIdentifierLabel);
             teleporterBlockEntity.setCurrentTargetOwnerLabel(currentTargetOwnerLabel);
+            teleporterBlockEntity.setShowRegenerateButton(showRegenerateButton);
             teleporterBlockEntity.setTeleportButtonLabel(teleportButtonLabel);
             teleporterBlockEntity.setCancelTeleportButtonLabel(cancelTeleportButtonLabel);
 

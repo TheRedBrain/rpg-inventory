@@ -1,6 +1,7 @@
 package com.github.theredbrain.betteradventuremode.mixin.client;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
+import com.github.theredbrain.betteradventuremode.BetterAdventureModeClient;
 import com.github.theredbrain.betteradventuremode.client.DuckMinecraftClientMixin;
 import com.github.theredbrain.betteradventuremode.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.betteradventuremode.network.packet.AttackStaminaCostPacket;
@@ -32,6 +33,8 @@ import net.minecraft.client.RunArgs;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.option.GameOptions;
+import net.minecraft.client.option.Perspective;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
@@ -69,6 +72,7 @@ public abstract class MinecraftClient_BetterCombatReplacementMixin implements Mi
     public TextRenderer textRenderer;
     @Shadow
     public int attackCooldown;
+    @Shadow @Final public GameOptions options;
     @Unique
     private boolean isHoldingAttackInput = false;
     @Unique
@@ -179,6 +183,13 @@ public abstract class MinecraftClient_BetterCombatReplacementMixin implements Mi
 
         }
     }
+
+//    @Inject(method = "handleInputEvents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/option/GameOptions;setPerspective(Lnet/minecraft/client/option/Perspective;)V", ordinal = 0, shift = At.Shift.AFTER))
+//    private void handleInputEvents(CallbackInfo ci) {
+//        if (BetterAdventureModeClient.clientConfig.enable_360_degree_third_person && BetterAdventureMode.serverConfig.allow_360_degree_third_person && BetterAdventureMode.serverConfig.disable_first_person && this.options.getPerspective() == Perspective.FIRST_PERSON && this.player != null && !this.player.isCreative()) {
+//            this.options.setPerspective(Perspective.THIRD_PERSON_BACK);
+//        }
+//    }
 
     @Inject(
             method = {"handleBlockBreaking"},

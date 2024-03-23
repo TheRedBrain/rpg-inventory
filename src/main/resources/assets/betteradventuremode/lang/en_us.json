@@ -213,6 +213,8 @@
 	"gui.teleporter_block.toggle_only_teleport_dimension_owner_button_label.off": "Dimension Owner Only: Off",
 	"gui.teleporter_block.toggle_teleport_team_button_label.on": "Teleport Team: On",
 	"gui.teleporter_block.toggle_teleport_team_button_label.off": "Teleport Team: Off",
+	"gui.teleporter_block.toggle_show_regenerate_button_button_label.on": "Show Regenerate Button: On",
+	"gui.teleporter_block.toggle_show_regenerate_button_button_label.off": "Show Regenerate Button: Off",
 
 	"gui.teleporter_block.teleportation_mode_label": "Teleportation Mode",
 	"gui.teleporter_block.teleportation_mode.direct": "Direct",
@@ -462,6 +464,7 @@
 	"attribute.name.player.active_spell_slot_amount": "Active Spell Slot Amount",
 	"attribute.name.player.equipment_weight": "Weight",
 	"attribute.name.player.max_equipment_weight": "Max Equipment Weight",
+	"attribute.name.player.max_food_effects": "Max Food Effects",
 	"attribute.name.generic.health_regeneration": "Health Regen",
 	"attribute.name.generic.mana_regeneration": "Mana Regen",
 	"attribute.name.generic.stamina_regeneration": "Stamina Regen",
@@ -540,6 +543,7 @@
 
 	"hud.message.staminaTooLow": "Your stamina is too low",
 	"hud.message.manaTooLow": "Your mana is too low",
+	"hud.message.foodEatenAlready": "You recently ate this food already",
 
 	"trinkets.slot.belts.belt": "Belt",
 	"trinkets.slot.gloves.gloves": "Glove",

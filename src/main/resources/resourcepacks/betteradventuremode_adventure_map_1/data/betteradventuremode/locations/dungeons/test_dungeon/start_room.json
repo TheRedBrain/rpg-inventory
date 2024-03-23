@@ -11,6 +11,6 @@
   "showLockAdvancement": false,
   "isPublic": false,
   "canOwnerBeChosen": false,
-  "showAdventureScreen": true,
+  "showDetailedAdventureScreen": true,
   "consumeKey": false
 }

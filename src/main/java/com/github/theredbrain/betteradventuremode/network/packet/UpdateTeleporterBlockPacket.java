@@ -44,10 +44,11 @@ public class UpdateTeleporterBlockPacket implements FabricPacket {
     public final String teleporterName;
     public final String currentTargetIdentifierLabel;
     public final String currentTargetOwnerLabel;
+    public final boolean showRegenerateButton;
     public final String teleportButtonLabel;
     public final String cancelTeleportButtonLabel;
 
-    public UpdateTeleporterBlockPacket(BlockPos teleportBlockPosition, boolean showActivationArea, boolean showAdventureScreen, Vec3i activationAreaDimensions, BlockPos activationAreaPositionOffset, BlockPos accessPositionOffset, boolean setAccessPosition, boolean onlyTeleportDimensionOwner, boolean teleportTeam, String teleportationMode, BlockPos directTeleportPositionOffset, double directTeleportOrientationYaw, double directTeleportOrientationPitch, String locationType, List<Pair<String, String>> locationsList, String teleporterName, String currentTargetIdentifierLabel, String currentTargetOwnerLabel, String teleportButtonLabel, String cancelTeleportButtonLabel) {
+    public UpdateTeleporterBlockPacket(BlockPos teleportBlockPosition, boolean showActivationArea, boolean showAdventureScreen, Vec3i activationAreaDimensions, BlockPos activationAreaPositionOffset, BlockPos accessPositionOffset, boolean setAccessPosition, boolean onlyTeleportDimensionOwner, boolean teleportTeam, String teleportationMode, BlockPos directTeleportPositionOffset, double directTeleportOrientationYaw, double directTeleportOrientationPitch, String locationType, List<Pair<String, String>> locationsList, String teleporterName, String currentTargetIdentifierLabel, String currentTargetOwnerLabel, boolean showRegenerateButton, String teleportButtonLabel, String cancelTeleportButtonLabel) {
         this.teleportBlockPosition = teleportBlockPosition;
 
         this.showActivationArea = showActivationArea;
@@ -74,6 +75,7 @@ public class UpdateTeleporterBlockPacket implements FabricPacket {
         this.teleporterName = teleporterName;
         this.currentTargetIdentifierLabel = currentTargetIdentifierLabel;
         this.currentTargetOwnerLabel = currentTargetOwnerLabel;
+        this.showRegenerateButton = showRegenerateButton;
         this.teleportButtonLabel = teleportButtonLabel;
         this.cancelTeleportButtonLabel = cancelTeleportButtonLabel;
     }
@@ -102,6 +104,7 @@ public class UpdateTeleporterBlockPacket implements FabricPacket {
                 buf.readString(),
                 buf.readString(),
                 buf.readString(),
+                buf.readBoolean(),
                 buf.readString(),
                 buf.readString()
         );
@@ -142,6 +145,7 @@ public class UpdateTeleporterBlockPacket implements FabricPacket {
         buf.writeString(this.teleporterName);
         buf.writeString(this.currentTargetIdentifierLabel);
         buf.writeString(this.currentTargetOwnerLabel);
+        buf.writeBoolean(this.showRegenerateButton);
         buf.writeString(this.teleportButtonLabel);
         buf.writeString(this.cancelTeleportButtonLabel);
     }

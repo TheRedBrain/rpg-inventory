@@ -11,7 +11,7 @@
   "showLockAdvancement": false,
   "isPublic": true,
   "canOwnerBeChosen": false,
-  "showAdventureScreen": true,
+  "showDetailedAdventureScreen": true,
   "consumeKey": false,
   "side_entrances": {
     "dungeon": {

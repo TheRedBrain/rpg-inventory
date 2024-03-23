@@ -122,7 +122,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     private static void betteradventuremode$createPlayerAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
         cir.getReturnValue()
                 .add(EntityAttributesRegistry.EQUIPMENT_WEIGHT)
-                .add(EntityAttributesRegistry.MAX_EQUIPMENT_WEIGHT, 10.0F)
+                .add(EntityAttributesRegistry.MAX_EQUIPMENT_WEIGHT)
+                .add(EntityAttributesRegistry.MAX_FOOD_EFFECTS)
                 .add(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT, 2.0F)
                 .add(EntityAttributesRegistry.STAMINA_REGENERATION, 1.0F)
                 .add(EntityAttributesRegistry.MAX_STAMINA, 20.0F);
@@ -169,11 +170,11 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
             this.removeStatusEffect(StatusEffectsRegistry.NO_ATTACK_ITEMS_EFFECT);
         }
         if (itemStackMainHand.isIn(Tags.TWO_HANDED_ITEMS) && (this.betteradventuremode$isMainHandStackSheathed() || !this.betteradventuremode$isOffHandStackSheathed()) && !this.isCreative() && !this.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT)) {
-            if (!this.hasStatusEffect(StatusEffectsRegistry.NEED_EMPTY_OFFHAND_EFFECT)) {
-                this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.NEED_EMPTY_OFFHAND_EFFECT, -1, 0, false, false, true));
+            if (!this.hasStatusEffect(StatusEffectsRegistry.NEEDS_TWO_HANDING_EFFECT)) {
+                this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.NEEDS_TWO_HANDING_EFFECT, -1, 0, false, false, true));
             }
         } else {
-            this.removeStatusEffect(StatusEffectsRegistry.NEED_EMPTY_OFFHAND_EFFECT);
+            this.removeStatusEffect(StatusEffectsRegistry.NEEDS_TWO_HANDING_EFFECT);
         }
         if (mana_regenerating_item_equipped) {
             if (!this.hasStatusEffect(StatusEffectsRegistry.MANA_REGENERATION_EFFECT)) {
@@ -477,13 +478,13 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
             List<StatusEffectInstance> currentEffects = getStatusEffects().stream().toList();
             for (StatusEffectInstance currentEffect : currentEffects) {
                 if (currentEffect.getEffectType() == statusEffectInstance.getEffectType()) {
+                    this.sendMessage(Text.translatable("hud.message.foodEatenAlready"), true);
                     return false;
                 } else if (currentEffect.getEffectType() instanceof FoodStatusEffect) {
                     currentEatenFoods++;
                 }
             }
-            // TODO get entityAttribute maxFoodEffects
-            return currentEatenFoods < 3;
+            return currentEatenFoods < this.betteradventuremode$getMaxFoodEffects();
         }
     }
 
@@ -495,6 +496,11 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     @Override
     public float betteradventuremode$getEquipmentWeight() {
         return (float) this.getAttributeValue(EntityAttributesRegistry.EQUIPMENT_WEIGHT);
+    }
+
+    @Override
+    public float betteradventuremode$getMaxFoodEffects() {
+        return (float) this.getAttributeValue(EntityAttributesRegistry.MAX_FOOD_EFFECTS);
     }
 
     /**

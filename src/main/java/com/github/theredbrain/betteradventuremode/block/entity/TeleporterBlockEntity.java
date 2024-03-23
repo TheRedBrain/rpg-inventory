@@ -62,6 +62,7 @@ public class TeleporterBlockEntity extends RotatedBlockEntity implements Extende
     private String teleporterName = "gui.teleporter_block.teleporter_name_field.label";
     private String currentTargetOwnerLabel = "gui.teleporter_block.target_owner_field.label";
     private String currentTargetIdentifierLabel = "gui.teleporter_block.target_identifier_field.label";
+    private boolean showRegenerateButton = true;
     private String teleportButtonLabel = "gui.teleporter_block.teleport_button.label";
     private String cancelTeleportButtonLabel = "gui.teleporter_block.cancel_teleport_button.label";
 
@@ -114,6 +115,7 @@ public class TeleporterBlockEntity extends RotatedBlockEntity implements Extende
 
         nbt.putString("currentTargetIdentifierLabel", this.currentTargetIdentifierLabel);
         nbt.putString("currentTargetOwnerLabel", this.currentTargetOwnerLabel);
+        nbt.putBoolean("showRegenerateButton", this.showRegenerateButton);
         nbt.putString("teleportButtonLabel", this.teleportButtonLabel);
         nbt.putString("cancelTeleportButtonLabel", this.cancelTeleportButtonLabel);
 
@@ -178,6 +180,7 @@ public class TeleporterBlockEntity extends RotatedBlockEntity implements Extende
 
         this.currentTargetIdentifierLabel = nbt.getString("currentTargetIdentifierLabel");
         this.currentTargetOwnerLabel = nbt.getString("currentTargetOwnerLabel");
+        this.showRegenerateButton = nbt.getBoolean("showRegenerateButton");
         this.teleportButtonLabel = nbt.getString("teleportButtonLabel");
         this.cancelTeleportButtonLabel = nbt.getString("cancelTeleportButtonLabel");
 
@@ -219,19 +222,19 @@ public class TeleporterBlockEntity extends RotatedBlockEntity implements Extende
             String worldName = world.getRegistryKey().getValue().getPath();
             for (PlayerEntity playerEntity : list) {
                 if (!playerEntity.hasStatusEffect(StatusEffectsRegistry.PORTAL_RESISTANCE_EFFECT) && !playerEntity.isCreative()) {
-                    // prevents continuous opening of a screen
-                    playerEntity.setStatusEffect(
-                            new StatusEffectInstance(
-                                    StatusEffectsRegistry.PORTAL_RESISTANCE_EFFECT,
-                                    -1,
-                                    0,
-                                    false,
-                                    false,
-                                    false
-                            ),
-                            playerEntity
-                    );
                     if (!teleporterBlockEntity.onlyTeleportDimensionOwner || playerEntity.getUuid().toString().equals(worldName)) {
+                        // prevents continuous opening of a screen
+                        playerEntity.setStatusEffect(
+                                new StatusEffectInstance(
+                                        StatusEffectsRegistry.PORTAL_RESISTANCE_EFFECT,
+                                        -1,
+                                        0,
+                                        false,
+                                        false,
+                                        false
+                                ),
+                                playerEntity
+                        );
                         playerEntity.openHandledScreen(state.createScreenHandlerFactory(world, pos));
                     } else {
                         playerEntity.sendMessage(Text.translatable("Only the dimension owner can teleport (WIP)"));
@@ -392,6 +395,14 @@ public class TeleporterBlockEntity extends RotatedBlockEntity implements Extende
 
     public void setCurrentTargetOwnerLabel(String currentTargetOwnerLabel) {
         this.currentTargetOwnerLabel = currentTargetOwnerLabel;
+    }
+
+    public boolean showRegenerateButton() {
+        return showRegenerateButton;
+    }
+
+    public void setShowRegenerateButton(boolean showRegenerateButton) {
+        this.showRegenerateButton = showRegenerateButton;
     }
 
     public String getTeleportButtonLabel() {

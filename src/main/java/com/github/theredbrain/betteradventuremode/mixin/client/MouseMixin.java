@@ -95,7 +95,7 @@ public abstract class MouseMixin {
 			if (this.client.player != null) {
 				StatusEffect statusEffect = Registries.STATUS_EFFECT.get(Identifier.tryParse(BetterAdventureMode.serverConfig.allow_pitch_changes_status_effect));
 				boolean changingPitchDisabled = !(statusEffect != null && this.client.player.hasStatusEffect(statusEffect)) && !(this.client.player.isUsingItem() && this.client.player.getActiveItem().isIn(Tags.ENABLES_CHANGING_PITCH_ON_USING)) && BetterAdventureMode.serverConfig.disable_player_pitch_changes && BetterAdventureMode.serverConfig.allow_360_degree_third_person;
-				this.client.player.changeLookDirection(betterThirdPersonEnabled || arePlayerYawChangesDisabledByAttacking ? 0 : k, changingPitchDisabled ? 0 : l * (double)m);
+				this.client.player.changeLookDirection((betterThirdPersonEnabled || arePlayerYawChangesDisabledByAttacking) && !this.client.player.isCreative() ? 0 : k, changingPitchDisabled && !this.client.player.isCreative() ? 0 : l * (double)m);
 			}
 
 		} else {
