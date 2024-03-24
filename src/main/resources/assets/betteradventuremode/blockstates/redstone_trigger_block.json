@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "triggered=false": {
+      "model": "betteradventuremode:block/redstone_trigger_block"
+    },
+    "triggered=true": {
+      "model": "betteradventuremode:block/redstone_trigger_block_triggered"
+    }
+  }
+}

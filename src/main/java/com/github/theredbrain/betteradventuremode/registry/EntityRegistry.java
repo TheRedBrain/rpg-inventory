@@ -29,6 +29,9 @@ public class EntityRegistry {
     //endregion Content Blocks
 
     //region Script Blocks
+    public static final BlockEntityType<InteractiveLootBlockEntity> INTERACTIVE_LOOT_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
+            BetterAdventureMode.identifier("interactive_loot_block"),
+            FabricBlockEntityTypeBuilder.create(InteractiveLootBlockEntity::new, BlockRegistry.INTERACTIVE_LOOT_BLOCK).build());
     public static final BlockEntityType<TriggeredCounterBlockEntity> TRIGGERED_COUNTER_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
             BetterAdventureMode.identifier("triggered_counter_block"),
             FabricBlockEntityTypeBuilder.create(TriggeredCounterBlockEntity::new, BlockRegistry.TRIGGERED_COUNTER_BLOCK).build());
@@ -105,6 +108,11 @@ public class EntityRegistry {
                     BlockRegistry.USE_RELAY_BAMBOO_TRAPDOOR,
                     BlockRegistry.USE_RELAY_CRIMSON_TRAPDOOR,
                     BlockRegistry.USE_RELAY_WARPED_TRAPDOOR).build());
+    public static final BlockEntityType<UseRelayChestBlockEntity> USE_RELAY_CHEST_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
+            BetterAdventureMode.identifier("use_relay_chest_block"),
+            FabricBlockEntityTypeBuilder.create(UseRelayChestBlockEntity::new,
+                    BlockRegistry.USE_RELAY_CHEST,
+                    BlockRegistry.LOCKED_USE_RELAY_CHEST).build());
     //endregion Script Blocks
 
     public static void init() {

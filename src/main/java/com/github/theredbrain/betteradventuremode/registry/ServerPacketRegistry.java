@@ -61,6 +61,8 @@ public class ServerPacketRegistry {
 
         ServerPlayNetworking.registerGlobalReceiver(UpdateDelayTriggerBlockPacket.TYPE, new UpdateDelayTriggerBlockPacketReceiver());
 
+        ServerPlayNetworking.registerGlobalReceiver(UpdateInteractiveLootBlockPacket.TYPE, new UpdateInteractiveLootBlockPacketReceiver());
+
         ServerPlayNetworking.registerGlobalReceiver(UpdateUseRelayBlockPacket.TYPE, new UpdateUseRelayBlockPacketReceiver());
 
         ServerPlayNetworking.registerGlobalReceiver(LeaveHouseFromHousingScreenPacket.TYPE, new LeaveHouseFromHousingScreenPacketReceiver());

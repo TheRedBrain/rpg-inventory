@@ -277,4 +277,9 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
     public void betteradventuremode$openTriggeredAdvancementCheckerBlockScreen(TriggeredAdvancementCheckerBlockEntity triggeredAdvancementCheckerBlock) {
         this.client.setScreen(new TriggeredAdvancementCheckerBlockScreen(triggeredAdvancementCheckerBlock));
     }
+
+    @Override
+    public void betteradventuremode$openInteractiveLootBlockScreen(InteractiveLootBlockEntity interactiveLootBlockEntity) {
+        this.client.setScreen(new InteractiveLootBlockScreen(interactiveLootBlockEntity));
+    }
 }

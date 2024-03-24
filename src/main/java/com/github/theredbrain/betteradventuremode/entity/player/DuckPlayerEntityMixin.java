@@ -48,4 +48,5 @@ public interface DuckPlayerEntityMixin {
     void betteradventuremode$openEntranceDelegationBlockScreen(EntranceDelegationBlockEntity entranceDelegationBlockEntity);
     void betteradventuremode$openAreaBlockScreen(AreaBlockEntity areaBlockEntity);
     void betteradventuremode$openTriggeredAdvancementCheckerBlockScreen(TriggeredAdvancementCheckerBlockEntity triggeredAdvancementCheckerBlock);
+    void betteradventuremode$openInteractiveLootBlockScreen(InteractiveLootBlockEntity interactiveLootBlockEntity);
 }

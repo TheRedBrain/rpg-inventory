@@ -5,6 +5,7 @@ import com.github.theredbrain.betteradventuremode.block.RotatedBlockWithEntity;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.betteradventuremode.registry.EntityRegistry;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
@@ -15,9 +16,12 @@ import net.minecraft.util.math.MathHelper;
 
 public class UseRelayBlockEntity extends RotatedBlockEntity {
     private BlockPos relayBlockPositionOffset = new BlockPos(0, -1, 0);
+    public UseRelayBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+        super(type, pos, state);
+    }
 
     public UseRelayBlockEntity(BlockPos pos, BlockState state) {
-        super(EntityRegistry.USE_RELAY_BLOCK_ENTITY, pos, state);
+        this(EntityRegistry.USE_RELAY_BLOCK_ENTITY, pos, state);
     }
 
     @Override
@@ -62,12 +66,14 @@ public class UseRelayBlockEntity extends RotatedBlockEntity {
         return relayBlockPositionOffset;
     }
 
-    // TODO check if input is valid
     public boolean setRelayBlockPositionOffset(BlockPos relayBlockPositionOffset) {
         if (relayBlockPositionOffset.getX() == 0 && relayBlockPositionOffset.getY() == 0 && relayBlockPositionOffset.getZ() == 0) {
             return false;
         }
-        this.relayBlockPositionOffset = relayBlockPositionOffset;
+        int x = MathHelper.clamp(relayBlockPositionOffset.getX(), -48, 48);
+        int y = MathHelper.clamp(relayBlockPositionOffset.getY(), -48, 48);
+        int z = MathHelper.clamp(relayBlockPositionOffset.getZ(), -48, 48);
+        this.relayBlockPositionOffset = new BlockPos(x, y, z);
         return true;
     }
 

@@ -48,6 +48,8 @@ public class BlockRegistry {
     public static final Block USE_RELAY_BAMBOO_TRAPDOOR = registerBlock("use_relay_bamboo_trapdoor", new UseRelayTrapdoorBlock(FabricBlockSettings.create().mapColor(MapColor.YELLOW).requiresTool().strength(-1.0f, 3600000.0f).nonOpaque().dropsNothing()), ItemGroupRegistry.SCRIPT_BLOCKS);
     public static final Block USE_RELAY_CRIMSON_TRAPDOOR = registerBlock("use_relay_crimson_trapdoor", new UseRelayTrapdoorBlock(FabricBlockSettings.create().mapColor(MapColor.DULL_PINK).requiresTool().strength(-1.0f, 3600000.0f).nonOpaque().dropsNothing()), ItemGroupRegistry.SCRIPT_BLOCKS);
     public static final Block USE_RELAY_WARPED_TRAPDOOR = registerBlock("use_relay_warped_trapdoor", new UseRelayTrapdoorBlock(FabricBlockSettings.create().mapColor(MapColor.DARK_AQUA).requiresTool().strength(-1.0f, 3600000.0f).nonOpaque().dropsNothing()), ItemGroupRegistry.SCRIPT_BLOCKS);
+    public static final Block USE_RELAY_CHEST = registerBlock("use_relay_chest", new UseRelayChestBlock(null, FabricBlockSettings.create().mapColor(MapColor.DARK_AQUA).requiresTool().strength(-1.0f, 3600000.0f).nonOpaque().dropsNothing()), ItemGroupRegistry.SCRIPT_BLOCKS);
+    public static final Block LOCKED_USE_RELAY_CHEST = registerBlock("locked_use_relay_chest", new UseRelayChestBlock(Tags.KEYS_FOR_LOCKED_USE_RELAY_CHEST, FabricBlockSettings.create().mapColor(MapColor.DARK_AQUA).requiresTool().strength(-1.0f, 3600000.0f).nonOpaque().dropsNothing()), ItemGroupRegistry.SCRIPT_BLOCKS);
 
     // crafting blocks
     public static final Block CRAFTING_ROOT_BLOCK = registerBlock("crafting_root_block", new CraftingRootBlock(FabricBlockSettings.create().mapColor(MapColor.OAK_TAN)), ItemGroupRegistry.BAM_BLOCK);
@@ -81,6 +83,7 @@ public class BlockRegistry {
     //endregion Content Blocks
 
     //region Script Blocks
+    public static final Block INTERACTIVE_LOOT_BLOCK = registerBlock("interactive_loot_block", new InteractiveLootBlock(FabricBlockSettings.create().mapColor(MapColor.LIGHT_GRAY).requiresTool().strength(-1.0f, 3600000.0f).dropsNothing()), ItemGroupRegistry.SCRIPT_BLOCKS);
     public static final Block DIALOGUE_BLOCK = registerBlock("dialogue_block", new DialogueBlock(FabricBlockSettings.create().mapColor(MapColor.LIGHT_GRAY).requiresTool().strength(-1.0f, 3600000.0f).dropsNothing()), ItemGroupRegistry.SCRIPT_BLOCKS);
     public static final Block SHOP_BLOCK = registerBlock("shop_block", new ShopBlock(FabricBlockSettings.create().mapColor(MapColor.LIGHT_GRAY).requiresTool().strength(-1.0f, 3600000.0f).dropsNothing()), ItemGroupRegistry.SCRIPT_BLOCKS);
     public static final Block MIMIC_BLOCK = registerBlock("mimic_block", new MimicBlock(FabricBlockSettings.create().mapColor(MapColor.LIGHT_GRAY).requiresTool().strength(-1.0f, 3600000.0f).dropsNothing()), ItemGroupRegistry.SCRIPT_BLOCKS);

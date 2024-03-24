@@ -156,6 +156,14 @@
 	"gui.housing_screen.tabEditHouse.addEntry": "Add player",
 
 
+	"gui.interactive_loot_block.loot_acquired_0": "More stuff!",
+	"gui.interactive_loot_block.loot_acquired_1": "My Precious!",
+	"gui.interactive_loot_block.loot_acquired_2": "Valuable Things!",
+	"gui.interactive_loot_block.loot_acquired_3": "Looooot!",
+	"gui.interactive_loot_block.loot_acquired_4": "Shiny!",
+	"gui.interactive_loot_block.loot_table_identifier_label": "Loot Table Identifier",
+
+
 	"gui.delay_trigger_block.triggeredBlockTriggerDelay": "Trigger Delay in ticks",
 
 
@@ -448,17 +456,33 @@
 	"gui.entity_attribute_modifier.operation.2": "Multiply Total",
 
 
+	"block.betteradventuremode.bonfire": "Bonfire",
 	"block.betteradventuremode.crafting_root_block": "Crafting Root Block",
-	"block.betteradventuremode.storage_provider_block": "Stash",
 	"block.betteradventuremode.crafting_tab_0_provider_block": "Work Bench",
 	"block.betteradventuremode.crafting_tab_1_provider_block": "Smithy",
 	"block.betteradventuremode.crafting_tab_2_provider_block": "Cauldron",
 	"block.betteradventuremode.crafting_tab_3_provider_block": "Crafting Station 3",
 
 	"block.betteradventuremode.area_filler_block": "Area Filler Block",
+
+	"block.betteradventuremode.delay_trigger_block": "Delay Trigger Block",
+	"block.betteradventuremode.housing_block": "Housing Block",
+	"block.betteradventuremode.interactive_loot_block": "Interactive Loot Block",
+	"block.betteradventuremode.jigsaw_placer_block": "Jigsaw Placer Block",
+	"block.betteradventuremode.locked_use_relay_chest": "Locked Use Relay Chest",
+	"block.betteradventuremode.mimic_block": "Mimic Block",
+	"block.betteradventuremode.mimic_fallback_block": "Mimic Fallback Block",
 	"block.betteradventuremode.redstone_trigger_block": "Redstone Trigger Block",
 	"block.betteradventuremode.relay_trigger_block": "Relay Trigger Block",
+	"block.betteradventuremode.storage_area_0_provider_block": "Stash 0",
+	"block.betteradventuremode.storage_area_1_provider_block": "Stash 1",
+	"block.betteradventuremode.storage_area_2_provider_block": "Stash 2",
+	"block.betteradventuremode.storage_area_3_provider_block": "Stash 3",
+	"block.betteradventuremode.storage_area_4_provider_block": "Stash 4",
 	"block.betteradventuremode.teleporter_block": "Teleporter Block",
+
+	"block.betteradventuremode.use_relay_block": "Use Relay Block",
+	"block.betteradventuremode.use_relay_chest": "Use Relay Chest",
 
 	
 	"attribute.name.player.active_spell_slot_amount": "Active Spell Slot Amount",
@@ -545,6 +569,7 @@
 	"hud.message.manaTooLow": "Your mana is too low",
 	"hud.message.foodEatenAlready": "You recently ate this food already",
 	"hud.message.onlyDimensionOwnerCanTeleport": "Only the dimension owner can teleport",
+	"hud.message.keyIsNeeded": "You need a key.",
 
 	"trinkets.slot.belts.belt": "Belt",
 	"trinkets.slot.gloves.gloves": "Glove",

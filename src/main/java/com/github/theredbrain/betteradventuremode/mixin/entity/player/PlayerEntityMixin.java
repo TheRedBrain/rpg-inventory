@@ -740,4 +740,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     @Override
     public void betteradventuremode$openTriggeredAdvancementCheckerBlockScreen(TriggeredAdvancementCheckerBlockEntity triggeredAdvancementCheckerBlock) {
     }
+
+    @Override
+    public void betteradventuremode$openInteractiveLootBlockScreen(InteractiveLootBlockEntity interactiveLootBlockEntity) {
+    }
 }
