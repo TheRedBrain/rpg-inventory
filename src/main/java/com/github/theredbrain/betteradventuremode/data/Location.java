@@ -19,22 +19,15 @@ public final class Location {
     private final boolean showLockedLocation;
     private final boolean showUnlockAdvancement;
     private final boolean showLockAdvancement;
-
-    // TODO merge
+    private final boolean showLocationName;
+    private final boolean showLocationOwner;
     private final boolean isPublic;
-//    private final boolean playerLocation;
-
     private final boolean canOwnerBeChosen;
-
-    // TODO necessary?
-//    private final boolean stayInCurrentDimension;
-
-    private final boolean showDetailedAdventureScreen;
     private final boolean consumeKey;
     private final @Nullable ItemUtils.VirtualItemStack key;
     private final @Nullable Map<String, SideEntrance> side_entrances;
 
-    public Location(int controlBlockPosX, int controlBlockPosY, int controlBlockPosZ, String structureIdentifier, String unlockAdvancement, String lockAdvancement, String displayName, boolean showLockedLocation, boolean showUnlockAdvancement, boolean showLockAdvancement, boolean isPublic, boolean canOwnerBeChosen, boolean showDetailedAdventureScreen, boolean consumeKey, @Nullable ItemUtils.VirtualItemStack key, @Nullable Map<String, SideEntrance> side_entrances) {
+    public Location(int controlBlockPosX, int controlBlockPosY, int controlBlockPosZ, String structureIdentifier, String displayName, String unlockAdvancement, String lockAdvancement, boolean showLockedLocation, boolean showUnlockAdvancement, boolean showLockAdvancement, boolean showLocationName, boolean showLocationOwner, boolean isPublic, boolean canOwnerBeChosen, boolean consumeKey, @Nullable ItemUtils.VirtualItemStack key, @Nullable Map<String, SideEntrance> side_entrances) {
         this.controlBlockPosX = controlBlockPosX;
         this.controlBlockPosY = controlBlockPosY;
         this.controlBlockPosZ = controlBlockPosZ;
@@ -45,11 +38,10 @@ public final class Location {
         this.showLockedLocation = showLockedLocation;
         this.showUnlockAdvancement = showUnlockAdvancement;
         this.showLockAdvancement = showLockAdvancement;
+        this.showLocationName = showLocationName;
+        this.showLocationOwner = showLocationOwner;
         this.isPublic = isPublic;
-//        this.playerLocation = playerLocation;
         this.canOwnerBeChosen = canOwnerBeChosen;
-//        this.stayInCurrentDimension = stayInCurrentDimension;
-        this.showDetailedAdventureScreen = showDetailedAdventureScreen;
         this.consumeKey = consumeKey;
         this.key = key;
         this.side_entrances = side_entrances;
@@ -67,52 +59,90 @@ public final class Location {
         return this.displayName;
     }
 
-    public String unlockAdvancement() {
-//        return new Identifier(this.unlockAdvancement);
-        if (Identifier.isValid(this.unlockAdvancement)) {
-            return this.unlockAdvancement;
+    public String unlockAdvancementForEntrance(String entrance) {
+        String unlockAdvancementIdString = "";
+        if (entrance.equals("")) {
+            unlockAdvancementIdString = this.unlockAdvancement;
+        }
+        if (this.side_entrances != null && this.side_entrances.get(entrance) != null) {
+            unlockAdvancementIdString = this.side_entrances.get(entrance).unlockAdvancement();
+        }
+        if (Identifier.isValid(unlockAdvancementIdString)) {
+            return unlockAdvancementIdString;
         }
         return "";
     }
 
-    public String lockAdvancement() {
-//        return new Identifier(this.lockAdvancement);
-        if (Identifier.isValid(this.lockAdvancement)) {
-            return this.lockAdvancement;
+    public String lockAdvancementForEntrance(String entrance) {
+        String lockAdvancementIdString = "";
+        if (entrance.equals("")) {
+            lockAdvancementIdString = this.lockAdvancement;
+        }
+        if (this.side_entrances != null && this.side_entrances.get(entrance) != null) {
+            lockAdvancementIdString = this.side_entrances.get(entrance).lockAdvancement();
+        }
+        if (Identifier.isValid(lockAdvancementIdString)) {
+            return lockAdvancementIdString;
         }
         return "";
     }
 
-    public boolean showLockedDungeon() {
-        return this.showLockedLocation;
+    public boolean showLockedLocationForEntrance(String entrance) {
+        if (entrance.equals("")) {
+            return this.showLockedLocation;
+        }
+        if (this.side_entrances != null && this.side_entrances.get(entrance) != null) {
+            return this.side_entrances.get(entrance).showLockedLocation();
+        }
+        return false;
     }
 
-    public boolean showUnlockAdvancement() {
-        return this.showUnlockAdvancement;
+    public boolean showUnlockAdvancementForEntrance(String entrance) {
+        if (entrance.equals("")) {
+            return this.showUnlockAdvancement;
+        }
+        if (this.side_entrances != null && this.side_entrances.get(entrance) != null) {
+            return this.side_entrances.get(entrance).showUnlockAdvancement();
+        }
+        return false;
     }
 
-    public boolean showLockAdvancement() {
-        return this.showLockAdvancement;
+    public boolean showLockAdvancementForEntrance(String entrance) {
+        if (entrance.equals("")) {
+            return this.showLockAdvancement;
+        }
+        if (this.side_entrances != null && this.side_entrances.get(entrance) != null) {
+            return this.side_entrances.get(entrance).showLockAdvancement();
+        }
+        return false;
+    }
+
+    public boolean showLocationNameForEntrance(String entrance) {
+        if (entrance.equals("")) {
+            return this.showLocationName;
+        }
+        if (this.side_entrances != null && this.side_entrances.get(entrance) != null) {
+            return this.side_entrances.get(entrance).showLocationName();
+        }
+        return false;
+    }
+
+    public boolean showLocationOwnerForEntrance(String entrance) {
+        if (entrance.equals("")) {
+            return this.showLocationOwner;
+        }
+        if (this.side_entrances != null && this.side_entrances.get(entrance) != null) {
+            return this.side_entrances.get(entrance).showLocationOwner();
+        }
+        return false;
     }
 
     public boolean isPublic() {
         return this.isPublic;
     }
 
-//    public boolean playerLocation() {
-//        return playerLocation;
-//    }
-
     public boolean canOwnerBeChosen() {
         return canOwnerBeChosen;
-    }
-
-//    public boolean stayInCurrentDimension() {
-//        return stayInCurrentDimension;
-//    }
-
-    public boolean showDetailedAdventureScreen() {
-        return showDetailedAdventureScreen;
     }
 
     public boolean consumeKey() {
@@ -167,18 +197,66 @@ public final class Location {
     public final class SideEntrance {
 
         private final String name;
+        private final String unlockAdvancement;
+        private final String lockAdvancement;
+        private final boolean showLockedLocation;
+        private final boolean showUnlockAdvancement;
+        private final boolean showLockAdvancement;
+        private final boolean showLocationName;
+        private final boolean showLocationOwner;
         private final boolean consumeKey;
 
         private final @Nullable ItemUtils.VirtualItemStack key;
 
-        public SideEntrance(String name, boolean consumeKey, @Nullable ItemUtils.VirtualItemStack key) {
+        public SideEntrance(String name, String unlockAdvancement, String lockAdvancement, boolean showLockedLocation, boolean showUnlockAdvancement, boolean showLockAdvancement, boolean showLocationName, boolean showLocationOwner, boolean consumeKey, @Nullable ItemUtils.VirtualItemStack key) {
             this.name = name;
+            this.unlockAdvancement = unlockAdvancement;
+            this.lockAdvancement = lockAdvancement;
+            this.showLockedLocation = showLockedLocation;
+            this.showUnlockAdvancement = showUnlockAdvancement;
+            this.showLockAdvancement = showLockAdvancement;
+            this.showLocationName = showLocationName;
+            this.showLocationOwner = showLocationOwner;
             this.consumeKey = consumeKey;
             this.key = key;
         }
 
         public String getName() {
             return this.name;
+        }
+
+        public String unlockAdvancement() {
+            if (Identifier.isValid(this.unlockAdvancement)) {
+                return this.unlockAdvancement;
+            }
+            return "";
+        }
+
+        public String lockAdvancement() {
+            if (Identifier.isValid(this.lockAdvancement)) {
+                return this.lockAdvancement;
+            }
+            return "";
+        }
+
+        public boolean showLockedLocation() {
+            return this.showLockedLocation;
+        }
+
+        public boolean showUnlockAdvancement() {
+            return this.showUnlockAdvancement;
+        }
+
+        public boolean showLockAdvancement() {
+            return this.showLockAdvancement;
+        }
+
+        public boolean showLocationName() {
+            return this.showLocationName;
+        }
+
+        public boolean showLocationOwner() {
+            return this.showLocationOwner;
         }
 
         public boolean consumeKey() {
@@ -205,15 +283,16 @@ public final class Location {
                 && this.showLockedLocation == that.showLockedLocation
                 && this.showUnlockAdvancement == that.showUnlockAdvancement
                 && this.showLockAdvancement == that.showLockAdvancement
+                && this.showLocationName == that.showLocationName
+                && this.showLocationOwner == that.showLocationOwner
                 && this.isPublic == that.isPublic
                 && this.canOwnerBeChosen == that.canOwnerBeChosen
-                && this.showDetailedAdventureScreen == that.showDetailedAdventureScreen
                 && this.consumeKey == that.consumeKey;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.controlBlockPosX, this.controlBlockPosY, this.controlBlockPosZ, this.structureIdentifier, this.displayName, this.unlockAdvancement, this.lockAdvancement, this.showLockedLocation, this.showUnlockAdvancement, this.showLockAdvancement, this.isPublic, this.canOwnerBeChosen, this.showDetailedAdventureScreen, this.consumeKey);
+        return Objects.hash(this.controlBlockPosX, this.controlBlockPosY, this.controlBlockPosZ, this.structureIdentifier, this.displayName, this.unlockAdvancement, this.lockAdvancement, this.showLockedLocation, this.showUnlockAdvancement, this.showLockAdvancement, this.showLocationName, this.showLocationOwner, this.isPublic, this.canOwnerBeChosen, this.consumeKey);
     }
 
     @Override
@@ -229,9 +308,10 @@ public final class Location {
                 "showLockedDungeon=" + this.showLockedLocation + ", " +
                 "showUnlockAdvancement=" + this.showUnlockAdvancement + ", " +
                 "showLockAdvancement=" + this.showLockAdvancement + ", " +
+                "showLocationName=" + this.showLocationName + ", " +
+                "showLocationOwner=" + this.showLocationOwner + ", " +
                 "publicLocation=" + this.isPublic + ", " +
                 "canOwnerBeChosen=" + this.canOwnerBeChosen + ", " +
-                "showDetailedAdventureScreen=" + this.showDetailedAdventureScreen + ", " +
                 "consumeKey=" + this.consumeKey + "]";
     }
 }

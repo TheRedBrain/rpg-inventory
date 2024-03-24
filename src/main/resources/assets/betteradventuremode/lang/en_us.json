@@ -544,6 +544,7 @@
 	"hud.message.staminaTooLow": "Your stamina is too low",
 	"hud.message.manaTooLow": "Your mana is too low",
 	"hud.message.foodEatenAlready": "You recently ate this food already",
+	"hud.message.onlyDimensionOwnerCanTeleport": "Only the dimension owner can teleport",
 
 	"trinkets.slot.belts.belt": "Belt",
 	"trinkets.slot.gloves.gloves": "Glove",

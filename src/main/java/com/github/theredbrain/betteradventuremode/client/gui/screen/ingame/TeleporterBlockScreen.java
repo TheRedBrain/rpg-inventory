@@ -150,7 +150,6 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
     private ButtonWidget openDungeonRegenerationScreenButton;
     private ButtonWidget confirmDungeonRegenerationButton;
     private ButtonWidget cancelDungeonRegenerationButton;
-    private boolean showDetailedAdventureScreen;
 
     private final boolean showCreativeTab;
     private CreativeScreenPage creativeScreenPage;
@@ -191,6 +190,8 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
     private Advancement currentLockAdvancement;
     private Advancement currentUnlockAdvancement;
     private boolean isCurrentLocationPublic;
+    private boolean showCurrentLocationName;
+    private boolean showCurrentLocationOwner;
     private boolean consumeKeyItem = false;
     private ItemUtils.VirtualItemStack currentKeyVirtualItemStack;
 
@@ -855,9 +856,9 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
                 this.visibleLocationsList.clear();
                 for (Pair<String, String> stringStringPair : this.locationsList) {
                     Location location = LocationsRegistry.getLocation(new Identifier(stringStringPair.getLeft()));
-                    lockAdvancementIdentifier = location.lockAdvancement();
-                    unlockAdvancementIdentifier = location.unlockAdvancement();
-                    showLockedLocation = location.showLockedDungeon();
+                    lockAdvancementIdentifier = location.lockAdvancementForEntrance(stringStringPair.getRight());
+                    unlockAdvancementIdentifier = location.unlockAdvancementForEntrance(stringStringPair.getRight());
+                    showLockedLocation = location.showLockedLocationForEntrance(stringStringPair.getRight());
 
                     if (advancementHandler != null) {
 //                        AdvancementEntry lockAdvancementEntry = null;
@@ -895,30 +896,19 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
 
         Location location = LocationsRegistry.getLocation(Identifier.tryParse(this.currentTargetIdentifier));
         if (location != null) {
-            lockAdvancementIdentifier = location.lockAdvancement();
-            unlockAdvancementIdentifier = location.unlockAdvancement();
-            this.showCurrentLockAdvancement = location.showLockAdvancement();
-            this.showCurrentUnlockAdvancement = location.showUnlockAdvancement();
+            lockAdvancementIdentifier = location.lockAdvancementForEntrance(this.currentTargetEntrance);
+            unlockAdvancementIdentifier = location.unlockAdvancementForEntrance(this.currentTargetEntrance);
+            this.showCurrentLockAdvancement = location.showLockAdvancementForEntrance(this.currentTargetEntrance);
+            this.showCurrentUnlockAdvancement = location.showUnlockAdvancementForEntrance(this.currentTargetEntrance);
             this.currentTargetDisplayName = location.getDisplayName();
             this.currentTargetEntranceDisplayName = location.getEntranceDisplayName(this.currentTargetEntrance);
             this.isCurrentLocationPublic = location.isPublic();
-//            this.isCurrentLocationPlayer = location.playerLocation();
             this.consumeKeyItem = location.consumeKeyAtEntrance(this.currentTargetEntrance);
             this.currentKeyVirtualItemStack = location.getKeyForEntrance(this.currentTargetEntrance);
             this.canOwnerBeChosen = location.canOwnerBeChosen();
-//            if (location.stayInCurrentDimension()) {
-//                if (this.teleporterBlock.getWorld() != null) {
-//                    String currentWorld = this.teleporterBlock.getWorld().getRegistryKey().getValue().toString();
-//                    if (UUIDUtilities.isStringValidUUID(currentWorld)) {
-//                        UUID newTargetOwnerUuid = UUID.fromString(currentWorld);
-//                        if (this.client != null && this.client.player != null) {
-//                            this.currentTargetOwner = this.client.player.networkHandler.getPlayerListEntry(newTargetOwnerUuid);
-//                        }
-//                    }
-//                }
-//                this.canOwnerBeChosen = false;
-//            }
-            this.showDetailedAdventureScreen = location.showDetailedAdventureScreen();
+
+            this.showCurrentLocationName = location.showLocationNameForEntrance(this.currentTargetEntrance);
+            this.showCurrentLocationOwner = location.showLocationOwnerForEntrance(this.currentTargetEntrance);
             if (advancementHandler != null) {
 //                AdvancementEntry lockAdvancementEntry = null;
                 Advancement lockAdvancementEntry = null;
@@ -1197,8 +1187,8 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
 
 //                        context.drawText(this.textRenderer, Text.translatable(this.teleporterBlock.getCurrentTargetIdentifierLabel()), this.x + 8, this.y + 20, 0x404040, false);
 
-                    if (this.showDetailedAdventureScreen) {
-                        if (!this.currentTargetEntrance.equals("")) {
+                    if (this.showCurrentLocationName || this.visibleLocationsList.size() > 1) {
+                        if (!this.currentTargetEntrance.equals("") && !this.currentTargetEntranceDisplayName.equals("")) {
 
                             context.drawText(this.textRenderer, Text.translatable(this.currentTargetEntranceDisplayName), this.x + 8, this.y + 20, 0x404040, false);
                             context.drawText(this.textRenderer, Text.translatable(this.currentTargetDisplayName), this.x + 8, this.y + 33, 0x404040, false);
@@ -1210,9 +1200,9 @@ public class TeleporterBlockScreen extends HandledScreen<TeleporterBlockScreenHa
                         }
                     }
 
-                    if (this.isCurrentLocationPublic) {
+                    if (this.isCurrentLocationPublic && this.showCurrentLocationOwner) {
                         context.drawText(this.textRenderer, LOCATION_IS_PUBLIC_TEXT, this.x + 19, this.y + 77, 0x404040, false);
-                    } else if (this.currentTargetOwner != null && this.showDetailedAdventureScreen) {
+                    } else if (this.currentTargetOwner != null && this.showCurrentLocationOwner) {
                         context.drawText(this.textRenderer, Text.translatable(this.teleporterBlock.getCurrentTargetOwnerLabel()), this.x + 8, this.y + 58, 0x404040, false);
 
 //                        context.drawTexture(currentTargetOwner.getSkinTextures().texture(), this.x + 7, this.y + 77, 8, 8, 8, 8, 8, 8, 64, 64);

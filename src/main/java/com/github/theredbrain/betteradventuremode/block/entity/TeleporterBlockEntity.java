@@ -237,7 +237,7 @@ public class TeleporterBlockEntity extends RotatedBlockEntity implements Extende
                         );
                         playerEntity.openHandledScreen(state.createScreenHandlerFactory(world, pos));
                     } else {
-                        playerEntity.sendMessage(Text.translatable("Only the dimension owner can teleport (WIP)"));
+                        playerEntity.sendMessage(Text.translatable("hud.message.onlyDimensionOwnerCanTeleport"), true);
                     }
                 }
             }
