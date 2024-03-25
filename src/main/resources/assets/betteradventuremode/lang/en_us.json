@@ -167,7 +167,17 @@
 	"gui.delay_trigger_block.triggeredBlockTriggerDelay": "Trigger Delay in ticks",
 
 
+	"gui.relay_trigger_block.hide_area_label": "Hide Area",
+	"gui.relay_trigger_block.show_area_label": "Show Area",
+	"gui.relay_trigger_block.resets_area_label": "Resets Area",
+	"gui.relay_trigger_block.triggers_area_label": "Triggers Area",
+	"gui.relay_trigger_block.area_dimensions_label": "Area Dimensions",
+	"gui.relay_trigger_block.area_position_offset_label": "Area Position Offset",
+
 	"gui.relay_trigger_block.newTriggeredBlockChanceLabel": "Trigger Chance: ",
+
+	"gui.relay_trigger_block.selectionMode.list": "Selection Mode: List",
+	"gui.relay_trigger_block.selectionMode.area": "Selection Mode: Area",
 
 	"gui.relay_trigger_block.triggerMode.normal": "Mode: Normal",
 	"gui.relay_trigger_block.triggerMode.random": "Mode: Random",
@@ -570,6 +580,7 @@
 	"hud.message.foodEatenAlready": "You recently ate this food already",
 	"hud.message.onlyDimensionOwnerCanTeleport": "Only the dimension owner can teleport",
 	"hud.message.keyIsNeeded": "You need a key.",
+	"hud.message.script_block.update_successful": "Update successful",
 
 	"trinkets.slot.belts.belt": "Belt",
 	"trinkets.slot.gloves.gloves": "Glove",
