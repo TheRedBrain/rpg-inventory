@@ -261,10 +261,12 @@
 	"gui.teleporter_block.cancelTeleportButtonLabel.tooltip": "Label of right Button in Adventure GUI",
 
 
-	"gui.location_controller_block.main_entrance.position_offset": "New Entrance Position",
+	"gui.location_controller_block.main_entrance.position_offset": "Main Entrance Position",
 	"gui.location_controller_block.main_entrance.orientation": "Yaw/Pitch",
+	"gui.location_controller_block.toggle_should_always_reset_button_label.on": "Always reset when entered: True",
+	"gui.location_controller_block.toggle_should_always_reset_button_label.off": "Always reset when entered: False",
 
-	"gui.location_controller_block.new_side_entrance.position_offset": "New Entrance Position",
+	"gui.location_controller_block.new_side_entrance.position_offset": "New Side Entrance Position",
 	"gui.location_controller_block.new_side_entrance.name": "Name",
 	"gui.location_controller_block.new_side_entrance.orientation": "Yaw/Pitch",
 

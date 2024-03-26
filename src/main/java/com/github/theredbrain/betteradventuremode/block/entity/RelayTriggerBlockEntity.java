@@ -241,10 +241,11 @@ public class RelayTriggerBlockEntity extends RotatedBlockEntity implements Trigg
                 }
             } else if (this.selectionMode == SelectionMode.AREA) {
                 Vec3i activationAreaDimensions = this.getAreaDimensions();
-                for (int i = 0; i <= activationAreaDimensions.getX(); i++) {
-                    for (int j = 0; j <= activationAreaDimensions.getY(); j++) {
-                        for (int k = 0; k <= activationAreaDimensions.getZ(); k++) {
-                            blockEntity = world.getBlockEntity(new BlockPos(this.pos.getX() + this.areaPositionOffset.getX() + i, this.pos.getY() + this.areaPositionOffset.getY() + j, this.pos.getZ() + this.areaPositionOffset.getZ() + k));
+                BlockPos blockPos = new BlockPos(this.pos.getX() + this.areaPositionOffset.getX(), this.pos.getY() + this.areaPositionOffset.getY(), this.pos.getZ() + this.areaPositionOffset.getZ());
+                for (int i = 0; i < activationAreaDimensions.getX(); i++) {
+                    for (int j = 0; j < activationAreaDimensions.getY(); j++) {
+                        for (int k = 0; k < activationAreaDimensions.getZ(); k++) {
+                            blockEntity = world.getBlockEntity(new BlockPos(blockPos.getX() + i, blockPos.getY() + j, blockPos.getZ() + k));
                             if (blockEntity == this) {
                                 continue;
                             }
@@ -269,27 +270,45 @@ public class RelayTriggerBlockEntity extends RotatedBlockEntity implements Trigg
         if (state.getBlock() instanceof RotatedBlockWithEntity) {
             if (state.get(RotatedBlockWithEntity.ROTATED) != this.rotated) {
                 BlockRotation blockRotation = BlockRotationUtils.calculateRotationFromDifferentRotatedStates(state.get(RotatedBlockWithEntity.ROTATED), this.rotated);
+
+                MutablePair<BlockPos, Vec3i> offsetArea = BlockRotationUtils.rotateOffsetArea(this.areaPositionOffset, this.areaDimensions, blockRotation);
+                this.areaPositionOffset = offsetArea.getLeft();
+                this.areaDimensions = offsetArea.getRight();
+
                 List<MutablePair<MutablePair<BlockPos, Boolean>, Integer>> newTriggeredBlocks = new ArrayList<>(List.of());
                 for (MutablePair<MutablePair<BlockPos, Boolean>, Integer> triggeredBlock : this.triggeredBlocks) {
                     newTriggeredBlocks.add(new MutablePair<>(new MutablePair<>(BlockRotationUtils.rotateOffsetBlockPos(triggeredBlock.getLeft().getLeft(), blockRotation), triggeredBlock.getLeft().getRight()), triggeredBlock.getRight()));
                 }
                 this.triggeredBlocks = newTriggeredBlocks;
+
                 this.rotated = state.get(RotatedBlockWithEntity.ROTATED);
             }
             if (state.get(RotatedBlockWithEntity.X_MIRRORED) != this.x_mirrored) {
+
+                MutablePair<BlockPos, Vec3i> offsetArea = BlockRotationUtils.mirrorOffsetArea(this.areaPositionOffset, this.areaDimensions, BlockMirror.FRONT_BACK);
+                this.areaPositionOffset = offsetArea.getLeft();
+                this.areaDimensions = offsetArea.getRight();
+
                 List<MutablePair<MutablePair<BlockPos, Boolean>, Integer>> newTriggeredBlocks = new ArrayList<>(List.of());
                 for (MutablePair<MutablePair<BlockPos, Boolean>, Integer> triggeredBlock : this.triggeredBlocks) {
                     newTriggeredBlocks.add(new MutablePair<>(new MutablePair<>(BlockRotationUtils.mirrorOffsetBlockPos(triggeredBlock.getLeft().getLeft(), BlockMirror.FRONT_BACK), triggeredBlock.getLeft().getRight()), triggeredBlock.getRight()));
                 }
                 this.triggeredBlocks = newTriggeredBlocks;
+
                 this.x_mirrored = state.get(RotatedBlockWithEntity.X_MIRRORED);
             }
             if (state.get(RotatedBlockWithEntity.Z_MIRRORED) != this.z_mirrored) {
+
+                MutablePair<BlockPos, Vec3i> offsetArea = BlockRotationUtils.mirrorOffsetArea(this.areaPositionOffset, this.areaDimensions, BlockMirror.LEFT_RIGHT);
+                this.areaPositionOffset = offsetArea.getLeft();
+                this.areaDimensions = offsetArea.getRight();
+
                 List<MutablePair<MutablePair<BlockPos, Boolean>, Integer>> newTriggeredBlocks = new ArrayList<>(List.of());
                 for (MutablePair<MutablePair<BlockPos, Boolean>, Integer> triggeredBlock : this.triggeredBlocks) {
                     newTriggeredBlocks.add(new MutablePair<>(new MutablePair<>(BlockRotationUtils.mirrorOffsetBlockPos(triggeredBlock.getLeft().getLeft(), BlockMirror.LEFT_RIGHT), triggeredBlock.getLeft().getRight()), triggeredBlock.getRight()));
                 }
                 this.triggeredBlocks = newTriggeredBlocks;
+
                 this.z_mirrored = state.get(RotatedBlockWithEntity.Z_MIRRORED);
             }
         }

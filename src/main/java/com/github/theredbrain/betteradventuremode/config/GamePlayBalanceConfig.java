@@ -32,6 +32,8 @@ public class GamePlayBalanceConfig implements ConfigData {
     public float poison_damage = 1.0f;
     @Comment("Shock")
     public float shock_damage = 10.0f;
+    @Comment("Combat Roll Compat")
+    public float rolling_stamina_cost = 3.0f;
     public GamePlayBalanceConfig() {
 
     }
