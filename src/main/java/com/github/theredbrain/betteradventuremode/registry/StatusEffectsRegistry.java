@@ -3,6 +3,7 @@ package com.github.theredbrain.betteradventuremode.registry;
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.effect.AuraStatusEffect;
 import com.github.theredbrain.betteradventuremode.effect.FoodStatusEffect;
+import com.github.theredbrain.betteradventuremode.spell_engine.ExtendedEntityActionsAllowedSemanticType;
 import com.github.theredbrain.betteradventuremode.util.AttributeModifierUUIDs;
 import com.github.theredbrain.betteradventuremode.effect.*;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
@@ -89,10 +90,10 @@ public class StatusEffectsRegistry {
     public static void registerEffects() {
         // --- Configuration ---
         // utility effects
-        ActionImpairing.configure(NO_ATTACK_ITEMS_EFFECT, new EntityActionsAllowed(true, true, new EntityActionsAllowed.PlayersAllowed(false, true, true), new EntityActionsAllowed.MobsAllowed(true), EntityActionsAllowed.SemanticType.NONE));
-        ActionImpairing.configure(NEEDS_TWO_HANDING_EFFECT, new EntityActionsAllowed(true, true, new EntityActionsAllowed.PlayersAllowed(false, false, false), new EntityActionsAllowed.MobsAllowed(true), EntityActionsAllowed.SemanticType.NONE));
-        ActionImpairing.configure(STAGGERED, new EntityActionsAllowed(false, false, new EntityActionsAllowed.PlayersAllowed(false, false, false), new EntityActionsAllowed.MobsAllowed(false), EntityActionsAllowed.SemanticType.STUN));
-        ActionImpairing.configure(OVERBURDENED_EFFECT, new EntityActionsAllowed(false, true, new EntityActionsAllowed.PlayersAllowed(true, true, true), new EntityActionsAllowed.MobsAllowed(true), EntityActionsAllowed.SemanticType.NONE));
+        ActionImpairing.configure(NO_ATTACK_ITEMS_EFFECT, new EntityActionsAllowed(true, true, new EntityActionsAllowed.PlayersAllowed(false, true, true), new EntityActionsAllowed.MobsAllowed(true), ExtendedEntityActionsAllowedSemanticType.NO_ATTACK_ITEM));
+        ActionImpairing.configure(NEEDS_TWO_HANDING_EFFECT, new EntityActionsAllowed(true, true, new EntityActionsAllowed.PlayersAllowed(false, false, false), new EntityActionsAllowed.MobsAllowed(true), ExtendedEntityActionsAllowedSemanticType.NEEDS_TWO_HANDING));
+        ActionImpairing.configure(STAGGERED, new EntityActionsAllowed(false, false, new EntityActionsAllowed.PlayersAllowed(false, false, false), new EntityActionsAllowed.MobsAllowed(false), ExtendedEntityActionsAllowedSemanticType.STAGGERED));
+        ActionImpairing.configure(OVERBURDENED_EFFECT, new EntityActionsAllowed(false, true, new EntityActionsAllowed.PlayersAllowed(true, true, true), new EntityActionsAllowed.MobsAllowed(true), ExtendedEntityActionsAllowedSemanticType.OVERBURDENED));
         Synchronized.configure(STAGGERED, true);
         Synchronized.configure(BURNING, true);
         Synchronized.configure(CHILLED, true);

@@ -33,6 +33,7 @@ public class GamePlayBalanceConfig implements ConfigData {
     @Comment("Shock")
     public float shock_damage = 10.0f;
     @Comment("Combat Roll Compat")
+    public boolean rolling_requires_stamina = true;
     public float rolling_stamina_cost = 3.0f;
     public GamePlayBalanceConfig() {
 

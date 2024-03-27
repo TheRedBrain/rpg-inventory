@@ -30,6 +30,7 @@
     "server.network.ServerPlayerInteractionManagerMixin",
     "server.network.ServerPlayNetworkHandlerMixin",
     "server.network.ServerRecipeBookMixin",
+    "spell_engine.api.effect.EntityActionsAllowedSemanticTypeMixin",
     "spell_engine.api.spell.SpellContainerMixin",
     "spell_engine.api.spell.SpellCostMixin",
     "spell_engine.api.spell.SpellImpactActionDamageMixin",

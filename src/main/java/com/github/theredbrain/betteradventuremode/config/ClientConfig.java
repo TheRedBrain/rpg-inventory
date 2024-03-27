@@ -34,7 +34,7 @@ public class ClientConfig implements ConfigData {
             This can be enabled for individual items via item tags (server-side)""")
     public boolean using_items_towards_camera_direction = false;
     @Comment("Additional debug messages are shown in-game.")
-    public boolean show_debug_messages = true;
+    public boolean show_debug_messages = false;
     public ClientConfig() {
 
     }

@@ -575,7 +575,10 @@
 	"gamerule.canSetSpawnOnBeds": "Can set spawn on beds",
 	"gamerule.canSetSpawnOnRespawnAnchor": "Can set spawn on respawn anchor",
 
-	"hud.action_impaired.none": "You can't attack with this item",
+	"hud.action_impaired.no_attack_item": "You can't attack with this item",
+	"hud.action_impaired.needs_two_handing": "You need to 2-hand this item",
+	"hud.action_impaired.overburdened": "You are overburdened",
+	"hud.action_impaired.staggered": "You are staggered",
 
 	"hud.message.staminaTooLow": "Your stamina is too low",
 	"hud.message.manaTooLow": "Your mana is too low",

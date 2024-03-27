@@ -1,5 +1,6 @@
 package com.github.theredbrain.betteradventuremode.mixin.combatroll.client;
 
+import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.entity.DuckLivingEntityMixin;
 import net.combatroll.client.RollManager;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,6 +14,6 @@ public abstract class RollManagerMixin {
 
     @Inject(method = "isRollAvailable(Lnet/minecraft/entity/player/PlayerEntity;)Z", at = @At("RETURN"), cancellable = true)
     public void isRollAvailable(PlayerEntity player, CallbackInfoReturnable<Boolean> cir) {
-        cir.setReturnValue(cir.getReturnValue() && ((DuckLivingEntityMixin)player).betteradventuremode$getStamina() > 0);
+        cir.setReturnValue(cir.getReturnValue() && (!BetterAdventureMode.gamePlayBalanceConfig.rolling_requires_stamina || ((DuckLivingEntityMixin)player).betteradventuremode$getStamina() > 0));
     }
 }

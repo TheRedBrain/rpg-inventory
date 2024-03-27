@@ -17,7 +17,7 @@ public class ServerConfig implements ConfigData {
             When set to true, the first person perspective is disabled.
             Exceptions are possible, when using items in itemTag 'enables_first_person_perspective_on_using'
             or when under 'first_person_status_effect'""")
-    public boolean disable_first_person = true;
+    public boolean disable_first_person = false;
     @Comment("""
             When this String is a valid status effect identifier,
             every player with this status effect is put into first person perspective,
@@ -31,7 +31,7 @@ public class ServerConfig implements ConfigData {
             When set to true, changing the players pitch is disabled.
             Exceptions are possible, when using items in itemTag 'allows_changing_pitch_on_using'
             or when under 'allow_pitch_changes_status_effect'""")
-    public boolean disable_player_pitch_changes = true;
+    public boolean disable_player_pitch_changes = false;
     @Comment("""
             When this String is a valid status effect identifier,
             every player with this status effect can change their pitch,
@@ -88,9 +88,9 @@ public class ServerConfig implements ConfigData {
     @Comment("Set to 'true' for the vanilla behaviour")
     public boolean shouldJigSawStructuresBeRandomlyRotated = false;
     @Comment("Additional debug log is shown in the console.")
-    public boolean show_debug_log = true;
+    public boolean show_debug_log = false;
     @Comment("Additional debug messages are send in game.")
-    public boolean show_debug_messages = true;
+    public boolean show_debug_messages = false;
     public ServerConfig() {
 
     }
