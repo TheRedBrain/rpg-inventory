@@ -9,6 +9,7 @@ import com.github.theredbrain.betteradventuremode.registry.GameRulesRegistry;
 import com.github.theredbrain.betteradventuremode.registry.Tags;
 import dev.emi.trinkets.api.*;
 import dev.emi.trinkets.api.event.TrinketDropCallback;
+import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -22,12 +23,15 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.registry.tag.DamageTypeTags;
+import net.minecraft.registry.tag.EntityTypeTags;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.UseAction;
 import net.minecraft.util.math.MathHelper;
@@ -44,7 +48,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-@Mixin(value = LivingEntity.class)
+@Mixin(value = LivingEntity.class, priority = 950)
 public abstract class LivingEntityMixin extends Entity implements DuckLivingEntityMixin {
 
     @Shadow
@@ -94,6 +98,60 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
     @Shadow public abstract boolean isUsingItem();
 
     @Shadow protected ItemStack activeItemStack;
+
+    @Shadow protected abstract float applyArmorToDamage(DamageSource source, float amount);
+
+    @Shadow public abstract float getAbsorptionAmount();
+
+    @Shadow public abstract void setAbsorptionAmount(float amount);
+
+    @Shadow public abstract boolean isDead();
+
+    @Shadow public abstract boolean isSleeping();
+
+    @Shadow public abstract void wakeUp();
+
+    @Shadow protected int despawnCounter;
+    @Shadow @Final public LimbAnimator limbAnimator;
+
+    @Shadow public abstract void setAttacker(@Nullable LivingEntity attacker);
+
+    @Shadow protected float lastDamageTaken;
+    @Shadow public int hurtTime;
+    @Shadow public int maxHurtTime;
+
+    @Shadow public abstract void damageHelmet(DamageSource source, float amount);
+
+    @Shadow @Nullable protected PlayerEntity attackingPlayer;
+    @Shadow protected int playerHitTimer;
+
+    @Shadow public abstract void takeKnockback(double strength, double x, double z);
+
+    @Shadow public abstract void tiltScreen(double deltaX, double deltaZ);
+
+    @Shadow protected abstract boolean tryUseTotem(DamageSource source);
+
+    @Shadow protected abstract @Nullable SoundEvent getDeathSound();
+
+    @Shadow public abstract void onDeath(DamageSource damageSource);
+
+    @Shadow protected abstract float getSoundVolume();
+
+    @Shadow public abstract float getSoundPitch();
+
+    @Shadow protected abstract void playHurtSound(DamageSource source);
+
+    @Shadow private @Nullable DamageSource lastDamageSource;
+    @Shadow private long lastDamageTime;
+
+    @Shadow public abstract boolean blockedByShield(DamageSource source);
+
+    @Shadow protected abstract void takeShieldHit(LivingEntity attacker);
+
+    @Shadow public abstract void damageShield(float amount);
+
+    @Shadow public abstract void heal(float amount);
+
     @Unique
     private int healthTickTimer = 0;
     @Unique
@@ -288,6 +346,306 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
 
     }
 
+    @Inject(method = "heal", at = @At("RETURN"))
+    public void heal(float amount, CallbackInfo ci) {
+        if (amount < 0) {
+            this.healthTickTimer = 0;
+        }
+    }
+
+    /**
+     * @author TheRedBrain
+     * @reason
+     */
+    @Overwrite
+    public boolean damage(DamageSource source, float amount) {
+        if (this.isInvulnerableTo(source)) {
+            return false;
+        } else if (this.getWorld().isClient) {
+            return false;
+        } else if (this.isDead()) {
+            return false;
+        }
+
+        if (BetterAdventureMode.serverConfig.useVanillaDamageCalculation) {
+            if (source.isIn(DamageTypeTags.IS_FIRE) && this.hasStatusEffect(StatusEffects.FIRE_RESISTANCE)) {
+                return false;
+            } else {
+                if (this.isSleeping() && !this.getWorld().isClient) {
+                    this.wakeUp();
+                }
+
+                this.despawnCounter = 0;
+                float f = amount;
+                boolean bl = false;
+                float g = 0.0F;
+                if (amount > 0.0F && this.blockedByShield(source)) {
+                    this.damageShield(amount);
+                    g = amount;
+                    amount = 0.0F;
+                    if (!source.isIn(DamageTypeTags.IS_PROJECTILE)) {
+                        Entity entity = source.getSource();
+                        if (entity instanceof LivingEntity) {
+                            LivingEntity livingEntity = (LivingEntity) entity;
+                            this.takeShieldHit(livingEntity);
+                        }
+                    }
+
+                    bl = true;
+                }
+
+                if (source.isIn(DamageTypeTags.IS_FREEZING) && this.getType().isIn(EntityTypeTags.FREEZE_HURTS_EXTRA_TYPES)) {
+                    amount *= 5.0F;
+                }
+
+                this.limbAnimator.setSpeed(1.5F);
+                boolean bl2 = true;
+                if ((float) this.timeUntilRegen > 10.0F && !source.isIn(DamageTypeTags.BYPASSES_COOLDOWN)) {
+                    if (amount <= this.lastDamageTaken) {
+                        return false;
+                    }
+
+                    this.applyDamage(source, amount - this.lastDamageTaken);
+                    this.lastDamageTaken = amount;
+                    bl2 = false;
+                } else {
+                    this.lastDamageTaken = amount;
+                    this.timeUntilRegen = 20;
+                    this.applyDamage(source, amount);
+                    this.maxHurtTime = 10;
+                    this.hurtTime = this.maxHurtTime;
+                }
+
+                if (source.isIn(DamageTypeTags.DAMAGES_HELMET) && !this.getEquippedStack(EquipmentSlot.HEAD).isEmpty()) {
+                    this.damageHelmet(source, amount);
+                    amount *= 0.75F;
+                }
+
+                Entity entity2 = source.getAttacker();
+                if (entity2 != null) {
+                    if (entity2 instanceof LivingEntity) {
+                        LivingEntity livingEntity2 = (LivingEntity) entity2;
+                        if (!source.isIn(DamageTypeTags.NO_ANGER)) {
+                            this.setAttacker(livingEntity2);
+                        }
+                    }
+
+                    if (entity2 instanceof PlayerEntity) {
+                        PlayerEntity playerEntity = (PlayerEntity) entity2;
+                        this.playerHitTimer = 100;
+                        this.attackingPlayer = playerEntity;
+                    } else if (entity2 instanceof WolfEntity) {
+                        WolfEntity wolfEntity = (WolfEntity) entity2;
+                        if (wolfEntity.isTamed()) {
+                            this.playerHitTimer = 100;
+                            LivingEntity var11 = wolfEntity.getOwner();
+                            if (var11 instanceof PlayerEntity) {
+                                PlayerEntity playerEntity2 = (PlayerEntity) var11;
+                                this.attackingPlayer = playerEntity2;
+                            } else {
+                                this.attackingPlayer = null;
+                            }
+                        }
+                    }
+                }
+
+                if (bl2) {
+                    if (bl) {
+                        this.getWorld().sendEntityStatus(this, EntityStatuses.BLOCK_WITH_SHIELD);
+                    } else {
+                        this.getWorld().sendEntityDamage(this, source);
+                    }
+
+                    if (!source.isIn(DamageTypeTags.NO_IMPACT) && (!bl || amount > 0.0F)) {
+                        this.scheduleVelocityUpdate();
+                    }
+
+                    if (entity2 != null && !source.isIn(DamageTypeTags.IS_EXPLOSION)) {
+                        double d = entity2.getX() - this.getX();
+
+                        double e;
+                        for (e = entity2.getZ() - this.getZ(); d * d + e * e < 1.0E-4; e = (Math.random() - Math.random()) * 0.01) {
+                            d = (Math.random() - Math.random()) * 0.01;
+                        }
+
+                        this.takeKnockback(0.4000000059604645, d, e);
+                        if (!bl) {
+                            this.tiltScreen(d, e);
+                        }
+                    }
+                }
+
+                if (this.isDead()) {
+                    if (!this.tryUseTotem(source)) {
+                        SoundEvent soundEvent = this.getDeathSound();
+                        if (bl2 && soundEvent != null) {
+                            this.playSound(soundEvent, this.getSoundVolume(), this.getSoundPitch());
+                        }
+
+                        this.onDeath(source);
+                    }
+                } else if (bl2) {
+                    this.playHurtSound(source);
+                }
+
+                boolean bl3 = !bl || amount > 0.0F;
+                if (bl3) {
+                    this.lastDamageSource = source;
+                    this.lastDamageTime = this.getWorld().getTime();
+                }
+
+                if (((LivingEntity) (Object) this) instanceof ServerPlayerEntity) {
+                    Criteria.ENTITY_HURT_PLAYER.trigger((ServerPlayerEntity) (Object) this, source, f, amount, bl);
+                    if (g > 0.0F && g < 3.4028235E37F) {
+                        ((ServerPlayerEntity) (Object) this).increaseStat(Stats.DAMAGE_BLOCKED_BY_SHIELD, Math.round(g * 10.0F));
+                    }
+                }
+
+                if (entity2 instanceof ServerPlayerEntity) {
+                    Criteria.PLAYER_HURT_ENTITY.trigger((ServerPlayerEntity) entity2, this, source, f, amount, bl);
+                }
+
+                return bl3;
+            }
+        } else {
+//            if (source.isIn(DamageTypeTags.IS_FIRE) && this.hasStatusEffect(StatusEffects.FIRE_RESISTANCE)) {
+//                return false;
+//            } else {
+                if (this.isSleeping() && !this.getWorld().isClient) {
+                    this.wakeUp();
+                }
+
+                this.despawnCounter = 0;
+                float f = amount;
+                boolean bl = false;
+                float g = 0.0F;
+//                if (amount > 0.0F && this.blockedByShield(source)) {
+//                    this.damageShield(amount);
+//                    g = amount;
+//                    amount = 0.0F;
+//                    if (!source.isIn(DamageTypeTags.IS_PROJECTILE)) {
+//                        Entity entity = source.getSource();
+//                        if (entity instanceof LivingEntity) {
+//                            LivingEntity livingEntity = (LivingEntity) entity;
+//                            this.takeShieldHit(livingEntity);
+//                        }
+//                    }
+//
+//                    bl = true;
+//                }
+
+//                if (source.isIn(DamageTypeTags.IS_FREEZING) && this.getType().isIn(EntityTypeTags.FREEZE_HURTS_EXTRA_TYPES)) {
+//                    amount *= 5.0F;
+//                }
+
+                this.limbAnimator.setSpeed(1.5F);
+                boolean bl2 = true;
+                if ((float) this.timeUntilRegen > 10.0F && !source.isIn(DamageTypeTags.BYPASSES_COOLDOWN)) {
+                    if (amount <= this.lastDamageTaken) {
+                        return false;
+                    }
+
+                    this.applyDamage(source, amount - this.lastDamageTaken);
+                    this.lastDamageTaken = amount;
+                    bl2 = false;
+                } else {
+                    this.lastDamageTaken = amount;
+                    this.timeUntilRegen = 20;
+                    this.applyDamage(source, amount);
+                    this.maxHurtTime = 10;
+                    this.hurtTime = this.maxHurtTime;
+                }
+
+//                if (source.isIn(DamageTypeTags.DAMAGES_HELMET) && !this.getEquippedStack(EquipmentSlot.HEAD).isEmpty()) {
+//                    this.damageHelmet(source, amount);
+//                    amount *= 0.75F;
+//                }
+
+                Entity entity2 = source.getAttacker();
+                if (entity2 != null) {
+                    if (entity2 instanceof LivingEntity livingEntity2) {
+                        if (!source.isIn(DamageTypeTags.NO_ANGER)) {
+                            this.setAttacker(livingEntity2);
+                        }
+                    }
+
+                    if (entity2 instanceof PlayerEntity playerEntity) {
+                        this.playerHitTimer = 100;
+                        this.attackingPlayer = playerEntity;
+                    } else if (entity2 instanceof WolfEntity wolfEntity) {
+                        if (wolfEntity.isTamed()) {
+                            this.playerHitTimer = 100;
+                            LivingEntity var11 = wolfEntity.getOwner();
+                            if (var11 instanceof PlayerEntity playerEntity2) {
+                                this.attackingPlayer = playerEntity2;
+                            } else {
+                                this.attackingPlayer = null;
+                            }
+                        }
+                    }
+                }
+
+                if (bl2) {
+//                    if (bl) {
+//                        this.getWorld().sendEntityStatus(this, EntityStatuses.BLOCK_WITH_SHIELD);
+//                    } else {
+                        this.getWorld().sendEntityDamage(this, source);
+//                    }
+
+                    if (!source.isIn(DamageTypeTags.NO_IMPACT) && /*(!bl || */amount > 0.0F)/*)*/ {
+                        this.scheduleVelocityUpdate();
+                    }
+
+                    if (entity2 != null && !source.isIn(DamageTypeTags.IS_EXPLOSION)) {
+                        double d = entity2.getX() - this.getX();
+
+                        double e;
+                        for (e = entity2.getZ() - this.getZ(); d * d + e * e < 1.0E-4; e = (Math.random() - Math.random()) * 0.01) {
+                            d = (Math.random() - Math.random()) * 0.01;
+                        }
+
+                        this.takeKnockback(0.4000000059604645, d, e);
+                        if (!bl) {
+                            this.tiltScreen(d, e);
+                        }
+                    }
+                }
+
+                if (this.isDead()) {
+                    if (!this.tryUseTotem(source)) {
+                        SoundEvent soundEvent = this.getDeathSound();
+                        if (bl2 && soundEvent != null) {
+                            this.playSound(soundEvent, this.getSoundVolume(), this.getSoundPitch());
+                        }
+
+                        this.onDeath(source);
+                    }
+                } else if (bl2) {
+                    this.playHurtSound(source);
+                }
+
+                boolean bl3 = /*!bl || */amount > 0.0F;
+                if (bl3) {
+                    this.lastDamageSource = source;
+                    this.lastDamageTime = this.getWorld().getTime();
+                }
+
+                if (((LivingEntity) (Object) this) instanceof ServerPlayerEntity) {
+                    Criteria.ENTITY_HURT_PLAYER.trigger((ServerPlayerEntity) (Object) this, source, f, amount, bl);
+                    if (g > 0.0F && g < 3.4028235E37F) {
+                        ((ServerPlayerEntity) (Object) this).increaseStat(Stats.DAMAGE_BLOCKED_BY_SHIELD, Math.round(g * 10.0F));
+                    }
+                }
+
+                if (entity2 instanceof ServerPlayerEntity) {
+                    Criteria.PLAYER_HURT_ENTITY.trigger((ServerPlayerEntity) entity2, this, source, f, amount, bl);
+                }
+
+                return bl3;
+//            }
+        }
+    }
+
     /**
      * @author TheRedBrain
      * @reason inject gamerule destroyDroppedItemsOnDeath into Trinkets drop logic
@@ -349,43 +707,6 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
      * @reason
      */
     @Overwrite
-    public void heal(float amount) {
-        float f = this.getHealth();
-        if (f > 0.0f) {
-            this.setHealth(f + amount);
-        }
-        if (amount < 0) {
-            this.healthTickTimer = 0;
-        }
-    }
-
-    @Unique
-    private void betteradventuremode$dropFromEntity(ItemStack stack) {
-        ItemEntity entity = dropStack(stack);
-        // Mimic player drop behavior for only players
-        if (entity != null && ((Entity) this) instanceof PlayerEntity) {
-            entity.setPos(entity.getX(), this.getEyeY() - 0.3, entity.getZ());
-            entity.setPickupDelay(40);
-            float magnitude = this.random.nextFloat() * 0.5f;
-            float angle = this.random.nextFloat() * ((float) Math.PI * 2);
-            entity.setVelocity(-MathHelper.sin(angle) * magnitude, 0.2f, MathHelper.cos(angle) * magnitude);
-        }
-    }
-
-    /**
-     * @author TheRedBrain
-     * @reason
-     */
-    @Overwrite
-    public boolean blockedByShield(DamageSource source) {
-        return false;
-    }
-
-    /**
-     * @author TheRedBrain
-     * @reason
-     */
-    @Overwrite
     public float modifyAppliedDamage(DamageSource source, float amount) {
         int i;
         int j;
@@ -425,248 +746,286 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
 
     /**
      * @author TheRedBrain
-     * @reason
+     * @reason complete overhaul of the damage calculation
      */
     @Overwrite
     public void applyDamage(DamageSource source, float amount) {
-        // TODO account for fallDamage/featherFalling and resistanceEffect, also protection enchantments?
-        LivingEntity attacker = null;
-        if (source.getAttacker() instanceof LivingEntity) {
-            attacker = (LivingEntity) source.getAttacker();
-        }
-        if (this.isInvulnerableTo(source)) {
-            return;
-        }
+        // TODO account for resistanceEffect
+        if (BetterAdventureMode.serverConfig.useVanillaDamageCalculation) {
+            if (!this.isInvulnerableTo(source)) {
+                amount = this.applyArmorToDamage(source, amount);
+                amount = this.modifyAppliedDamage(source, amount);
+                float f = amount;
+                amount = Math.max(amount - this.getAbsorptionAmount(), 0.0F);
+                this.setAbsorptionAmount(this.getAbsorptionAmount() - (f - amount));
+                float g = f - amount;
+                if (g > 0.0F && g < 3.4028235E37F) {
+                    Entity var6 = source.getAttacker();
+                    if (var6 instanceof ServerPlayerEntity serverPlayerEntity) {
+                        serverPlayerEntity.increaseStat(Stats.DAMAGE_DEALT_ABSORBED, Math.round(g * 10.0F));
+                    }
+                }
 
-        if (this.hasStatusEffect(StatusEffectsRegistry.STAGGERED)) {
-            amount = amount * 2;
-        }
+                if (amount != 0.0F) {
+                    this.getDamageTracker().onDamage(source, amount);
+                    this.setHealth(this.getHealth() - amount);
+                    this.setAbsorptionAmount(this.getAbsorptionAmount() - amount);
+                    this.emitGameEvent(GameEvent.ENTITY_DAMAGE);
+                }
+            }
+        } else {
+            LivingEntity attacker = null;
+            if (source.getAttacker() instanceof LivingEntity) {
+                attacker = (LivingEntity) source.getAttacker();
+            }
+            if (this.isInvulnerableTo(source)) {
+                return;
+            }
 
-        if (!source.isIn(DamageTypeTags.BYPASSES_ARMOR)) {
-            this.damageArmor(source, amount);
-        }
+            if (this.hasStatusEffect(StatusEffectsRegistry.STAGGERED)) {
+                amount = amount * 2;
+            }
 
-        float vanilla_amount = 0;
-        if (source.isIn(Tags.IS_VANILLA)) {
-            if (BetterAdventureMode.serverConfig.show_debug_log) {
+            if (!source.isIn(DamageTypeTags.BYPASSES_ARMOR)) {
+                this.damageArmor(source, amount);
+            }
+
+            if (!source.isIn(DamageTypeTags.IS_FALL)) {
+                boolean fall_damage_prevention_item_equipped = false;
+                Predicate<ItemStack> fall_damage_prevention_item_equipped_predicate = stack -> stack.isIn(Tags.PREVENTS_NON_LETHAL_FALL_DAMAGE);
+                if (source.isIn(DamageTypeTags.IS_FALL)) {
+                    Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent((LivingEntity) (Object) this);
+                    if (trinkets.isPresent()) {
+                        fall_damage_prevention_item_equipped = trinkets.get().isEquipped(fall_damage_prevention_item_equipped_predicate);
+                    }
+                }
+                if (fall_damage_prevention_item_equipped || betteradventuremode$hasEquipped(fall_damage_prevention_item_equipped_predicate)) {
+                    return;
+                }
+            }
+
+            if (source.isIn(Tags.IS_VANILLA) && BetterAdventureMode.serverConfig.show_debug_log) {
                 BetterAdventureMode.info("This vanilla damage type was used: " + source.getType().toString());
             }
-            vanilla_amount = amount;
-        }
 
-        float true_amount = 0;
-        if (source.isIn(Tags.IS_TRUE_DAMAGE)) {
-            true_amount = amount;
-        }
+            float applied_damage = 0;
+            float true_amount = 0;
+            if (source.isIn(Tags.IS_TRUE_DAMAGE)) {
+                true_amount = amount;
+                amount = 0;
+            }
 
-        float bashing_multiplier = source.isIn(Tags.HAS_BASHING_DIVISION_OF_1) ? 1.0f : source.isIn(Tags.HAS_BASHING_DIVISION_OF_0_9) ? 0.9f : source.isIn(Tags.HAS_BASHING_DIVISION_OF_0_8) ? 0.8f : source.isIn(Tags.HAS_BASHING_DIVISION_OF_0_7) ? 0.7f : source.isIn(Tags.HAS_BASHING_DIVISION_OF_0_6) ? 0.6f : source.isIn(Tags.HAS_BASHING_DIVISION_OF_0_5) ? 0.5f : source.isIn(Tags.HAS_BASHING_DIVISION_OF_0_4) ? 0.4f : source.isIn(Tags.HAS_BASHING_DIVISION_OF_0_3) ? 0.3f : source.isIn(Tags.HAS_BASHING_DIVISION_OF_0_2) ? 0.2f : source.isIn(Tags.HAS_BASHING_DIVISION_OF_0_1) ? 0.1f : 0;
-        float bashing_amount = amount * bashing_multiplier;
+            if (amount > 0) {
+                float bashing_multiplier = source.isIn(Tags.HAS_BASHING_DIVISION_OF_1) ? 1.0f : source.isIn(Tags.HAS_BASHING_DIVISION_OF_0_9) ? 0.9f : source.isIn(Tags.HAS_BASHING_DIVISION_OF_0_8) ? 0.8f : source.isIn(Tags.HAS_BASHING_DIVISION_OF_0_7) ? 0.7f : source.isIn(Tags.HAS_BASHING_DIVISION_OF_0_6) ? 0.6f : source.isIn(Tags.HAS_BASHING_DIVISION_OF_0_5) ? 0.5f : source.isIn(Tags.HAS_BASHING_DIVISION_OF_0_4) ? 0.4f : source.isIn(Tags.HAS_BASHING_DIVISION_OF_0_3) ? 0.3f : source.isIn(Tags.HAS_BASHING_DIVISION_OF_0_2) ? 0.2f : source.isIn(Tags.HAS_BASHING_DIVISION_OF_0_1) ? 0.1f : 0;
+                float bashing_amount = amount * bashing_multiplier;
 
-        float piercing_multiplier = source.isIn(Tags.HAS_PIERCING_DIVISION_OF_1) ? 1.0f : source.isIn(Tags.HAS_PIERCING_DIVISION_OF_0_9) ? 0.9f : source.isIn(Tags.HAS_PIERCING_DIVISION_OF_0_8) ? 0.8f : source.isIn(Tags.HAS_PIERCING_DIVISION_OF_0_7) ? 0.7f : source.isIn(Tags.HAS_PIERCING_DIVISION_OF_0_6) ? 0.6f : source.isIn(Tags.HAS_PIERCING_DIVISION_OF_0_5) ? 0.5f : source.isIn(Tags.HAS_PIERCING_DIVISION_OF_0_4) ? 0.4f : source.isIn(Tags.HAS_PIERCING_DIVISION_OF_0_3) ? 0.3f : source.isIn(Tags.HAS_PIERCING_DIVISION_OF_0_2) ? 0.2f : source.isIn(Tags.HAS_PIERCING_DIVISION_OF_0_1) ? 0.1f : 0;
-        float piercing_amount = amount * piercing_multiplier;
+                float piercing_multiplier = source.isIn(Tags.HAS_PIERCING_DIVISION_OF_1) ? 1.0f : source.isIn(Tags.HAS_PIERCING_DIVISION_OF_0_9) ? 0.9f : source.isIn(Tags.HAS_PIERCING_DIVISION_OF_0_8) ? 0.8f : source.isIn(Tags.HAS_PIERCING_DIVISION_OF_0_7) ? 0.7f : source.isIn(Tags.HAS_PIERCING_DIVISION_OF_0_6) ? 0.6f : source.isIn(Tags.HAS_PIERCING_DIVISION_OF_0_5) ? 0.5f : source.isIn(Tags.HAS_PIERCING_DIVISION_OF_0_4) ? 0.4f : source.isIn(Tags.HAS_PIERCING_DIVISION_OF_0_3) ? 0.3f : source.isIn(Tags.HAS_PIERCING_DIVISION_OF_0_2) ? 0.2f : source.isIn(Tags.HAS_PIERCING_DIVISION_OF_0_1) ? 0.1f : 0;
+                float piercing_amount = amount * piercing_multiplier;
 
-        float slashing_multiplier = source.isIn(Tags.HAS_SLASHING_DIVISION_OF_1) ? 1.0f : source.isIn(Tags.HAS_SLASHING_DIVISION_OF_0_9) ? 0.9f : source.isIn(Tags.HAS_SLASHING_DIVISION_OF_0_8) ? 0.8f : source.isIn(Tags.HAS_SLASHING_DIVISION_OF_0_7) ? 0.7f : source.isIn(Tags.HAS_SLASHING_DIVISION_OF_0_6) ? 0.6f : source.isIn(Tags.HAS_SLASHING_DIVISION_OF_0_5) ? 0.5f : source.isIn(Tags.HAS_SLASHING_DIVISION_OF_0_4) ? 0.4f : source.isIn(Tags.HAS_SLASHING_DIVISION_OF_0_3) ? 0.3f : source.isIn(Tags.HAS_SLASHING_DIVISION_OF_0_2) ? 0.2f : source.isIn(Tags.HAS_SLASHING_DIVISION_OF_0_1) ? 0.1f : 0;
-        float slashing_amount = amount * slashing_multiplier;
+                float slashing_multiplier = source.isIn(Tags.HAS_SLASHING_DIVISION_OF_1) ? 1.0f : source.isIn(Tags.HAS_SLASHING_DIVISION_OF_0_9) ? 0.9f : source.isIn(Tags.HAS_SLASHING_DIVISION_OF_0_8) ? 0.8f : source.isIn(Tags.HAS_SLASHING_DIVISION_OF_0_7) ? 0.7f : source.isIn(Tags.HAS_SLASHING_DIVISION_OF_0_6) ? 0.6f : source.isIn(Tags.HAS_SLASHING_DIVISION_OF_0_5) ? 0.5f : source.isIn(Tags.HAS_SLASHING_DIVISION_OF_0_4) ? 0.4f : source.isIn(Tags.HAS_SLASHING_DIVISION_OF_0_3) ? 0.3f : source.isIn(Tags.HAS_SLASHING_DIVISION_OF_0_2) ? 0.2f : source.isIn(Tags.HAS_SLASHING_DIVISION_OF_0_1) ? 0.1f : 0;
+                float slashing_amount = amount * slashing_multiplier;
 
-        float poison_multiplier = source.isIn(Tags.HAS_POISON_DIVISION_OF_1) ? 1.0f : source.isIn(Tags.HAS_POISON_DIVISION_OF_0_9) ? 0.9f : source.isIn(Tags.HAS_POISON_DIVISION_OF_0_8) ? 0.8f : source.isIn(Tags.HAS_POISON_DIVISION_OF_0_7) ? 0.7f : source.isIn(Tags.HAS_POISON_DIVISION_OF_0_6) ? 0.6f : source.isIn(Tags.HAS_POISON_DIVISION_OF_0_5) ? 0.5f : source.isIn(Tags.HAS_POISON_DIVISION_OF_0_4) ? 0.4f : source.isIn(Tags.HAS_POISON_DIVISION_OF_0_3) ? 0.3f : source.isIn(Tags.HAS_POISON_DIVISION_OF_0_2) ? 0.2f : source.isIn(Tags.HAS_POISON_DIVISION_OF_0_1) ? 0.1f : 0;
-        float poison_amount = amount * poison_multiplier;
+                float poison_multiplier = source.isIn(Tags.HAS_POISON_DIVISION_OF_1) ? 1.0f : source.isIn(Tags.HAS_POISON_DIVISION_OF_0_9) ? 0.9f : source.isIn(Tags.HAS_POISON_DIVISION_OF_0_8) ? 0.8f : source.isIn(Tags.HAS_POISON_DIVISION_OF_0_7) ? 0.7f : source.isIn(Tags.HAS_POISON_DIVISION_OF_0_6) ? 0.6f : source.isIn(Tags.HAS_POISON_DIVISION_OF_0_5) ? 0.5f : source.isIn(Tags.HAS_POISON_DIVISION_OF_0_4) ? 0.4f : source.isIn(Tags.HAS_POISON_DIVISION_OF_0_3) ? 0.3f : source.isIn(Tags.HAS_POISON_DIVISION_OF_0_2) ? 0.2f : source.isIn(Tags.HAS_POISON_DIVISION_OF_0_1) ? 0.1f : 0;
+                float poison_amount = amount * poison_multiplier;
 
-        float fire_multiplier = source.isIn(Tags.HAS_FIRE_DIVISION_OF_1) ? 1.0f : source.isIn(Tags.HAS_FIRE_DIVISION_OF_0_9) ? 0.9f : source.isIn(Tags.HAS_FIRE_DIVISION_OF_0_8) ? 0.8f : source.isIn(Tags.HAS_FIRE_DIVISION_OF_0_7) ? 0.7f : source.isIn(Tags.HAS_FIRE_DIVISION_OF_0_6) ? 0.6f : source.isIn(Tags.HAS_FIRE_DIVISION_OF_0_5) ? 0.5f : source.isIn(Tags.HAS_FIRE_DIVISION_OF_0_4) ? 0.4f : source.isIn(Tags.HAS_FIRE_DIVISION_OF_0_3) ? 0.3f : source.isIn(Tags.HAS_FIRE_DIVISION_OF_0_2) ? 0.2f : source.isIn(Tags.HAS_FIRE_DIVISION_OF_0_1) ? 0.1f : 0;
-        float fire_amount = amount * fire_multiplier;
+                float fire_multiplier = source.isIn(Tags.HAS_FIRE_DIVISION_OF_1) ? 1.0f : source.isIn(Tags.HAS_FIRE_DIVISION_OF_0_9) ? 0.9f : source.isIn(Tags.HAS_FIRE_DIVISION_OF_0_8) ? 0.8f : source.isIn(Tags.HAS_FIRE_DIVISION_OF_0_7) ? 0.7f : source.isIn(Tags.HAS_FIRE_DIVISION_OF_0_6) ? 0.6f : source.isIn(Tags.HAS_FIRE_DIVISION_OF_0_5) ? 0.5f : source.isIn(Tags.HAS_FIRE_DIVISION_OF_0_4) ? 0.4f : source.isIn(Tags.HAS_FIRE_DIVISION_OF_0_3) ? 0.3f : source.isIn(Tags.HAS_FIRE_DIVISION_OF_0_2) ? 0.2f : source.isIn(Tags.HAS_FIRE_DIVISION_OF_0_1) ? 0.1f : 0;
+                float fire_amount = amount * fire_multiplier;
 
-        float frost_multiplier = source.isIn(Tags.HAS_FROST_DIVISION_OF_1) ? 1.0f : source.isIn(Tags.HAS_FROST_DIVISION_OF_0_9) ? 0.9f : source.isIn(Tags.HAS_FROST_DIVISION_OF_0_8) ? 0.8f : source.isIn(Tags.HAS_FROST_DIVISION_OF_0_7) ? 0.7f : source.isIn(Tags.HAS_FROST_DIVISION_OF_0_6) ? 0.6f : source.isIn(Tags.HAS_FROST_DIVISION_OF_0_5) ? 0.5f : source.isIn(Tags.HAS_FROST_DIVISION_OF_0_4) ? 0.4f : source.isIn(Tags.HAS_FROST_DIVISION_OF_0_3) ? 0.3f : source.isIn(Tags.HAS_FROST_DIVISION_OF_0_2) ? 0.2f : source.isIn(Tags.HAS_FROST_DIVISION_OF_0_1) ? 0.1f : 0;
-        float frost_amount = amount * frost_multiplier;
+                float frost_multiplier = source.isIn(Tags.HAS_FROST_DIVISION_OF_1) ? 1.0f : source.isIn(Tags.HAS_FROST_DIVISION_OF_0_9) ? 0.9f : source.isIn(Tags.HAS_FROST_DIVISION_OF_0_8) ? 0.8f : source.isIn(Tags.HAS_FROST_DIVISION_OF_0_7) ? 0.7f : source.isIn(Tags.HAS_FROST_DIVISION_OF_0_6) ? 0.6f : source.isIn(Tags.HAS_FROST_DIVISION_OF_0_5) ? 0.5f : source.isIn(Tags.HAS_FROST_DIVISION_OF_0_4) ? 0.4f : source.isIn(Tags.HAS_FROST_DIVISION_OF_0_3) ? 0.3f : source.isIn(Tags.HAS_FROST_DIVISION_OF_0_2) ? 0.2f : source.isIn(Tags.HAS_FROST_DIVISION_OF_0_1) ? 0.1f : 0;
+                float frost_amount = amount * frost_multiplier;
 
-        float lightning_multiplier = source.isIn(Tags.HAS_LIGHTNING_DIVISION_OF_1) ? 1.0f : source.isIn(Tags.HAS_LIGHTNING_DIVISION_OF_0_9) ? 0.9f : source.isIn(Tags.HAS_LIGHTNING_DIVISION_OF_0_8) ? 0.8f : source.isIn(Tags.HAS_LIGHTNING_DIVISION_OF_0_7) ? 0.7f : source.isIn(Tags.HAS_LIGHTNING_DIVISION_OF_0_6) ? 0.6f : source.isIn(Tags.HAS_LIGHTNING_DIVISION_OF_0_5) ? 0.5f : source.isIn(Tags.HAS_LIGHTNING_DIVISION_OF_0_4) ? 0.4f : source.isIn(Tags.HAS_LIGHTNING_DIVISION_OF_0_3) ? 0.3f : source.isIn(Tags.HAS_LIGHTNING_DIVISION_OF_0_2) ? 0.2f : source.isIn(Tags.HAS_LIGHTNING_DIVISION_OF_0_1) ? 0.1f : 0;
-        float lightning_amount = amount * lightning_multiplier;
+                float lightning_multiplier = source.isIn(Tags.HAS_LIGHTNING_DIVISION_OF_1) ? 1.0f : source.isIn(Tags.HAS_LIGHTNING_DIVISION_OF_0_9) ? 0.9f : source.isIn(Tags.HAS_LIGHTNING_DIVISION_OF_0_8) ? 0.8f : source.isIn(Tags.HAS_LIGHTNING_DIVISION_OF_0_7) ? 0.7f : source.isIn(Tags.HAS_LIGHTNING_DIVISION_OF_0_6) ? 0.6f : source.isIn(Tags.HAS_LIGHTNING_DIVISION_OF_0_5) ? 0.5f : source.isIn(Tags.HAS_LIGHTNING_DIVISION_OF_0_4) ? 0.4f : source.isIn(Tags.HAS_LIGHTNING_DIVISION_OF_0_3) ? 0.3f : source.isIn(Tags.HAS_LIGHTNING_DIVISION_OF_0_2) ? 0.2f : source.isIn(Tags.HAS_LIGHTNING_DIVISION_OF_0_1) ? 0.1f : 0;
+                float lightning_amount = amount * lightning_multiplier;
 
-        if (attacker != null) {
-            bashing_amount = (float) ((attacker.getAttributeValue(EntityAttributesRegistry.ADDITIONAL_BASHING_DAMAGE) + bashing_amount) * attacker.getAttributeValue(EntityAttributesRegistry.INCREASED_BASHING_DAMAGE));
-            piercing_amount = (float) ((attacker.getAttributeValue(EntityAttributesRegistry.ADDITIONAL_PIERCING_DAMAGE) + piercing_amount) * attacker.getAttributeValue(EntityAttributesRegistry.INCREASED_PIERCING_DAMAGE));
-            slashing_amount = (float) ((attacker.getAttributeValue(EntityAttributesRegistry.ADDITIONAL_SLASHING_DAMAGE) + slashing_amount) * attacker.getAttributeValue(EntityAttributesRegistry.INCREASED_SLASHING_DAMAGE));
-            fire_amount = (float) ((attacker.getAttributeValue(EntityAttributesRegistry.ADDITIONAL_FIRE_DAMAGE) + fire_amount) * attacker.getAttributeValue(EntityAttributesRegistry.INCREASED_FIRE_DAMAGE));
-            frost_amount = (float) ((attacker.getAttributeValue(EntityAttributesRegistry.ADDITIONAL_FROST_DAMAGE) + frost_amount) * attacker.getAttributeValue(EntityAttributesRegistry.INCREASED_FROST_DAMAGE));
-            lightning_amount = (float) ((attacker.getAttributeValue(EntityAttributesRegistry.ADDITIONAL_LIGHTNING_DAMAGE) + lightning_amount) * attacker.getAttributeValue(EntityAttributesRegistry.INCREASED_LIGHTNING_DAMAGE));
-            poison_amount = (float) ((attacker.getAttributeValue(EntityAttributesRegistry.ADDITIONAL_POISON_DAMAGE) + poison_amount) * attacker.getAttributeValue(EntityAttributesRegistry.INCREASED_POISON_DAMAGE));
-        }
-
-        // region shield blocks
-        ItemStack shieldItemStack = this.getOffHandStack();
-        if (this.isBlocking() && this.blockedByShield(source) && this.betteradventuremode$getStamina() > 0 && shieldItemStack.getItem() instanceof BasicShieldItem basicShieldItem) {
-            boolean tryParry = this.betteradventuremode$canParry() && this.blockingTime <= 20 && this.betteradventuremode$getStamina() >= 2 && source.getAttacker() != null && source.getAttacker() instanceof LivingEntity && ((BasicShieldItem) shieldItemStack.getItem()).canParry();
-            // try to parry the attack
-            double parryBonus = tryParry ? basicShieldItem.getParryBonus() : 1;
-            float blockedBashingDamage = (float) (bashing_amount - basicShieldItem.getPhysicalDamageReduction() * parryBonus);
-            float blockedPiercingDamage = (float) (piercing_amount - basicShieldItem.getPhysicalDamageReduction() * parryBonus);
-            float blockedSlashingDamage = (float) (slashing_amount - basicShieldItem.getPhysicalDamageReduction() * parryBonus);
-            float blockedFireDamage = (float) (fire_amount - basicShieldItem.getFireDamageReduction() * parryBonus);
-            float blockedFrostDamage = (float) (frost_amount - basicShieldItem.getFrostDamageReduction() * parryBonus);
-            float blockedLightningDamage = (float) (lightning_amount - basicShieldItem.getLightningDamageReduction() * parryBonus);
-
-            this.betteradventuremode$addStamina(tryParry ? -4 : -2);
-
-            if (this.betteradventuremode$getStamina() >= 0) {
-
-                boolean isStaggered = false;
-                // apply stagger based on left over damage
-                float appliedStagger = (float) Math.max(((bashing_amount - blockedBashingDamage) * 0.75 + (piercing_amount - blockedPiercingDamage) * 0.5 + (slashing_amount - blockedSlashingDamage) * 0.5 + (lightning_amount - blockedLightningDamage) * 0.5), 0);
-                if (appliedStagger > 0) {
-                    this.betteradventuremode$addStaggerBuildUp(appliedStagger);
-                    isStaggered = this.hasStatusEffect(StatusEffectsRegistry.STAGGERED);
+                if (attacker != null) {
+                    bashing_amount = (float) ((attacker.getAttributeValue(EntityAttributesRegistry.ADDITIONAL_BASHING_DAMAGE) + bashing_amount) * attacker.getAttributeValue(EntityAttributesRegistry.INCREASED_BASHING_DAMAGE));
+                    piercing_amount = (float) ((attacker.getAttributeValue(EntityAttributesRegistry.ADDITIONAL_PIERCING_DAMAGE) + piercing_amount) * attacker.getAttributeValue(EntityAttributesRegistry.INCREASED_PIERCING_DAMAGE));
+                    slashing_amount = (float) ((attacker.getAttributeValue(EntityAttributesRegistry.ADDITIONAL_SLASHING_DAMAGE) + slashing_amount) * attacker.getAttributeValue(EntityAttributesRegistry.INCREASED_SLASHING_DAMAGE));
+                    fire_amount = (float) ((attacker.getAttributeValue(EntityAttributesRegistry.ADDITIONAL_FIRE_DAMAGE) + fire_amount) * attacker.getAttributeValue(EntityAttributesRegistry.INCREASED_FIRE_DAMAGE));
+                    frost_amount = (float) ((attacker.getAttributeValue(EntityAttributesRegistry.ADDITIONAL_FROST_DAMAGE) + frost_amount) * attacker.getAttributeValue(EntityAttributesRegistry.INCREASED_FROST_DAMAGE));
+                    lightning_amount = (float) ((attacker.getAttributeValue(EntityAttributesRegistry.ADDITIONAL_LIGHTNING_DAMAGE) + lightning_amount) * attacker.getAttributeValue(EntityAttributesRegistry.INCREASED_LIGHTNING_DAMAGE));
+                    poison_amount = (float) ((attacker.getAttributeValue(EntityAttributesRegistry.ADDITIONAL_POISON_DAMAGE) + poison_amount) * attacker.getAttributeValue(EntityAttributesRegistry.INCREASED_POISON_DAMAGE));
                 }
 
-                // parry was successful
-                if (!isStaggered) {
-                    bashing_amount -= blockedBashingDamage;
-                    piercing_amount -= blockedPiercingDamage;
-                    slashing_amount -= blockedSlashingDamage;
-                    fire_amount -= blockedFireDamage;
-                    frost_amount -= blockedFrostDamage;
-                    lightning_amount -= blockedLightningDamage;
+                // region shield blocks
+                ItemStack shieldItemStack = this.getOffHandStack();
+                if (this.isBlocking() && this.blockedByShield(source) && this.betteradventuremode$getStamina() > 0 && shieldItemStack.getItem() instanceof BasicShieldItem basicShieldItem) {
+                    boolean tryParry = this.betteradventuremode$canParry() && this.blockingTime <= 20 && this.betteradventuremode$getStamina() >= 2 && source.getAttacker() != null && source.getAttacker() instanceof LivingEntity && ((BasicShieldItem) shieldItemStack.getItem()).canParry();
+                    // try to parry the attack
+                    double parryBonus = tryParry ? basicShieldItem.getParryBonus() : 1;
+                    float blockedBashingDamage = (float) (bashing_amount - basicShieldItem.getPhysicalDamageReduction() * parryBonus);
+                    float blockedPiercingDamage = (float) (piercing_amount - basicShieldItem.getPhysicalDamageReduction() * parryBonus);
+                    float blockedSlashingDamage = (float) (slashing_amount - basicShieldItem.getPhysicalDamageReduction() * parryBonus);
+                    float blockedFireDamage = (float) (fire_amount - basicShieldItem.getFireDamageReduction() * parryBonus);
+                    float blockedFrostDamage = (float) (frost_amount - basicShieldItem.getFrostDamageReduction() * parryBonus);
+                    float blockedLightningDamage = (float) (lightning_amount - basicShieldItem.getLightningDamageReduction() * parryBonus);
 
-                    if (tryParry) {
+                    this.betteradventuremode$addStamina(tryParry ? -4 : -2);
 
-                        // TODO only one attack can be parried ?
+                    if (this.betteradventuremode$getStamina() >= 0) {
+
+                        boolean isStaggered = false;
+                        // apply stagger based on left over damage
+                        float appliedStagger = (float) Math.max(((bashing_amount - blockedBashingDamage) * 0.75 + (piercing_amount - blockedPiercingDamage) * 0.5 + (slashing_amount - blockedSlashingDamage) * 0.5 + (lightning_amount - blockedLightningDamage) * 0.5), 0);
+                        if (appliedStagger > 0) {
+                            this.betteradventuremode$addStaggerBuildUp(appliedStagger);
+                            isStaggered = this.hasStatusEffect(StatusEffectsRegistry.STAGGERED);
+                        }
+
+                        // parry was successful
+                        if (!isStaggered) {
+                            bashing_amount -= blockedBashingDamage;
+                            piercing_amount -= blockedPiercingDamage;
+                            slashing_amount -= blockedSlashingDamage;
+                            fire_amount -= blockedFireDamage;
+                            frost_amount -= blockedFrostDamage;
+                            lightning_amount -= blockedLightningDamage;
+
+                            if (tryParry) {
+
+                                // TODO only one attack can be parried ?
 //                        this.blockingTime = this.blockingTime + 20;
 
-                        if (attacker != null) {
-                            // attacker is staggered
-                            ((DuckLivingEntityMixin) attacker).betteradventuremode$addStaggerBuildUp(((DuckLivingEntityMixin) attacker).betteradventuremode$getMaxStaggerBuildUp());
+                                if (attacker != null) {
+                                    // attacker is staggered
+                                    ((DuckLivingEntityMixin) attacker).betteradventuremode$addStaggerBuildUp(((DuckLivingEntityMixin) attacker).betteradventuremode$getMaxStaggerBuildUp());
+                                }
+
+                            } else {
+
+                                //
+                                if (attacker != null) {
+                                    attacker.takeKnockback(((BasicShieldItem) shieldItemStack.getItem()).getBlockForce(), attacker.getX() - this.getX(), attacker.getZ() - this.getZ());
+                                }
+
+                            }
+                            float totalBlockedDamage = blockedBashingDamage + blockedPiercingDamage + blockedSlashingDamage + blockedFireDamage + blockedFrostDamage + blockedLightningDamage;
+                            if (((LivingEntity) (Object) this) instanceof ServerPlayerEntity serverPlayerEntity && totalBlockedDamage > 0.0f && totalBlockedDamage < 3.4028235E37f) {
+                                serverPlayerEntity.increaseStat(Stats.DAMAGE_BLOCKED_BY_SHIELD, Math.round(totalBlockedDamage * 10.0f));
+                            }
+
+                            this.getWorld().sendEntityStatus(this, EntityStatuses.BLOCK_WITH_SHIELD);
+                        } else {
+                            this.getWorld().sendEntityStatus(this, EntityStatuses.BREAK_SHIELD);
                         }
-
-                    } else {
-
-                        //
-                        if (attacker != null) {
-                            attacker.takeKnockback(((BasicShieldItem) shieldItemStack.getItem()).getBlockForce(), attacker.getX() - this.getX(), attacker.getZ() - this.getZ());
-                        }
-
                     }
-                    float totalBlockedDamage = blockedBashingDamage + blockedPiercingDamage + blockedSlashingDamage + blockedFireDamage + blockedFrostDamage + blockedLightningDamage;
-                    if (((LivingEntity) (Object) this) instanceof ServerPlayerEntity serverPlayerEntity && totalBlockedDamage > 0.0f && totalBlockedDamage < 3.4028235E37f) {
-                        serverPlayerEntity.increaseStat(Stats.DAMAGE_BLOCKED_BY_SHIELD, Math.round(totalBlockedDamage * 10.0f));
-                    }
+//        } else if (!source.isIn(Tags.IS_TRUE_DAMAGE)) {
+//            this.stopUsingItem();
+                }
+                // endregion shield blocks
 
-                    this.getWorld().sendEntityStatus(this, EntityStatuses.BLOCK_WITH_SHIELD);
+                // region apply resistances/armor
+                // armorToughness now directly determines how effective armor is
+                // it can not increase armor beyond the initial value
+                // effective armor reduces damage by its amount
+                // armor can't reduce damage to zero
+                float effectiveArmor = this.getArmor() * MathHelper.clamp((float) this.getAttributeValue(EntityAttributes.GENERIC_ARMOR_TOUGHNESS), 0, 1);
+                if (piercing_amount * 1.25 <= effectiveArmor) {
+                    effectiveArmor -= piercing_amount * 1.25;
+                    piercing_amount = 0;
                 } else {
-                    this.getWorld().sendEntityStatus(this, EntityStatuses.BREAK_SHIELD);
+                    // TODO think about this more
+                    piercing_amount -= effectiveArmor;
+                    effectiveArmor = 0;
+                }
+
+                if (bashing_amount <= effectiveArmor) {
+                    effectiveArmor -= bashing_amount;
+                    bashing_amount = 0;
+                } else {
+                    bashing_amount -= effectiveArmor;
+                    effectiveArmor = 0;
+                }
+
+                if (fire_amount <= effectiveArmor) {
+                    effectiveArmor -= fire_amount;
+                    fire_amount = 0;
+                } else {
+                    fire_amount -= effectiveArmor;
+                    effectiveArmor = 0;
+                }
+
+                if (slashing_amount <= effectiveArmor) {
+                    effectiveArmor -= slashing_amount;
+                    slashing_amount = 0;
+                } else {
+                    slashing_amount -= effectiveArmor;
+                    slashing_amount = (float) (slashing_amount * 1.25); // slashing damage not blocked by armor deals more damage
+                    effectiveArmor = 0;
+                }
+
+                poison_amount = (float) (poison_amount - (poison_amount * this.getAttributeValue(EntityAttributesRegistry.POISON_RESISTANCE)) / 100);
+
+                fire_amount = (float) (fire_amount - (fire_amount * this.getAttributeValue(EntityAttributesRegistry.FIRE_RESISTANCE)) / 100);
+
+                frost_amount = (float) (frost_amount - (frost_amount * this.getAttributeValue(EntityAttributesRegistry.FROST_RESISTANCE)) / 100);
+
+                lightning_amount = (float) (lightning_amount - (lightning_amount * this.getAttributeValue(EntityAttributesRegistry.LIGHTNING_RESISTANCE)) / 100);
+                // endregion apply resistances/armor
+
+
+                applied_damage = piercing_amount + bashing_amount + slashing_amount;
+
+                // taking damage interrupts eating food, drinking potions, etc
+                if (applied_damage > 0.0f && !this.isBlocking()) {
+                    this.stopUsingItem();
+                }
+
+                // apply bleeding
+                float appliedBleeding = (float) ((piercing_amount * 0.5) + (slashing_amount * 0.5));
+                if (appliedBleeding > 0 && source.isIn(Tags.APPLIES_BLEEDING)) {
+                    this.betteradventuremode$addBleedingBuildUp(appliedBleeding);
+                }
+
+                // apply burning
+                if (fire_amount > 0) {
+                    float burnBuildUpMultiplier = this.hasStatusEffect(StatusEffectsRegistry.WET) ? 0.5f : 1.0f;//TODO should wet effect impact burning build up?
+                    this.betteradventuremode$addBurnBuildUp(fire_amount * burnBuildUpMultiplier);
+                }
+
+                // apply chilled and frozen
+                if (frost_amount > 0) {
+                    // apply chilled
+                    int chilledDuration = (int) Math.ceil(frost_amount);
+                    StatusEffectInstance statusEffectInstance = this.getStatusEffect(StatusEffectsRegistry.CHILLED);
+                    if (statusEffectInstance != null) {
+                        chilledDuration = chilledDuration + statusEffectInstance.getDuration();
+                    }
+                    this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.CHILLED, chilledDuration, 0, false, false, true));
+
+                    // apply frozen
+                    float freezeBuildUp = frost_amount * (this.hasStatusEffect(StatusEffectsRegistry.WET) ? 2 : 1);//TODO should wet effect impact freeze build up?
+                    if (freezeBuildUp > 0) {
+                        this.betteradventuremode$addFreezeBuildUp(freezeBuildUp);
+                    }
+                }
+
+                // apply stagger
+                float appliedStagger = (float) ((bashing_amount * 0.75) + (piercing_amount * 0.5) + (slashing_amount * 0.5) + (lightning_amount * 0.5));
+                if (appliedStagger > 0) {
+                    this.betteradventuremode$addStaggerBuildUp(appliedStagger);
+                }
+
+                // apply poison
+                if (poison_amount > 0) {
+                    this.betteradventuremode$addPoisonBuildUp(poison_amount);
+                }
+
+                // apply shocked
+                if (lightning_amount > 0) {
+                    this.betteradventuremode$addShockBuildUp(lightning_amount);
                 }
             }
-        } else if (!source.isIn(Tags.IS_TRUE_DAMAGE)) {
-            this.stopUsingItem();
-        }
-        // endregion shield blocks
 
-        // region apply resistances/armor
-        // armorToughness now directly determines how effective armor is
-        // it can not increase armor beyond the initial value
-        // effective armor reduces damage by its amount
-        // armor can't reduce damage to zero
-        float effectiveArmor = this.getArmor() * MathHelper.clamp((float) this.getAttributeValue(EntityAttributes.GENERIC_ARMOR_TOUGHNESS), 0, 1);
-        if (piercing_amount * 1.25 <= effectiveArmor) {
-            effectiveArmor -= piercing_amount * 1.25;
-            piercing_amount = 0;
-        } else {
-            // TODO think about this more
-            piercing_amount -= effectiveArmor;
-            effectiveArmor = 0;
-        }
-
-        if (bashing_amount <= effectiveArmor) {
-            effectiveArmor -= bashing_amount;
-            bashing_amount = 0;
-        } else {
-            bashing_amount -= effectiveArmor;
-            effectiveArmor = 0;
-        }
-
-        if (fire_amount <= effectiveArmor) {
-            effectiveArmor -= fire_amount;
-            fire_amount = 0;
-        } else {
-            fire_amount -= effectiveArmor;
-            effectiveArmor = 0;
-        }
-
-        if (slashing_amount <= effectiveArmor) {
-            effectiveArmor -= slashing_amount;
-            slashing_amount = 0;
-        } else {
-            slashing_amount -= effectiveArmor;
-            slashing_amount = (float) (slashing_amount * 1.25); // slashing damage not blocked by armor deals more damage
-            effectiveArmor = 0;
-        }
-
-        poison_amount = (float) (poison_amount - (poison_amount * this.getAttributeValue(EntityAttributesRegistry.POISON_RESISTANCE)) / 100);
-
-        fire_amount = (float) (fire_amount - (fire_amount * this.getAttributeValue(EntityAttributesRegistry.FIRE_RESISTANCE)) / 100);
-
-        frost_amount = (float) (frost_amount - (frost_amount * this.getAttributeValue(EntityAttributesRegistry.FROST_RESISTANCE)) / 100);
-
-        lightning_amount = (float) (lightning_amount - (lightning_amount * this.getAttributeValue(EntityAttributesRegistry.LIGHTNING_RESISTANCE)) / 100);
-        // endregion apply resistances/armor
-
-
-        float applied_damage = piercing_amount + bashing_amount + slashing_amount + vanilla_amount;
-
-        // taking damage interrupts eating food, drinking potions, etc
-        if (applied_damage > 0.0f && !this.isBlocking()) {
-            this.stopUsingItem();
-        }
-
-        applied_damage = applied_damage + true_amount;
-        if (applied_damage != 0.0F) {
-            this.getDamageTracker().onDamage(source, applied_damage);
-            this.setHealth(this.getHealth() - applied_damage);
-            if (((LivingEntity) (Object) this) instanceof ServerPlayerEntity serverPlayerEntity && applied_damage < 3.4028235E37f) {
-                serverPlayerEntity.increaseStat(Stats.DAMAGE_TAKEN, Math.round(applied_damage * 10.0f));
+            applied_damage = applied_damage + true_amount;
+            if (applied_damage != 0.0F) {
+                this.getDamageTracker().onDamage(source, applied_damage);
+                this.setHealth(this.getHealth() - applied_damage);
+                if (((LivingEntity) (Object) this) instanceof ServerPlayerEntity serverPlayerEntity && applied_damage < 3.4028235E37f) {
+                    serverPlayerEntity.increaseStat(Stats.DAMAGE_TAKEN, Math.round(applied_damage * 10.0f));
+                }
+                this.emitGameEvent(GameEvent.ENTITY_DAMAGE);
             }
-            this.emitGameEvent(GameEvent.ENTITY_DAMAGE);
-        }
-
-        // apply bleeding
-        float appliedBleeding = (float) ((piercing_amount * 0.5) + (slashing_amount * 0.5));
-        if (appliedBleeding > 0 && source.isIn(Tags.APPLIES_BLEEDING)) {
-            this.betteradventuremode$addBleedingBuildUp(appliedBleeding);
-        }
-
-        // apply burning
-        if (fire_amount > 0) {
-            float burnBuildUpMultiplier = this.hasStatusEffect(StatusEffectsRegistry.WET) ? 0.5f : 1.0f;//TODO should wet effect impact burning build up?
-            this.betteradventuremode$addBurnBuildUp(fire_amount * burnBuildUpMultiplier);
-        }
-
-        // apply chilled and frozen
-        if (frost_amount > 0) {
-            // apply chilled
-            int chilledDuration = (int) Math.ceil(frost_amount);
-            StatusEffectInstance statusEffectInstance = this.getStatusEffect(StatusEffectsRegistry.CHILLED);
-            if (statusEffectInstance != null) {
-                chilledDuration = chilledDuration + statusEffectInstance.getDuration();
-            }
-            this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.CHILLED, chilledDuration, 0, false, false, true));
-
-            // apply frozen
-            float freezeBuildUp = frost_amount * (this.hasStatusEffect(StatusEffectsRegistry.WET) ? 2 : 1);//TODO should wet effect impact freeze build up?
-            if (freezeBuildUp > 0) {
-                this.betteradventuremode$addFreezeBuildUp(freezeBuildUp);
-            }
-        }
-
-        // apply stagger
-        float appliedStagger = (float) ((bashing_amount * 0.75) + (piercing_amount * 0.5) + (slashing_amount * 0.5) + (lightning_amount * 0.5));
-        if (appliedStagger > 0) {
-            this.betteradventuremode$addStaggerBuildUp(appliedStagger);
-        }
-
-        // apply poison
-        if (poison_amount > 0) {
-            this.betteradventuremode$addPoisonBuildUp(poison_amount);
-        }
-
-        // apply shocked
-        if (lightning_amount > 0) {
-            this.betteradventuremode$addShockBuildUp(lightning_amount);
         }
     }
 
@@ -846,6 +1205,7 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
         return super.doesRenderOnFire() || (this.hasStatusEffect(StatusEffectsRegistry.BURNING) && !this.isSpectator());
     }
 
+    @Override
     public boolean betteradventuremode$hasEquipped(Predicate<ItemStack> predicate) {
         if (predicate.test(this.getEquippedStack(EquipmentSlot.MAINHAND))) {
             return true;
@@ -995,8 +1355,11 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
         if (this.betteradventuremode$getMaxFreezeBuildUp() != -1.0f && !this.hasStatusEffect(StatusEffectsRegistry.FROZEN)) {
             float f = this.betteradventuremode$getFreezeBuildUp();
             this.betteradventuremode$setFreezeBuildUp(f + amount);
-            if (amount > 0) {
+            // TODO play test
+            if (this.betteradventuremode$getFreezeBuildUp() >= this.betteradventuremode$getMaxFreezeBuildUp()) {
                 this.freezeTickTimer = this.betteradventuremode$getFreezeTickThreshold();
+            } else {
+                this.freezeTickTimer = 0;
             }
         }
     }
@@ -1232,5 +1595,18 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
     @Override
     public boolean betteradventuremode$isMoving() {
         return this.isMoving;
+    }
+
+    @Unique
+    private void betteradventuremode$dropFromEntity(ItemStack stack) {
+        ItemEntity entity = dropStack(stack);
+        // Mimic player drop behavior for only players
+        if (entity != null && ((Entity) this) instanceof PlayerEntity) {
+            entity.setPos(entity.getX(), this.getEyeY() - 0.3, entity.getZ());
+            entity.setPickupDelay(40);
+            float magnitude = this.random.nextFloat() * 0.5f;
+            float angle = this.random.nextFloat() * ((float) Math.PI * 2);
+            entity.setVelocity(-MathHelper.sin(angle) * magnitude, 0.2f, MathHelper.cos(angle) * magnitude);
+        }
     }
 }

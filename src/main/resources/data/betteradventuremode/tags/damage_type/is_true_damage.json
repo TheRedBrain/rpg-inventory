@@ -3,6 +3,7 @@
     "betteradventuremode:bleeding_damage_type",
     "betteradventuremode:blood_magic_casting_damage_type",
     "betteradventuremode:burning_damage_type",
+    "betteradventuremode:lethal_fall_damage_type",
     "betteradventuremode:poison_damage_type",
     "betteradventuremode:shocked_damage_type"
   ]

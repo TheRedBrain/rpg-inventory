@@ -32,6 +32,11 @@ public class GamePlayBalanceConfig implements ConfigData {
     public float poison_damage = 1.0f;
     @Comment("Shock")
     public float shock_damage = 10.0f;
+    @Comment("""
+            When food effects have less than this many ticks of duration left,
+            their corresponding food type can be eaten again
+            """)
+    public int food_effect_duration_threshold_to_allow_eating = 200;
     @Comment("Combat Roll Compat")
     public boolean rolling_requires_stamina = true;
     public float rolling_stamina_cost = 3.0f;

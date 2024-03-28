@@ -2,61 +2,16 @@
   "values": [
     "minecraft:bow",
     "minecraft:crossbow",
-    "minecraft:wooden_axe",
-    "minecraft:stone_axe",
-    "minecraft:iron_axe",
-    "minecraft:diamond_axe",
-    "minecraft:golden_axe",
-    "minecraft:netherite_axe",
-    "minecraft:wooden_pickaxe",
-    "minecraft:stone_pickaxe",
-    "minecraft:iron_pickaxe",
-    "minecraft:diamond_pickaxe",
-    "minecraft:golden_pickaxe",
-    "minecraft:netherite_pickaxe",
-    "minecraft:wooden_sword",
-    "minecraft:stone_sword",
-    "minecraft:iron_sword",
-    "minecraft:diamond_sword",
-    "minecraft:golden_sword",
-    "minecraft:netherite_sword",
-    "betteradventuremode:test_sword",
-    "betteradventuremode:elemental_flame",
     "betteradventuremode:arcane_encyclopedia",
     "betteradventuremode:ice_staff",
     "betteradventuremode:blessed_talisman",
-    "betteradventuremode:dagger",
-    "betteradventuremode:short_sword",
-    "betteradventuremode:long_sword",
-    "betteradventuremode:zweihander",
-    "betteradventuremode:halberd",
-    "betteradventuremode:spear",
-    "betteradventuremode:battle_axe",
-    "betteradventuremode:war_hammer",
-    "betteradventuremode:mace",
-    "betteradventuremode:claw",
+    "#betteradventuremode:attack_items",
     {
       "id": "#archers:bows",
       "required": false
     },
     {
       "id": "#archers:crossbows",
-      "required": false
-    },
-    {
-      "id": "#archers:spears",
-      "required": false
-    },
-    {
-      "id": "#paladins:claymores",
-      "required": false
-    },
-    {
-      "id": "#paladins:great_hammers",
-      "required": false
-    },
-    {
-      "id": "#paladins:maces",
       "required": false
     },
     {

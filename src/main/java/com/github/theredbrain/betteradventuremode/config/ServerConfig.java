@@ -52,6 +52,8 @@ public class ServerConfig implements ConfigData {
     public boolean disable_vanilla_food_system = true;
     @Comment("Disables the recipe book")
     public boolean disable_recipe_book = true;
+    public boolean allow_jumping_during_attacks = true;
+    public boolean sprinting_only_when_button_is_pressed = true;
     @Comment("""
             Disables Better Combat's formerly client feature of
             continuously attacking while holding down the attack key.
@@ -87,6 +89,15 @@ public class ServerConfig implements ConfigData {
     public boolean shouldJigSawGenerationBeDeterministic = false;
     @Comment("Set to 'true' for the vanilla behaviour")
     public boolean shouldJigSawStructuresBeRandomlyRotated = false;
+    @Comment("Set to 'true' for the vanilla behaviour")
+    public boolean useVanillaDamageCalculation = false;
+    @Comment("""
+            When set to 'false', only items in the 'attack_items' can be used to attack/break blocks
+            Being in creative mode or having the 'adventure building' status effect always allow it
+            """)
+    public boolean allow_attacking_with_non_attack_items = false;
+    @Comment("Set to 'true' for the vanilla behaviour")
+    public boolean disable_jump_crit_mechanic = true;
     @Comment("Additional debug log is shown in the console.")
     public boolean show_debug_log = false;
     @Comment("Additional debug messages are send in game.")

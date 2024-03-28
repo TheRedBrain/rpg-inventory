@@ -139,6 +139,7 @@ public class Tags {
     public static final TagKey<Item> GRANTS_LOOTING_LEVEL_3 = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("grants_looting_level_3"));
     public static final TagKey<Item> GRANTS_UNBREAKING_LEVEL_3 = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("grants_unbreaking_level_3"));
     public static final TagKey<Item> GRANTS_FEATHER_FALLING_LEVEL_4 = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("grants_feather_falling_level_4"));
+    public static final TagKey<Item> PREVENTS_NON_LETHAL_FALL_DAMAGE = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("prevents_non_lethal_fall_damage"));
     public static final TagKey<Item> GRANTS_SWIFT_SNEAK_LEVEL_3 = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("grants_swift_sneak_level_3"));
     public static final TagKey<Item> GRANTS_RESPIRATION_LEVEL_3 = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("grants_respiration_level_3"));
 

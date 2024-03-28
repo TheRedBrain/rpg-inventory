@@ -162,16 +162,16 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
         ItemStack itemStackMainHand = this.getEquippedStack(EquipmentSlot.MAINHAND);
         ItemStack itemStackOffHand = this.getEquippedStack(EquipmentSlot.OFFHAND);
-        if (!itemStackMainHand.isIn(Tags.ATTACK_ITEMS) && !this.isCreative() && !this.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT)) {
+        if (!itemStackMainHand.isIn(Tags.ATTACK_ITEMS) && !this.isCreative() && !this.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT) && !BetterAdventureMode.serverConfig.allow_attacking_with_non_attack_items) {
             if (!this.hasStatusEffect(StatusEffectsRegistry.NO_ATTACK_ITEMS_EFFECT)) {
-                this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.NO_ATTACK_ITEMS_EFFECT, -1, 0, false, false, true));
+                this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.NO_ATTACK_ITEMS_EFFECT, -1, 0, false, false, false));
             }
         } else {
             this.removeStatusEffect(StatusEffectsRegistry.NO_ATTACK_ITEMS_EFFECT);
         }
         if (itemStackMainHand.isIn(Tags.TWO_HANDED_ITEMS) && (this.betteradventuremode$isMainHandStackSheathed() || !this.betteradventuremode$isOffHandStackSheathed()) && !this.isCreative() && !this.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT)) {
             if (!this.hasStatusEffect(StatusEffectsRegistry.NEEDS_TWO_HANDING_EFFECT)) {
-                this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.NEEDS_TWO_HANDING_EFFECT, -1, 0, false, false, true));
+                this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.NEEDS_TWO_HANDING_EFFECT, -1, 0, false, false, false));
             }
         } else {
             this.removeStatusEffect(StatusEffectsRegistry.NEEDS_TWO_HANDING_EFFECT);
@@ -185,14 +185,14 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         }
         if (itemStackMainHand.isIn(Tags.ENABLES_CHANGING_PITCH)) {
             if (!this.hasStatusEffect(StatusEffectsRegistry.CHANGING_PITCH_ENABLED_EFFECT)) {
-                this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.CHANGING_PITCH_ENABLED_EFFECT, -1, 0, false, false, true));
+                this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.CHANGING_PITCH_ENABLED_EFFECT, -1, 0, false, false, false));
             }
         } else {
             this.removeStatusEffect(StatusEffectsRegistry.CHANGING_PITCH_ENABLED_EFFECT);
         }
         if ((itemStackMainHand.isIn(Tags.ENABLES_CHANGING_PITCH) || (this.isUsingItem() && this.getActiveItem().isIn(Tags.ENABLES_CHANGING_PITCH_ON_USING))) && first_person_enabling_item_equipped) {
             if (!this.hasStatusEffect(StatusEffectsRegistry.FIRST_PERSON_PERSPECTIVE_ENABLED_EFFECT)) {
-                this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.FIRST_PERSON_PERSPECTIVE_ENABLED_EFFECT, -1, 0, false, false, true));
+                this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.FIRST_PERSON_PERSPECTIVE_ENABLED_EFFECT, -1, 0, false, false, false));
             }
         } else {
             this.removeStatusEffect(StatusEffectsRegistry.FIRST_PERSON_PERSPECTIVE_ENABLED_EFFECT);
@@ -303,16 +303,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         }
     }
 
-    @Inject(method = "attack", at = @At("HEAD"), cancellable = true)
-    public void betteradventuremode$attack(Entity target, CallbackInfo ci) {
-        ItemStack mainHandStack = this.getMainHandStack();
-        boolean twoHanded = !this.betteradventuremode$isMainHandStackSheathed() && this.betteradventuremode$isOffHandStackSheathed();
-        if (mainHandStack.getItem() instanceof BasicWeaponItem && this.betteradventuremode$getStamina() + ((BasicWeaponItem)mainHandStack.getItem()).getStaminaCost(twoHanded) <= 0) {
-            this.sendMessage(Text.translatable("hud.message.staminaTooLow-attackCanceled"), true);
-            ci.cancel();
-        }
-    }
-
     // effectively disables the vanilla jump crit mechanic
     @Redirect(
             method = "attack",
@@ -322,7 +312,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
             )
     )
     public boolean betteradventuremode$redirect_hasVehicle(PlayerEntity instance) {
-        return true;
+        return BetterAdventureMode.serverConfig.disable_jump_crit_mechanic;
     }
 
     /**
@@ -477,7 +467,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
             int currentEatenFoods = 0;
             List<StatusEffectInstance> currentEffects = getStatusEffects().stream().toList();
             for (StatusEffectInstance currentEffect : currentEffects) {
-                if (currentEffect.getEffectType() == statusEffectInstance.getEffectType()) {
+                if (currentEffect.getEffectType() == statusEffectInstance.getEffectType() && !statusEffectInstance.isDurationBelow(BetterAdventureMode.gamePlayBalanceConfig.food_effect_duration_threshold_to_allow_eating)) {
                     this.sendMessage(Text.translatable("hud.message.foodEatenAlready"), true);
                     return false;
                 } else if (currentEffect.getEffectType() instanceof FoodStatusEffect) {

@@ -2,14 +2,8 @@ package com.github.theredbrain.betteradventuremode.registry;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import net.minecraft.entity.damage.DamageType;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.gen.FlatLevelGeneratorPreset;
 
 public class DamageTypesRegistry {
 
@@ -19,16 +13,31 @@ public class DamageTypesRegistry {
     // endregion spell damage types
 
     // region weapon damage types
+    public static final RegistryKey<DamageType> BATTLE_AXE_ONE_HANDED_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("battle_axe_one_handed_damage_type"));
+    public static final RegistryKey<DamageType> BATTLE_AXE_TWO_HANDED_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("battle_axe_two_handed_damage_type"));
     public static final RegistryKey<DamageType> CLAW_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("claw_damage_type"));
+    public static final RegistryKey<DamageType> DAGGER_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("dagger_damage_type"));
+    public static final RegistryKey<DamageType> HALBERD_ONE_HANDED_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("halberd_one_handed_damage_type"));
+    public static final RegistryKey<DamageType> HALBERD_TWO_HANDED_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("halberd_two_handed_damage_type"));
+    public static final RegistryKey<DamageType> LONG_SWORD_ONE_HANDED_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("long_sword_one_handed_damage_type"));
+    public static final RegistryKey<DamageType> LONG_SWORD_TWO_HANDED_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("long_sword_two_handed_damage_type"));
+    public static final RegistryKey<DamageType> MACE_ONE_HANDED_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("mace_one_handed_damage_type"));
+    public static final RegistryKey<DamageType> MACE_TWO_HANDED_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("mace_two_handed_damage_type"));
+    public static final RegistryKey<DamageType> SHORT_SWORD_ONE_HANDED_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("short_sword_one_handed_damage_type"));
+    public static final RegistryKey<DamageType> SHORT_SWORD_TWO_HANDED_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("short_sword_two_handed_damage_type"));
+    public static final RegistryKey<DamageType> SPEAR_ONE_HANDED_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("spear_one_handed_damage_type"));
+    public static final RegistryKey<DamageType> SPEAR_TWO_HANDED_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("spear_two_handed_damage_type"));
+    public static final RegistryKey<DamageType> WAR_HAMMER_ONE_HANDED_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("war_hammer_one_handed_damage_type"));
+    public static final RegistryKey<DamageType> WAR_HAMMER_TWO_HANDED_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("war_hammer_two_handed_damage_type"));
     public static final RegistryKey<DamageType> ZWEIHANDER_ONE_HANDED_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("zweihander_one_handed_damage_type"));
     public static final RegistryKey<DamageType> ZWEIHANDER_TWO_HANDED_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("zweihander_two_handed_damage_type"));
     // endregion weapon damage types
 
     public static final RegistryKey<DamageType> LAVA_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("lava_damage_type"));
+    public static final RegistryKey<DamageType> LETHAL_FALL_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("lethal_fall_damage_type"));
     public static final RegistryKey<DamageType> BASHING_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("bashing_damage_type"));
     public static final RegistryKey<DamageType> PIERCING_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("piercing_damage_type"));
     public static final RegistryKey<DamageType> SLASHING_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("slashing_damage_type"));
-    public static final RegistryKey<DamageType> UNARMED_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("unarmed_damage_type"));
 
     // region status effect damage types
     public static final RegistryKey<DamageType> BLEEDING_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("bleeding_damage_type"));
@@ -41,7 +50,7 @@ public class DamageTypesRegistry {
     public static final RegistryKey<DamageType> PLAYER_BASHING_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("player_bashing_damage_type"));
     public static final RegistryKey<DamageType> PLAYER_PIERCING_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("player_piercing_damage_type"));
     public static final RegistryKey<DamageType> PLAYER_SLASHING_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("player_slashing_damage_type"));
-    public static final RegistryKey<DamageType> PLAYER_UNARMED_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("player_unarmed_damage_type"));
+    public static final RegistryKey<DamageType> DEFAULT_UNARMED_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("default_unarmed_damage_type"));
     // endregion player damage types
 
     /**
@@ -54,8 +63,6 @@ public class DamageTypesRegistry {
             return PLAYER_PIERCING_DAMAGE_TYPE;
         } else if (damageTypeRegistryKey == SLASHING_DAMAGE_TYPE) {
             return PLAYER_SLASHING_DAMAGE_TYPE;
-        } else if (damageTypeRegistryKey == UNARMED_DAMAGE_TYPE) {
-            return PLAYER_UNARMED_DAMAGE_TYPE;
         } else {
             return damageTypeRegistryKey;
         }
