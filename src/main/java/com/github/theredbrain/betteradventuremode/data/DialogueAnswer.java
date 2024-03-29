@@ -21,6 +21,8 @@ public final class DialogueAnswer {
 
     private final boolean showLockedAnswer;
 
+    private final boolean showUnaffordableAnswer;
+
     /**
      * if grantedAdvancement is valid identifier for an advancement, grants that advancement
      */
@@ -47,21 +49,28 @@ public final class DialogueAnswer {
     private final @Nullable String triggeredBlock;
 
     /**
+     * displays this string as localized text in the players overlay
+     */
+    private final @Nullable String overlayMessage;
+
+    /**
      * player inventory is checked for specified items, if all are found they are removed from player inventory, otherwise the answer fails
      */
     private final @Nullable List<ItemUtils.VirtualItemStack> itemCost;
 
-    public DialogueAnswer(String answerText, String responseDialogue, String lockAdvancement, String unlockAdvancement, boolean showLockedAnswer, @Nullable String grantedAdvancement, @Nullable String criterionName, @Nullable String lootTable, @Nullable String usedBlock, @Nullable String triggeredBlock, @Nullable List<ItemUtils.VirtualItemStack> itemCost) {
+    public DialogueAnswer(String answerText, String responseDialogue, String lockAdvancement, String unlockAdvancement, boolean showLockedAnswer, boolean showUnaffordableAnswer, @Nullable String grantedAdvancement, @Nullable String criterionName, @Nullable String lootTable, @Nullable String usedBlock, @Nullable String triggeredBlock, @Nullable String overlayMessage, @Nullable List<ItemUtils.VirtualItemStack> itemCost) {
         this.answerText = answerText;
         this.responseDialogue = responseDialogue;
         this.lockAdvancement = lockAdvancement;
         this.unlockAdvancement = unlockAdvancement;
         this.showLockedAnswer = showLockedAnswer;
+        this.showUnaffordableAnswer = showUnaffordableAnswer;
         this.grantedAdvancement = grantedAdvancement;
         this.criterionName = criterionName;
         this.lootTable = lootTable;
         this.usedBlock = usedBlock;
         this.triggeredBlock = triggeredBlock;
+        this.overlayMessage = overlayMessage;
         this.itemCost = itemCost;
     }
 
@@ -94,6 +103,10 @@ public final class DialogueAnswer {
         return this.showLockedAnswer;
     }
 
+    public boolean showUnaffordableAnswer() {
+        return this.showUnaffordableAnswer;
+    }
+
     @Nullable
     public Identifier getGrantedAdvancement() {
         if (this.grantedAdvancement != null) {
@@ -105,6 +118,11 @@ public final class DialogueAnswer {
     @Nullable
     public String getCriterionName() {
         return this.criterionName;
+    }
+
+    @Nullable
+    public String getOverlayMessage() {
+        return this.overlayMessage;
     }
 
     @Nullable

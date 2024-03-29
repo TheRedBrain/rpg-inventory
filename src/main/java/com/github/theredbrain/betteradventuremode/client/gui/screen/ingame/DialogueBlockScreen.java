@@ -135,6 +135,7 @@ public class DialogueBlockScreen extends Screen {
         String lockAdvancementIdentifier;
         String unlockAdvancementIdentifier;
         boolean showLockedAnswer;
+        boolean showUnaffordableAnswer;
 
         if (this.client != null && this.client.player != null) {
             advancementHandler = this.client.player.networkHandler.getAdvancementHandler();
@@ -189,6 +190,7 @@ public class DialogueBlockScreen extends Screen {
             lockAdvancementIdentifier = dialogueAnswer.getLockAdvancement();
             unlockAdvancementIdentifier = dialogueAnswer.getUnlockAdvancement();
             showLockedAnswer = dialogueAnswer.showLockedAnswer();
+            showUnaffordableAnswer = dialogueAnswer.showUnaffordableAnswer();
 
             if (advancementHandler != null) {
 //                AdvancementEntry lockAdvancementEntry = null;
@@ -206,7 +208,7 @@ public class DialogueBlockScreen extends Screen {
                     if (isItemCostPayable) {
                         this.unlockedAnswersList.add(answerIdentifier);
                         this.visibleAnswersList.add(answerIdentifier);
-                    } else {
+                    } else if (showUnaffordableAnswer) {
                         this.visibleAnswersList.add(answerIdentifier);
                     }
                 } else if (showLockedAnswer) {
@@ -955,6 +957,7 @@ public class DialogueBlockScreen extends Screen {
         if (!this.showCreativeScreen) {
             int i = this.x;
             int j = this.y;
+            BetterAdventureMode.info("drawBackground");
             context.drawTexture(BACKGROUND_218_197_TEXTURE, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
         }
     }

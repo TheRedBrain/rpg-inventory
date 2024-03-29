@@ -25,6 +25,8 @@ public class DamageTypesRegistry {
     public static final RegistryKey<DamageType> MACE_TWO_HANDED_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("mace_two_handed_damage_type"));
     public static final RegistryKey<DamageType> SHORT_SWORD_ONE_HANDED_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("short_sword_one_handed_damage_type"));
     public static final RegistryKey<DamageType> SHORT_SWORD_TWO_HANDED_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("short_sword_two_handed_damage_type"));
+    public static final RegistryKey<DamageType> SHORT_SWORD_FIRE_ONE_HANDED_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("short_sword_fire_one_handed_damage_type"));
+    public static final RegistryKey<DamageType> SHORT_SWORD_FIRE_TWO_HANDED_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("short_sword_fire_two_handed_damage_type"));
     public static final RegistryKey<DamageType> SPEAR_ONE_HANDED_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("spear_one_handed_damage_type"));
     public static final RegistryKey<DamageType> SPEAR_TWO_HANDED_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("spear_two_handed_damage_type"));
     public static final RegistryKey<DamageType> WAR_HAMMER_ONE_HANDED_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("war_hammer_one_handed_damage_type"));

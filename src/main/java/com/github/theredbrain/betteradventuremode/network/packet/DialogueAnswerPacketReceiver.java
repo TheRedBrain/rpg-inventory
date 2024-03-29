@@ -141,6 +141,12 @@ public class DialogueAnswerPacketReceiver implements ServerPlayNetworking.PlayPa
                 }
             }
 
+            // overlay message
+            String overlayMessage = dialogueAnswer.getOverlayMessage();
+            if (overlayMessage != null) {
+                player.sendMessageToClient(Text.translatable(overlayMessage), true);
+            }
+
             ServerPlayNetworking.send(player, new OpenDialogueScreenPacket(dialogueBlockPos, dialogueAnswer.getResponseDialogue()));
 
 
