@@ -50,7 +50,9 @@ public class EventsRegistry {
             sender.sendPacket(ServerPacketRegistry.SYNC_WEAPON_POSES, WeaponPosesRegistry.getEncodedRegistry()); // TODO convert to packet
         });
         ServerSideRollEvents.PLAYER_START_ROLLING.register((serverPlayerEntity, vec3d) -> {
-            ((DuckLivingEntityMixin) serverPlayerEntity).betteradventuremode$addStamina(-BetterAdventureMode.gamePlayBalanceConfig.rolling_stamina_cost);
+            if (!serverPlayerEntity.isCreative()) {
+                ((DuckLivingEntityMixin) serverPlayerEntity).betteradventuremode$addStamina(-BetterAdventureMode.gamePlayBalanceConfig.rolling_stamina_cost);
+            }
         });
     }
 

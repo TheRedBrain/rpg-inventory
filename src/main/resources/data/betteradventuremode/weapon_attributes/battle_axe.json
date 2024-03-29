@@ -8,7 +8,7 @@
         "hitbox": "HORIZONTAL_PLANE",
         "angle": 180,
         "upswing": 0.5,
-        "animation": "bettercombat:two_handed_slash_horizontal_right",
+        "animation": "bettercombat:two_handed_slash_horizontal_left",
         "swing_sound": {
           "id": "bettercombat:double_axe_swing"
         }
@@ -19,7 +19,7 @@
         "damage_multiplier": 1.1,
         "angle": 180,
         "upswing": 0.5,
-        "animation": "bettercombat:two_handed_slash_horizontal_left",
+        "animation": "bettercombat:two_handed_slash_horizontal_right",
         "swing_sound": {
           "id": "bettercombat:double_axe_swing"
         }
@@ -42,7 +42,7 @@
         "damage_multiplier": 0.5,
         "angle": 90,
         "upswing": 0.5,
-        "animation": "bettercombat:one_handed_slash_horizontal_right",
+        "animation": "bettercombat:one_handed_slash_horizontal_left",
         "swing_sound": {
           "id": "bettercombat:axe_slash"
         }

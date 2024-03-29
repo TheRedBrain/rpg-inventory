@@ -18,7 +18,7 @@ public class AttackStaminaCostPacketReceiver implements ServerPlayNetworking.Pla
 
         ItemStack attackHandItemStack = packet.itemStack;
 
-        if (((DuckLivingEntityMixin) player).betteradventuremode$getStamina() <= 0) {
+        if (((DuckLivingEntityMixin) player).betteradventuremode$getStamina() <= 0 && !player.isCreative()) {
             PacketByteBuf data = new PacketByteBuf(Unpooled.buffer());
             data.writeInt(player.getId());
             ServerPlayNetworking.send(player, ServerPacketRegistry.CANCEL_ATTACK_PACKET, data); // TODO convert to packet

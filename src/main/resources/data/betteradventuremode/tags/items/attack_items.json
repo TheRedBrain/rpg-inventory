@@ -20,7 +20,7 @@
     "minecraft:netherite_sword",
     "betteradventuremode:default_empty_hand_weapon",
     "betteradventuremode:dagger",
-    "betteradventuremode:short_sword",
+    "#betteradventuremode:short_swords",
     "betteradventuremode:long_sword",
     "betteradventuremode:zweihander",
     "betteradventuremode:halberd",

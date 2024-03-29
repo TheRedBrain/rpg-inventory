@@ -684,8 +684,22 @@
 	"item.betteradventuremode.red_mushroom": "Red Mushroom",
 	"item.betteradventuremode.glow_berries": "Glow Berries",
 
-	"item.betteradventuremode.elemental_fire_wand": "Burning Wand",
-	"item.betteradventuremode.elemental_ice_wand": "Freezing Wand",
+	"item.betteradventuremode.battle_axe": "Battle Axe",
+	"item.betteradventuremode.claw": "Claw",
+	"item.betteradventuremode.dagger": "Dagger",
+	"item.betteradventuremode.halberd": "Halberd",
+	"item.betteradventuremode.long_sword": "Long Sword",
+	"item.betteradventuremode.mace": "Mace",
+	"item.betteradventuremode.short_sword": "Short Sword",
+	"item.betteradventuremode.short_sword_plus_1": "Short Sword +1",
+	"item.betteradventuremode.short_sword_plus_2": "Short Sword +2",
+	"item.betteradventuremode.short_sword_plus_3": "Short Sword +3",
+	"item.betteradventuremode.short_sword_plus_4": "Short Sword +4",
+	"item.betteradventuremode.short_sword_plus_5": "Short Sword +5",
+	"item.betteradventuremode.spear": "Spear",
+	"item.betteradventuremode.war_hammer": "War Hammer",
+	"item.betteradventuremode.zweihander": "Zweihander",
+
 
 	"item.betteradventuremode.block_position_distance_meter": "Block Position Distance Meter",
 
@@ -702,6 +716,7 @@
 	"item.betteradventuremode.block_position_distance_meter.set_root_block": "New Root Block Position: %s, %s, %s.",
 	"item.betteradventuremode.block_position_distance_meter.set_offset_block": "New Offset Block Position: %s, %s, %s.",
 	"item.betteradventuremode.block_position_distance_meter.info": "Offset is %s, %s, %s.",
+
 
 	"item.betteradventuremode.default_empty_hand_weapon": "",
 

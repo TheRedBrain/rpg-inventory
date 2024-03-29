@@ -10,7 +10,7 @@
     "betteradventuremode:test_normal_shield",
     "betteradventuremode:test_tower_shield",
     "betteradventuremode:dagger",
-    "betteradventuremode:short_sword",
+    "#betteradventuremode:short_swords",
     "betteradventuremode:claw",
     "betteradventuremode:buckler",
     "betteradventuremode:plank_shield",

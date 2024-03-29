@@ -33,7 +33,7 @@ public class SheatheWeaponsPacketReceiver implements ServerPlayNetworking.PlayPa
             }
         }
 
-        if (((DuckLivingEntityMixin) player).betteradventuremode$getStamina() <= 0) {
+        if (((DuckLivingEntityMixin) player).betteradventuremode$getStamina() <= 0 && !player.isCreative()) {
             player.sendMessageToClient(Text.translatable("hud.message.staminaTooLow"), true);
             return;
         }

@@ -303,7 +303,7 @@ public abstract class MinecraftClient_BetterCombatReplacementMixin implements Mi
             if (hand != null) {
                 float upswingRate = (float)hand.upswingRate();
                 if (this.upswingTicks <= 0 && this.attackCooldown <= 0 && !this.player.isUsingItem() && !((double)this.player.getAttackCooldownProgress(0.0F) < 1.0 - (double)upswingRate)) {
-                    if (((DuckLivingEntityMixin)this.player).betteradventuremode$getStamina() <= 0) {
+                    if (((DuckLivingEntityMixin)this.player).betteradventuremode$getStamina() <= 0 && !this.player.isCreative()) {
                         this.player.sendMessage(Text.translatable("hud.message.staminaTooLow"), true);
                         return;
                     }

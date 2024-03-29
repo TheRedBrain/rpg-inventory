@@ -36,7 +36,7 @@ public class SwapHandItemsPacketReceiver implements ServerPlayNetworking.PlayPac
         if (itemStack.isEmpty() && alternativeItemStack.isEmpty()) {
             return;
         }
-        if (((DuckLivingEntityMixin) player).betteradventuremode$getStamina() <= 0) {
+        if (((DuckLivingEntityMixin) player).betteradventuremode$getStamina() <= 0 && !player.isCreative()) {
             player.sendMessageToClient(Text.translatable("hud.message.staminaTooLow"), true);
             return;
         }
