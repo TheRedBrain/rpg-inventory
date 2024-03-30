@@ -165,7 +165,7 @@ public class BetterAdventureModeClient implements ClientModInitializer {
         if (entity instanceof SpellCasterEntity caster && entity.getMainHandStack() == itemStack) {
             var process = caster.getSpellCastProcess();
             // Watch out! This condition check is duplicated
-            if (process != null && process.spell().casting_animates_ranged_weapon) {
+            if (process != null && process.spell().cast.animates_ranged_weapon) {
                 return process.progress(entity.getWorld().getTime());
             }
         }
@@ -176,7 +176,7 @@ public class BetterAdventureModeClient implements ClientModInitializer {
         if (entity instanceof SpellCasterEntity caster && entity.getMainHandStack() == itemStack) {
             var process = caster.getSpellCastProcess();
             // Watch out! This condition check is duplicated
-            return process != null && process.spell().casting_animates_ranged_weapon;
+            return process != null && process.spell().cast.animates_ranged_weapon;
         }
         return false;
     }

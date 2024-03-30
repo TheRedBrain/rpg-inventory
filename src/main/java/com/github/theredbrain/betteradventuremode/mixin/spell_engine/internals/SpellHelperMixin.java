@@ -10,8 +10,10 @@ import com.google.common.base.Suppliers;
 import it.unimi.dsi.fastutil.Function;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.boss.dragon.EnderDragonPart;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageType;
 import net.minecraft.entity.effect.StatusEffect;
@@ -27,7 +29,10 @@ import net.minecraft.stat.Stats;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraft.world.event.GameEvent;
 import net.spell_engine.SpellEngineMod;
+import net.spell_engine.api.effect.EntityImmunity;
+import net.spell_engine.api.entity.SpellSpawnedEntity;
 import net.spell_engine.api.spell.CustomSpellHandler;
 import net.spell_engine.api.spell.Spell;
 import net.spell_engine.api.spell.SpellInfo;
@@ -49,6 +54,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -57,17 +63,17 @@ import java.util.function.Supplier;
 public abstract class SpellHelperMixin {
 
     @Shadow
-    private static void beamImpact(World world, LivingEntity caster, List<Entity> targets, Spell spell, SpellHelper.ImpactContext context) {
+    private static void beamImpact(World world, LivingEntity caster, List<Entity> targets, SpellInfo spellInfo, SpellHelper.ImpactContext context) {
         throw new AssertionError();
     }
 
     @Shadow
-    private static void applyAreaImpact(World world, LivingEntity caster, List<Entity> targets, float range, Spell.Release.Target.Area area, Spell spell, SpellHelper.ImpactContext context, boolean additionalTargetLookup) {
+    private static void applyAreaImpact(World world, LivingEntity caster, List<Entity> targets, float range, Spell.Release.Target.Area area, SpellInfo spellInfo, SpellHelper.ImpactContext context, boolean additionalTargetLookup) {
         throw new AssertionError();
     }
 
     @Shadow
-    private static void directImpact(World world, LivingEntity caster, Entity target, Spell spell, SpellHelper.ImpactContext context) {
+    private static void directImpact(World world, LivingEntity caster, Entity target, SpellInfo spellInfo, SpellHelper.ImpactContext context) {
         throw new AssertionError();
     }
 
@@ -115,180 +121,6 @@ public abstract class SpellHelperMixin {
                 }
             }
             return SpellCast.Attempt.success();
-        }
-    }
-
-    /**
-     * @author TheRedBrain
-     * @reason integrate direct damage, direct healing and damage type override
-     */
-    @Overwrite
-    private static boolean performImpact(World world, LivingEntity caster, Entity target, MagicSchool spellSchool, Spell.Impact impact, SpellHelper.ImpactContext context, Collection<ServerPlayerEntity> trackers) {
-        if (!((Entity)target).isAttackable()) {
-            return false;
-        } else {
-            boolean success = false;
-            boolean isKnockbackPushed = false;
-
-            try {
-                double particleMultiplier = (double)(1.0F * context.total());
-                SpellPower.Result power = context.power();
-                MagicSchool school = impact.school != null ? impact.school : spellSchool;
-                if (power == null || power.school() != school) {
-                    power = SpellPower.getSpellPower(school, caster);
-                }
-
-                if (power.baseValue() < (double)impact.action.min_power) {
-                    power = new SpellPower.Result(power.school(), (double)impact.action.min_power, power.criticalChance(), power.criticalDamage());
-                }
-
-                if (impact.action.apply_to_caster) {
-                    target = caster;
-                }
-
-                if (!TargetHelper.actionAllowed(context.targetingMode(), SpellHelper.intent(impact.action), caster, (Entity)target)) {
-                    return false;
-                }
-
-                switch (impact.action.type) {
-                    case DAMAGE:
-                        Spell.Impact.Action.Damage damageData = impact.action.damage;
-                        float knockbackMultiplier = Math.max(0.0F, damageData.knockback * context.total());
-                        SpellPower.Vulnerability vulnerability = SpellPower.Vulnerability.none;
-                        int timeUntilRegen = ((Entity)target).timeUntilRegen;
-                        if (target instanceof LivingEntity) {
-                            LivingEntity livingEntity = (LivingEntity)target;
-                            ((ConfigurableKnockback)livingEntity).pushKnockbackMultiplier_SpellEngine(context.hasOffset() ? 0.0F : knockbackMultiplier);
-                            isKnockbackPushed = true;
-                            if (damageData.bypass_iframes && SpellEngineMod.config.bypass_iframes) {
-                                ((Entity)target).timeUntilRegen = 0;
-                            }
-
-                            vulnerability = SpellPower.getVulnerability(livingEntity, school);
-                        }
-
-                        double amount = power.randomValue(vulnerability);
-                        amount *= (double)damageData.spell_power_coefficient;
-                        amount *= (double)context.total();
-                        if (context.isChanneled()) {
-                            amount *= SpellPower.getHaste(caster);
-                        }
-
-                        // direct damage
-                        double directDamageAmount = ((DuckSpellImpactActionDamageMixin) damageData).betteradventuremode$getDirectDamage();
-                        if (directDamageAmount > 0.0) {
-                            amount = directDamageAmount;
-                        }
-
-                        particleMultiplier = power.criticalDamage() + (double)vulnerability.criticalDamageBonus();
-                        caster.onAttacking((Entity)target);
-
-                        // damage type override
-                        DamageSource damageSource = null;
-                        String damageTypeOverride = ((DuckSpellImpactActionDamageMixin) damageData).betteradventuremode$getDamageTypeOverride();
-                        if (!damageTypeOverride.equals("") && Identifier.isValid(damageTypeOverride)) {
-                            Identifier damageTypeOverrideId = Identifier.tryParse(damageTypeOverride);
-                            if (damageTypeOverrideId != null) {
-                                RegistryKey<DamageType> key = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, damageTypeOverrideId);
-                                Registry<DamageType> registry = ((DamageSourcesAccessor)caster.getDamageSources()).getRegistry();
-                                damageSource =  new DamageSource(registry.entryOf(key), caster);
-                            }
-                        }
-                        if (damageSource == null) {
-                            damageSource =  SpellDamageSource.create(school, caster);
-                        }
-                        ((Entity)target).damage(damageSource, (float)amount);
-
-                        if (target instanceof LivingEntity) {
-                            LivingEntity livingEntity = (LivingEntity)target;
-                            ((ConfigurableKnockback)livingEntity).popKnockbackMultiplier_SpellEngine();
-                            ((Entity)target).timeUntilRegen = timeUntilRegen;
-                            if (context.hasOffset()) {
-                                Vec3d direction = context.knockbackDirection(livingEntity.getPos()).negate();
-                                livingEntity.takeKnockback((double)(0.4F * knockbackMultiplier), direction.x, direction.z);
-                            }
-                        }
-
-                        success = true;
-                        break;
-                    case HEAL:
-                        if (target instanceof LivingEntity) {
-                            LivingEntity livingTarget = (LivingEntity)target;
-                            Spell.Impact.Action.Heal healData = impact.action.heal;
-                            particleMultiplier = power.criticalDamage();
-                            double healAmount = power.randomValue();
-                            healAmount *= (double)healData.spell_power_coefficient;
-                            healAmount *= (double)context.total();
-
-                            // direct heal
-                            double directHealAmount = ((DuckSpellImpactActionHealMixin) healData).betteradventuremode$getDirectHeal();
-                            if (directHealAmount > 0) {
-                                healAmount = directHealAmount;
-                            }
-
-                            if (context.isChanneled()) {
-                                healAmount *= SpellPower.getHaste(caster);
-                            }
-                            livingTarget.heal((float)healAmount);
-                            success = true;
-                        }
-                        break;
-                    case STATUS_EFFECT:
-                        Spell.Impact.Action.StatusEffect data = impact.action.status_effect;
-                        if (target instanceof LivingEntity) {
-                            LivingEntity livingTarget = (LivingEntity)target;
-                            Identifier id = new Identifier(data.effect_id);
-                            StatusEffect effect = (StatusEffect)Registries.STATUS_EFFECT.get(id);
-                            if (!SpellHelper.underApplyLimit(power, livingTarget, school, data.apply_limit)) {
-                                return false;
-                            }
-
-                            int duration = Math.round(data.duration * 20.0F);
-                            int amplifier = data.amplifier + (int)((double)data.amplifier_power_multiplier * power.nonCriticalValue());
-                            boolean showParticles = data.show_particles;
-                            switch (data.apply_mode) {
-                                case ADD:
-                                    StatusEffectInstance currentEffect = livingTarget.getStatusEffect(effect);
-                                    int newAmplifier = 0;
-                                    if (currentEffect != null) {
-                                        int incrementedAmplifier = currentEffect.getAmplifier() + 1;
-                                        newAmplifier = Math.min(incrementedAmplifier, amplifier);
-                                    }
-
-                                    amplifier = newAmplifier;
-                                case SET:
-                                default:
-                                    livingTarget.addStatusEffect(new StatusEffectInstance(effect, duration, amplifier, false, showParticles, true), caster);
-                                    success = true;
-                            }
-                        }
-                        break;
-                    case FIRE:
-                        Spell.Impact.Action.Fire fireData = impact.action.fire;
-                        ((Entity)target).setOnFireFor(fireData.duration);
-                        if (((Entity)target).getFireTicks() > 0) {
-                            ((Entity)target).setFireTicks(((Entity)target).getFireTicks() + fireData.tick_offset);
-                        }
-                }
-
-                if (success) {
-                    if (impact.particles != null) {
-                        ParticleHelper.sendBatches((Entity)target, impact.particles, (float)particleMultiplier, trackers);
-                    }
-
-                    if (impact.sound != null) {
-                        SoundHelper.playSound(world, (Entity)target, impact.sound);
-                    }
-                }
-            } catch (Exception var22) {
-                System.err.println("Failed to perform impact effect");
-                System.err.println(var22.getMessage());
-                if (isKnockbackPushed) {
-                    ((ConfigurableKnockback)target).popKnockbackMultiplier_SpellEngine();
-                }
-            }
-
-            return success;
         }
     }
 
@@ -346,10 +178,10 @@ public abstract class SpellHelperMixin {
                                     case AREA:
                                         Vec3d center = player.getPos().add(0.0, (double) (player.getHeight() / 2.0F), 0.0);
                                         Spell.Release.Target.Area area = spell.release.target.area;
-                                        applyAreaImpact(world, player, targets, spell.range, area, spell, context.position(center), true);
+                                        applyAreaImpact(world, player, targets, spell.range, area, spellInfo, context.position(center), true);
                                         break;
                                     case BEAM:
-                                        beamImpact(world, player, targets, spell, context);
+                                        beamImpact(world, player, targets, spellInfo, context);
                                         break;
                                     case CLOUD:
                                         SpellHelper.placeCloud(world, player, spellInfo, context);
@@ -358,7 +190,7 @@ public abstract class SpellHelperMixin {
                                     case CURSOR:
                                         optionalTarget = targets.stream().findFirst();
                                         if (optionalTarget.isPresent()) {
-                                            directImpact(world, player, (Entity) optionalTarget.get(), spell, context);
+                                            directImpact(world, player, (Entity) optionalTarget.get(), spellInfo, context);
                                         } else {
                                             released = false;
                                         }
@@ -380,7 +212,7 @@ public abstract class SpellHelperMixin {
                                         }
                                         break;
                                     case SELF:
-                                        directImpact(world, player, player, spell, context);
+                                        directImpact(world, player, player, spellInfo, context);
                                         released = true;
                                         break;
                                     case SHOOT_ARROW:
@@ -466,6 +298,247 @@ public abstract class SpellHelperMixin {
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * @author TheRedBrain
+     * @reason integrate direct damage, direct healing and damage type override
+     */
+    @Overwrite
+    private static boolean performImpact(World world, LivingEntity caster, Entity target, SpellInfo spellInfo, Spell.Impact impact, SpellHelper.ImpactContext context, Collection<ServerPlayerEntity> trackers) {
+        if (target instanceof EnderDragonPart) {
+            target = ((EnderDragonPart)target).owner;
+        }
+
+        if (!((Entity)target).isAttackable()) {
+            return false;
+        } else {
+            boolean success = false;
+            boolean isKnockbackPushed = false;
+            Spell spell = spellInfo.spell();
+
+            try {
+                double particleMultiplier = (double)(1.0F * context.total());
+                SpellPower.Result power = context.power();
+                MagicSchool school = impact.school != null ? impact.school : spell.school;
+                if (power == null || power.school() != school) {
+                    power = SpellPower.getSpellPower(school, caster);
+                }
+
+                if (power.baseValue() < (double)impact.action.min_power) {
+                    power = new SpellPower.Result(power.school(), (double)impact.action.min_power, power.criticalChance(), power.criticalDamage());
+                }
+
+                if (impact.action.apply_to_caster) {
+                    target = caster;
+                }
+
+                TargetHelper.Intent intent = SpellHelper.intent(impact.action);
+                if (!TargetHelper.actionAllowed(context.targetingMode(), intent, caster, (Entity)target)) {
+                    return false;
+                }
+
+                if (intent == TargetHelper.Intent.HARMFUL && context.targetingMode() == TargetHelper.TargetingMode.AREA && ((EntityImmunity)target).isImmuneTo(EntityImmunity.Type.AREA_EFFECT)) {
+                    return false;
+                }
+
+                LivingEntity livingTarget;
+                label141:
+                switch (impact.action.type) {
+                    case DAMAGE:
+                        Spell.Impact.Action.Damage damageData = impact.action.damage;
+                        float knockbackMultiplier = Math.max(0.0F, damageData.knockback * context.total());
+                        SpellPower.Vulnerability vulnerability = SpellPower.Vulnerability.none;
+                        int timeUntilRegen = ((Entity)target).timeUntilRegen;
+                        if (target instanceof LivingEntity) {
+                            LivingEntity livingEntity = (LivingEntity)target;
+                            ((ConfigurableKnockback)livingEntity).pushKnockbackMultiplier_SpellEngine(context.hasOffset() ? 0.0F : knockbackMultiplier);
+                            isKnockbackPushed = true;
+                            if (damageData.bypass_iframes && SpellEngineMod.config.bypass_iframes) {
+                                ((Entity)target).timeUntilRegen = 0;
+                            }
+
+                            vulnerability = SpellPower.getVulnerability(livingEntity, school);
+                        }
+
+                        double amount = power.randomValue(vulnerability);
+                        amount *= (double)damageData.spell_power_coefficient;
+                        amount *= (double)context.total();
+                        if (context.isChanneled()) {
+                            amount *= SpellPower.getHaste(caster);
+                        }
+
+                        // direct damage
+                        double directDamageAmount = ((DuckSpellImpactActionDamageMixin) damageData).betteradventuremode$getDirectDamage();
+                        if (directDamageAmount > 0.0) {
+                            amount = directDamageAmount;
+                        }
+
+                        particleMultiplier = power.criticalDamage() + (double)vulnerability.criticalDamageBonus();
+                        caster.onAttacking((Entity)target);
+
+                        // damage type override
+                        DamageSource damageSource = null;
+                        String damageTypeOverride = ((DuckSpellImpactActionDamageMixin) damageData).betteradventuremode$getDamageTypeOverride();
+                        if (!damageTypeOverride.equals("") && Identifier.isValid(damageTypeOverride)) {
+                            Identifier damageTypeOverrideId = Identifier.tryParse(damageTypeOverride);
+                            if (damageTypeOverrideId != null) {
+                                RegistryKey<DamageType> key = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, damageTypeOverrideId);
+                                Registry<DamageType> registry = ((DamageSourcesAccessor)caster.getDamageSources()).getRegistry();
+                                damageSource =  new DamageSource(registry.entryOf(key), caster);
+                            }
+                        }
+                        if (damageSource == null) {
+                            damageSource =  SpellDamageSource.create(school, caster);
+                        }
+                        ((Entity)target).damage(damageSource, (float)amount);
+
+                        if (target instanceof LivingEntity) {
+                            LivingEntity livingEntity = (LivingEntity)target;
+                            ((ConfigurableKnockback)livingEntity).popKnockbackMultiplier_SpellEngine();
+                            isKnockbackPushed = false;
+                            ((Entity)target).timeUntilRegen = timeUntilRegen;
+                            if (context.hasOffset()) {
+                                Vec3d direction = context.knockbackDirection(livingEntity.getPos()).negate();
+                                livingEntity.takeKnockback((double)(0.4F * knockbackMultiplier), direction.x, direction.z);
+                            }
+                        }
+
+                        success = true;
+                        break;
+                    case HEAL:
+                        if (target instanceof LivingEntity) {
+                            livingTarget = (LivingEntity)target;
+                            Spell.Impact.Action.Heal healData = impact.action.heal;
+                            particleMultiplier = power.criticalDamage();
+                            double healAmount = power.randomValue();
+                            healAmount *= (double)healData.spell_power_coefficient;
+                            healAmount *= (double)context.total();
+
+                            // direct heal
+                            double directHealAmount = ((DuckSpellImpactActionHealMixin) healData).betteradventuremode$getDirectHeal();
+                            if (directHealAmount > 0) {
+                                healAmount = directHealAmount;
+                            }
+
+                            if (context.isChanneled()) {
+                                healAmount *= SpellPower.getHaste(caster);
+                            }
+                            livingTarget.heal((float)healAmount);
+                            success = true;
+                        }
+                        break;
+                    case STATUS_EFFECT:
+                        Spell.Impact.Action.StatusEffect data = impact.action.status_effect;
+                        if (target instanceof LivingEntity) {
+                            livingTarget = (LivingEntity)target;
+                            Identifier id = new Identifier(data.effect_id);
+                            StatusEffect effect = (StatusEffect)Registries.STATUS_EFFECT.get(id);
+                            if (!SpellHelper.underApplyLimit(power, livingTarget, school, data.apply_limit)) {
+                                return false;
+                            }
+
+                            int duration = Math.round(data.duration * 20.0F);
+                            int amplifier = data.amplifier + (int)((double)data.amplifier_power_multiplier * power.nonCriticalValue());
+                            boolean showParticles = data.show_particles;
+                            switch (data.apply_mode) {
+                                case ADD:
+                                    StatusEffectInstance currentEffect = livingTarget.getStatusEffect(effect);
+                                    int newAmplifier = 0;
+                                    if (currentEffect != null) {
+                                        int incrementedAmplifier = currentEffect.getAmplifier() + 1;
+                                        newAmplifier = Math.min(incrementedAmplifier, amplifier);
+                                    }
+
+                                    amplifier = newAmplifier;
+                                case SET:
+                                default:
+                                    livingTarget.addStatusEffect(new StatusEffectInstance(effect, duration, amplifier, false, showParticles, true), caster);
+                                    success = true;
+                            }
+                        }
+                        break;
+                    case FIRE:
+                        Spell.Impact.Action.Fire fireData = impact.action.fire;
+                        ((Entity)target).setOnFireFor(fireData.duration);
+                        if (((Entity)target).getFireTicks() > 0) {
+                            ((Entity)target).setFireTicks(((Entity)target).getFireTicks() + fireData.tick_offset);
+                        }
+                        break;
+                    case SPAWN:
+                        List spawns;
+                        if (impact.action.spawns.length > 0) {
+                            spawns = List.of(impact.action.spawns);
+                        } else {
+                            spawns = List.of(impact.action.spawn);
+                        }
+
+                        Iterator var28 = spawns.iterator();
+
+                        while(true) {
+                            if (!var28.hasNext()) {
+                                break label141;
+                            }
+
+                            Spell.Impact.Action.Spawn spawnData = (Spell.Impact.Action.Spawn)var28.next();
+                            Identifier id = new Identifier(spawnData.entity_type_id);
+                            EntityType<?> type = (EntityType)Registries.ENTITY_TYPE.get(id);
+                            Entity entity = type.create(world);
+                            SpellHelper.applyEntityPlacement(entity, caster, ((Entity)target).getPos(), spawnData.placement);
+                            if (entity instanceof SpellSpawnedEntity) {
+                                SpellSpawnedEntity spellSpawnedEntity = (SpellSpawnedEntity)entity;
+                                spellSpawnedEntity.onCreatedFromSpell(caster, spellInfo.id(), spawnData);
+                            }
+
+                            ((WorldScheduler)world).schedule(spawnData.delay_ticks, () -> {
+                                world.spawnEntity(entity);
+                            });
+                            success = true;
+                        }
+                    case TELEPORT:
+                        Spell.Impact.Action.Teleport teleportData = impact.action.teleport;
+                        if (target instanceof LivingEntity) {
+                            livingTarget = (LivingEntity)target;
+                            switch (teleportData.mode) {
+                                case FORWARD:
+                                    Spell.Impact.Action.Teleport.Forward forward = teleportData.forward;
+                                    Vec3d look = ((Entity)target).getRotationVector();
+                                    Vec3d startingPosition = ((Entity)target).getPos();
+                                    Vec3d destination = TargetHelper.findTeleportDestination(livingTarget, look, forward.distance, teleportData.required_clearance_block_y);
+                                    Vec3d groundJustBelow = TargetHelper.findSolidBlockBelow(livingTarget, destination, ((Entity)target).getWorld(), -1.5F);
+                                    if (groundJustBelow != null) {
+                                        destination = groundJustBelow;
+                                    }
+
+                                    if (destination != null) {
+                                        ParticleHelper.sendBatches(livingTarget, teleportData.depart_particles, false);
+                                        world.emitGameEvent(GameEvent.TELEPORT, startingPosition, GameEvent.Emitter.of((Entity)target));
+                                        livingTarget.teleport(destination.x, destination.y, destination.z);
+                                        success = true;
+                                    }
+                            }
+                        }
+                }
+
+                if (success) {
+                    if (impact.particles != null) {
+                        ParticleHelper.sendBatches((Entity)target, impact.particles, (float)particleMultiplier, trackers);
+                    }
+
+                    if (impact.sound != null) {
+                        SoundHelper.playSound(world, (Entity)target, impact.sound);
+                    }
+                }
+            } catch (Exception var22) {
+                System.err.println("Failed to perform impact effect");
+                System.err.println(var22.getMessage());
+                if (isKnockbackPushed) {
+                    ((ConfigurableKnockback)target).popKnockbackMultiplier_SpellEngine();
+                }
+            }
+
+            return success;
         }
     }
 }
