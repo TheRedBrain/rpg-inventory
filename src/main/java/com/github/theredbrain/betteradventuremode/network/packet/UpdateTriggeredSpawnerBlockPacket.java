@@ -27,15 +27,20 @@ public class UpdateTriggeredSpawnerBlockPacket implements FabricPacket {
     public final float spawnerBoundEntityBoundingBoxWidth;
     public final String spawnerBoundEntityLootTableIdentifier;
     public final BlockPos entitySpawnPositionOffset;
+    public final double entitySpawnOrientationPitch;
+    public final double entitySpawnOrientationYaw;
     public final TriggeredSpawnerBlockEntity.SpawningMode spawningMode;
     public final TriggeredSpawnerBlockEntity.EntityMode entityMode;
     public final String entityTypeId;
     public final List<MutablePair<String, EntityAttributeModifier>> entityAttributeModifiersList;
     public final BlockPos triggeredBlockPositionOffset;
     public final BlockPos useRelayBlockPositionOffset;
+    public final String villagerProfession;
+    public final String villagerType;
+    public final int villagerLevel;
 
 
-    public UpdateTriggeredSpawnerBlockPacket(BlockPos triggeredSpawnerBlockPosition, String spawnerBoundEntityName, String spawnerBoundEntityModelIdentifier, String spawnerBoundEntityTextureIdentifier, String spawnerBoundEntityAnimationsIdentifier, float spawnerBoundEntityBoundingBoxHeight, float spawnerBoundEntityBoundingBoxWidth, String spawnerBoundEntityLootTableIdentifier, BlockPos entitySpawnPositionOffset, String spawningMode, String entityMode, String entityTypeId, List<MutablePair<String, EntityAttributeModifier>> entityAttributeModifiersList, BlockPos triggeredBlockPositionOffset, BlockPos useRelayBlockPositionOffset) {
+    public UpdateTriggeredSpawnerBlockPacket(BlockPos triggeredSpawnerBlockPosition, String spawnerBoundEntityName, String spawnerBoundEntityModelIdentifier, String spawnerBoundEntityTextureIdentifier, String spawnerBoundEntityAnimationsIdentifier, float spawnerBoundEntityBoundingBoxHeight, float spawnerBoundEntityBoundingBoxWidth, String spawnerBoundEntityLootTableIdentifier, BlockPos entitySpawnPositionOffset, double entitySpawnOrientationPitch, double entitySpawnOrientationYaw, String spawningMode, String entityMode, String entityTypeId, List<MutablePair<String, EntityAttributeModifier>> entityAttributeModifiersList, BlockPos triggeredBlockPositionOffset, BlockPos useRelayBlockPositionOffset, String villagerProfession, String villagerType, int villagerLevel) {
         this.triggeredSpawnerBlockPosition = triggeredSpawnerBlockPosition;
 
         this.spawnerBoundEntityName = spawnerBoundEntityName;
@@ -47,6 +52,8 @@ public class UpdateTriggeredSpawnerBlockPacket implements FabricPacket {
         this.spawnerBoundEntityLootTableIdentifier = spawnerBoundEntityLootTableIdentifier;
 
         this.entitySpawnPositionOffset = entitySpawnPositionOffset;
+        this.entitySpawnOrientationPitch = entitySpawnOrientationPitch;
+        this.entitySpawnOrientationYaw = entitySpawnOrientationYaw;
 
         this.spawningMode = TriggeredSpawnerBlockEntity.SpawningMode.byName(spawningMode).orElseGet(() -> TriggeredSpawnerBlockEntity.SpawningMode.ONCE);
         this.entityMode = TriggeredSpawnerBlockEntity.EntityMode.byName(entityMode).orElseGet(() -> TriggeredSpawnerBlockEntity.EntityMode.IDENTIFIER);
@@ -58,6 +65,10 @@ public class UpdateTriggeredSpawnerBlockPacket implements FabricPacket {
         this.triggeredBlockPositionOffset = triggeredBlockPositionOffset;
 
         this.useRelayBlockPositionOffset = useRelayBlockPositionOffset;
+
+        this.villagerProfession = villagerProfession;
+        this.villagerType = villagerType;
+        this.villagerLevel = villagerLevel;
     }
 
     public UpdateTriggeredSpawnerBlockPacket(PacketByteBuf buf) {
@@ -71,12 +82,17 @@ public class UpdateTriggeredSpawnerBlockPacket implements FabricPacket {
                 buf.readFloat(),
                 buf.readString(),
                 buf.readBlockPos(),
+                buf.readDouble(),
+                buf.readDouble(),
                 buf.readString(),
                 buf.readString(),
                 buf.readString(),
                 buf.readList(new PacketByteBufUtils.MutablePairStringEntityAttributeModifierReader()),
                 buf.readBlockPos(),
-                buf.readBlockPos()
+                buf.readBlockPos(),
+                buf.readString(),
+                buf.readString(),
+                buf.readInt()
         );
     }
     @Override
@@ -96,7 +112,9 @@ public class UpdateTriggeredSpawnerBlockPacket implements FabricPacket {
         buf.writeString(this.spawnerBoundEntityLootTableIdentifier);
 
         buf.writeBlockPos(this.entitySpawnPositionOffset);
-        
+        buf.writeDouble(this.entitySpawnOrientationPitch);
+        buf.writeDouble(this.entitySpawnOrientationYaw);
+
         buf.writeString(this.spawningMode.asString());
         buf.writeString(this.entityMode.asString());
 
@@ -107,5 +125,9 @@ public class UpdateTriggeredSpawnerBlockPacket implements FabricPacket {
         buf.writeBlockPos(this.triggeredBlockPositionOffset);
 
         buf.writeBlockPos(this.useRelayBlockPositionOffset);
+
+        buf.writeString(this.villagerProfession);
+        buf.writeString(this.villagerType);
+        buf.writeInt(this.villagerLevel);
     }
 }

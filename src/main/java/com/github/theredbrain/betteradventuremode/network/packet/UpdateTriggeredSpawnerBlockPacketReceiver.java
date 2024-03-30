@@ -42,6 +42,8 @@ public class UpdateTriggeredSpawnerBlockPacketReceiver implements ServerPlayNetw
         String spawnerBoundEntityLootTableIdentifier = packet.spawnerBoundEntityLootTableIdentifier;
 
         BlockPos entitySpawnPositionOffset = packet.entitySpawnPositionOffset;
+        double entitySpawnOrientationPitch = packet.entitySpawnOrientationPitch;
+        double entitySpawnOrientationYaw = packet.entitySpawnOrientationYaw;
 
         TriggeredSpawnerBlockEntity.SpawningMode spawningMode = packet.spawningMode;
         TriggeredSpawnerBlockEntity.EntityMode entityMode = packet.entityMode;
@@ -63,6 +65,10 @@ public class UpdateTriggeredSpawnerBlockPacketReceiver implements ServerPlayNetw
         BlockPos useRelayBlockPositionOffset = packet.useRelayBlockPositionOffset;
 
         BlockPos triggeredBlockPositionOffset = packet.triggeredBlockPositionOffset;
+
+        String villagerProfession = packet.villagerProfession;
+        String villagerType = packet.villagerType;
+        int villagerLevel = packet.villagerLevel;
 
         World world = player.getWorld();
 
@@ -101,6 +107,14 @@ public class UpdateTriggeredSpawnerBlockPacketReceiver implements ServerPlayNetw
                 player.sendMessage(Text.translatable("triggered_spawner_block.entitySpawnPositionOffset.invalid"), false);
                 updateSuccessful = false;
             }
+            if (!triggeredSpawnerBlockEntity.setEntitySpawnPositionPitch(entitySpawnOrientationPitch)) {
+                player.sendMessage(Text.translatable("triggered_spawner_block.entitySpawnOrientationPitch.invalid"), false);
+                updateSuccessful = false;
+            }
+            if (!triggeredSpawnerBlockEntity.setEntitySpawnPositionYaw(entitySpawnOrientationYaw)) {
+                player.sendMessage(Text.translatable("triggered_spawner_block.entitySpawnOrientationYaw.invalid"), false);
+                updateSuccessful = false;
+            }
             if (!triggeredSpawnerBlockEntity.setSpawningMode(spawningMode)) {
                 player.sendMessage(Text.translatable("triggered_spawner_block.spawningMode.invalid"), false);
                 updateSuccessful = false;
@@ -119,6 +133,9 @@ public class UpdateTriggeredSpawnerBlockPacketReceiver implements ServerPlayNetw
             }
             triggeredSpawnerBlockEntity.setTriggeredBlockPositionOffset(triggeredBlockPositionOffset);
             triggeredSpawnerBlockEntity.setUseRelayBlockPositionOffset(useRelayBlockPositionOffset);
+            triggeredSpawnerBlockEntity.setVillagerProfession(villagerProfession);
+            triggeredSpawnerBlockEntity.setVillagerType(villagerType);
+            triggeredSpawnerBlockEntity.setVillagerLevel(villagerLevel);
             if (updateSuccessful) {
                 player.sendMessage(Text.translatable("triggered_spawner_block.update_successful"), true);
             }

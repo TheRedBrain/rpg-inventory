@@ -3,6 +3,7 @@ package com.github.theredbrain.betteradventuremode.registry;
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.entity.decoration.MannequinEntity;
 import com.github.theredbrain.betteradventuremode.entity.mob.SpawnerBoundEntity;
+import com.github.theredbrain.betteradventuremode.entity.passive.SpawnerBoundVillagerEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.entity.attribute.ClampedEntityAttribute;
 import net.minecraft.entity.attribute.EntityAttribute;
@@ -139,6 +140,7 @@ public class EntityAttributesRegistry {
     public static void registerEntityAttributes() {
 
         FabricDefaultAttributeRegistry.register(EntityRegistry.SPAWNER_BOUND_ENTITY, SpawnerBoundEntity.createLivingAttributes());
+        FabricDefaultAttributeRegistry.register(EntityRegistry.SPAWNER_BOUND_VILLAGER_ENTITY, SpawnerBoundVillagerEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(EntityRegistry.MANNEQUIN_ENTITY, MannequinEntity.createLivingAttributes());
     }
 }

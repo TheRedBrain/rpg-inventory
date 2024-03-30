@@ -4,6 +4,7 @@ import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.block.entity.*;
 import com.github.theredbrain.betteradventuremode.entity.decoration.MannequinEntity;
 import com.github.theredbrain.betteradventuremode.entity.mob.SpawnerBoundEntity;
+import com.github.theredbrain.betteradventuremode.entity.passive.SpawnerBoundVillagerEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.block.entity.BlockEntityType;
@@ -18,6 +19,9 @@ public class EntityRegistry {
     public static final EntityType<SpawnerBoundEntity> SPAWNER_BOUND_ENTITY = Registry.register(Registries.ENTITY_TYPE,
             BetterAdventureMode.identifier("spawner_bound_entity"),
             FabricEntityTypeBuilder.create(SpawnGroup.MISC, SpawnerBoundEntity::new).dimensions(new EntityDimensions(0.6F, 1.8F, false)).build());
+    public static final EntityType<SpawnerBoundVillagerEntity> SPAWNER_BOUND_VILLAGER_ENTITY = Registry.register(Registries.ENTITY_TYPE,
+            BetterAdventureMode.identifier("spawner_bound_villager_entity"),
+            FabricEntityTypeBuilder.create(SpawnGroup.MISC, SpawnerBoundVillagerEntity::new).dimensions(new EntityDimensions(0.6F, 1.95F, false)).build());
     public static final EntityType<MannequinEntity> MANNEQUIN_ENTITY = Registry.register(Registries.ENTITY_TYPE,
             BetterAdventureMode.identifier("mannequin"),
             FabricEntityTypeBuilder.create(SpawnGroup.MISC, MannequinEntity::new).dimensions(new EntityDimensions(0.6F, 1.8F, false)).build());

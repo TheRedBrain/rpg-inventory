@@ -1,38 +1,35 @@
 package com.github.theredbrain.betteradventuremode.entity.mob;
 
 import com.github.theredbrain.betteradventuremode.block.entity.TriggeredSpawnerBlockEntity;
-//import mod.azure.azurelib.common.api.common.animatable.GeoEntity;
-//import mod.azure.azurelib.common.internal.common.core.animatable.instance.AnimatableInstanceCache;
-//import mod.azure.azurelib.common.internal.common.core.animation.AnimatableManager;
-//import mod.azure.azurelib.common.internal.common.util.AzureLibUtil;
 import com.github.theredbrain.betteradventuremode.entity.IsSpawnerBound;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.*;
+import net.minecraft.entity.EntityDimensions;
+import net.minecraft.entity.EntityPose;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
-import java.util.List;
 import java.util.Objects;
 
-public class SpawnerBoundEntity extends LivingEntity implements GeoEntity, IsSpawnerBound {
+public class SpawnerBoundMobGeoEntity extends SpawnerBoundMobEntity implements GeoEntity {
     private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
     public static final TrackedData<String> ANIMATION_IDENTIFIER_STRING;
@@ -43,7 +40,7 @@ public class SpawnerBoundEntity extends LivingEntity implements GeoEntity, IsSpa
     public static final TrackedData<BlockPos> USE_RELAY_BLOCK_POS;
     public static final TrackedData<String> TEXTURE_IDENTIFIER_STRING;
 
-    public SpawnerBoundEntity(EntityType<? extends LivingEntity> entityType, World world) {
+    public SpawnerBoundMobGeoEntity(EntityType<? extends MobEntity> entityType, World world) {
         super(entityType, world);
     }
 
@@ -163,7 +160,7 @@ public class SpawnerBoundEntity extends LivingEntity implements GeoEntity, IsSpa
     }
 
     @Override
-    public ActionResult interact(PlayerEntity player, Hand hand) {
+    protected ActionResult interactMob(PlayerEntity player, Hand hand) {
 
         World world = player.getWorld();
         BlockHitResult blockHitResult = new BlockHitResult(player.getPos(), Direction.UP, this.getUseRelayBlockPos(), false);
@@ -219,7 +216,7 @@ public class SpawnerBoundEntity extends LivingEntity implements GeoEntity, IsSpa
         return this.dataTracker.get(MODEL_IDENTIFIER_STRING);
     }
     public void setModelIdentifierString(String modelIdentifierString) {
-        this.dataTracker.set(MODEL_IDENTIFIER_STRING, modelIdentifierString);
+//        this.dataTracker.set(MODEL_IDENTIFIER_STRING, modelIdentifierString);
     }
 
     public BlockPos getUseRelayBlockPos() {
@@ -247,26 +244,6 @@ public class SpawnerBoundEntity extends LivingEntity implements GeoEntity, IsSpa
 //    }
 
     @Override
-    public Iterable<ItemStack> getArmorItems() {
-        return List.of();
-    }
-
-    @Override
-    public ItemStack getEquippedStack(EquipmentSlot slot) {
-        return ItemStack.EMPTY;
-    }
-
-    @Override
-    public void equipStack(EquipmentSlot slot, ItemStack stack) {
-
-    }
-
-    @Override
-    public Arm getMainArm() {
-        return Arm.RIGHT;
-    }
-
-    @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
 
     }
@@ -278,12 +255,12 @@ public class SpawnerBoundEntity extends LivingEntity implements GeoEntity, IsSpa
 
     static {
 
-        ANIMATION_IDENTIFIER_STRING = DataTracker.registerData(SpawnerBoundEntity.class, TrackedDataHandlerRegistry.STRING);
-        BOUND_SPAWNER_BLOCK_POS = DataTracker.registerData(SpawnerBoundEntity.class, TrackedDataHandlerRegistry.BLOCK_POS);
-        BOUNDING_BOX_HEIGHT = DataTracker.registerData(SpawnerBoundEntity.class, TrackedDataHandlerRegistry.FLOAT);
-        BOUNDING_BOX_WIDTH = DataTracker.registerData(SpawnerBoundEntity.class, TrackedDataHandlerRegistry.FLOAT);
-        MODEL_IDENTIFIER_STRING = DataTracker.registerData(SpawnerBoundEntity.class, TrackedDataHandlerRegistry.STRING);
-        USE_RELAY_BLOCK_POS = DataTracker.registerData(SpawnerBoundEntity.class, TrackedDataHandlerRegistry.BLOCK_POS);
-        TEXTURE_IDENTIFIER_STRING = DataTracker.registerData(SpawnerBoundEntity.class, TrackedDataHandlerRegistry.STRING);
+        ANIMATION_IDENTIFIER_STRING = DataTracker.registerData(SpawnerBoundMobGeoEntity.class, TrackedDataHandlerRegistry.STRING);
+        BOUND_SPAWNER_BLOCK_POS = DataTracker.registerData(SpawnerBoundMobGeoEntity.class, TrackedDataHandlerRegistry.BLOCK_POS);
+        BOUNDING_BOX_HEIGHT = DataTracker.registerData(SpawnerBoundMobGeoEntity.class, TrackedDataHandlerRegistry.FLOAT);
+        BOUNDING_BOX_WIDTH = DataTracker.registerData(SpawnerBoundMobGeoEntity.class, TrackedDataHandlerRegistry.FLOAT);
+        MODEL_IDENTIFIER_STRING = DataTracker.registerData(SpawnerBoundMobGeoEntity.class, TrackedDataHandlerRegistry.STRING);
+        USE_RELAY_BLOCK_POS = DataTracker.registerData(SpawnerBoundMobGeoEntity.class, TrackedDataHandlerRegistry.BLOCK_POS);
+        TEXTURE_IDENTIFIER_STRING = DataTracker.registerData(SpawnerBoundMobGeoEntity.class, TrackedDataHandlerRegistry.STRING);
     }
 }

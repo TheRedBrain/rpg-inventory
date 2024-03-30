@@ -290,15 +290,24 @@
 	"gui.triggered_spawner_block.spawner_bound_entity_bounding_box_width_field_label": "Bounding Box Width",
 	"gui.triggered_spawner_block.spawner_bound_entity_loot_table_identifier_field_label": "Loot Table Identifier",
 
+	"gui.triggered_spawner_block.spawner_bound_villager_entity_profession_identifier_field_label": "Villager Profession",
+	"gui.triggered_spawner_block.spawner_bound_villager_entity_type_identifier_field_label": "Villager Biome Type",
+	"gui.triggered_spawner_block.spawner_bound_villager_entity_level_field_label": "Villager Level",
+
 	"gui.triggered_spawner_block.spawning_mode_label": "Spawning Mode",
 	"gui.triggered_spawner_block.entity_mode_label": "Entity Mode",
 	"gui.triggered_spawner_block.entity_spawn_position_offset_label": "Entity Spawn Position Offset",
+	"gui.triggered_spawner_block.entity_spawn_orientation_pitch_label": "Entity Spawn Orientation Pitch",
+	"gui.triggered_spawner_block.entity_spawn_orientation_yaw_label": "Entity Spawn Orientation Yaw",
 	"gui.triggered_spawner_block.entity_type_label": "Entity Type Identifier",
 	"gui.triggered_spawner_block.open_spawner_bound_entity_config_screen_button_label": "Open Spawner Bound Entity Config",
+	"gui.triggered_spawner_block.open_spawner_bound_villager_entity_config_screen_button_label": "Open Spawner Bound Villager Entity Config",
 
 	"gui.triggered_spawner_block.creativeScreenPage.misc": "Misc",
 	"gui.triggered_spawner_block.creativeScreenPage.entity_attribute_modifier": "Entity Attribute Modifiers",
 	"gui.triggered_spawner_block.creativeScreenPage.triggered_block": "Triggered Block",
+
+	"gui.triggered_spawner_block.useRelayBlockPositionOffset": "Use Relay Block Position Offset",
 
 	"gui.triggered_spawner_block.spawning_mode.once": "Once",
 	"gui.triggered_spawner_block.spawning_mode.continuous": "Continuous",

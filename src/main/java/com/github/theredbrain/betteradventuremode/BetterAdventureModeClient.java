@@ -6,6 +6,7 @@ import com.github.theredbrain.betteradventuremode.client.gui.screen.ingame.ShopB
 import com.github.theredbrain.betteradventuremode.client.gui.screen.ingame.TeleporterBlockScreen;
 import com.github.theredbrain.betteradventuremode.client.render.block.entity.*;
 import com.github.theredbrain.betteradventuremode.client.render.renderer.MannequinEntityRenderer;
+import com.github.theredbrain.betteradventuremode.client.render.renderer.SpawnerBoundVillagerEntityRenderer;
 import com.github.theredbrain.betteradventuremode.registry.ClientPacketRegistry;
 import com.github.theredbrain.betteradventuremode.client.render.renderer.SpawnerBoundEntityRenderer;
 import com.github.theredbrain.betteradventuremode.config.ClientConfig;
@@ -108,6 +109,7 @@ public class BetterAdventureModeClient implements ClientModInitializer {
     private void registerEntityRenderer() {
         EntityRendererRegistry.register(EntityRegistry.MANNEQUIN_ENTITY, MannequinEntityRenderer::new);
         EntityRendererRegistry.register(EntityRegistry.SPAWNER_BOUND_ENTITY, SpawnerBoundEntityRenderer::new);
+        EntityRendererRegistry.register(EntityRegistry.SPAWNER_BOUND_VILLAGER_ENTITY, SpawnerBoundVillagerEntityRenderer::new);
     }
 
     private void registerScreens() {

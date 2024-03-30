@@ -203,8 +203,8 @@ public class DialogueBlockScreen extends Screen {
                 if (!unlockAdvancementIdentifier.equals("")) {
                     unlockAdvancementEntry = advancementHandler.getManager().get(Identifier.tryParse(unlockAdvancementIdentifier));
                 }
-                if ((lockAdvancementIdentifier.equals("") || (lockAdvancementEntry != null && !((DuckClientAdvancementManagerMixin)advancementHandler.getManager()).betteradventuremode$getAdvancementProgress(lockAdvancementEntry).isDone())) &&
-                    (unlockAdvancementIdentifier.equals("") || (unlockAdvancementEntry != null && ((DuckClientAdvancementManagerMixin)advancementHandler.getManager()).betteradventuremode$getAdvancementProgress(unlockAdvancementEntry).isDone()))) {
+                if ((lockAdvancementIdentifier.equals("") || (lockAdvancementEntry != null && !((DuckClientAdvancementManagerMixin)advancementHandler/*.getManager()*/).betteradventuremode$getAdvancementProgress(lockAdvancementEntry).isDone())) &&
+                    (unlockAdvancementIdentifier.equals("") || (unlockAdvancementEntry != null && ((DuckClientAdvancementManagerMixin)advancementHandler/*.getManager()*/).betteradventuremode$getAdvancementProgress(unlockAdvancementEntry).isDone()))) {
                     if (isItemCostPayable) {
                         this.unlockedAnswersList.add(answerIdentifier);
                         this.visibleAnswersList.add(answerIdentifier);
