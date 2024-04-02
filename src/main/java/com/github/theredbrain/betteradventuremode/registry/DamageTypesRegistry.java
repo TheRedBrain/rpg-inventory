@@ -55,6 +55,12 @@ public class DamageTypesRegistry {
     public static final RegistryKey<DamageType> DEFAULT_UNARMED_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("default_unarmed_damage_type"));
     // endregion player damage types
 
+    // region player damage types
+    public static final RegistryKey<DamageType> MOB_BASHING_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("mob_bashing_damage_type"));
+    public static final RegistryKey<DamageType> MOB_PIERCING_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("mob_piercing_damage_type"));
+    public static final RegistryKey<DamageType> MOB_SLASHING_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, BetterAdventureMode.identifier("mob_slashing_damage_type"));
+    // endregion player damage types
+
     /**
      * @return the player variant of the parameter if it exists and the parameter otherwise
      */

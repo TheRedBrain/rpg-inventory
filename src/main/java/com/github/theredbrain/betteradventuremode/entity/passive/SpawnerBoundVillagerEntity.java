@@ -60,13 +60,7 @@ public class SpawnerBoundVillagerEntity extends SpawnerBoundMobEntity implements
         }
     }
 
-    public void setAnimationIdentifierString(String animationIdentifierString) {}
 
-    public void setBoundingBoxHeight(float boundingBoxHeight) {}
-
-    public void setBoundingBoxWidth(float boundingBoxWidth) {}
-
-    public void setModelIdentifierString(String modelIdentifierString) {}
 
     public void setVillagerData(VillagerData villagerData) {
         this.dataTracker.set(VILLAGER_DATA, villagerData);
@@ -76,7 +70,6 @@ public class SpawnerBoundVillagerEntity extends SpawnerBoundMobEntity implements
         return (VillagerData)this.dataTracker.get(VILLAGER_DATA);
     }
 
-    public void setTextureIdentifierString(String textureIdentifierString) {}
 
     static {
         VILLAGER_DATA = DataTracker.registerData(SpawnerBoundVillagerEntity.class, TrackedDataHandlerRegistry.VILLAGER_DATA);

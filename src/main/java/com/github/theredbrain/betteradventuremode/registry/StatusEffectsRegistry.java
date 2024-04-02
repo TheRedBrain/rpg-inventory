@@ -75,6 +75,9 @@ public class StatusEffectsRegistry {
     public static final StatusEffect FIRST_PERSON_PERSPECTIVE_ENABLED_EFFECT = new NeutralStatusEffect();
 
     public static final StatusEffect LAVA_IMMUNE = new BeneficialStatusEffect();
+    public static final StatusEffect FALL_IMMUNE = new BeneficialStatusEffect();
+    public static final StatusEffect KEEP_INVENTORY_ON_DEATH = new BeneficialStatusEffect();
+    public static final StatusEffect CALAMITY = new HarmfulStatusEffect();
     public static final StatusEffect STAGGERED = new HarmfulStatusEffect();
     public static final StatusEffect BLEEDING = new BleedingStatusEffect();
     public static final StatusEffect BURNING = new BurningStatusEffect();
@@ -123,8 +126,11 @@ public class StatusEffectsRegistry {
 
 
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("lava_immune"), LAVA_IMMUNE);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("fall_immune"), FALL_IMMUNE);
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("keep_inventory_on_death"), KEEP_INVENTORY_ON_DEATH);
 
 
+        Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("calamity"), CALAMITY);
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("overburdened_effect"), OVERBURDENED_EFFECT);
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("staggered"), STAGGERED);
 

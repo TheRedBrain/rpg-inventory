@@ -2,12 +2,18 @@ package com.github.theredbrain.betteradventuremode.registry;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import net.minecraft.block.Block;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageType;
 import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 
 public class Tags {
+    //region EntityTags
+    public static final TagKey<EntityType<?>> ATTACKS_WITH_BASHING = TagKey.of(RegistryKeys.ENTITY_TYPE, BetterAdventureMode.identifier("attacks_with_bashing"));
+    public static final TagKey<EntityType<?>> ATTACKS_WITH_PIERCING = TagKey.of(RegistryKeys.ENTITY_TYPE, BetterAdventureMode.identifier("attacks_with_piercing"));
+    public static final TagKey<EntityType<?>> ATTACKS_WITH_SLASHING = TagKey.of(RegistryKeys.ENTITY_TYPE, BetterAdventureMode.identifier("attacks_with_slashing"));
+    //endregion EntityTags
     //region BlockTags
     public static final TagKey<Block> PROVIDES_CRAFTING_TAB_0_LEVEL = TagKey.of(RegistryKeys.BLOCK, BetterAdventureMode.identifier("provides_crafting_tab_0_level"));
     public static final TagKey<Block> PROVIDES_CRAFTING_TAB_1_LEVEL = TagKey.of(RegistryKeys.BLOCK, BetterAdventureMode.identifier("provides_crafting_tab_1_level"));
@@ -133,6 +139,8 @@ public class Tags {
     public static final TagKey<Item> ENABLES_FIRST_PERSON_PERSPECTIVE_ON_USING = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("enables_first_person_perspective_on_using"));
     public static final TagKey<Item> ROTATE_PLAYER_ON_USING = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("rotate_player_on_using"));
     public static final TagKey<Item> IGNORES_ATTACK_MOVEMENT_PENALTY = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("ignores_attack_movement_penalty"));
+    public static final TagKey<Item> KEEPS_INVENTORY_ON_DEATH = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("keeps_inventory_on_death"));
+    public static final TagKey<Item> DOUBLES_INCOMING_DAMAGE = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("doubles_incoming_damage"));
 
     // granting enchantments
     public static final TagKey<Item> GRANTS_DEPTH_STRIDER_LEVEL_3 = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("grants_depth_strider_level_3"));

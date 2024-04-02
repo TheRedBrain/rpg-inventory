@@ -7,6 +7,7 @@ import java.util.function.Predicate;
 public interface DuckLivingEntityMixin {
 
     boolean betteradventuremode$hasEquipped(Predicate<ItemStack> predicate);
+    int betteradventuremode$getAmountEquipped(Predicate<ItemStack> predicate);
     int betteradventuremode$getStaminaRegenerationDelayThreshold();
     int betteradventuremode$getHealthTickThreshold();
     int betteradventuremode$getStaminaTickThreshold();

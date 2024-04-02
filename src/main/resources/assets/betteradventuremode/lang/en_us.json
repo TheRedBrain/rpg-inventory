@@ -305,6 +305,7 @@
 
 	"gui.triggered_spawner_block.creativeScreenPage.misc": "Misc",
 	"gui.triggered_spawner_block.creativeScreenPage.entity_attribute_modifier": "Entity Attribute Modifiers",
+	"gui.triggered_spawner_block.creativeScreenPage.use_relay_block": "Use Relay Block",
 	"gui.triggered_spawner_block.creativeScreenPage.triggered_block": "Triggered Block",
 
 	"gui.triggered_spawner_block.useRelayBlockPositionOffset": "Use Relay Block Position Offset",
@@ -312,9 +313,11 @@
 	"gui.triggered_spawner_block.spawning_mode.once": "Once",
 	"gui.triggered_spawner_block.spawning_mode.continuous": "Continuous",
 	"gui.triggered_spawner_block.spawning_mode.bound": "Bound",
+	"gui.triggered_spawner_block.spawning_mode.bound_respawn": "Bound Respawn",
 
 	"gui.triggered_spawner_block.entity_mode.identifier": "Identifier",
 	"gui.triggered_spawner_block.entity_mode.spawner_bound_entity": "Spawner Bound Entity",
+	"gui.triggered_spawner_block.entity_mode.spawner_bound_villager_entity": "Spawner Bound Villager Entity",
 
 	"gui.triggered_spawner_block.new_entity_attribute_modifier_identifier_label": "Attribute Identifier",
 	"gui.triggered_spawner_block.new_entity_attribute_modifier_name_label": "Name",

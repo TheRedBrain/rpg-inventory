@@ -484,7 +484,7 @@ public class TriggeredSpawnerBlockEntity extends RotatedBlockEntity implements T
         if (this.triggered) {
             this.triggered = false;
         }
-        if (this.spawningMode == SpawningMode.BOUND && this.boundEntityUuid != null && this.world instanceof ServerWorld serverWorld) {
+        if ((this.spawningMode == SpawningMode.BOUND || this.spawningMode == SpawningMode.BOUND_RESPAWN) && this.boundEntityUuid != null && this.world instanceof ServerWorld serverWorld) {
             Entity entity = serverWorld.getEntity(this.boundEntityUuid);
             if (entity != null) {
                 entity.discard();
@@ -499,7 +499,7 @@ public class TriggeredSpawnerBlockEntity extends RotatedBlockEntity implements T
             if (this.spawnEntity()) {
                 this.triggered = true;
             }
-        } else if (this.spawningMode == SpawningMode.BOUND && !this.triggered) {
+        } else if ((this.spawningMode == SpawningMode.BOUND && !this.triggered) || (this.spawningMode == SpawningMode.BOUND_RESPAWN && this.boundEntityUuid == null)) {
             if (this.spawnBoundEntity()) {
                 this.triggered = true;
             }
@@ -508,9 +508,13 @@ public class TriggeredSpawnerBlockEntity extends RotatedBlockEntity implements T
 
     public void onBoundEntityKilled() {
         if (this.world != null) {
+            this.boundEntityUuid = null;
             BlockEntity blockEntity = world.getBlockEntity(new BlockPos(this.pos.getX() + this.triggeredBlockPositionOffset.getX(), this.pos.getY() + this.triggeredBlockPositionOffset.getY(), this.pos.getZ() + this.triggeredBlockPositionOffset.getZ()));
             if (blockEntity instanceof Triggerable triggerable) {
                 triggerable.trigger();
+            }
+            if (this.spawningMode == SpawningMode.BOUND_RESPAWN) {
+                this.trigger();
             }
         }
     }
@@ -653,6 +657,7 @@ public class TriggeredSpawnerBlockEntity extends RotatedBlockEntity implements T
     public static enum SpawningMode implements StringIdentifiable
     {
         BOUND("bound"),
+        BOUND_RESPAWN("bound_respawn"),
         CONTINUOUS("continuous"),
         ONCE("once");
 

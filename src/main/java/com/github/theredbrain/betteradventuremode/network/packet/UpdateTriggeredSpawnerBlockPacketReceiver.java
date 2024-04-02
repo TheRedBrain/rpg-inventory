@@ -53,6 +53,8 @@ public class UpdateTriggeredSpawnerBlockPacketReceiver implements ServerPlayNetw
             entityTypeId = packet.entityTypeId;
         } else if (entityMode == TriggeredSpawnerBlockEntity.EntityMode.SPAWNER_BOUND_ENTITY) {
             entityTypeId = "betteradventuremode:spawner_bound_entity";
+        } else if (entityMode == TriggeredSpawnerBlockEntity.EntityMode.SPAWNER_BOUND_VILLAGER_ENTITY) {
+            entityTypeId = "betteradventuremode:spawner_bound_villager_entity";
         }
 
         List<MutablePair<String, EntityAttributeModifier>> entityAttributeModifiersList = packet.entityAttributeModifiersList;

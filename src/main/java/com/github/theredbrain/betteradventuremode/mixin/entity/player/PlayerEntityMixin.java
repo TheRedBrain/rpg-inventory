@@ -3,7 +3,6 @@ package com.github.theredbrain.betteradventuremode.mixin.entity.player;
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.block.AbstractSetSpawnBlock;
 import com.github.theredbrain.betteradventuremode.entity.IRenderEquippedTrinkets;
-import com.github.theredbrain.betteradventuremode.item.BasicWeaponItem;
 import com.github.theredbrain.betteradventuremode.effect.FoodStatusEffect;
 import com.github.theredbrain.betteradventuremode.data.Dialogue;
 import com.github.theredbrain.betteradventuremode.block.entity.*;
@@ -17,6 +16,7 @@ import com.github.theredbrain.betteradventuremode.registry.StatusEffectsRegistry
 import com.github.theredbrain.betteradventuremode.registry.Tags;
 import com.github.theredbrain.betteradventuremode.util.ItemUtils;
 import com.mojang.datafixers.util.Pair;
+import dev.emi.trinkets.api.SlotReference;
 import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketsApi;
 import net.minecraft.block.BedBlock;
@@ -148,17 +148,32 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
     @Inject(method = "updateTurtleHelmet", at = @At("TAIL"))
     private void betteradventuremode$updateTurtleHelmet(CallbackInfo ci) {
+
         boolean mana_regenerating_item_equipped = false;
+        boolean fall_damage_prevention_item_equipped = false;
         boolean first_person_enabling_item_equipped = false;
+        boolean keep_inventory_on_death_item_equipped = false;
+        int damage_doubling_items_amount = 0;
+
         Predicate<ItemStack> mana_regenerating_item_equipped_predicate = stack -> stack.isIn(Tags.ENABLES_MANA_REGENERATION);
+        Predicate<ItemStack> fall_damage_prevention_item_equipped_predicate = stack -> stack.isIn(Tags.PREVENTS_NON_LETHAL_FALL_DAMAGE);
         Predicate<ItemStack> first_person_enabling_item_equipped_predicate = stack -> stack.isIn(Tags.ENABLES_FIRST_PERSON_PERSPECTIVE);
+        Predicate<ItemStack> is_damage_doubling_item_equipped_predicate = stack -> stack.isIn(Tags.DOUBLES_INCOMING_DAMAGE);
+        Predicate<ItemStack> keep_inventory_on_death_item_equipped_predicate = stack -> stack.isIn(Tags.KEEPS_INVENTORY_ON_DEATH);
+
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(this);
         if (trinkets.isPresent()) {
             mana_regenerating_item_equipped = trinkets.get().isEquipped(mana_regenerating_item_equipped_predicate);
+            fall_damage_prevention_item_equipped = trinkets.get().isEquipped(fall_damage_prevention_item_equipped_predicate);
             first_person_enabling_item_equipped = trinkets.get().isEquipped(first_person_enabling_item_equipped_predicate);
+            keep_inventory_on_death_item_equipped = trinkets.get().isEquipped(keep_inventory_on_death_item_equipped_predicate);
+            damage_doubling_items_amount += trinkets.get().getEquipped(is_damage_doubling_item_equipped_predicate).size();
         }
         mana_regenerating_item_equipped = mana_regenerating_item_equipped || betteradventuremode$hasEquipped(mana_regenerating_item_equipped_predicate);
+        fall_damage_prevention_item_equipped = fall_damage_prevention_item_equipped || betteradventuremode$hasEquipped(fall_damage_prevention_item_equipped_predicate);
         first_person_enabling_item_equipped = first_person_enabling_item_equipped || betteradventuremode$hasEquipped(first_person_enabling_item_equipped_predicate);
+        keep_inventory_on_death_item_equipped = keep_inventory_on_death_item_equipped || betteradventuremode$hasEquipped(keep_inventory_on_death_item_equipped_predicate);
+        damage_doubling_items_amount += betteradventuremode$getAmountEquipped(is_damage_doubling_item_equipped_predicate);
 
         ItemStack itemStackMainHand = this.getEquippedStack(EquipmentSlot.MAINHAND);
         ItemStack itemStackOffHand = this.getEquippedStack(EquipmentSlot.OFFHAND);
@@ -197,16 +212,48 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         } else {
             this.removeStatusEffect(StatusEffectsRegistry.FIRST_PERSON_PERSPECTIVE_ENABLED_EFFECT);
         }
+        if (fall_damage_prevention_item_equipped) {
+            if (!this.hasStatusEffect(StatusEffectsRegistry.FALL_IMMUNE)) {
+                this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.FALL_IMMUNE, -1, 0, false, false, true));
+            }
+        } else {
+            this.removeStatusEffect(StatusEffectsRegistry.FALL_IMMUNE);
+        }
+        if (keep_inventory_on_death_item_equipped) {
+            if (!this.hasStatusEffect(StatusEffectsRegistry.KEEP_INVENTORY_ON_DEATH)) {
+                this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.KEEP_INVENTORY_ON_DEATH, -1, 0, false, false, false));
+            }
+        } else {
+            this.removeStatusEffect(StatusEffectsRegistry.KEEP_INVENTORY_ON_DEATH);
+        }
+        if (damage_doubling_items_amount > 0) {
+            StatusEffectInstance statusEffectInstance = this.getStatusEffect(StatusEffectsRegistry.CALAMITY);
+            if (statusEffectInstance != null) {
+                if (damage_doubling_items_amount + 1 != statusEffectInstance.getAmplifier()) {
+                    this.removeStatusEffect(StatusEffectsRegistry.CALAMITY);
+                    this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.CALAMITY, -1, damage_doubling_items_amount - 1, false, false, true));
+                }
+            } else {
+                this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.CALAMITY, -1, damage_doubling_items_amount - 1, false, false, true));
+            }
+        } else {
+            this.removeStatusEffect(StatusEffectsRegistry.CALAMITY);
+        }
+
     }
 
     /**
      * @author TheRedBrain
-     * @reason
+     * @reason WIP
      */
     @Overwrite
     public void dropInventory() {
         super.dropInventory();
         if (!this.getWorld().getGameRules().getBoolean(GameRules.KEEP_INVENTORY)) {
+            if (this.hasStatusEffect(StatusEffectsRegistry.KEEP_INVENTORY_ON_DEATH)) {
+                this.betteradventuremode$breakKeepInventoryItems();
+                return;
+            }
             this.vanishCursedItems();
             if (this.getWorld().getGameRules().getBoolean(GameRulesRegistry.DESTROY_DROPPED_ITEMS_ON_DEATH)) {
                 this.inventory.clear();
@@ -355,12 +402,12 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
             if (!BetterAdventureMode.serverConfig.disable_vanilla_food_system) {
                 this.addExhaustion(0.2F);
             }
-            this.betteradventuremode$addStamina(-2);
+            this.betteradventuremode$addStamina(-1.0F);
         } else {
             if (!BetterAdventureMode.serverConfig.disable_vanilla_food_system) {
                 this.addExhaustion(0.05F);
             }
-            this.betteradventuremode$addStamina(-1);
+            this.betteradventuremode$addStamina(-0.5F);
         }
 
     }
@@ -585,6 +632,27 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     @Override
     public void betteradventuremode$setStashInventory(SimpleInventory stashInventory) {
         this.stashInventory = stashInventory;
+    }
+
+    @Unique
+    private void betteradventuremode$breakKeepInventoryItems() {
+        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(this);
+        if (trinkets.isPresent()) {
+            List<net.minecraft.util.Pair<SlotReference, ItemStack>> trinketList = trinkets.get().getAllEquipped();
+            for (net.minecraft.util.Pair<SlotReference, ItemStack> trinket : trinketList) {
+                if (trinket.getRight().isIn(Tags.KEEPS_INVENTORY_ON_DEATH)) {
+                    trinket.getLeft().inventory().clear();
+                }
+            }
+        }
+        for (int i = 0; i < this.inventory.armor.size(); i++) {
+            if (this.inventory.armor.get(i).isIn(Tags.KEEPS_INVENTORY_ON_DEATH)) {
+                this.inventory.armor.set(i, ItemStack.EMPTY);
+            }
+        }
+        if (this.inventory.offHand.get(0).isIn(Tags.KEEPS_INVENTORY_ON_DEATH)) {
+            this.inventory.offHand.set(0, ItemStack.EMPTY);
+        }
     }
 
     @Unique

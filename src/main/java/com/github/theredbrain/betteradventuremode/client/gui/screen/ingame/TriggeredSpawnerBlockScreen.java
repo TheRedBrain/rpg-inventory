@@ -658,7 +658,7 @@ public class TriggeredSpawnerBlockScreen extends Screen {
 
                 context.drawTextWithShadow(this.textRenderer, ENTITY_SPAWN_ORIENTATION_PITCH_LABEL_TEXT, this.width / 2 - 153, 85, 0xA0A0A0);
                 this.entitySpawnOrientationPitchField.render(context, mouseX, mouseY, delta);
-                context.drawTextWithShadow(this.textRenderer, ENTITY_SPAWN_ORIENTATION_YAW_LABEL_TEXT, this.width / 2 - 153, 85, 0xA0A0A0);
+                context.drawTextWithShadow(this.textRenderer, ENTITY_SPAWN_ORIENTATION_YAW_LABEL_TEXT, this.width / 2 + 5, 85, 0xA0A0A0);
                 this.entitySpawnOrientationYawField.render(context, mouseX, mouseY, delta);
 
                 context.drawTextWithShadow(this.textRenderer, SPAWNING_MODE_LABEL_TEXT, this.width / 2 - 153, 120, 0xA0A0A0);

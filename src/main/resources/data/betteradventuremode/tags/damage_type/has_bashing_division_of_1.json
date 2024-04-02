@@ -1,6 +1,7 @@
 {
   "values": [
     "betteradventuremode:bashing_damage_type",
+    "betteradventuremode:mob_bashing_damage_type",
     "betteradventuremode:default_unarmed_damage_type",
     "betteradventuremode:fireball_damage_type",
     "betteradventuremode:player_bashing_damage_type",

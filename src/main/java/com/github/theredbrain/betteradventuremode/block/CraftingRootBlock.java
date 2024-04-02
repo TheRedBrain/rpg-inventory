@@ -12,8 +12,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.NamedScreenHandlerFactory;
-import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.*;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -46,9 +45,16 @@ public class CraftingRootBlock extends Block {
         }
         if (BetterAdventureMode.serverConfig.crafting_root_block_provides_crafting_tab) {
             player.openHandledScreen(createCraftingRootBlockScreenHandlerFactory(state, world, pos, 0));
+        } else {
+            player.openHandledScreen(state.createScreenHandlerFactory(world, pos));
         }
 //        player.incrementStat(Stats.INTERACT_WITH_CRAFTING_TABLE); // TODO stats
         return ActionResult.CONSUME;
+    }
+
+    @Override
+    public NamedScreenHandlerFactory createScreenHandlerFactory(BlockState state, World world, BlockPos pos) {
+        return new SimpleNamedScreenHandlerFactory((syncId, inventory, player) -> new CraftingScreenHandler(syncId, inventory, ScreenHandlerContext.create(world, pos)), Text.translatable("container.crafting"));
     }
 
     public static NamedScreenHandlerFactory createCraftingRootBlockScreenHandlerFactory(BlockState state, World world, BlockPos pos, int initialTab) {

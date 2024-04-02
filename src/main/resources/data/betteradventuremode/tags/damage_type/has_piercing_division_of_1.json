@@ -1,6 +1,7 @@
 {
   "values": [
     "betteradventuremode:piercing_damage_type",
+    "betteradventuremode:mob_piercing_damage_type",
     "betteradventuremode:player_piercing_damage_type",
     "betteradventuremode:dagger_damage_type",
     "betteradventuremode:halberd_one_handed_damage_type",

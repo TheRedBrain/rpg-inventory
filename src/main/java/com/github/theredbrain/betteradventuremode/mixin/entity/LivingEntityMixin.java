@@ -152,6 +152,8 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
 
     @Shadow public abstract void heal(float amount);
 
+    @Shadow protected abstract float modifyAppliedDamage(DamageSource source, float amount);
+
     @Unique
     private int healthTickTimer = 0;
     @Unique
@@ -704,53 +706,10 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
 
     /**
      * @author TheRedBrain
-     * @reason
-     */
-    @Overwrite
-    public float modifyAppliedDamage(DamageSource source, float amount) {
-        int i;
-        int j;
-        float f;
-        float g;
-        float h;
-        if (source.isIn(DamageTypeTags.BYPASSES_EFFECTS)) {
-            return amount;
-        }
-        if (this.hasStatusEffect(StatusEffects.RESISTANCE) && !source.isIn(DamageTypeTags.BYPASSES_RESISTANCE) && (h = (g = amount) - (amount = Math.max((f = amount * (float) (j = 25 - (i = (this.getStatusEffect(StatusEffects.RESISTANCE).getAmplifier() + 1) * 5))) / 25.0f, 0.0f))) > 0.0f && h < 3.4028235E37f) {
-            if (((LivingEntity) (Object) this) instanceof ServerPlayerEntity) {
-                ((ServerPlayerEntity) (Object) this).increaseStat(Stats.DAMAGE_RESISTED, Math.round(h * 10.0f));
-            } else if (source.getAttacker() instanceof ServerPlayerEntity) {
-                ((ServerPlayerEntity) source.getAttacker()).increaseStat(Stats.DAMAGE_DEALT_RESISTED, Math.round(h * 10.0f));
-            }
-        }
-        if (amount <= 0.0f) {
-            return 0.0f;
-        }
-        if (source.isIn(DamageTypeTags.BYPASSES_ENCHANTMENTS)) {
-            return amount;
-        }
-        boolean feather_falling_trinket_equipped = false;
-        if (source.isIn(DamageTypeTags.IS_FALL)) {
-            Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent((LivingEntity) (Object) this);
-            if (trinkets.isPresent()) {
-                Predicate<ItemStack> predicate = stack -> stack.isIn(Tags.GRANTS_FEATHER_FALLING_LEVEL_4);
-                feather_falling_trinket_equipped = trinkets.get().isEquipped(predicate);
-            }
-        }
-        i = EnchantmentHelper.getProtectionAmount(this.getArmorItems(), source) + (feather_falling_trinket_equipped ? 12 : 0);
-        if (i > 0) {
-            amount = DamageUtil.getInflictedDamage(amount, i);
-        }
-        return amount;
-    }
-
-    /**
-     * @author TheRedBrain
      * @reason complete overhaul of the damage calculation
      */
     @Overwrite
     public void applyDamage(DamageSource source, float amount) {
-        // TODO account for resistanceEffect
         if (BetterAdventureMode.serverConfig.useVanillaDamageCalculation) {
             if (!this.isInvulnerableTo(source)) {
                 amount = this.applyArmorToDamage(source, amount);
@@ -774,6 +733,7 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
                 }
             }
         } else {
+            // TODO account for resistanceEffect
             LivingEntity attacker = null;
             if (source.getAttacker() instanceof LivingEntity) {
                 attacker = (LivingEntity) source.getAttacker();
@@ -782,30 +742,25 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
                 return;
             }
 
+            if (source.isIn(Tags.IS_VANILLA) && BetterAdventureMode.serverConfig.show_debug_log) {
+                BetterAdventureMode.info("This vanilla damage type was used: " + source.getType().toString());
+            }
+
+            if (source.isIn(DamageTypeTags.IS_FALL) && this.hasStatusEffect(StatusEffectsRegistry.FALL_IMMUNE)) {
+                return;
+            }
+
             if (this.hasStatusEffect(StatusEffectsRegistry.STAGGERED)) {
                 amount = amount * 2;
             }
 
+            StatusEffectInstance calamityEffectInstance = this.getStatusEffect(StatusEffectsRegistry.CALAMITY);
+            if (calamityEffectInstance != null) {
+                amount = amount * 2 + calamityEffectInstance.getAmplifier();
+            }
+
             if (!source.isIn(DamageTypeTags.BYPASSES_ARMOR)) {
                 this.damageArmor(source, amount);
-            }
-
-            if (!source.isIn(DamageTypeTags.IS_FALL)) {
-                boolean fall_damage_prevention_item_equipped = false;
-                Predicate<ItemStack> fall_damage_prevention_item_equipped_predicate = stack -> stack.isIn(Tags.PREVENTS_NON_LETHAL_FALL_DAMAGE);
-                if (source.isIn(DamageTypeTags.IS_FALL)) {
-                    Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent((LivingEntity) (Object) this);
-                    if (trinkets.isPresent()) {
-                        fall_damage_prevention_item_equipped = trinkets.get().isEquipped(fall_damage_prevention_item_equipped_predicate);
-                    }
-                }
-                if (fall_damage_prevention_item_equipped || betteradventuremode$hasEquipped(fall_damage_prevention_item_equipped_predicate)) {
-                    return;
-                }
-            }
-
-            if (source.isIn(Tags.IS_VANILLA) && BetterAdventureMode.serverConfig.show_debug_log) {
-                BetterAdventureMode.info("This vanilla damage type was used: " + source.getType().toString());
             }
 
             float applied_damage = 0;
@@ -1226,6 +1181,30 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
             return true;
         }
         return false;
+    }
+
+    @Override
+    public int betteradventuremode$getAmountEquipped(Predicate<ItemStack> predicate) {
+        int i = 0;
+        if (predicate.test(this.getEquippedStack(EquipmentSlot.MAINHAND))) {
+            i += 1;
+        }
+        if (predicate.test(this.getEquippedStack(EquipmentSlot.OFFHAND))) {
+            i += 1;
+        }
+        if (predicate.test(this.getEquippedStack(EquipmentSlot.FEET))) {
+            i += 1;
+        }
+        if (predicate.test(this.getEquippedStack(EquipmentSlot.LEGS))) {
+            i += 1;
+        }
+        if (predicate.test(this.getEquippedStack(EquipmentSlot.CHEST))) {
+            i += 1;
+        }
+        if (predicate.test(this.getEquippedStack(EquipmentSlot.HEAD))) {
+            i += 1;
+        }
+        return i;
     }
 
     @Override
