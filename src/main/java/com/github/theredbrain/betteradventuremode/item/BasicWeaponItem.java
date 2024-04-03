@@ -31,8 +31,8 @@ public class BasicWeaponItem extends Item implements IMakesEquipSound {
     private final RegistryKey<DamageType> twoHandedDamageTypeRegistryKey;
     private final float attackDamage;
     private final float attackSpeed;
-    private final int staminaCost;
-    private final int twoHandedStaminaCost;
+    private final float staminaCost;
+    private final float twoHandedStaminaCost;
     private final float weight;
     private final Multimap<EntityAttribute, EntityAttributeModifier> attributeModifiers;
     @Nullable
@@ -40,7 +40,7 @@ public class BasicWeaponItem extends Item implements IMakesEquipSound {
     @Nullable
     private final SoundEvent equipSound;
 
-    public BasicWeaponItem(RegistryKey<DamageType> damageTypeRegistryKey, RegistryKey<DamageType> twoHandedDamageTypeRegistryKey, float attackDamage, float attackSpeed, int staminaCost, int twoHandedStaminaCost, float weight, @Nullable SoundEvent equipSound, Settings settings) {
+    public BasicWeaponItem(RegistryKey<DamageType> damageTypeRegistryKey, RegistryKey<DamageType> twoHandedDamageTypeRegistryKey, float attackDamage, float attackSpeed, float staminaCost, float twoHandedStaminaCost, float weight, @Nullable SoundEvent equipSound, Settings settings) {
         super(settings);
         this.damageTypeRegistryKey = damageTypeRegistryKey;
         this.twoHandedDamageTypeRegistryKey = twoHandedDamageTypeRegistryKey;
@@ -53,11 +53,11 @@ public class BasicWeaponItem extends Item implements IMakesEquipSound {
         this.attributeModifiers = buildModifiers();
     }
 
-    public BasicWeaponItem(RegistryKey<DamageType> damageTypeRegistryKey, float attackDamage, float attackSpeed, int staminaCost, float weight, SoundEvent equipSound, Settings settings) {
+    public BasicWeaponItem(RegistryKey<DamageType> damageTypeRegistryKey, float attackDamage, float attackSpeed, float staminaCost, float weight, SoundEvent equipSound, Settings settings) {
         this(damageTypeRegistryKey, damageTypeRegistryKey, attackDamage, attackSpeed, staminaCost, staminaCost, weight, equipSound, settings);
     }
 
-    public BasicWeaponItem(RegistryKey<DamageType> damageTypeRegistryKey, float attackDamage, float attackSpeed, int staminaCost, float weight, Settings settings) {
+    public BasicWeaponItem(RegistryKey<DamageType> damageTypeRegistryKey, float attackDamage, float attackSpeed, float staminaCost, float weight, Settings settings) {
         this(damageTypeRegistryKey, damageTypeRegistryKey, attackDamage, attackSpeed, staminaCost, staminaCost, weight, null, settings);
     }
 
@@ -124,7 +124,7 @@ public class BasicWeaponItem extends Item implements IMakesEquipSound {
         return builder.build();
     }
 
-    public int getStaminaCost(boolean twoHanded) {
+    public float getStaminaCost(boolean twoHanded) {
         if (twoHanded) {
             return this.twoHandedStaminaCost;
         }

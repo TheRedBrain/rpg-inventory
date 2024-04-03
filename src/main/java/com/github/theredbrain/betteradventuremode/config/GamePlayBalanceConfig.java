@@ -38,8 +38,8 @@ public class GamePlayBalanceConfig implements ConfigData {
             """)
     public int food_effect_duration_threshold_to_allow_eating = 200;
     @Comment("Combat Roll Compat")
-    public boolean rolling_requires_stamina = true;
-    public float rolling_stamina_cost = 3.0f;
+    public boolean rolling_requires_stamina = false;
+    public float rolling_stamina_cost = 0.0f;
     public GamePlayBalanceConfig() {
 
     }

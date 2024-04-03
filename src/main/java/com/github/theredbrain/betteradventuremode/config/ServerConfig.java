@@ -12,7 +12,7 @@ import java.util.List;
 )
 public class ServerConfig implements ConfigData {
     @Comment("Set to false to disable the 360 degree 3rd person camera for connecting clients")
-    public boolean allow_360_degree_third_person = true;
+    public boolean allow_360_degree_third_person = false;
     @Comment("""
             When set to true, the first person perspective is disabled.
             Exceptions are possible, when using items in itemTag 'enables_first_person_perspective_on_using'
@@ -26,7 +26,7 @@ public class ServerConfig implements ConfigData {
     @Comment("""
             When set to true, changing the players yaw while attacking is disabled.
             """)
-    public boolean disable_player_yaw_changes_during_attacks = true;
+    public boolean disable_player_yaw_changes_during_attacks = false;
     @Comment("""
             When set to true, changing the players pitch is disabled.
             Exceptions are possible, when using items in itemTag 'allows_changing_pitch_on_using'
@@ -42,18 +42,18 @@ public class ServerConfig implements ConfigData {
             Min value: -90.0F, Max value: 90.0F, Default/Vanilla: 0.0F""")
     public float default_player_pitch = 0.0F;
     @Comment("The player inventory screen is customized")
-    public boolean use_adventure_inventory_screen = true;
+    public boolean use_adventure_inventory_screen = false;
     @Comment("""
             Set to false to enable the 2x2 crafting grid
             in the adventure inventory screen
             """)
-    public boolean disable_inventory_crafting_slots = true;
+    public boolean disable_inventory_crafting_slots = false;
     @Comment("Disables food, saturation and exhaustion")
-    public boolean disable_vanilla_food_system = true;
+    public boolean disable_vanilla_food_system = false;
     @Comment("Disables the recipe book")
-    public boolean disable_recipe_book = true;
+    public boolean disable_recipe_book = false;
     public boolean allow_jumping_during_attacks = true;
-    public boolean sprinting_only_when_button_is_pressed = true;
+    public boolean sprinting_only_when_button_is_pressed = false;
     @Comment("""
             Disables Better Combat's formerly client feature of
             continuously attacking while holding down the attack key.
@@ -86,18 +86,18 @@ public class ServerConfig implements ConfigData {
             """)
     public boolean crafting_root_block_provides_crafting_tab = false;
     @Comment("Set to 'true' for the vanilla behaviour")
-    public boolean shouldJigSawGenerationBeDeterministic = false;
+    public boolean shouldJigSawGenerationBeDeterministic = true;
     @Comment("Set to 'true' for the vanilla behaviour")
-    public boolean shouldJigSawStructuresBeRandomlyRotated = false;
+    public boolean shouldJigSawStructuresBeRandomlyRotated = true;
     @Comment("Set to 'true' for the vanilla behaviour")
-    public boolean useVanillaDamageCalculation = false;
+    public boolean useVanillaDamageCalculation = true;
     @Comment("""
-            When set to 'false', only items in the 'attack_items' can be used to attack/break blocks
+            When set to 'false', only items in the 'attack_items' tag can be used to attack/break blocks
             Being in creative mode or having the 'adventure building' status effect always allow it
             """)
-    public boolean allow_attacking_with_non_attack_items = false;
+    public boolean allow_attacking_with_non_attack_items = true;
     @Comment("Set to 'true' for the vanilla behaviour")
-    public boolean disable_jump_crit_mechanic = true;
+    public boolean disable_jump_crit_mechanic = false;
     @Comment("Additional debug log is shown in the console.")
     public boolean show_debug_log = false;
     @Comment("Additional debug messages are send in game.")

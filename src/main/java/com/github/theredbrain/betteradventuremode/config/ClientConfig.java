@@ -12,14 +12,14 @@ public class ClientConfig implements ConfigData {
             Changes HUD elements like the health bar, disables some like the armor bar
             and adds new ones like a stamina bar.
             """)
-    public boolean show_adventure_hud = true;
+    public boolean show_adventure_hud = false;
     @Comment("Current health, stamina and mana are shown above their respective bars in the HUD.")
     public boolean show_resource_bar_numbers = true;
     public int health_bar_number_color = -6250336;
     public int stamina_bar_number_color = -6250336;
     public int mana_bar_number_color = -6250336;
     @Comment("This needs to be enabled in the server config")
-    public boolean enable_360_degree_third_person = true;
+    public boolean enable_360_degree_third_person = false;
     @Comment("""
             When set to false, attacking is executed in the players current direction
             Set to true to rotate player to camera direction on attacking""")

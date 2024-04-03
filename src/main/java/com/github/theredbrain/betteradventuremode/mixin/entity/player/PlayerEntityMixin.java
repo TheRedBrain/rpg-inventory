@@ -64,7 +64,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-@Mixin(value = PlayerEntity.class, priority = 1050)
+@Mixin(value = PlayerEntity.class, priority = 950)
 public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlayerEntityMixin, DuckLivingEntityMixin, IRenderEquippedTrinkets {
 
     @Shadow
@@ -316,9 +316,12 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
      * @author TheRedBrain
      * @reason
      */
-    @Overwrite
-    public void applyDamage(DamageSource source, float amount) {
-        super.applyDamage(source, amount);
+    @Inject(method = "applyDamage", at = @At("HEAD"), cancellable = true)
+    public void betteradventuremode$applyDamage(DamageSource source, float amount, CallbackInfo ci) {
+        if (!BetterAdventureMode.serverConfig.useVanillaDamageCalculation) {
+            super.applyDamage(source, amount);
+            ci.cancel();
+        }
     }
 
     /**

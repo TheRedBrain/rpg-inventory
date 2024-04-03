@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 
 public class EmptyHandWeapon extends BasicWeaponItem {
 
-    public EmptyHandWeapon(RegistryKey<DamageType> damageTypeRegistryKey, float attackDamage, float attackSpeed, int staminaCost, Settings settings) {
+    public EmptyHandWeapon(RegistryKey<DamageType> damageTypeRegistryKey, float attackDamage, float attackSpeed, float staminaCost, Settings settings) {
         super(damageTypeRegistryKey, attackDamage, attackSpeed, staminaCost, 0, settings);
     }
 
