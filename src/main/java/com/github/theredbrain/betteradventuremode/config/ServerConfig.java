@@ -96,6 +96,14 @@ public class ServerConfig implements ConfigData {
             Being in creative mode or having the 'adventure building' status effect always allow it
             """)
     public boolean allow_attacking_with_non_attack_items = true;
+    @Comment("""
+            When food effects have less than this many ticks of duration left,
+            their corresponding food type can be eaten again
+            """)
+    public int food_effect_duration_threshold_to_allow_eating = 200;
+    @Comment("Combat Roll Compat")
+    public boolean rolling_requires_stamina = false;
+    public float rolling_stamina_cost = 0.0f;
     @Comment("Set to 'true' for the vanilla behaviour")
     public boolean disable_jump_crit_mechanic = false;
     @Comment("Additional debug log is shown in the console.")

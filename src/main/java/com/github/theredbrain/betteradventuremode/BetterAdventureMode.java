@@ -1,7 +1,5 @@
 package com.github.theredbrain.betteradventuremode;
 
-import com.github.theredbrain.betteradventuremode.config.GamePlayBalanceConfig;
-import com.github.theredbrain.betteradventuremode.config.GamePlayBalanceConfigWrapper;
 import com.github.theredbrain.betteradventuremode.registry.ServerPacketRegistry;
 import com.github.theredbrain.betteradventuremode.registry.EntityAttributesRegistry;
 import com.github.theredbrain.betteradventuremode.registry.StatusEffectsRegistry;
@@ -27,7 +25,6 @@ public class BetterAdventureMode implements ModInitializer {
 	public static final String MOD_ID = "betteradventuremode";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	public static ServerConfig serverConfig;
-	public static GamePlayBalanceConfig gamePlayBalanceConfig;
 
 	@Override
 	public void onInitialize() {
@@ -36,8 +33,6 @@ public class BetterAdventureMode implements ModInitializer {
 		// Config
 		AutoConfig.register(ServerConfigWrapper.class, PartitioningSerializer.wrap(JanksonConfigSerializer::new));
 		serverConfig = ((ServerConfigWrapper)AutoConfig.getConfigHolder(ServerConfigWrapper.class).getConfig()).server;
-		AutoConfig.register(GamePlayBalanceConfigWrapper.class, PartitioningSerializer.wrap(JanksonConfigSerializer::new));
-		gamePlayBalanceConfig = ((GamePlayBalanceConfigWrapper)AutoConfig.getConfigHolder(GamePlayBalanceConfigWrapper.class).getConfig()).gamePlayBalance;
 
 		// Packets
 		ServerPacketRegistry.init();

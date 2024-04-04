@@ -22,6 +22,14 @@ public class EntityAttributesRegistry {
     public static final EntityAttribute MAX_MANA = new ClampedEntityAttribute("attribute.name.generic.max_mana", 0.0, 0.0, 1024.0).setTracked(true);
     public static final EntityAttribute MAX_STAMINA = new ClampedEntityAttribute("attribute.name.generic.max_stamina", 0.0, 0.0, 1024.0).setTracked(true);
 
+    public static final EntityAttribute HEALTH_REGENERATION_DELAY_THRESHOLD = new ClampedEntityAttribute("attribute.name.generic.health_regeneration_delay_threshold", 60.0, 0.0, 1024.0).setTracked(true);
+    public static final EntityAttribute STAMINA_REGENERATION_DELAY_THRESHOLD = new ClampedEntityAttribute("attribute.name.generic.stamina_regeneration_delay_threshold", 60.0, 0.0, 1024.0).setTracked(true);
+    public static final EntityAttribute MANA_REGENERATION_DELAY_THRESHOLD = new ClampedEntityAttribute("attribute.name.generic.mana_regeneration_delay_threshold", 60.0, 0.0, 1024.0).setTracked(true);
+
+    public static final EntityAttribute HEALTH_TICK_THRESHOLD = new ClampedEntityAttribute("attribute.name.generic.health_tick_threshold", 20.0, 0.0, 1024.0).setTracked(true);
+    public static final EntityAttribute STAMINA_TICK_THRESHOLD = new ClampedEntityAttribute("attribute.name.generic.stamina_tick_threshold", 20.0, 0.0, 1024.0).setTracked(true);
+    public static final EntityAttribute MANA_TICK_THRESHOLD = new ClampedEntityAttribute("attribute.name.generic.mana_tick_threshold", 20.0, 0.0, 1024.0).setTracked(true);
+
     public static final EntityAttribute ADDITIONAL_BASHING_DAMAGE = new ClampedEntityAttribute("attribute.name.generic.additional_bashing_damage", 0.0, -1024.0, 1024.0).setTracked(true);
     public static final EntityAttribute INCREASED_BASHING_DAMAGE = new ClampedEntityAttribute("attribute.name.generic.increased_bashing_damage", 1.0, -1024.0, 1024.0).setTracked(true);
 
@@ -84,7 +92,15 @@ public class EntityAttributesRegistry {
         Registry.register(Registries.ATTRIBUTE, BetterAdventureMode.identifier("generic.stamina_regeneration"), STAMINA_REGENERATION);
         Registry.register(Registries.ATTRIBUTE, BetterAdventureMode.identifier("generic.max_mana"), MAX_MANA);
         Registry.register(Registries.ATTRIBUTE, BetterAdventureMode.identifier("generic.max_stamina"), MAX_STAMINA);
-        
+
+        Registry.register(Registries.ATTRIBUTE, BetterAdventureMode.identifier("generic.health_regeneration_delay_threshold"), HEALTH_REGENERATION_DELAY_THRESHOLD);
+        Registry.register(Registries.ATTRIBUTE, BetterAdventureMode.identifier("generic.stamina_regeneration_delay_threshold"), STAMINA_REGENERATION_DELAY_THRESHOLD);
+        Registry.register(Registries.ATTRIBUTE, BetterAdventureMode.identifier("generic.mana_regeneration_delay_threshold"), MANA_REGENERATION_DELAY_THRESHOLD);
+
+        Registry.register(Registries.ATTRIBUTE, BetterAdventureMode.identifier("generic.health_tick_threshold"), HEALTH_TICK_THRESHOLD);
+        Registry.register(Registries.ATTRIBUTE, BetterAdventureMode.identifier("generic.stamina_tick_threshold"), STAMINA_TICK_THRESHOLD);
+        Registry.register(Registries.ATTRIBUTE, BetterAdventureMode.identifier("generic.mana_tick_threshold"), MANA_TICK_THRESHOLD);
+
         Registry.register(Registries.ATTRIBUTE, BetterAdventureMode.identifier("generic.additional_bashing_damage"), ADDITIONAL_BASHING_DAMAGE);
         Registry.register(Registries.ATTRIBUTE, BetterAdventureMode.identifier("generic.increased_bashing_damage"), INCREASED_BASHING_DAMAGE);
         

@@ -173,9 +173,13 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
     @Unique
     private int shockTickTimer = 0;
     @Unique
+    private int healthRegenerationDelayTimer = 0;
+    @Unique
     private int staminaRegenerationDelayTimer = 0;
     @Unique
     private boolean delayStaminaRegeneration = false;
+    @Unique
+    private int manaRegenerationDelayTimer = 0;
     @Unique
     private int blockingTime = 0;
     @Unique
@@ -236,7 +240,15 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
                 .add(EntityAttributesRegistry.STAMINA_REGENERATION)
                 .add(EntityAttributesRegistry.MAX_MANA)
                 .add(EntityAttributesRegistry.MAX_STAMINA)
-                
+
+                .add(EntityAttributesRegistry.HEALTH_REGENERATION_DELAY_THRESHOLD)
+                .add(EntityAttributesRegistry.STAMINA_REGENERATION_DELAY_THRESHOLD)
+                .add(EntityAttributesRegistry.MANA_REGENERATION_DELAY_THRESHOLD)
+
+                .add(EntityAttributesRegistry.HEALTH_TICK_THRESHOLD)
+                .add(EntityAttributesRegistry.STAMINA_TICK_THRESHOLD)
+                .add(EntityAttributesRegistry.MANA_TICK_THRESHOLD)
+
                 .add(EntityAttributesRegistry.ADDITIONAL_BASHING_DAMAGE)
                 .add(EntityAttributesRegistry.INCREASED_BASHING_DAMAGE)
 
@@ -349,8 +361,9 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
     }
 
     @Inject(method = "heal", at = @At("RETURN"))
-    public void heal(float amount, CallbackInfo ci) {
+    public void betteradventuremode$heal(float amount, CallbackInfo ci) {
         if (amount < 0) {
+            this.healthRegenerationDelayTimer = 0;
             this.healthTickTimer = 0;
         }
     }
@@ -1001,7 +1014,19 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
             this.healthTickTimer++;
             this.staminaTickTimer++;
             this.manaTickTimer++;
-            if (this.healthTickTimer >= this.betteradventuremode$getHealthTickThreshold()) {
+
+//            if (this.getHealth() <= 0 && this.delayHealthRegeneration) {
+//                this.healthRegenerationDelayTimer = 0;
+//                this.delayHealthRegeneration = false;
+//            }
+//            if (this.getHealth() > 0 && !this.delayHealthRegeneration) {
+//                this.delayHealthRegeneration = true;
+//            }
+            if (this.healthRegenerationDelayTimer <= this.betteradventuremode$getHealthRegenerationDelayThreshold()) {
+                this.healthRegenerationDelayTimer++;
+            }
+
+            if (this.healthTickTimer >= this.betteradventuremode$getHealthTickThreshold() && this.healthRegenerationDelayTimer >= this.betteradventuremode$getHealthRegenerationDelayThreshold()) {
                 if (this.getHealth() < this.getMaxHealth()) {
                     this.heal(this.betteradventuremode$getRegeneratedHealth());
                 } else if (this.getHealth() > this.getMaxHealth()) {
@@ -1021,7 +1046,7 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
                 this.staminaRegenerationDelayTimer++;
             }
 
-            if (this.staminaTickTimer >= this.betteradventuremode$getStaminaTickThreshold() && staminaRegenerationDelayTimer >= this.betteradventuremode$getStaminaRegenerationDelayThreshold()) {
+            if (this.staminaTickTimer >= this.betteradventuremode$getStaminaTickThreshold() && this.staminaRegenerationDelayTimer >= this.betteradventuremode$getStaminaRegenerationDelayThreshold()) {
                 if (this.betteradventuremode$getStamina() < this.betteradventuremode$getMaxStamina()) {
                     this.betteradventuremode$addStamina(this.betteradventuremode$getRegeneratedStamina());
                 } else if (this.betteradventuremode$getStamina() > this.betteradventuremode$getMaxStamina()) {
@@ -1030,7 +1055,18 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
                 this.staminaTickTimer = 0;
             }
 
-            if (this.manaTickTimer >= this.betteradventuremode$getManaTickThreshold()) {
+//            if (this.betteradventuremode$getMana() <= 0 && this.delayManaRegeneration) {
+//                this.manaRegenerationDelayTimer = 0;
+//                this.delayManaRegeneration = false;
+//            }
+//            if (this.betteradventuremode$getMana() > 0 && !this.delayManaRegeneration) {
+//                this.delayManaRegeneration = true;
+//            }
+            if (this.manaRegenerationDelayTimer <= this.betteradventuremode$getManaRegenerationDelayThreshold()) {
+                this.manaRegenerationDelayTimer++;
+            }
+
+            if (this.manaTickTimer >= this.betteradventuremode$getManaTickThreshold() && this.manaRegenerationDelayTimer >= this.betteradventuremode$getManaRegenerationDelayThreshold()) {
                 if (this.betteradventuremode$getMana() < this.betteradventuremode$getMaxMana()) {
                     ((DuckLivingEntityMixin) this).betteradventuremode$addMana(this.betteradventuremode$getRegeneratedMana());
                 } else if (this.betteradventuremode$getMana() > this.betteradventuremode$getMaxMana()) {
@@ -1208,23 +1244,33 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
     }
 
     @Override
+    public int betteradventuremode$getHealthRegenerationDelayThreshold() {
+        return (int) this.getAttributeValue(EntityAttributesRegistry.HEALTH_REGENERATION_DELAY_THRESHOLD);
+    }
+
+    @Override
     public int betteradventuremode$getStaminaRegenerationDelayThreshold() {
-        return 60;
+        return (int) this.getAttributeValue(EntityAttributesRegistry.STAMINA_REGENERATION_DELAY_THRESHOLD);
+    }
+
+    @Override
+    public int betteradventuremode$getManaRegenerationDelayThreshold() {
+        return (int) this.getAttributeValue(EntityAttributesRegistry.MANA_REGENERATION_DELAY_THRESHOLD);
     }
 
     @Override
     public int betteradventuremode$getHealthTickThreshold() {
-        return 20;
+        return (int) this.getAttributeValue(EntityAttributesRegistry.HEALTH_TICK_THRESHOLD);
     }
 
     @Override
     public int betteradventuremode$getStaminaTickThreshold() {
-        return 20;
+        return (int) this.getAttributeValue(EntityAttributesRegistry.STAMINA_TICK_THRESHOLD);
     }
 
     @Override
     public int betteradventuremode$getManaTickThreshold() {
-        return 20;
+        return (int) this.getAttributeValue(EntityAttributesRegistry.MANA_TICK_THRESHOLD);
     }
 
     @Override
@@ -1523,6 +1569,7 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
         float f = this.betteradventuremode$getMana();
         this.betteradventuremode$setMana(f + amount);
         if (amount < 0) {
+            this.manaRegenerationDelayTimer = 0;
             this.manaTickTimer = 0;
         }
     }

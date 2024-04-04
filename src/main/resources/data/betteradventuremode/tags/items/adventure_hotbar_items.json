@@ -1,9 +1,9 @@
 {
   "values": [
-    "betteradventuremode:sweet_berries",
-    "betteradventuremode:glow_berries",
-    "betteradventuremode:brown_mushroom",
-    "betteradventuremode:red_mushroom",
+    "minecraft:sweet_berries",
+    "minecraft:glow_berries",
+    "minecraft:brown_mushroom",
+    "minecraft:red_mushroom",
     "betteradventuremode:fireball_spell_scroll"
   ]
 }

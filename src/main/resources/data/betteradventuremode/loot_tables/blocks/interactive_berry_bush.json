@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "betteradventuremode:sweet_berries"
+          "name": "minecraft:sweet_berries"
         }
       ],
       "rolls": 1

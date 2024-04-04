@@ -37,14 +37,14 @@ public abstract class SurvivalTrinketSlotMixin extends Slot {
     public void betteradventuremode$canInsert(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         LivingEntity livingEntity = trinketInventory.getComponent().getEntity();
         boolean bl = false;
-        if (livingEntity instanceof PlayerEntity playerEntity && !((DuckPlayerEntityMixin) playerEntity).betteradventuremode$isAdventure()) {
+        if (livingEntity instanceof PlayerEntity playerEntity && playerEntity.isCreative()) {
             bl = true;
         }
         boolean bl2 = true;
         if (livingEntity.getServer() != null) {
-            bl2 = livingEntity.getServer().getGameRules().getBoolean(GameRulesRegistry.REQUIRE_CIVILISATION_EFFECT_TO_CHANGE_GEAR_IN_ADVENTURE_MODE);
+            bl2 = livingEntity.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT);
         }
-        cir.setReturnValue(cir.getReturnValue() && (livingEntity.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT)|| bl || !bl2));
+        cir.setReturnValue(cir.getReturnValue() && (livingEntity.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT) || bl || (bl2 && !livingEntity.hasStatusEffect(StatusEffectsRegistry.WILDERNESS_EFFECT))));
     }
 
     /**
@@ -54,9 +54,9 @@ public abstract class SurvivalTrinketSlotMixin extends Slot {
     public void betteradventuremode$canTakeItems(PlayerEntity player, CallbackInfoReturnable<Boolean> cir) {
         boolean bl = true;
         if (player.getServer() != null) {
-            bl = player.getServer().getGameRules().getBoolean(GameRulesRegistry.REQUIRE_CIVILISATION_EFFECT_TO_CHANGE_GEAR_IN_ADVENTURE_MODE);
+            bl = player.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT);
         }
-        cir.setReturnValue(cir.getReturnValue() && (player.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT) || !bl || !((DuckPlayerEntityMixin) player).betteradventuremode$isAdventure()));
+        cir.setReturnValue(cir.getReturnValue() && (player.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT) || (bl && !player.hasStatusEffect(StatusEffectsRegistry.WILDERNESS_EFFECT)) || player.isCreative()));
     }
 
     /**

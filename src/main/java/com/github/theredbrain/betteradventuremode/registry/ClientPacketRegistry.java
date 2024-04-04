@@ -124,8 +124,5 @@ public class ClientPacketRegistry {
                 client.options.setPerspective(Perspective.THIRD_PERSON_BACK);
             }
         });
-        ClientPlayNetworking.registerGlobalReceiver(ServerPacketRegistry.GamePlayBalanceConfigSync.ID, (client, handler, buf, responseSender) -> {
-            BetterAdventureMode.gamePlayBalanceConfig = ServerPacketRegistry.GamePlayBalanceConfigSync.read(buf);
-        });
     }
 }

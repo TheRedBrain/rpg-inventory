@@ -4,7 +4,6 @@ import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.effect.AuraStatusEffect;
 import com.github.theredbrain.betteradventuremode.item.*;
 import com.github.theredbrain.betteradventuremode.util.ItemUtils;
-import net.fabric_extras.ranged_weapon.api.RangedConfig;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
@@ -106,10 +105,6 @@ public class ItemRegistry {
     public static final Item STAGGERING_MOSS = registerItem("staggering_moss", new AddEffectBuildUpItem(new FabricItemSettings().maxCount(16), 5, false), ItemGroups.OPERATOR);
 
     // food
-    public static final Item SWEET_BERRIES = registerItem("sweet_berries", new AdventureFoodConsumable(new FabricItemSettings().maxCount(16).food(AdventureFoodComponents.SWEET_BERRIES)), ItemGroupRegistry.BAM_FOOD);
-    public static final Item BROWN_MUSHROOM = registerItem("brown_mushroom", new AdventureFoodConsumable(new FabricItemSettings().maxCount(16).food(AdventureFoodComponents.BROWN_MUSHROOM)), ItemGroupRegistry.BAM_FOOD);
-    public static final Item RED_MUSHROOM = registerItem("red_mushroom", new AdventureFoodConsumable(new FabricItemSettings().maxCount(16).food(AdventureFoodComponents.RED_MUSHROOM)), ItemGroupRegistry.BAM_FOOD);
-    public static final Item GLOW_BERRIES = registerItem("glow_berries", new AdventureFoodConsumable(new FabricItemSettings().maxCount(16).food(AdventureFoodComponents.GLOW_BERRIES)), ItemGroupRegistry.BAM_FOOD);
     //endregion Hotbar Items
     
     // weapons

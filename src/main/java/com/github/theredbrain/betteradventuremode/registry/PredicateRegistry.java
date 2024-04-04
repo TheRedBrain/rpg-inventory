@@ -1,7 +1,6 @@
 package com.github.theredbrain.betteradventuremode.registry;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
-import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
 import dev.emi.trinkets.api.TrinketsApi;
 import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -33,9 +32,9 @@ public class PredicateRegistry {
         });
         TrinketsApi.registerTrinketPredicate(BetterAdventureMode.identifier("can_change_equipment"), (stack, ref, entity) -> {
             if (entity.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT)
-                    || entity instanceof PlayerEntity playerEntity && !((DuckPlayerEntityMixin) playerEntity).betteradventuremode$isAdventure()
+                    || entity instanceof PlayerEntity playerEntity && playerEntity.isCreative()
                     || entity.getServer() == null
-                    || !entity.getServer().getGameRules().getBoolean(GameRulesRegistry.REQUIRE_CIVILISATION_EFFECT_TO_CHANGE_GEAR_IN_ADVENTURE_MODE)) {
+                    || (entity.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT) && !entity.hasStatusEffect(StatusEffectsRegistry.WILDERNESS_EFFECT))) {
                 return TriState.TRUE;
             }
             return TriState.FALSE;

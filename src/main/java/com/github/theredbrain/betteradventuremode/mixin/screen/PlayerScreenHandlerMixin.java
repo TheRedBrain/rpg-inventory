@@ -1,9 +1,10 @@
 package com.github.theredbrain.betteradventuremode.mixin.screen;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
-import com.github.theredbrain.betteradventuremode.BetterAdventureModeClient;
 import com.github.theredbrain.betteradventuremode.registry.EntityAttributesRegistry;
+import com.github.theredbrain.betteradventuremode.registry.GameRulesRegistry;
 import com.github.theredbrain.betteradventuremode.registry.StatusEffectsRegistry;
+import com.github.theredbrain.betteradventuremode.registry.Tags;
 import com.github.theredbrain.betteradventuremode.screen.DuckSlotMixin;
 import com.google.common.collect.ImmutableList;
 import dev.emi.trinkets.Point;
@@ -451,8 +452,12 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
     public ItemStack quickMove(PlayerEntity player, int index) {
         Slot slot = slots.get(index);
         boolean bl = player.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT);
+        if (player.getServer() != null) {
+            bl = bl || (player.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT) && !player.hasStatusEffect(StatusEffectsRegistry.WILDERNESS_EFFECT));
+        }
         if (slot.hasStack()) {
             ItemStack stack = slot.getStack();
+            bl = bl || stack.isIn(Tags.ADVENTURE_HOTBAR_ITEMS);
             if (index >= trinketSlotStart && index < trinketSlotEnd) {
                 if (!this.insertItem(stack, 9, bl ? 45 : 36, false)) {
                     return ItemStack.EMPTY;

@@ -1,7 +1,6 @@
 package com.github.theredbrain.betteradventuremode.registry;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
-import com.github.theredbrain.betteradventuremode.config.GamePlayBalanceConfig;
 import com.github.theredbrain.betteradventuremode.config.ServerConfig;
 import com.github.theredbrain.betteradventuremode.network.packet.*;
 import com.google.gson.Gson;
@@ -133,24 +132,6 @@ public class ServerPacketRegistry {
             var gson = new Gson();
             var json = buffer.readString();
             return gson.fromJson(json, ServerConfig.class);
-        }
-    }
-
-    public static class GamePlayBalanceConfigSync {
-        public static Identifier ID = BetterAdventureMode.identifier("game_play_balance_config_sync");
-
-        public static PacketByteBuf write(GamePlayBalanceConfig gamePlayBalanceConfig) {
-            var gson = new Gson();
-            var json = gson.toJson(gamePlayBalanceConfig);
-            var buffer = PacketByteBufs.create();
-            buffer.writeString(json);
-            return buffer;
-        }
-
-        public static GamePlayBalanceConfig read(PacketByteBuf buffer) {
-            var gson = new Gson();
-            var json = buffer.readString();
-            return gson.fromJson(json, GamePlayBalanceConfig.class);
         }
     }
 }

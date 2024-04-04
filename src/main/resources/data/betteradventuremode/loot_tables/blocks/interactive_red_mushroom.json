@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "betteradventuremode:red_mushroom"
+          "name": "minecraft:red_mushroom"
         }
       ],
       "rolls": 1

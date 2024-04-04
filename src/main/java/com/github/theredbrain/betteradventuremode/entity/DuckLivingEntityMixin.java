@@ -8,7 +8,9 @@ public interface DuckLivingEntityMixin {
 
     boolean betteradventuremode$hasEquipped(Predicate<ItemStack> predicate);
     int betteradventuremode$getAmountEquipped(Predicate<ItemStack> predicate);
+    int betteradventuremode$getHealthRegenerationDelayThreshold();
     int betteradventuremode$getStaminaRegenerationDelayThreshold();
+    int betteradventuremode$getManaRegenerationDelayThreshold();
     int betteradventuremode$getHealthTickThreshold();
     int betteradventuremode$getStaminaTickThreshold();
     int betteradventuremode$getManaTickThreshold();

@@ -126,7 +126,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
                 .add(EntityAttributesRegistry.MAX_FOOD_EFFECTS)
                 .add(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT, 2.0F)
                 .add(EntityAttributesRegistry.STAMINA_REGENERATION, 1.0F)
-                .add(EntityAttributesRegistry.MAX_STAMINA, 20.0F);
+                .add(EntityAttributesRegistry.MAX_STAMINA, 10.0F);
     }
 
     @Inject(method = "initDataTracker", at = @At("RETURN"))
@@ -517,7 +517,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
             int currentEatenFoods = 0;
             List<StatusEffectInstance> currentEffects = getStatusEffects().stream().toList();
             for (StatusEffectInstance currentEffect : currentEffects) {
-                if (currentEffect.getEffectType() == statusEffectInstance.getEffectType() && !statusEffectInstance.isDurationBelow(BetterAdventureMode.gamePlayBalanceConfig.food_effect_duration_threshold_to_allow_eating)) {
+                if (currentEffect.getEffectType() == statusEffectInstance.getEffectType() && !statusEffectInstance.isDurationBelow(BetterAdventureMode.serverConfig.food_effect_duration_threshold_to_allow_eating)) {
                     this.sendMessage(Text.translatable("hud.message.foodEatenAlready"), true);
                     return false;
                 } else if (currentEffect.getEffectType() instanceof FoodStatusEffect) {
@@ -706,11 +706,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
     @Override
     public float betteradventuremode$getRegeneratedHealth() { // TODO balance
-        boolean bl = this.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT);
         return (float) (
-                (bl ? 1 : 0 + this.betteradventuremode$getHealthRegeneration()) *
-                (bl ? 5 : 1) *
-                (this.getEncumbrance() > 1 ? 0.75 : 1)
+                this.betteradventuremode$getHealthRegeneration() * (this.getEncumbrance() > 1 ? 0.75 : 1)
         );
     }
 
@@ -721,20 +718,20 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
                 this.betteradventuremode$getStaminaRegeneration() *
                 (this.isSprinting() ? 0 : this.betteradventuremode$isMoving() ? 0.5 : 1) *
                 (this.isBlocking() ? 0.5 : 1) *
-                (encumbrance <= 0.5 ? 1 : encumbrance <= 1 ? 0.75 : 0.5) *
-                (this.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT) ? 5 : 1)
+                (encumbrance <= 0.5 ? 1 : encumbrance <= 1 ? 0.75 : 0.5)
         );
     }
 
     @Override
     public float betteradventuremode$getRegeneratedMana() { // TODO balance
-        StatusEffectInstance manaRegenerationEffectInstance = this.getStatusEffect(StatusEffectsRegistry.MANA_REGENERATION_EFFECT);
-        return (float) (
-                this.betteradventuremode$getManaRegeneration() *
-                (this.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT) ? 10 : 1) *
-                (manaRegenerationEffectInstance != null ? (manaRegenerationEffectInstance.getAmplifier() > 0 ? 1 : 0.5) : 0.5) *
-                (this.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT) || this.hasStatusEffect(StatusEffectsRegistry.MANA_REGENERATION_EFFECT) ? 1 : 0)
-        );
+        if (this.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT) || this.hasStatusEffect(StatusEffectsRegistry.MANA_REGENERATION_EFFECT)) {
+            StatusEffectInstance manaRegenerationEffectInstance = this.getStatusEffect(StatusEffectsRegistry.MANA_REGENERATION_EFFECT);
+            return (float) (
+                    this.betteradventuremode$getManaRegeneration() *
+                            (manaRegenerationEffectInstance != null ? (manaRegenerationEffectInstance.getAmplifier() > 0 ? 1 : 0.5) : 0.5)
+            );
+        }
+        return 0.0F;
     }
 
     @Override

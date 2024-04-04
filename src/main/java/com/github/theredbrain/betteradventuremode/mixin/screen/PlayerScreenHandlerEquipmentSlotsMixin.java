@@ -1,6 +1,5 @@
 package com.github.theredbrain.betteradventuremode.mixin.screen;
 
-import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.betteradventuremode.registry.GameRulesRegistry;
 import com.github.theredbrain.betteradventuremode.registry.StatusEffectsRegistry;
 import com.github.theredbrain.betteradventuremode.registry.Tags;
@@ -26,9 +25,9 @@ public class PlayerScreenHandlerEquipmentSlotsMixin {
     public void betteradventuremode$canInsert(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         boolean bl = true;
         if (this.field_39410.getServer() != null) {
-            bl = this.field_39410.getServer().getGameRules().getBoolean(GameRulesRegistry.REQUIRE_CIVILISATION_EFFECT_TO_CHANGE_GEAR_IN_ADVENTURE_MODE);
+            bl = this.field_39410.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT);
         }
-        cir.setReturnValue((cir.getReturnValue() || betteradventuremode$isOfEquipmentTag(stack, this.field_7834)) && (this.field_39410.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT)|| !((DuckPlayerEntityMixin) this.field_39410).betteradventuremode$isAdventure() || !bl));
+        cir.setReturnValue((cir.getReturnValue() || betteradventuremode$isOfEquipmentTag(stack, this.field_7834)) && (this.field_39410.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT) || this.field_39410.isCreative() || (bl && !this.field_39410.hasStatusEffect(StatusEffectsRegistry.WILDERNESS_EFFECT))));
     }
 
     @Unique

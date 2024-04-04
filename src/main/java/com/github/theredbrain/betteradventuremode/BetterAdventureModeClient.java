@@ -26,6 +26,7 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.DyeableItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
 import net.spell_engine.api.render.CustomModels;
 import net.spell_engine.internals.casting.SpellCast;
@@ -142,15 +143,15 @@ public class BetterAdventureModeClient implements ClientModInitializer {
         // spell scrolls
         ModelPredicateProviderRegistry.register(ItemRegistry.FIREBALL_SPELL_SCROLL, new Identifier("charging"), (stack, world, entity, seed) -> isItemStackUsedForSpellCasting(stack, entity) ? 1.0f : 0.0f);
 
-        // food
-        ModelPredicateProviderRegistry.register(ItemRegistry.BROWN_MUSHROOM, new Identifier("eating"), (stack, world, entity, seed) -> entity != null && entity.isUsingItem() && entity.getActiveItem() == stack ? 1.0f : 0.0f);
-        ModelPredicateProviderRegistry.register(ItemRegistry.BROWN_MUSHROOM, new Identifier("progress"), (stack, world, entity, seed) -> {
-            if (entity == null) {
-                return 0.0F;
-            } else {
-                return (float) (stack.getMaxUseTime() + 3 - entity.getItemUseTimeLeft()) / (float) stack.getMaxUseTime();
-            }
-        });
+//        // food disabled for now, might revisit later
+//        ModelPredicateProviderRegistry.register(Items.BROWN_MUSHROOM, new Identifier("eating"), (stack, world, entity, seed) -> entity != null && entity.isUsingItem() && entity.getActiveItem() == stack ? 1.0f : 0.0f);
+//        ModelPredicateProviderRegistry.register(Items.BROWN_MUSHROOM, new Identifier("progress"), (stack, world, entity, seed) -> {
+//            if (entity == null) {
+//                return 0.0F;
+//            } else {
+//                return (float) (stack.getMaxUseTime() + 3 - entity.getItemUseTimeLeft()) / (float) stack.getMaxUseTime();
+//            }
+//        });
     }
 
     private void registerCustomModelStatusEffectRenderers() {

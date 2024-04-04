@@ -16,6 +16,8 @@
     "entity.player.HungerManagerMixin",
     "entity.player.PlayerEntityMixin",
     "entity.player.PlayerInventoryMixin",
+    "item.FoodComponentsMixin",
+    "item.ItemMixin",
     "item.ItemStackMixin",
     "item.MiningToolItemMixin",
     "item.SwordItemMixin",
