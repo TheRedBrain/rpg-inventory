@@ -18,7 +18,7 @@ public class GameRulesRegistry {
     public static final GameRules.Key<GameRules.BooleanRule> RESET_RECIPES_ON_DEATH =
             GameRuleRegistry.register("resetRecipesOnDeath", GameRules.Category.PLAYER, GameRuleFactory.createBooleanRule(false));
     public static final GameRules.Key<GameRules.IntRule> MIN_OFFLINE_TICKS_TO_TELEPORT_TO_SPAWN =
-            GameRuleRegistry.register("minOfflineTicksToTeleportToSpawn", GameRules.Category.PLAYER, GameRuleFactory.createIntRule(6000, -1));
+            GameRuleRegistry.register("minOfflineTicksToTeleportToSpawn", GameRules.Category.PLAYER, GameRuleFactory.createIntRule(0, -1));
     public static final GameRules.Key<GameRules.BooleanRule> CAN_CHANGE_EQUIPMENT =
             GameRuleRegistry.register("canChangeEquipment", GameRules.Category.PLAYER, GameRuleFactory.createBooleanRule(true));
     public static void init() {}

@@ -24,7 +24,6 @@ public abstract class ItemMixin {
         if (BetterAdventureMode.serverConfig.disable_vanilla_food_system) {
             if (this.isFood()) {
                 ItemStack itemStack = user.getStackInHand(hand);
-                BetterAdventureMode.info("itemStack: " + itemStack);
                 if (((DuckPlayerEntityMixin) user).betteradventuremode$canConsumeItem(itemStack)) {
                     user.setCurrentHand(hand);
                     cir.setReturnValue(TypedActionResult.consume(itemStack));

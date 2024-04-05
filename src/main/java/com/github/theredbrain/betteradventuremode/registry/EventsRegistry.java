@@ -5,6 +5,7 @@ import com.github.theredbrain.betteradventuremode.BetterAdventureModeClient;
 import com.github.theredbrain.betteradventuremode.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.betteradventuremode.network.event.PlayerDeathCallback;
 import com.github.theredbrain.betteradventuremode.network.event.PlayerJoinCallback;
+import com.github.theredbrain.betteradventuremode.network.event.PlayerLeaveCallback;
 import net.bettercombat.api.MinecraftClient_BetterCombat;
 import net.combatroll.api.event.ServerSideRollEvents;
 import net.fabricmc.api.EnvType;
@@ -14,6 +15,8 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.client.option.Perspective;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.BlockPos;
 
 public class EventsRegistry {
     private static PacketByteBuf serverConfigSerialized = PacketByteBufs.create();
@@ -24,6 +27,12 @@ public class EventsRegistry {
             int minOfflineTimeToTeleportToSpawn = server.getGameRules().getInt(GameRulesRegistry.MIN_OFFLINE_TICKS_TO_TELEPORT_TO_SPAWN);
             if (minOfflineTimeToTeleportToSpawn > -1 && Math.abs(server.getOverworld().getTime() - ComponentsRegistry.LAST_LOGOUT_TIME.get(player).getValue()) >= minOfflineTimeToTeleportToSpawn) {
                 server.getPlayerManager().respawnPlayer(player, true);
+                // using the teleport after the update to 1.20.2
+                // until then use the respawn to avoid the shuffled status effect ids
+                // because respawn removes status effects
+//                ServerWorld serverWorld = server.getOverworld();
+//                BlockPos spawnPoint = serverWorld.getSpawnPos();
+//                player.teleport(serverWorld, spawnPoint.getX() + 0.5, spawnPoint.getY(), spawnPoint.getZ() + 0.5, serverWorld.getSpawnAngle(), 0.0F);
             }
         });
         PlayerDeathCallback.EVENT.register((player, server, source) -> {
@@ -34,6 +43,7 @@ public class EventsRegistry {
                 player.getRecipeBook().lockRecipes(server.getRecipeManager().values(), player);
             }
         });
+        PlayerLeaveCallback.EVENT.register((player, server) -> ComponentsRegistry.LAST_LOGOUT_TIME.get(player).setValue(server.getOverworld().getTime()));
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             sender.sendPacket(ServerPacketRegistry.ServerConfigSync.ID, serverConfigSerialized); // TODO convert to packet
             sender.sendPacket(ServerPacketRegistry.SYNC_CRAFTING_RECIPES, CraftingRecipeRegistry.getEncodedRegistry()); // TODO convert to packet

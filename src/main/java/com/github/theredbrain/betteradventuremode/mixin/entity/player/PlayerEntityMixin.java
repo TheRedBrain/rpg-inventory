@@ -1,6 +1,7 @@
 package com.github.theredbrain.betteradventuremode.mixin.entity.player;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
+import com.github.theredbrain.betteradventuremode.BetterAdventureModeClient;
 import com.github.theredbrain.betteradventuremode.block.AbstractSetSpawnBlock;
 import com.github.theredbrain.betteradventuremode.entity.IRenderEquippedTrinkets;
 import com.github.theredbrain.betteradventuremode.effect.FoodStatusEffect;
@@ -25,6 +26,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.RespawnAnchorBlock;
 import net.minecraft.entity.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -126,7 +128,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
                 .add(EntityAttributesRegistry.MAX_FOOD_EFFECTS)
                 .add(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT, 2.0F)
                 .add(EntityAttributesRegistry.STAMINA_REGENERATION, 1.0F)
-                .add(EntityAttributesRegistry.MAX_STAMINA, 10.0F);
+                .add(EntityAttributesRegistry.MAX_STAMINA, 10.0F)
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, 5.0F)
+        ;
     }
 
     @Inject(method = "initDataTracker", at = @At("RETURN"))
@@ -680,7 +684,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
     @Unique
     private void ejectNonHotbarItemsFromHotbar() { // FIXME is only called once?
-        if (!this.isCreative() && !this.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT)) {
+        if (!this.isCreative() && !this.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT) && !((this.getServer() != null && this.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT) && !this.hasStatusEffect(StatusEffectsRegistry.WILDERNESS_EFFECT)) || this.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT))) {
             if (!this.isAdventureHotbarCleanedUp) {
                 for (int i = 0; i < 9; i++) {
                     PlayerInventory playerInventory = this.getInventory();
