@@ -5,6 +5,8 @@ import com.github.theredbrain.betteradventuremode.block.InteractiveAdventureFull
 import com.github.theredbrain.betteradventuremode.block.InteractiveAdventureLogBlock;
 import com.github.theredbrain.betteradventuremode.block.InteractiveAdventurePlantBlock;
 import com.github.theredbrain.betteradventuremode.block.*;
+import com.github.theredbrain.betteradventuremode.item.AdventureFoodComponents;
+import com.github.theredbrain.betteradventuremode.item.ITemporaryItemModifications;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -14,6 +16,7 @@ import net.minecraft.block.MapColor;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;

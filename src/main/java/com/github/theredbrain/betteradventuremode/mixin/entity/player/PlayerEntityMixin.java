@@ -414,7 +414,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
             if (!BetterAdventureMode.serverConfig.disable_vanilla_food_system) {
                 this.addExhaustion(0.05F);
             }
-            this.betteradventuremode$addStamina(-0.5F);
+            this.betteradventuremode$addStamina(-1.0F);
         }
 
     }

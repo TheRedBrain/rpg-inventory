@@ -1,5 +1,7 @@
 package com.github.theredbrain.betteradventuremode;
 
+import com.github.theredbrain.betteradventuremode.block.TemporaryBlockModifications;
+import com.github.theredbrain.betteradventuremode.item.TemporaryItemModifications;
 import com.github.theredbrain.betteradventuremode.registry.ServerPacketRegistry;
 import com.github.theredbrain.betteradventuremode.registry.EntityAttributesRegistry;
 import com.github.theredbrain.betteradventuremode.registry.StatusEffectsRegistry;
@@ -58,6 +60,12 @@ public class BetterAdventureMode implements ModInitializer {
 		PredicateRegistry.init();
 		StructurePlacementTypesRegistry.register();
 		WeaponPosesRegistry.init();
+		if (serverConfig.disable_vanilla_food_system) {
+			TemporaryItemModifications.betteradventuremode$applyFoodComponentModifications();
+		}
+		if (serverConfig.enable_harder_movement) {
+			TemporaryBlockModifications.betteradventuremode$applyVelocityModifications();
+		}
 	}
 
 	static {

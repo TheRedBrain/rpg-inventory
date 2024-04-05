@@ -52,6 +52,8 @@ public class ServerConfig implements ConfigData {
     public boolean disable_vanilla_food_system = false;
     @Comment("Disables the recipe book")
     public boolean disable_recipe_book = false;
+    @Comment("Enables velocity modifiers on many blocks, eg faster movement on dirt paths")
+    public boolean enable_harder_movement = true;
     public boolean allow_jumping_during_attacks = true;
     public boolean sprinting_only_when_button_is_pressed = false;
     @Comment("""

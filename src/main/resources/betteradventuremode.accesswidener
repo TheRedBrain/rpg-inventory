@@ -10,3 +10,8 @@ accessible method net/minecraft/client/render/WorldRenderer canDrawEntityOutline
 accessible class net/minecraft/client/gui/screen/ingame/CreativeInventoryScreen$CreativeSlot
 
 accessible field net/minecraft/client/model/ModelPart cuboids Ljava/util/List;
+
+#temporary TODO remove when data-driven items are in vanilla
+mutable field net/minecraft/item/Item foodComponent Lnet/minecraft/item/FoodComponent;
+mutable field net/minecraft/block/AbstractBlock velocityMultiplier F
+mutable field net/minecraft/block/AbstractBlock jumpVelocityMultiplier F

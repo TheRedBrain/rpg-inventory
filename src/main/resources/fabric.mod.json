@@ -16,6 +16,7 @@
   "icon": "assets/betteradventuremode/icon.png",
 
   "environment": "*",
+  "accessWidener": "betteradventuremode.accesswidener",
   "entrypoints": {
     "main": [
       "com.github.theredbrain.betteradventuremode.BetterAdventureMode"

@@ -63,10 +63,10 @@ public class StatusEffectsRegistry {
             ;
 
     public static final StatusEffect BROWN_MUSHROOM_FOOD_EFFECT = new FoodStatusEffect()
-            .addAttributeModifier(EntityAttributes.GENERIC_MAX_HEALTH, AttributeModifierUUIDs.BROWN_MUSHROOM_FOOD_EFFECT, 1.0F, EntityAttributeModifier.Operation.ADDITION)
-            .addAttributeModifier(EntityAttributesRegistry.HEALTH_REGENERATION, AttributeModifierUUIDs.BROWN_MUSHROOM_FOOD_EFFECT, 1.0F, EntityAttributeModifier.Operation.ADDITION)
-            .addAttributeModifier(EntityAttributesRegistry.MAX_STAMINA, AttributeModifierUUIDs.BROWN_MUSHROOM_FOOD_EFFECT, 2.0F, EntityAttributeModifier.Operation.ADDITION)
-            .addAttributeModifier(EntityAttributesRegistry.STAMINA_REGENERATION, AttributeModifierUUIDs.BROWN_MUSHROOM_FOOD_EFFECT, 2.0F, EntityAttributeModifier.Operation.ADDITION)
+//            .addAttributeModifier(EntityAttributes.GENERIC_MAX_HEALTH, AttributeModifierUUIDs.BROWN_MUSHROOM_FOOD_EFFECT, 1.0F, EntityAttributeModifier.Operation.ADDITION)
+//            .addAttributeModifier(EntityAttributesRegistry.HEALTH_REGENERATION, AttributeModifierUUIDs.BROWN_MUSHROOM_FOOD_EFFECT, 1.0F, EntityAttributeModifier.Operation.ADDITION)
+            .addAttributeModifier(EntityAttributesRegistry.MAX_STAMINA, AttributeModifierUUIDs.BROWN_MUSHROOM_FOOD_EFFECT, 3.0F, EntityAttributeModifier.Operation.ADDITION)
+//            .addAttributeModifier(EntityAttributesRegistry.STAMINA_REGENERATION, AttributeModifierUUIDs.BROWN_MUSHROOM_FOOD_EFFECT, 2.0F, EntityAttributeModifier.Operation.ADDITION)
             ;
 
     public static final StatusEffect CAKE_FOOD_EFFECT = new FoodStatusEffect()
@@ -182,10 +182,10 @@ public class StatusEffectsRegistry {
             ;
 
     public static final StatusEffect FERMENTED_SPIDER_EYE_FOOD_EFFECT = new FoodStatusEffect()
-            .addAttributeModifier(EntityAttributes.GENERIC_MAX_HEALTH, AttributeModifierUUIDs.FERMENTED_SPIDER_EYE_FOOD_EFFECT, 30.0F, EntityAttributeModifier.Operation.ADDITION)
-            .addAttributeModifier(EntityAttributesRegistry.HEALTH_REGENERATION, AttributeModifierUUIDs.FERMENTED_SPIDER_EYE_FOOD_EFFECT, 2.0F, EntityAttributeModifier.Operation.ADDITION)
-            .addAttributeModifier(EntityAttributesRegistry.MAX_STAMINA, AttributeModifierUUIDs.FERMENTED_SPIDER_EYE_FOOD_EFFECT, 25.0F, EntityAttributeModifier.Operation.ADDITION)
-            .addAttributeModifier(EntityAttributesRegistry.STAMINA_REGENERATION, AttributeModifierUUIDs.FERMENTED_SPIDER_EYE_FOOD_EFFECT, 1.0F, EntityAttributeModifier.Operation.ADDITION)
+//            .addAttributeModifier(EntityAttributes.GENERIC_MAX_HEALTH, AttributeModifierUUIDs.FERMENTED_SPIDER_EYE_FOOD_EFFECT, 30.0F, EntityAttributeModifier.Operation.ADDITION)
+//            .addAttributeModifier(EntityAttributesRegistry.HEALTH_REGENERATION, AttributeModifierUUIDs.FERMENTED_SPIDER_EYE_FOOD_EFFECT, 2.0F, EntityAttributeModifier.Operation.ADDITION)
+            .addAttributeModifier(EntityAttributesRegistry.MAX_MANA, AttributeModifierUUIDs.FERMENTED_SPIDER_EYE_FOOD_EFFECT, 10.0F, EntityAttributeModifier.Operation.ADDITION)
+//            .addAttributeModifier(EntityAttributesRegistry.STAMINA_REGENERATION, AttributeModifierUUIDs.FERMENTED_SPIDER_EYE_FOOD_EFFECT, 1.0F, EntityAttributeModifier.Operation.ADDITION)
             ;
 
     public static final StatusEffect GLOW_BERRIES_FOOD_EFFECT = new FoodStatusEffect()
@@ -315,7 +315,7 @@ public class StatusEffectsRegistry {
 //            .addAttributeModifier(EntityAttributes.GENERIC_MAX_HEALTH, AttributeModifierUUIDs.SUGAR_FOOD_EFFECT, 30.0F, EntityAttributeModifier.Operation.ADDITION)
 //            .addAttributeModifier(EntityAttributesRegistry.HEALTH_REGENERATION, AttributeModifierUUIDs.SUGAR_FOOD_EFFECT, 2.0F, EntityAttributeModifier.Operation.ADDITION)
 //            .addAttributeModifier(EntityAttributesRegistry.MAX_STAMINA, AttributeModifierUUIDs.SUGAR_FOOD_EFFECT, 25.0F, EntityAttributeModifier.Operation.ADDITION)
-//            .addAttributeModifier(EntityAttributesRegistry.STAMINA_REGENERATION, AttributeModifierUUIDs.SUGAR_FOOD_EFFECT, 1.0F, EntityAttributeModifier.Operation.ADDITION)
+            .addAttributeModifier(EntityAttributesRegistry.STAMINA_REGENERATION, AttributeModifierUUIDs.SUGAR_FOOD_EFFECT, 4.0F, EntityAttributeModifier.Operation.ADDITION)
             ;
 
     public static final StatusEffect SUSPICIOUS_STEW_FOOD_EFFECT = new FoodStatusEffect()
