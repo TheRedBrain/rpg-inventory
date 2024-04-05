@@ -6,12 +6,12 @@
   "mixins": [
     "bettercombat.PlatformClientMixin",
     "bettercombat.PlayerAttackHelperMixin",
-    "block.PlantBlockMixin",
     "block.RespawnAnchorBlockMixin",
     "block.TemporaryAbstractBlockAccessor",
     "combatroll.client.RollManagerMixin",
     "enchantment.EnchantmentHelperMixin",
     "entity.DamageUtilMixin",
+    "entity.EntityMixin",
     "entity.LivingEntityMixin",
     "entity.damage.DamageSourcesMixin",
     "entity.mob.MobEntityMixin",

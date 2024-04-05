@@ -24,6 +24,7 @@ public class TemporaryBlockModifications implements ITemporaryBlockModifications
         ITemporaryBlockModifications.INSTANCE.betteradventuremode$setVelocityMultiplier(Blocks.SUSPICIOUS_SAND, 0.75F);
         ITemporaryBlockModifications.INSTANCE.betteradventuremode$setVelocityMultiplier(Blocks.SNOW, 0.75F);
         ITemporaryBlockModifications.INSTANCE.betteradventuremode$setVelocityMultiplier(Blocks.SNOW_BLOCK, 0.75F);
+        ITemporaryBlockModifications.INSTANCE.betteradventuremode$setVelocityMultiplier(Blocks.FARMLAND, 0.75F);
         ITemporaryBlockModifications.INSTANCE.betteradventuremode$setVelocityMultiplier(Blocks.WHITE_WOOL, 0.75F);
         ITemporaryBlockModifications.INSTANCE.betteradventuremode$setVelocityMultiplier(Blocks.ORANGE_WOOL, 0.75F);
         ITemporaryBlockModifications.INSTANCE.betteradventuremode$setVelocityMultiplier(Blocks.MAGENTA_WOOL, 0.75F);
