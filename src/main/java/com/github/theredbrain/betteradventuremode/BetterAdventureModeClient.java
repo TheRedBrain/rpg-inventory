@@ -19,6 +19,8 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.minecraft.client.color.world.BiomeColors;
+import net.minecraft.client.color.world.GrassColors;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.render.RenderLayer;
@@ -26,7 +28,6 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.DyeableItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
 import net.spell_engine.api.render.CustomModels;
 import net.spell_engine.internals.casting.SpellCast;
@@ -97,6 +98,7 @@ public class BetterAdventureModeClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(BlockRegistry.USE_RELAY_BAMBOO_TRAPDOOR, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(BlockRegistry.USE_RELAY_CRIMSON_TRAPDOOR, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(BlockRegistry.USE_RELAY_WARPED_TRAPDOOR, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(BlockRegistry.GRASS_SLAB, RenderLayer.getCutoutMipped());
     }
 
     private void registerBlockEntityRenderer() {
@@ -121,7 +123,9 @@ public class BetterAdventureModeClient implements ClientModInitializer {
     }
 
     private void registerColors() {
+        ColorProviderRegistry.BLOCK.register(((state, world, pos, tintIndex) -> world != null && pos != null ? BiomeColors.getGrassColor(world, pos) : GrassColors.getDefaultColor()), BlockRegistry.GRASS_SLAB);
         ColorProviderRegistry.ITEM.register((stack, tintIndex) -> tintIndex > 0 ? -1 : ((DyeableItem)((Object)stack.getItem())).getColor(stack), ItemRegistry.LEATHER_GLOVES, ItemRegistry.LEATHER_SHOULDERS);
+        ColorProviderRegistry.ITEM.register((stack, tintIndex) -> GrassColors.getDefaultColor(), BlockRegistry.GRASS_SLAB);
     }
 
     private void registerModelPredicateProviders() {

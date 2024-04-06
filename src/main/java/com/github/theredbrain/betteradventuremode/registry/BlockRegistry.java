@@ -66,6 +66,16 @@ public class BlockRegistry {
     public static final Block CRAFTING_TAB_2_PROVIDER_BLOCK = registerBlock("crafting_tab_2_provider_block", new CraftingTabProviderBlock(2, FabricBlockSettings.create().mapColor(MapColor.OAK_TAN)), ItemGroupRegistry.BAM_BLOCK);
     public static final Block CRAFTING_TAB_3_PROVIDER_BLOCK = registerBlock("crafting_tab_3_provider_block", new CraftingTabProviderBlock(3, FabricBlockSettings.create().mapColor(MapColor.OAK_TAN)), ItemGroupRegistry.BAM_BLOCK);
 
+    public static final Block GRASS_SLAB = registerBlock("grass_slab", new GrassSlabBlock(FabricBlockSettings.create().mapColor(MapColor.PALE_GREEN).ticksRandomly().strength(0.6F).sounds(BlockSoundGroup.GRASS)), ItemGroupRegistry.BAM_BLOCK);
+    public static final Block DIRT_SLAB = registerBlock("dirt_slab", new DirtSlabBlock(FabricBlockSettings.create().mapColor(MapColor.DIRT_BROWN).ticksRandomly().strength(0.5F).sounds(BlockSoundGroup.GRAVEL)), ItemGroupRegistry.BAM_BLOCK);
+    public static final Block COARSE_DIRT_SLAB = registerBlock("coarse_dirt_slab", new CustomSlabBlock(FabricBlockSettings.create().mapColor(MapColor.DIRT_BROWN).ticksRandomly().strength(0.5F).sounds(BlockSoundGroup.GRAVEL)), ItemGroupRegistry.BAM_BLOCK);
+    public static final Block PODZOL_SLAB = registerBlock("podzol_slab", new CustomSlabBlock(FabricBlockSettings.create().mapColor(MapColor.SPRUCE_BROWN).ticksRandomly().strength(0.5F).sounds(BlockSoundGroup.GRAVEL)), ItemGroupRegistry.BAM_BLOCK);
+    public static final Block MYCELIUM_SLAB = registerBlock("mycelium_slab", new MyceliumSlabBlock(FabricBlockSettings.create().mapColor(MapColor.PURPLE).ticksRandomly().strength(0.6F).sounds(BlockSoundGroup.GRASS)), ItemGroupRegistry.BAM_BLOCK);
+    public static final Block ROOTED_DIRT_SLAB = registerBlock("rooted_dirt_slab", new CustomSlabBlock(FabricBlockSettings.create().mapColor(MapColor.DIRT_BROWN).ticksRandomly().strength(0.5F).sounds(BlockSoundGroup.ROOTED_DIRT)), ItemGroupRegistry.BAM_BLOCK);
+    public static final Block DIRT_PATH_SLAB = registerBlock("dirt_path_slab", new DirtPathSlabBlock(FabricBlockSettings.create().mapColor(MapColor.DIRT_BROWN).ticksRandomly().strength(0.6F).sounds(BlockSoundGroup.GRASS)), ItemGroupRegistry.BAM_BLOCK);
+    public static final Block SAND_SLAB = registerBlock("sand_slab", new FallingSlabBlock(14406560, FabricBlockSettings.create().mapColor(MapColor.PALE_YELLOW).ticksRandomly().strength(0.5F).sounds(BlockSoundGroup.SAND)), ItemGroupRegistry.BAM_BLOCK);
+    public static final Block RED_SAND_SLAB = registerBlock("red_sand_slab", new FallingSlabBlock(11098145, FabricBlockSettings.create().mapColor(MapColor.ORANGE).ticksRandomly().strength(0.5F).sounds(BlockSoundGroup.SAND)), ItemGroupRegistry.BAM_BLOCK);
+    public static final Block GRAVEL_SLAB = registerBlock("gravel_slab", new FallingSlabBlock(-8356741, FabricBlockSettings.create().mapColor(MapColor.STONE_GRAY).ticksRandomly().strength(0.6F).sounds(BlockSoundGroup.GRAVEL)), ItemGroupRegistry.BAM_BLOCK);
 
     public static final Block BONFIRE_BLOCK = registerBlock("bonfire", new BonfireBlock(FabricBlockSettings.create().mapColor(MapColor.SPRUCE_BROWN).ticksRandomly().sounds(BlockSoundGroup.STONE).luminance((state) -> state.get(BonfireBlock.ACTIVE) ? 15 : 0).nonOpaque()), ItemGroupRegistry.BAM_BLOCK);
 
@@ -107,8 +117,7 @@ public class BlockRegistry {
     public static final Block TRIGGERED_ADVANCEMENT_CHECKER_BLOCK = registerBlock("triggered_advancement_checker_block", new TriggeredAdvancementCheckerBlock(FabricBlockSettings.create().mapColor(MapColor.LIGHT_GRAY).requiresTool().strength(-1.0f, 3600000.0f).dropsNothing()), ItemGroupRegistry.SCRIPT_BLOCKS);
     //endregion Script Blocks
 
-    private static Block registerBlock(String name, Block block, @Nullable RegistryKey<ItemGroup> itemGroup) {
-
+    private static Block registerBlock(String name, Block block, RegistryKey<ItemGroup> itemGroup) {
         Registry.register(Registries.ITEM, BetterAdventureMode.identifier(name), new BlockItem(block, new FabricItemSettings()));
         ItemGroupEvents.modifyEntriesEvent(itemGroup).register(content -> content.add(block));
         return Registry.register(Registries.BLOCK, BetterAdventureMode.identifier(name), block);

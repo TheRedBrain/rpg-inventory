@@ -1,6 +1,7 @@
 package com.github.theredbrain.betteradventuremode.block;
 
 import com.github.theredbrain.betteradventuremode.mixin.block.TemporaryAbstractBlockAccessor;
+import com.github.theredbrain.betteradventuremode.registry.BlockRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 
@@ -51,18 +52,28 @@ public class TemporaryBlockModifications implements ITemporaryBlockModifications
         ITemporaryBlockModifications.INSTANCE.betteradventuremode$setVelocityMultiplier(Blocks.MANGROVE_LEAVES, 0.75F);
         ITemporaryBlockModifications.INSTANCE.betteradventuremode$setVelocityMultiplier(Blocks.MANGROVE_LEAVES, 0.75F);
         ITemporaryBlockModifications.INSTANCE.betteradventuremode$setVelocityMultiplier(Blocks.FLOWERING_AZALEA_LEAVES, 0.75F);
+        ITemporaryBlockModifications.INSTANCE.betteradventuremode$setVelocityMultiplier(BlockRegistry.SAND_SLAB, 0.75F);
+        ITemporaryBlockModifications.INSTANCE.betteradventuremode$setVelocityMultiplier(BlockRegistry.RED_SAND_SLAB, 0.75F);
 
         ITemporaryBlockModifications.INSTANCE.betteradventuremode$setVelocityMultiplier(Blocks.DIRT, 0.85F);
         ITemporaryBlockModifications.INSTANCE.betteradventuremode$setVelocityMultiplier(Blocks.GRAVEL, 0.85F);
         ITemporaryBlockModifications.INSTANCE.betteradventuremode$setVelocityMultiplier(Blocks.SUSPICIOUS_GRAVEL, 0.85F);
         ITemporaryBlockModifications.INSTANCE.betteradventuremode$setVelocityMultiplier(Blocks.COARSE_DIRT, 0.85F);
         ITemporaryBlockModifications.INSTANCE.betteradventuremode$setVelocityMultiplier(Blocks.MOSS_BLOCK, 0.85F);
+        ITemporaryBlockModifications.INSTANCE.betteradventuremode$setVelocityMultiplier(BlockRegistry.DIRT_SLAB, 0.85F);
+        ITemporaryBlockModifications.INSTANCE.betteradventuremode$setVelocityMultiplier(BlockRegistry.GRAVEL_SLAB, 0.85F);
+        ITemporaryBlockModifications.INSTANCE.betteradventuremode$setVelocityMultiplier(BlockRegistry.COARSE_DIRT_SLAB, 0.85F);
 
         ITemporaryBlockModifications.INSTANCE.betteradventuremode$setVelocityMultiplier(Blocks.GRASS_BLOCK, 0.9F);
         ITemporaryBlockModifications.INSTANCE.betteradventuremode$setVelocityMultiplier(Blocks.PODZOL, 0.9F);
         ITemporaryBlockModifications.INSTANCE.betteradventuremode$setVelocityMultiplier(Blocks.MYCELIUM, 0.9F);
         ITemporaryBlockModifications.INSTANCE.betteradventuremode$setVelocityMultiplier(Blocks.ROOTED_DIRT, 0.9F);
+        ITemporaryBlockModifications.INSTANCE.betteradventuremode$setVelocityMultiplier(BlockRegistry.GRASS_SLAB, 0.9F);
+        ITemporaryBlockModifications.INSTANCE.betteradventuremode$setVelocityMultiplier(BlockRegistry.PODZOL_SLAB, 0.9F);
+        ITemporaryBlockModifications.INSTANCE.betteradventuremode$setVelocityMultiplier(BlockRegistry.MYCELIUM_SLAB, 0.9F);
+        ITemporaryBlockModifications.INSTANCE.betteradventuremode$setVelocityMultiplier(BlockRegistry.ROOTED_DIRT_SLAB, 0.9F);
 
         ITemporaryBlockModifications.INSTANCE.betteradventuremode$setVelocityMultiplier(Blocks.DIRT_PATH, 1.1F);
+        ITemporaryBlockModifications.INSTANCE.betteradventuremode$setVelocityMultiplier(BlockRegistry.DIRT_PATH_SLAB, 1.1F);
     }
 }

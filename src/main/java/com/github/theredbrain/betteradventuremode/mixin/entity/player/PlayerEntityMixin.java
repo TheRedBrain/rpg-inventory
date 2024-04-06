@@ -711,7 +711,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     @Override
     public float betteradventuremode$getRegeneratedHealth() { // TODO balance
         return (float) (
-                this.betteradventuremode$getHealthRegeneration() * (this.getEncumbrance() > 1 ? 0.75 : 1)
+                ((this.getServer() != null && this.getServer().getGameRules().getBoolean(GameRules.NATURAL_REGENERATION)? 1.0F : 0.0F) + this.betteradventuremode$getHealthRegeneration()) * (this.getEncumbrance() > 1 ? 0.75 : 1)
         );
     }
 

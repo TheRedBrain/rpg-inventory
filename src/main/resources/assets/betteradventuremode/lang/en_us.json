@@ -508,6 +508,16 @@
 	"block.betteradventuremode.use_relay_block": "Use Relay Block",
 	"block.betteradventuremode.use_relay_chest": "Use Relay Chest",
 
+	"block.betteradventuremode.grass_slab": "Grass Slab",
+	"block.betteradventuremode.dirt_slab": "Dirt Slab",
+	"block.betteradventuremode.coarse_dirt_slab": "Coarse Dirt Slab",
+	"block.betteradventuremode.podzol_slab": "Podzol Slab",
+	"block.betteradventuremode.mycelium_slab": "Mycelium Slab",
+	"block.betteradventuremode.rooted_dirt_slab": "Rooted Dirt Slab",
+	"block.betteradventuremode.sand_slab": "Sand Slab",
+	"block.betteradventuremode.red_sand_slab": "Red Sand Slab",
+	"block.betteradventuremode.gravel_slab": "Gravel Slab",
+
 	
 	"attribute.name.player.active_spell_slot_amount": "Active Spell Slot Amount",
 	"attribute.name.player.equipment_weight": "Weight",

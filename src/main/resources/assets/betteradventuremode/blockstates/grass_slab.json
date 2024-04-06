@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "betteradventuremode:block/grass_slab"
+    },
+    "snowy=false,type=double": {
+      "model": "minecraft:block/grass_block"
+    },
+    "snowy=true,type=double": {
+      "model": "minecraft:block/grass_block_snow"
+    },
+    "type=top": {
+      "model": "betteradventuremode:block/grass_slab"
+    }
+  }
+}

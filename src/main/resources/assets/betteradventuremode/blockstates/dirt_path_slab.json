@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "betteradventuremode:block/dirt_path_slab"
+    },
+    "type=double": {
+      "model": "minecraft:block/dirt_path"
+    },
+    "type=top": {
+      "model": "betteradventuremode:block/dirt_path_slab"
+    }
+  }
+}

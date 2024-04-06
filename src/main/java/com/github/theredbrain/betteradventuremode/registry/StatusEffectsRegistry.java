@@ -19,6 +19,7 @@ import net.spell_engine.api.effect.Synchronized;
 public class StatusEffectsRegistry {
 
     //region Food Effects
+    // TODO simple health providing food should also give health regen
     public static final StatusEffect APPLE_FOOD_EFFECT = new FoodStatusEffect()
 //            .addAttributeModifier(EntityAttributes.GENERIC_MAX_HEALTH, AttributeModifierUUIDs.APPLE_FOOD_EFFECT, 1.0F, EntityAttributeModifier.Operation.ADDITION)
 //            .addAttributeModifier(EntityAttributesRegistry.HEALTH_REGENERATION, AttributeModifierUUIDs.APPLE_FOOD_EFFECT, 1.0F, EntityAttributeModifier.Operation.ADDITION)
@@ -35,7 +36,7 @@ public class StatusEffectsRegistry {
 
     public static final StatusEffect BEEF_FOOD_EFFECT = new FoodStatusEffect()
             .addAttributeModifier(EntityAttributes.GENERIC_MAX_HEALTH, AttributeModifierUUIDs.BEEF_FOOD_EFFECT, 5.0F, EntityAttributeModifier.Operation.ADDITION)
-//            .addAttributeModifier(EntityAttributesRegistry.HEALTH_REGENERATION, AttributeModifierUUIDs.BEEF_FOOD_EFFECT, 1.0F, EntityAttributeModifier.Operation.ADDITION)
+            .addAttributeModifier(EntityAttributesRegistry.HEALTH_REGENERATION, AttributeModifierUUIDs.BEEF_FOOD_EFFECT, 0.5F, EntityAttributeModifier.Operation.ADDITION)
 //            .addAttributeModifier(EntityAttributesRegistry.MAX_STAMINA, AttributeModifierUUIDs.BEEF_FOOD_EFFECT, 2.0F, EntityAttributeModifier.Operation.ADDITION)
 //            .addAttributeModifier(EntityAttributesRegistry.STAMINA_REGENERATION, AttributeModifierUUIDs.BEEF_FOOD_EFFECT, 2.0F, EntityAttributeModifier.Operation.ADDITION)
             ;
@@ -85,8 +86,8 @@ public class StatusEffectsRegistry {
 
     public static final StatusEffect CHICKEN_FOOD_EFFECT = new FoodStatusEffect()
             .addAttributeModifier(EntityAttributes.GENERIC_MAX_HEALTH, AttributeModifierUUIDs.CHICKEN_FOOD_EFFECT, 5.0F, EntityAttributeModifier.Operation.ADDITION)
-            .addAttributeModifier(EntityAttributesRegistry.POISON_BUILD_UP_REDUCTION, AttributeModifierUUIDs.CHICKEN_FOOD_EFFECT, -1.0F, EntityAttributeModifier.Operation.ADDITION)
-//            .addAttributeModifier(EntityAttributesRegistry.MAX_STAMINA, AttributeModifierUUIDs.CHICKEN_FOOD_EFFECT, 2.0F, EntityAttributeModifier.Operation.ADDITION)
+            .addAttributeModifier(EntityAttributesRegistry.HEALTH_REGENERATION, AttributeModifierUUIDs.CHICKEN_FOOD_EFFECT, 0.5F, EntityAttributeModifier.Operation.ADDITION)
+            .addAttributeModifier(EntityAttributesRegistry.POISON_BUILD_UP_REDUCTION, AttributeModifierUUIDs.CHICKEN_FOOD_EFFECT, -2.0F, EntityAttributeModifier.Operation.ADDITION)
 //            .addAttributeModifier(EntityAttributesRegistry.STAMINA_REGENERATION, AttributeModifierUUIDs.CHICKEN_FOOD_EFFECT, 2.0F, EntityAttributeModifier.Operation.ADDITION)
             ;
 
@@ -106,7 +107,8 @@ public class StatusEffectsRegistry {
 
     public static final StatusEffect COD_FOOD_EFFECT = new FoodStatusEffect()
             .addAttributeModifier(EntityAttributes.GENERIC_MAX_HEALTH, AttributeModifierUUIDs.COD_FOOD_EFFECT, 5.0F, EntityAttributeModifier.Operation.ADDITION)
-            .addAttributeModifier(EntityAttributesRegistry.POISON_BUILD_UP_REDUCTION, AttributeModifierUUIDs.COD_FOOD_EFFECT, -1.0F, EntityAttributeModifier.Operation.ADDITION)
+            .addAttributeModifier(EntityAttributesRegistry.HEALTH_REGENERATION, AttributeModifierUUIDs.CHICKEN_FOOD_EFFECT, 0.5F, EntityAttributeModifier.Operation.ADDITION)
+            .addAttributeModifier(EntityAttributesRegistry.POISON_BUILD_UP_REDUCTION, AttributeModifierUUIDs.COD_FOOD_EFFECT, -2.0F, EntityAttributeModifier.Operation.ADDITION)
 //            .addAttributeModifier(EntityAttributesRegistry.MAX_STAMINA, AttributeModifierUUIDs.COD_FOOD_EFFECT, 2.0F, EntityAttributeModifier.Operation.ADDITION)
 //            .addAttributeModifier(EntityAttributesRegistry.STAMINA_REGENERATION, AttributeModifierUUIDs.COD_FOOD_EFFECT, 2.0F, EntityAttributeModifier.Operation.ADDITION)
             ;
@@ -161,9 +163,9 @@ public class StatusEffectsRegistry {
             ;
 
     public static final StatusEffect COOKIE_FOOD_EFFECT = new FoodStatusEffect()
-            .addAttributeModifier(EntityAttributes.GENERIC_MAX_HEALTH, AttributeModifierUUIDs.COOKIE_FOOD_EFFECT, 60.0F, EntityAttributeModifier.Operation.ADDITION)
-            .addAttributeModifier(EntityAttributesRegistry.HEALTH_REGENERATION, AttributeModifierUUIDs.COOKIE_FOOD_EFFECT, 3.0F, EntityAttributeModifier.Operation.ADDITION)
-            .addAttributeModifier(EntityAttributesRegistry.MAX_STAMINA, AttributeModifierUUIDs.COOKIE_FOOD_EFFECT, 50.0F, EntityAttributeModifier.Operation.ADDITION)
+//            .addAttributeModifier(EntityAttributes.GENERIC_MAX_HEALTH, AttributeModifierUUIDs.COOKIE_FOOD_EFFECT, 60.0F, EntityAttributeModifier.Operation.ADDITION)
+//            .addAttributeModifier(EntityAttributesRegistry.HEALTH_REGENERATION, AttributeModifierUUIDs.COOKIE_FOOD_EFFECT, 3.0F, EntityAttributeModifier.Operation.ADDITION)
+            .addAttributeModifier(EntityAttributesRegistry.MAX_STAMINA, AttributeModifierUUIDs.COOKIE_FOOD_EFFECT, 10.0F, EntityAttributeModifier.Operation.ADDITION)
             .addAttributeModifier(EntityAttributesRegistry.STAMINA_REGENERATION, AttributeModifierUUIDs.COOKIE_FOOD_EFFECT, 3.0F, EntityAttributeModifier.Operation.ADDITION)
             ;
 
@@ -185,7 +187,7 @@ public class StatusEffectsRegistry {
 //            .addAttributeModifier(EntityAttributes.GENERIC_MAX_HEALTH, AttributeModifierUUIDs.FERMENTED_SPIDER_EYE_FOOD_EFFECT, 30.0F, EntityAttributeModifier.Operation.ADDITION)
 //            .addAttributeModifier(EntityAttributesRegistry.HEALTH_REGENERATION, AttributeModifierUUIDs.FERMENTED_SPIDER_EYE_FOOD_EFFECT, 2.0F, EntityAttributeModifier.Operation.ADDITION)
             .addAttributeModifier(EntityAttributesRegistry.MAX_MANA, AttributeModifierUUIDs.FERMENTED_SPIDER_EYE_FOOD_EFFECT, 10.0F, EntityAttributeModifier.Operation.ADDITION)
-//            .addAttributeModifier(EntityAttributesRegistry.STAMINA_REGENERATION, AttributeModifierUUIDs.FERMENTED_SPIDER_EYE_FOOD_EFFECT, 1.0F, EntityAttributeModifier.Operation.ADDITION)
+            .addAttributeModifier(EntityAttributesRegistry.MANA_REGENERATION, AttributeModifierUUIDs.FERMENTED_SPIDER_EYE_FOOD_EFFECT, 1.0F, EntityAttributeModifier.Operation.ADDITION)
             ;
 
     public static final StatusEffect GLOW_BERRIES_FOOD_EFFECT = new FoodStatusEffect()
@@ -230,7 +232,7 @@ public class StatusEffectsRegistry {
 
     public static final StatusEffect MUTTON_FOOD_EFFECT = new FoodStatusEffect()
             .addAttributeModifier(EntityAttributes.GENERIC_MAX_HEALTH, AttributeModifierUUIDs.MUTTON_FOOD_EFFECT, 5.0F, EntityAttributeModifier.Operation.ADDITION)
-//            .addAttributeModifier(EntityAttributesRegistry.HEALTH_REGENERATION, AttributeModifierUUIDs.MUTTON_FOOD_EFFECT, 3.0F, EntityAttributeModifier.Operation.ADDITION)
+            .addAttributeModifier(EntityAttributesRegistry.HEALTH_REGENERATION, AttributeModifierUUIDs.MUTTON_FOOD_EFFECT, 0.5F, EntityAttributeModifier.Operation.ADDITION)
 //            .addAttributeModifier(EntityAttributesRegistry.MAX_STAMINA, AttributeModifierUUIDs.MUTTON_FOOD_EFFECT, 50.0F, EntityAttributeModifier.Operation.ADDITION)
 //            .addAttributeModifier(EntityAttributesRegistry.STAMINA_REGENERATION, AttributeModifierUUIDs.MUTTON_FOOD_EFFECT, 3.0F, EntityAttributeModifier.Operation.ADDITION)
             ;
@@ -244,7 +246,8 @@ public class StatusEffectsRegistry {
 
     public static final StatusEffect PORKCHOP_FOOD_EFFECT = new FoodStatusEffect()
             .addAttributeModifier(EntityAttributes.GENERIC_MAX_HEALTH, AttributeModifierUUIDs.PORKCHOP_FOOD_EFFECT, 5.0F, EntityAttributeModifier.Operation.ADDITION)
-            .addAttributeModifier(EntityAttributesRegistry.POISON_BUILD_UP_REDUCTION, AttributeModifierUUIDs.PORKCHOP_FOOD_EFFECT, -1.0F, EntityAttributeModifier.Operation.ADDITION)
+            .addAttributeModifier(EntityAttributesRegistry.HEALTH_REGENERATION, AttributeModifierUUIDs.MUTTON_FOOD_EFFECT, 0.5F, EntityAttributeModifier.Operation.ADDITION)
+            .addAttributeModifier(EntityAttributesRegistry.POISON_BUILD_UP_REDUCTION, AttributeModifierUUIDs.PORKCHOP_FOOD_EFFECT, -2.0F, EntityAttributeModifier.Operation.ADDITION)
 //            .addAttributeModifier(EntityAttributesRegistry.MAX_STAMINA, AttributeModifierUUIDs.PORKCHOP_FOOD_EFFECT, 50.0F, EntityAttributeModifier.Operation.ADDITION)
 //            .addAttributeModifier(EntityAttributesRegistry.STAMINA_REGENERATION, AttributeModifierUUIDs.PORKCHOP_FOOD_EFFECT, 3.0F, EntityAttributeModifier.Operation.ADDITION)
             ;
@@ -272,6 +275,7 @@ public class StatusEffectsRegistry {
 
     public static final StatusEffect RABBIT_FOOD_EFFECT = new FoodStatusEffect()
             .addAttributeModifier(EntityAttributes.GENERIC_MAX_HEALTH, AttributeModifierUUIDs.RABBIT_FOOD_EFFECT, 5.0F, EntityAttributeModifier.Operation.ADDITION)
+            .addAttributeModifier(EntityAttributesRegistry.HEALTH_REGENERATION, AttributeModifierUUIDs.MUTTON_FOOD_EFFECT, 0.5F, EntityAttributeModifier.Operation.ADDITION)
 //            .addAttributeModifier(EntityAttributesRegistry.HEALTH_REGENERATION, AttributeModifierUUIDs.RABBIT_FOOD_EFFECT, 3.0F, EntityAttributeModifier.Operation.ADDITION)
 //            .addAttributeModifier(EntityAttributesRegistry.MAX_STAMINA, AttributeModifierUUIDs.RABBIT_FOOD_EFFECT, 50.0F, EntityAttributeModifier.Operation.ADDITION)
 //            .addAttributeModifier(EntityAttributesRegistry.STAMINA_REGENERATION, AttributeModifierUUIDs.RABBIT_FOOD_EFFECT, 3.0F, EntityAttributeModifier.Operation.ADDITION)
@@ -299,6 +303,7 @@ public class StatusEffectsRegistry {
 
     public static final StatusEffect SALMON_FOOD_EFFECT = new FoodStatusEffect()
             .addAttributeModifier(EntityAttributes.GENERIC_MAX_HEALTH, AttributeModifierUUIDs.SALMON_FOOD_EFFECT, 5.0F, EntityAttributeModifier.Operation.ADDITION)
+            .addAttributeModifier(EntityAttributesRegistry.HEALTH_REGENERATION, AttributeModifierUUIDs.MUTTON_FOOD_EFFECT, 0.5F, EntityAttributeModifier.Operation.ADDITION)
             .addAttributeModifier(EntityAttributesRegistry.POISON_BUILD_UP_REDUCTION, AttributeModifierUUIDs.SALMON_FOOD_EFFECT, -1.0F, EntityAttributeModifier.Operation.ADDITION)
 //            .addAttributeModifier(EntityAttributesRegistry.MAX_STAMINA, AttributeModifierUUIDs.SALMON_FOOD_EFFECT, 50.0F, EntityAttributeModifier.Operation.ADDITION)
 //            .addAttributeModifier(EntityAttributesRegistry.STAMINA_REGENERATION, AttributeModifierUUIDs.SALMON_FOOD_EFFECT, 3.0F, EntityAttributeModifier.Operation.ADDITION)
@@ -320,7 +325,7 @@ public class StatusEffectsRegistry {
 
     public static final StatusEffect SUSPICIOUS_STEW_FOOD_EFFECT = new FoodStatusEffect()
             .addAttributeModifier(EntityAttributes.GENERIC_MAX_HEALTH, AttributeModifierUUIDs.SUSPICIOUS_STEW_FOOD_EFFECT, 5.0F, EntityAttributeModifier.Operation.ADDITION)
-//            .addAttributeModifier(EntityAttributesRegistry.HEALTH_REGENERATION, AttributeModifierUUIDs.SUSPICIOUS_STEW_FOOD_EFFECT, 2.0F, EntityAttributeModifier.Operation.ADDITION)
+            .addAttributeModifier(EntityAttributesRegistry.HEALTH_REGENERATION, AttributeModifierUUIDs.SUSPICIOUS_STEW_FOOD_EFFECT, 0.5F, EntityAttributeModifier.Operation.ADDITION)
             .addAttributeModifier(EntityAttributesRegistry.MAX_STAMINA, AttributeModifierUUIDs.SUSPICIOUS_STEW_FOOD_EFFECT, 5.0F, EntityAttributeModifier.Operation.ADDITION)
             .addAttributeModifier(EntityAttributesRegistry.MAX_MANA, AttributeModifierUUIDs.SUSPICIOUS_STEW_FOOD_EFFECT, 5.0F, EntityAttributeModifier.Operation.ADDITION)
             ;
@@ -334,6 +339,7 @@ public class StatusEffectsRegistry {
 
     public static final StatusEffect TROPICAL_FISH_FOOD_EFFECT = new FoodStatusEffect()
             .addAttributeModifier(EntityAttributes.GENERIC_MAX_HEALTH, AttributeModifierUUIDs.TROPICAL_FISH_FOOD_EFFECT, 5.0F, EntityAttributeModifier.Operation.ADDITION)
+            .addAttributeModifier(EntityAttributesRegistry.HEALTH_REGENERATION, AttributeModifierUUIDs.MUTTON_FOOD_EFFECT, 0.5F, EntityAttributeModifier.Operation.ADDITION)
             .addAttributeModifier(EntityAttributesRegistry.POISON_BUILD_UP_REDUCTION, AttributeModifierUUIDs.TROPICAL_FISH_FOOD_EFFECT, -1.0F, EntityAttributeModifier.Operation.ADDITION)
 //            .addAttributeModifier(EntityAttributesRegistry.MAX_STAMINA, AttributeModifierUUIDs.TROPICAL_FISH_FOOD_EFFECT, 25.0F, EntityAttributeModifier.Operation.ADDITION)
 //            .addAttributeModifier(EntityAttributesRegistry.STAMINA_REGENERATION, AttributeModifierUUIDs.TROPICAL_FISH_FOOD_EFFECT, 1.0F, EntityAttributeModifier.Operation.ADDITION)
