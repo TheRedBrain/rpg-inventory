@@ -13,6 +13,7 @@ import net.minecraft.registry.Registry;
 public class EntityAttributesRegistry {
 
     public static final EntityAttribute ACTIVE_SPELL_SLOT_AMOUNT = new ClampedEntityAttribute("attribute.name.player.active_spell_slot_amount", 0.0, 0.0, 8.0).setTracked(true);
+    public static final EntityAttribute BACKPACK_CAPACITY = new ClampedEntityAttribute("attribute.name.player.backpack_capacity", 0.0, 0.0, 27.0).setTracked(true);
     public static final EntityAttribute EQUIPMENT_WEIGHT = new ClampedEntityAttribute("attribute.name.player.equipment_weight", 0.0, 0.0, 1024.0).setTracked(true);
     public static final EntityAttribute MAX_EQUIPMENT_WEIGHT = new ClampedEntityAttribute("attribute.name.player.max_equipment_weight", 10.0, 1.0, 1024.0).setTracked(true);
     public static final EntityAttribute MAX_FOOD_EFFECTS = new ClampedEntityAttribute("attribute.name.player.max_food_effects", 3.0, 0.0, 1024.0).setTracked(true);
@@ -26,9 +27,9 @@ public class EntityAttributesRegistry {
     public static final EntityAttribute STAMINA_REGENERATION_DELAY_THRESHOLD = new ClampedEntityAttribute("attribute.name.generic.stamina_regeneration_delay_threshold", 60.0, 0.0, 1024.0).setTracked(true);
     public static final EntityAttribute MANA_REGENERATION_DELAY_THRESHOLD = new ClampedEntityAttribute("attribute.name.generic.mana_regeneration_delay_threshold", 60.0, 0.0, 1024.0).setTracked(true);
 
-    public static final EntityAttribute HEALTH_TICK_THRESHOLD = new ClampedEntityAttribute("attribute.name.generic.health_tick_threshold", 20.0, 0.0, 1024.0).setTracked(true);
-    public static final EntityAttribute STAMINA_TICK_THRESHOLD = new ClampedEntityAttribute("attribute.name.generic.stamina_tick_threshold", 20.0, 0.0, 1024.0).setTracked(true);
-    public static final EntityAttribute MANA_TICK_THRESHOLD = new ClampedEntityAttribute("attribute.name.generic.mana_tick_threshold", 20.0, 0.0, 1024.0).setTracked(true);
+    public static final EntityAttribute HEALTH_TICK_THRESHOLD = new ClampedEntityAttribute("attribute.name.generic.health_tick_threshold", 100.0, 0.0, 1024.0).setTracked(true);
+    public static final EntityAttribute STAMINA_TICK_THRESHOLD = new ClampedEntityAttribute("attribute.name.generic.stamina_tick_threshold", 100.0, 0.0, 1024.0).setTracked(true);
+    public static final EntityAttribute MANA_TICK_THRESHOLD = new ClampedEntityAttribute("attribute.name.generic.mana_tick_threshold", 100.0, 0.0, 1024.0).setTracked(true);
 
     public static final EntityAttribute ADDITIONAL_BASHING_DAMAGE = new ClampedEntityAttribute("attribute.name.generic.additional_bashing_damage", 0.0, -1024.0, 1024.0).setTracked(true);
     public static final EntityAttribute INCREASED_BASHING_DAMAGE = new ClampedEntityAttribute("attribute.name.generic.increased_bashing_damage", 1.0, -1024.0, 1024.0).setTracked(true);
@@ -84,6 +85,7 @@ public class EntityAttributesRegistry {
     public static void registerAttributes() {
 
         Registry.register(Registries.ATTRIBUTE, BetterAdventureMode.identifier("player.active_spell_slot_amount"), ACTIVE_SPELL_SLOT_AMOUNT);
+        Registry.register(Registries.ATTRIBUTE, BetterAdventureMode.identifier("player.backpack_capacity"), BACKPACK_CAPACITY);
         Registry.register(Registries.ATTRIBUTE, BetterAdventureMode.identifier("player.equipment_weight"), EQUIPMENT_WEIGHT);
         Registry.register(Registries.ATTRIBUTE, BetterAdventureMode.identifier("player.max_equipment_weight"), MAX_EQUIPMENT_WEIGHT);
         Registry.register(Registries.ATTRIBUTE, BetterAdventureMode.identifier("player.max_food_effects"), MAX_FOOD_EFFECTS);

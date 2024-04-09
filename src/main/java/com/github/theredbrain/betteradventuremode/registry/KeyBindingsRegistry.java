@@ -18,12 +18,14 @@ public class KeyBindingsRegistry {
     public static KeyBinding swapOffHand;
     public static KeyBinding toggleNecklaceAbility;
     public static KeyBinding openHousingScreen;
+    public static KeyBinding openBackpackScreen;
     public static boolean sheatheWeaponsBoolean;
     public static boolean twoHandMainWeaponBoolean;
     public static boolean swapMainHandBoolean;
     public static boolean swapOffHandBoolean;
     public static boolean toggleNecklaceAbilityBoolean;
     public static boolean openHousingScreenBoolean;
+    public static boolean openBackpackScreenBoolean;
 
     public static void registerKeyBindings() {
         KeyBindingsRegistry.sheatheWeapons = KeyBindingHelper.registerKeyBinding(new KeyBinding(
@@ -60,6 +62,12 @@ public class KeyBindingsRegistry {
                 "key.betteradventuremode.housingScreen",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_H,
+                "category.betteradventuremode.category"
+        ));
+        KeyBindingsRegistry.openBackpackScreen = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.betteradventuremode.backpackScreen",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_B,
                 "category.betteradventuremode.category"
         ));
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
@@ -111,6 +119,14 @@ public class KeyBindingsRegistry {
             } else if (openHousingScreenBoolean) {
                 openHousingScreenBoolean = false;
             }
+            if (KeyBindingsRegistry.openBackpackScreen.wasPressed()) {
+                if (!openBackpackScreenBoolean) {
+                    openBackpackScreen(client);
+                }
+                openBackpackScreenBoolean = true;
+            } else if (openBackpackScreenBoolean) {
+                openBackpackScreenBoolean = false;
+            }
         });
     }
     public static void sheatheWeapons() {
@@ -128,6 +144,11 @@ public class KeyBindingsRegistry {
     public static void openHousingScreen(MinecraftClient client) {
         if (client.player != null) {
             ((DuckPlayerEntityMixin)client.player).betteradventuremode$openHousingScreen();
+        }
+    }
+    public static void openBackpackScreen(MinecraftClient client) {
+        if (client.player != null) {
+            ClientPlayNetworking.send(new OpenBackpackScreenPacket());
         }
     }
 }

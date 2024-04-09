@@ -3,6 +3,11 @@
     "betteradventuremode:test_ring",
     "betteradventuremode:three_spell_slot_ring",
     "betteradventuremode:two_health_regeneration_ring",
+    "betteradventuremode:armor_toughness_ring",
+    "betteradventuremode:additional_fire_damage_ring",
+    "betteradventuremode:max_equipment_weight_ring",
+    "betteradventuremode:keep_inventory_on_death_ring",
+    "betteradventuremode:calamity_ring",
     "betteradventuremode:archer_ring",
     {
       "id": "#jewelry:rings",

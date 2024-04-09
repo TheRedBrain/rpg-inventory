@@ -6,6 +6,9 @@
     "betteradventuremode:depth_strider_belt",
     "betteradventuremode:looting_belt",
     "betteradventuremode:unbreaking_belt",
-    "betteradventuremode:feather_falling_belt"
+    "betteradventuremode:feather_falling_belt",
+    "betteradventuremode:small_backpack_belt",
+    "betteradventuremode:medium_backpack_belt",
+    "betteradventuremode:large_backpack_belt"
   ]
 }

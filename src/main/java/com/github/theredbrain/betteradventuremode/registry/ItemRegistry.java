@@ -23,7 +23,7 @@ import java.util.List;
 
 public class ItemRegistry {
 
-    // region Vanilla Armor Replacements
+    // region armor
     public static final Item LEATHER_GLOVES = registerItem("leather_gloves", new DyeableArmorTrinketItem(1, 0, 1, BetterAdventureMode.identifier("model/armor/leather_armor"), new FabricItemSettings().maxDamage(60)), ItemGroupRegistry.BAM_EQUIPMENT);
     public static final Item LEATHER_SHOULDERS = registerItem("leather_shoulders", new DyeableArmorTrinketItem(1, 0, 1, BetterAdventureMode.identifier("model/armor/leather_armor"), new FabricItemSettings().maxDamage(60)), ItemGroupRegistry.BAM_EQUIPMENT);
 
@@ -41,7 +41,7 @@ public class ItemRegistry {
 
     public static final Item NETHERITE_GLOVES = registerItem("netherite_gloves", new ArmorTrinketItem(3, 0.05, 3, BetterAdventureMode.identifier("model/armor/netherite_armor"), new FabricItemSettings().maxDamage(120)), ItemGroupRegistry.BAM_EQUIPMENT);
     public static final Item NETHERITE_SHOULDERS = registerItem("netherite_shoulders", new ArmorTrinketItem(3, 0.05, 3, BetterAdventureMode.identifier("model/armor/netherite_armor"), new FabricItemSettings().maxDamage(120)), ItemGroupRegistry.BAM_EQUIPMENT);
-    // endregion Vanilla Armor Replacements
+    // endregion armor
 
     //region Accessories
     // belts
@@ -50,6 +50,9 @@ public class ItemRegistry {
     public static final Item LOOTING_BELT = registerItem("looting_belt", new AccessoryTrinketItem(BetterAdventureMode.identifier("model/accessory/belt_basic"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT);
     public static final Item UNBREAKING_BELT = registerItem("unbreaking_belt", new AccessoryTrinketItem(BetterAdventureMode.identifier("model/accessory/belt_basic"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT);
     public static final Item FEATHER_FALLING_BELT = registerItem("feather_falling_belt", new AccessoryTrinketItem(BetterAdventureMode.identifier("model/accessory/belt_basic"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT);
+    public static final Item SMALL_BACKPACK_BELT = registerItem("small_backpack_belt", new ModifyEntityAttributeBeltItem(EntityAttributesRegistry.BACKPACK_CAPACITY, "backpack_capacity", 9.0, EntityAttributeModifier.Operation.ADDITION, BetterAdventureMode.identifier("model/accessory/belt_basic"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT);
+    public static final Item MEDIUM_BACKPACK_BELT = registerItem("medium_backpack_belt", new ModifyEntityAttributeBeltItem(EntityAttributesRegistry.BACKPACK_CAPACITY, "backpack_capacity", 18.0, EntityAttributeModifier.Operation.ADDITION, BetterAdventureMode.identifier("model/accessory/belt_basic"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT);
+    public static final Item LARGE_BACKPACK_BELT = registerItem("large_backpack_belt", new ModifyEntityAttributeBeltItem(EntityAttributesRegistry.BACKPACK_CAPACITY, "backpack_capacity", 27.0, EntityAttributeModifier.Operation.ADDITION, BetterAdventureMode.identifier("model/accessory/belt_basic"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT);
 
     // necklaces
     public static final Item TELEPORT_HOME_NECKLACE = registerItem("teleport_home_necklace", new AccessoryTrinketItem(BetterAdventureMode.identifier("model/accessory/necklace_basic"), new FabricItemSettings().maxCount(1)), ItemGroupRegistry.BAM_EQUIPMENT);

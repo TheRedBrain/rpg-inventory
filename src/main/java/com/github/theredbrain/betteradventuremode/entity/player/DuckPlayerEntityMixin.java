@@ -2,6 +2,7 @@ package com.github.theredbrain.betteradventuremode.entity.player;
 
 import com.github.theredbrain.betteradventuremode.data.Dialogue;
 import com.github.theredbrain.betteradventuremode.block.entity.*;
+import com.github.theredbrain.betteradventuremode.inventory.AdditionalPlayerInventory;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
@@ -16,6 +17,7 @@ public interface DuckPlayerEntityMixin {
     float betteradventuremode$getMaxEquipmentWeight();
     float betteradventuremode$getEquipmentWeight();
     float betteradventuremode$getMaxFoodEffects();
+    int betteradventuremode$getBackpackCapacity();
 
     boolean betteradventuremode$isAdventure();
 
@@ -27,9 +29,13 @@ public interface DuckPlayerEntityMixin {
     boolean betteradventuremode$useStashForCrafting();
     void betteradventuremode$setUseStashForCrafting(boolean useStashForCrafting);
     int betteradventuremode$oldActiveSpellSlotAmount();
-    void betteradventuremode$setOldActiveSpellSlotAmount(int useStashForCrafting);
-    SimpleInventory betteradventuremode$getStashInventory();
-    void betteradventuremode$setStashInventory(SimpleInventory stashInventory);
+    void betteradventuremode$setOldActiveSpellSlotAmount(int oldActiveSpellSlotAmount);
+    int betteradventuremode$oldBackpackCapacity();
+    void betteradventuremode$setOldBackpackCapacity(int backpack_capacity);
+    AdditionalPlayerInventory betteradventuremode$getStashInventory();
+    void betteradventuremode$setStashInventory(AdditionalPlayerInventory stashInventory);
+    AdditionalPlayerInventory betteradventuremode$getBackpackInventory();
+    void betteradventuremode$setBackpackInventory(AdditionalPlayerInventory backpackInventory);
 
     void betteradventuremode$sendAnnouncement(Text announcement);
 

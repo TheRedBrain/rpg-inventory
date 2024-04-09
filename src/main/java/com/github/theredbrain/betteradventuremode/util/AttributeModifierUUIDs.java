@@ -73,10 +73,10 @@ public class AttributeModifierUUIDs {
     public static final String RING_SLOT_2 = "c849fae2-2cde-4234-9129-81c3bedf253d";
     public static final String BELT_SLOT = "631e3619-cb5f-4e31-ac51-93d76596fe5d";
     public static final String NECKLACE_SLOT = "4e150af2-dc4a-4f99-9806-3fc7eb7cb193";
-    public static final String HELMET_SLOT = "5b265355-97fa-43b5-8d3a-f60504812593";
-    public static final String CHESTPLATE_SLOT = "f1036ac6-a749-4bf4-907c-befe0f34e46e";
-    public static final String LEGGINGS_SLOT = "4b81b3ff-6d86-487a-a8f9-5d123d894579";
-    public static final String BOOTS_SLOT = "9437dac9-cbb6-4341-b72c-5c87f6b9478e";
+    public static final String HELMET_SLOT = "2AD3F246-FEE1-4E67-B886-69FD380BB150";
+    public static final String CHESTPLATE_SLOT = "9F3D476D-C118-4544-8365-64846904B48E";
+    public static final String LEGGINGS_SLOT = "D8499B04-0E66-4726-AB29-64469D734E0D";
+    public static final String BOOTS_SLOT = "845DB27C-C624-495F-8C9F-6020A9A58B6B";
     public static final String GLOVES_SLOT = "9d59b6db-6d0d-47bc-9c7f-f72ece0d6928";
     public static final String SHOULDERS_SLOT = "627e6d74-a46d-4250-9954-110e9a229567";
     //endregion

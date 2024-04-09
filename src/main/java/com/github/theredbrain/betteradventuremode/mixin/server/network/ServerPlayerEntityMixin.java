@@ -126,6 +126,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Du
     @Inject(method = "copyFrom", at = @At("TAIL"))
     public void betteradventuremode$copyFrom(ServerPlayerEntity oldPlayer, boolean alive, CallbackInfo ci) {
         ((DuckPlayerEntityMixin) this).betteradventuremode$setStashInventory(((DuckPlayerEntityMixin) oldPlayer).betteradventuremode$getStashInventory());
+        ((DuckPlayerEntityMixin) this).betteradventuremode$setBackpackInventory(((DuckPlayerEntityMixin) oldPlayer).betteradventuremode$getBackpackInventory());
     }
 
     /**

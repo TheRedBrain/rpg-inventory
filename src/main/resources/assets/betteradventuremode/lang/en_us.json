@@ -77,6 +77,11 @@
 	"gui.area_block.triggered_mode.once": "Gets triggered once.",
 
 
+	"gui.backpack_screen.title": "Backpack",
+	"gui.backpack_screen.no_active_capacity": "Your equipment provides no backpack slots.",
+	"gui.backpack_screen.itemRemovedFromInactiveBackpackSlots": "Your backpack got smaller and some items were transferred to your normal inventory.",
+
+
 	"gui.triggered_message_block.toggle_show_message_area_button_label.on": "Show Message Area: On",
 	"gui.triggered_message_block.toggle_show_message_area_button_label.off": "Show Message Area: Off",
 	"gui.triggered_message_block.message_area_dimensions_label": "Activation Area Dimensions",

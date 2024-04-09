@@ -1,7 +1,6 @@
 package com.github.theredbrain.betteradventuremode.mixin.entity.player;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
-import com.github.theredbrain.betteradventuremode.BetterAdventureModeClient;
 import com.github.theredbrain.betteradventuremode.block.AbstractSetSpawnBlock;
 import com.github.theredbrain.betteradventuremode.entity.IRenderEquippedTrinkets;
 import com.github.theredbrain.betteradventuremode.effect.FoodStatusEffect;
@@ -10,6 +9,7 @@ import com.github.theredbrain.betteradventuremode.block.entity.*;
 import com.github.theredbrain.betteradventuremode.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerInventoryMixin;
+import com.github.theredbrain.betteradventuremode.inventory.AdditionalPlayerInventory;
 import com.github.theredbrain.betteradventuremode.item.IMakesEquipSound;
 import com.github.theredbrain.betteradventuremode.registry.EntityAttributesRegistry;
 import com.github.theredbrain.betteradventuremode.registry.GameRulesRegistry;
@@ -42,6 +42,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.registry.tag.FluidTags;
+import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -64,6 +65,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.function.Predicate;
 
 @Mixin(value = PlayerEntity.class, priority = 950)
@@ -114,7 +116,13 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     private static final TrackedData<Integer> OLD_ACTIVE_SPELL_SLOT_AMOUNT = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
 
     @Unique
-    protected SimpleInventory stashInventory = new SimpleInventory(34);
+    private static final TrackedData<Integer> OLD_BACKPACK_CAPACITY = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
+
+    @Unique
+    protected AdditionalPlayerInventory stashInventory = new AdditionalPlayerInventory(34, ((PlayerEntity) (Object) this));
+
+    @Unique
+    protected AdditionalPlayerInventory backpackInventory = new AdditionalPlayerInventory(27, ((PlayerEntity) (Object) this));
 
     protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
@@ -127,6 +135,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
                 .add(EntityAttributesRegistry.MAX_EQUIPMENT_WEIGHT)
                 .add(EntityAttributesRegistry.MAX_FOOD_EFFECTS)
                 .add(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT, 2.0F)
+                .add(EntityAttributesRegistry.BACKPACK_CAPACITY)
                 .add(EntityAttributesRegistry.STAMINA_REGENERATION, 1.0F)
                 .add(EntityAttributesRegistry.MAX_STAMINA, 10.0F)
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 5.0F)
@@ -139,6 +148,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         this.dataTracker.startTracking(IS_OFF_HAND_STACK_SHEATHED, false);
         this.dataTracker.startTracking(USE_STASH_FOR_CRAFTING, true);
         this.dataTracker.startTracking(OLD_ACTIVE_SPELL_SLOT_AMOUNT, -1);
+        this.dataTracker.startTracking(OLD_BACKPACK_CAPACITY, 0);
 
     }
 
@@ -146,6 +156,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     public void betteradventuremode$tick(CallbackInfo ci) {
         if (!this.getWorld().isClient) {
             this.ejectItemsFromInactiveSpellSlots();
+            this.ejectItemsFromInactiveBackpackSlots();
             this.ejectNonHotbarItemsFromHotbar();
         }
     }
@@ -261,11 +272,14 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
             this.vanishCursedItems();
             if (this.getWorld().getGameRules().getBoolean(GameRulesRegistry.DESTROY_DROPPED_ITEMS_ON_DEATH)) {
                 this.inventory.clear();
+                this.backpackInventory.clear();
             } else {
                 this.inventory.dropAll();
+                this.backpackInventory.dropAll();
             }
             if (this.getWorld().getGameRules().getBoolean(GameRulesRegistry.CLEAR_ENDER_CHEST_ON_DEATH)) {
                 this.enderChestInventory.clear();
+                this.stashInventory.clear();
             }
         }
 
@@ -276,6 +290,10 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
         if (nbt.contains("stash_items", NbtElement.LIST_TYPE)) {
             this.stashInventory.readNbtList(nbt.getList("stash_items", NbtElement.COMPOUND_TYPE));
+        }
+
+        if (nbt.contains("backpack_items", NbtElement.LIST_TYPE)) {
+            this.backpackInventory.readNbtList(nbt.getList("backpack_items", NbtElement.COMPOUND_TYPE));
         }
 
         if (nbt.contains("is_main_hand_stack_sheathed", NbtElement.BYTE_TYPE)) {
@@ -299,6 +317,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     public void betteradventuremode$writeCustomDataToNbt(NbtCompound nbt, CallbackInfo ci) {
 
         nbt.put("stash_items", this.stashInventory.toNbtList());
+
+        nbt.put("backpack_items", this.backpackInventory.toNbtList());
 
         nbt.putBoolean("is_main_hand_stack_sheathed", this.betteradventuremode$isMainHandStackSheathed());
 
@@ -547,6 +567,11 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         return (float) this.getAttributeValue(EntityAttributesRegistry.MAX_FOOD_EFFECTS);
     }
 
+    @Override
+    public int betteradventuremode$getBackpackCapacity() {
+        return (int) this.getAttributeValue(EntityAttributesRegistry.BACKPACK_CAPACITY);
+    }
+
     /**
      * Returns whether this player is in adventure mode.
      */
@@ -632,13 +657,33 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     }
 
     @Override
-    public SimpleInventory betteradventuremode$getStashInventory() {
+    public int betteradventuremode$oldBackpackCapacity() {
+        return this.dataTracker.get(OLD_BACKPACK_CAPACITY);
+    }
+
+    @Override
+    public void betteradventuremode$setOldBackpackCapacity(int backpack_capacity) {
+        this.dataTracker.set(OLD_BACKPACK_CAPACITY, backpack_capacity);
+    }
+
+    @Override
+    public AdditionalPlayerInventory betteradventuremode$getStashInventory() {
         return this.stashInventory;
     }
 
     @Override
-    public void betteradventuremode$setStashInventory(SimpleInventory stashInventory) {
+    public void betteradventuremode$setStashInventory(AdditionalPlayerInventory stashInventory) {
         this.stashInventory = stashInventory;
+    }
+
+    @Override
+    public AdditionalPlayerInventory betteradventuremode$getBackpackInventory() {
+        return this.backpackInventory;
+    }
+
+    @Override
+    public void betteradventuremode$setBackpackInventory(AdditionalPlayerInventory backpackInventory) {
+        this.backpackInventory = backpackInventory;
     }
 
     @Unique
@@ -679,6 +724,27 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
             }
 
             this.betteradventuremode$setOldActiveSpellSlotAmount(activeSpellSlotAmount);
+        }
+    }
+
+    @Unique
+    private void ejectItemsFromInactiveBackpackSlots() {
+        int backpack_capacity = (int) this.getAttributeInstance(EntityAttributesRegistry.BACKPACK_CAPACITY).getValue();
+
+        if (this.betteradventuremode$oldBackpackCapacity() != backpack_capacity) {
+            for (int j = backpack_capacity + 1; j < 27; j++) {
+                PlayerInventory playerInventory = this.getInventory();
+                AdditionalPlayerInventory backpackInventory = this.betteradventuremode$getBackpackInventory();
+
+                if (!backpackInventory.getStack(j).isEmpty()) {
+                    playerInventory.offerOrDrop(backpackInventory.removeStack(j));
+                    if (((PlayerEntity) (Object) this) instanceof ServerPlayerEntity serverPlayerEntity) {
+                        serverPlayerEntity.sendMessage(Text.translatable("gui.backpack_screen.itemRemovedFromInactiveBackpackSlots"), true);
+                    }
+                }
+            }
+
+            this.betteradventuremode$setOldBackpackCapacity(backpack_capacity);
         }
     }
 

@@ -1,9 +1,6 @@
 package com.github.theredbrain.betteradventuremode;
 
-import com.github.theredbrain.betteradventuremode.client.gui.screen.ingame.CraftingBenchBlockScreen;
-import com.github.theredbrain.betteradventuremode.client.gui.screen.ingame.MannequinScreen;
-import com.github.theredbrain.betteradventuremode.client.gui.screen.ingame.ShopBlockScreen;
-import com.github.theredbrain.betteradventuremode.client.gui.screen.ingame.TeleporterBlockScreen;
+import com.github.theredbrain.betteradventuremode.client.gui.screen.ingame.*;
 import com.github.theredbrain.betteradventuremode.client.render.block.entity.*;
 import com.github.theredbrain.betteradventuremode.client.render.renderer.MannequinEntityRenderer;
 import com.github.theredbrain.betteradventuremode.client.render.renderer.SpawnerBoundVillagerEntityRenderer;
@@ -116,6 +113,7 @@ public class BetterAdventureModeClient implements ClientModInitializer {
     }
 
     private void registerScreens() {
+        HandledScreens.register(ScreenHandlerTypesRegistry.BACKPACK_SCREEN_HANDLER, BackpackScreen::new);
         HandledScreens.register(ScreenHandlerTypesRegistry.CRAFTING_BENCH_BLOCK_SCREEN_HANDLER, CraftingBenchBlockScreen::new);
         HandledScreens.register(ScreenHandlerTypesRegistry.MANNEQUIN_SCREEN_HANDLER, MannequinScreen::new);
         HandledScreens.register(ScreenHandlerTypesRegistry.SHOP_BLOCK_SCREEN_HANDLER, ShopBlockScreen::new);
