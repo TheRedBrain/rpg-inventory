@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "BB"
+  ],
+  "key": {
+    "B": {
+      "item": "minecraft:sand"
+    }
+  },
+  "result": {
+    "item": "betteradventuremode:sand_slab",
+    "count": 4
+  }
+}

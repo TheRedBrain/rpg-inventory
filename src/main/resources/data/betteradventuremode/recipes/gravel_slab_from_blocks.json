@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "BB"
+  ],
+  "key": {
+    "B": {
+      "item": "minecraft:gravel"
+    }
+  },
+  "result": {
+    "item": "betteradventuremode:gravel_slab",
+    "count": 4
+  }
+}

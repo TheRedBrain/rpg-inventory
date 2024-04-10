@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "BB"
+  ],
+  "key": {
+    "B": {
+      "item": "minecraft:mycelium"
+    }
+  },
+  "result": {
+    "item": "betteradventuremode:mycelium_slab",
+    "count": 4
+  }
+}

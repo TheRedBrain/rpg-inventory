@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "S",
+    "S"
+  ],
+  "key": {
+    "S": {
+      "item": "betteradventuremode:dirt_slab"
+    }
+  },
+  "result": {
+    "item": "minecraft:dirt",
+    "count": 1
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "S",
+    "S"
+  ],
+  "key": {
+    "S": {
+      "item": "betteradventuremode:rooted_dirt_slab"
+    }
+  },
+  "result": {
+    "item": "minecraft:rooted_dirt",
+    "count": 1
+  }
+}

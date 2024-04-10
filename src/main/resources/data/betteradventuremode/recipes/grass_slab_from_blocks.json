@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "BB"
+  ],
+  "key": {
+    "B": {
+      "item": "minecraft:grass_block"
+    }
+  },
+  "result": {
+    "item": "betteradventuremode:grass_slab",
+    "count": 4
+  }
+}
