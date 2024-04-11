@@ -85,9 +85,6 @@ dependencies {
 	// Spell Power
 	modImplementation("maven.modrinth:spell-power:${project.spell_power_version}")
 
-	// Projectile Damage Attribute
-	modImplementation "maven.modrinth:projectile-damage-attribute:${project.projectile_damage_attribute_version}"
-
 	// Ranged Weapon API
 	modImplementation "maven.modrinth:ranged-weapon-api:${project.ranged_weapon_api_version}"
 

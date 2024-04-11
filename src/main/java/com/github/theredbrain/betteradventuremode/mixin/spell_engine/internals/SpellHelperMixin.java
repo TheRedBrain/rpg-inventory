@@ -45,9 +45,9 @@ import net.spell_engine.particle.ParticleHelper;
 import net.spell_engine.utils.AnimationHelper;
 import net.spell_engine.utils.SoundHelper;
 import net.spell_engine.utils.TargetHelper;
-import net.spell_power.api.MagicSchool;
 import net.spell_power.api.SpellDamageSource;
 import net.spell_power.api.SpellPower;
+import net.spell_power.api.SpellSchool;
 import net.spell_power.mixin.DamageSourcesAccessor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -321,7 +321,7 @@ public abstract class SpellHelperMixin {
             try {
                 double particleMultiplier = (double)(1.0F * context.total());
                 SpellPower.Result power = context.power();
-                MagicSchool school = impact.school != null ? impact.school : spell.school;
+                SpellSchool school = impact.school != null ? impact.school : spell.school;
                 if (power == null || power.school() != school) {
                     power = SpellPower.getSpellPower(school, caster);
                 }
@@ -530,9 +530,9 @@ public abstract class SpellHelperMixin {
                         SoundHelper.playSound(world, (Entity)target, impact.sound);
                     }
                 }
-            } catch (Exception var22) {
+            } catch (Exception var25) {
                 System.err.println("Failed to perform impact effect");
-                System.err.println(var22.getMessage());
+                System.err.println(var25.getMessage());
                 if (isKnockbackPushed) {
                     ((ConfigurableKnockback)target).popKnockbackMultiplier_SpellEngine();
                 }
