@@ -62,45 +62,27 @@ public class EventsRegistry {
 
     @Environment(EnvType.CLIENT)
     public static void initializeClientEvents() {
-        ClientTickEvents.START_CLIENT_TICK.register(client -> {
-            boolean bl = client.options.leftKey.isPressed() || client.options.backKey.isPressed() || client.options.rightKey.isPressed();
-            boolean arePlayerYawChangesDisabledByAttacking = BetterAdventureMode.serverConfig.disable_player_yaw_changes_during_attacks && ((MinecraftClient_BetterCombat) client).isWeaponSwingInProgress();
-            if (client.options.attackKey.isPressed() && !bl &&
-                    client.player != null && BetterAdventureModeClient.clientConfig.enable_360_degree_third_person &&
-                    BetterAdventureMode.serverConfig.allow_360_degree_third_person &&
-                    client.options.getPerspective() != Perspective.FIRST_PERSON &&
-                    BetterAdventureModeClient.clientConfig.attacking_towards_camera_direction) {
-                if (!BetterAdventureMode.serverConfig.disable_player_pitch_changes) {
-                    client.player.setPitch(BetterAdventureModeClient.INSTANCE.cameraPitch);
-                }
-                if (!arePlayerYawChangesDisabledByAttacking) {
-                    client.player.setYaw(BetterAdventureModeClient.INSTANCE.cameraYaw);
-                }
-            }
-            if (client.options.pickItemKey.isPressed() && !bl &&
-                    client.player != null && BetterAdventureModeClient.clientConfig.enable_360_degree_third_person &&
-                    BetterAdventureMode.serverConfig.allow_360_degree_third_person &&
-                    client.options.getPerspective() != Perspective.FIRST_PERSON &&
-                    BetterAdventureModeClient.clientConfig.pick_block_towards_camera_direction) {
-                if (!BetterAdventureMode.serverConfig.disable_player_pitch_changes) {
-                    client.player.setPitch(BetterAdventureModeClient.INSTANCE.cameraPitch);
-                }
-                if (!arePlayerYawChangesDisabledByAttacking) {
-                    client.player.setYaw(BetterAdventureModeClient.INSTANCE.cameraYaw);
-                }
-            }
-            if (client.options.useKey.isPressed() && !bl &&
-                    client.player != null && BetterAdventureModeClient.clientConfig.enable_360_degree_third_person &&
-                    BetterAdventureMode.serverConfig.allow_360_degree_third_person &&
-                    client.options.getPerspective() != Perspective.FIRST_PERSON &&
-                    BetterAdventureModeClient.clientConfig.using_items_towards_camera_direction) {
-                if (!BetterAdventureMode.serverConfig.disable_player_pitch_changes) {
-                    client.player.setPitch(BetterAdventureModeClient.INSTANCE.cameraPitch);
-                }
-                if (!arePlayerYawChangesDisabledByAttacking) {
-                    client.player.setYaw(BetterAdventureModeClient.INSTANCE.cameraYaw);
-                }
-            }
-        });
+//        ClientTickEvents.START_CLIENT_TICK.register(client -> {
+//            boolean bl = client.options.leftKey.isPressed() || client.options.backKey.isPressed() || client.options.rightKey.isPressed();
+//            boolean arePlayerYawChangesDisabledByAttacking = BetterAdventureMode.serverConfig.disable_player_yaw_changes_during_attacks && ((MinecraftClient_BetterCombat) client).isWeaponSwingInProgress();
+//            if (client.options.attackKey.isPressed() && !bl &&
+//                    client.player != null && client.options.getPerspective() != Perspective.FIRST_PERSON) {
+//                if (!arePlayerYawChangesDisabledByAttacking) {
+//                    client.player.setYaw(BetterAdventureModeClient.INSTANCE.cameraYaw);
+//                }
+//            }
+//            if (client.options.pickItemKey.isPressed() && !bl &&
+//                    client.player != null && client.options.getPerspective() != Perspective.FIRST_PERSON) {
+//                if (!arePlayerYawChangesDisabledByAttacking) {
+//                    client.player.setYaw(BetterAdventureModeClient.INSTANCE.cameraYaw);
+//                }
+//            }
+//            if (client.options.useKey.isPressed() && !bl &&
+//                    client.player != null && client.options.getPerspective() != Perspective.FIRST_PERSON) {
+//                if (!arePlayerYawChangesDisabledByAttacking) {
+//                    client.player.setYaw(BetterAdventureModeClient.INSTANCE.cameraYaw);
+//                }
+//            }
+//        });
     }
 }

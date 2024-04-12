@@ -1,5 +1,6 @@
 package com.github.theredbrain.betteradventuremode.mixin.client.network;
 
+import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.data.WeaponPoses;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.betteradventuremode.registry.WeaponPosesRegistry;
@@ -147,53 +148,55 @@ public abstract class AbstractClientPlayerEntity_BetterCombatReplacementMixin ex
     @Unique
     private AdjustmentModifier createAttackAdjustment() {
         return new AdjustmentModifier((partName) -> {
-            return Optional.empty();
-            // TODO find a range of angles where the animations look good and restrict the attack adjustment to that range
-            //  also apply that range to the hit boxes
-            //  that means that pitch change restrictions can be removed
-//            float rotationX = 0.0F;
-//            float rotationY = 0.0F;
-//            float rotationZ = 0.0F;
-//            float offsetX = 0.0F;
-//            float offsetY = 0.0F;
-//            float offsetZ = 0.0F;
-//            float pitch;
-//            if (FirstPersonMode.isFirstPersonPass()) {
-//                pitch = this.getPitch();
-//                pitch = (float)Math.toRadians((double)pitch);
-//                switch (partName) {
-//                    case "body":
-//                        rotationX -= pitch;
-//                        if (pitch < 0.0F) {
-//                            double offset = Math.abs(Math.sin((double)pitch));
-//                            offsetY = (float)((double)offsetY + offset * 0.5);
-//                            offsetZ = (float)((double)offsetZ - offset);
-//                        }
-//                        break;
-//                    default:
-//                        return Optional.empty();
-//                }
-//            } else {
-//                pitch = this.getPitch();
-//                pitch = (float)Math.toRadians((double)pitch);
-//                switch (partName) {
-//                    case "body":
-//                        rotationX -= pitch * 0.75F;
-//                        break;
-//                    case "rightArm":
-//                    case "leftArm":
-//                        rotationX += pitch * 0.25F;
-//                        break;
-//                    case "rightLeg":
-//                    case "leftLeg":
-//                        rotationX = (float)((double)rotationX - (double)pitch * 0.75);
-//                        break;
-//                    default:
-//                        return Optional.empty();
-//                }
-//            }
-//
-//            return Optional.of(new AdjustmentModifier.PartModifier(new Vec3f(rotationX, rotationY, rotationZ), new Vec3f(offsetX, offsetY, offsetZ)));
+            if (BetterAdventureMode.serverConfig.restrict_attack_pitch) {
+                // TODO find a range of angles where the animations look good and restrict the attack adjustment to that range
+                //  also apply that range to the hit boxes
+                return Optional.empty();
+            } else {
+                float rotationX = 0.0F;
+                float rotationY = 0.0F;
+                float rotationZ = 0.0F;
+                float offsetX = 0.0F;
+                float offsetY = 0.0F;
+                float offsetZ = 0.0F;
+                float pitch;
+                if (FirstPersonMode.isFirstPersonPass()) {
+                    pitch = this.getPitch();
+                    pitch = (float) Math.toRadians((double) pitch);
+                    switch (partName) {
+                        case "body":
+                            rotationX -= pitch;
+                            if (pitch < 0.0F) {
+                                double offset = Math.abs(Math.sin((double) pitch));
+                                offsetY = (float) ((double) offsetY + offset * 0.5);
+                                offsetZ = (float) ((double) offsetZ - offset);
+                            }
+                            break;
+                        default:
+                            return Optional.empty();
+                    }
+                } else {
+                    pitch = this.getPitch();
+                    pitch = (float) Math.toRadians((double) pitch);
+                    switch (partName) {
+                        case "body":
+                            rotationX -= pitch * 0.75F;
+                            break;
+                        case "rightArm":
+                        case "leftArm":
+                            rotationX += pitch * 0.25F;
+                            break;
+                        case "rightLeg":
+                        case "leftLeg":
+                            rotationX = (float) ((double) rotationX - (double) pitch * 0.75);
+                            break;
+                        default:
+                            return Optional.empty();
+                    }
+                }
+
+                return Optional.of(new AdjustmentModifier.PartModifier(new Vec3f(rotationX, rotationY, rotationZ), new Vec3f(offsetX, offsetY, offsetZ)));
+            }
         });
     }
 

@@ -11,36 +11,6 @@ import java.util.List;
         name = "server"
 )
 public class ServerConfig implements ConfigData {
-    @Comment("Set to false to disable the 360 degree 3rd person camera for connecting clients")
-    public boolean allow_360_degree_third_person = false;
-    @Comment("""
-            When set to true, the first person perspective is disabled.
-            Exceptions are possible, when using items in itemTag 'enables_first_person_perspective_on_using'
-            or when under 'first_person_status_effect'""")
-    public boolean disable_first_person = false;
-    @Comment("""
-            When this String is a valid status effect identifier,
-            every player with this status effect is put into first person perspective,
-            even if 'disable_first_person' is true""")
-    public String first_person_status_effect = "betteradventuremode:first_person_perspective_enabled_effect";
-    @Comment("""
-            When set to true, changing the players yaw while attacking is disabled.
-            """)
-    public boolean disable_player_yaw_changes_during_attacks = false;
-    @Comment("""
-            When set to true, changing the players pitch is disabled.
-            Exceptions are possible, when using items in itemTag 'allows_changing_pitch_on_using'
-            or when under 'allow_pitch_changes_status_effect'""")
-    public boolean disable_player_pitch_changes = false;
-    @Comment("""
-            When this String is a valid status effect identifier,
-            every player with this status effect can change their pitch,
-            even if 'disable_player_pitch_changes' is true""")
-    public String allow_pitch_changes_status_effect = "betteradventuremode:changing_pitch_enabled_effect";
-    @Comment("""
-            The default pitch for each player.
-            Min value: -90.0F, Max value: 90.0F, Default/Vanilla: 0.0F""")
-    public float default_player_pitch = 0.0F;
     @Comment("The player inventory screen is customized")
     public boolean use_adventure_inventory_screen = false;
     @Comment("""
@@ -52,8 +22,16 @@ public class ServerConfig implements ConfigData {
     public boolean disable_vanilla_food_system = false;
     @Comment("Disables the recipe book")
     public boolean disable_recipe_book = false;
-    @Comment("Enables velocity modifiers on many blocks, eg faster movement on dirt paths")
+    @Comment("Enables velocity modifiers on many blocks, eg faster movement on dirt paths and slower movement on sand")
     public boolean enable_harder_movement = true;
+    @Comment("""
+            When set to true, changing the players orientation while attacking is disabled.
+            """)
+    public boolean disable_player_yaw_changes_during_attacks = false;
+    @Comment("""
+            When set to true, the pitch of the players attack is restricted.
+            """)
+    public boolean restrict_attack_pitch = false;
     public boolean allow_jumping_during_attacks = true;
     public boolean sprinting_only_when_button_is_pressed = false;
     @Comment("""

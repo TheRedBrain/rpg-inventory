@@ -27,8 +27,8 @@ public class EntityAttributesRegistry {
     public static final EntityAttribute STAMINA_REGENERATION_DELAY_THRESHOLD = new ClampedEntityAttribute("attribute.name.generic.stamina_regeneration_delay_threshold", 60.0, 0.0, 1024.0).setTracked(true);
     public static final EntityAttribute MANA_REGENERATION_DELAY_THRESHOLD = new ClampedEntityAttribute("attribute.name.generic.mana_regeneration_delay_threshold", 60.0, 0.0, 1024.0).setTracked(true);
 
-    public static final EntityAttribute HEALTH_TICK_THRESHOLD = new ClampedEntityAttribute("attribute.name.generic.health_tick_threshold", 100.0, 0.0, 1024.0).setTracked(true);
-    public static final EntityAttribute STAMINA_TICK_THRESHOLD = new ClampedEntityAttribute("attribute.name.generic.stamina_tick_threshold", 100.0, 0.0, 1024.0).setTracked(true);
+    public static final EntityAttribute HEALTH_TICK_THRESHOLD = new ClampedEntityAttribute("attribute.name.generic.health_tick_threshold", 200.0, 0.0, 1024.0).setTracked(true);
+    public static final EntityAttribute STAMINA_TICK_THRESHOLD = new ClampedEntityAttribute("attribute.name.generic.stamina_tick_threshold", 20.0, 0.0, 1024.0).setTracked(true);
     public static final EntityAttribute MANA_TICK_THRESHOLD = new ClampedEntityAttribute("attribute.name.generic.mana_tick_threshold", 100.0, 0.0, 1024.0).setTracked(true);
 
     public static final EntityAttribute ADDITIONAL_BASHING_DAMAGE = new ClampedEntityAttribute("attribute.name.generic.additional_bashing_damage", 0.0, -1024.0, 1024.0).setTracked(true);

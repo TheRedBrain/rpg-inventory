@@ -166,13 +166,11 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
         boolean mana_regenerating_item_equipped = false;
         boolean fall_damage_prevention_item_equipped = false;
-        boolean first_person_enabling_item_equipped = false;
         boolean keep_inventory_on_death_item_equipped = false;
         int damage_doubling_items_amount = 0;
 
         Predicate<ItemStack> mana_regenerating_item_equipped_predicate = stack -> stack.isIn(Tags.ENABLES_MANA_REGENERATION);
         Predicate<ItemStack> fall_damage_prevention_item_equipped_predicate = stack -> stack.isIn(Tags.PREVENTS_NON_LETHAL_FALL_DAMAGE);
-        Predicate<ItemStack> first_person_enabling_item_equipped_predicate = stack -> stack.isIn(Tags.ENABLES_FIRST_PERSON_PERSPECTIVE);
         Predicate<ItemStack> is_damage_doubling_item_equipped_predicate = stack -> stack.isIn(Tags.DOUBLES_INCOMING_DAMAGE);
         Predicate<ItemStack> keep_inventory_on_death_item_equipped_predicate = stack -> stack.isIn(Tags.KEEPS_INVENTORY_ON_DEATH);
 
@@ -180,13 +178,11 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         if (trinkets.isPresent()) {
             mana_regenerating_item_equipped = trinkets.get().isEquipped(mana_regenerating_item_equipped_predicate);
             fall_damage_prevention_item_equipped = trinkets.get().isEquipped(fall_damage_prevention_item_equipped_predicate);
-            first_person_enabling_item_equipped = trinkets.get().isEquipped(first_person_enabling_item_equipped_predicate);
             keep_inventory_on_death_item_equipped = trinkets.get().isEquipped(keep_inventory_on_death_item_equipped_predicate);
             damage_doubling_items_amount += trinkets.get().getEquipped(is_damage_doubling_item_equipped_predicate).size();
         }
         mana_regenerating_item_equipped = mana_regenerating_item_equipped || betteradventuremode$hasEquipped(mana_regenerating_item_equipped_predicate);
         fall_damage_prevention_item_equipped = fall_damage_prevention_item_equipped || betteradventuremode$hasEquipped(fall_damage_prevention_item_equipped_predicate);
-        first_person_enabling_item_equipped = first_person_enabling_item_equipped || betteradventuremode$hasEquipped(first_person_enabling_item_equipped_predicate);
         keep_inventory_on_death_item_equipped = keep_inventory_on_death_item_equipped || betteradventuremode$hasEquipped(keep_inventory_on_death_item_equipped_predicate);
         damage_doubling_items_amount += betteradventuremode$getAmountEquipped(is_damage_doubling_item_equipped_predicate);
 
@@ -212,20 +208,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
             }
         } else {
             this.removeStatusEffect(StatusEffectsRegistry.MANA_REGENERATION_EFFECT);
-        }
-        if (itemStackMainHand.isIn(Tags.ENABLES_CHANGING_PITCH)) {
-            if (!this.hasStatusEffect(StatusEffectsRegistry.CHANGING_PITCH_ENABLED_EFFECT)) {
-                this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.CHANGING_PITCH_ENABLED_EFFECT, -1, 0, false, false, false));
-            }
-        } else {
-            this.removeStatusEffect(StatusEffectsRegistry.CHANGING_PITCH_ENABLED_EFFECT);
-        }
-        if ((itemStackMainHand.isIn(Tags.ENABLES_CHANGING_PITCH) || (this.isUsingItem() && this.getActiveItem().isIn(Tags.ENABLES_CHANGING_PITCH_ON_USING))) && first_person_enabling_item_equipped) {
-            if (!this.hasStatusEffect(StatusEffectsRegistry.FIRST_PERSON_PERSPECTIVE_ENABLED_EFFECT)) {
-                this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.FIRST_PERSON_PERSPECTIVE_ENABLED_EFFECT, -1, 0, false, false, false));
-            }
-        } else {
-            this.removeStatusEffect(StatusEffectsRegistry.FIRST_PERSON_PERSPECTIVE_ENABLED_EFFECT);
         }
         if (fall_damage_prevention_item_equipped) {
             if (!this.hasStatusEffect(StatusEffectsRegistry.FALL_IMMUNE)) {
@@ -466,52 +448,75 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         if (!this.hasVehicle()) {
             int i;
             if (this.isSwimming()) {
-                i = Math.round((float)Math.sqrt(dx * dx + dy * dy + dz * dz) * 100.0F);
+                i = Math.round((float) Math.sqrt(dx * dx + dy * dy + dz * dz) * 100.0F);
                 if (i > 0) {
                     this.increaseStat(Stats.SWIM_ONE_CM, i);
-//                    this.addExhaustion(0.01F * (float)i * 0.01F);
-                    ((DuckLivingEntityMixin)this).betteradventuremode$addStamina(-0.2F);
+                    if (!BetterAdventureMode.serverConfig.disable_vanilla_food_system) {
+                        this.addExhaustion(0.01F * (float) i * 0.01F);
+                    }
+                    if (!this.isCreative()) {
+                        ((DuckLivingEntityMixin) this).betteradventuremode$addStamina(-0.02F);
+                    }
                 }
             } else if (this.isSubmergedIn(FluidTags.WATER)) {
-                i = Math.round((float)Math.sqrt(dx * dx + dy * dy + dz * dz) * 100.0F);
+                i = Math.round((float) Math.sqrt(dx * dx + dy * dy + dz * dz) * 100.0F);
                 if (i > 0) {
                     this.increaseStat(Stats.WALK_UNDER_WATER_ONE_CM, i);
-//                    this.addExhaustion(0.01F * (float)i * 0.01F);
-                    ((DuckLivingEntityMixin)this).betteradventuremode$addStamina(-0.4F);
+                    if (!BetterAdventureMode.serverConfig.disable_vanilla_food_system) {
+                        this.addExhaustion(0.01F * (float) i * 0.01F);
+                    }
+                    if (!this.isCreative()) {
+                        ((DuckLivingEntityMixin) this).betteradventuremode$addStamina(-0.03F);
+                    }
                 }
             } else if (this.isTouchingWater()) {
-                i = Math.round((float)Math.sqrt(dx * dx + dz * dz) * 100.0F);
+                i = Math.round((float) Math.sqrt(dx * dx + dz * dz) * 100.0F);
                 if (i > 0) {
                     this.increaseStat(Stats.WALK_ON_WATER_ONE_CM, i);
-//                    this.addExhaustion(0.01F * (float)i * 0.01F);
-                    ((DuckLivingEntityMixin)this).betteradventuremode$addStamina(-0.1F);
+                    if (!BetterAdventureMode.serverConfig.disable_vanilla_food_system) {
+                        this.addExhaustion(0.01F * (float) i * 0.01F);
+                    }
+                    if (!this.isCreative()) {
+                        ((DuckLivingEntityMixin) this).betteradventuremode$addStamina(-0.01F);
+                    }
                 }
             } else if (this.isClimbing()) {
                 if (dy > 0.0) {
-                    this.increaseStat(Stats.CLIMB_ONE_CM, (int)Math.round(dy * 100.0));
-                    ((DuckLivingEntityMixin)this).betteradventuremode$addStamina(this.hasStatusEffect(StatusEffectsRegistry.OVERBURDENED_EFFECT) ? -4 : -1);
+                    this.increaseStat(Stats.CLIMB_ONE_CM, (int) Math.round(dy * 100.0));
+                    if (!this.isCreative()) {
+                        ((DuckLivingEntityMixin) this).betteradventuremode$addStamina(this.hasStatusEffect(StatusEffectsRegistry.OVERBURDENED_EFFECT) ? -0.04F : -0.01F);
+                    }
                 }
             } else if (this.isOnGround()) {
-                i = Math.round((float)Math.sqrt(dx * dx + dz * dz) * 100.0F);
+                i = Math.round((float) Math.sqrt(dx * dx + dz * dz) * 100.0F);
                 if (i > 0) {
                     if (this.isSprinting()) {
                         this.increaseStat(Stats.SPRINT_ONE_CM, i);
-//                        this.addExhaustion(0.1F * (float)i * 0.01F);
-                        ((DuckLivingEntityMixin)this).betteradventuremode$addStamina(-0.1F);
+                        if (!BetterAdventureMode.serverConfig.disable_vanilla_food_system) {
+                            this.addExhaustion(0.1F * (float) i * 0.01F);
+                        }
+                        if (!this.isCreative()) {
+                            ((DuckLivingEntityMixin) this).betteradventuremode$addStamina(-0.01F);
+                        }
                     } else if (this.isInSneakingPose()) {
                         this.increaseStat(Stats.CROUCH_ONE_CM, i);
-//                        this.addExhaustion(0.0F * (float)i * 0.01F);
+                        if (!BetterAdventureMode.serverConfig.disable_vanilla_food_system) {
+                            this.addExhaustion(0.0F * (float) i * 0.01F);
+                        }
+
 //                        ((DuckPlayerEntityMixin)this).bamcore$addStamina(-2);
                     } else {
                         this.increaseStat(Stats.WALK_ONE_CM, i);
-//                        this.addExhaustion(0.0F * (float)i * 0.01F);
+                        if (!BetterAdventureMode.serverConfig.disable_vanilla_food_system) {
+                            this.addExhaustion(0.0F * (float) i * 0.01F);
+                        }
                     }
                 }
             } else if (this.isFallFlying()) {
-                i = Math.round((float)Math.sqrt(dx * dx + dy * dy + dz * dz) * 100.0F);
+                i = Math.round((float) Math.sqrt(dx * dx + dy * dy + dz * dz) * 100.0F);
                 this.increaseStat(Stats.AVIATE_ONE_CM, i);
             } else {
-                i = Math.round((float)Math.sqrt(dx * dx + dz * dz) * 100.0F);
+                i = Math.round((float) Math.sqrt(dx * dx + dz * dz) * 100.0F);
                 if (i > 25) {
                     this.increaseStat(Stats.FLY_ONE_CM, i);
                 }

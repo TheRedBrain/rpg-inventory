@@ -64,8 +64,6 @@
     "client.network.ClientPlayerEntityMixin",
     "client.network.ClientPlayerInteractionManagerMixin",
     "client.network.message.MessageHandlerMixin",
-    "client.option.PerspectiveMixin",
-    "client.render.CameraMixin",
     "client.render.entity.PlayerEntityRendererMixin"
   ]
 }

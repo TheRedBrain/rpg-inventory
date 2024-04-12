@@ -134,11 +134,6 @@ public class Tags {
 
     // enables functionality
     public static final TagKey<Item> ENABLES_MANA_REGENERATION = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("enables_mana_regeneration"));
-    public static final TagKey<Item> ENABLES_CHANGING_PITCH = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("enables_changing_pitch"));
-    public static final TagKey<Item> ENABLES_CHANGING_PITCH_ON_USING = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("enables_changing_pitch_on_using"));
-    public static final TagKey<Item> ENABLES_FIRST_PERSON_PERSPECTIVE = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("enables_first_person_perspective"));
-    public static final TagKey<Item> ENABLES_FIRST_PERSON_PERSPECTIVE_ON_USING = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("enables_first_person_perspective_on_using"));
-    public static final TagKey<Item> ROTATE_PLAYER_ON_USING = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("rotate_player_on_using"));
     public static final TagKey<Item> IGNORES_ATTACK_MOVEMENT_PENALTY = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("ignores_attack_movement_penalty"));
     public static final TagKey<Item> KEEPS_INVENTORY_ON_DEATH = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("keeps_inventory_on_death"));
     public static final TagKey<Item> DOUBLES_INCOMING_DAMAGE = TagKey.of(RegistryKeys.ITEM, BetterAdventureMode.identifier("doubles_incoming_damage"));

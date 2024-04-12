@@ -378,10 +378,6 @@ public class StatusEffectsRegistry {
     public static final StatusEffect OVERBURDENED_EFFECT = new HarmfulStatusEffect().addAttributeModifier(EntityAttributes.GENERIC_MOVEMENT_SPEED, AttributeModifierUUIDs.OVERBURDENED_EFFECT, -0.25, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
     public static final StatusEffect PORTAL_RESISTANCE_EFFECT = new NeutralStatusEffect();
 
-    // better 3rd person compat
-    public static final StatusEffect CHANGING_PITCH_ENABLED_EFFECT = new NeutralStatusEffect();
-    public static final StatusEffect FIRST_PERSON_PERSPECTIVE_ENABLED_EFFECT = new NeutralStatusEffect();
-
     public static final StatusEffect LAVA_IMMUNE = new BeneficialStatusEffect();
     public static final StatusEffect FALL_IMMUNE = new BeneficialStatusEffect();
     public static final StatusEffect KEEP_INVENTORY_ON_DEATH = new BeneficialStatusEffect();
@@ -428,10 +424,6 @@ public class StatusEffectsRegistry {
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("needs_two_handing_effect"), NEEDS_TWO_HANDING_EFFECT);
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("no_attack_items_effect"), NO_ATTACK_ITEMS_EFFECT);
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("portal_resistance_effect"), PORTAL_RESISTANCE_EFFECT);
-
-        // better 3rd person compat
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("changing_pitch_enabled_effect"), CHANGING_PITCH_ENABLED_EFFECT);
-        Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("first_person_perspective_enabled_effect"), FIRST_PERSON_PERSPECTIVE_ENABLED_EFFECT);
 
 
         Registry.register(Registries.STATUS_EFFECT, BetterAdventureMode.identifier("lava_immune"), LAVA_IMMUNE);
