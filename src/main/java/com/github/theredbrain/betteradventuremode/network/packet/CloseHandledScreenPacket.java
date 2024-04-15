@@ -5,16 +5,16 @@ import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.minecraft.network.PacketByteBuf;
 
-public class SuccessfulTeleportPacket implements FabricPacket {
-    public static final PacketType<SuccessfulTeleportPacket> TYPE = PacketType.create(
-            BetterAdventureMode.identifier("successful_teleport"),
-            SuccessfulTeleportPacket::new
+public class CloseHandledScreenPacket implements FabricPacket {
+    public static final PacketType<CloseHandledScreenPacket> TYPE = PacketType.create(
+            BetterAdventureMode.identifier("close_handled_screen"),
+            CloseHandledScreenPacket::new
     );
 
-    public SuccessfulTeleportPacket() {
+    public CloseHandledScreenPacket() {
     }
 
-    public SuccessfulTeleportPacket(PacketByteBuf buf) {
+    public CloseHandledScreenPacket(PacketByteBuf buf) {
         this();
     }
     @Override

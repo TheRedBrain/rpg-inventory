@@ -8,7 +8,7 @@ import net.minecraft.util.math.BlockPos;
 
 public class OpenDialogueScreenPacket implements FabricPacket {
     public static final PacketType<OpenDialogueScreenPacket> TYPE = PacketType.create(
-            BetterAdventureMode.identifier("close_current_screen"),
+            BetterAdventureMode.identifier("open_dialogue_screen"),
             OpenDialogueScreenPacket::new
     );
 

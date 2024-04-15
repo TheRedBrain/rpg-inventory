@@ -1,16 +1,12 @@
 package com.github.theredbrain.betteradventuremode.block.entity;
 
-import com.github.theredbrain.betteradventuremode.data.Dialogue;
 import com.github.theredbrain.betteradventuremode.util.BlockRotationUtils;
 import com.github.theredbrain.betteradventuremode.block.RotatedBlockWithEntity;
 import com.github.theredbrain.betteradventuremode.client.network.DuckClientAdvancementManagerMixin;
-import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.betteradventuremode.network.packet.*;
-import com.github.theredbrain.betteradventuremode.registry.DialoguesRegistry;
 import com.github.theredbrain.betteradventuremode.registry.EntityRegistry;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.advancement.Advancement;
-//import net.minecraft.advancement.AdvancementEntry;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.network.ClientAdvancementManager;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -23,7 +19,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import org.apache.commons.lang3.tuple.MutablePair;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -118,23 +113,15 @@ public class DialogueBlockEntity extends RotatedBlockEntity {
         return this.createNbt();
     }
 
-    public boolean openScreen(PlayerEntity player) {
-        if (player.getEntityWorld().isClient) {
-            ((DuckPlayerEntityMixin)player).betteradventuremode$openDialogueScreen(this, getStartingDialogue(player, this));
-        }
-        return true;
-    }
-
-    private static @Nullable Dialogue getStartingDialogue(PlayerEntity player, DialogueBlockEntity dialogueBlockEntity) {
+    public static String getStartingDialogue(PlayerEntity player, DialogueBlockEntity dialogueBlockEntity) {
         if (dialogueBlockEntity.startingDialogueList.size() < 1) {
-            return null;
+            return "";
         }
         ClientAdvancementManager advancementHandler = null;
 
         if (player instanceof ClientPlayerEntity clientPlayerEntity) {
             advancementHandler = clientPlayerEntity.networkHandler.getAdvancementHandler();
         }
-        Dialogue startingDialogue = null;
         String lockAdvancementString;
         String unlockAdvancementString;
 
@@ -153,15 +140,13 @@ public class DialogueBlockEntity extends RotatedBlockEntity {
                 if (!unlockAdvancementString.equals("")) {
                     unlockAdvancement = advancementHandler.getManager().get(Identifier.tryParse(unlockAdvancementString));
                 }
-                if ((lockAdvancementString.equals("") || (lockAdvancement != null && !((DuckClientAdvancementManagerMixin)advancementHandler.getManager()).betteradventuremode$getAdvancementProgress(lockAdvancement).isDone())) && (unlockAdvancementString.equals("") || (unlockAdvancement != null && ((DuckClientAdvancementManagerMixin)advancementHandler.getManager()).betteradventuremode$getAdvancementProgress(unlockAdvancement).isDone()))) {
-                    startingDialogue = DialoguesRegistry.getDialogue(Identifier.tryParse(dialogueEntry.getLeft()));
-                    if (startingDialogue != null) {
-                        break;
-                    }
+                if ((lockAdvancementString.equals("") || (lockAdvancement != null && !((DuckClientAdvancementManagerMixin) advancementHandler.getManager()).betteradventuremode$getAdvancementProgress(lockAdvancement).isDone())) && (unlockAdvancementString.equals("") || (unlockAdvancement != null && ((DuckClientAdvancementManagerMixin) advancementHandler.getManager()).betteradventuremode$getAdvancementProgress(unlockAdvancement).isDone()))) {
+                    String string = dialogueEntry.getLeft();
+                    return string;
                 }
             }
         }
-        return startingDialogue;
+        return "";
     }
 
     public void answer(Identifier answerIdentifier) {

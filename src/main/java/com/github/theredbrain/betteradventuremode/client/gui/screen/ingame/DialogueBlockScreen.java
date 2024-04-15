@@ -3,6 +3,7 @@ package com.github.theredbrain.betteradventuremode.client.gui.screen.ingame;
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.data.Dialogue;
 import com.github.theredbrain.betteradventuremode.data.DialogueAnswer;
+import com.github.theredbrain.betteradventuremode.screen.DialogueBlockScreenHandler;
 import com.github.theredbrain.betteradventuremode.util.ItemUtils;
 import com.github.theredbrain.betteradventuremode.block.entity.DialogueBlockEntity;
 import com.github.theredbrain.betteradventuremode.client.network.DuckClientAdvancementManagerMixin;
@@ -12,16 +13,16 @@ import com.github.theredbrain.betteradventuremode.registry.DialoguesRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-//import net.minecraft.advancement.AdvancementEntry;
 import net.minecraft.advancement.Advancement;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.CyclingButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.network.ClientAdvancementManager;
-import net.minecraft.client.util.NarratorManager;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.Item;
@@ -42,7 +43,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Environment(value= EnvType.CLIENT)
-public class DialogueBlockScreen extends Screen {
+public class DialogueBlockScreen extends HandledScreen<DialogueBlockScreenHandler> {
     private static final Text ADD_ENTRY_BUTTON_LABEL_TEXT = Text.translatable("gui.list_entry.add");
     private static final Text REMOVE_ENTRY_BUTTON_LABEL_TEXT = Text.translatable("gui.list_entry.remove");
     public static final Identifier BACKGROUND_218_197_TEXTURE = BetterAdventureMode.identifier("textures/gui/container/generic_218_197_background.png");
@@ -51,7 +52,7 @@ public class DialogueBlockScreen extends Screen {
     private static final Identifier SCROLL_BAR_BACKGROUND_8_92_TEXTURE = BetterAdventureMode.identifier("scroll_bar/scroll_bar_background_8_92");
     private static final Identifier SCROLL_BAR_BACKGROUND_8_96_TEXTURE = BetterAdventureMode.identifier("scroll_bar/scroll_bar_background_8_96");
     private static final Identifier SCROLLER_VERTICAL_6_7_TEXTURE = BetterAdventureMode.identifier("scroll_bar/scroller_vertical_6_7");
-    private final DialogueBlockEntity dialogueBlockEntity;
+    private DialogueBlockEntity dialogueBlockEntity;
 
     //region adventure widgets
     private ButtonWidget answerButton0;
@@ -91,7 +92,7 @@ public class DialogueBlockScreen extends Screen {
     private ButtonWidget saveCreativeButton;
     private ButtonWidget cancelCreativeButton;
     //endregion creative widgets
-    private final @Nullable Dialogue dialogue;
+    private @Nullable Dialogue dialogue;
     private final boolean showCreativeScreen;
     private CreativeScreenPage creativeScreenPage;
     private List<MutablePair<String, BlockPos>> dialogueUsedBlocksList = new ArrayList<>(List.of());
@@ -114,11 +115,9 @@ public class DialogueBlockScreen extends Screen {
     private float scrollAmount = 0.0f;
     private boolean mouseClicked = false;
 
-    public DialogueBlockScreen(DialogueBlockEntity dialogueBlockEntity, @Nullable Dialogue dialogue, boolean showCreativeScreen) {
-        super(NarratorManager.EMPTY);
-        this.dialogueBlockEntity = dialogueBlockEntity;
-        this.dialogue = dialogue;
-        this.showCreativeScreen = showCreativeScreen;
+    public DialogueBlockScreen(DialogueBlockScreenHandler handler, PlayerInventory inventory, Text title) {
+        super(handler, inventory, title);
+        this.showCreativeScreen = handler.getShowCreativeTab();
         this.creativeScreenPage = CreativeScreenPage.STARTING_DIALOGUES;
     }
 
@@ -360,6 +359,17 @@ public class DialogueBlockScreen extends Screen {
 
     @Override
     protected void init() {
+        if (this.client != null && this.client.world != null) {
+            BlockEntity blockEntity = this.client.world.getBlockEntity(this.handler.getBlockPos());
+            if (blockEntity instanceof DialogueBlockEntity) {
+                this.dialogueBlockEntity = (DialogueBlockEntity) blockEntity;
+                String string = this.handler.getDialogueIdentifierString();
+                if (string.equals("") && this.client.player != null) {
+                    string = DialogueBlockEntity.getStartingDialogue(this.client.player, this.dialogueBlockEntity);
+                }
+                this.dialogue = DialoguesRegistry.getDialogue(Identifier.tryParse(string));
+            }
+        }
         if (!this.showCreativeScreen && this.dialogue == null && this.client != null) {
             this.client.setScreen(null);
             return;
@@ -938,28 +948,17 @@ public class DialogueBlockScreen extends Screen {
     }
 
     @Override
-    public boolean shouldPause() {
-        return false;
+    protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
+        if (!this.showCreativeScreen) {
+            int i = this.x;
+            int j = this.y;
+            context.drawTexture(BACKGROUND_218_197_TEXTURE, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
+        }
     }
 
     @Override
     public boolean shouldCloseOnEsc() {
         return (this.dialogue != null && this.dialogue.isCancellable()) || this.showCreativeScreen || this.dialogue == null;
-    }
-
-    @Override
-    public void renderBackground(DrawContext context/*, int mouseX, int mouseY, float delta*/) {
-        super.renderBackground(context/*, mouseX, mouseY, delta*/);
-        this.drawBackground(context/*, delta, mouseX, mouseY*/);
-    }
-
-    public void drawBackground(DrawContext context/*, float delta, int mouseX, int mouseY*/) {
-        if (!this.showCreativeScreen) {
-            int i = this.x;
-            int j = this.y;
-            BetterAdventureMode.info("drawBackground");
-            context.drawTexture(BACKGROUND_218_197_TEXTURE, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
-        }
     }
 
     private boolean updateDialogueBlockCreative() {

@@ -16,11 +16,10 @@ import net.minecraft.item.ItemStack;
 public class ClientPacketRegistry {
 
     public static void init() {
-        ClientPlayNetworking.registerGlobalReceiver(OpenDialogueScreenPacket.TYPE, new OpenDialogueScreenPacketReceiver());
 
         ClientPlayNetworking.registerGlobalReceiver(SendAnnouncementPacket.TYPE, new SendAnnouncementPacketReceiver());
 
-        ClientPlayNetworking.registerGlobalReceiver(SuccessfulTeleportPacket.TYPE, new SuccessfulTeleportPacketReceiver());
+        ClientPlayNetworking.registerGlobalReceiver(CloseHandledScreenPacket.TYPE, new CloseHandledScreenPacketReceiver());
 
         ClientPlayNetworking.registerGlobalReceiver(ServerPacketRegistry.SWAPPED_HAND_ITEMS_PACKET, (client, handler, buffer, responseSender) -> { // TODO convert to packet
             int entityId = buffer.readInt();

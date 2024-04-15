@@ -37,7 +37,7 @@ public class TeleportToTeamPacketReceiver implements ServerPlayNetworking.PlayPa
             if (BetterAdventureModeClient.clientConfig.show_debug_messages) {
                 serverPlayerEntity.sendMessage(Text.of("Teleport to your team in world: " + targetWorld.getRegistryKey().getValue() + " at position: " + (targetPos.getX() + 0.5) + ", " + (targetPos.getY() + 0.01) + ", " + (targetPos.getZ() + 0.5) + ", with yaw: " + targetYaw + " and pitch: " + targetPitch));
             }
-            ClientPlayNetworking.send(new SuccessfulTeleportPacket());
+            ClientPlayNetworking.send(new CloseHandledScreenPacket());
 
         }
     }

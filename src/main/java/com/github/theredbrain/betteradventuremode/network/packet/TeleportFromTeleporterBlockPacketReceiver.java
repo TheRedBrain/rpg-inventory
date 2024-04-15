@@ -224,7 +224,7 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
                     serverPlayerEntity.sendMessage(Text.of("World owned by: " + targetDimensionOwnerName));
                 }
             }
-            ServerPlayNetworking.send(serverPlayerEntity, new SuccessfulTeleportPacket());
+            ServerPlayNetworking.send(serverPlayerEntity, new CloseHandledScreenPacket());
             serverPlayerEntity.removeStatusEffect(StatusEffectsRegistry.PORTAL_RESISTANCE_EFFECT);
 
             if (teleportTeam) {
@@ -242,7 +242,7 @@ public class TeleportFromTeleporterBlockPacketReceiver implements ServerPlayNetw
                                     teamServerPlayerEntity.sendMessage(Text.of("World owned by: " + targetDimensionOwnerName));
                                 }
                             }
-                            ServerPlayNetworking.send(teamServerPlayerEntity, new SuccessfulTeleportPacket());
+                            ServerPlayNetworking.send(teamServerPlayerEntity, new CloseHandledScreenPacket());
                             teamServerPlayerEntity.removeStatusEffect(StatusEffectsRegistry.PORTAL_RESISTANCE_EFFECT);
                         }
                     }

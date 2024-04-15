@@ -189,10 +189,10 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
         this.client.setScreen(new LocationControlBlockScreen(locationControlBlock));
     }
 
-    @Override
-    public void betteradventuremode$openDialogueScreen(DialogueBlockEntity dialogueBlockEntity, @Nullable Dialogue dialogue) {
-        this.client.setScreen(new DialogueBlockScreen(dialogueBlockEntity, dialogue, this.isCreativeLevelTwoOp()));
-    }
+//    @Override
+//    public void betteradventuremode$openDialogueScreen(DialogueBlockEntity dialogueBlockEntity, @Nullable Dialogue dialogue) {
+//        this.client.setScreen(new DialogueBlockScreen(dialogueBlockEntity, dialogue, this.isCreativeLevelTwoOp()));
+//    }
 
     @Override
     public void betteradventuremode$openEntranceDelegationBlockScreen(EntranceDelegationBlockEntity entranceDelegationBlockEntity) {

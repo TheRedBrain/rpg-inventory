@@ -5,6 +5,7 @@ import com.github.theredbrain.betteradventuremode.util.ItemUtils;
 import com.github.theredbrain.betteradventuremode.block.Triggerable;
 import com.github.theredbrain.betteradventuremode.block.entity.DialogueBlockEntity;
 import com.github.theredbrain.betteradventuremode.registry.DialogueAnswersRegistry;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 //import net.minecraft.advancement.AdvancementEntry;
@@ -147,7 +148,12 @@ public class DialogueAnswerPacketReceiver implements ServerPlayNetworking.PlayPa
                 player.sendMessageToClient(Text.translatable(overlayMessage), true);
             }
 
-            ServerPlayNetworking.send(player, new OpenDialogueScreenPacket(dialogueBlockPos, dialogueAnswer.getResponseDialogue()));
+            String responseDialogueIdentifierString = dialogueAnswer.getResponseDialogue();
+            if (responseDialogueIdentifierString.equals("")) {
+                ServerPlayNetworking.send(player, new CloseHandledScreenPacket());
+            } else {
+                ClientPlayNetworking.send(new OpenDialogueScreenPacket(dialogueBlockPos, responseDialogueIdentifierString));
+            }
 
 
             // trigger block
