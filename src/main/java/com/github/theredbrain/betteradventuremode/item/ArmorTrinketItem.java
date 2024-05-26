@@ -1,24 +1,19 @@
 package com.github.theredbrain.betteradventuremode.item;
 
+import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.util.AttributeModifierUUIDs;
 import com.github.theredbrain.betteradventuremode.util.ItemUtils;
 import com.github.theredbrain.betteradventuremode.azurelib.BetterAdventureModeRenderProvider;
 import com.github.theredbrain.betteradventuremode.client.render.renderer.ArmorTrinketRenderer;
 import com.github.theredbrain.betteradventuremode.client.render.renderer.ModeledTrinketRenderer;
-import com.github.theredbrain.betteradventuremode.registry.EntityAttributesRegistry;
 import com.google.common.collect.Multimap;
-import dev.emi.trinkets.TrinketSlot;
 import dev.emi.trinkets.api.SlotReference;
-import dev.emi.trinkets.api.TrinketComponent;
-import dev.emi.trinkets.api.TrinketInventory;
-import dev.emi.trinkets.api.TrinketsApi;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Equipment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.sound.SoundEvent;
@@ -86,7 +81,7 @@ public class ArmorTrinketItem extends ModeledTrinketItem {
                     new EntityAttributeModifier(slotUuid, "Armor", this.armor, EntityAttributeModifier.Operation.ADDITION));
             map.put(EntityAttributes.GENERIC_ARMOR_TOUGHNESS,
                     new EntityAttributeModifier(slotUuid, "Armor Toughness", this.armorToughness, EntityAttributeModifier.Operation.ADDITION));
-            map.put(EntityAttributesRegistry.EQUIPMENT_WEIGHT,
+            map.put(BetterAdventureMode.EQUIPMENT_WEIGHT,
                     new EntityAttributeModifier(slotUuid, "Equipment Weight", this.weight, EntityAttributeModifier.Operation.ADDITION));
         }
         return map;

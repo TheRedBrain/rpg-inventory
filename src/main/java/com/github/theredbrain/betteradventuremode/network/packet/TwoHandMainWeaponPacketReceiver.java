@@ -4,6 +4,7 @@ import com.github.theredbrain.betteradventuremode.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.betteradventuremode.registry.Tags;
+import com.github.theredbrain.staminaattributes.entity.StaminaUsingEntity;
 import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketsApi;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -29,7 +30,7 @@ public class TwoHandMainWeaponPacketReceiver implements ServerPlayNetworking.Pla
             }
         }
 
-        if (((DuckLivingEntityMixin) player).betteradventuremode$getStamina() <= 0 && !player.isCreative()) {
+        if (((StaminaUsingEntity) player).staminaattributes$getStamina() <= 0 && !player.isCreative()) {
             player.sendMessageToClient(Text.translatable("hud.message.staminaTooLow"), true);
         } else if (((DuckPlayerEntityMixin) player).betteradventuremode$isMainHandStackSheathed() && ((DuckPlayerEntityMixin) player).betteradventuremode$isOffHandStackSheathed()) {
             player.sendMessageToClient(Text.translatable("hud.message.weaponsAreSheathed"), true);

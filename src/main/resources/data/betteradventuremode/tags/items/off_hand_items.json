@@ -6,14 +6,6 @@
     "minecraft:diamond_sword",
     "minecraft:golden_sword",
     "minecraft:netherite_sword",
-    "betteradventuremode:test_buckler",
-    "betteradventuremode:test_normal_shield",
-    "betteradventuremode:test_tower_shield",
-    "betteradventuremode:dagger",
-    "#betteradventuremode:short_swords",
-    "betteradventuremode:claw",
-    "betteradventuremode:buckler",
-    "betteradventuremode:plank_shield",
-    "betteradventuremode:great_shield"
+    "minecraft:shield"
   ]
 }

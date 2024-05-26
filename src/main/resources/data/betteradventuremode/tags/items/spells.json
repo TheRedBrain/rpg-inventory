@@ -1,25 +1,5 @@
 {
   "values": [
-    "betteradventuremode:arcane_beam_spell_book",
-    "betteradventuremode:arcane_blast_spell_book",
-    "betteradventuremode:arcane_bolt_spell_book",
-    "betteradventuremode:arcane_missile_spell_book",
-    "betteradventuremode:circle_of_healing_spell_book",
-    "betteradventuremode:divine_protection_spell_book",
-    "betteradventuremode:fire_breath_spell_book",
-    "betteradventuremode:fire_meteor_spell_book",
-    "betteradventuremode:fire_scorch_spell_book",
-    "betteradventuremode:fireball_spell_book",
-    "betteradventuremode:fireball_explosive_spell_book",
-    "betteradventuremode:flash_heal_spell_book",
-    "betteradventuremode:frostbolt_spell_book",
-    "betteradventuremode:frost_nova_spell_book",
-    "betteradventuremode:frost_shield_spell_book",
-    "betteradventuremode:heal_spell_book",
-    "betteradventuremode:holy_beam_spell_book",
-    "betteradventuremode:holy_shock_spell_book",
-    "betteradventuremode:ice_lance_spell_book",
-    "betteradventuremode:judgement_spell_book",
     {
       "id": "archers:archer_spell_book",
       "required": false

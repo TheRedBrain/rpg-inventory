@@ -1,9 +1,0 @@
-{
-  "answerText": "dialogue.betteradventuremode.choose_color_cancel.answer_text.1",
-  "responseDialogue": "",
-  "lockAdvancement": "",
-  "unlockAdvancement": "",
-  "showLockedAnswer": true,
-  "grantedAdvancement": "minecraft:adventure/voluntary_exile",
-  "criterionName": "voluntary_exile"
-}

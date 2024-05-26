@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:item/handheld",
-  "textures": {
-    "layer0": "betteradventuremode:item/health_regeneration_aura_necklace"
-  }
-}

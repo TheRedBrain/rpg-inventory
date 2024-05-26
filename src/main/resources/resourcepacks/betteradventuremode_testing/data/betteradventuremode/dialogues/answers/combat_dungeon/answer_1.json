@@ -1,9 +1,0 @@
-{
-  "answerText": "dialogue.betteradventuremode.combat_dungeon.answer_text.1",
-  "responseDialogue": "",
-  "lockAdvancement": "",
-  "unlockAdvancement": "",
-  "showLockedAnswer": true,
-  "usedBlock": "teleporter",
-  "triggeredBlock": "spawners"
-}

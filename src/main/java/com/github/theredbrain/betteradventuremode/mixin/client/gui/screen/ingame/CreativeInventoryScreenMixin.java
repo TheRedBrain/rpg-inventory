@@ -1,7 +1,7 @@
 package com.github.theredbrain.betteradventuremode.mixin.client.gui.screen.ingame;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
-import com.github.theredbrain.betteradventuremode.screen.DuckSlotMixin;
+import com.github.theredbrain.slotcustomizationapi.api.SlotCustomization;
 import dev.emi.trinkets.*;
 import dev.emi.trinkets.api.SlotGroup;
 import net.fabricmc.api.EnvType;
@@ -37,18 +37,18 @@ public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScre
 
         if (selectedTab.getType() == ItemGroup.Type.INVENTORY && BetterAdventureMode.serverConfig.use_adventure_inventory_screen) {
             // reposition vanilla armor slots
-            ((DuckSlotMixin) this.handler.slots.get(5)).betteradventuremode$setX(9);
-            ((DuckSlotMixin) this.handler.slots.get(5)).betteradventuremode$setY(6);
-            ((DuckSlotMixin) this.handler.slots.get(6)).betteradventuremode$setX(45);
-            ((DuckSlotMixin) this.handler.slots.get(6)).betteradventuremode$setY(6);
-            ((DuckSlotMixin) this.handler.slots.get(7)).betteradventuremode$setX(27);
-            ((DuckSlotMixin) this.handler.slots.get(7)).betteradventuremode$setY(33);
-            ((DuckSlotMixin) this.handler.slots.get(8)).betteradventuremode$setX(45);
-            ((DuckSlotMixin) this.handler.slots.get(8)).betteradventuremode$setY(33);
+            ((SlotCustomization) this.handler.slots.get(5)).slotcustomizationapi$setX(9);
+            ((SlotCustomization) this.handler.slots.get(5)).slotcustomizationapi$setY(6);
+            ((SlotCustomization) this.handler.slots.get(6)).slotcustomizationapi$setX(45);
+            ((SlotCustomization) this.handler.slots.get(6)).slotcustomizationapi$setY(6);
+            ((SlotCustomization) this.handler.slots.get(7)).slotcustomizationapi$setX(27);
+            ((SlotCustomization) this.handler.slots.get(7)).slotcustomizationapi$setY(33);
+            ((SlotCustomization) this.handler.slots.get(8)).slotcustomizationapi$setX(45);
+            ((SlotCustomization) this.handler.slots.get(8)).slotcustomizationapi$setY(33);
 
             // reposition vanilla offhand slot
-            ((DuckSlotMixin) this.handler.slots.get(45)).betteradventuremode$setX(117);
-            ((DuckSlotMixin) this.handler.slots.get(45)).betteradventuremode$setY(33);
+            ((SlotCustomization) this.handler.slots.get(45)).slotcustomizationapi$setX(117);
+            ((SlotCustomization) this.handler.slots.get(45)).slotcustomizationapi$setY(33);
         }
     }
 

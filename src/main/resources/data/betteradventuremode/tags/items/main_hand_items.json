@@ -2,9 +2,6 @@
   "values": [
     "minecraft:bow",
     "minecraft:crossbow",
-    "betteradventuremode:arcane_encyclopedia",
-    "betteradventuremode:ice_staff",
-    "betteradventuremode:blessed_talisman",
     "#betteradventuremode:attack_items",
     {
       "id": "#archers:bows",

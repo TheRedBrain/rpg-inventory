@@ -1,7 +1,5 @@
 package com.github.theredbrain.betteradventuremode.client.render.renderer;
 
-import com.github.theredbrain.betteradventuremode.item.BasicShieldItem;
-import com.github.theredbrain.betteradventuremode.item.BasicWeaponItem;
 import com.github.theredbrain.betteradventuremode.entity.IRenderEquippedTrinkets;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -49,7 +47,7 @@ public class SheathedOffHandItemFeatureRenderer<T extends LivingEntity> extends 
                     matrixStack.translate(0.0F, 0.75F, 0.0F);
                     matrixStack.scale(0.5F, 0.5F, 0.5F);
                 }
-                if (offHandItem instanceof SwordItem || offHandItem instanceof BasicWeaponItem) {
+                if (offHandItem instanceof SwordItem) {
                     matrixStack.translate(0.2D, 0.0D, 0.15D);
                     if (hasStackedEquippedInChestSlot) {
                         //                    matrixStack.translate(0.05F, 0.0F, 0.0F);
@@ -63,7 +61,7 @@ public class SheathedOffHandItemFeatureRenderer<T extends LivingEntity> extends 
 //                }
 //                matrixStack.scale(1.0F, -1.0F, -1.0F);
                     heldItemRenderer.renderItem(livingEntity, offHandStack, ModelTransformationMode.THIRD_PERSON_RIGHT_HAND, false, matrixStack, vertexConsumerProvider, i);
-                } else if (offHandItem instanceof ShieldItem || offHandItem instanceof BasicShieldItem) {
+                } else if (offHandItem instanceof ShieldItem) {
                     matrixStack.translate(0.2D, 0.4D, 0.0D);
                     if (hasStackedEquippedInChestSlot) {
                         //                    matrixStack.translate(0.05F, 0.0F, 0.0F);

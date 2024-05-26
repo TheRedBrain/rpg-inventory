@@ -12,12 +12,13 @@ public class ClientConfig implements ConfigData {
             Changes HUD elements like the health bar, disables some like the armor bar
             and adds new ones like a stamina bar.
             """)
-    public boolean show_adventure_hud = false;
-    @Comment("Current health, stamina and mana are shown above their respective bars in the HUD.")
-    public boolean show_resource_bar_numbers = true;
-    public int health_bar_number_color = -6250336;
-    public int stamina_bar_number_color = -6250336;
-    public int mana_bar_number_color = -6250336;
+    public boolean alternative_off_hand_slot_is_right = true;
+    public boolean off_hand_slot_is_right = true;
+    public int hand_slots_x_offset = -140;
+    public int hand_slots_y_offset = -23;
+    public int alternative_hand_slots_x_offset = 91;
+    public int alternative_hand_slots_y_offset = -23;
+    public boolean show_armor_bar = false;
     @Comment("Additional debug messages are shown in-game.")
     public boolean show_debug_messages = false;
     public ClientConfig() {

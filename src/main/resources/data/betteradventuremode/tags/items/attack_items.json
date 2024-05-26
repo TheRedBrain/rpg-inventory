@@ -7,17 +7,6 @@
     "minecraft:golden_sword",
     "minecraft:netherite_sword",
     "betteradventuremode:default_empty_hand_weapon",
-    "betteradventuremode:dagger",
-    "#betteradventuremode:short_swords",
-    "betteradventuremode:long_sword",
-    "betteradventuremode:zweihander",
-    "betteradventuremode:halberd",
-    "betteradventuremode:spear",
-    "betteradventuremode:battle_axe",
-    "betteradventuremode:war_hammer",
-    "betteradventuremode:mace",
-    "betteradventuremode:claw",
-    "betteradventuremode:elemental_flame",
     {
       "id": "#archers:spears",
       "required": false

@@ -1,22 +1,17 @@
 package com.github.theredbrain.betteradventuremode;
 
-import com.github.theredbrain.betteradventuremode.block.TemporaryBlockModifications;
-import com.github.theredbrain.betteradventuremode.item.TemporaryItemModifications;
 import com.github.theredbrain.betteradventuremode.registry.ServerPacketRegistry;
-import com.github.theredbrain.betteradventuremode.registry.EntityAttributesRegistry;
 import com.github.theredbrain.betteradventuremode.registry.StatusEffectsRegistry;
 import com.github.theredbrain.betteradventuremode.config.ServerConfig;
 import com.github.theredbrain.betteradventuremode.config.ServerConfigWrapper;
 import com.github.theredbrain.betteradventuremode.registry.*;
-import com.github.theredbrain.betteradventuremode.world.DimensionsManager;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import me.shedaniel.autoconfig.serializer.PartitioningSerializer;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.ModContainer;
-import net.minecraft.text.Text;
+import net.minecraft.entity.attribute.ClampedEntityAttribute;
+import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +22,10 @@ public class BetterAdventureMode implements ModInitializer {
 	public static final String MOD_ID = "betteradventuremode";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	public static ServerConfig serverConfig;
+
+	public static EntityAttribute ACTIVE_SPELL_SLOT_AMOUNT;
+	public static EntityAttribute EQUIPMENT_WEIGHT;
+	public static EntityAttribute MAX_EQUIPMENT_WEIGHT;
 
 	@Override
 	public void onInitialize() {
@@ -40,39 +39,11 @@ public class BetterAdventureMode implements ModInitializer {
 		ServerPacketRegistry.init();
 
 		// Registry
-		BlockRegistry.init();
-		EntityRegistry.init();
-		EntityAttributesRegistry.registerAttributes();
-		EntityAttributesRegistry.registerEntityAttributes();
-		DataHandlerRegistry.init();
-		DimensionsManager.init();
-		CraftingRecipeRegistry.init();
 		EventsRegistry.initializeEvents();
-		DialoguesRegistry.init();
-		DialogueAnswersRegistry.init();
-		ShopsRegistry.init();
-		LocationsRegistry.init();
 		ItemRegistry.init();
-		ItemGroupRegistry.init();
-		ScreenHandlerTypesRegistry.registerAll();
 		StatusEffectsRegistry.registerEffects();
 		GameRulesRegistry.init();
 		PredicateRegistry.init();
-		StructurePlacementTypesRegistry.register();
-		WeaponPosesRegistry.init();
-		if (serverConfig.disable_vanilla_food_system) {
-			TemporaryItemModifications.betteradventuremode$applyFoodComponentModifications();
-		}
-		if (serverConfig.enable_harder_movement) {
-			TemporaryBlockModifications.betteradventuremode$applyVelocityModifications();
-		}
-	}
-
-	static {
-		ModContainer modContainer = FabricLoader.getInstance().getModContainer(MOD_ID).get();
-		registerBuiltinResourcePack(new Identifier(MOD_ID, "betteradventuremode_adventure_map_1"), modContainer, Text.translatable("betteradventuremode.builtin_resource_packs.betteradventuremode_adventure_map_1"), ResourcePackActivationType.NORMAL);
-		registerBuiltinResourcePack(new Identifier(MOD_ID, "betteradventuremode_testing"), modContainer, Text.translatable("betteradventuremode.builtin_resource_packs.betteradventuremode_testing"), ResourcePackActivationType.NORMAL);
-		registerBuiltinResourcePack(new Identifier(MOD_ID, "betteradventuremode_x_rpgseries"), modContainer, Text.translatable("betteradventuremode.builtin_resource_packs.betteradventuremode_x_rpgseries"), ResourcePackActivationType.DEFAULT_ENABLED);
 	}
 
 	public static Identifier identifier(String path) {

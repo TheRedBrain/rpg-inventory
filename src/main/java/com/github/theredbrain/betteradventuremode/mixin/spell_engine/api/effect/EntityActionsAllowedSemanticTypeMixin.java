@@ -34,7 +34,7 @@ public class EntityActionsAllowedSemanticTypeMixin {
         values.add(init("NO_ATTACK_ITEM", last.ordinal() + 1));
         values.add(init("NEEDS_TWO_HANDING", last.ordinal() + 2));
         values.add(init("OVERBURDENED", last.ordinal() + 3));
-        values.add(init("STAGGERED", last.ordinal() + 4));
+//        values.add(init("STAGGERED", last.ordinal() + 4));
 
         $VALUES = values.toArray(new EntityActionsAllowed.SemanticType[0]);
     }

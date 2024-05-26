@@ -16,16 +16,16 @@ public class KeyBindingsRegistry {
     public static KeyBinding twoHandMainWeapon;
     public static KeyBinding swapMainHand;
     public static KeyBinding swapOffHand;
-    public static KeyBinding toggleNecklaceAbility;
-    public static KeyBinding openHousingScreen;
-    public static KeyBinding openBackpackScreen;
+//    public static KeyBinding toggleNecklaceAbility;
+//    public static KeyBinding openHousingScreen;
+//    public static KeyBinding openBackpackScreen;
     public static boolean sheatheWeaponsBoolean;
     public static boolean twoHandMainWeaponBoolean;
     public static boolean swapMainHandBoolean;
     public static boolean swapOffHandBoolean;
-    public static boolean toggleNecklaceAbilityBoolean;
-    public static boolean openHousingScreenBoolean;
-    public static boolean openBackpackScreenBoolean;
+//    public static boolean toggleNecklaceAbilityBoolean;
+//    public static boolean openHousingScreenBoolean;
+//    public static boolean openBackpackScreenBoolean;
 
     public static void registerKeyBindings() {
         KeyBindingsRegistry.sheatheWeapons = KeyBindingHelper.registerKeyBinding(new KeyBinding(
@@ -52,24 +52,24 @@ public class KeyBindingsRegistry {
                 GLFW.GLFW_KEY_Q,
                 "category.betteradventuremode.category"
         ));
-        KeyBindingsRegistry.toggleNecklaceAbility = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.betteradventuremode.toggleNecklaceAbility",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_Z,
-                "category.betteradventuremode.category"
-        ));
-        KeyBindingsRegistry.openHousingScreen = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.betteradventuremode.housingScreen",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_H,
-                "category.betteradventuremode.category"
-        ));
-        KeyBindingsRegistry.openBackpackScreen = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.betteradventuremode.backpackScreen",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_B,
-                "category.betteradventuremode.category"
-        ));
+//        KeyBindingsRegistry.toggleNecklaceAbility = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+//                "key.betteradventuremode.toggleNecklaceAbility",
+//                InputUtil.Type.KEYSYM,
+//                GLFW.GLFW_KEY_Z,
+//                "category.betteradventuremode.category"
+//        ));
+//        KeyBindingsRegistry.openHousingScreen = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+//                "key.betteradventuremode.housingScreen",
+//                InputUtil.Type.KEYSYM,
+//                GLFW.GLFW_KEY_H,
+//                "category.betteradventuremode.category"
+//        ));
+//        KeyBindingsRegistry.openBackpackScreen = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+//                "key.betteradventuremode.backpackScreen",
+//                InputUtil.Type.KEYSYM,
+//                GLFW.GLFW_KEY_B,
+//                "category.betteradventuremode.category"
+//        ));
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (KeyBindingsRegistry.swapMainHand.wasPressed()) {
                 if (!swapMainHandBoolean) {
@@ -103,30 +103,30 @@ public class KeyBindingsRegistry {
             } else if (twoHandMainWeaponBoolean) {
                 twoHandMainWeaponBoolean = false;
             }
-            if (KeyBindingsRegistry.toggleNecklaceAbility.wasPressed()) {
-                if (!toggleNecklaceAbilityBoolean) {
-                    toggleNecklaceAbility();
-                }
-                toggleNecklaceAbilityBoolean = true;
-            } else if (toggleNecklaceAbilityBoolean) {
-                toggleNecklaceAbilityBoolean = false;
-            }
-            if (KeyBindingsRegistry.openHousingScreen.wasPressed()) {
-                if (!openHousingScreenBoolean) {
-                    openHousingScreen(client);
-                }
-                openHousingScreenBoolean = true;
-            } else if (openHousingScreenBoolean) {
-                openHousingScreenBoolean = false;
-            }
-            if (KeyBindingsRegistry.openBackpackScreen.wasPressed()) {
-                if (!openBackpackScreenBoolean) {
-                    openBackpackScreen(client);
-                }
-                openBackpackScreenBoolean = true;
-            } else if (openBackpackScreenBoolean) {
-                openBackpackScreenBoolean = false;
-            }
+//            if (KeyBindingsRegistry.toggleNecklaceAbility.wasPressed()) {
+//                if (!toggleNecklaceAbilityBoolean) {
+//                    toggleNecklaceAbility();
+//                }
+//                toggleNecklaceAbilityBoolean = true;
+//            } else if (toggleNecklaceAbilityBoolean) {
+//                toggleNecklaceAbilityBoolean = false;
+//            }
+//            if (KeyBindingsRegistry.openHousingScreen.wasPressed()) {
+//                if (!openHousingScreenBoolean) {
+//                    openHousingScreen(client);
+//                }
+//                openHousingScreenBoolean = true;
+//            } else if (openHousingScreenBoolean) {
+//                openHousingScreenBoolean = false;
+//            }
+//            if (KeyBindingsRegistry.openBackpackScreen.wasPressed()) {
+//                if (!openBackpackScreenBoolean) {
+//                    openBackpackScreen(client);
+//                }
+//                openBackpackScreenBoolean = true;
+//            } else if (openBackpackScreenBoolean) {
+//                openBackpackScreenBoolean = false;
+//            }
         });
     }
     public static void sheatheWeapons() {
@@ -138,17 +138,17 @@ public class KeyBindingsRegistry {
     public static void syncSlotSwapHand(boolean mainHand) {
         ClientPlayNetworking.send(new SwapHandItemsPacket(mainHand));
     }
-    public static void toggleNecklaceAbility() {
-        ClientPlayNetworking.send(new ToggleNecklaceAbilityPacket());
-    }
-    public static void openHousingScreen(MinecraftClient client) {
-        if (client.player != null) {
-            ((DuckPlayerEntityMixin)client.player).betteradventuremode$openHousingScreen();
-        }
-    }
-    public static void openBackpackScreen(MinecraftClient client) {
-        if (client.player != null) {
-            ClientPlayNetworking.send(new OpenBackpackScreenPacket());
-        }
-    }
+//    public static void toggleNecklaceAbility() {
+//        ClientPlayNetworking.send(new ToggleNecklaceAbilityPacket());
+//    }
+//    public static void openHousingScreen(MinecraftClient client) {
+//        if (client.player != null) {
+//            ((DuckPlayerEntityMixin)client.player).betteradventuremode$openHousingScreen();
+//        }
+//    }
+//    public static void openBackpackScreen(MinecraftClient client) {
+//        if (client.player != null) {
+//            ClientPlayNetworking.send(new OpenBackpackScreenPacket());
+//        }
+//    }
 }

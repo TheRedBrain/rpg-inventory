@@ -2,7 +2,6 @@
   "values": [
     "minecraft:bow",
     "minecraft:crossbow",
-    "betteradventuremode:ice_staff",
     {
       "id": "#archers:bows",
       "required": false

@@ -1,10 +1,6 @@
 package com.github.theredbrain.betteradventuremode.client.gui.screen.ingame;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
-import com.github.theredbrain.betteradventuremode.BetterAdventureModeClient;
-import com.github.theredbrain.betteradventuremode.effect.FoodStatusEffect;
-import com.github.theredbrain.betteradventuremode.registry.EntityAttributesRegistry;
-import com.github.theredbrain.betteradventuremode.screen.DuckSlotMixin;
 import com.google.common.collect.Ordering;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.emi.trinkets.Point;
@@ -133,9 +129,9 @@ public class AdventureInventoryScreen extends HandledScreen<PlayerScreenHandler>
             this.neutralScrollAmount = 0.0f;
 
             for (StatusEffectInstance statusEffectInstance : visibleEffectsList) {
-                if (statusEffectInstance.getEffectType() instanceof FoodStatusEffect) {
+                /*if (statusEffectInstance.getEffectType() instanceof FoodStatusEffect) { // TODO wait for foodoverhaul
                     this.foodEffectsList.add(statusEffectInstance);
-                } else if (statusEffectInstance.getEffectType().getCategory() == StatusEffectCategory.HARMFUL) {
+                } else */if (statusEffectInstance.getEffectType().getCategory() == StatusEffectCategory.HARMFUL) {
                     this.negativeEffectsList.add(statusEffectInstance);
                 } else if (statusEffectInstance.getEffectType().getCategory() == StatusEffectCategory.BENEFICIAL) {
                     this.positiveEffectsList.add(statusEffectInstance);
@@ -163,22 +159,6 @@ public class AdventureInventoryScreen extends HandledScreen<PlayerScreenHandler>
             return;
         }
         super.init();
-
-//        // disable vanilla crafting slots
-//        ((DuckSlotMixin)this.handler.slots.get(0)).betteradventuremode$setDisabledOverride(true);
-//        ((DuckSlotMixin)this.handler.slots.get(1)).betteradventuremode$setDisabledOverride(true);
-//        ((DuckSlotMixin)this.handler.slots.get(2)).betteradventuremode$setDisabledOverride(true);
-//        ((DuckSlotMixin)this.handler.slots.get(3)).betteradventuremode$setDisabledOverride(true);
-//        ((DuckSlotMixin)this.handler.slots.get(4)).betteradventuremode$setDisabledOverride(true);
-//
-//        // disable vanilla armor slots
-//        ((DuckSlotMixin)this.handler.slots.get(5)).betteradventuremode$setDisabledOverride(true);
-//        ((DuckSlotMixin)this.handler.slots.get(6)).betteradventuremode$setDisabledOverride(true);
-//        ((DuckSlotMixin)this.handler.slots.get(7)).betteradventuremode$setDisabledOverride(true);
-//        ((DuckSlotMixin)this.handler.slots.get(8)).betteradventuremode$setDisabledOverride(true);
-//
-//        // disable vanilla offhand slot
-//        ((DuckSlotMixin)this.handler.slots.get(45)).betteradventuremode$setDisabledOverride(true);
     }
 
     @Override
@@ -197,7 +177,7 @@ public class AdventureInventoryScreen extends HandledScreen<PlayerScreenHandler>
         int j = this.y;
         int activeSpellSlotAmount = 0;
         if (this.client != null && this.client.player != null) {
-            activeSpellSlotAmount = (int) this.client.player.getAttributeInstance(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT).getValue();
+            activeSpellSlotAmount = (int) this.client.player.getAttributeInstance(BetterAdventureMode.ACTIVE_SPELL_SLOT_AMOUNT).getValue();
             updateEffectsLists(this.client.player);
         }
         context.drawTexture(BetterAdventureMode.identifier("textures/gui/container/adventure_inventory/adventure_inventory_main_background.png"), i, j, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);

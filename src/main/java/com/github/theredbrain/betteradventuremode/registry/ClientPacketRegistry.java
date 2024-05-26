@@ -3,8 +3,6 @@ package com.github.theredbrain.betteradventuremode.registry;
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerInventoryMixin;
-import com.github.theredbrain.betteradventuremode.network.packet.*;
-import net.bettercombat.api.MinecraftClient_BetterCombat;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -16,10 +14,6 @@ import net.minecraft.item.ItemStack;
 public class ClientPacketRegistry {
 
     public static void init() {
-
-        ClientPlayNetworking.registerGlobalReceiver(SendAnnouncementPacket.TYPE, new SendAnnouncementPacketReceiver());
-
-        ClientPlayNetworking.registerGlobalReceiver(CloseHandledScreenPacket.TYPE, new CloseHandledScreenPacketReceiver());
 
         ClientPlayNetworking.registerGlobalReceiver(ServerPacketRegistry.SWAPPED_HAND_ITEMS_PACKET, (client, handler, buffer, responseSender) -> { // TODO convert to packet
             int entityId = buffer.readInt();
@@ -87,35 +81,6 @@ public class ClientPacketRegistry {
             });
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(ServerPacketRegistry.CANCEL_ATTACK_PACKET, (client, handler, buffer, responseSender) -> { // TODO convert to packet
-            int entityId = buffer.readInt();
-            client.execute(() -> {
-                if (client.player != null && client.player.getWorld().getEntityById(entityId) != null) {
-                    PlayerEntity player = (PlayerEntity) client.player.getWorld().getEntityById(entityId);
-                    if (player != null && player == client.player) {
-                        ((MinecraftClient_BetterCombat)client).cancelUpswing();
-                    }
-                }
-            });
-        });
-        ClientPlayNetworking.registerGlobalReceiver(ServerPacketRegistry.SYNC_CRAFTING_RECIPES, (client, handler, buffer, responseSender) -> { // TODO convert to packet
-            CraftingRecipeRegistry.decodeRegistry(buffer);
-        });
-        ClientPlayNetworking.registerGlobalReceiver(ServerPacketRegistry.SYNC_DIALOGUES, (client, handler, buffer, responseSender) -> { // TODO convert to packet
-            DialoguesRegistry.decodeRegistry(buffer);
-        });
-        ClientPlayNetworking.registerGlobalReceiver(ServerPacketRegistry.SYNC_DIALOGUE_ANSWERS, (client, handler, buffer, responseSender) -> { // TODO convert to packet
-            DialogueAnswersRegistry.decodeRegistry(buffer);
-        });
-        ClientPlayNetworking.registerGlobalReceiver(ServerPacketRegistry.SYNC_LOCATIONS, (client, handler, buffer, responseSender) -> { // TODO convert to packet
-            LocationsRegistry.decodeRegistry(buffer);
-        });
-        ClientPlayNetworking.registerGlobalReceiver(ServerPacketRegistry.SYNC_SHOPS, (client, handler, buffer, responseSender) -> { // TODO convert to packet
-            ShopsRegistry.decodeRegistry(buffer);
-        });
-        ClientPlayNetworking.registerGlobalReceiver(ServerPacketRegistry.SYNC_WEAPON_POSES, (client, handler, buffer, responseSender) -> { // TODO convert to packet
-            WeaponPosesRegistry.decodeRegistry(buffer);
-        });
         ClientPlayNetworking.registerGlobalReceiver(ServerPacketRegistry.ServerConfigSync.ID, (client, handler, buf, responseSender) -> {
             BetterAdventureMode.serverConfig = ServerPacketRegistry.ServerConfigSync.read(buf);
         });

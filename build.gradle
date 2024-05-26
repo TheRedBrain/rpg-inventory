@@ -1,6 +1,7 @@
 plugins {
-	id 'fabric-loom' version '1.5-SNAPSHOT'
+	id 'fabric-loom' version '1.6-SNAPSHOT'
 	id 'maven-publish'
+	id "com.modrinth.minotaur" version "2.+"
 }
 
 version = project.mod_version
@@ -28,7 +29,7 @@ repositories {
 		url = 'https://maven.ladysnake.org/releases'
 	}
 
-	// Spell Power, Spell Engine, Better Combat
+	// Spell Power, Spell Engine, Better Combat, Stamina Attributes, Slot Customization API, Script Blocks
 	maven {
 		name = "Modrinth"
 		url = "https://api.modrinth.com/maven"
@@ -43,7 +44,7 @@ repositories {
 		url 'https://maven.kosmx.dev/'
 	}
 
-	// Mixin Squared, Immersive Portals
+	// Mixin Squared, Immersive Portals, Tiny Config
 	maven {
 		url 'https://jitpack.io'
 	}
@@ -73,11 +74,11 @@ dependencies {
 	// Player Animation Lib
 	modImplementation("dev.kosmx.player-anim:player-animation-lib-fabric:${project.player_anim}")
 
-	// Better Combat
-	modImplementation "maven.modrinth:better-combat:${project.better_combat}"
-
-	// Combat Roll
-	modImplementation "maven.modrinth:combat-roll:${project.combat_roll_version}"
+//	// Better Combat
+//	modImplementation "maven.modrinth:better-combat:${project.better_combat}"
+//
+//	// Combat Roll
+//	modImplementation "maven.modrinth:combat-roll:${project.combat_roll_version}"
 
 	// Spell Engine
 	modImplementation("maven.modrinth:spell-engine:${project.spell_engine_version}")
@@ -85,8 +86,8 @@ dependencies {
 	// Spell Power
 	modImplementation("maven.modrinth:spell-power:${project.spell_power_version}")
 
-	// Ranged Weapon API
-	modImplementation "maven.modrinth:ranged-weapon-api:${project.ranged_weapon_api_version}"
+//	// Ranged Weapon API
+//	modImplementation "maven.modrinth:ranged-weapon-api:${project.ranged_weapon_api_version}"
 
 	// Trinkets
 	modImplementation "dev.emi:trinkets:${project.trinkets_version}"
@@ -94,27 +95,33 @@ dependencies {
 	// Tiny Config
 	implementation include("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}")
 
-	// Revelationary
-	modImplementation "maven.modrinth:Revelationary:${project.revelationary_version}"
+//	// Revelationary
+//	modImplementation "maven.modrinth:Revelationary:${project.revelationary_version}"
+//
+//	// Immersive Portals Core
+//	modImplementation "com.github.iPortalTeam.ImmersivePortalsMod:imm_ptl_core:${project.q_misc_util_version}"
+//
+//	// Miscellaneous Utility Library
+//	modImplementation "com.github.iPortalTeam.ImmersivePortalsMod:q_misc_util:${project.q_misc_util_version}"
 
-	// Immersive Portals Core
-	modImplementation "com.github.iPortalTeam.ImmersivePortalsMod:imm_ptl_core:${project.q_misc_util_version}"
-
-	// Miscellaneous Utility Library
-	modImplementation "com.github.iPortalTeam.ImmersivePortalsMod:q_misc_util:${project.q_misc_util_version}"
-
-	// Cardinal Components
-	modImplementation ("dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cca_version}")
-	modImplementation ("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cca_version}")
+//	// Cardinal Components
+//	modImplementation ("dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cca_version}")
+//	modImplementation ("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cca_version}")
 
 	// Azure Lib
-	modImplementation("mod.azure.azurelib:azurelib-fabric-${project.mc_version}:${project.azure_lib_version}")
+	modImplementation("mod.azure.azurelib:azurelib-fabric-${project.minecraft_version}:${project.azure_lib_version}")
 
 	// Mixin Squared
 	include(implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:0.1.2-beta.4")))
 
 	// Mod Menu
 	modImplementation "com.terraformersmc:modmenu:${project.mod_menu_version}"
+
+	// Stamina Attributes
+	modImplementation "maven.modrinth:stamina-attributes:${project.stamina_attributes}"
+
+	// Slot Customization API
+	modImplementation "maven.modrinth:slot-customization-api:${project.slot_customization_api_version}"
 
 }
 

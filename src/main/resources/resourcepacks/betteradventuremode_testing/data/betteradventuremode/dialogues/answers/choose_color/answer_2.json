@@ -1,9 +1,0 @@
-{
-  "answerText": "dialogue.betteradventuremode.choose_color.answer_text.2",
-  "responseDialogue": "",
-  "lockAdvancement": "",
-  "unlockAdvancement": "",
-  "showLockedAnswer": true,
-  "usedBlock": "yellow",
-  "lootTable": "minecraft:blocks/yellow_wool"
-}

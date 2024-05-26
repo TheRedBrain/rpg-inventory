@@ -1,20 +1,23 @@
 package com.github.theredbrain.betteradventuremode.mixin.entity.player;
 
+import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.item.ArmorTrinketItem;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.betteradventuremode.util.ItemUtils;
-import com.github.theredbrain.betteradventuremode.registry.StatusEffectsRegistry;
 import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketsApi;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.tag.DamageTypeTags;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
@@ -53,7 +56,8 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 
     @Inject(method = "getMainHandStack", at = @At("HEAD"), cancellable = true)
     public void betteradventuremode$getMainHandStack(CallbackInfoReturnable<ItemStack> cir) {
-        if (!player.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT) && !player.isCreative()) {
+        StatusEffect building_mode_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(BetterAdventureMode.serverConfig.building_mode_status_effect_identifier));
+        if (!(building_mode_status_effect != null && player.hasStatusEffect(building_mode_status_effect)) && !player.isCreative()) {
             ItemStack emptyMainHandStack = betteradventuremode$getEmptyMainHand();
             ItemStack mainHandStack = betteradventuremode$getMainHand();
             if (!((DuckPlayerEntityMixin)player).betteradventuremode$isMainHandStackSheathed()) {
@@ -65,7 +69,8 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 
     @Override
     public ItemStack betteradventuremode$getOffHandStack() {
-        if (!player.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT) && !player.isCreative()) {
+        StatusEffect building_mode_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(BetterAdventureMode.serverConfig.building_mode_status_effect_identifier));
+        if (!(building_mode_status_effect != null && player.hasStatusEffect(building_mode_status_effect)) && !player.isCreative()) {
             ItemStack emptyOffHandStack = betteradventuremode$getEmptyOffHand();
             ItemStack offHandStack = this.offHand.get(0);
             if (!((DuckPlayerEntityMixin)player).betteradventuremode$isOffHandStackSheathed()) {
@@ -82,7 +87,9 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
      */
     @Overwrite
     public int getEmptySlot() {
-        for (int i = !this.player.isCreative() && !this.player.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT) ? 9 : 0; i < this.main.size(); ++i) {
+        StatusEffect building_mode_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(BetterAdventureMode.serverConfig.building_mode_status_effect_identifier));
+        boolean bl = !(building_mode_status_effect != null && player.hasStatusEffect(building_mode_status_effect)) && !player.isCreative();
+        for (int i = bl ? 9 : 0; i < this.main.size(); ++i) {
             if (!this.main.get(i).isEmpty()) continue;
             return i;
         }
@@ -100,7 +107,9 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
             return this.selectedSlot;
         }
 
-        for (int i = !this.player.isCreative() && !this.player.hasStatusEffect(StatusEffectsRegistry.ADVENTURE_BUILDING_EFFECT) ? 9 : 0; i < this.main.size(); ++i) {
+        StatusEffect building_mode_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(BetterAdventureMode.serverConfig.building_mode_status_effect_identifier));
+        boolean bl = !(building_mode_status_effect != null && this.player.hasStatusEffect(building_mode_status_effect)) && !this.player.isCreative();
+        for (int i = bl ? 9 : 0; i < this.main.size(); ++i) {
             if (!this.canStackAddMore(this.main.get(i), stack)) continue;
             return i;
         }

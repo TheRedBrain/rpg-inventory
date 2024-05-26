@@ -2,6 +2,7 @@ package com.github.theredbrain.betteradventuremode.network.packet;
 
 import com.github.theredbrain.betteradventuremode.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerInventoryMixin;
+import com.github.theredbrain.staminaattributes.entity.StaminaUsingEntity;
 import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketsApi;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -36,7 +37,7 @@ public class SwapHandItemsPacketReceiver implements ServerPlayNetworking.PlayPac
         if (itemStack.isEmpty() && alternativeItemStack.isEmpty()) {
             return;
         }
-        if (((DuckLivingEntityMixin) player).betteradventuremode$getStamina() <= 0 && !player.isCreative()) {
+        if (((StaminaUsingEntity) player).staminaattributes$getStamina() <= 0 && !player.isCreative()) {
             player.sendMessageToClient(Text.translatable("hud.message.staminaTooLow"), true);
             return;
         }

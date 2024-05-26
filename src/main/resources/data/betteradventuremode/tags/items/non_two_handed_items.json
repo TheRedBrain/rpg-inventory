@@ -1,10 +1,5 @@
 {
   "values": [
-    "betteradventuremode:default_empty_hand_weapon",
-    "betteradventuremode:elemental_flame",
-    "betteradventuremode:arcane_encyclopedia",
-    "betteradventuremode:blessed_talisman",
-    "betteradventuremode:dagger",
-    "betteradventuremode:claw"
+    "betteradventuremode:default_empty_hand_weapon"
   ]
 }

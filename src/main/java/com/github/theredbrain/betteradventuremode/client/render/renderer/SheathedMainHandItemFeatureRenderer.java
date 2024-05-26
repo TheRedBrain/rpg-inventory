@@ -1,6 +1,5 @@
 package com.github.theredbrain.betteradventuremode.client.render.renderer;
 
-import com.github.theredbrain.betteradventuremode.item.BasicWeaponItem;
 import com.github.theredbrain.betteradventuremode.entity.IRenderEquippedTrinkets;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -48,7 +47,7 @@ public class SheathedMainHandItemFeatureRenderer<T extends LivingEntity> extends
                     matrixStack.translate(0.0F, 0.75F, 0.0F);
                     matrixStack.scale(0.5F, 0.5F, 0.5F);
                 }
-                if (mainHandStackItem instanceof SwordItem || mainHandStackItem instanceof BasicWeaponItem) {
+                if (mainHandStackItem instanceof SwordItem) {
                     matrixStack.translate(-0.3D, 0.05D, 0.16D);
                     if (hasStackedEquippedInChestSlot) {
 //                    matrixStack.translate(0.05F, 0.0F, 0.0F);

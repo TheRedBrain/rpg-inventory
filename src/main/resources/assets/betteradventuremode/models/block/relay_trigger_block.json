@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:block/cube_column",
-  "textures": {
-    "end": "betteradventuremode:block/trigger_block",
-    "side": "betteradventuremode:block/relay_trigger_block_side"
-  }
-}

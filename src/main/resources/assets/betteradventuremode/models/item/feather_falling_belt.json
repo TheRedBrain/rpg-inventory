@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:item/handheld",
-  "textures": {
-    "layer0": "betteradventuremode:item/feather_falling_belt"
-  }
-}

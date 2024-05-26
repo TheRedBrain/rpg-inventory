@@ -1,11 +1,10 @@
 package com.github.theredbrain.betteradventuremode.mixin.screen;
 
 import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
-import com.github.theredbrain.betteradventuremode.registry.EntityAttributesRegistry;
 import com.github.theredbrain.betteradventuremode.registry.GameRulesRegistry;
 import com.github.theredbrain.betteradventuremode.registry.StatusEffectsRegistry;
 import com.github.theredbrain.betteradventuremode.registry.Tags;
-import com.github.theredbrain.betteradventuremode.screen.DuckSlotMixin;
+import com.github.theredbrain.slotcustomizationapi.api.SlotCustomization;
 import com.google.common.collect.ImmutableList;
 import dev.emi.trinkets.Point;
 import dev.emi.trinkets.SurvivalTrinketSlot;
@@ -75,46 +74,46 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
             for (int i = 0; i < 3; ++i) {
                 for (int j = 0; j < 9; ++j) {
 //                    this.slots.get(j + (i + 1) * 9).y = 146 + i * 18;
-                    ((DuckSlotMixin) this.slots.get(j + (i + 1) * 9)).betteradventuremode$setY(138 + i * 18);
+                    ((SlotCustomization) this.slots.get(j + (i + 1) * 9)).slotcustomizationapi$setY(138 + i * 18);
                 }
             }
             for (int i = 0; i < 9; ++i) {
 //                this.slots.get(i + 36).y = 204;
-                ((DuckSlotMixin) this.slots.get(i + 36)).betteradventuremode$setY(196);
+                ((SlotCustomization) this.slots.get(i + 36)).slotcustomizationapi$setY(196);
             }
 
             if (BetterAdventureMode.serverConfig.disable_inventory_crafting_slots) {
-                ((DuckSlotMixin) this.slots.get(0)).betteradventuremode$setDisabledOverride(true);
-                ((DuckSlotMixin) this.slots.get(1)).betteradventuremode$setDisabledOverride(true);
-                ((DuckSlotMixin) this.slots.get(2)).betteradventuremode$setDisabledOverride(true);
-                ((DuckSlotMixin) this.slots.get(3)).betteradventuremode$setDisabledOverride(true);
-                ((DuckSlotMixin) this.slots.get(4)).betteradventuremode$setDisabledOverride(true);
+                ((SlotCustomization) this.slots.get(0)).slotcustomizationapi$setDisabledOverride(true);
+                ((SlotCustomization) this.slots.get(1)).slotcustomizationapi$setDisabledOverride(true);
+                ((SlotCustomization) this.slots.get(2)).slotcustomizationapi$setDisabledOverride(true);
+                ((SlotCustomization) this.slots.get(3)).slotcustomizationapi$setDisabledOverride(true);
+                ((SlotCustomization) this.slots.get(4)).slotcustomizationapi$setDisabledOverride(true);
             } else {
-                ((DuckSlotMixin) this.slots.get(0)).betteradventuremode$setX(153);
-                ((DuckSlotMixin) this.slots.get(0)).betteradventuremode$setY(52);
-                ((DuckSlotMixin) this.slots.get(1)).betteradventuremode$setX(97);
-                ((DuckSlotMixin) this.slots.get(1)).betteradventuremode$setY(42);
-                ((DuckSlotMixin) this.slots.get(2)).betteradventuremode$setX(115);
-                ((DuckSlotMixin) this.slots.get(2)).betteradventuremode$setY(42);
-                ((DuckSlotMixin) this.slots.get(3)).betteradventuremode$setX(97);
-                ((DuckSlotMixin) this.slots.get(3)).betteradventuremode$setY(60);
-                ((DuckSlotMixin) this.slots.get(4)).betteradventuremode$setX(115);
-                ((DuckSlotMixin) this.slots.get(4)).betteradventuremode$setY(60);
+                ((SlotCustomization) this.slots.get(0)).slotcustomizationapi$setX(153);
+                ((SlotCustomization) this.slots.get(0)).slotcustomizationapi$setY(52);
+                ((SlotCustomization) this.slots.get(1)).slotcustomizationapi$setX(97);
+                ((SlotCustomization) this.slots.get(1)).slotcustomizationapi$setY(42);
+                ((SlotCustomization) this.slots.get(2)).slotcustomizationapi$setX(115);
+                ((SlotCustomization) this.slots.get(2)).slotcustomizationapi$setY(42);
+                ((SlotCustomization) this.slots.get(3)).slotcustomizationapi$setX(97);
+                ((SlotCustomization) this.slots.get(3)).slotcustomizationapi$setY(60);
+                ((SlotCustomization) this.slots.get(4)).slotcustomizationapi$setX(115);
+                ((SlotCustomization) this.slots.get(4)).slotcustomizationapi$setY(60);
             }
 
             // reposition vanilla armor slots
-            ((DuckSlotMixin) this.slots.get(5)).betteradventuremode$setX(33);
-            ((DuckSlotMixin) this.slots.get(5)).betteradventuremode$setY(18);
-            ((DuckSlotMixin) this.slots.get(6)).betteradventuremode$setX(8);
-            ((DuckSlotMixin) this.slots.get(6)).betteradventuremode$setY(54);
-            ((DuckSlotMixin) this.slots.get(7)).betteradventuremode$setX(8);
-            ((DuckSlotMixin) this.slots.get(7)).betteradventuremode$setY(90);
-            ((DuckSlotMixin) this.slots.get(8)).betteradventuremode$setX(77);
-            ((DuckSlotMixin) this.slots.get(8)).betteradventuremode$setY(90);
+            ((SlotCustomization) this.slots.get(5)).slotcustomizationapi$setX(33);
+            ((SlotCustomization) this.slots.get(5)).slotcustomizationapi$setY(18);
+            ((SlotCustomization) this.slots.get(6)).slotcustomizationapi$setX(8);
+            ((SlotCustomization) this.slots.get(6)).slotcustomizationapi$setY(54);
+            ((SlotCustomization) this.slots.get(7)).slotcustomizationapi$setX(8);
+            ((SlotCustomization) this.slots.get(7)).slotcustomizationapi$setY(90);
+            ((SlotCustomization) this.slots.get(8)).slotcustomizationapi$setX(77);
+            ((SlotCustomization) this.slots.get(8)).slotcustomizationapi$setY(90);
 
             // reposition vanilla offhand slot
-            ((DuckSlotMixin) this.slots.get(45)).betteradventuremode$setX(26);
-            ((DuckSlotMixin) this.slots.get(45)).betteradventuremode$setY(108);
+            ((SlotCustomization) this.slots.get(45)).slotcustomizationapi$setX(26);
+            ((SlotCustomization) this.slots.get(45)).slotcustomizationapi$setY(108);
         }
     }
 
@@ -476,14 +475,14 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
                         SlotType type = ts.getType();
                         SlotReference ref = new SlotReference((TrinketInventory) ts.inventory, ts.getIndex());
 
-                        if ((Objects.equals(type.getGroup(), "spell_slot_1") && player.getAttributeValue(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT) < 1)
-                                || (Objects.equals(type.getGroup(), "spell_slot_2") && player.getAttributeValue(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT) < 2)
-                                || (Objects.equals(type.getGroup(), "spell_slot_3") && player.getAttributeValue(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT) < 3)
-                                || (Objects.equals(type.getGroup(), "spell_slot_4") && player.getAttributeValue(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT) < 4)
-                                || (Objects.equals(type.getGroup(), "spell_slot_5") && player.getAttributeValue(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT) < 5)
-                                || (Objects.equals(type.getGroup(), "spell_slot_6") && player.getAttributeValue(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT) < 6)
-                                || (Objects.equals(type.getGroup(), "spell_slot_7") && player.getAttributeValue(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT) < 7)
-                                || (Objects.equals(type.getGroup(), "spell_slot_8") && player.getAttributeValue(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT) < 8)
+                        if ((Objects.equals(type.getGroup(), "spell_slot_1") && player.getAttributeValue(BetterAdventureMode.ACTIVE_SPELL_SLOT_AMOUNT) < 1)
+                                || (Objects.equals(type.getGroup(), "spell_slot_2") && player.getAttributeValue(BetterAdventureMode.ACTIVE_SPELL_SLOT_AMOUNT) < 2)
+                                || (Objects.equals(type.getGroup(), "spell_slot_3") && player.getAttributeValue(BetterAdventureMode.ACTIVE_SPELL_SLOT_AMOUNT) < 3)
+                                || (Objects.equals(type.getGroup(), "spell_slot_4") && player.getAttributeValue(BetterAdventureMode.ACTIVE_SPELL_SLOT_AMOUNT) < 4)
+                                || (Objects.equals(type.getGroup(), "spell_slot_5") && player.getAttributeValue(BetterAdventureMode.ACTIVE_SPELL_SLOT_AMOUNT) < 5)
+                                || (Objects.equals(type.getGroup(), "spell_slot_6") && player.getAttributeValue(BetterAdventureMode.ACTIVE_SPELL_SLOT_AMOUNT) < 6)
+                                || (Objects.equals(type.getGroup(), "spell_slot_7") && player.getAttributeValue(BetterAdventureMode.ACTIVE_SPELL_SLOT_AMOUNT) < 7)
+                                || (Objects.equals(type.getGroup(), "spell_slot_8") && player.getAttributeValue(BetterAdventureMode.ACTIVE_SPELL_SLOT_AMOUNT) < 8)
                         ) {
                             continue;
                         }

@@ -1,8 +1,7 @@
 package com.github.theredbrain.betteradventuremode.mixin.trinkets;
 
-import com.github.theredbrain.betteradventuremode.registry.EntityAttributesRegistry;
+import com.github.theredbrain.betteradventuremode.BetterAdventureMode;
 import com.github.theredbrain.betteradventuremode.registry.StatusEffectsRegistry;
-import com.github.theredbrain.betteradventuremode.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.betteradventuremode.registry.GameRulesRegistry;
 import dev.emi.trinkets.SurvivalTrinketSlot;
 import dev.emi.trinkets.api.*;
@@ -65,14 +64,14 @@ public abstract class SurvivalTrinketSlotMixin extends Slot {
     @Inject(method = "isEnabled", at = @At("RETURN"), cancellable = true)
     public void betteradventuremode$isEnabled(CallbackInfoReturnable<Boolean> cir) {
         cir.setReturnValue(cir.getReturnValue()
-                && !((Objects.equals(this.group.getName(), "spell_slot_1") && trinketInventory.getComponent().getEntity().getAttributeValue(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT) < 1)
-                || (Objects.equals(this.group.getName(), "spell_slot_2") && trinketInventory.getComponent().getEntity().getAttributeValue(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT) < 2)
-                || (Objects.equals(this.group.getName(), "spell_slot_3") && trinketInventory.getComponent().getEntity().getAttributeValue(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT) < 3)
-                || (Objects.equals(this.group.getName(), "spell_slot_4") && trinketInventory.getComponent().getEntity().getAttributeValue(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT) < 4)
-                || (Objects.equals(this.group.getName(), "spell_slot_5") && trinketInventory.getComponent().getEntity().getAttributeValue(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT) < 5)
-                || (Objects.equals(this.group.getName(), "spell_slot_6") && trinketInventory.getComponent().getEntity().getAttributeValue(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT) < 6)
-                || (Objects.equals(this.group.getName(), "spell_slot_7") && trinketInventory.getComponent().getEntity().getAttributeValue(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT) < 7)
-                || (Objects.equals(this.group.getName(), "spell_slot_8") && trinketInventory.getComponent().getEntity().getAttributeValue(EntityAttributesRegistry.ACTIVE_SPELL_SLOT_AMOUNT) < 8)
+                && !((Objects.equals(this.group.getName(), "spell_slot_1") && trinketInventory.getComponent().getEntity().getAttributeValue(BetterAdventureMode.ACTIVE_SPELL_SLOT_AMOUNT) < 1)
+                || (Objects.equals(this.group.getName(), "spell_slot_2") && trinketInventory.getComponent().getEntity().getAttributeValue(BetterAdventureMode.ACTIVE_SPELL_SLOT_AMOUNT) < 2)
+                || (Objects.equals(this.group.getName(), "spell_slot_3") && trinketInventory.getComponent().getEntity().getAttributeValue(BetterAdventureMode.ACTIVE_SPELL_SLOT_AMOUNT) < 3)
+                || (Objects.equals(this.group.getName(), "spell_slot_4") && trinketInventory.getComponent().getEntity().getAttributeValue(BetterAdventureMode.ACTIVE_SPELL_SLOT_AMOUNT) < 4)
+                || (Objects.equals(this.group.getName(), "spell_slot_5") && trinketInventory.getComponent().getEntity().getAttributeValue(BetterAdventureMode.ACTIVE_SPELL_SLOT_AMOUNT) < 5)
+                || (Objects.equals(this.group.getName(), "spell_slot_6") && trinketInventory.getComponent().getEntity().getAttributeValue(BetterAdventureMode.ACTIVE_SPELL_SLOT_AMOUNT) < 6)
+                || (Objects.equals(this.group.getName(), "spell_slot_7") && trinketInventory.getComponent().getEntity().getAttributeValue(BetterAdventureMode.ACTIVE_SPELL_SLOT_AMOUNT) < 7)
+                || (Objects.equals(this.group.getName(), "spell_slot_8") && trinketInventory.getComponent().getEntity().getAttributeValue(BetterAdventureMode.ACTIVE_SPELL_SLOT_AMOUNT) < 8)
                 || (this.group.getOrder() == 0)));
     }
 }

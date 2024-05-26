@@ -27,14 +27,6 @@ public interface DuckPlayerInventoryMixin {
     ItemStack betteradventuremode$setAlternativeMainHand(ItemStack itemStack);
     ItemStack betteradventuremode$getAlternativeOffHand();
     ItemStack betteradventuremode$setAlternativeOffHand(ItemStack itemStack);
-//    ItemStack betteradventuremode$getHeadStack();
-//    ItemStack betteradventuremode$setHeadStack(ItemStack itemStack);
-//    ItemStack betteradventuremode$getChestStack();
-//    ItemStack betteradventuremode$setChestStack(ItemStack itemStack);
-//    ItemStack betteradventuremode$getLegsStack();
-//    ItemStack betteradventuremode$setLegsStack(ItemStack itemStack);
-//    ItemStack betteradventuremode$getFeetStack();
-//    ItemStack betteradventuremode$setFeetStack(ItemStack itemStack);
     ItemStack betteradventuremode$getGlovesStack();
     ItemStack betteradventuremode$setGlovesStack(ItemStack itemStack);
     ItemStack betteradventuremode$getShouldersStack();
