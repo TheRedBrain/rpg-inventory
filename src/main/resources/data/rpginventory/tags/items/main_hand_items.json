@@ -1,0 +1,31 @@
+{
+  "values": [
+    "minecraft:bow",
+    "minecraft:crossbow",
+    "#rpginventory:attack_items",
+    {
+      "id": "#archers:bows",
+      "required": false
+    },
+    {
+      "id": "#archers:crossbows",
+      "required": false
+    },
+    {
+      "id": "#paladins:staves",
+      "required": false
+    },
+    {
+      "id": "#paladins:wands",
+      "required": false
+    },
+    {
+      "id": "#wizards:staves",
+      "required": false
+    },
+    {
+      "id": "#wizards:wands",
+      "required": false
+    }
+  ]
+}

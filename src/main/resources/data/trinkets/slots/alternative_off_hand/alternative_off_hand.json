@@ -1,7 +1,7 @@
 {
   "icon": "minecraft:item/empty_armor_slot_shield",
   "quick_move_predicates": [
-    "betteradventuremode:can_change_equipment"
+    "rpginventory:can_change_equipment"
   ],
   "tooltip_predicates": [
     "trinkets:relevant"

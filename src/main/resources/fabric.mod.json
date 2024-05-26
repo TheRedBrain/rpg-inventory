@@ -1,34 +1,34 @@
 {
   "schemaVersion": 1,
-  "id": "betteradventuremode",
+  "id": "rpginventory",
   "version": "${version}",
 
-  "name": "Better Adventure Mode",
+  "name": "RPG Inventory",
   "description": "This mod adds mechanics which allow for a more RPG styled gameplay.",
   "authors": [
     "TheRedBrain"
   ],
   "contact": {
-    "sources": "https://github.com/TheRedBrain/better_adventure_mode"
+    "sources": "https://github.com/TheRedBrain/rpg-inventory"
   },
 
   "license": "MIT",
 
   "environment": "*",
-  "accessWidener": "betteradventuremode.accesswidener",
+  "accessWidener": "rpginventory.accesswidener",
   "entrypoints": {
     "main": [
-      "com.github.theredbrain.betteradventuremode.BetterAdventureMode"
+      "com.github.theredbrain.rpginventory.RPGInventory"
     ],
     "client": [
-      "com.github.theredbrain.betteradventuremode.BetterAdventureModeClient"
+      "com.github.theredbrain.rpginventory.RPGInventoryClient"
     ],
     "modmenu": [
-      "com.github.theredbrain.betteradventuremode.client.compatibility.ModMenuCompatibility"
+      "com.github.theredbrain.rpginventory.client.compatibility.ModMenuCompatibility"
     ]
   },
   "mixins": [
-    "betteradventuremode.mixins.json"
+    "rpginventory.mixins.json"
   ],
 
   "depends": {
