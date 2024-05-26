@@ -61,7 +61,7 @@ public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScre
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/InventoryScreen;drawEntity(Lnet/minecraft/client/gui/DrawContext;IIIFFLnet/minecraft/entity/LivingEntity;)V"), method = "drawBackground", cancellable = true)
     private void rpginventory$moveDrawnPlayerEntity(DrawContext context, float delta, int mouseX, int mouseY, CallbackInfo ci) {
-        if (selectedTab.getType() == ItemGroup.Type.INVENTORY && RPGInventory.serverConfig.use_adventure_inventory_screen) {
+        if (selectedTab.getType() == ItemGroup.Type.INVENTORY) {
             InventoryScreen.drawEntity(context, this.x + 80, this.y + 46, 20, (float)(this.x + 80 - mouseX), (float)(this.y + 46 - 30 - mouseY), this.client.player);
             rpginventory$drawExtraGroups(context, this);
             ci.cancel();

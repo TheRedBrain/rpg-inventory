@@ -231,19 +231,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     @Override
     public void rpginventory$setIsMainHandStackSheathed(boolean isMainHandStackSheathed) {
         this.dataTracker.set(IS_MAIN_HAND_STACK_SHEATHED, isMainHandStackSheathed);
-
-//        // TODO move
-//        Item mainHandStackItem = this.getInventory().getMainHandStack().getItem();
-//        if (mainHandStackItem instanceof IMakesEquipSound noiseMakingItem && !this.isSpectator()) {
-//            SoundEvent equipSound = noiseMakingItem.getEquipSound();
-//            if (equipSound != null) {
-//
-//                if (!this.getWorld().isClient() && !this.isSilent()) {
-//                    this.getWorld().playSound((PlayerEntity) null, this.getX(), this.getY(), this.getZ(), equipSound, this.getSoundCategory(), 1.0F, 1.0F);
-//                }
-//                this.emitGameEvent(GameEvent.EQUIP);
-//            }
-//        }
     }
 
     @Override
@@ -254,19 +241,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     @Override
     public void rpginventory$setIsOffHandStackSheathed(boolean isOffHandStackSheathed) {
         this.dataTracker.set(IS_OFF_HAND_STACK_SHEATHED, isOffHandStackSheathed);
-
-//        // TODO move
-//        Item offHandStackItem = ((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$getOffHandStack().getItem();
-//        if (offHandStackItem instanceof IMakesEquipSound noiseMakingItem && !this.isSpectator()) {
-//            SoundEvent equipSound = noiseMakingItem.getEquipSound();
-//            if (equipSound != null) {
-//
-//                if (!this.getWorld().isClient() && !this.isSilent()) {
-//                    this.getWorld().playSound((PlayerEntity) null, this.getX(), this.getY(), this.getZ(), equipSound, this.getSoundCategory(), 1.0F, 1.0F);
-//                }
-//                this.emitGameEvent(GameEvent.EQUIP);
-//            }
-//        }
     }
 
     @Override

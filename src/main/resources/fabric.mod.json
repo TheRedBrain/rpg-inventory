@@ -4,7 +4,7 @@
   "version": "${version}",
 
   "name": "RPG Inventory",
-  "description": "This mod adds mechanics which allow for a more RPG styled gameplay.",
+  "description": "This mod adds new equipment slots powered by Trinkets. Also adds mechanics like equipment weight.",
   "authors": [
     "TheRedBrain"
   ],
@@ -25,6 +25,9 @@
     ],
     "modmenu": [
       "com.github.theredbrain.rpginventory.client.compatibility.ModMenuCompatibility"
+    ],
+    "mixinsquared": [
+      "com.github.theredbrain.rpginventory.RPGInventoryMixinCanceller"
     ]
   },
   "mixins": [

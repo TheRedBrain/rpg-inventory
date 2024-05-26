@@ -1,5 +1,6 @@
 package com.github.theredbrain.rpginventory.registry;
 
+import com.github.theredbrain.manaattributes.ManaAttributes;
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.spell_engine.ExtendedEntityActionsAllowedSemanticType;
 import com.github.theredbrain.rpginventory.util.AttributeModifierUUIDs;
@@ -16,7 +17,7 @@ import net.spell_engine.api.effect.EntityActionsAllowed;
 public class StatusEffectsRegistry {
 
     public static final StatusEffect CIVILISATION_EFFECT = new BeneficialStatusEffect()
-//            .addAttributeModifier(EntityAttributesRegistry.MANA_REGENERATION, AttributeModifierUUIDs.CIVILISATION_EFFECT, 10.0F, EntityAttributeModifier.Operation.MULTIPLY_TOTAL)
+            .addAttributeModifier(ManaAttributes.MANA_REGENERATION, AttributeModifierUUIDs.CIVILISATION_EFFECT, 10.0F, EntityAttributeModifier.Operation.MULTIPLY_TOTAL)
             .addAttributeModifier(StaminaAttributes.STAMINA_REGENERATION, AttributeModifierUUIDs.CIVILISATION_EFFECT, 5.0F, EntityAttributeModifier.Operation.MULTIPLY_TOTAL)
 //            .addAttributeModifier(EntityAttributesRegistry.HEALTH_REGENERATION, AttributeModifierUUIDs.CIVILISATION_EFFECT, 5.0F, EntityAttributeModifier.Operation.ADDITION)
             ;

@@ -117,6 +117,9 @@ dependencies {
 	// Mod Menu
 	modImplementation "com.terraformersmc:modmenu:${project.mod_menu_version}"
 
+	// Mana Attributes
+	modImplementation "maven.modrinth:mana-attributes:${project.mana_attributes}"
+
 	// Stamina Attributes
 	modImplementation "maven.modrinth:stamina-attributes:${project.stamina_attributes}"
 

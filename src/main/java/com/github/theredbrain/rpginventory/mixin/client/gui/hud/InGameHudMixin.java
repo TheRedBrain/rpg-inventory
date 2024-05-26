@@ -65,13 +65,13 @@ public abstract class InGameHudMixin {
 
             int x = this.scaledWidth / 2 + RPGInventoryClient.clientConfig.hand_slots_x_offset;
             int y = this.scaledHeight + 4 + RPGInventoryClient.clientConfig.hand_slots_y_offset;
-            boolean off_hand_slot_is_right = RPGInventoryClient.clientConfig.off_hand_slot_is_right;
+            boolean off_hand_slot_is_right = RPGInventoryClient.clientConfig.off_hand_item_is_right;
             this.renderHotbarItem(context, x + 23, y, tickDelta, playerEntity, off_hand_slot_is_right ? itemStackOffHand : itemStackMainHand, l++);
             this.renderHotbarItem(context, x + 3, y, tickDelta, playerEntity, off_hand_slot_is_right ? itemStackMainHand : itemStackOffHand, l++);
 
             x = this.scaledWidth / 2 + RPGInventoryClient.clientConfig.alternative_hand_slots_x_offset;
             y = this.scaledHeight + 4 + RPGInventoryClient.clientConfig.alternative_hand_slots_y_offset;
-            boolean alternative_off_hand_slot_is_right = RPGInventoryClient.clientConfig.alternative_off_hand_slot_is_right;
+            boolean alternative_off_hand_slot_is_right = RPGInventoryClient.clientConfig.alternative_off_hand_item_is_right;
             this.renderHotbarItem(context, x + 10, y, tickDelta, playerEntity, alternative_off_hand_slot_is_right ? itemStackAlternativeMainHand : itemStackAlternativeOffHand, l++);
             this.renderHotbarItem(context, x + 30, y, tickDelta, playerEntity, alternative_off_hand_slot_is_right ? itemStackAlternativeOffHand : itemStackAlternativeMainHand, l);
         }

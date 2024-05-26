@@ -1,5 +1,6 @@
 package com.github.theredbrain.rpginventory.network.packet;
 
+import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.rpginventory.registry.Tags;
@@ -29,20 +30,25 @@ public class TwoHandMainWeaponPacketReceiver implements ServerPlayNetworking.Pla
             }
         }
 
-        if (((StaminaUsingEntity) player).staminaattributes$getStamina() <= 0 && !player.isCreative()) {
+        if (RPGInventory.serverConfig.toggling_two_handed_stance_requires_stamina && ((StaminaUsingEntity) player).staminaattributes$getStamina() <= 0 && !player.isCreative()) {
             player.sendMessageToClient(Text.translatable("hud.message.staminaTooLow"), true);
+            return;
         } else if (((DuckPlayerEntityMixin) player).rpginventory$isMainHandStackSheathed() && ((DuckPlayerEntityMixin) player).rpginventory$isOffHandStackSheathed()) {
             player.sendMessageToClient(Text.translatable("hud.message.weaponsAreSheathed"), true);
+            return;
+        } else if (player.getMainHandStack().isIn(Tags.NON_TWO_HANDED_ITEMS)) {
+            player.sendMessageToClient(Text.translatable("hud.message.nonTwoHandedWeaponEquipped"), true);
+            return;
         } else if (((DuckPlayerEntityMixin) player).rpginventory$isOffHandStackSheathed()) {
             ((DuckPlayerEntityMixin) player).rpginventory$setIsOffHandStackSheathed(false);
             player.equipStack(EquipmentSlot.OFFHAND, offHandItemStack);
             ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedOffHand(ItemStack.EMPTY);
-        } else if (player.getMainHandStack().isIn(Tags.NON_TWO_HANDED_ITEMS)) {
-            player.sendMessageToClient(Text.translatable("hud.message.nonTwoHandedWeaponEquipped"), true);
         } else {
             ((DuckPlayerEntityMixin) player).rpginventory$setIsOffHandStackSheathed(true);
             player.equipStack(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
             ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedOffHand(offHandItemStack);
         }
+        ((StaminaUsingEntity) player).staminaattributes$addStamina(-RPGInventory.serverConfig.toggling_two_handed_stance_stamina_cost);
+        // TODO play sounds
     }
 }

@@ -1,5 +1,14 @@
 {
-	"wip": "WIP",
+	"attribute.name.generic.active_spell_slot_amount": "Active Spell Slot Amount",
+	"attribute.name.generic.equipment_weight": "Weight",
+	"attribute.name.generic.max_equipment_weight": "Max Equipment Weight",
+	
+	
+	"effect.rpginventory.civilisation_effect": "Civilisation",
+	"effect.rpginventory.civilisation_effect.description": "You feel safe here.",
+	"effect.rpginventory.overburdened_effect": "Overburdened",
+	"effect.rpginventory.overburdened_effect.description": "Your equipment is to heavy for you.",
+
 
 	"gui.edit": "Edit",
 	"gui.choose": "Choose",
@@ -37,21 +46,29 @@
 	"gui.entity_attribute_modifier.operation.1": "Multiply Base",
 	"gui.entity_attribute_modifier.operation.2": "Multiply Total",
 
-	
-	"attribute.name.generic.active_spell_slot_amount": "Active Spell Slot Amount",
-	"attribute.name.generic.equipment_weight": "Weight",
-	"attribute.name.generic.max_equipment_weight": "Max Equipment Weight",
-	
-	
-	"effect.rpginventory.civilisation_effect": "Civilisation",
-	"effect.rpginventory.civilisation_effect.description": "You feel safe here.",
-	"effect.rpginventory.overburdened_effect": "Overburdened",
-	"effect.rpginventory.overburdened_effect.description": "Your equipment is to heavy for you.",
-
 
 	"hud.action_impaired.no_attack_item": "You can't attack with this item",
 	"hud.action_impaired.needs_two_handing": "You need to 2-hand this item",
 	"hud.action_impaired.overburdened": "You are overburdened",
+
+	"hud.message.nonTwoHandedWeaponEquipped": "Your weapon can't be two-handed",
+	"hud.message.spellsRemovedFromInactiveSpellSlots": "The maximum amount of spells you can equip was lowered and some items were transferred to your normal inventory. If your inventory was full, they were dropped at your location.",
+	"hud.message.staminaTooLow": "Your stamina is to low",
+	"hud.message.weaponsAreSheathed": "Your weapons are sheathed already",
+
+
+	"item.rpginventory.default_empty_hand_weapon": "",
+
+
+	"text.autoconfig.rpginventory.title": "RPG Inventory",
+	"text.autoconfig.rpginventory.option.client.off_hand_item_is_right": "Offhand item is right",
+	"text.autoconfig.rpginventory.option.client.alternative_off_hand_item_is_right": "Alternative offhand item is right",
+	"text.autoconfig.rpginventory.option.client.hand_slots_x_offset": "Hand slots x offset",
+	"text.autoconfig.rpginventory.option.client.hand_slots_y_offset": "Hand slots y offset",
+	"text.autoconfig.rpginventory.option.client.alternative_hand_slots_x_offset": "Alternative hand slots x offset",
+	"text.autoconfig.rpginventory.option.client.alternative_hand_slots_y_offset": "Alternative hand slots y offset",
+	"text.autoconfig.rpginventory.option.client.show_armor_bar": "Show the armor bar",
+
 
 	"trinkets.slot.belts.belt": "Belt",
 	"trinkets.slot.gloves.gloves": "Glove",
@@ -66,21 +83,5 @@
 	"trinkets.slot.spell_slot_5.spell": "Spell Slot",
 	"trinkets.slot.spell_slot_6.spell": "Spell Slot",
 	"trinkets.slot.spell_slot_7.spell": "Spell Slot",
-	"trinkets.slot.spell_slot_8.spell": "Spell Slot",
-
-
-	"item.rpginventory.default_empty_hand_weapon": "",
-
-
-	"text.autoconfig.rpginventory.title": "Better Adventure Mode",
-	"text.autoconfig.rpginventory.option.client.show_adventure_hud": "Change the HUD",
-	"text.autoconfig.rpginventory.option.client.show_resource_bar_numbers": "Show numeric resource values",
-	"text.autoconfig.rpginventory.option.client.health_bar_number_color": "Color of the health bar number",
-	"text.autoconfig.rpginventory.option.client.stamina_bar_number_color": "Color of the stamina bar number",
-	"text.autoconfig.rpginventory.option.client.mana_bar_number_color": "Color of the mana bar number",
-	"text.autoconfig.rpginventory.option.client.enable_360_degree_third_person": "Enable the 360 degree 3rd person camera.",
-	"text.autoconfig.rpginventory.option.client.attacking_towards_camera_direction": "Attack Towards Camera Direction",
-	"text.autoconfig.rpginventory.option.client.pick_block_towards_camera_direction": "Pick Block Towards Camera Direction",
-	"text.autoconfig.rpginventory.option.client.using_items_towards_camera_direction": "Use Item Towards Camera Direction",
-	"text.autoconfig.rpginventory.option.client.show_debug_messages": "Show debug messages"
+	"trinkets.slot.spell_slot_8.spell": "Spell Slot"
 }

@@ -1,6 +1,7 @@
 package com.github.theredbrain.rpginventory.client.gui.screen.ingame;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
+import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.google.common.collect.Ordering;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.emi.trinkets.Point;
@@ -154,7 +155,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
     @Override
     protected void init() {
         TrinketScreenManager.init(this);
-        if (this.client.interactionManager.hasCreativeInventory()) {
+        if (this.client != null && this.client.player != null && this.client.interactionManager != null && this.client.interactionManager.hasCreativeInventory()) {
             this.client.setScreen(new CreativeInventoryScreen(this.client.player, this.client.player.networkHandler.getEnabledFeatures(), this.client.options.getOperatorItemsTab().getValue()));
             return;
         }
@@ -177,7 +178,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
         int j = this.y;
         int activeSpellSlotAmount = 0;
         if (this.client != null && this.client.player != null) {
-            activeSpellSlotAmount = (int) this.client.player.getAttributeInstance(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT).getValue();
+            activeSpellSlotAmount = (int) ((DuckPlayerEntityMixin)this.client.player).rpginventory$getActiveSpellSlotAmount();
             updateEffectsLists(this.client.player);
         }
         context.drawTexture(RPGInventory.identifier("textures/gui/container/adventure_inventory/adventure_inventory_main_background.png"), i, j, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
@@ -227,7 +228,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
             context.drawText(this.textRenderer, Text.translatable("gui.adventureInventory.status_effects"), i + 1, j, 0x404040, false);
         }
         j += 13;
-        if (this.foodEffectsList.size() > 0) {
+        if (!this.foodEffectsList.isEmpty()) {
 
             context.drawText(this.textRenderer, Text.translatable("gui.adventureInventory.status_effects.food_effects"), i + 1, j, 0x404040, false);
             j += 13;
@@ -245,7 +246,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
         } else {
             j += 50;
         }
-        if (this.negativeEffectsList.size() > 0) {
+        if (!this.negativeEffectsList.isEmpty()) {
 
             context.drawText(this.textRenderer, Text.translatable("gui.adventureInventory.status_effects.negative_effects"), i + 1, j, 0x404040, false);
             j += 13;
@@ -263,7 +264,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
         } else {
             j += 50;
         }
-        if (this.positiveEffectsList.size() > 0) {
+        if (!this.positiveEffectsList.isEmpty()) {
 
             context.drawText(this.textRenderer, Text.translatable("gui.adventureInventory.status_effects.positive_effects"), i + 1, j, 0x404040, false);
             j += 13;
@@ -281,7 +282,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
         } else {
             j += 50;
         }
-        if (this.neutralEffectsList.size() > 0) {
+        if (!this.neutralEffectsList.isEmpty()) {
 
             context.drawText(this.textRenderer, Text.translatable("gui.adventureInventory.status_effects.neutral_effects"), i + 1, j, 0x404040, false);
             j += 13;
@@ -300,15 +301,17 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
     }
 
     private void drawStatusEffectTexturesAndToolTips(DrawContext context, int x, int y, int z, int mouseX, int mouseY, StatusEffectInstance statusEffectInstance) {
-        StatusEffectSpriteManager statusEffectSpriteManager = this.client.getStatusEffectSpriteManager();
-        int i = x + 3 + ((z % 3) * 35);
+        if (this.client != null) {
+            StatusEffectSpriteManager statusEffectSpriteManager = this.client.getStatusEffectSpriteManager();
+            int i = x + 3 + ((z % 3) * 35);
 //        context.drawGuiTexture(EFFECT_BACKGROUND_SMALL_TEXTURE, i, y, 32, 32);
-        context.drawTexture(EFFECT_BACKGROUND_SMALL_TEXTURE, i, y, 0, 0, 32, 32);
-        Sprite sprite = statusEffectSpriteManager.getSprite(statusEffectInstance.getEffectType());
-        context.drawSprite(i + 7, y + 7, 0, 18, 18, sprite);
-        if (mouseX >= i && mouseX <= i + 32 && mouseY >= y && mouseY <= y + 32) {
-            List<Text> list = getStatusEffectTooltip(statusEffectInstance);
-            context.drawTooltip(this.textRenderer, list, Optional.empty(), mouseX, mouseY);
+            context.drawTexture(EFFECT_BACKGROUND_SMALL_TEXTURE, i, y, 0, 0, 32, 32);
+            Sprite sprite = statusEffectSpriteManager.getSprite(statusEffectInstance.getEffectType());
+            context.drawSprite(i + 7, y + 7, 0, 18, 18, sprite);
+            if (mouseX >= i && mouseX <= i + 32 && mouseY >= y && mouseY <= y + 32) {
+                List<Text> list = getStatusEffectTooltip(statusEffectInstance);
+                context.drawTooltip(this.textRenderer, list, Optional.empty(), mouseX, mouseY);
+            }
         }
     }
 
