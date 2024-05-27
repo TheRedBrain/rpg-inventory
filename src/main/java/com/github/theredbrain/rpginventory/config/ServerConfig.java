@@ -15,27 +15,33 @@ public class ServerConfig implements ConfigData {
     public boolean disable_inventory_crafting_slots = false;
 
     @Comment("When true, stamina must be above 0 for swapping hand items.")
-    public boolean swapping_hand_items_requires_stamina = false;
+    public boolean swapping_hand_items_requires_stamina = true;
     @Comment("Stamina cost for toggling two handed stance")
-    public float swapping_hand_items_stamina_cost = 0.0f;
+    public float swapping_hand_items_stamina_cost = 1.0f;
 
     @Comment("When true, stamina must be above 0 for sheathing hand items.")
-    public boolean sheathing_hand_items_requires_stamina = false;
+    public boolean sheathing_hand_items_requires_stamina = true;
     @Comment("Stamina cost for toggling two handed stance")
-    public float sheathing_hand_items_stamina_cost = 0.0f;
+    public float sheathing_hand_items_stamina_cost = 1.0f;
 
     @Comment("When true, stamina must be above 0 for toggling two handed stance.")
-    public boolean toggling_two_handed_stance_requires_stamina = false;
+    public boolean toggling_two_handed_stance_requires_stamina = true;
     @Comment("Stamina cost for toggling two handed stance")
-    public float toggling_two_handed_stance_stamina_cost = 0.0f;
+    public float toggling_two_handed_stance_stamina_cost = 1.0f;
 
-    @Comment("""
-            When set to 'false', only items in the 'attack_items' tag can be used to attack/break blocks
-            Being in creative mode or having the 'building mode' status effect always allows it
-            """)
-    public boolean allow_attacking_with_non_attack_items = true;
+    public String civilisation_status_effect_identifier = "";
+
+    public String wilderness_status_effect_identifier = "";
+
     @Comment("This status effect enables the building mode")
     public String building_mode_status_effect_identifier = "";
+
+    @Comment("This status effect is applied when an item in the 'non_two_handed_items' item tag is equipped")
+    public String needs_two_handing_status_effect_identifier = "";
+
+    @Comment("This status effect is applied when an item which is not in the 'attack_items' item tag is equipped and the 'allow_attacking_with_non_attack_items' option is set to false")
+    public String no_attack_item_status_effect_identifier = "";
+    public boolean allow_attacking_with_non_attack_items = true;
 
     @Comment("Additional debug log is shown in the console.")
     public boolean show_debug_log = false;

@@ -3,7 +3,10 @@ package com.github.theredbrain.rpginventory.registry;
 import com.github.theredbrain.rpginventory.RPGInventory;
 import dev.emi.trinkets.api.TrinketsApi;
 import net.fabricmc.fabric.api.util.TriState;
+import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.registry.Registries;
+import net.minecraft.util.Identifier;
 
 import java.util.Objects;
 
@@ -31,10 +34,17 @@ public class PredicateRegistry {
             return TriState.FALSE;
         });
         TrinketsApi.registerTrinketPredicate(RPGInventory.identifier("can_change_equipment"), (stack, ref, entity) -> {
-            if (entity.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT)
+
+            StatusEffect civilisation_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.civilisation_status_effect_identifier));
+            boolean hasCivilisationEffect = civilisation_status_effect != null && entity.hasStatusEffect(civilisation_status_effect);
+
+            StatusEffect wilderness_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.wilderness_status_effect_identifier));
+            boolean hasWildernessEffect = wilderness_status_effect != null && entity.hasStatusEffect(wilderness_status_effect);
+
+            if (hasCivilisationEffect
                     || entity instanceof PlayerEntity playerEntity && playerEntity.isCreative()
                     || entity.getServer() == null
-                    || (entity.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT) && !entity.hasStatusEffect(StatusEffectsRegistry.WILDERNESS_EFFECT))) {
+                    || (entity.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT) && !hasWildernessEffect)) {
                 return TriState.TRUE;
             }
             return TriState.FALSE;

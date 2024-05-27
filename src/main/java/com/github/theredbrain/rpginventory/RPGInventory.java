@@ -1,7 +1,6 @@
 package com.github.theredbrain.rpginventory;
 
 import com.github.theredbrain.rpginventory.registry.ServerPacketRegistry;
-import com.github.theredbrain.rpginventory.registry.StatusEffectsRegistry;
 import com.github.theredbrain.rpginventory.config.ServerConfig;
 import com.github.theredbrain.rpginventory.config.ServerConfigWrapper;
 import com.github.theredbrain.rpginventory.registry.*;
@@ -14,16 +13,12 @@ import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static net.fabricmc.fabric.api.resource.ResourceManagerHelper.registerBuiltinResourcePack;
-
 public class RPGInventory implements ModInitializer {
 	public static final String MOD_ID = "rpginventory";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	public static ServerConfig serverConfig;
 
 	public static EntityAttribute ACTIVE_SPELL_SLOT_AMOUNT;
-	public static EntityAttribute EQUIPMENT_WEIGHT;
-	public static EntityAttribute MAX_EQUIPMENT_WEIGHT;
 
 	@Override
 	public void onInitialize() {
@@ -39,7 +34,6 @@ public class RPGInventory implements ModInitializer {
 		// Registry
 		EventsRegistry.initializeEvents();
 		ItemRegistry.init();
-		StatusEffectsRegistry.registerEffects();
 		GameRulesRegistry.init();
 		PredicateRegistry.init();
 	}

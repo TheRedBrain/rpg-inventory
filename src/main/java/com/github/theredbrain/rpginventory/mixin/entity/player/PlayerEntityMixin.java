@@ -6,7 +6,6 @@ import com.github.theredbrain.rpginventory.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
-import com.github.theredbrain.rpginventory.registry.StatusEffectsRegistry;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import com.github.theredbrain.rpginventory.util.ItemUtils;
 import net.minecraft.entity.*;
@@ -16,14 +15,12 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.registry.Registries;
-import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -35,7 +32,7 @@ import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(value = PlayerEntity.class, priority = 950)
+@Mixin(value = PlayerEntity.class/*, priority = 950*/)
 public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlayerEntityMixin, DuckLivingEntityMixin, IRenderEquippedTrinkets {
 
     @Shadow
@@ -47,10 +44,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     public PlayerScreenHandler playerScreenHandler;
 
     @Shadow public abstract PlayerInventory getInventory();
-
-    @Shadow @Final private PlayerAbilities abilities;
-
-    @Shadow public abstract void sendMessage(Text message, boolean overlay);
 
     @Shadow public abstract ItemStack getEquippedStack(EquipmentSlot slot);
 
@@ -75,8 +68,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     @Inject(method = "createPlayerAttributes", at = @At("RETURN"))
     private static void rpginventory$createPlayerAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
         cir.getReturnValue()
-                .add(RPGInventory.EQUIPMENT_WEIGHT)
-                .add(RPGInventory.MAX_EQUIPMENT_WEIGHT)
                 .add(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT, 2.0F)
         ;
     }
@@ -104,19 +95,27 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         ItemStack itemStackOffHand = this.getEquippedStack(EquipmentSlot.OFFHAND);
         StatusEffect adventure_building_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.building_mode_status_effect_identifier));
         boolean hasAdventureBuildingEffect = adventure_building_status_effect != null && this.hasStatusEffect(adventure_building_status_effect);
-        if (!itemStackMainHand.isIn(Tags.ATTACK_ITEMS) && !this.isCreative() && !hasAdventureBuildingEffect && !RPGInventory.serverConfig.allow_attacking_with_non_attack_items) {
-            if (!this.hasStatusEffect(StatusEffectsRegistry.NO_ATTACK_ITEMS_EFFECT)) {
-                this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.NO_ATTACK_ITEMS_EFFECT, -1, 0, false, false, false));
+
+        StatusEffect no_attack_item_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.no_attack_item_status_effect_identifier));
+        if (no_attack_item_status_effect != null) {
+            if (!itemStackMainHand.isIn(Tags.ATTACK_ITEMS) && !this.isCreative() && !hasAdventureBuildingEffect && !RPGInventory.serverConfig.allow_attacking_with_non_attack_items) {
+                if (!this.hasStatusEffect(no_attack_item_status_effect)) {
+                    this.addStatusEffect(new StatusEffectInstance(no_attack_item_status_effect, -1, 0, false, false, false));
+                }
+            } else {
+                this.removeStatusEffect(no_attack_item_status_effect);
             }
-        } else {
-            this.removeStatusEffect(StatusEffectsRegistry.NO_ATTACK_ITEMS_EFFECT);
         }
-        if (itemStackMainHand.isIn(Tags.TWO_HANDED_ITEMS) && (this.rpginventory$isMainHandStackSheathed() || !this.rpginventory$isOffHandStackSheathed()) && !this.isCreative() && !hasAdventureBuildingEffect) {
-            if (!this.hasStatusEffect(StatusEffectsRegistry.NEEDS_TWO_HANDING_EFFECT)) {
-                this.addStatusEffect(new StatusEffectInstance(StatusEffectsRegistry.NEEDS_TWO_HANDING_EFFECT, -1, 0, false, false, false));
+
+        StatusEffect needs_two_handing_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.needs_two_handing_status_effect_identifier));
+        if (needs_two_handing_status_effect != null) {
+            if (itemStackMainHand.isIn(Tags.TWO_HANDED_ITEMS) && (this.rpginventory$isMainHandStackSheathed() || !this.rpginventory$isOffHandStackSheathed()) && !this.isCreative() && !hasAdventureBuildingEffect) {
+                if (!this.hasStatusEffect(needs_two_handing_status_effect)) {
+                    this.addStatusEffect(new StatusEffectInstance(needs_two_handing_status_effect, -1, 0, false, false, false));
+                }
+            } else {
+                this.removeStatusEffect(needs_two_handing_status_effect);
             }
-        } else {
-            this.removeStatusEffect(StatusEffectsRegistry.NEEDS_TWO_HANDING_EFFECT);
         }
     }
 
@@ -169,41 +168,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     @Overwrite
     public Iterable<ItemStack> getArmorItems() {
         return ((DuckPlayerInventoryMixin)this.inventory).rpginventory$getArmor();
-    }
-
-    @Inject(method = "jump", at = @At("HEAD"), cancellable = true)
-    public void rpginventory$jump(CallbackInfo ci) {
-        if (this.hasStatusEffect(StatusEffectsRegistry.OVERBURDENED_EFFECT)) {
-            ci.cancel();
-        }
-    }
-
-    /**
-     * @author TheRedBrain
-     * @reason
-     */
-    @Overwrite
-    public void updateSwimming() {
-        if (this.abilities.flying) {
-            this.setSwimming(false);
-        } else {
-            if (this.isSwimming()) {
-                this.setSwimming(!this.hasStatusEffect(StatusEffectsRegistry.OVERBURDENED_EFFECT) && this.isTouchingWater() && !this.hasVehicle());
-            } else {
-                this.setSwimming(!this.hasStatusEffect(StatusEffectsRegistry.OVERBURDENED_EFFECT) && this.isSubmergedInWater() && !this.hasVehicle() && this.getWorld().getFluidState(this.getBlockPos()).isIn(FluidTags.WATER));
-            }
-        }
-
-    }
-
-    @Override
-    public float rpginventory$getMaxEquipmentWeight() {
-        return (float) this.getAttributeValue(RPGInventory.MAX_EQUIPMENT_WEIGHT);
-    }
-
-    @Override
-    public float rpginventory$getEquipmentWeight() {
-        return (float) this.getAttributeValue(RPGInventory.EQUIPMENT_WEIGHT);
     }
 
     @Override
@@ -277,7 +241,15 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     private void ejectNonHotbarItemsFromHotbar() { // FIXME is only called once?
         StatusEffect adventure_building_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.building_mode_status_effect_identifier));
         boolean hasAdventureBuildingEffect = adventure_building_status_effect != null && this.hasStatusEffect(adventure_building_status_effect);
-        if (!this.isCreative() && !hasAdventureBuildingEffect && !((this.getServer() != null && this.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT) && !this.hasStatusEffect(StatusEffectsRegistry.WILDERNESS_EFFECT)) || this.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT))) {
+
+        StatusEffect civilisation_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.civilisation_status_effect_identifier));
+        boolean hasCivilisationEffect = civilisation_status_effect != null && this.hasStatusEffect(civilisation_status_effect);
+
+        StatusEffect wilderness_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.wilderness_status_effect_identifier));
+        boolean hasWildernessEffect = wilderness_status_effect != null && this.hasStatusEffect(wilderness_status_effect);
+
+        boolean canChangeEquipment = this.getServer() != null && this.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT);
+        if (!this.isCreative() && !hasAdventureBuildingEffect && !((canChangeEquipment && !hasWildernessEffect) || hasCivilisationEffect)) {
             if (!this.isAdventureHotbarCleanedUp) {
                 for (int i = 0; i < 9; i++) {
                     PlayerInventory playerInventory = this.getInventory();
@@ -294,10 +266,5 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
                 this.isAdventureHotbarCleanedUp = false;
             }
         }
-    }
-
-    @Unique
-    private double getEncumbrance() { // TODO balance
-        return this.rpginventory$getEquipmentWeight() / Math.max(1, this.rpginventory$getMaxEquipmentWeight());
     }
 }

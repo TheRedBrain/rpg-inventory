@@ -40,10 +40,12 @@ import java.util.Optional;
 @Environment(EnvType.CLIENT)
 public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> implements TrinketScreen {
     public static final Identifier ADVENTURE_INVENTORY_SIDES_BACKGROUND_TEXTURE = RPGInventory.identifier("textures/gui/container/adventure_inventory/adventure_inventory_sides_background.png");
-    private static final Identifier INVENTORY_SLOT_TEXTURE = RPGInventory.identifier("textures/gui/container/inventory_slot.png");
-    private static final Identifier EFFECT_BACKGROUND_SMALL_TEXTURE = new Identifier("container/inventory/effect_background_small");
-    private static final Identifier EFFECT_SCROLLER_BACKGROUND_TEXTURE = RPGInventory.identifier("container/adventure_inventory/scroller_background");
-    private static final Identifier EFFECT_SCROLLER_TEXTURE = RPGInventory.identifier("container/scroller");
+//    private static final Identifier INVENTORY_SLOT_TEXTURE = RPGInventory.identifier("textures/gui/container/inventory_slot.png");
+//    private static final Identifier EFFECT_BACKGROUND_SMALL_TEXTURE = new Identifier("container/inventory/effect_background_small");
+//    private static final Identifier EFFECT_SCROLLER_BACKGROUND_TEXTURE = RPGInventory.identifier("container/adventure_inventory/scroller_background");
+    private static final Identifier EFFECT_SCROLLER_BACKGROUND_TEXTURE = RPGInventory.identifier("textures/gui/sprites/scroll_bar/scroll_bar_background_8_32.png");
+//    private static final Identifier EFFECT_SCROLLER_TEXTURE = RPGInventory.identifier("container/scroller");
+    private static final Identifier EFFECT_SCROLLER_TEXTURE = RPGInventory.identifier("textures/gui/sprites/scroll_bar/scroller_vertical_6_7.png");
     private static final Text CRAFTING_LABEL_TEXT = Text.translatable("gui.adventure_inventory_screen.crafting_label");
     private static final Text SPELLS_LABEL_TEXT = Text.translatable("gui.adventure_inventory_screen.spells_label");
     private float mouseX;
@@ -237,10 +239,10 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
             }
             if (this.foodEffectsRowAmount > 1) {
 //                context.drawGuiTexture(EFFECT_SCROLLER_BACKGROUND_TEXTURE, i + 109, j, 8, 32);
-                context.drawTexture(EFFECT_SCROLLER_BACKGROUND_TEXTURE, i + 109, j, 0, 0, 8, 32);
+                context.drawTexture(EFFECT_SCROLLER_BACKGROUND_TEXTURE, i + 109, j, 0, 0, 8, 32, 8, 32);
                 int k = (int)(23.0f * this.foodScrollAmount);
 //                context.drawGuiTexture(EFFECT_SCROLLER_TEXTURE, i + 110, j + 1 + k, 6, 7);
-                context.drawTexture(EFFECT_SCROLLER_TEXTURE, i + 110, j + 1 + k, 0, 0, 6, 7);
+                context.drawTexture(EFFECT_SCROLLER_TEXTURE, i + 110, j + 1 + k, 0, 0, 6, 7, 6, 7);
             }
             j += 37;
         } else {
@@ -255,10 +257,10 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
             }
             if (this.negativeEffectsRowAmount > 1) {
 //                context.drawGuiTexture(EFFECT_SCROLLER_BACKGROUND_TEXTURE, i + 109, j, 8, 32);
-                context.drawTexture(EFFECT_SCROLLER_BACKGROUND_TEXTURE, i + 109, j, 0, 0, 8, 32);
+                context.drawTexture(EFFECT_SCROLLER_BACKGROUND_TEXTURE, i + 109, j, 0, 0, 8, 32, 8, 32);
                 int k = (int)(23.0f * this.negativeScrollAmount);
 //                context.drawGuiTexture(EFFECT_SCROLLER_TEXTURE, i + 110, j + 1 + k, 6, 7);
-                context.drawTexture(EFFECT_SCROLLER_TEXTURE, i + 110, j + 1 + k, 0, 0, 6, 7);
+                context.drawTexture(EFFECT_SCROLLER_TEXTURE, i + 110, j + 1 + k, 0, 0, 6, 7, 6, 7);
             }
             j += 37;
         } else {
@@ -273,10 +275,10 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
             }
             if (this.positiveEffectsRowAmount > 1) {
 //                context.drawGuiTexture(EFFECT_SCROLLER_BACKGROUND_TEXTURE, i + 109, j, 8, 32);
-                context.drawTexture(EFFECT_SCROLLER_BACKGROUND_TEXTURE, i + 109, j, 0, 0, 8, 32);
+                context.drawTexture(EFFECT_SCROLLER_BACKGROUND_TEXTURE, i + 109, j, 0, 0, 8, 32, 8, 32);
                 int k = (int)(23.0f * this.positiveScrollAmount);
 //                context.drawGuiTexture(EFFECT_SCROLLER_TEXTURE, i + 110, j + 1 + k, 6, 7);
-                context.drawTexture(EFFECT_SCROLLER_TEXTURE, i + 110, j + 1 + k, 0, 0, 6, 7);
+                context.drawTexture(EFFECT_SCROLLER_TEXTURE, i + 110, j + 1 + k, 0, 0, 6, 7, 6, 7);
             }
             j += 37;
         } else {
@@ -291,10 +293,10 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
             }
             if (this.neutralEffectsRowAmount > 1) {
 //                context.drawGuiTexture(EFFECT_SCROLLER_BACKGROUND_TEXTURE, i + 109, j, 8, 32);
-                context.drawTexture(EFFECT_SCROLLER_BACKGROUND_TEXTURE, i + 109, j, 0, 0, 8, 32);
+                context.drawTexture(EFFECT_SCROLLER_BACKGROUND_TEXTURE, i + 109, j, 0, 0, 8, 32, 8, 32);
                 int k = (int)(23.0f * this.neutralScrollAmount);
 //                context.drawGuiTexture(EFFECT_SCROLLER_TEXTURE, i + 110, j + 1 + k, 6, 7);
-                context.drawTexture(EFFECT_SCROLLER_TEXTURE, i + 110, j + 1 + k, 0, 0, 6, 7);
+                context.drawTexture(EFFECT_SCROLLER_TEXTURE, i + 110, j + 1 + k, 0, 0, 6, 7, 6, 7);
             }
         }
 
@@ -305,7 +307,8 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
             StatusEffectSpriteManager statusEffectSpriteManager = this.client.getStatusEffectSpriteManager();
             int i = x + 3 + ((z % 3) * 35);
 //        context.drawGuiTexture(EFFECT_BACKGROUND_SMALL_TEXTURE, i, y, 32, 32);
-            context.drawTexture(EFFECT_BACKGROUND_SMALL_TEXTURE, i, y, 0, 0, 32, 32);
+//            context.drawTexture(EFFECT_BACKGROUND_SMALL_TEXTURE, i, y, 0, 0, 32, 32);
+            context.drawTexture(BACKGROUND_TEXTURE, i, y, 0, 198, 32, 32);
             Sprite sprite = statusEffectSpriteManager.getSprite(statusEffectInstance.getEffectType());
             context.drawSprite(i + 7, y + 7, 0, 18, 18, sprite);
             if (mouseX >= i && mouseX <= i + 32 && mouseY >= y && mouseY <= y + 32) {

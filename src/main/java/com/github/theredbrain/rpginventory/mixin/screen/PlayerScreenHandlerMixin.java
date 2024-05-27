@@ -2,7 +2,6 @@ package com.github.theredbrain.rpginventory.mixin.screen;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
-import com.github.theredbrain.rpginventory.registry.StatusEffectsRegistry;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import com.github.theredbrain.slotcustomizationapi.api.SlotCustomization;
 import com.google.common.collect.ImmutableList;
@@ -13,13 +12,16 @@ import dev.emi.trinkets.TrinketsClient;
 import dev.emi.trinkets.api.*;
 import dev.emi.trinkets.mixin.accessor.ScreenHandlerAccessor;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.*;
@@ -379,15 +381,21 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
     @Overwrite
     public ItemStack quickMove(PlayerEntity player, int index) {
         Slot slot = slots.get(index);
-        boolean bl = player.hasStatusEffect(StatusEffectsRegistry.CIVILISATION_EFFECT);
+
+        StatusEffect civilisation_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.civilisation_status_effect_identifier));
+        boolean hasCivilisationEffect = civilisation_status_effect != null && player.hasStatusEffect(civilisation_status_effect);
+
+        StatusEffect wilderness_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.wilderness_status_effect_identifier));
+        boolean hasWildernessEffect = wilderness_status_effect != null && player.hasStatusEffect(wilderness_status_effect);
+
         if (player.getServer() != null) {
-            bl = bl || (player.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT) && !player.hasStatusEffect(StatusEffectsRegistry.WILDERNESS_EFFECT));
+            hasCivilisationEffect = hasCivilisationEffect || (player.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT) && !hasWildernessEffect);
         }
         if (slot.hasStack()) {
             ItemStack stack = slot.getStack();
-            bl = bl || stack.isIn(Tags.ADVENTURE_HOTBAR_ITEMS);
+            hasCivilisationEffect = hasCivilisationEffect || stack.isIn(Tags.ADVENTURE_HOTBAR_ITEMS);
             if (index >= trinketSlotStart && index < trinketSlotEnd) {
-                if (!this.insertItem(stack, 9, bl ? 45 : 36, false)) {
+                if (!this.insertItem(stack, 9, hasCivilisationEffect ? 45 : 36, false)) {
                     return ItemStack.EMPTY;
                 } else {
                     return stack;

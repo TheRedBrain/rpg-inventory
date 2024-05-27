@@ -1,6 +1,6 @@
 package com.github.theredbrain.rpginventory.azurelib;
 
-import com.github.theredbrain.rpginventory.client.render.renderer.ModeledTrinketRenderer;
+import com.github.theredbrain.rpginventory.client.render.renderer.AbstractModeledTrinketRenderer;
 //import mod.azure.azurelib.common.api.client.renderer.layer.GeoRenderLayer;
 //import mod.azure.azurelib.common.internal.client.renderer.GeoRenderer;
 //import mod.azure.azurelib.common.internal.common.cache.object.BakedGeoModel;
@@ -17,9 +17,9 @@ import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class Trinket implements GeoRenderEvent {
-    private final ModeledTrinketRenderer<?> renderer;
+    private final AbstractModeledTrinketRenderer<?> renderer;
 
-    public Trinket(ModeledTrinketRenderer<?> renderer) {
+    public Trinket(AbstractModeledTrinketRenderer<?> renderer) {
         this.renderer = renderer;
     }
 
@@ -27,7 +27,7 @@ public abstract class Trinket implements GeoRenderEvent {
      * Returns the renderer for this event
      */
     @Override
-    public ModeledTrinketRenderer<?> getRenderer() {
+    public AbstractModeledTrinketRenderer<?> getRenderer() {
         return this.renderer;
     }
 
@@ -64,7 +64,7 @@ public abstract class Trinket implements GeoRenderEvent {
     }
 
     /**
-     * Pre-render event for trinkets being rendered by {@link ModeledTrinketRenderer}.<br>
+     * Pre-render event for trinkets being rendered by {@link AbstractModeledTrinketRenderer}.<br>
      * This event is called before rendering, but after {@link GeoRenderer#preRender}<br>
      * <br>
      * This event is <u>cancellable</u>.<br>
@@ -86,7 +86,7 @@ public abstract class Trinket implements GeoRenderEvent {
         private final float partialTick;
         private final int packedLight;
 
-        public Pre(ModeledTrinketRenderer<?> renderer, MatrixStack poseStack, BakedGeoModel model, VertexConsumerProvider bufferSource, float partialTick, int packedLight) {
+        public Pre(AbstractModeledTrinketRenderer<?> renderer, MatrixStack poseStack, BakedGeoModel model, VertexConsumerProvider bufferSource, float partialTick, int packedLight) {
             super(renderer);
 
             this.poseStack = poseStack;
@@ -127,7 +127,7 @@ public abstract class Trinket implements GeoRenderEvent {
     }
 
     /**
-     * Post-render event for trinkets being rendered by {@link ModeledTrinketRenderer}.<br>
+     * Post-render event for trinkets being rendered by {@link AbstractModeledTrinketRenderer}.<br>
      * This event is called after {@link GeoRenderer#postRender}
      */
     public static class Post extends Trinket {
@@ -144,7 +144,7 @@ public abstract class Trinket implements GeoRenderEvent {
         private final float partialTick;
         private final int packedLight;
 
-        public Post(ModeledTrinketRenderer<?> renderer, MatrixStack poseStack, BakedGeoModel model, VertexConsumerProvider bufferSource, float partialTick, int packedLight) {
+        public Post(AbstractModeledTrinketRenderer<?> renderer, MatrixStack poseStack, BakedGeoModel model, VertexConsumerProvider bufferSource, float partialTick, int packedLight) {
             super(renderer);
 
             this.poseStack = poseStack;
@@ -184,7 +184,7 @@ public abstract class Trinket implements GeoRenderEvent {
     }
 
     /**
-     * One-time event for a {@link ModeledTrinketRenderer} called on first initialisation.<br>
+     * One-time event for a {@link AbstractModeledTrinketRenderer} called on first initialisation.<br>
      * Use this event to add render layers to the renderer as needed
      */
     public static class CompileRenderLayers extends Trinket {
@@ -195,7 +195,7 @@ public abstract class Trinket implements GeoRenderEvent {
             }
         });
 
-        public CompileRenderLayers(ModeledTrinketRenderer<?> renderer) {
+        public CompileRenderLayers(AbstractModeledTrinketRenderer<?> renderer) {
             super(renderer);
         }
 

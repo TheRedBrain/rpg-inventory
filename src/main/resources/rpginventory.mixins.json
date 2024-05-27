@@ -12,7 +12,6 @@
     "screen.PlayerScreenHandlerMixin",
     "server.network.EntityTrackerEntryMixin",
     "server.network.ServerPlayerEntityMixin",
-    "spell_engine.api.effect.EntityActionsAllowedSemanticTypeMixin",
     "trinkets.SurvivalTrinketSlotMixin"
   ],
   "injectors": {

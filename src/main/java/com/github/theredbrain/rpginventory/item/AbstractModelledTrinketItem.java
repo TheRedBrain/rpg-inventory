@@ -13,12 +13,12 @@ import net.minecraft.util.Identifier;
 
 import java.util.function.Supplier;
 
-public abstract class ModeledTrinketItem extends TrinketItem implements GeoItem {
+public abstract class AbstractModelledTrinketItem extends TrinketItem implements GeoItem {
     public final Identifier assetSubpath;
     private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
     private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
 
-    public ModeledTrinketItem(Identifier assetSubpath, Settings settings) {
+    public AbstractModelledTrinketItem(Identifier assetSubpath, Settings settings) {
         super(settings);
         this.assetSubpath = assetSubpath;
     }

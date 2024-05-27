@@ -1,9 +1,9 @@
 package com.github.theredbrain.rpginventory.mixin.entity.player;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
-import com.github.theredbrain.rpginventory.item.ArmorTrinketItem;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerInventoryMixin;
+import com.github.theredbrain.rpginventory.registry.Tags;
 import com.github.theredbrain.rpginventory.util.ItemUtils;
 import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketsApi;
@@ -148,7 +148,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
             // armor trinkets
             TrinketsApi.getTrinketComponent(player).ifPresent(trinkets ->
                     trinkets.forEach((slotReference, itemStack) -> {
-                        if ((!(damageSource.isIn(DamageTypeTags.IS_FIRE)) || itemStack.getItem().isFireproof()) && itemStack.getItem() instanceof ArmorTrinketItem && ItemUtils.isUsable(itemStack)) {
+                        if ((!(damageSource.isIn(DamageTypeTags.IS_FIRE)) || itemStack.getItem().isFireproof()) && itemStack.isIn(Tags.ARMOR_TRINKETS) && ItemUtils.isUsable(itemStack)) {
                             itemStack.damage((int) finalAmount, this.player, player -> TrinketsApi.onTrinketBroken(itemStack, slotReference, player));
                         }
                     }));

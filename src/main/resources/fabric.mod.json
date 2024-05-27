@@ -41,7 +41,6 @@
     "fabric-api": "*",
     "cloth-config": ">=11.1.106",
     "trinkets": ">=3.7.1",
-    "azurelib": ">=1.0.3",
-    "spell_engine": ">=0.12.5"
+    "azurelib": ">=1.0.3"
   }
 }

@@ -1,6 +1,6 @@
 package com.github.theredbrain.rpginventory.client.render.entity.feature;
 
-import com.github.theredbrain.rpginventory.item.ModeledTrinketItem;
+import com.github.theredbrain.rpginventory.item.AbstractModelledTrinketItem;
 import com.github.theredbrain.rpginventory.azurelib.RPGInventoryRenderProvider;
 import com.google.common.collect.Maps;
 import dev.emi.trinkets.api.TrinketComponent;
@@ -58,7 +58,7 @@ public class TrinketFeatureRenderer<T extends LivingEntity, M extends BipedEntit
             }
         }
         Item item = itemStack.getItem();
-        if (!(item instanceof ModeledTrinketItem)) {
+        if (!(item instanceof AbstractModelledTrinketItem)) {
             return;
         }
 
@@ -66,12 +66,12 @@ public class TrinketFeatureRenderer<T extends LivingEntity, M extends BipedEntit
     }
 
     private void renderTrinket(MatrixStack matrices, VertexConsumerProvider vertexConsumers, T entity, String slotGroup, String slotName, int light, ItemStack itemStack, A model, boolean slim, float red, float green, float blue) {
-        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getArmorCutoutNoCull(this.getTrinketTexture((ModeledTrinketItem)itemStack.getItem(), slim)));
+        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getArmorCutoutNoCull(this.getTrinketTexture((AbstractModelledTrinketItem)itemStack.getItem(), slim)));
         RPGInventoryRenderProvider.of(itemStack).getGenericTrinketModel(entity, itemStack, slotGroup, slotName, (BipedEntityModel<LivingEntity>)model, slim).render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV, red, green, blue, 1.0f);
     }
 
-    private Identifier getTrinketTexture(ModeledTrinketItem modeledTrinketItem, boolean slim) {
-        String string = modeledTrinketItem.assetSubpath.getNamespace() + ":textures/item/" + modeledTrinketItem.assetSubpath.getPath() + (slim ? "_slim" : "") + ".png";
+    private Identifier getTrinketTexture(AbstractModelledTrinketItem abstractModelledTrinketItem, boolean slim) {
+        String string = abstractModelledTrinketItem.assetSubpath.getNamespace() + ":textures/item/" + abstractModelledTrinketItem.assetSubpath.getPath() + (slim ? "_slim" : "") + ".png";
         return TRINKET_TEXTURE_CACHE.computeIfAbsent(string, Identifier::new);
     }
 }
