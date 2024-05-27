@@ -42,12 +42,18 @@ The 2x2 crafting grid in the player inventory can be disabled.
 
 Items in the "two_handed_items" item tag can only be used when the offhand is sheathed.
 
-When the item in the main hand is in the "non_two_handed_items" item tag and "needs_two_handing_status_effect_identifier" is a valid status effect identifier, that status effect is applied.
+When "needs_two_handing_status_effect_identifier" is a valid status effect identifier, that status effect is applied when the item in the main hand is in the "non_two_handed_items" item tag.
 
-When "allow_attacking_with_non_attack_items" is set to false, only items in the "attack_items" item tag can be used to attack and to break blocks.
+When "no_attack_item_status_effect_identifier" is a valid status effect identifier, that status effect is applied when the item in the main hand is not in the 'attack_items' item tag and the 'allow_attacking_with_non_attack_items' option is set to false.
 
 When "building_mode_status_effect_identifier" is a valid status effect identifier and the player has that status effect, several mechanics are ignored.
 - every item can be used to attack and to break blocks
 - both main and offhand behave like they are sheathed, so the main hand slot contains the item in the selected hotbar slot, like in vanilla.
+
+The gamerule "canChangeEquipment" controls, whether items can be put into or removed from equipment slots.
+
+When "civilisation_status_effect_identifier" is a valid status effect identifier and the player has that status effect items can be put into or removed from equipment slots, regardless of the gamerule "canChangeEquipment".
+
+When "wilderness_status_effect_identifier" is a valid status effect identifier and the player has that status effect items can not be put into or removed from equipment slots, regardless of the gamerule "canChangeEquipment".
 
 This mod also provides an API for trinket items which are rendered on the player model.
