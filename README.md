@@ -28,7 +28,7 @@ The mod also adds additional slots which are not directly accessible. They are u
 
 
 - Sheathe Weapons: Puts the items in the main hand and the offhand slot into their corresponding sheathed hand slots. When pressed again, swaps the items back
-- Toggle Two-handing Stance: Puts the items in the main hand slot into the sheathed main hand slot. When pressed again, swaps the item back
+- Toggle Two-handing Stance: Puts the items in the offhand slot into the sheathed offhand slot. When pressed again, swaps the item back. This is not possible, when the main hand item is in the "non_two_handed_items" item tag.
 When the main hand item is sheathed, the main hand slot contains the item in the selected hotbar slot, like in vanilla.
 When the offhand item is sheathed, the offhand slot contains an empty item stack. On its own this is not very useful, it's designed to be used in combination with other mods like [Better Combat Extension](https://modrinth.com/mod/bettercombat-extension).
 
@@ -42,7 +42,7 @@ The 2x2 crafting grid in the player inventory can be disabled.
 
 Items in the "two_handed_items" item tag can only be used when the offhand is sheathed.
 
-When "needs_two_handing_status_effect_identifier" is a valid status effect identifier, that status effect is applied when the item in the main hand is in the "non_two_handed_items" item tag.
+When "needs_two_handing_status_effect_identifier" is a valid status effect identifier, that status effect is applied when the item in the main hand is in the "two_handed_items" item tag and the offhand is not sheathed.
 
 When "no_attack_item_status_effect_identifier" is a valid status effect identifier, that status effect is applied when the item in the main hand is not in the 'attack_items' item tag and the 'allow_attacking_with_non_attack_items' option is set to false.
 
@@ -55,5 +55,10 @@ The gamerule "canChangeEquipment" controls, whether items can be put into or rem
 When "civilisation_status_effect_identifier" is a valid status effect identifier and the player has that status effect items can be put into or removed from equipment slots, regardless of the gamerule "canChangeEquipment".
 
 When "wilderness_status_effect_identifier" is a valid status effect identifier and the player has that status effect items can not be put into or removed from equipment slots, regardless of the gamerule "canChangeEquipment".
+
+When the gamerule "destroyDroppedItemsOnDeath" is true and the vanilla gamerule "keepInventory" is false, the items in the players inventory are not dropped when they die. They are destroyed instead.
+
+When "keep_inventory_status_effect_identifier" is a valid status effect identifier, that status effect is applied when an item in the "keeps_inventory_on_death" item tag is equipped (in an equipment, trinket or the offhand slot).
+When the player dies while having that status effect, all equipped items in the "keeps_inventory_on_death" item tag are destroyed. The rest of the inventory is kept, regardless of game rules and stuff like "Curse of Vanishing".
 
 This mod also provides an API for trinket items which are rendered on the player model.

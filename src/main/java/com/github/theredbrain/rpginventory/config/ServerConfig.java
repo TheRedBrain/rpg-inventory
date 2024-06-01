@@ -29,18 +29,20 @@ public class ServerConfig implements ConfigData {
     @Comment("Stamina cost for toggling two handed stance")
     public float toggling_two_handed_stance_stamina_cost = 1.0f;
 
-    public String civilisation_status_effect_identifier = "";
+    public String keep_inventory_status_effect_identifier = "variousstatuseffects:keep_inventory";
 
-    public String wilderness_status_effect_identifier = "";
+    public String civilisation_status_effect_identifier = "variousstatuseffects:civilisation";
+
+    public String wilderness_status_effect_identifier = "variousstatuseffects:wilderness";
 
     @Comment("This status effect enables the building mode")
-    public String building_mode_status_effect_identifier = "";
+    public String building_mode_status_effect_identifier = "scriptblocks:building_mode";
 
     @Comment("This status effect is applied when an item in the 'non_two_handed_items' item tag is equipped")
-    public String needs_two_handing_status_effect_identifier = "";
+    public String needs_two_handing_status_effect_identifier = "variousstatuseffects:needs_two_handing";
 
     @Comment("This status effect is applied when an item which is not in the 'attack_items' item tag is equipped and the 'allow_attacking_with_non_attack_items' option is set to false")
-    public String no_attack_item_status_effect_identifier = "";
+    public String no_attack_item_status_effect_identifier = "variousstatuseffects:no_attack_item";
     public boolean allow_attacking_with_non_attack_items = true;
 
     @Comment("Additional debug log is shown in the console.")

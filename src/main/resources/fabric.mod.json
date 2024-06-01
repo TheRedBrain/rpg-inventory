@@ -44,5 +44,9 @@
     "azurelib": ">=1.0.3",
     "staminaattributes": ">=1.2.1",
     "slotcustomizationapi": ">=1.0.0-1.20.1"
+  },
+  "suggests": {
+    "scriptblocks": "*",
+    "variousstatuseffects": "*"
   }
 }

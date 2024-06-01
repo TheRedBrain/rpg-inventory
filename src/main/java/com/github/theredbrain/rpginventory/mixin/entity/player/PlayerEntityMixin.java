@@ -8,6 +8,10 @@ import com.github.theredbrain.rpginventory.entity.player.DuckPlayerInventoryMixi
 import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import com.github.theredbrain.rpginventory.util.ItemUtils;
+import com.github.theredbrain.staminaattributes.StaminaAttributes;
+import dev.emi.trinkets.api.SlotReference;
+import dev.emi.trinkets.api.TrinketComponent;
+import dev.emi.trinkets.api.TrinketsApi;
 import net.minecraft.entity.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.data.DataTracker;
@@ -26,11 +30,17 @@ import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Pair;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
 
 @Mixin(value = PlayerEntity.class/*, priority = 950*/)
 public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlayerEntityMixin, DuckLivingEntityMixin, IRenderEquippedTrinkets {
@@ -43,11 +53,14 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     @Final
     public PlayerScreenHandler playerScreenHandler;
 
-    @Shadow public abstract PlayerInventory getInventory();
+    @Shadow
+    public abstract PlayerInventory getInventory();
 
-    @Shadow public abstract ItemStack getEquippedStack(EquipmentSlot slot);
+    @Shadow
+    public abstract ItemStack getEquippedStack(EquipmentSlot slot);
 
-    @Shadow public abstract boolean isCreative();
+    @Shadow
+    public abstract boolean isCreative();
 
     @Unique
     private boolean isAdventureHotbarCleanedUp = false;
@@ -83,13 +96,34 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     @Inject(method = "tick", at = @At("TAIL"))
     public void rpginventory$tick(CallbackInfo ci) {
         if (!this.getWorld().isClient) {
-            this.ejectItemsFromInactiveSpellSlots();
-            this.ejectNonHotbarItemsFromHotbar();
+            this.rpginventory$ejectItemsFromInactiveSpellSlots();
+            this.rpginventory$ejectNonHotbarItemsFromHotbar();
         }
     }
 
     @Inject(method = "updateTurtleHelmet", at = @At("TAIL"))
     private void rpginventory$updateTurtleHelmet(CallbackInfo ci) {
+
+        boolean keep_inventory_on_death_item_equipped = false;
+        Predicate<ItemStack> keep_inventory_on_death_item_equipped_predicate = stack -> stack.isIn(Tags.KEEPS_INVENTORY_ON_DEATH);
+
+        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(this);
+        if (trinkets.isPresent()) {
+            keep_inventory_on_death_item_equipped = trinkets.get().isEquipped(keep_inventory_on_death_item_equipped_predicate);
+        }
+
+        keep_inventory_on_death_item_equipped = keep_inventory_on_death_item_equipped || rpginventory$hasEquipped(keep_inventory_on_death_item_equipped_predicate);
+
+        StatusEffect keep_inventory_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.keep_inventory_status_effect_identifier));
+        if (keep_inventory_status_effect != null) {
+            if (keep_inventory_on_death_item_equipped) {
+                if (!this.hasStatusEffect(keep_inventory_status_effect)) {
+                    this.addStatusEffect(new StatusEffectInstance(keep_inventory_status_effect, -1, 0, false, false, false));
+                }
+            } else {
+                this.removeStatusEffect(keep_inventory_status_effect);
+            }
+        }
 
         ItemStack itemStackMainHand = this.getEquippedStack(EquipmentSlot.MAINHAND);
         ItemStack itemStackOffHand = this.getEquippedStack(EquipmentSlot.OFFHAND);
@@ -153,11 +187,27 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     public void equipStack(EquipmentSlot slot, ItemStack stack) {
         this.processEquippedStack(stack);
         if (slot == EquipmentSlot.MAINHAND) {
-            this.onEquipStack(slot, ((DuckPlayerInventoryMixin)this.inventory).rpginventory$setMainHand(stack), stack);
+            this.onEquipStack(slot, ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setMainHand(stack), stack);
         } else if (slot == EquipmentSlot.OFFHAND) {
             this.onEquipStack(slot, this.inventory.offHand.set(0, stack), stack);
         } else if (slot.getType() == EquipmentSlot.Type.ARMOR) {
             this.onEquipStack(slot, this.inventory.armor.set(slot.getEntitySlotId(), stack), stack);
+        }
+    }
+
+    @Inject(method = "dropInventory", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;vanishCursedItems()V", ordinal = 0), cancellable = true)
+    private void rpginventory$pre_vanishCursedItems(CallbackInfo ci) {
+        StatusEffect keep_inventory_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.keep_inventory_status_effect_identifier));
+        if (keep_inventory_status_effect != null && this.hasStatusEffect(keep_inventory_status_effect)) {
+            this.rpginventory$breakKeepInventoryItems();
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "dropInventory", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerInventory;dropAll()V", ordinal = 0))
+    private void rpginventory$pre_inventoryDropAll(CallbackInfo ci) {
+        if (this.getWorld().getGameRules().getBoolean(GameRulesRegistry.DESTROY_DROPPED_ITEMS_ON_DEATH)) {
+            this.inventory.clear();
         }
     }
 
@@ -167,7 +217,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
      */
     @Overwrite
     public Iterable<ItemStack> getArmorItems() {
-        return ((DuckPlayerInventoryMixin)this.inventory).rpginventory$getArmor();
+        return ((DuckPlayerInventoryMixin) this.inventory).rpginventory$getArmor();
     }
 
     @Override
@@ -177,13 +227,13 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
     @Override
     public ItemStack rpginventory$getSheathedMainHandItemStack() {
-        ItemStack itemStack = ((DuckPlayerInventoryMixin)this.getInventory()).rpginventory$getSheathedMainHand();
+        ItemStack itemStack = ((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$getSheathedMainHand();
         return rpginventory$isMainHandStackSheathed() && !itemStack.isIn(Tags.EMPTY_HAND_WEAPONS) && ItemUtils.isUsable(itemStack) ? itemStack : ItemStack.EMPTY;
     }
 
     @Override
     public ItemStack rpginventory$getSheathedOffHandItemStack() {
-        ItemStack itemStack = ((DuckPlayerInventoryMixin)this.getInventory()).rpginventory$getSheathedOffHand();
+        ItemStack itemStack = ((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$getSheathedOffHand();
         return rpginventory$isOffHandStackSheathed() && !itemStack.isIn(Tags.EMPTY_HAND_WEAPONS) && ItemUtils.isUsable(itemStack) ? itemStack : ItemStack.EMPTY;
     }
 
@@ -218,15 +268,15 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     }
 
     @Unique
-    private void ejectItemsFromInactiveSpellSlots() {
+    private void rpginventory$ejectItemsFromInactiveSpellSlots() {
         int activeSpellSlotAmount = (int) this.rpginventory$getActiveSpellSlotAmount();
 
         if (this.rpginventory$oldActiveSpellSlotAmount() != activeSpellSlotAmount) {
             for (int j = activeSpellSlotAmount + 1; j < 9; j++) {
                 PlayerInventory playerInventory = this.getInventory();
 
-                if (!((DuckPlayerInventoryMixin)playerInventory).rpginventory$getSpellSlotStack(j).isEmpty()) {
-                    playerInventory.offerOrDrop(((DuckPlayerInventoryMixin)playerInventory).rpginventory$setSpellSlotStack(ItemStack.EMPTY, j));
+                if (!((DuckPlayerInventoryMixin) playerInventory).rpginventory$getSpellSlotStack(j).isEmpty()) {
+                    playerInventory.offerOrDrop(((DuckPlayerInventoryMixin) playerInventory).rpginventory$setSpellSlotStack(ItemStack.EMPTY, j));
                     if (((PlayerEntity) (Object) this) instanceof ServerPlayerEntity serverPlayerEntity) {
                         serverPlayerEntity.sendMessage(Text.translatable("hud.message.spellsRemovedFromInactiveSpellSlots"), false);
                     }
@@ -238,7 +288,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     }
 
     @Unique
-    private void ejectNonHotbarItemsFromHotbar() { // FIXME is only called once?
+    private void rpginventory$ejectNonHotbarItemsFromHotbar() { // FIXME is only called once?
         StatusEffect adventure_building_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.building_mode_status_effect_identifier));
         boolean hasAdventureBuildingEffect = adventure_building_status_effect != null && this.hasStatusEffect(adventure_building_status_effect);
 
@@ -265,6 +315,27 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
             if (this.isAdventureHotbarCleanedUp) {
                 this.isAdventureHotbarCleanedUp = false;
             }
+        }
+    }
+
+    @Unique
+    private void rpginventory$breakKeepInventoryItems() {
+        Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(this);
+        if (trinkets.isPresent()) {
+            List<Pair<SlotReference, ItemStack>> trinketList = trinkets.get().getAllEquipped();
+            for (net.minecraft.util.Pair<SlotReference, ItemStack> trinket : trinketList) {
+                if (trinket.getRight().isIn(Tags.KEEPS_INVENTORY_ON_DEATH)) {
+                    trinket.getLeft().inventory().clear();
+                }
+            }
+        }
+        for (int i = 0; i < this.inventory.armor.size(); i++) {
+            if (this.inventory.armor.get(i).isIn(Tags.KEEPS_INVENTORY_ON_DEATH)) {
+                this.inventory.armor.set(i, ItemStack.EMPTY);
+            }
+        }
+        if (this.inventory.offHand.get(0).isIn(Tags.KEEPS_INVENTORY_ON_DEATH)) {
+            this.inventory.offHand.set(0, ItemStack.EMPTY);
         }
     }
 }

@@ -1,8 +1,17 @@
 package com.github.theredbrain.rpginventory.mixin.entity;
 
 import com.github.theredbrain.rpginventory.entity.DuckLivingEntityMixin;
+import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
+import dev.emi.trinkets.api.TrinketEnums;
+import dev.emi.trinkets.api.TrinketInventory;
+import dev.emi.trinkets.api.TrinketsApi;
+import dev.emi.trinkets.api.event.TrinketDropCallback;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.*;
 
@@ -62,5 +71,74 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
             i += 1;
         }
         return i;
+    }
+
+    /**
+     * @author TheRedBrain
+     * @reason inject gamerule destroyDroppedItemsOnDeath into Trinkets drop logic
+     */
+    @Overwrite
+    public void dropInventory() {
+        LivingEntity entity = (LivingEntity) (Object) this;
+
+        boolean keepInv = entity.getWorld().getGameRules().getBoolean(GameRules.KEEP_INVENTORY);
+
+        boolean destroyDroppedItems;
+        if (entity.getServer() != null && entity instanceof PlayerEntity) {
+            destroyDroppedItems = entity.getServer().getGameRules().getBoolean(GameRulesRegistry.DESTROY_DROPPED_ITEMS_ON_DEATH);
+        } else {
+            destroyDroppedItems = false;
+        }
+        TrinketsApi.getTrinketComponent(entity).ifPresent(trinkets -> trinkets.forEach((ref, stack) -> {
+            if (stack.isEmpty()) {
+                return;
+            }
+
+            TrinketEnums.DropRule dropRule = TrinketsApi.getTrinket(stack.getItem()).getDropRule(stack, ref, entity);
+
+            dropRule = TrinketDropCallback.EVENT.invoker().drop(dropRule, stack, ref, entity);
+
+            TrinketInventory inventory = ref.inventory();
+
+            if (dropRule == TrinketEnums.DropRule.DEFAULT) {
+                dropRule = inventory.getSlotType().getDropRule();
+            }
+
+            if (dropRule == TrinketEnums.DropRule.DEFAULT) {
+                if (keepInv && entity.getType() == EntityType.PLAYER) {
+                    dropRule = TrinketEnums.DropRule.KEEP;
+                } else {
+                    if (EnchantmentHelper.hasVanishingCurse(stack) || destroyDroppedItems) {
+                        dropRule = TrinketEnums.DropRule.DESTROY;
+                    } else {
+                        dropRule = TrinketEnums.DropRule.DROP;
+                    }
+                }
+            }
+
+            switch (dropRule) {
+                case DROP:
+                    betteradventuremode$dropFromEntity(stack);
+                    // Fallthrough
+                case DESTROY:
+                    inventory.setStack(ref.index(), ItemStack.EMPTY);
+                    break;
+                default:
+                    break;
+            }
+        }));
+    }
+
+    @Unique
+    private void betteradventuremode$dropFromEntity(ItemStack stack) {
+        ItemEntity entity = dropStack(stack);
+        // Mimic player drop behavior for only players
+        if (entity != null && ((Entity) this) instanceof PlayerEntity) {
+            entity.setPos(entity.getX(), this.getEyeY() - 0.3, entity.getZ());
+            entity.setPickupDelay(40);
+            float magnitude = this.random.nextFloat() * 0.5f;
+            float angle = this.random.nextFloat() * ((float) Math.PI * 2);
+            entity.setVelocity(-MathHelper.sin(angle) * magnitude, 0.2f, MathHelper.cos(angle) * magnitude);
+        }
     }
 }
