@@ -66,6 +66,8 @@
 	"text.autoconfig.rpginventory.option.client.alternative_hand_slots_x_offset": "Alternative hand slots x offset",
 	"text.autoconfig.rpginventory.option.client.alternative_hand_slots_y_offset": "Alternative hand slots y offset",
 	"text.autoconfig.rpginventory.option.client.show_armor_bar": "Show the armor bar",
+	"text.autoconfig.rpginventory.option.client.show_attribute_screen_when_opening_inventory_screen": "Show attribute screen by default",
+	"text.autoconfig.rpginventory.option.client.attribute_screen_configuration": "Attribute Screen Configuration",
 
 
 	"trinkets.slot.belts.belt": "Belt",

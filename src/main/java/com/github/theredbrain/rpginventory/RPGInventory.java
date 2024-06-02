@@ -8,6 +8,7 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import me.shedaniel.autoconfig.serializer.PartitioningSerializer;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
@@ -19,6 +20,8 @@ public class RPGInventory implements ModInitializer {
 	public static ServerConfig serverConfig;
 
 	public static EntityAttribute ACTIVE_SPELL_SLOT_AMOUNT;
+
+	public static final boolean isFoodOverhaulLoaded = FabricLoader.getInstance().isModLoaded("foodoverhaul");
 
 	@Override
 	public void onInitialize() {

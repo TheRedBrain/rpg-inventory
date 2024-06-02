@@ -89,4 +89,16 @@ public abstract class InGameHudMixin {
         return ItemStack.EMPTY;
     }
 
+    // disables rendering of the armor bar when disabled in the client config
+    @Redirect(
+            method = "renderStatusBars",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/entity/player/PlayerEntity;getArmor()I"
+            )
+    )
+    public int overhauleddamage$redirect_getArmor(PlayerEntity instance) {
+        return RPGInventoryClient.clientConfig.show_armor_bar ? instance.getArmor() : 0;
+    }
+
 }

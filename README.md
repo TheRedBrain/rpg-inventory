@@ -1,6 +1,6 @@
 # RPG Inventory
 
-Adds new equipment slots powered by the Trinkets mod. These slots are integrated into a new inventory screen.
+Adds new equipment slots powered by the [Trinkets](https://modrinth.com/mod/trinkets) mod. These slots are integrated into a new inventory screen.
 
 ## New equipment slots
 The new slots accessible in the inventory are:
@@ -34,6 +34,14 @@ When the offhand item is sheathed, the offhand slot contains an empty item stack
 
 When a hand item is not sheathed, but the corresponding slot contains no item, the players hand is not empty. The item in the corresponding empty hand slot is held instead.
 The empty hand slots always contain a item called "Empty Hand Weapon". This is technically a weapon. When Better Combat is installed, this allows for unarmed combat.
+
+## Status Effect screen
+Active and visible status effects are listed on the left side of the inventory screen. They are sorted by their category (harmful beneficial and neutral). When the mod [Food Overhaul](https://modrinth.com/mod/food-overhaul) is installed, its food effects are listed in a separate list.
+Effects can have a description (added by assigning a value to <effect_translation_key>.description in the lang files), which is also displayed.
+
+## Attribute Screen
+Attributes and their values are listed on the right side of the inventory. This can be toggled on/off with a button.
+The client config allows extensive customization of the attribute screen.
 
 ## Additional settings and features
 Swapping hand items, sheathing weapons and Toggling two-handing stance can all be configured to require stamina above 0. They also cost a configurable amount of stamina.

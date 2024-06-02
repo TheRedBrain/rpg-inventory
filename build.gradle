@@ -83,6 +83,18 @@ dependencies {
 	// Slot Customization API
 	modImplementation "maven.modrinth:slot-customization-api:${project.slot_customization_api_version}"
 
+	// Food Overhaul
+	modImplementation "maven.modrinth:food-overhaul:${project.food_overhaul_version}"
+
+	// Mana Attributes
+	modImplementation "maven.modrinth:mana-attributes:${project.mana_attributes}"
+
+	// Overhauled Damage
+	modImplementation "maven.modrinth:overhauled-damage:${project.overhauled_damage_version}"
+
+	// Health Regeneration Overhaul
+	modImplementation "maven.modrinth:health-regeneration-overhaul:${project.health_regeneration_overhaul_version}"
+
 }
 
 processResources {
@@ -128,7 +140,9 @@ modrinth {
 			new ModDependency('7zlUOZvb', 'required'), // Azure Lib
 			new ModDependency('5aaWibi9', 'required'), // Trinkets
 			new ModDependency('QKOE26gD', 'required'), // Stamina Attributes
-			new ModDependency('QYZ7JTtD', 'required') // Slot Customization API
+			new ModDependency('QYZ7JTtD', 'required'), // Slot Customization API
+			new ModDependency('UigDbuvI', 'optional'), // Food Overhaul
+			new ModDependency('mOgUt4GM', 'optional') // Mod Menu
 	]
 	changelog = "${update_changelog}"
 }

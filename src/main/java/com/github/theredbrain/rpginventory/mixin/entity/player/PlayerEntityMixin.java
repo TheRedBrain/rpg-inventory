@@ -8,7 +8,6 @@ import com.github.theredbrain.rpginventory.entity.player.DuckPlayerInventoryMixi
 import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import com.github.theredbrain.rpginventory.util.ItemUtils;
-import com.github.theredbrain.staminaattributes.StaminaAttributes;
 import dev.emi.trinkets.api.SlotReference;
 import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketsApi;
@@ -31,7 +30,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
-import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.*;
@@ -42,7 +40,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-@Mixin(value = PlayerEntity.class/*, priority = 950*/)
+@Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlayerEntityMixin, DuckLivingEntityMixin, IRenderEquippedTrinkets {
 
     @Shadow
@@ -81,7 +79,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     @Inject(method = "createPlayerAttributes", at = @At("RETURN"))
     private static void rpginventory$createPlayerAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
         cir.getReturnValue()
-                .add(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT, 2.0F)
+                .add(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT, 1.0F)
         ;
     }
 
