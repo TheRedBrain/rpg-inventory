@@ -1,7 +1,7 @@
 {
   "values": [
     {
-      "id": "#jewelry:necklaces",
+      "id": "#trinkets:chest/necklace",
       "required": false
     }
   ]

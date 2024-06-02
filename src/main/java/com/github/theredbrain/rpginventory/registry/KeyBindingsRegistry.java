@@ -23,25 +23,25 @@ public class KeyBindingsRegistry {
         KeyBindingsRegistry.sheatheWeapons = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.rpginventory.sheatheWeapons",
                 InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_F,
+                GLFW.GLFW_KEY_G,
                 "category.rpginventory.category"
         ));
         KeyBindingsRegistry.twoHandMainWeapon = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.rpginventory.twoHandMainWeapon",
                 InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_G,
+                GLFW.GLFW_KEY_H,
                 "category.rpginventory.category"
         ));
         KeyBindingsRegistry.swapMainHand = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.rpginventory.swapMainHand",
                 InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_E,
+                GLFW.GLFW_KEY_X,
                 "category.rpginventory.category"
         ));
         KeyBindingsRegistry.swapOffHand = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.rpginventory.swapOffHand",
                 InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_Q,
+                GLFW.GLFW_KEY_Y,
                 "category.rpginventory.category"
         ));
         ClientTickEvents.END_CLIENT_TICK.register(client -> {

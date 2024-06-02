@@ -1,6 +1,9 @@
 {
 	"attribute.name.generic.active_spell_slot_amount": "Active Spell Slot Amount",
-	
+
+
+	"category.rpginventory.category": "RPG Inventory",
+
 	
 	"effect.rpginventory.civilisation_effect": "Civilisation",
 	"effect.rpginventory.civilisation_effect.description": "You feel safe here.",
@@ -56,6 +59,12 @@
 
 
 	"item.rpginventory.default_empty_hand_weapon": "",
+
+
+	"key.rpginventory.sheatheWeapons": "Sheathe Weapons",
+	"key.rpginventory.twoHandMainWeapon": "Toggle Two-handing Stance",
+	"key.rpginventory.swapMainHand": "Swap Main Hand Items",
+	"key.rpginventory.swapOffHand": "Swap Offhand Items",
 
 
 	"text.autoconfig.rpginventory.title": "RPG Inventory",

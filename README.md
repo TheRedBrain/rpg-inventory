@@ -9,7 +9,7 @@ The new slots accessible in the inventory are:
 - 2 ring slots
 - 1 gloves slot
 - 1 shoulders slot
-- 8 spell slots, by default 2 of them can be accessed\
+- 8 spell slots, by default 1 of them can be accessed\
 The new entity attribute "generic.active_spell_slot_amount" controls how many active spell slots the player has available.
 These spell slots are intended to be used with spell books powered by Spell Engine, but they should work with other items as well.
 - 1 main hand slot

@@ -1,7 +1,11 @@
 {
   "values": [
     {
-      "id": "#jewelry:rings",
+      "id": "#trinkets:hand/ring",
+      "required": false
+    },
+    {
+      "id": "#trinkets:offhand/ring",
       "required": false
     }
   ]

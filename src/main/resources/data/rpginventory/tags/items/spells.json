@@ -1,28 +1,4 @@
 {
   "values": [
-    {
-      "id": "archers:archer_spell_book",
-      "required": false
-    },
-    {
-      "id": "paladins:paladin_spell_book",
-      "required": false
-    },
-    {
-      "id": "paladins:priests_spell_book",
-      "required": false
-    },
-    {
-      "id": "wizards:arcane_spell_book",
-      "required": false
-    },
-    {
-      "id": "wizards:fire_spell_book",
-      "required": false
-    },
-    {
-      "id": "wizards:frost_spell_book",
-      "required": false
-    }
   ]
 }
