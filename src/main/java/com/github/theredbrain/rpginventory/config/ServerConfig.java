@@ -14,7 +14,11 @@ public class ServerConfig implements ConfigData {
             """)
     public boolean disable_inventory_crafting_slots = false;
 
-    @Comment("When true, stamina must be above 0 for swapping hand items.")
+    @Comment("""
+            When the mod 'Stamina Attributes' is installed, the following 6 options take effect
+            
+            When true, stamina must be above 0 for swapping hand items.
+            """)
     public boolean swapping_hand_items_requires_stamina = true;
     @Comment("Stamina cost for toggling two handed stance")
     public float swapping_hand_items_stamina_cost = 1.0f;
@@ -47,6 +51,7 @@ public class ServerConfig implements ConfigData {
 
     @Comment("Additional debug log is shown in the console.")
     public boolean show_debug_log = false;
+
     public ServerConfig() {
 
     }

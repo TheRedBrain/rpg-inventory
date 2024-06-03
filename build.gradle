@@ -139,10 +139,11 @@ modrinth {
 			new ModDependency('9s6osm5g', 'required'), // Cloth Config
 			new ModDependency('7zlUOZvb', 'required'), // Azure Lib
 			new ModDependency('5aaWibi9', 'required'), // Trinkets
-			new ModDependency('QKOE26gD', 'required'), // Stamina Attributes
 			new ModDependency('QYZ7JTtD', 'required'), // Slot Customization API
+			new ModDependency('QKOE26gD', 'optional'), // Stamina Attributes
 			new ModDependency('UigDbuvI', 'optional'), // Food Overhaul
-			new ModDependency('mOgUt4GM', 'optional') // Mod Menu
+			new ModDependency('mOgUt4GM', 'optional'), // Mod Menu
+			new ModDependency('wLmM53ED', 'optional') // Various Status Effects
 	]
 	changelog = "${update_changelog}"
 }

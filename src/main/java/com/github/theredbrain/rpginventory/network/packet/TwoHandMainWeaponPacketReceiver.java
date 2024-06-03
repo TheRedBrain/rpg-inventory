@@ -30,7 +30,7 @@ public class TwoHandMainWeaponPacketReceiver implements ServerPlayNetworking.Pla
             }
         }
 
-        if (RPGInventory.serverConfig.toggling_two_handed_stance_requires_stamina && ((StaminaUsingEntity) player).staminaattributes$getStamina() <= 0 && !player.isCreative()) {
+        if (RPGInventory.isStaminaAttributesLoaded && RPGInventory.serverConfig.toggling_two_handed_stance_requires_stamina && ((StaminaUsingEntity) player).staminaattributes$getStamina() <= 0 && !player.isCreative()) {
             player.sendMessageToClient(Text.translatable("hud.message.staminaTooLow"), true);
             return;
         } else if (((DuckPlayerEntityMixin) player).rpginventory$isMainHandStackSheathed() && ((DuckPlayerEntityMixin) player).rpginventory$isOffHandStackSheathed()) {
@@ -48,7 +48,9 @@ public class TwoHandMainWeaponPacketReceiver implements ServerPlayNetworking.Pla
             player.equipStack(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
             ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedOffHand(offHandItemStack);
         }
-        ((StaminaUsingEntity) player).staminaattributes$addStamina(-RPGInventory.serverConfig.toggling_two_handed_stance_stamina_cost);
+        if (RPGInventory.isStaminaAttributesLoaded) {
+            ((StaminaUsingEntity) player).staminaattributes$addStamina(-RPGInventory.serverConfig.toggling_two_handed_stance_stamina_cost);
+        }
         // TODO play sounds
     }
 }

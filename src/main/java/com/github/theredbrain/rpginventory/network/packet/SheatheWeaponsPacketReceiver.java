@@ -7,13 +7,9 @@ import com.github.theredbrain.staminaattributes.entity.StaminaUsingEntity;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Equipment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
-import net.minecraft.world.event.GameEvent;
 
 public class SheatheWeaponsPacketReceiver implements ServerPlayNetworking.PlayPacketHandler<SheatheWeaponsPacket> {
     @Override
@@ -28,7 +24,7 @@ public class SheatheWeaponsPacketReceiver implements ServerPlayNetworking.PlayPa
             offHandItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSheathedOffHand();
         }
 
-        if (RPGInventory.serverConfig.sheathing_hand_items_requires_stamina && ((StaminaUsingEntity) player).staminaattributes$getStamina() <= 0 && !player.isCreative()) {
+        if (RPGInventory.isStaminaAttributesLoaded && RPGInventory.serverConfig.sheathing_hand_items_requires_stamina && ((StaminaUsingEntity) player).staminaattributes$getStamina() <= 0 && !player.isCreative()) {
             player.sendMessageToClient(Text.translatable("hud.message.staminaTooLow"), true);
             return;
         }
@@ -47,18 +43,9 @@ public class SheatheWeaponsPacketReceiver implements ServerPlayNetworking.PlayPa
             player.equipStack(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
             ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedOffHand(offHandItemStack);
         }
-        ((StaminaUsingEntity) player).staminaattributes$addStamina(-RPGInventory.serverConfig.sheathing_hand_items_stamina_cost);
+        if (RPGInventory.isStaminaAttributesLoaded) {
+            ((StaminaUsingEntity) player).staminaattributes$addStamina(-RPGInventory.serverConfig.sheathing_hand_items_stamina_cost);
+        }
         // TODO play sounds
-//        Item offHandStackItem = ((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$getOffHandStack().getItem();
-//        if (offHandStackItem instanceof Equipment noiseMakingItem && !player.isSpectator()) {
-//            SoundEvent equipSound = noiseMakingItem.getEquipSound();
-//            if (equipSound != null) {
-//
-//                if (!player.getWorld().isClient() && !player.isSilent()) {
-//                    player.getWorld().playSound(null, player.getX(), player.getY(), player.getZ(), equipSound, player.getSoundCategory(), 1.0F, 1.0F);
-//                }
-//                player.emitGameEvent(GameEvent.EQUIP);
-//            }
-//        }
     }
 }

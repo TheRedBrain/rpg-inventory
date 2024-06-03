@@ -34,7 +34,7 @@ public class SwapHandItemsPacketReceiver implements ServerPlayNetworking.PlayPac
         if (itemStack.isEmpty() && alternativeItemStack.isEmpty()) {
             return;
         }
-        if (RPGInventory.serverConfig.swapping_hand_items_requires_stamina && ((StaminaUsingEntity) player).staminaattributes$getStamina() <= 0 && !player.isCreative()) {
+        if (RPGInventory.isStaminaAttributesLoaded && RPGInventory.serverConfig.swapping_hand_items_requires_stamina && ((StaminaUsingEntity) player).staminaattributes$getStamina() <= 0 && !player.isCreative()) {
             player.sendMessageToClient(Text.translatable("hud.message.staminaTooLow"), true);
             return;
         }
@@ -54,7 +54,9 @@ public class SwapHandItemsPacketReceiver implements ServerPlayNetworking.PlayPac
             }
             ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setAlternativeOffHand(itemStack);
         }
-        ((StaminaUsingEntity) player).staminaattributes$addStamina(-RPGInventory.serverConfig.swapping_hand_items_stamina_cost);
+        if (RPGInventory.isStaminaAttributesLoaded) {
+            ((StaminaUsingEntity) player).staminaattributes$addStamina(-RPGInventory.serverConfig.swapping_hand_items_stamina_cost);
+        }
         // TODO play sounds
     }
 }

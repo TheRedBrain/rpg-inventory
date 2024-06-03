@@ -1,6 +1,20 @@
 # RPG Inventory
 
-Adds new equipment slots powered by the [Trinkets](https://modrinth.com/mod/trinkets) mod. These slots are integrated into a new inventory screen.
+Adds a new inventory screen with more equipment slots and other equipment related mechanics.
+
+## Installation
+Requires
+- [Fabric API](https://modrinth.com/mod/fabric-api)
+- [Cloth Config](https://modrinth.com/mod/cloth-config)
+- [Azure Lib](https://modrinth.com/mod/azurelib)
+- [Trinkets](https://modrinth.com/mod/trinkets)
+- [Slot Customization API](https://modrinth.com/mod/slot-customization-api)
+
+Highly recommended
+- [Mod Menu](https://modrinth.com/mod/modmenu)
+- [Food Overhaul](https://modrinth.com/mod/food-overhaul)
+- [Stamina Attributes](https://modrinth.com/mod/stamina-attributes)
+- [Various Status Effects](https://modrinth.com/mod/various-status-effects)
 
 ## New equipment slots
 The new slots accessible in the inventory are:
@@ -24,7 +38,7 @@ The mod also adds additional slots which are not directly accessible. They are u
 
 ## New Keybindings and mechanics
 - Swap main hand: Swaps the item in the main hand slot with the item in the alternative main hand slot
-- Swap offhand: Swaps the item in the offhand slot with the item in the alternative offhand slot\
+- Swap offhand: Swaps the item in the offhand slot with the item in the alternative offhand slot
 
 
 - Sheathe Weapons: Puts the items in the main hand and the offhand slot into their corresponding sheathed hand slots. When pressed again, swaps the items back
@@ -35,17 +49,22 @@ When the offhand item is sheathed, the offhand slot contains an empty item stack
 When a hand item is not sheathed, but the corresponding slot contains no item, the players hand is not empty. The item in the corresponding empty hand slot is held instead.
 The empty hand slots always contain a item called "Empty Hand Weapon". This is technically a weapon. When Better Combat is installed, this allows for unarmed combat.
 
+Note: The vanilla 'Swap Item With Offhand' hotkey no longer has a function. Using it when items where sheathed could duplicate items. Swapping items into the hotbar using the number keys still works.
+
+### Stamina Attributes Compatibility
+Installing [Stamina Attributes](https://modrinth.com/mod/stamina-attributes) allows for swapping. sheathing and toggling the 2-handed stance to have configurable stamina costs/requirements.
+
 ## Status Effect screen
-Active and visible status effects are listed on the left side of the inventory screen. They are sorted by their category (harmful beneficial and neutral). When the mod [Food Overhaul](https://modrinth.com/mod/food-overhaul) is installed, its food effects are listed in a separate list.
-Effects can have a description (added by assigning a value to <effect_translation_key>.description in the lang files), which is also displayed.
+Active and visible status effects are listed on the left side of the inventory screen. They are sorted by their category (harmful beneficial and neutral). Effects can have a description (added by assigning a value to <effect_translation_key>.description in the lang files), which is also displayed.
+
+### Food Overhaul Compatibility
+[Food Overhaul](https://modrinth.com/mod/food-overhaul)s food effects are displayed in a separate list.
 
 ## Attribute Screen
 Attributes and their values are listed on the right side of the inventory. This can be toggled on/off with a button.
 The client config allows extensive customization of the attribute screen.
 
 ## Additional settings and features
-Swapping hand items, sheathing weapons and Toggling two-handing stance can all be configured to require stamina above 0. They also cost a configurable amount of stamina.
-
 The 2x2 crafting grid in the player inventory can be disabled.
 
 Items in the "two_handed_items" item tag can only be used when the offhand is sheathed.
@@ -68,5 +87,8 @@ When the gamerule "destroyDroppedItemsOnDeath" is true and the vanilla gamerule 
 
 When "keep_inventory_status_effect_identifier" is a valid status effect identifier, that status effect is applied when an item in the "keeps_inventory_on_death" item tag is equipped (in an equipment, trinket or the offhand slot).
 When the player dies while having that status effect, all equipped items in the "keeps_inventory_on_death" item tag are destroyed. The rest of the inventory is kept, regardless of game rules and stuff like "Curse of Vanishing".
+
+### Various Status Effects Compatibility
+All status effect identifier options default to status effects implemented by [Various Status Effects](https://modrinth.com/mod/various-status-effects).
 
 This mod also provides an API for trinket items which are rendered on the player model.
