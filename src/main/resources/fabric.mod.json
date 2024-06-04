@@ -41,7 +41,6 @@
     "fabric-api": "*",
     "cloth-config": ">=11.1.106",
     "trinkets": ">=3.7.1",
-    "azurelib": ">=1.0.3",
     "slotcustomizationapi": ">=1.0.0-1.20.1"
   },
   "suggests": {

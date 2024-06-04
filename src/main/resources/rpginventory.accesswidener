@@ -2,16 +2,3 @@ accessWidener v1 named
 
 accessible method net/minecraft/client/gui/screen/ingame/HandledScreen drawSlot (Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/screen/slot/Slot;)V
 extendable method net/minecraft/client/gui/screen/ingame/HandledScreen drawSlot (Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/screen/slot/Slot;)V
-
-accessible field net/minecraft/client/render/WorldRenderer bufferBuilders Lnet/minecraft/client/render/BufferBuilderStorage;
-
-accessible method net/minecraft/client/render/WorldRenderer canDrawEntityOutlines ()Z
-
-accessible class net/minecraft/client/gui/screen/ingame/CreativeInventoryScreen$CreativeSlot
-
-accessible field net/minecraft/client/model/ModelPart cuboids Ljava/util/List;
-
-#temporary TODO remove when data-driven items are in vanilla
-mutable field net/minecraft/item/Item foodComponent Lnet/minecraft/item/FoodComponent;
-mutable field net/minecraft/block/AbstractBlock velocityMultiplier F
-mutable field net/minecraft/block/AbstractBlock jumpVelocityMultiplier F

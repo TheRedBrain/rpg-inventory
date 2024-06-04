@@ -1,6 +1,6 @@
 package com.github.theredbrain.rpginventory.client.render.renderer;
 
-import com.github.theredbrain.rpginventory.entity.IRenderEquippedTrinkets;
+import com.github.theredbrain.rpginventory.entity.RendersSheathedWeapons;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.ModelPart;
@@ -31,7 +31,7 @@ public class SheathedMainHandItemFeatureRenderer<T extends LivingEntity> extends
     @Override
     public void render(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, T livingEntity, float f, float g, float h, float j, float k, float l) {
 
-        if (livingEntity instanceof IRenderEquippedTrinkets renderEquippedTrinkets) {
+        if (livingEntity instanceof RendersSheathedWeapons renderEquippedTrinkets) {
 
             ItemStack mainHandStack = renderEquippedTrinkets.rpginventory$getSheathedMainHandItemStack();
 

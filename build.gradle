@@ -68,9 +68,6 @@ dependencies {
 	// Trinkets
 	modImplementation "dev.emi:trinkets:${project.trinkets_version}"
 
-	// Azure Lib
-	modImplementation("mod.azure.azurelib:azurelib-fabric-${project.minecraft_version}:${project.azure_lib_version}")
-
 	// Mixin Squared
 	include(implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:0.1.2-beta.4")))
 

@@ -2,6 +2,7 @@ package com.github.theredbrain.rpginventory.mixin.client.gui.hud;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.RPGInventoryClient;
+import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerInventoryMixin;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -60,6 +61,12 @@ public abstract class InGameHudMixin {
             ItemStack itemStackOffHand = playerEntity.getEquippedStack(EquipmentSlot.OFFHAND);
             ItemStack itemStackAlternativeMainHand = ((DuckPlayerInventoryMixin) playerEntity.getInventory()).rpginventory$getAlternativeMainHand();
             ItemStack itemStackAlternativeOffHand = ((DuckPlayerInventoryMixin) playerEntity.getInventory()).rpginventory$getAlternativeOffHand();
+            if (((DuckPlayerEntityMixin) playerEntity).rpginventory$isMainHandStackSheathed()) {
+                itemStackMainHand = ((DuckPlayerInventoryMixin) playerEntity.getInventory()).rpginventory$getSheathedMainHand();
+            }
+            if (((DuckPlayerEntityMixin) playerEntity).rpginventory$isOffHandStackSheathed()) {
+                itemStackOffHand = ((DuckPlayerInventoryMixin) playerEntity.getInventory()).rpginventory$getSheathedOffHand();
+            }
 
             int l = 10;
 
@@ -85,7 +92,7 @@ public abstract class InGameHudMixin {
                     target = "Lnet/minecraft/entity/player/PlayerEntity;getOffHandStack()Lnet/minecraft/item/ItemStack;"
             )
     )
-    public ItemStack overhauleddamage$redirect_hasVehicle(PlayerEntity instance) {
+    public ItemStack overhauleddamage$redirect_getOffHandStack(PlayerEntity instance) {
         return ItemStack.EMPTY;
     }
 
