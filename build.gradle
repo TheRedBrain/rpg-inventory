@@ -42,11 +42,6 @@ repositories {
 	maven {
 		url 'https://jitpack.io'
 	}
-
-	// Azure Lib
-	maven {
-		url 'https://libs.azuredoom.com:4443/mods'
-	}
 }
 
 loom {
@@ -134,7 +129,6 @@ modrinth {
 	dependencies = [
 			new ModDependency('P7dR8mSH', 'required'), // Fabric API
 			new ModDependency('9s6osm5g', 'required'), // Cloth Config
-			new ModDependency('7zlUOZvb', 'required'), // Azure Lib
 			new ModDependency('5aaWibi9', 'required'), // Trinkets
 			new ModDependency('QYZ7JTtD', 'required'), // Slot Customization API
 			new ModDependency('QKOE26gD', 'optional'), // Stamina Attributes

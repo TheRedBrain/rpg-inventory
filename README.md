@@ -6,7 +6,6 @@ Adds a new inventory screen with more equipment slots and other equipment relate
 Requires
 - [Fabric API](https://modrinth.com/mod/fabric-api)
 - [Cloth Config](https://modrinth.com/mod/cloth-config)
-- [Azure Lib](https://modrinth.com/mod/azurelib)
 - [Trinkets](https://modrinth.com/mod/trinkets)
 - [Slot Customization API](https://modrinth.com/mod/slot-customization-api)
 
@@ -90,5 +89,3 @@ When the player dies while having that status effect, all equipped items in the 
 
 ### Various Status Effects Compatibility
 All status effect identifier options default to status effects implemented by [Various Status Effects](https://modrinth.com/mod/various-status-effects).
-
-This mod also provides an API for trinket items which are rendered on the player model.
