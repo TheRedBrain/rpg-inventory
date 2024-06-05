@@ -10,6 +10,7 @@
     "entity.player.PlayerInventoryMixin",
     "screen.PlayerScreenHandlerEquipmentSlotsMixin",
     "screen.PlayerScreenHandlerMixin",
+    "screen.PlayerScreenHandlerOffHandSlotMixin",
     "server.network.EntityTrackerEntryMixin",
     "server.network.ServerPlayerEntityMixin",
     "server.network.ServerPlayNetworkHandlerMixin",
