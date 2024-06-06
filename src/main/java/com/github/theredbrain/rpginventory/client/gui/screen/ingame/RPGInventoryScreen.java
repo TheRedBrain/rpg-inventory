@@ -48,7 +48,7 @@ import java.util.Optional;
 @Environment(EnvType.CLIENT)
 public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> implements TrinketScreen {
     public static final Identifier ADVENTURE_INVENTORY_SIDES_BACKGROUND_TEXTURE = RPGInventory.identifier("textures/gui/container/adventure_inventory/adventure_inventory_sides_background.png");
-    //    private static final Identifier INVENTORY_SLOT_TEXTURE = RPGInventory.identifier("textures/gui/container/inventory_slot.png");
+    private static final Identifier INVENTORY_SLOT_TEXTURE = RPGInventory.identifier("textures/gui/container/adventure_inventory/adventure_inventory_spells_background_1.png");
 //    private static final Identifier EFFECT_BACKGROUND_SMALL_TEXTURE = new Identifier("container/inventory/effect_background_small");
 //    private static final Identifier EFFECT_SCROLLER_BACKGROUND_TEXTURE = RPGInventory.identifier("container/adventure_inventory/scroller_background");
     private static final Identifier SCROLL_BAR_BACKGROUND_8_206_TEXTURE = RPGInventory.identifier("textures/gui/sprites/scroll_bar/scroll_bar_background_8_206.png");
@@ -209,22 +209,33 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
         int i = this.x;
         int j = this.y;
         int activeSpellSlotAmount = 0;
+        var serverConfig = RPGInventory.serverConfig;
         if (this.client != null && this.client.player != null) {
             activeSpellSlotAmount = (int) ((DuckPlayerEntityMixin) this.client.player).rpginventory$getActiveSpellSlotAmount();
             updateEffectsLists(this.client.player);
         }
         context.drawTexture(RPGInventory.identifier("textures/gui/container/adventure_inventory/adventure_inventory_main_background.png"), i, j, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
-        if (!RPGInventory.serverConfig.disable_inventory_crafting_slots) {
-            context.drawText(this.textRenderer, CRAFTING_LABEL_TEXT, i + 97, j + 31, 4210752, false);
-            context.drawTexture(RPGInventory.identifier("textures/gui/container/adventure_inventory/adventure_inventory_crafting_background.png"), i + 96, j + 41, 0, 0, 74, 36, 74, 36);
+        if (!serverConfig.disable_inventory_crafting_slots) {
+            context.drawText(this.textRenderer, CRAFTING_LABEL_TEXT, i + serverConfig.inventory_crafting_slots_x_offset, j + serverConfig.inventory_crafting_slots_y_offset - 11, 4210752, false);
+            context.drawTexture(RPGInventory.identifier("textures/gui/container/adventure_inventory/adventure_inventory_crafting_background.png"), i + serverConfig.inventory_crafting_slots_x_offset - 1, j + serverConfig.inventory_crafting_slots_y_offset - 1, 0, 0, 74, 36, 74, 36);
         }
         if (activeSpellSlotAmount > 0) {
-            context.drawText(this.textRenderer, SPELLS_LABEL_TEXT, i + 98, j + 79, 4210752, false);
+            context.drawText(this.textRenderer, SPELLS_LABEL_TEXT, i + serverConfig.spell_slots_x_offset, j + serverConfig.spell_slots_y_offset - 11, 4210752, false);
             int width = activeSpellSlotAmount < 5 ? (activeSpellSlotAmount % 5) * 18 : 72;
             int height = activeSpellSlotAmount < 5 ? 18 : 36;
-            context.drawTexture(RPGInventory.identifier("textures/gui/container/adventure_inventory/adventure_inventory_spells_background_" + activeSpellSlotAmount + ".png"), i + 97, j + 89, 0, 0, width, height, width, height);
+            context.drawTexture(RPGInventory.identifier("textures/gui/container/adventure_inventory/adventure_inventory_spells_background_" + activeSpellSlotAmount + ".png"), i + serverConfig.spell_slots_x_offset - 1, j + serverConfig.spell_slots_y_offset - 1, 0, 0, width, height, width, height);
 
         }
+        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.order_1_slot_x_offset, j + serverConfig.order_1_slot_y_offset, 0, 0, 18, 18, 18, 18);
+        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.order_2_slot_x_offset, j + serverConfig.order_2_slot_y_offset, 0, 0, 18, 18, 18, 18);
+        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.order_3_slot_x_offset, j + serverConfig.order_3_slot_y_offset, 0, 0, 18, 18, 18, 18);
+        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.order_4_slot_x_offset, j + serverConfig.order_4_slot_y_offset, 0, 0, 18, 18, 18, 18);
+        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.order_5_slot_x_offset, j + serverConfig.order_5_slot_y_offset, 0, 0, 18, 18, 18, 18);
+        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.order_6_slot_x_offset, j + serverConfig.order_6_slot_y_offset, 0, 0, 18, 18, 18, 18);
+        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.order_7_slot_x_offset, j + serverConfig.order_7_slot_y_offset, 0, 0, 18, 18, 18, 18);
+        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.order_8_slot_x_offset, j + serverConfig.order_8_slot_y_offset, 0, 0, 18, 18, 18, 18);
+        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.order_9_slot_x_offset, j + serverConfig.order_9_slot_y_offset, 0, 0, 18, 18, 18, 18);
+
         if (this.oldEffectsListSize > 0) {
             context.drawTexture(ADVENTURE_INVENTORY_SIDES_BACKGROUND_TEXTURE, i - 130, j, 0, 0, 130, this.backgroundHeight, 130, this.backgroundHeight);
         }

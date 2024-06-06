@@ -55,10 +55,6 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
     private int groupCount = 0;
     @Unique
     private PlayerInventory inventory;
-    @Unique
-    private final int spellSlotsX = 98;
-    @Unique
-    private final int spellSlotsY = 90;
 
     public PlayerScreenHandlerMixin() {
         super(null, 0);
@@ -72,6 +68,8 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
         this.inventory = inventory;
         trinkets$updateTrinketSlots(true);
 
+        var serverConfig = RPGInventory.serverConfig;
+
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
                 ((SlotCustomization) this.slots.get(j + (i + 1) * 9)).slotcustomizationapi$setY(138 + i * 18);
@@ -81,23 +79,23 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
             ((SlotCustomization) this.slots.get(i + 36)).slotcustomizationapi$setY(196);
         }
 
-        if (RPGInventory.serverConfig.disable_inventory_crafting_slots) {
+        if (serverConfig.disable_inventory_crafting_slots) {
             ((SlotCustomization) this.slots.get(0)).slotcustomizationapi$setDisabledOverride(true);
             ((SlotCustomization) this.slots.get(1)).slotcustomizationapi$setDisabledOverride(true);
             ((SlotCustomization) this.slots.get(2)).slotcustomizationapi$setDisabledOverride(true);
             ((SlotCustomization) this.slots.get(3)).slotcustomizationapi$setDisabledOverride(true);
             ((SlotCustomization) this.slots.get(4)).slotcustomizationapi$setDisabledOverride(true);
         } else {
-            ((SlotCustomization) this.slots.get(0)).slotcustomizationapi$setX(153);
-            ((SlotCustomization) this.slots.get(0)).slotcustomizationapi$setY(52);
-            ((SlotCustomization) this.slots.get(1)).slotcustomizationapi$setX(97);
-            ((SlotCustomization) this.slots.get(1)).slotcustomizationapi$setY(42);
-            ((SlotCustomization) this.slots.get(2)).slotcustomizationapi$setX(115);
-            ((SlotCustomization) this.slots.get(2)).slotcustomizationapi$setY(42);
-            ((SlotCustomization) this.slots.get(3)).slotcustomizationapi$setX(97);
-            ((SlotCustomization) this.slots.get(3)).slotcustomizationapi$setY(60);
-            ((SlotCustomization) this.slots.get(4)).slotcustomizationapi$setX(115);
-            ((SlotCustomization) this.slots.get(4)).slotcustomizationapi$setY(60);
+            ((SlotCustomization) this.slots.get(0)).slotcustomizationapi$setX(serverConfig.inventory_crafting_slots_x_offset + 66);
+            ((SlotCustomization) this.slots.get(0)).slotcustomizationapi$setY(serverConfig.inventory_crafting_slots_y_offset + 10);
+            ((SlotCustomization) this.slots.get(1)).slotcustomizationapi$setX(serverConfig.inventory_crafting_slots_x_offset);
+            ((SlotCustomization) this.slots.get(1)).slotcustomizationapi$setY(serverConfig.inventory_crafting_slots_y_offset);
+            ((SlotCustomization) this.slots.get(2)).slotcustomizationapi$setX(serverConfig.inventory_crafting_slots_x_offset + 18);
+            ((SlotCustomization) this.slots.get(2)).slotcustomizationapi$setY(serverConfig.inventory_crafting_slots_y_offset);
+            ((SlotCustomization) this.slots.get(3)).slotcustomizationapi$setX(serverConfig.inventory_crafting_slots_x_offset);
+            ((SlotCustomization) this.slots.get(3)).slotcustomizationapi$setY(serverConfig.inventory_crafting_slots_y_offset + 18);
+            ((SlotCustomization) this.slots.get(4)).slotcustomizationapi$setX(serverConfig.inventory_crafting_slots_x_offset + 18);
+            ((SlotCustomization) this.slots.get(4)).slotcustomizationapi$setY(serverConfig.inventory_crafting_slots_y_offset + 18);
         }
 
         // reposition vanilla armor slots
@@ -117,6 +115,9 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 
     @Override
     public void trinkets$updateTrinketSlots(boolean slotsChanged) {
+
+        var serverConfig = RPGInventory.serverConfig;
+
         TrinketsApi.getTrinketComponent(owner).ifPresent(trinkets -> {
             if (slotsChanged) trinkets.update();
             Map<String, SlotGroup> groups = trinkets.getGroups();
@@ -138,6 +139,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
                 int order = group.getOrder();
                 int id = group.getSlotId();
                 if (id != -1) {
+                    // TODO
                     RPGInventory.warn("Trinket slot groups with id != -1 are ignored. This applies to group " + group.getName());
                 } else {
                     int x;
@@ -146,88 +148,88 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
                     // this way most unwanted cases are avoided
                     if (order == 1) {
                         // belts
-                        x = 8;
-                        y = 72;
+                        x = serverConfig.order_1_slot_x_offset;
+                        y = serverConfig.order_1_slot_y_offset;
 
                     } else if (order == 2) {
                         // shoulders
-                        x = 8;
-                        y = 36;
+                        x = serverConfig.order_2_slot_x_offset;
+                        y = serverConfig.order_2_slot_y_offset;
 
                     } else if (order == 3) {
                         // necklaces
-                        x = 52;
-                        y = 18;
+                        x = serverConfig.order_3_slot_x_offset;
+                        y = serverConfig.order_3_slot_y_offset;
 
                     } else if (order == 4) {
                         // rings 1
-                        x = 77;
-                        y = 36;
+                        x = serverConfig.order_4_slot_x_offset;
+                        y = serverConfig.order_4_slot_y_offset;
 
                     } else if (order == 5) {
                         // rings 2
-                        x = 77;
-                        y = 54;
+                        x = serverConfig.order_5_slot_x_offset;
+                        y = serverConfig.order_5_slot_y_offset;
 
                     } else if (order == 6) {
                         // gloves
-                        x = 77;
-                        y = 72;
+                        x = serverConfig.order_6_slot_x_offset;
+                        y = serverConfig.order_6_slot_y_offset;
 
                     } else if (order == 7) {
                         // main_hand
-                        x = 8;
-                        y = 108;
+                        x = serverConfig.order_7_slot_x_offset;
+                        y = serverConfig.order_7_slot_y_offset;
 
                     } else if (order == 8) {
                         // alternative main hand
-                        x = 59;
-                        y = 108;
+                        x = serverConfig.order_8_slot_x_offset;
+                        y = serverConfig.order_8_slot_y_offset;
 
                     } else if (order == 9) {
-                        // alternative off hand
-                        x = 77;
-                        y = 108;
+                        // alternative offhand
+                        x = serverConfig.order_9_slot_x_offset;
+                        y = serverConfig.order_9_slot_y_offset;
 
                     } else if (order == 10) {
                         // spell slot 1
-                        x = this.spellSlotsX;
-                        y = this.spellSlotsY;
+                        x = serverConfig.spell_slots_x_offset;
+                        y = serverConfig.spell_slots_y_offset;
 
                     } else if (order == 11) {
                         // spell slot 2
-                        x = this.spellSlotsX + 18;
-                        y = this.spellSlotsY;
+                        x = serverConfig.spell_slots_x_offset + 18;
+                        y = serverConfig.spell_slots_y_offset;
 
                     } else if (order == 12) {
                         // spell slot 3
-                        x = this.spellSlotsX + 36;
-                        y = this.spellSlotsY;
+                        x = serverConfig.spell_slots_x_offset + 36;
+                        y = serverConfig.spell_slots_y_offset;
 
                     } else if (order == 13) {
                         // spell slot 4
-                        x = this.spellSlotsX + 54;
-                        y = this.spellSlotsY;
+                        x = serverConfig.spell_slots_x_offset + 54;
+                        y = serverConfig.spell_slots_y_offset;
 
                     } else if (order == 14) {
                         // spell slot 5
-                        x = this.spellSlotsX;
-                        y = this.spellSlotsY + 18;
+                        x = serverConfig.spell_slots_x_offset;
+                        y = serverConfig.spell_slots_y_offset + 18;
 
                     } else if (order == 15) {
                         // spell slot 6
-                        x = this.spellSlotsX + 18;
-                        y = this.spellSlotsY + 18;
+                        x = serverConfig.spell_slots_x_offset + 18;
+                        y = serverConfig.spell_slots_y_offset + 18;
 
                     } else if (order == 16) {
                         // spell slot 7
-                        x = this.spellSlotsX + 36;
-                        y = this.spellSlotsY + 18;
+                        x = serverConfig.spell_slots_x_offset + 36;
+                        y = serverConfig.spell_slots_y_offset + 18;
 
                     } else if (order == 17) {
                         // spell slot 8
-                        x = this.spellSlotsX + 54;
-                        y = this.spellSlotsY + 18;
+                        x = serverConfig.spell_slots_x_offset + 54;
+                        y = serverConfig.spell_slots_y_offset + 18;
 
                     } else if (order == 18) {
                         // these include empty hand slots which are necessary but should not be interacted with by the player
@@ -236,6 +238,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
                         }
                         continue;
                     } else {
+                        // TODO
                         if (RPGInventory.serverConfig.show_debug_log) {
                             RPGInventory.warn("Trinket slot groups with order <= 0 or order > 18 are ignored. This applies to group " + group.getName());
                         }
