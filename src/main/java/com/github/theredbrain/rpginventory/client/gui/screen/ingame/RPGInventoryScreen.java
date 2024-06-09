@@ -5,6 +5,7 @@ import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.RPGInventoryClient;
 import com.github.theredbrain.rpginventory.client.gui.widget.ToggleInventoryScreenWidget;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
+import com.github.theredbrain.slotcustomizationapi.api.SlotCustomization;
 import com.google.common.collect.Ordering;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.emi.trinkets.Point;
@@ -59,9 +60,10 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
     private static final Text SPELLS_LABEL_TEXT = Text.translatable("gui.adventure_inventory_screen.spells_label");
     private float mouseX;
     private float mouseY;
-    private ButtonWidget toggleShowAttributeScreen;
+    private ButtonWidget toggleShowAttributeScreenButton;
     private boolean showAttributeScreen;
     private int attributeListSize = 0;
+    private int extraSlotAmount = 0;
     private int oldEffectsListSize = 0;
     private List<StatusEffectInstance> foodEffectsList = new ArrayList<>(Collections.emptyList());
     private List<StatusEffectInstance> negativeEffectsList = new ArrayList<>(Collections.emptyList());
@@ -171,12 +173,21 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
     private void toggleShowAttributeScreen() {
         if (this.showAttributeScreen) {
             this.showAttributeScreen = false;
-            ((ToggleInventoryScreenWidget) this.toggleShowAttributeScreen).setIsPressed(false);
-            this.toggleShowAttributeScreen.setTooltip(Tooltip.of(Text.translatable("gui.adventureInventory.toggleAttributeScreenButton.off.tooltip")));
+            ((ToggleInventoryScreenWidget) this.toggleShowAttributeScreenButton).setIsPressed(false);
+            this.toggleShowAttributeScreenButton.setTooltip(Tooltip.of(Text.translatable("gui.adventureInventory.toggleShowAttributeScreenButton.off.tooltip")));
         } else {
             this.showAttributeScreen = true;
-            ((ToggleInventoryScreenWidget) this.toggleShowAttributeScreen).setIsPressed(true);
-            this.toggleShowAttributeScreen.setTooltip(Tooltip.of(Text.translatable("gui.adventureInventory.toggleAttributeScreenButton.on.tooltip")));
+            ((ToggleInventoryScreenWidget) this.toggleShowAttributeScreenButton).setIsPressed(true);
+            this.toggleShowAttributeScreenButton.setTooltip(Tooltip.of(Text.translatable("gui.adventureInventory.toggleShowAttributeScreenButton.on.tooltip")));
+        }
+        this.updateExtraTrinketSlots();
+    }
+
+    private void updateExtraTrinketSlots() {
+        this.extraSlotAmount = ((TrinketPlayerScreenHandler)this.handler).trinkets$getGroupCount();
+        int start = ((TrinketPlayerScreenHandler) this.handler).trinkets$getTrinketSlotStart() + 17;
+        for (int i = start; i < ((TrinketPlayerScreenHandler) this.handler).trinkets$getTrinketSlotEnd(); i++) {
+            ((SlotCustomization)this.handler.slots.get(i)).slotcustomizationapi$setDisabledOverride(this.showAttributeScreen);
         }
     }
 
@@ -189,8 +200,11 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
         }
         super.init();
         this.showAttributeScreen = RPGInventoryClient.clientConfig.show_attribute_screen_when_opening_inventory_screen;
-        this.toggleShowAttributeScreen = this.addDrawableChild(new ToggleInventoryScreenWidget(this.x + this.backgroundWidth - 30, this.y + 7, this.showAttributeScreen, button -> this.toggleShowAttributeScreen()));
-        this.toggleShowAttributeScreen.setTooltip(Tooltip.of(this.showAttributeScreen ? Text.translatable("gui.adventureInventory.toggleAttributeScreenButton.on.tooltip") : Text.translatable("gui.adventureInventory.toggleAttributeScreenButton.off.tooltip")));
+        this.toggleShowAttributeScreenButton = this.addDrawableChild(new ToggleInventoryScreenWidget(this.x + this.backgroundWidth - 30, this.y + 7, this.showAttributeScreen, button -> this.toggleShowAttributeScreen()));
+        this.toggleShowAttributeScreenButton.setTooltip(Tooltip.of(this.showAttributeScreen ? Text.translatable("gui.adventureInventory.toggleShowAttributeScreenButton.on.tooltip") : Text.translatable("gui.adventureInventory.toggleShowAttributeScreenButton.off.tooltip")));
+
+        this.updateExtraTrinketSlots();
+
     }
 
     @Override
@@ -226,21 +240,26 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
             context.drawTexture(RPGInventory.identifier("textures/gui/container/adventure_inventory/adventure_inventory_spells_background_" + activeSpellSlotAmount + ".png"), i + serverConfig.spell_slots_x_offset - 1, j + serverConfig.spell_slots_y_offset - 1, 0, 0, width, height, width, height);
 
         }
-        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.order_1_slot_x_offset, j + serverConfig.order_1_slot_y_offset, 0, 0, 18, 18, 18, 18);
-        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.order_2_slot_x_offset, j + serverConfig.order_2_slot_y_offset, 0, 0, 18, 18, 18, 18);
-        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.order_3_slot_x_offset, j + serverConfig.order_3_slot_y_offset, 0, 0, 18, 18, 18, 18);
-        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.order_4_slot_x_offset, j + serverConfig.order_4_slot_y_offset, 0, 0, 18, 18, 18, 18);
-        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.order_5_slot_x_offset, j + serverConfig.order_5_slot_y_offset, 0, 0, 18, 18, 18, 18);
-        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.order_6_slot_x_offset, j + serverConfig.order_6_slot_y_offset, 0, 0, 18, 18, 18, 18);
-        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.order_7_slot_x_offset, j + serverConfig.order_7_slot_y_offset, 0, 0, 18, 18, 18, 18);
-        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.order_8_slot_x_offset, j + serverConfig.order_8_slot_y_offset, 0, 0, 18, 18, 18, 18);
-        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.order_9_slot_x_offset, j + serverConfig.order_9_slot_y_offset, 0, 0, 18, 18, 18, 18);
+        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.order_1_slot_x_offset - 1, j + serverConfig.order_1_slot_y_offset - 1, 0, 0, 18, 18, 18, 18);
+        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.order_2_slot_x_offset - 1, j + serverConfig.order_2_slot_y_offset - 1, 0, 0, 18, 18, 18, 18);
+        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.order_3_slot_x_offset - 1, j + serverConfig.order_3_slot_y_offset - 1, 0, 0, 18, 18, 18, 18);
+        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.order_4_slot_x_offset - 1, j + serverConfig.order_4_slot_y_offset - 1, 0, 0, 18, 18, 18, 18);
+        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.order_5_slot_x_offset - 1, j + serverConfig.order_5_slot_y_offset - 1, 0, 0, 18, 18, 18, 18);
+        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.order_6_slot_x_offset - 1, j + serverConfig.order_6_slot_y_offset - 1, 0, 0, 18, 18, 18, 18);
+        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.order_7_slot_x_offset - 1, j + serverConfig.order_7_slot_y_offset - 1, 0, 0, 18, 18, 18, 18);
+        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.order_8_slot_x_offset - 1, j + serverConfig.order_8_slot_y_offset - 1, 0, 0, 18, 18, 18, 18);
+        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.order_9_slot_x_offset - 1, j + serverConfig.order_9_slot_y_offset - 1, 0, 0, 18, 18, 18, 18);
 
         if (this.oldEffectsListSize > 0) {
             context.drawTexture(ADVENTURE_INVENTORY_SIDES_BACKGROUND_TEXTURE, i - 130, j, 0, 0, 130, this.backgroundHeight, 130, this.backgroundHeight);
         }
-        if (this.showAttributeScreen) {
+        if (this.showAttributeScreen || this.extraSlotAmount > 0) {
             context.drawTexture(ADVENTURE_INVENTORY_SIDES_BACKGROUND_TEXTURE, i + this.backgroundWidth, j, 0, 0, 130, this.backgroundHeight, 130, this.backgroundHeight);
+        }
+        if (!this.showAttributeScreen) {
+            for (int k = 0; k < this.extraSlotAmount; k++) {
+                context.drawTexture(INVENTORY_SLOT_TEXTURE, i + this.backgroundWidth + 11 + (k % 6) * 18, j + 11 + (k / 6) * 18, 0, 0, 18, 18, 18, 18);
+            }
         }
         if (this.client != null && this.client.player != null) {
 //            InventoryScreen.drawEntity(context, i + 26, j + 36, i + 75, j + 106, 30, 0.0625f, this.mouseX, this.mouseY, this.client.player);
@@ -505,6 +524,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
         this.negativeScrollAmount = number7;
         this.positiveScrollAmount = number8;
         this.neutralScrollAmount = number9;
+        this.updateExtraTrinketSlots();
     }
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {

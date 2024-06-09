@@ -3,6 +3,7 @@ package com.github.theredbrain.rpginventory.mixin.screen;
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
 import com.github.theredbrain.rpginventory.registry.Tags;
+import com.github.theredbrain.rpginventory.screen.RPGInventoryTrinketSlot;
 import com.github.theredbrain.slotcustomizationapi.api.SlotCustomization;
 import com.google.common.collect.ImmutableList;
 import dev.emi.trinkets.Point;
@@ -86,7 +87,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
             ((SlotCustomization) this.slots.get(3)).slotcustomizationapi$setDisabledOverride(true);
             ((SlotCustomization) this.slots.get(4)).slotcustomizationapi$setDisabledOverride(true);
         } else {
-            ((SlotCustomization) this.slots.get(0)).slotcustomizationapi$setX(serverConfig.inventory_crafting_slots_x_offset + 66);
+            ((SlotCustomization) this.slots.get(0)).slotcustomizationapi$setX(serverConfig.inventory_crafting_slots_x_offset + 56);
             ((SlotCustomization) this.slots.get(0)).slotcustomizationapi$setY(serverConfig.inventory_crafting_slots_y_offset + 10);
             ((SlotCustomization) this.slots.get(1)).slotcustomizationapi$setX(serverConfig.inventory_crafting_slots_x_offset);
             ((SlotCustomization) this.slots.get(1)).slotcustomizationapi$setY(serverConfig.inventory_crafting_slots_y_offset);
@@ -130,8 +131,9 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
             }
 
             int groupNum = 1; // Start at 1 because offhand exists
+            int extraGroupCount = 0;
 
-            HashMap<Integer, Boolean> presentGroups = new HashMap<>(Map.of());
+            HashMap<Integer, Boolean> presentPermanentGroups = new HashMap<>(Map.of());
             for (SlotGroup group : groups.values().stream().sorted(Comparator.comparing(SlotGroup::getOrder)).toList()) {
                 if (!rpginventory$hasSlots(trinkets, group)) {
                     continue;
@@ -139,8 +141,9 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
                 int order = group.getOrder();
                 int id = group.getSlotId();
                 if (id != -1) {
-                    // TODO
-                    RPGInventory.warn("Trinket slot groups with id != -1 are ignored. This applies to group " + group.getName());
+                    if (RPGInventory.serverConfig.show_debug_log) {
+                        RPGInventory.warn("Trinket slot groups with id != -1 are ignored. This applies to group " + group.getName());
+                    }
                 } else {
                     int x;
                     int y;
@@ -238,32 +241,31 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
                         }
                         continue;
                     } else {
-                        // TODO
-                        if (RPGInventory.serverConfig.show_debug_log) {
-                            RPGInventory.warn("Trinket slot groups with order <= 0 or order > 18 are ignored. This applies to group " + group.getName());
-                        }
-                        continue;
+                        x = 188 + (extraGroupCount % 6) * 18;
+                        y = 12 + (extraGroupCount / 6) * 18;
+                        extraGroupCount++;
                     }
                     groupPos.put(group, new Point(x, y));
                     groupNums.put(group, groupNum);
                     groupNum++;
 
-                    if (presentGroups.getOrDefault(order, false) && RPGInventory.serverConfig.show_debug_log) {
+                    if (presentPermanentGroups.getOrDefault(order, false) && RPGInventory.serverConfig.show_debug_log) {
                         RPGInventory.warn("Multiple slot groups with order " + order + " are defined. This may lead to unexpected behaviour. This applies to group " + group.getName());
-                    } else {
-                        presentGroups.put(order, true);
+                    } else if (order > 0 && order < 18) {
+                        presentPermanentGroups.put(order, true);
                     }
                 }
             }
-            groupCount = Math.max(0, groupNum - 4);
+            groupCount = extraGroupCount;
             trinketSlotStart = slots.size();
             slotWidths.clear();
             slotHeights.clear();
             slotTypes.clear();
 
-            int trinketSlotAmount = 22;
+            int permanentTrinketSlotAmount = 17;
 
-            SurvivalTrinketSlot[] newSlots = new SurvivalTrinketSlot[trinketSlotAmount];
+            RPGInventoryTrinketSlot[] permanentSlotsArray = new RPGInventoryTrinketSlot[permanentTrinketSlotAmount];
+            List<RPGInventoryTrinketSlot> extraSlotsList = new ArrayList<>();
 
             for (Map.Entry<String, Map<String, TrinketInventory>> entry : trinkets.getInventory().entrySet()) {
                 String groupId = entry.getKey();
@@ -287,9 +289,16 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
                     slotHeights.computeIfAbsent(group, (k) -> new ArrayList<>()).add(new Point(x, stacks.size()));
                     slotTypes.computeIfAbsent(group, (k) -> new ArrayList<>()).add(stacks.getSlotType());
 
-                    for (int i = 0; i < stacks.size(); i++) {
-                        int index = group.getOrder() - 1; // -1 to account for all groups with order=0 being ignored
-                        newSlots[index] = new SurvivalTrinketSlot(stacks, i, groupPos.get(group).x(), groupPos.get(group).y(), group, stacks.getSlotType(), 0, true);
+                    int groupOrder = group.getOrder();
+                    if (groupOrder <= 0 || groupOrder > 18) {
+                        for (int i = 0; i < stacks.size(); i++) {
+                            extraSlotsList.add(new RPGInventoryTrinketSlot(stacks, i, groupPos.get(group).x(), groupPos.get(group).y(), group, stacks.getSlotType(), 0, true));
+                        }
+                    } else {
+                        for (int i = 0; i < stacks.size(); i++) {
+                            int index = groupOrder - 1; // -1 to account for all groups with order=0 being ignored
+                            permanentSlotsArray[index] = new RPGInventoryTrinketSlot(stacks, i, groupPos.get(group).x(), groupPos.get(group).y(), group, stacks.getSlotType(), 0, true);
+                        }
                     }
 
                     width++;
@@ -298,10 +307,13 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
             }
 
             // add slots to screenHandler
-            for (int i = 0; i < trinketSlotAmount; i++) {
-                if (newSlots[i] != null) {
-                    this.addSlot(newSlots[i]);
+            for (int i = 0; i < permanentTrinketSlotAmount; i++) {
+                if (permanentSlotsArray[i] != null) {
+                    this.addSlot(permanentSlotsArray[i]);
                 }
+            }
+            for (RPGInventoryTrinketSlot slot : extraSlotsList) {
+                this.addSlot(slot);
             }
 
             trinketSlotEnd = slots.size();

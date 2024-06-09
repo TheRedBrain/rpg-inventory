@@ -11,17 +11,6 @@
 	"effect.rpginventory.overburdened_effect.description": "Your equipment is to heavy for you.",
 
 
-	"gui.edit": "Edit",
-	"gui.choose": "Choose",
-	"gui.save": "Save",
-	"gui.add": "Add",
-	"gui.remove": "Remove",
-	"gui.delete": "Delete",
-	"gui.close": "Close",
-	"gui.list_entry.add": "Add new entry",
-	"gui.list_entry.remove": "Remove entry",
-	"gui.edit_teleporter_title": "Edit Teleporter",
-
 	"gui.adventureInventory": "Inventory",
 	"gui.adventure_inventory_screen.equipment_label": "Equipment",
 	"gui.adventure_inventory_screen.crafting_label": "Crafting",
@@ -34,19 +23,11 @@
 	"gui.adventureInventory.status_effects.positive_effects": "Positive Effects",
 	"gui.adventureInventory.status_effects.neutral_effects": "Neutral Effects",
 	"gui.adventureInventory.toggleAttributeScreenButton": "Equipment",
-	"gui.adventureInventory.toggleAttributeScreenButton.on": "Hide Attribute Screen",
-	"gui.adventureInventory.toggleAttributeScreenButton.on.tooltip": "Hide Attribute Screen",
-	"gui.adventureInventory.toggleAttributeScreenButton.off": "Show Attribute Screen",
-	"gui.adventureInventory.toggleAttributeScreenButton.off.tooltip": "Show Attribute Screen",
-
-
-	"gui.entity_attribute_modifier.operation.addition": "Addition",
-	"gui.entity_attribute_modifier.operation.multiply_base": "Multiply Base",
-	"gui.entity_attribute_modifier.operation.multiply_total": "Multiply Total",
-	"gui.entity_attribute_modifier.operation.0": "Addition",
-	"gui.entity_attribute_modifier.operation.1": "Multiply Base",
-	"gui.entity_attribute_modifier.operation.2": "Multiply Total",
-
+	"gui.adventureInventory.toggleShowAttributeScreenButton.on.tooltip": "Hide Attribute Screen",
+	"gui.adventureInventory.toggleShowAttributeScreenButton.off.tooltip": "Show Attribute Screen",
+	"gui.adventureInventory.toggleShowExtraTrinketSlotsScreenButton.on.tooltip": "Hide Extra Slots",
+	"gui.adventureInventory.toggleShowExtraTrinketSlotsScreenButton.off.tooltip": "Show Extra Slots",
+	
 
 	"hud.action_impaired.no_attack_item": "You can't attack with this item",
 	"hud.action_impaired.needs_two_handing": "You need to 2-hand this item",

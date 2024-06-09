@@ -89,3 +89,6 @@ When the player dies while having that status effect, all equipped items in the 
 
 ### Various Status Effects Compatibility
 All status effect identifier options default to status effects implemented by [Various Status Effects](https://modrinth.com/mod/various-status-effects).
+
+## Adding custom slots
+If you want to add your own slots to the RPG Inventory, you can find some [important information here](https://github.com/TheRedBrain/rpg-inventory/wiki/Adding-Custom-Slots).
