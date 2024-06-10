@@ -10,6 +10,9 @@ public class RPGInventoryMixinCanceller implements MixinCanceller {
         if (mixinClassName.equals("dev.emi.trinkets.mixin.PlayerScreenHandlerMixin")) {
             return true;
         }
+        if (mixinClassName.equals("dev.emi.trinkets.mixin.CreativeInventoryScreenMixin")) {
+            return true;
+        }
         return false;
     }
 }

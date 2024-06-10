@@ -13,7 +13,9 @@
     "screen.PlayerScreenHandlerOffHandSlotMixin",
     "server.network.EntityTrackerEntryMixin",
     "server.network.ServerPlayerEntityMixin",
-    "server.network.ServerPlayNetworkHandlerMixin"
+    "server.network.ServerPlayNetworkHandlerMixin",
+    "trinkets.SurvivalTrinketSlotMixin",
+    "trinkets.TrinketScreenManagerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

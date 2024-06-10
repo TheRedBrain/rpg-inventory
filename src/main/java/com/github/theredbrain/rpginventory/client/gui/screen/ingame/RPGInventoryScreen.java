@@ -5,7 +5,6 @@ import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.RPGInventoryClient;
 import com.github.theredbrain.rpginventory.client.gui.widget.ToggleInventoryScreenWidget;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
-import com.github.theredbrain.slotcustomizationapi.api.SlotCustomization;
 import com.google.common.collect.Ordering;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.emi.trinkets.Point;
@@ -58,12 +57,14 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
     private static final Identifier SCROLLER_VERTICAL_6_15_TEXTURE = RPGInventory.identifier("textures/gui/sprites/scroll_bar/scroller_vertical_6_15.png");
     private static final Text CRAFTING_LABEL_TEXT = Text.translatable("gui.adventure_inventory_screen.crafting_label");
     private static final Text SPELLS_LABEL_TEXT = Text.translatable("gui.adventure_inventory_screen.spells_label");
+    private static final Text TOGGLE_SHOW_ATTRIBUTES_BUTTON_TOOLTIP_TEXT_OFF = Text.translatable("gui.adventureInventory.toggleShowAttributeScreenButton.off.tooltip");
+    private static final Text TOGGLE_SHOW_ATTRIBUTES_BUTTON_TOOLTIP_TEXT_ON = Text.translatable("gui.adventureInventory.toggleShowAttributeScreenButton.on.tooltip");
     private float mouseX;
     private float mouseY;
+    private final int sidesBackgroundWidth = 130;
     private ButtonWidget toggleShowAttributeScreenButton;
     private boolean showAttributeScreen;
     private int attributeListSize = 0;
-    private int extraSlotAmount = 0;
     private int oldEffectsListSize = 0;
     private List<StatusEffectInstance> foodEffectsList = new ArrayList<>(Collections.emptyList());
     private List<StatusEffectInstance> negativeEffectsList = new ArrayList<>(Collections.emptyList());
@@ -171,24 +172,9 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
     }
 
     private void toggleShowAttributeScreen() {
-        if (this.showAttributeScreen) {
-            this.showAttributeScreen = false;
-            ((ToggleInventoryScreenWidget) this.toggleShowAttributeScreenButton).setIsPressed(false);
-            this.toggleShowAttributeScreenButton.setTooltip(Tooltip.of(Text.translatable("gui.adventureInventory.toggleShowAttributeScreenButton.off.tooltip")));
-        } else {
-            this.showAttributeScreen = true;
-            ((ToggleInventoryScreenWidget) this.toggleShowAttributeScreenButton).setIsPressed(true);
-            this.toggleShowAttributeScreenButton.setTooltip(Tooltip.of(Text.translatable("gui.adventureInventory.toggleShowAttributeScreenButton.on.tooltip")));
-        }
-        this.updateExtraTrinketSlots();
-    }
-
-    private void updateExtraTrinketSlots() {
-        this.extraSlotAmount = ((TrinketPlayerScreenHandler)this.handler).trinkets$getGroupCount();
-        int start = ((TrinketPlayerScreenHandler) this.handler).trinkets$getTrinketSlotStart() + 17;
-        for (int i = start; i < ((TrinketPlayerScreenHandler) this.handler).trinkets$getTrinketSlotEnd(); i++) {
-            ((SlotCustomization)this.handler.slots.get(i)).slotcustomizationapi$setDisabledOverride(this.showAttributeScreen);
-        }
+        ((ToggleInventoryScreenWidget) this.toggleShowAttributeScreenButton).setIsPressed(!this.showAttributeScreen);
+        this.toggleShowAttributeScreenButton.setTooltip(this.showAttributeScreen ? Tooltip.of(TOGGLE_SHOW_ATTRIBUTES_BUTTON_TOOLTIP_TEXT_OFF) : Tooltip.of(TOGGLE_SHOW_ATTRIBUTES_BUTTON_TOOLTIP_TEXT_ON));
+        this.showAttributeScreen = !this.showAttributeScreen;
     }
 
     @Override
@@ -200,11 +186,8 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
         }
         super.init();
         this.showAttributeScreen = RPGInventoryClient.clientConfig.show_attribute_screen_when_opening_inventory_screen;
-        this.toggleShowAttributeScreenButton = this.addDrawableChild(new ToggleInventoryScreenWidget(this.x + this.backgroundWidth - 30, this.y + 7, this.showAttributeScreen, button -> this.toggleShowAttributeScreen()));
-        this.toggleShowAttributeScreenButton.setTooltip(Tooltip.of(this.showAttributeScreen ? Text.translatable("gui.adventureInventory.toggleShowAttributeScreenButton.on.tooltip") : Text.translatable("gui.adventureInventory.toggleShowAttributeScreenButton.off.tooltip")));
-
-        this.updateExtraTrinketSlots();
-
+        this.toggleShowAttributeScreenButton = this.addDrawableChild(new ToggleInventoryScreenWidget(this.x + 6, this.y + 19, this.showAttributeScreen, button -> this.toggleShowAttributeScreen()));
+        this.toggleShowAttributeScreenButton.setTooltip(Tooltip.of(this.showAttributeScreen ? TOGGLE_SHOW_ATTRIBUTES_BUTTON_TOOLTIP_TEXT_ON : TOGGLE_SHOW_ATTRIBUTES_BUTTON_TOOLTIP_TEXT_OFF));
     }
 
     @Override
@@ -216,6 +199,12 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
         this.drawMouseoverTooltip(context, mouseX, mouseY);
         this.mouseX = mouseX;
         this.mouseY = mouseY;
+    }
+
+    @Override
+    protected void drawForeground(DrawContext context, int mouseX, int mouseY) {
+        super.drawForeground(context, mouseX, mouseY);
+        TrinketScreenManager.drawActiveGroup(context);
     }
 
     @Override
@@ -240,31 +229,27 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
             context.drawTexture(RPGInventory.identifier("textures/gui/container/adventure_inventory/adventure_inventory_spells_background_" + activeSpellSlotAmount + ".png"), i + serverConfig.spell_slots_x_offset - 1, j + serverConfig.spell_slots_y_offset - 1, 0, 0, width, height, width, height);
 
         }
-        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.order_1_slot_x_offset - 1, j + serverConfig.order_1_slot_y_offset - 1, 0, 0, 18, 18, 18, 18);
-        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.order_2_slot_x_offset - 1, j + serverConfig.order_2_slot_y_offset - 1, 0, 0, 18, 18, 18, 18);
-        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.order_3_slot_x_offset - 1, j + serverConfig.order_3_slot_y_offset - 1, 0, 0, 18, 18, 18, 18);
-        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.order_4_slot_x_offset - 1, j + serverConfig.order_4_slot_y_offset - 1, 0, 0, 18, 18, 18, 18);
-        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.order_5_slot_x_offset - 1, j + serverConfig.order_5_slot_y_offset - 1, 0, 0, 18, 18, 18, 18);
-        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.order_6_slot_x_offset - 1, j + serverConfig.order_6_slot_y_offset - 1, 0, 0, 18, 18, 18, 18);
-        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.order_7_slot_x_offset - 1, j + serverConfig.order_7_slot_y_offset - 1, 0, 0, 18, 18, 18, 18);
-        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.order_8_slot_x_offset - 1, j + serverConfig.order_8_slot_y_offset - 1, 0, 0, 18, 18, 18, 18);
-        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.order_9_slot_x_offset - 1, j + serverConfig.order_9_slot_y_offset - 1, 0, 0, 18, 18, 18, 18);
+        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.belts_group_x_offset - 1, j + serverConfig.belts_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
+        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.shoulders_group_x_offset - 1, j + serverConfig.shoulders_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
+        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.necklaces_group_x_offset - 1, j + serverConfig.necklaces_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
+        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.rings_1_group_x_offset - 1, j + serverConfig.rings_1_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
+        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.rings_2_group_x_offset - 1, j + serverConfig.rings_2_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
+        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.gloves_group_x_offset - 1, j + serverConfig.gloves_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
+        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.main_hand_group_x_offset - 1, j + serverConfig.main_hand_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
+        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.alternative_main_hand_group_x_offset - 1, j + serverConfig.alternative_main_hand_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
+        context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.alternative_offhand_group_x_offset - 1, j + serverConfig.alternative_offhand_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
 
+        if (this.showAttributeScreen) {
+            context.drawTexture(ADVENTURE_INVENTORY_SIDES_BACKGROUND_TEXTURE, i - this.sidesBackgroundWidth, j, 0, 0, this.sidesBackgroundWidth, this.backgroundHeight, this.sidesBackgroundWidth, this.backgroundHeight);
+        }
         if (this.oldEffectsListSize > 0) {
-            context.drawTexture(ADVENTURE_INVENTORY_SIDES_BACKGROUND_TEXTURE, i - 130, j, 0, 0, 130, this.backgroundHeight, 130, this.backgroundHeight);
-        }
-        if (this.showAttributeScreen || this.extraSlotAmount > 0) {
-            context.drawTexture(ADVENTURE_INVENTORY_SIDES_BACKGROUND_TEXTURE, i + this.backgroundWidth, j, 0, 0, 130, this.backgroundHeight, 130, this.backgroundHeight);
-        }
-        if (!this.showAttributeScreen) {
-            for (int k = 0; k < this.extraSlotAmount; k++) {
-                context.drawTexture(INVENTORY_SLOT_TEXTURE, i + this.backgroundWidth + 11 + (k % 6) * 18, j + 11 + (k / 6) * 18, 0, 0, 18, 18, 18, 18);
-            }
+            context.drawTexture(ADVENTURE_INVENTORY_SIDES_BACKGROUND_TEXTURE, i + this.backgroundWidth, j, 0, 0, this.sidesBackgroundWidth, this.backgroundHeight, this.sidesBackgroundWidth, this.backgroundHeight);
         }
         if (this.client != null && this.client.player != null) {
 //            InventoryScreen.drawEntity(context, i + 26, j + 36, i + 75, j + 106, 30, 0.0625f, this.mouseX, this.mouseY, this.client.player);
             InventoryScreen.drawEntity(context, i + 51, j + 103, 30, (float) (i + 51) - this.mouseX, (float) (j + 103 - 50) - this.mouseY, this.client.player);
         }
+        TrinketScreenManager.drawExtraGroups(context);
     }
 
     @Override
@@ -290,7 +275,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
         if (!this.showAttributeScreen) {
             return;
         }
-        int x = this.x + this.backgroundWidth + 7;
+        int x = this.x - this.sidesBackgroundWidth + 7;
         int y = this.y + 7;
         List<Text> list = this.getAttributeList();
         this.attributeListSize = list.size();
@@ -307,7 +292,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
     }
 
     private void drawStatusEffects(DrawContext context, int mouseX, int mouseY) {
-        int i = this.x - 123;
+        int i = this.x + this.backgroundWidth + 7;
         int j = this.y + 7;
         if (this.oldEffectsListSize > 0) {
             context.drawText(this.textRenderer, Text.translatable("gui.adventureInventory.status_effects"), i + 1, j, 0x404040, false);
@@ -498,6 +483,10 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
         return list;
     }
 
+    @Override
+    protected boolean isClickOutsideBounds(double mouseX, double mouseY, int left, int top, int button) {
+        return super.isClickOutsideBounds(mouseX, mouseY, left, top, button) && !(TrinketScreenManager.isClickInsideTrinketBounds(mouseX, mouseY));
+    }
 
     @Override
     public void resize(MinecraftClient client, int width, int height) {
@@ -524,7 +513,8 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
         this.negativeScrollAmount = number7;
         this.positiveScrollAmount = number8;
         this.neutralScrollAmount = number9;
-        this.updateExtraTrinketSlots();
+        ((ToggleInventoryScreenWidget) this.toggleShowAttributeScreenButton).setIsPressed(this.showAttributeScreen);
+        this.toggleShowAttributeScreenButton.setTooltip(this.showAttributeScreen ? Tooltip.of(TOGGLE_SHOW_ATTRIBUTES_BUTTON_TOOLTIP_TEXT_ON) : Tooltip.of(TOGGLE_SHOW_ATTRIBUTES_BUTTON_TOOLTIP_TEXT_OFF));
     }
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
@@ -533,7 +523,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
         this.negativeMouseClicked = false;
         this.positiveMouseClicked = false;
         this.neutralMouseClicked = false;
-        int i = this.x - 13;
+        int i = this.x + this.backgroundWidth + this.sidesBackgroundWidth - 15;
         int j;
         if (this.foodEffectsRowAmount > 1) {
             j = this.y + 34;
@@ -561,7 +551,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
         }
 
         if (this.attributeListSize > 15 && this.showAttributeScreen) {
-            i = this.x + this.backgroundWidth + 115;
+            i = this.x - 13;
             j = this.y + 7;
             if (mouseX >= (double) i && mouseX < (double) (i + 6) && mouseY >= (double) j && mouseY < (double) (j + 206)) {
                 this.attributeMouseClicked = true;
@@ -607,31 +597,42 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY/*, double horizontalAmount*/, double verticalAmount) {
-        if (this.foodEffectsRowAmount > 1 && mouseX >= this.x - 123 && mouseX <= this.x - 4 && mouseY >= this.y + 33 && mouseY <= this.y + 65) {
+        int scrollAreaStartX = this.x + this.backgroundWidth + 7;
+        int scrollAreaWidth = 119;
+        int scrollAreaStartY = this.y + 33;
+        int scrollAreaHeight = 32;
+        if (this.foodEffectsRowAmount > 1 && mouseX >= scrollAreaStartX && mouseX <= scrollAreaStartX + scrollAreaWidth && mouseY >= scrollAreaStartY && mouseY <= scrollAreaStartY + scrollAreaHeight) {
             int i = this.foodEffectsRowAmount - 1;
             float f = (float) verticalAmount / (float) i;
             this.foodScrollAmount = MathHelper.clamp(this.foodScrollAmount - f, 0.0f, 1.0f);
             this.foodScrollPosition = (int) ((double) (this.foodScrollAmount * (float) i));
         }
-        if (this.negativeEffectsRowAmount > 1 && mouseX >= this.x - 123 && mouseX <= this.x - 4 && mouseY >= this.y + 83 && mouseY <= this.y + 115) {
+        scrollAreaStartY = this.y + 83;
+        if (this.negativeEffectsRowAmount > 1 && mouseX >= scrollAreaStartX && mouseX <= scrollAreaStartX + scrollAreaWidth && mouseY >= scrollAreaStartY && mouseY <= scrollAreaStartY + scrollAreaHeight) {
             int i = this.negativeEffectsRowAmount - 1;
             float f = (float) verticalAmount / (float) i;
             this.negativeScrollAmount = MathHelper.clamp(this.negativeScrollAmount - f, 0.0f, 1.0f);
             this.negativeScrollPosition = (int) ((double) (this.negativeScrollAmount * (float) i));
         }
-        if (this.positiveEffectsRowAmount > 1 && mouseX >= this.x - 123 && mouseX <= this.x - 4 && mouseY >= this.y + 133 && mouseY <= this.y + 165) {
+        scrollAreaStartY = this.y + 133;
+        if (this.positiveEffectsRowAmount > 1 && mouseX >= scrollAreaStartX && mouseX <= scrollAreaStartX + scrollAreaWidth && mouseY >= scrollAreaStartY && mouseY <= scrollAreaStartY + scrollAreaHeight) {
             int i = this.positiveEffectsRowAmount - 1;
             float f = (float) verticalAmount / (float) i;
             this.positiveScrollAmount = MathHelper.clamp(this.positiveScrollAmount - f, 0.0f, 1.0f);
             this.positiveScrollPosition = (int) ((double) (this.positiveScrollAmount * (float) i));
         }
-        if (this.neutralEffectsRowAmount > 1 && mouseX >= this.x - 123 && mouseX <= this.x - 4 && mouseY >= this.y + 183 && mouseY <= this.y + 215) {
+        scrollAreaStartY = this.y + 183;
+        if (this.neutralEffectsRowAmount > 1 && mouseX >= scrollAreaStartX && mouseX <= scrollAreaStartX + scrollAreaWidth && mouseY >= scrollAreaStartY && mouseY <= scrollAreaStartY + scrollAreaHeight) {
             int i = this.neutralEffectsRowAmount - 1;
             float f = (float) verticalAmount / (float) i;
             this.neutralScrollAmount = MathHelper.clamp(this.neutralScrollAmount - f, 0.0f, 1.0f);
             this.neutralScrollPosition = (int) ((double) (this.neutralScrollAmount * (float) i));
         }
-        if (this.attributeListSize > 15 && mouseX >= this.x + this.backgroundWidth + 7 && mouseX <= this.x + this.backgroundWidth + 123 && mouseY >= this.y + 7 && mouseY <= this.y + 213) {
+        scrollAreaStartX = this.x - this.sidesBackgroundWidth + 7;
+        scrollAreaWidth = 116;
+        scrollAreaStartY = this.y + 7;
+        scrollAreaHeight = 206;
+        if (this.attributeListSize > 15 && mouseX >= scrollAreaStartX && mouseX <= scrollAreaStartX + scrollAreaWidth && mouseY >= scrollAreaStartY && mouseY <= scrollAreaStartY + scrollAreaHeight) {
             int i = this.attributeListSize - 15;
             float f = (float) verticalAmount / (float) i;
             this.attributeScrollAmount = MathHelper.clamp(this.attributeScrollAmount - f, 0.0f, 1.0f);
@@ -667,5 +668,10 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
     @Override
     public int trinkets$getY() {
         return this.y;
+    }
+
+    @Override
+    public boolean trinkets$isRecipeBookOpen() {
+        return this.showAttributeScreen;
     }
 }

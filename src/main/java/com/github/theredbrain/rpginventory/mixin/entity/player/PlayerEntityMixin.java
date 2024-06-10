@@ -95,7 +95,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     public void rpginventory$tick(CallbackInfo ci) {
         if (!this.getWorld().isClient) {
             this.rpginventory$ejectItemsFromInactiveSpellSlots();
-            this.rpginventory$ejectNonHotbarItemsFromHotbar();
+//            this.rpginventory$ejectNonHotbarItemsFromHotbar(); TODO disabled for now, needs overhaul
         }
     }
 

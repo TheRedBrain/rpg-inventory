@@ -20,6 +20,10 @@ public class ToggleInventoryScreenWidget extends ButtonWidget {
         this.isPressed = isPressed;
     }
 
+    public boolean getIsPressed() {
+        return this.isPressed;
+    }
+
     public void setIsPressed(boolean isPressed) {
         this.isPressed = isPressed;
     }
@@ -27,13 +31,13 @@ public class ToggleInventoryScreenWidget extends ButtonWidget {
     @Override
     public void renderButton(DrawContext context, int mouseX, int mouseY, float delta) {
         int i = 0;
-        int j = 192;
+        int j = 205;
         if (this.isHovered()) {
             i += 23;
         }
 
         if (this.isPressed) {
-            j += 13;
+            j -= 13;
         }
 
         context.drawTexture(BOOK_TEXTURE, this.getX(), this.getY(), i, j, 23, 13);

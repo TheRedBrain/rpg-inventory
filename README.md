@@ -36,31 +36,34 @@ The mod also adds additional slots which are not directly accessible. They are u
 - 1 empty offhand slot
 
 ## New Keybindings and mechanics
-- Swap main hand: Swaps the item in the main hand slot with the item in the alternative main hand slot
-- Swap offhand: Swaps the item in the offhand slot with the item in the alternative offhand slot
-
-
-- Sheathe Weapons: Puts the items in the main hand and the offhand slot into their corresponding sheathed hand slots. When pressed again, swaps the items back
-- Toggle Two-handing Stance: Puts the items in the offhand slot into the sheathed offhand slot. When pressed again, swaps the item back. This is not possible, when the main hand item is in the "non_two_handed_items" item tag.
+### Swap main hand
+Swaps the item in the main hand slot with the item in the alternative main hand slot
+### Swap offhand
+Swaps the item in the offhand slot with the item in the alternative offhand slot
+### Sheathe Weapons
+Puts the items in the main hand and the offhand slot into their corresponding sheathed hand slots. When pressed again, swaps the items back
+### Toggle Two-handing Stance
+Puts the items in the offhand slot into the sheathed offhand slot. When pressed again, swaps the item back. This is not possible, when the main hand item is in the "non_two_handed_items" item tag.
 When the main hand item is sheathed, the main hand slot contains the item in the selected hotbar slot, like in vanilla.
 When the offhand item is sheathed, the offhand slot contains an empty item stack. On its own this is not very useful, it's designed to be used in combination with other mods like [Better Combat Extension](https://modrinth.com/mod/bettercombat-extension).
 
 When a hand item is not sheathed, but the corresponding slot contains no item, the players hand is not empty. The item in the corresponding empty hand slot is held instead.
 The empty hand slots always contain a item called "Empty Hand Weapon". This is technically a weapon. When Better Combat is installed, this allows for unarmed combat.
 
-Note: The vanilla 'Swap Item With Offhand' hotkey no longer has a function. Using it when items where sheathed could duplicate items. Swapping items into the hotbar using the number keys still works.
-
 ### Stamina Attributes Compatibility
 Installing [Stamina Attributes](https://modrinth.com/mod/stamina-attributes) allows for swapping. sheathing and toggling the 2-handed stance to have configurable stamina costs/requirements.
 
+### Note: The vanilla 'Swap Item With Offhand' hotkey no longer has a function.
+Using it when items where sheathed could duplicate items. Swapping items into the hotbar using the number keys still works.
+
 ## Status Effect screen
-Active and visible status effects are listed on the left side of the inventory screen. They are sorted by their category (harmful beneficial and neutral). Effects can have a description (added by assigning a value to <effect_translation_key>.description in the lang files), which is also displayed.
+Active and visible status effects are listed on the right side of the inventory screen. They are sorted by their category (harmful, beneficial and neutral). Effects can have a description (added by assigning a value to <effect_translation_key>.description in the lang files), which is also displayed.
 
 ### Food Overhaul Compatibility
-[Food Overhaul](https://modrinth.com/mod/food-overhaul)s food effects are displayed in a separate list.
+[Food Overhauls](https://modrinth.com/mod/food-overhaul) food effects are displayed in a separate list.
 
 ## Attribute Screen
-Attributes and their values are listed on the right side of the inventory. This can be toggled on/off with a button.
+Attributes and their values are listed on the left side of the inventory. This can be toggled on/off with a button.
 The client config allows extensive customization of the attribute screen.
 
 ## Additional settings and features
@@ -90,5 +93,5 @@ When the player dies while having that status effect, all equipped items in the 
 ### Various Status Effects Compatibility
 All status effect identifier options default to status effects implemented by [Various Status Effects](https://modrinth.com/mod/various-status-effects).
 
-## Adding custom slots
-If you want to add your own slots to the RPG Inventory, you can find some [important information here](https://github.com/TheRedBrain/rpg-inventory/wiki/Adding-Custom-Slots).
+### Additional Trinket slots
+Trinket slots added by other mods or data packs are displayed and function like normal.

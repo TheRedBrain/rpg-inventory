@@ -3,7 +3,6 @@ package com.github.theredbrain.rpginventory.mixin.screen;
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
 import com.github.theredbrain.rpginventory.registry.Tags;
-import com.github.theredbrain.rpginventory.screen.RPGInventoryTrinketSlot;
 import com.github.theredbrain.slotcustomizationapi.api.SlotCustomization;
 import com.google.common.collect.ImmutableList;
 import dev.emi.trinkets.Point;
@@ -133,127 +132,84 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
             int groupNum = 1; // Start at 1 because offhand exists
             int extraGroupCount = 0;
 
-            HashMap<Integer, Boolean> presentPermanentGroups = new HashMap<>(Map.of());
             for (SlotGroup group : groups.values().stream().sorted(Comparator.comparing(SlotGroup::getOrder)).toList()) {
                 if (!rpginventory$hasSlots(trinkets, group)) {
                     continue;
                 }
-                int order = group.getOrder();
+                String groupName = group.getName();
                 int id = group.getSlotId();
                 if (id != -1) {
-                    if (RPGInventory.serverConfig.show_debug_log) {
-                        RPGInventory.warn("Trinket slot groups with id != -1 are ignored. This applies to group " + group.getName());
+                    if (this.slots.size() > id) {
+                        Slot slot = this.slots.get(id);
+                        if (!(slot instanceof SurvivalTrinketSlot)) {
+                            groupPos.put(group, new Point(slot.x, slot.y));
+                            groupNums.put(group, -id);
+                        }
                     }
                 } else {
                     int x;
                     int y;
-                    // begins at 1 because order=0 is the default
-                    // this way most unwanted cases are avoided
-                    if (order == 1) {
-                        // belts
-                        x = serverConfig.order_1_slot_x_offset;
-                        y = serverConfig.order_1_slot_y_offset;
-
-                    } else if (order == 2) {
-                        // shoulders
-                        x = serverConfig.order_2_slot_x_offset;
-                        y = serverConfig.order_2_slot_y_offset;
-
-                    } else if (order == 3) {
-                        // necklaces
-                        x = serverConfig.order_3_slot_x_offset;
-                        y = serverConfig.order_3_slot_y_offset;
-
-                    } else if (order == 4) {
-                        // rings 1
-                        x = serverConfig.order_4_slot_x_offset;
-                        y = serverConfig.order_4_slot_y_offset;
-
-                    } else if (order == 5) {
-                        // rings 2
-                        x = serverConfig.order_5_slot_x_offset;
-                        y = serverConfig.order_5_slot_y_offset;
-
-                    } else if (order == 6) {
-                        // gloves
-                        x = serverConfig.order_6_slot_x_offset;
-                        y = serverConfig.order_6_slot_y_offset;
-
-                    } else if (order == 7) {
-                        // main_hand
-                        x = serverConfig.order_7_slot_x_offset;
-                        y = serverConfig.order_7_slot_y_offset;
-
-                    } else if (order == 8) {
-                        // alternative main hand
-                        x = serverConfig.order_8_slot_x_offset;
-                        y = serverConfig.order_8_slot_y_offset;
-
-                    } else if (order == 9) {
-                        // alternative offhand
-                        x = serverConfig.order_9_slot_x_offset;
-                        y = serverConfig.order_9_slot_y_offset;
-
-                    } else if (order == 10) {
-                        // spell slot 1
+                    if (Objects.equals(groupName, "belts")) {
+                        x = serverConfig.belts_group_x_offset;
+                        y = serverConfig.belts_group_y_offset;
+                    } else if (Objects.equals(groupName, "shoulders")) {
+                        x = serverConfig.shoulders_group_x_offset;
+                        y = serverConfig.shoulders_group_y_offset;
+                    } else if (Objects.equals(groupName, "necklaces")) {
+                        x = serverConfig.necklaces_group_x_offset;
+                        y = serverConfig.necklaces_group_y_offset;
+                    } else if (Objects.equals(groupName, "rings_1")) {
+                        x = serverConfig.rings_1_group_x_offset;
+                        y = serverConfig.rings_1_group_y_offset;
+                    } else if (Objects.equals(groupName, "rings_2")) {
+                        x = serverConfig.rings_2_group_x_offset;
+                        y = serverConfig.rings_2_group_y_offset;
+                    } else if (Objects.equals(groupName, "gloves")) {
+                        x = serverConfig.gloves_group_x_offset;
+                        y = serverConfig.gloves_group_y_offset;
+                    } else if (Objects.equals(groupName, "main_hand")) {
+                        x = serverConfig.main_hand_group_x_offset;
+                        y = serverConfig.main_hand_group_y_offset;
+                    } else if (Objects.equals(groupName, "alternative_main_hand")) {
+                        x = serverConfig.alternative_main_hand_group_x_offset;
+                        y = serverConfig.alternative_main_hand_group_y_offset;
+                    } else if (Objects.equals(groupName, "alternative_offhand")) {
+                        x = serverConfig.alternative_offhand_group_x_offset;
+                        y = serverConfig.alternative_offhand_group_y_offset;
+                    } else if (Objects.equals(groupName, "spell_slot_1")) {
                         x = serverConfig.spell_slots_x_offset;
                         y = serverConfig.spell_slots_y_offset;
-
-                    } else if (order == 11) {
-                        // spell slot 2
+                    } else if (Objects.equals(groupName, "spell_slot_2")) {
                         x = serverConfig.spell_slots_x_offset + 18;
                         y = serverConfig.spell_slots_y_offset;
-
-                    } else if (order == 12) {
-                        // spell slot 3
+                    } else if (Objects.equals(groupName, "spell_slot_3")) {
                         x = serverConfig.spell_slots_x_offset + 36;
                         y = serverConfig.spell_slots_y_offset;
-
-                    } else if (order == 13) {
-                        // spell slot 4
+                    } else if (Objects.equals(groupName, "spell_slot_4")) {
                         x = serverConfig.spell_slots_x_offset + 54;
                         y = serverConfig.spell_slots_y_offset;
-
-                    } else if (order == 14) {
-                        // spell slot 5
+                    } else if (Objects.equals(groupName, "spell_slot_5")) {
                         x = serverConfig.spell_slots_x_offset;
                         y = serverConfig.spell_slots_y_offset + 18;
-
-                    } else if (order == 15) {
-                        // spell slot 6
+                    } else if (Objects.equals(groupName, "spell_slot_6")) {
                         x = serverConfig.spell_slots_x_offset + 18;
                         y = serverConfig.spell_slots_y_offset + 18;
-
-                    } else if (order == 16) {
-                        // spell slot 7
+                    } else if (Objects.equals(groupName, "spell_slot_7")) {
                         x = serverConfig.spell_slots_x_offset + 36;
                         y = serverConfig.spell_slots_y_offset + 18;
-
-                    } else if (order == 17) {
-                        // spell slot 8
+                    } else if (Objects.equals(groupName, "spell_slot_8")) {
                         x = serverConfig.spell_slots_x_offset + 54;
                         y = serverConfig.spell_slots_y_offset + 18;
-
-                    } else if (order == 18) {
-                        // these include empty hand slots which are necessary but should not be interacted with by the player
-                        if (!(Objects.equals(group.getName(), "empty_main_hand") || Objects.equals(group.getName(), "empty_off_hand") || Objects.equals(group.getName(), "sheathed_main_hand") || Objects.equals(group.getName(), "sheathed_off_hand")) && RPGInventory.serverConfig.show_debug_log) {
-                            RPGInventory.warn("Trinket Slots with order == 18 can not be interacted with by the player. This applies to group " + group.getName());
-                        }
+                    } else if (Objects.equals(groupName, "empty_main_hand") || Objects.equals(groupName, "empty_offhand") || Objects.equals(groupName, "sheathed_main_hand") || Objects.equals(groupName, "sheathed_offhand")) {
                         continue;
                     } else {
-                        x = 188 + (extraGroupCount % 6) * 18;
-                        y = 12 + (extraGroupCount / 6) * 18;
+                        x = - 14 - (extraGroupCount / 4) * 18;
+                        y = 8 + (extraGroupCount % 4) * 18;
                         extraGroupCount++;
                     }
                     groupPos.put(group, new Point(x, y));
                     groupNums.put(group, groupNum);
                     groupNum++;
-
-                    if (presentPermanentGroups.getOrDefault(order, false) && RPGInventory.serverConfig.show_debug_log) {
-                        RPGInventory.warn("Multiple slot groups with order " + order + " are defined. This may lead to unexpected behaviour. This applies to group " + group.getName());
-                    } else if (order > 0 && order < 18) {
-                        presentPermanentGroups.put(order, true);
-                    }
                 }
             }
             groupCount = extraGroupCount;
@@ -262,15 +218,14 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
             slotHeights.clear();
             slotTypes.clear();
 
-            int permanentTrinketSlotAmount = 17;
-
-            RPGInventoryTrinketSlot[] permanentSlotsArray = new RPGInventoryTrinketSlot[permanentTrinketSlotAmount];
-            List<RPGInventoryTrinketSlot> extraSlotsList = new ArrayList<>();
-
             for (Map.Entry<String, Map<String, TrinketInventory>> entry : trinkets.getInventory().entrySet()) {
                 String groupId = entry.getKey();
                 SlotGroup group = groups.get(groupId);
+                int groupOffset = 1;
 
+                if (group.getSlotId() != -1) {
+                    groupOffset++;
+                }
                 int width = 0;
                 Point pos = trinkets$getGroupPos(group);
                 if (pos == null) {
@@ -282,38 +237,20 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
                     if (stacks.size() == 0) {
                         continue;
                     }
-                    if (stacks.size() > 1 && RPGInventory.serverConfig.show_debug_log) {
-                        RPGInventory.warn("Multiple slots are defined for slot group " + slot.getKey() + ". This may lead to unexpected behaviour");
-                    }
-                    int x = groupPos.get(group).x();
+                    int slotOffset = 1;
+                    int x = (int) ((groupOffset / 2) * 18 * Math.pow(-1, groupOffset));
                     slotHeights.computeIfAbsent(group, (k) -> new ArrayList<>()).add(new Point(x, stacks.size()));
                     slotTypes.computeIfAbsent(group, (k) -> new ArrayList<>()).add(stacks.getSlotType());
-
-                    int groupOrder = group.getOrder();
-                    if (groupOrder <= 0 || groupOrder > 18) {
-                        for (int i = 0; i < stacks.size(); i++) {
-                            extraSlotsList.add(new RPGInventoryTrinketSlot(stacks, i, groupPos.get(group).x(), groupPos.get(group).y(), group, stacks.getSlotType(), 0, true));
-                        }
-                    } else {
-                        for (int i = 0; i < stacks.size(); i++) {
-                            int index = groupOrder - 1; // -1 to account for all groups with order=0 being ignored
-                            permanentSlotsArray[index] = new RPGInventoryTrinketSlot(stacks, i, groupPos.get(group).x(), groupPos.get(group).y(), group, stacks.getSlotType(), 0, true);
-                        }
+                    for (int i = 0; i < stacks.size(); i++) {
+                        int y = (int) (pos.y() + (slotOffset / 2) * 18 * Math.pow(-1, slotOffset));
+                        this.addSlot(new SurvivalTrinketSlot(stacks, i, x + pos.x(), y, group, stacks.getSlotType(), i, groupOffset == 1 && i == 0));
+                        slotOffset++;
                     }
+                    groupOffset++;
 
                     width++;
                 }
                 slotWidths.put(group, width);
-            }
-
-            // add slots to screenHandler
-            for (int i = 0; i < permanentTrinketSlotAmount; i++) {
-                if (permanentSlotsArray[i] != null) {
-                    this.addSlot(permanentSlotsArray[i]);
-                }
-            }
-            for (RPGInventoryTrinketSlot slot : extraSlotsList) {
-                this.addSlot(slot);
             }
 
             trinketSlotEnd = slots.size();
@@ -389,6 +326,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
         }
     }
 
+    // TODO find way to reliably insert into alternative hand slots only if main slot is not empty
     /**
      * @author TheRedBrain
      * @reason total overhaul
@@ -408,7 +346,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
         }
         if (slot.hasStack()) {
             ItemStack stack = slot.getStack();
-            hasCivilisationEffect = hasCivilisationEffect || stack.isIn(Tags.ADVENTURE_HOTBAR_ITEMS);
+            hasCivilisationEffect = true;//hasCivilisationEffect || stack.isIn(Tags.ADVENTURE_HOTBAR_ITEMS); // TODO disabled for now
             if (index >= trinketSlotStart && index < trinketSlotEnd) {
                 if (!this.insertItem(stack, 9, hasCivilisationEffect ? 45 : 36, false)) {
                     return ItemStack.EMPTY;
