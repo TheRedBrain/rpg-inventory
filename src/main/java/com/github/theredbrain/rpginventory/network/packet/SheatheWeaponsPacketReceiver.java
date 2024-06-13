@@ -15,13 +15,13 @@ public class SheatheWeaponsPacketReceiver implements ServerPlayNetworking.PlayPa
     @Override
     public void receive(SheatheWeaponsPacket packet, ServerPlayerEntity player, PacketSender responseSender) {
 
-        ItemStack mainHandItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getMainHand();
+        ItemStack mainHandItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getMainHand().copy();
         if (mainHandItemStack.isEmpty()) {
-            mainHandItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSheathedMainHand();
+            mainHandItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSheathedMainHand().copy();
         }
-        ItemStack offHandItemStack = player.getEquippedStack(EquipmentSlot.OFFHAND);
+        ItemStack offHandItemStack = player.getEquippedStack(EquipmentSlot.OFFHAND).copy();
         if (offHandItemStack.isEmpty()) {
-            offHandItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSheathedOffHand();
+            offHandItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSheathedOffhand().copy();
         }
 
         if (RPGInventory.isStaminaAttributesLoaded && RPGInventory.serverConfig.sheathing_hand_items_requires_stamina && ((StaminaUsingEntity) player).staminaattributes$getStamina() <= 0 && !player.isCreative()) {
@@ -34,16 +34,16 @@ public class SheatheWeaponsPacketReceiver implements ServerPlayNetworking.PlayPa
             ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setMainHand(mainHandItemStack);
             ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedMainHand(ItemStack.EMPTY);
             player.equipStack(EquipmentSlot.OFFHAND, offHandItemStack);
-            ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedOffHand(ItemStack.EMPTY);
+            ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedOffhand(ItemStack.EMPTY);
         } else {
             ((DuckPlayerEntityMixin) player).rpginventory$setIsMainHandStackSheathed(true);
             ((DuckPlayerEntityMixin) player).rpginventory$setIsOffHandStackSheathed(true);
             ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setMainHand(ItemStack.EMPTY);
             ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedMainHand(mainHandItemStack);
             player.equipStack(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
-            ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedOffHand(offHandItemStack);
+            ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedOffhand(offHandItemStack);
         }
-        if (RPGInventory.isStaminaAttributesLoaded) {
+        if (RPGInventory.isStaminaAttributesLoaded && !player.isCreative()) {
             ((StaminaUsingEntity) player).staminaattributes$addStamina(-RPGInventory.serverConfig.sheathing_hand_items_stamina_cost);
         }
         // TODO play sounds

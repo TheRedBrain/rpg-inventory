@@ -1,6 +1,7 @@
 package com.github.theredbrain.rpginventory.mixin.screen;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
+import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import com.github.theredbrain.slotcustomizationapi.api.SlotCustomization;
@@ -99,18 +100,22 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
         }
 
         // reposition vanilla armor slots
-        ((SlotCustomization) this.slots.get(5)).slotcustomizationapi$setX(33);
-        ((SlotCustomization) this.slots.get(5)).slotcustomizationapi$setY(18);
-        ((SlotCustomization) this.slots.get(6)).slotcustomizationapi$setX(8);
-        ((SlotCustomization) this.slots.get(6)).slotcustomizationapi$setY(54);
-        ((SlotCustomization) this.slots.get(7)).slotcustomizationapi$setX(8);
-        ((SlotCustomization) this.slots.get(7)).slotcustomizationapi$setY(90);
-        ((SlotCustomization) this.slots.get(8)).slotcustomizationapi$setX(77);
-        ((SlotCustomization) this.slots.get(8)).slotcustomizationapi$setY(90);
+        // head
+        ((SlotCustomization) this.slots.get(5)).slotcustomizationapi$setX(serverConfig.head_slot_x_offset);
+        ((SlotCustomization) this.slots.get(5)).slotcustomizationapi$setY(serverConfig.head_slot_y_offset);
+        // chest
+        ((SlotCustomization) this.slots.get(6)).slotcustomizationapi$setX(serverConfig.chest_slot_x_offset);
+        ((SlotCustomization) this.slots.get(6)).slotcustomizationapi$setY(serverConfig.chest_slot_y_offset);
+        // legs
+        ((SlotCustomization) this.slots.get(7)).slotcustomizationapi$setX(serverConfig.legs_slot_x_offset);
+        ((SlotCustomization) this.slots.get(7)).slotcustomizationapi$setY(serverConfig.legs_slot_y_offset);
+        // feet
+        ((SlotCustomization) this.slots.get(8)).slotcustomizationapi$setX(serverConfig.feet_slot_x_offset);
+        ((SlotCustomization) this.slots.get(8)).slotcustomizationapi$setY(serverConfig.feet_slot_y_offset);
 
         // reposition vanilla offhand slot
-        ((SlotCustomization) this.slots.get(45)).slotcustomizationapi$setX(26);
-        ((SlotCustomization) this.slots.get(45)).slotcustomizationapi$setY(108);
+        ((SlotCustomization) this.slots.get(45)).slotcustomizationapi$setX(serverConfig.offhand_slot_x_offset);
+        ((SlotCustomization) this.slots.get(45)).slotcustomizationapi$setY(serverConfig.offhand_slot_y_offset);
     }
 
     @Override
@@ -200,7 +205,13 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
                     } else if (Objects.equals(groupName, "spell_slot_8")) {
                         x = serverConfig.spell_slots_x_offset + 54;
                         y = serverConfig.spell_slots_y_offset + 18;
-                    } else if (Objects.equals(groupName, "empty_main_hand") || Objects.equals(groupName, "empty_offhand") || Objects.equals(groupName, "sheathed_main_hand") || Objects.equals(groupName, "sheathed_offhand")) {
+                    } else if (Objects.equals(groupName, "sheathed_main_hand")) {
+                        x = serverConfig.main_hand_group_x_offset;
+                        y = serverConfig.main_hand_group_y_offset;
+                    } else if (Objects.equals(groupName, "sheathed_offhand")) {
+                        x = serverConfig.offhand_slot_x_offset;
+                        y = serverConfig.offhand_slot_y_offset;
+                    } else if (Objects.equals(groupName, "empty_main_hand") || Objects.equals(groupName, "empty_offhand")) {
                         continue;
                     } else {
                         x = - 14 - (extraGroupCount / 4) * 18;

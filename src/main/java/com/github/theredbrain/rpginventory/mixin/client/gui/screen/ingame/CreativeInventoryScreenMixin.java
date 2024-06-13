@@ -1,6 +1,7 @@
 package com.github.theredbrain.rpginventory.mixin.client.gui.screen.ingame;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
+import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.slotcustomizationapi.api.SlotCustomization;
 import dev.emi.trinkets.*;
 import dev.emi.trinkets.api.SlotGroup;
@@ -75,6 +76,10 @@ public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScre
             // reposition vanilla offhand slot
             ((SlotCustomization) this.handler.slots.get(45)).slotcustomizationapi$setX(117);
             ((SlotCustomization) this.handler.slots.get(45)).slotcustomizationapi$setY(33);
+
+            if (this.client != null && this.client.player != null) {
+                ((SlotCustomization) this.client.player.playerScreenHandler.slots.get(45)).slotcustomizationapi$setDisabledOverride(((DuckPlayerEntityMixin) this.client.player).rpginventory$isOffHandStackSheathed());
+            }
         }
     }
 
@@ -194,6 +199,10 @@ public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScre
             return new Rect2i(8, 32, 17, 17);
         } else if (Objects.equals(groupName, "main_hand")) {
             return new Rect2i(98, 32, 17, 17);
+        } else if (Objects.equals(groupName, "sheathed_main_hand")) {
+            return new Rect2i(98, 32, 17, 17);
+        } else if (Objects.equals(groupName, "sheathed_offhand")) {
+            return new Rect2i(116, 32, 17, 17);
         } else if (Objects.equals(groupName, "alternative_main_hand")) {
             return new Rect2i(134, 32, 17, 17);
         } else if (Objects.equals(groupName, "alternative_offhand")) {

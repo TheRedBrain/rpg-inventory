@@ -1,6 +1,5 @@
 package com.github.theredbrain.rpginventory.mixin.entity.player;
 
-import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.rpginventory.registry.Tags;
@@ -10,14 +9,11 @@ import dev.emi.trinkets.api.TrinketsApi;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
 import net.minecraft.registry.tag.DamageTypeTags;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
@@ -48,56 +44,37 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         throw new AssertionError();
     }
 
-    @Shadow public int selectedSlot;
+    @Shadow
+    public int selectedSlot;
 
-    @Shadow public abstract ItemStack getStack(int slot);
+    @Shadow
+    public abstract ItemStack getStack(int slot);
 
-    @Shadow @Final public DefaultedList<ItemStack> offHand;
+    @Shadow
+    @Final
+    public DefaultedList<ItemStack> offHand;
 
     @Inject(method = "getMainHandStack", at = @At("HEAD"), cancellable = true)
     public void rpginventory$getMainHandStack(CallbackInfoReturnable<ItemStack> cir) {
-        StatusEffect building_mode_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.building_mode_status_effect_identifier));
-        if (!(building_mode_status_effect != null && player.hasStatusEffect(building_mode_status_effect)) && !player.isCreative()) {
-            ItemStack emptyMainHandStack = rpginventory$getEmptyMainHand();
-            ItemStack mainHandStack = rpginventory$getMainHand();
-            if (!((DuckPlayerEntityMixin)player).rpginventory$isMainHandStackSheathed()) {
-                cir.setReturnValue(ItemUtils.isUsable(mainHandStack) ? mainHandStack : emptyMainHandStack);
-                cir.cancel();
-            }
+        ItemStack emptyMainHandStack = rpginventory$getEmptyMainHand();
+        ItemStack mainHandStack = rpginventory$getMainHand();
+        if (!((DuckPlayerEntityMixin) player).rpginventory$isMainHandStackSheathed()) {
+            cir.setReturnValue(ItemUtils.isUsable(mainHandStack) ? mainHandStack : emptyMainHandStack);
+            cir.cancel();
         }
     }
 
     @Override
     public ItemStack rpginventory$getOffHandStack() {
-        StatusEffect building_mode_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.building_mode_status_effect_identifier));
-        if (!(building_mode_status_effect != null && player.hasStatusEffect(building_mode_status_effect)) && !player.isCreative()) {
-            ItemStack emptyOffHandStack = rpginventory$getEmptyOffHand();
-            ItemStack offHandStack = this.offHand.get(0);
-            if (!((DuckPlayerEntityMixin)player).rpginventory$isOffHandStackSheathed()) {
-                return ItemUtils.isUsable(offHandStack) ? offHandStack : emptyOffHandStack;
-            }
+        ItemStack emptyOffHandStack = rpginventory$getEmptyOffhand();
+        ItemStack offHandStack = this.offHand.get(0);
+        if (!((DuckPlayerEntityMixin) player).rpginventory$isOffHandStackSheathed()) {
+            return ItemUtils.isUsable(offHandStack) ? offHandStack : emptyOffHandStack;
         }
         return ItemStack.EMPTY;
     }
 
     /**
-     *
-     * @author TheRedBrain
-     * @reason
-     */
-    @Overwrite
-    public int getEmptySlot() {
-        StatusEffect building_mode_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.building_mode_status_effect_identifier));
-        boolean bl = !(building_mode_status_effect != null && player.hasStatusEffect(building_mode_status_effect)) && !player.isCreative();
-        for (int i = bl ? 9 : 0; i < this.main.size(); ++i) {
-            if (!this.main.get(i).isEmpty()) continue;
-            return i;
-        }
-        return -1;
-    }
-
-    /**
-     *
      * @author TheRedBrain
      * @reason
      */
@@ -105,15 +82,15 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
     public int getOccupiedSlotWithRoomForStack(ItemStack stack) {
         if (this.canStackAddMore(this.getStack(this.selectedSlot), stack)) {
             return this.selectedSlot;
-        }
+        } else {
+            for(int i = 0; i < this.main.size(); ++i) {
+                if (this.canStackAddMore(this.main.get(i), stack)) {
+                    return i;
+                }
+            }
 
-        StatusEffect building_mode_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.building_mode_status_effect_identifier));
-        boolean bl = !(building_mode_status_effect != null && this.player.hasStatusEffect(building_mode_status_effect)) && !this.player.isCreative();
-        for (int i = bl ? 9 : 0; i < this.main.size(); ++i) {
-            if (!this.canStackAddMore(this.main.get(i), stack)) continue;
-            return i;
+            return -1;
         }
-        return -1;
     }
 
     /**
@@ -134,12 +111,12 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         int[] var4 = slots;
         int var5 = slots.length;
 
-        for(int var6 = 0; var6 < var5; ++var6) {
+        for (int var6 = 0; var6 < var5; ++var6) {
             int i = var4[var6];
-            ItemStack itemStack = (ItemStack)this.armor.get(i);
+            ItemStack itemStack = (ItemStack) this.armor.get(i);
             if ((!damageSource.isIn(DamageTypeTags.IS_FIRE) || !itemStack.getItem().isFireproof()) && itemStack.getItem() instanceof ArmorItem) {
-                itemStack.damage((int)finalAmount, (LivingEntity)this.player, (Consumer)((player) -> {
-                    ((LivingEntity)player).sendEquipmentBreakStatus(EquipmentSlot.fromTypeIndex(EquipmentSlot.Type.ARMOR, i));
+                itemStack.damage((int) finalAmount, (LivingEntity) this.player, (Consumer) ((player) -> {
+                    ((LivingEntity) player).sendEquipmentBreakStatus(EquipmentSlot.fromTypeIndex(EquipmentSlot.Type.ARMOR, i));
                 }));
             }
         }
@@ -207,26 +184,26 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         return oldStack;
     }
 
-    public ItemStack rpginventory$getAlternativeOffHand() {
+    public ItemStack rpginventory$getAlternativeOffhand() {
         ItemStack alternativeOffHandStack = ItemStack.EMPTY;
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
-            if (trinkets.get().getInventory().get("alternative_off_hand") != null) {
-                if (trinkets.get().getInventory().get("alternative_off_hand").get("alternative_off_hand") != null) {
-                    alternativeOffHandStack = trinkets.get().getInventory().get("alternative_off_hand").get("alternative_off_hand").getStack(0);
+            if (trinkets.get().getInventory().get("alternative_offhand") != null) {
+                if (trinkets.get().getInventory().get("alternative_offhand").get("alternative_offhand") != null) {
+                    alternativeOffHandStack = trinkets.get().getInventory().get("alternative_offhand").get("alternative_offhand").getStack(0);
                 }
             }
         }
         return alternativeOffHandStack;
     }
 
-    public ItemStack rpginventory$setAlternativeOffHand(ItemStack itemStack) {
-        ItemStack oldStack = rpginventory$getAlternativeOffHand();
+    public ItemStack rpginventory$setAlternativeOffhand(ItemStack itemStack) {
+        ItemStack oldStack = rpginventory$getAlternativeOffhand();
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
-            if (trinkets.get().getInventory().get("alternative_off_hand") != null) {
-                if (trinkets.get().getInventory().get("alternative_off_hand").get("alternative_off_hand") != null) {
-                    trinkets.get().getInventory().get("alternative_off_hand").get("alternative_off_hand").setStack(0, itemStack);
+            if (trinkets.get().getInventory().get("alternative_offhand") != null) {
+                if (trinkets.get().getInventory().get("alternative_offhand").get("alternative_offhand") != null) {
+                    trinkets.get().getInventory().get("alternative_offhand").get("alternative_offhand").setStack(0, itemStack);
                 }
             }
         }
@@ -259,26 +236,26 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         return oldStack;
     }
 
-    public ItemStack rpginventory$getEmptyOffHand() {
+    public ItemStack rpginventory$getEmptyOffhand() {
         ItemStack emptyOffHandStack = ItemStack.EMPTY;
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
-            if (trinkets.get().getInventory().get("empty_off_hand") != null) {
-                if (trinkets.get().getInventory().get("empty_off_hand").get("empty_off_hand") != null) {
-                    emptyOffHandStack = trinkets.get().getInventory().get("empty_off_hand").get("empty_off_hand").getStack(0);
+            if (trinkets.get().getInventory().get("empty_offhand") != null) {
+                if (trinkets.get().getInventory().get("empty_offhand").get("empty_offhand") != null) {
+                    emptyOffHandStack = trinkets.get().getInventory().get("empty_offhand").get("empty_offhand").getStack(0);
                 }
             }
         }
         return emptyOffHandStack;
     }
 
-    public ItemStack rpginventory$setEmptyOffHand(ItemStack itemStack) {
-        ItemStack oldStack = rpginventory$getEmptyOffHand();
+    public ItemStack rpginventory$setEmptyOffhand(ItemStack itemStack) {
+        ItemStack oldStack = rpginventory$getEmptyOffhand();
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
-            if (trinkets.get().getInventory().get("empty_off_hand") != null) {
-                if (trinkets.get().getInventory().get("empty_off_hand").get("empty_off_hand") != null) {
-                    trinkets.get().getInventory().get("empty_off_hand").get("empty_off_hand").setStack(0, itemStack);
+            if (trinkets.get().getInventory().get("empty_offhand") != null) {
+                if (trinkets.get().getInventory().get("empty_offhand").get("empty_offhand") != null) {
+                    trinkets.get().getInventory().get("empty_offhand").get("empty_offhand").setStack(0, itemStack);
                 }
             }
         }
@@ -311,26 +288,26 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         return oldStack;
     }
 
-    public ItemStack rpginventory$getSheathedOffHand() {
+    public ItemStack rpginventory$getSheathedOffhand() {
         ItemStack sheathedOffHandStack = ItemStack.EMPTY;
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
-            if (trinkets.get().getInventory().get("sheathed_off_hand") != null) {
-                if (trinkets.get().getInventory().get("sheathed_off_hand").get("sheathed_off_hand") != null) {
-                    sheathedOffHandStack = trinkets.get().getInventory().get("sheathed_off_hand").get("sheathed_off_hand").getStack(0);
+            if (trinkets.get().getInventory().get("sheathed_offhand") != null) {
+                if (trinkets.get().getInventory().get("sheathed_offhand").get("sheathed_offhand") != null) {
+                    sheathedOffHandStack = trinkets.get().getInventory().get("sheathed_offhand").get("sheathed_offhand").getStack(0);
                 }
             }
         }
         return sheathedOffHandStack;
     }
 
-    public ItemStack rpginventory$setSheathedOffHand(ItemStack itemStack) {
-        ItemStack oldStack = rpginventory$getSheathedOffHand();
+    public ItemStack rpginventory$setSheathedOffhand(ItemStack itemStack) {
+        ItemStack oldStack = rpginventory$getSheathedOffhand();
         Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
         if (trinkets.isPresent()) {
-            if (trinkets.get().getInventory().get("sheathed_off_hand") != null) {
-                if (trinkets.get().getInventory().get("sheathed_off_hand").get("sheathed_off_hand") != null) {
-                    trinkets.get().getInventory().get("sheathed_off_hand").get("sheathed_off_hand").setStack(0, itemStack);
+            if (trinkets.get().getInventory().get("sheathed_offhand") != null) {
+                if (trinkets.get().getInventory().get("sheathed_offhand").get("sheathed_offhand") != null) {
+                    trinkets.get().getInventory().get("sheathed_offhand").get("sheathed_offhand").setStack(0, itemStack);
                 }
             }
         }

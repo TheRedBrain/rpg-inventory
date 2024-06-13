@@ -24,11 +24,11 @@ public class SwapHandItemsPacketReceiver implements ServerPlayNetworking.PlayPac
         boolean offHandIsSheathed = ((DuckPlayerEntityMixin) player).rpginventory$isOffHandStackSheathed();
 
         if (mainHand) {
-            itemStack = mainHandIsSheathed ? ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSheathedMainHand() : ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getMainHand();
-            alternativeItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getAlternativeMainHand();
+            itemStack = mainHandIsSheathed ? ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSheathedMainHand().copy() : ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getMainHand().copy();
+            alternativeItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getAlternativeMainHand().copy();
         } else {
-            itemStack = offHandIsSheathed ? ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSheathedOffHand() : player.getEquippedStack(EquipmentSlot.OFFHAND);
-            alternativeItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getAlternativeOffHand();
+            itemStack = offHandIsSheathed ? ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSheathedOffhand().copy() : player.getEquippedStack(EquipmentSlot.OFFHAND).copy();
+            alternativeItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getAlternativeOffhand().copy();
         }
 
         if (itemStack.isEmpty() && alternativeItemStack.isEmpty()) {
@@ -48,13 +48,13 @@ public class SwapHandItemsPacketReceiver implements ServerPlayNetworking.PlayPac
             ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setAlternativeMainHand(itemStack);
         } else {
             if (mainHandIsSheathed) {
-                ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedOffHand(alternativeItemStack);
+                ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedOffhand(alternativeItemStack);
             } else {
                 player.equipStack(EquipmentSlot.OFFHAND, alternativeItemStack);
             }
-            ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setAlternativeOffHand(itemStack);
+            ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setAlternativeOffhand(itemStack);
         }
-        if (RPGInventory.isStaminaAttributesLoaded) {
+        if (RPGInventory.isStaminaAttributesLoaded && !player.isCreative()) {
             ((StaminaUsingEntity) player).staminaattributes$addStamina(-RPGInventory.serverConfig.swapping_hand_items_stamina_cost);
         }
         // TODO play sounds

@@ -33,7 +33,7 @@ public class EntityTrackerEntryMixin {
                 data.writeBoolean(true);
                 ServerPlayNetworking.send((ServerPlayerEntity) player, ServerPacketRegistry.SWAPPED_HAND_ITEMS_PACKET, data); // TODO convert to packet
             }
-            if (!serverPlayer.getEquippedStack(EquipmentSlot.OFFHAND).isEmpty() || !((DuckPlayerInventoryMixin)serverPlayer.getInventory()).rpginventory$getAlternativeOffHand().isEmpty()) {
+            if (!serverPlayer.getEquippedStack(EquipmentSlot.OFFHAND).isEmpty() || !((DuckPlayerInventoryMixin)serverPlayer.getInventory()).rpginventory$getAlternativeOffhand().isEmpty()) {
                 PacketByteBuf data = new PacketByteBuf(Unpooled.buffer());
                 data.writeInt(serverPlayer.getId());
                 data.writeBoolean(false);
@@ -46,7 +46,7 @@ public class EntityTrackerEntryMixin {
                 data.writeBoolean(((DuckPlayerEntityMixin)player).rpginventory$isMainHandStackSheathed());
                 ServerPlayNetworking.send((ServerPlayerEntity) player, ServerPacketRegistry.SHEATHED_WEAPONS_PACKET, data); // TODO convert to packet
             }
-            if (!serverPlayer.getEquippedStack(EquipmentSlot.OFFHAND).isEmpty() || !((DuckPlayerInventoryMixin)serverPlayer.getInventory()).rpginventory$getSheathedOffHand().isEmpty()) {
+            if (!serverPlayer.getEquippedStack(EquipmentSlot.OFFHAND).isEmpty() || !((DuckPlayerInventoryMixin)serverPlayer.getInventory()).rpginventory$getSheathedOffhand().isEmpty()) {
                 PacketByteBuf data = new PacketByteBuf(Unpooled.buffer());
                 data.writeInt(serverPlayer.getId());
                 data.writeBoolean(false);

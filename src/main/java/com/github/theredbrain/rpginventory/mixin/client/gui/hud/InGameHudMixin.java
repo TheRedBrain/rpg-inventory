@@ -60,12 +60,12 @@ public abstract class InGameHudMixin {
             ItemStack itemStackMainHand = ((DuckPlayerInventoryMixin) playerEntity.getInventory()).rpginventory$getMainHand();
             ItemStack itemStackOffHand = playerEntity.getEquippedStack(EquipmentSlot.OFFHAND);
             ItemStack itemStackAlternativeMainHand = ((DuckPlayerInventoryMixin) playerEntity.getInventory()).rpginventory$getAlternativeMainHand();
-            ItemStack itemStackAlternativeOffHand = ((DuckPlayerInventoryMixin) playerEntity.getInventory()).rpginventory$getAlternativeOffHand();
+            ItemStack itemStackAlternativeOffHand = ((DuckPlayerInventoryMixin) playerEntity.getInventory()).rpginventory$getAlternativeOffhand();
             if (((DuckPlayerEntityMixin) playerEntity).rpginventory$isMainHandStackSheathed()) {
                 itemStackMainHand = ((DuckPlayerInventoryMixin) playerEntity.getInventory()).rpginventory$getSheathedMainHand();
             }
             if (((DuckPlayerEntityMixin) playerEntity).rpginventory$isOffHandStackSheathed()) {
-                itemStackOffHand = ((DuckPlayerInventoryMixin) playerEntity.getInventory()).rpginventory$getSheathedOffHand();
+                itemStackOffHand = ((DuckPlayerInventoryMixin) playerEntity.getInventory()).rpginventory$getSheathedOffhand();
             }
 
             int l = 10;

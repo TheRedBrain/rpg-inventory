@@ -5,6 +5,7 @@ import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.RPGInventoryClient;
 import com.github.theredbrain.rpginventory.client.gui.widget.ToggleInventoryScreenWidget;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
+import com.github.theredbrain.slotcustomizationapi.api.SlotCustomization;
 import com.google.common.collect.Ordering;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.emi.trinkets.Point;
@@ -180,14 +181,18 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
     @Override
     protected void init() {
         TrinketScreenManager.init(this);
-        if (this.client != null && this.client.player != null && this.client.interactionManager != null && this.client.interactionManager.hasCreativeInventory()) {
-            this.client.setScreen(new CreativeInventoryScreen(this.client.player, this.client.player.networkHandler.getEnabledFeatures(), this.client.options.getOperatorItemsTab().getValue()));
-            return;
+        if (this.client != null && this.client.player != null) {
+            if (this.client.interactionManager != null && this.client.interactionManager.hasCreativeInventory()) {
+                this.client.setScreen(new CreativeInventoryScreen(this.client.player, this.client.player.networkHandler.getEnabledFeatures(), this.client.options.getOperatorItemsTab().getValue()));
+                return;
+            }
+            ((SlotCustomization) this.handler.slots.get(45)).slotcustomizationapi$setDisabledOverride(((DuckPlayerEntityMixin) this.client.player).rpginventory$isOffHandStackSheathed());
         }
         super.init();
         this.showAttributeScreen = RPGInventoryClient.clientConfig.show_attribute_screen_when_opening_inventory_screen;
         this.toggleShowAttributeScreenButton = this.addDrawableChild(new ToggleInventoryScreenWidget(this.x + 6, this.y + 19, this.showAttributeScreen, button -> this.toggleShowAttributeScreen()));
         this.toggleShowAttributeScreenButton.setTooltip(Tooltip.of(this.showAttributeScreen ? TOGGLE_SHOW_ATTRIBUTES_BUTTON_TOOLTIP_TEXT_ON : TOGGLE_SHOW_ATTRIBUTES_BUTTON_TOOLTIP_TEXT_OFF));
+
     }
 
     @Override
@@ -496,11 +501,11 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
         int number2 = this.negativeScrollPosition;
         int number3 = this.positiveScrollPosition;
         int number4 = this.neutralScrollPosition;
-        float number5 =  this.attributeScrollAmount;
-        float number6 =  this.foodScrollAmount;
-        float number7 =  this.negativeScrollAmount;
-        float number8 =  this.positiveScrollAmount;
-        float number9 =  this.neutralScrollAmount;
+        float number5 = this.attributeScrollAmount;
+        float number6 = this.foodScrollAmount;
+        float number7 = this.negativeScrollAmount;
+        float number8 = this.positiveScrollAmount;
+        float number9 = this.neutralScrollAmount;
         this.init(client, width, height);
         this.showAttributeScreen = bool;
         this.attributeScrollPosition = number;
@@ -516,6 +521,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
         ((ToggleInventoryScreenWidget) this.toggleShowAttributeScreenButton).setIsPressed(this.showAttributeScreen);
         this.toggleShowAttributeScreenButton.setTooltip(this.showAttributeScreen ? Tooltip.of(TOGGLE_SHOW_ATTRIBUTES_BUTTON_TOOLTIP_TEXT_ON) : Tooltip.of(TOGGLE_SHOW_ATTRIBUTES_BUTTON_TOOLTIP_TEXT_OFF));
     }
+
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         this.attributeMouseClicked = false;

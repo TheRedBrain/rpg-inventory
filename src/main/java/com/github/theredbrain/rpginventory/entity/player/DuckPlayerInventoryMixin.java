@@ -13,20 +13,18 @@ public interface DuckPlayerInventoryMixin {
     // these methods get/set the ItemStacks in the TrinketSlot inventories
     ItemStack rpginventory$getEmptyMainHand();
     ItemStack rpginventory$setEmptyMainHand(ItemStack itemStack);
-    ItemStack rpginventory$getEmptyOffHand();
-    ItemStack rpginventory$setEmptyOffHand(ItemStack itemStack);
+    ItemStack rpginventory$getEmptyOffhand();
+    ItemStack rpginventory$setEmptyOffhand(ItemStack itemStack);
     ItemStack rpginventory$getSheathedMainHand();
     ItemStack rpginventory$setSheathedMainHand(ItemStack itemStack);
-    ItemStack rpginventory$getSheathedOffHand();
-    ItemStack rpginventory$setSheathedOffHand(ItemStack itemStack);
+    ItemStack rpginventory$getSheathedOffhand();
+    ItemStack rpginventory$setSheathedOffhand(ItemStack itemStack);
     ItemStack rpginventory$getMainHand();
     ItemStack rpginventory$setMainHand(ItemStack itemStack);
-//    ItemStack rpginventory$getOffHand();
-//    ItemStack rpginventory$setOffHand(ItemStack itemStack);
     ItemStack rpginventory$getAlternativeMainHand();
     ItemStack rpginventory$setAlternativeMainHand(ItemStack itemStack);
-    ItemStack rpginventory$getAlternativeOffHand();
-    ItemStack rpginventory$setAlternativeOffHand(ItemStack itemStack);
+    ItemStack rpginventory$getAlternativeOffhand();
+    ItemStack rpginventory$setAlternativeOffhand(ItemStack itemStack);
     ItemStack rpginventory$getGlovesStack();
     ItemStack rpginventory$setGlovesStack(ItemStack itemStack);
     ItemStack rpginventory$getShouldersStack();

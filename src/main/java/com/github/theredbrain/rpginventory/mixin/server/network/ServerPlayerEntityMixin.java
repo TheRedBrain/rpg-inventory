@@ -54,8 +54,8 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Du
             if (!((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$getEmptyMainHand().isOf(ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON)) {
                 ((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$setEmptyMainHand(ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON.getDefaultStack());
             }
-            if (!((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$getEmptyOffHand().isOf(ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON)) {
-                ((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$setEmptyOffHand(ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON.getDefaultStack());
+            if (!((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$getEmptyOffhand().isOf(ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON)) {
+                ((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$setEmptyOffhand(ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON.getDefaultStack());
             }
             ItemStack newMainHandStack = ((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$getMainHand();
             ItemStack newAlternativeMainHandStack = ((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$getAlternativeMainHand();
@@ -65,7 +65,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Du
             mainHandSlotStack = newMainHandStack;
             alternateMainHandSlotStack = newAlternativeMainHandStack;
             ItemStack newOffHandStack = this.getEquippedStack(EquipmentSlot.OFFHAND);
-            ItemStack newAlternativeOffHandStack = ((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$getAlternativeOffHand();
+            ItemStack newAlternativeOffHandStack = ((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$getAlternativeOffhand();
             if (!ItemStack.areItemsEqual(offHandSlotStack, newOffHandStack) || !ItemStack.areItemsEqual(alternateOffHandSlotStack, newAlternativeOffHandStack)) {
                 rpginventory$sendChangedHandSlotsPacket(false);
             }

@@ -62,6 +62,26 @@ public class ServerConfig implements ConfigData {
     public int spell_slots_y_offset = 90;
 
     @Comment("default: 8")
+    public int head_slot_x_offset = 33;
+    @Comment("default: 72")
+    public int head_slot_y_offset = 18;
+
+    @Comment("default: 8")
+    public int chest_slot_x_offset = 8;
+    @Comment("default: 72")
+    public int chest_slot_y_offset = 54;
+
+    @Comment("default: 8")
+    public int legs_slot_x_offset = 8;
+    @Comment("default: 72")
+    public int legs_slot_y_offset = 90;
+
+    @Comment("default: 8")
+    public int feet_slot_x_offset = 77;
+    @Comment("default: 72")
+    public int feet_slot_y_offset = 90;
+
+    @Comment("default: 8")
     public int belts_group_x_offset = 8;
     @Comment("default: 72")
     public int belts_group_y_offset = 72;
@@ -95,6 +115,11 @@ public class ServerConfig implements ConfigData {
     public int main_hand_group_x_offset = 8;
     @Comment("default: 108")
     public int main_hand_group_y_offset = 108;
+
+    @Comment("default: 26")
+    public int offhand_slot_x_offset = 26;
+    @Comment("default: 108")
+    public int offhand_slot_y_offset = 108;
 
     @Comment("default: 59")
     public int alternative_main_hand_group_x_offset = 59;
