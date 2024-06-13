@@ -26,7 +26,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Objects;
 
-@Mixin(value = SurvivalTrinketSlot.class, remap = false)
+@Mixin(value = SurvivalTrinketSlot.class)
 public abstract class SurvivalTrinketSlotMixin extends Slot {
 
     @Shadow @Final private TrinketInventory trinketInventory;
@@ -117,7 +117,7 @@ public abstract class SurvivalTrinketSlotMixin extends Slot {
     /**
      * @author TheRedBrain
      */
-    @Inject(method = "isTrinketFocused", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "isTrinketFocused", at = @At("HEAD"), cancellable = true, remap = false)
     public void rpginventory$isTrinketFocused(CallbackInfoReturnable<Boolean> cir) {
         if ((Objects.equals(this.group.getName(), "spell_slot_1") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 1)
                 || (Objects.equals(this.group.getName(), "spell_slot_2") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 2)
