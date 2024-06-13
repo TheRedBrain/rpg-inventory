@@ -7,7 +7,6 @@
         "hitbox": "FORWARD_BOX",
         "upswing": 0.5,
         "stamina_cost": 2.0,
-        "damage_type": "bettercombat:one_handed_punch",
         "animation": "bettercombat:one_handed_punch",
         "swing_sound": {
           "id": "bettercombat:fist_punch"
