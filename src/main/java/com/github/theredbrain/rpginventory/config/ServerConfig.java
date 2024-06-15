@@ -12,6 +12,9 @@ public class ServerConfig implements ConfigData {
     @Comment("When true, all main and offhand slots can only hold items in the item tags 'rpginventory:main_hand_items' and 'rpginventory:off_hand_items', respectively.")
     public boolean are_hand_items_restricted_to_item_tags = false;
 
+    @Comment("When false, toggling the two-handed stance is not possible when the main hand is sheathed.")
+    public boolean always_allow_toggling_two_handed_stance = false;
+
     @Comment("""
             When the mod 'Stamina Attributes' is installed, the following 6 options take effect
             

@@ -50,6 +50,7 @@
 
 
 	"text.autoconfig.rpginventory.title": "RPG Inventory",
+	"text.autoconfig.rpginventory.option.client.always_show_selected_hotbar_slot": "Always show selected hotbar slot",
 	"text.autoconfig.rpginventory.option.client.off_hand_item_is_right": "Offhand item is right",
 	"text.autoconfig.rpginventory.option.client.alternative_off_hand_item_is_right": "Alternative offhand item is right",
 	"text.autoconfig.rpginventory.option.client.hand_slots_x_offset": "Hand slots x offset",
