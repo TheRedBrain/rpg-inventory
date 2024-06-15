@@ -67,7 +67,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     private static final TrackedData<Boolean> IS_MAIN_HAND_STACK_SHEATHED = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
     @Unique
-    private static final TrackedData<Boolean> IS_OFF_HAND_STACK_SHEATHED = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final TrackedData<Boolean> IS_OFFHAND_STACK_SHEATHED = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
     @Unique
     private static final TrackedData<Integer> OLD_ACTIVE_SPELL_SLOT_AMOUNT = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
@@ -86,7 +86,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     @Inject(method = "initDataTracker", at = @At("RETURN"))
     protected void rpginventory$initDataTracker(CallbackInfo ci) {
         this.dataTracker.startTracking(IS_MAIN_HAND_STACK_SHEATHED, false);
-        this.dataTracker.startTracking(IS_OFF_HAND_STACK_SHEATHED, false);
+        this.dataTracker.startTracking(IS_OFFHAND_STACK_SHEATHED, false);
         this.dataTracker.startTracking(OLD_ACTIVE_SPELL_SLOT_AMOUNT, -1);
 
     }
@@ -158,8 +158,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
             this.rpginventory$setIsMainHandStackSheathed(nbt.getBoolean("is_main_hand_stack_sheathed"));
         }
 
-        if (nbt.contains("is_off_hand_stack_sheathed", NbtElement.BYTE_TYPE)) {
-            this.rpginventory$setIsOffHandStackSheathed(nbt.getBoolean("is_off_hand_stack_sheathed"));
+        if (nbt.contains("is_offhand_stack_sheathed", NbtElement.BYTE_TYPE)) {
+            this.rpginventory$setIsOffHandStackSheathed(nbt.getBoolean("is_offhand_stack_sheathed"));
         }
 
         if (nbt.contains("old_active_spell_slot_amount", NbtElement.INT_TYPE)) {
@@ -170,11 +170,20 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
     public void rpginventory$writeCustomDataToNbt(NbtCompound nbt, CallbackInfo ci) {
 
-        nbt.putBoolean("is_main_hand_stack_sheathed", this.rpginventory$isMainHandStackSheathed());
+        boolean is_main_hand_stack_sheathed = this.rpginventory$isMainHandStackSheathed();
+        if (is_main_hand_stack_sheathed) {
+            nbt.putBoolean("is_main_hand_stack_sheathed", this.rpginventory$isMainHandStackSheathed());
+        }
 
-        nbt.putBoolean("is_off_hand_stack_sheathed", this.rpginventory$isOffHandStackSheathed());
+        boolean is_offhand_stack_sheathed = this.rpginventory$isOffHandStackSheathed();
+        if (is_offhand_stack_sheathed) {
+            nbt.putBoolean("is_offhand_stack_sheathed", this.rpginventory$isOffHandStackSheathed());
+        }
 
-        nbt.putInt("old_active_spell_slot_amount", this.rpginventory$oldActiveSpellSlotAmount());
+        int old_active_spell_slot_amount = this.rpginventory$oldActiveSpellSlotAmount();
+        if (old_active_spell_slot_amount != -1) {
+            nbt.putInt("old_active_spell_slot_amount", old_active_spell_slot_amount);
+        }
     }
 
     /**
@@ -247,12 +256,12 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
     @Override
     public boolean rpginventory$isOffHandStackSheathed() {
-        return this.dataTracker.get(IS_OFF_HAND_STACK_SHEATHED);
+        return this.dataTracker.get(IS_OFFHAND_STACK_SHEATHED);
     }
 
     @Override
     public void rpginventory$setIsOffHandStackSheathed(boolean isOffHandStackSheathed) {
-        this.dataTracker.set(IS_OFF_HAND_STACK_SHEATHED, isOffHandStackSheathed);
+        this.dataTracker.set(IS_OFFHAND_STACK_SHEATHED, isOffHandStackSheathed);
     }
 
     @Override

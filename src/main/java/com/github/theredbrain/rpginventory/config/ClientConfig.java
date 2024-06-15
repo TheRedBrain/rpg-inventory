@@ -9,8 +9,8 @@ import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 )
 public class ClientConfig implements ConfigData {
     public boolean always_show_selected_hotbar_slot = false;
-    public boolean off_hand_item_is_right = true;
-    public boolean alternative_off_hand_item_is_right = true;
+    public boolean offhand_item_is_right = true;
+    public boolean alternative_offhand_item_is_right = true;
     public int hand_slots_x_offset = -140;
     public int hand_slots_y_offset = -23;
     public int alternative_hand_slots_x_offset = 91;

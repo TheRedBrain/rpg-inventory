@@ -83,24 +83,24 @@ public abstract class InGameHudMixin {
 
             int x = this.scaledWidth / 2 + clientConfig.hand_slots_x_offset;
             int y = this.scaledHeight + 4 + clientConfig.hand_slots_y_offset;
-            boolean off_hand_slot_is_right = clientConfig.off_hand_item_is_right;
-            this.renderHotbarItem(context, x + 23, y, tickDelta, playerEntity, off_hand_slot_is_right ? itemStackOffHand : itemStackMainHand, l++);
-            this.renderHotbarItem(context, x + 3, y, tickDelta, playerEntity, off_hand_slot_is_right ? itemStackMainHand : itemStackOffHand, l++);
+            boolean offhand_slot_is_right = clientConfig.offhand_item_is_right;
+            this.renderHotbarItem(context, x + 23, y, tickDelta, playerEntity, offhand_slot_is_right ? itemStackOffHand : itemStackMainHand, l++);
+            this.renderHotbarItem(context, x + 3, y, tickDelta, playerEntity, offhand_slot_is_right ? itemStackMainHand : itemStackOffHand, l++);
 
             // sheathed hand indicator
-            if ((!isMainHandSheathed && off_hand_slot_is_right) || (!isOffhandSheathed && !off_hand_slot_is_right)) {
+            if ((!isMainHandSheathed && offhand_slot_is_right) || (!isOffhandSheathed && !offhand_slot_is_right)) {
                 context.drawTexture(WIDGETS_TEXTURE, x - 1, y - 4, 0, 22, 24, 24);
             }
-            if ((!isOffhandSheathed && off_hand_slot_is_right) || (!isMainHandSheathed && !off_hand_slot_is_right)) {
+            if ((!isOffhandSheathed && offhand_slot_is_right) || (!isMainHandSheathed && !offhand_slot_is_right)) {
                 context.drawTexture(UNSHEATHED_RIGHT_HAND_SLOT_SELECTOR_TEXTURE, x + 19, y - 4, 0, 0, 24, 24, 24, 24);
             }
 
 
             x = this.scaledWidth / 2 + clientConfig.alternative_hand_slots_x_offset;
             y = this.scaledHeight + 4 + clientConfig.alternative_hand_slots_y_offset;
-            boolean alternative_off_hand_slot_is_right = clientConfig.alternative_off_hand_item_is_right;
-            this.renderHotbarItem(context, x + 10, y, tickDelta, playerEntity, alternative_off_hand_slot_is_right ? itemStackAlternativeMainHand : itemStackAlternativeOffHand, l++);
-            this.renderHotbarItem(context, x + 30, y, tickDelta, playerEntity, alternative_off_hand_slot_is_right ? itemStackAlternativeOffHand : itemStackAlternativeMainHand, l);
+            boolean alternative_offhand_slot_is_right = clientConfig.alternative_offhand_item_is_right;
+            this.renderHotbarItem(context, x + 10, y, tickDelta, playerEntity, alternative_offhand_slot_is_right ? itemStackAlternativeMainHand : itemStackAlternativeOffHand, l++);
+            this.renderHotbarItem(context, x + 30, y, tickDelta, playerEntity, alternative_offhand_slot_is_right ? itemStackAlternativeOffHand : itemStackAlternativeMainHand, l);
         }
     }
 
