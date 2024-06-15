@@ -12,6 +12,8 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 
 import java.util.Optional;
@@ -48,6 +50,6 @@ public class TwoHandMainWeaponPacketReceiver implements ServerPlayNetworking.Pla
         if (RPGInventory.isStaminaAttributesLoaded && !player.isCreative()) {
             ((StaminaUsingEntity) player).staminaattributes$addStamina(-RPGInventory.serverConfig.toggling_two_handed_stance_stamina_cost);
         }
-        // TODO play sounds
+        player.getServerWorld().playSound(null, player.getBlockPos(), SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.PLAYERS, 1.0F, 1.0F);
     }
 }
