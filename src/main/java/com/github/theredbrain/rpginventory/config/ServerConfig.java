@@ -8,6 +8,10 @@ import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
         name = "server"
 )
 public class ServerConfig implements ConfigData {
+
+    @Comment("When true, all main and offhand slots can only hold items in the item tags 'rpginventory:main_hand_items' and 'rpginventory:off_hand_items', respectively.")
+    public boolean are_hand_items_restricted_to_item_tags = false;
+
     @Comment("""
             When the mod 'Stamina Attributes' is installed, the following 6 options take effect
             

@@ -4,6 +4,9 @@
     "rpginventory:can_change_equipment"
   ],
   "tooltip_predicates": [
-    "trinkets:relevant"
+    "trinkets:none"
+  ],
+  "validator_predicates": [
+    "rpginventory:are_hand_slots_restricted_to_tags"
   ]
 }
