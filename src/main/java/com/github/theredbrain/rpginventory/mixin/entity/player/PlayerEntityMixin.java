@@ -95,6 +95,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
     public void rpginventory$tick(CallbackInfo ci) {
         if (!this.getWorld().isClient) {
             this.rpginventory$ejectItemsFromInactiveSpellSlots();
+            this.rpginventory$ejectSecondUniqueRing();
 //            this.rpginventory$ejectNonHotbarItemsFromHotbar(); TODO disabled for now, needs overhaul
         }
     }
@@ -279,8 +280,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         int activeSpellSlotAmount = (int) this.rpginventory$getActiveSpellSlotAmount();
 
         if (this.rpginventory$oldActiveSpellSlotAmount() != activeSpellSlotAmount) {
+            PlayerInventory playerInventory = this.getInventory();
             for (int j = activeSpellSlotAmount + 1; j < 9; j++) {
-                PlayerInventory playerInventory = this.getInventory();
 
                 if (!((DuckPlayerInventoryMixin) playerInventory).rpginventory$getSpellSlotStack(j).isEmpty()) {
                     playerInventory.offerOrDrop(((DuckPlayerInventoryMixin) playerInventory).rpginventory$setSpellSlotStack(ItemStack.EMPTY, j));
@@ -291,6 +292,17 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
             }
 
             this.rpginventory$setOldActiveSpellSlotAmount(activeSpellSlotAmount);
+        }
+    }
+
+    @Unique
+    private void rpginventory$ejectSecondUniqueRing() {
+        PlayerInventory playerInventory = this.getInventory();
+        ItemStack firstRingStack = ((DuckPlayerInventoryMixin) playerInventory).rpginventory$getRing1Stack();
+        ItemStack secondRingStack = ((DuckPlayerInventoryMixin) playerInventory).rpginventory$getRing2Stack();
+        if (firstRingStack.isIn(Tags.UNIQUE_RINGS) && firstRingStack.getItem() == secondRingStack.getItem()) {
+            playerInventory.offerOrDrop(((DuckPlayerInventoryMixin) playerInventory).rpginventory$setRing2Stack(ItemStack.EMPTY));
+
         }
     }
 
