@@ -35,7 +35,6 @@
 
 	"hud.message.nonTwoHandedWeaponEquipped": "Your weapon can't be two-handed",
 	"hud.message.spellsRemovedFromInactiveSpellSlots": "The maximum amount of spells you can equip was lowered and some items were transferred to your normal inventory. If your inventory was full, they were dropped at your location.",
-	"hud.message.staminaTooLow": "Your stamina is to low",
 	"hud.message.weaponsAreSheathed": "Your weapons are sheathed already",
 	"hud.message.disabledVanillaItemSwapMechanic": "The vanilla item swap mechanic was disabled by RPG Inventory.",
 

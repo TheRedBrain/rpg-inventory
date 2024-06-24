@@ -1,5 +1,6 @@
 package com.github.theredbrain.rpginventory.client.render.renderer;
 
+import com.github.theredbrain.rpginventory.RPGInventoryClient;
 import com.github.theredbrain.rpginventory.entity.RendersSheathedWeapons;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -13,10 +14,9 @@ import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.CrossbowItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.SwordItem;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.math.RotationAxis;
 
 @Environment(EnvType.CLIENT)
@@ -41,68 +41,40 @@ public class SheathedMainHandItemFeatureRenderer<T extends LivingEntity> extends
                 modelPart.rotate(matrixStack);
                 Item mainHandStackItem = mainHandStack.getItem();
                 boolean hasStackedEquippedInChestSlot = livingEntity.hasStackEquipped(EquipmentSlot.CHEST);
-
+                double initial_translation_x = -0.3;
+                double initial_translation_y = 0.05;
+                double initial_translation_z = 0.16;
+                double equipped_chest_offset_x = 0.0;
+                double equipped_chest_offset_y = 0.0;
+                double equipped_chest_offset_z = 0.06;
+                float rotation_positive_z = 0.0F;
+                float rotation_positive_y = 90.0F;
+                float rotation_positive_x = 35.0F;
+                String itemId = Registries.ITEM.getId(mainHandStackItem).toString();
+                Float[] itemConfiguration = RPGInventoryClient.clientConfig.sheathed_main_hand_item_positions.get(itemId);
+                if (itemConfiguration != null && itemConfiguration.length == 9) {
+                    initial_translation_x = itemConfiguration[0];
+                    initial_translation_y = itemConfiguration[1];
+                    initial_translation_z = itemConfiguration[2];
+                    equipped_chest_offset_x = itemConfiguration[3];
+                    equipped_chest_offset_y = itemConfiguration[4];
+                    equipped_chest_offset_z = itemConfiguration[5];
+                    rotation_positive_z = itemConfiguration[6];
+                    rotation_positive_y = itemConfiguration[7];
+                    rotation_positive_x = itemConfiguration[8];
+                }
                 if (this.getContextModel().child) {
-                    float m = 0.5F;
                     matrixStack.translate(0.0F, 0.75F, 0.0F);
                     matrixStack.scale(0.5F, 0.5F, 0.5F);
                 }
-                if (mainHandStackItem instanceof SwordItem) {
-                    matrixStack.translate(-0.3D, 0.05D, 0.16D);
-                    if (hasStackedEquippedInChestSlot) {
-//                    matrixStack.translate(0.05F, 0.0F, 0.0F);
-                        matrixStack.translate(0.0D, 0.0D, 0.06D);
-                    }
-                    matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(90.0F));
-                    matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(35.0F));
-//                matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(-25.0F));
-////                matrixStack.translate(0.0D, 0.0D, 0.16D);
-//                matrixStack.scale(1.0F, -1.0F, -1.0F);
-                    heldItemRenderer.renderItem(livingEntity, mainHandStack, ModelTransformationMode.THIRD_PERSON_RIGHT_HAND, false, matrixStack, vertexConsumerProvider, i);
-//            } else if (mainHandStackItem instanceof TridentItem) {
-//                matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(52.0F));
-//                matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(40.0F));
-//                matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(-25.0F));
-//                matrixStack.translate(-0.26D, 0.0D, 0.0D);
-//                if (!livingEntity.hasStackEquipped(EquipmentSlot.CHEST)) {
-//                    matrixStack.translate(0.05F, 0.0F, 0.0F);
-//                }
-//                matrixStack.scale(1.0F, -1.0F, -1.0F);
-//                heldItemRenderer.renderItem(livingEntity, mainHandStack, ModelTransformationMode.THIRD_PERSON_RIGHT_HAND, false, matrixStack, vertexConsumerProvider, i);
-                } else if (mainHandStackItem instanceof CrossbowItem) {
-                    matrixStack.translate(-0.3D, 0.1D, 0.16D);
-//                matrixStack.translate(-0.3D, 0.0D, 0.16D);
-                    if (hasStackedEquippedInChestSlot) {
-//                    matrixStack.translate(0.05F, 0.0F, 0.0F);
-                        matrixStack.translate(0.0D, 0.0D, 0.06D);
-                    }
-                    matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90.0F));
-                    matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-10.0F));
-//                matrixStack.translate(0.0D, 0.0D, 0.16D);
-////                matrixStack.scale(BackSlotMain.CONFIG.backslot_scaling, BackSlotMain.CONFIG.backslot_scaling, BackSlotMain.CONFIG.backslot_scaling);
-////                if (backSlotStack.getItem() instanceof FishingRodItem || backSlotStack.getItem() instanceof OnAStickItem) {
-////                    matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(180.0F));
-////                    matrixStack.translate(0.0D, -0.3D, 0.0D);
-////                }
-//                if (livingEntity.hasStackEquipped(EquipmentSlot.CHEST)) {
-//                    matrixStack.translate(0.0F, 0.0F, 0.06F);
-//                }
-                    heldItemRenderer.renderItem(livingEntity, mainHandStack, ModelTransformationMode.THIRD_PERSON_RIGHT_HAND, false, matrixStack, vertexConsumerProvider, i);
-                } else { // TODO bow
-                    matrixStack.translate(-0.1D, 0.4D, 0.09D);
-                    if (hasStackedEquippedInChestSlot) {
-//                    matrixStack.translate(0.05F, 0.0F, 0.0F);
-                        matrixStack.translate(0.0D, 0.0D, 0.06D);
-                    }
-                    matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(90.0F));
-                    matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(-12.0F));
-                    matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(35.0F));
-//                matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(-25.0F));
-////                matrixStack.translate(0.0D, 0.0D, 0.16D);
-//                matrixStack.scale(1.0F, -1.0F, -1.0F);
-                    heldItemRenderer.renderItem(livingEntity, mainHandStack, ModelTransformationMode.THIRD_PERSON_RIGHT_HAND, false, matrixStack, vertexConsumerProvider, i);
+                matrixStack.translate(initial_translation_x, initial_translation_y, initial_translation_z);
+                if (hasStackedEquippedInChestSlot) {
+                    matrixStack.translate(equipped_chest_offset_x, equipped_chest_offset_y, equipped_chest_offset_z);
                 }
-
+                matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(rotation_positive_z));
+                matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rotation_positive_y));
+                matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(rotation_positive_x));
+                heldItemRenderer.renderItem(livingEntity, mainHandStack, ModelTransformationMode.THIRD_PERSON_RIGHT_HAND, false, matrixStack, vertexConsumerProvider, i);
                 matrixStack.pop();
             }
         }
