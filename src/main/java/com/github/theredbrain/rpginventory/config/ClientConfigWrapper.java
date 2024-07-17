@@ -5,13 +5,13 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.autoconfig.serializer.PartitioningSerializer;
 
 @Config(
-        name = "rpginventory"
+		name = "rpginventory"
 )
 public class ClientConfigWrapper extends PartitioningSerializer.GlobalData {
-    @ConfigEntry.Category("client")
-    @ConfigEntry.Gui.TransitiveObject
-    public ClientConfig client = new ClientConfig();
+	@ConfigEntry.Category("client")
+	@ConfigEntry.Gui.TransitiveObject
+	public ClientConfig client = new ClientConfig();
 
-    public ClientConfigWrapper() {
-    }
+	public ClientConfigWrapper() {
+	}
 }

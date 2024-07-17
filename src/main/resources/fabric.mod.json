@@ -1,52 +1,48 @@
 {
-  "schemaVersion": 1,
-  "id": "rpginventory",
-  "version": "${version}",
-
-  "name": "RPG Inventory",
-  "description": "This mod adds new equipment slots and other mechanics found in popular RPGs.",
-  "authors": [
-    "TheRedBrain"
-  ],
-  "contact": {
-    "sources": "https://github.com/TheRedBrain/rpg-inventory"
-  },
-
-  "license": "MIT",
-
-  "environment": "*",
-  "icon": "assets/rpginventory/icon.png",
-  "accessWidener": "rpginventory.accesswidener",
-  "entrypoints": {
-    "main": [
-      "com.github.theredbrain.rpginventory.RPGInventory"
-    ],
-    "client": [
-      "com.github.theredbrain.rpginventory.RPGInventoryClient"
-    ],
-    "modmenu": [
-      "com.github.theredbrain.rpginventory.client.compatibility.ModMenuCompatibility"
-    ],
-    "mixinsquared": [
-      "com.github.theredbrain.rpginventory.RPGInventoryMixinCanceller"
-    ]
-  },
-  "mixins": [
-    "rpginventory.mixins.json"
-  ],
-
-  "depends": {
-    "java": ">=17",
-    "minecraft": "1.20.1",
-    "fabricloader": ">=0.14.20",
-    "fabric-api": "*",
-    "cloth-config": ">=11.1.106",
-    "trinkets": ">=3.7.1",
-    "slotcustomizationapi": ">=1.0.0-1.20.1"
-  },
-  "suggests": {
-    "scriptblocks": "*",
-    "staminaattributes": "*",
-    "variousstatuseffects": "*"
-  }
+	"schemaVersion": 1,
+	"id": "rpginventory",
+	"version": "${version}",
+	"name": "RPG Inventory",
+	"description": "This mod adds new equipment slots and other mechanics found in popular RPGs.",
+	"authors": [
+		"TheRedBrain"
+	],
+	"contact": {
+		"sources": "https://github.com/TheRedBrain/rpg-inventory"
+	},
+	"license": "MIT",
+	"environment": "*",
+	"icon": "assets/rpginventory/icon.png",
+	"accessWidener": "rpginventory.accesswidener",
+	"entrypoints": {
+		"main": [
+			"com.github.theredbrain.rpginventory.RPGInventory"
+		],
+		"client": [
+			"com.github.theredbrain.rpginventory.RPGInventoryClient"
+		],
+		"modmenu": [
+			"com.github.theredbrain.rpginventory.client.compatibility.ModMenuCompatibility"
+		],
+		"mixinsquared": [
+			"com.github.theredbrain.rpginventory.RPGInventoryMixinCanceller"
+		]
+	},
+	"mixins": [
+		"rpginventory.mixins.json"
+	],
+	"depends": {
+		"java": ">=17",
+		"minecraft": "1.20.1",
+		"fabricloader": ">=0.14.20",
+		"fabric-api": "*",
+		"cloth-config": ">=11.1.106",
+		"trinkets": ">=3.7.1",
+		"slotcustomizationapi": ">=1.0.0-1.20.1"
+	},
+	"suggests": {
+		"scriptblocks": "*",
+		"staminaattributes": "*",
+		"variousstatuseffects": "*"
+	}
 }

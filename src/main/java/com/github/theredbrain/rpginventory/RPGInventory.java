@@ -1,9 +1,12 @@
 package com.github.theredbrain.rpginventory;
 
-import com.github.theredbrain.rpginventory.registry.ServerPacketRegistry;
 import com.github.theredbrain.rpginventory.config.ServerConfig;
 import com.github.theredbrain.rpginventory.config.ServerConfigWrapper;
-import com.github.theredbrain.rpginventory.registry.*;
+import com.github.theredbrain.rpginventory.registry.EventsRegistry;
+import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
+import com.github.theredbrain.rpginventory.registry.ItemRegistry;
+import com.github.theredbrain.rpginventory.registry.PredicateRegistry;
+import com.github.theredbrain.rpginventory.registry.ServerPacketRegistry;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import me.shedaniel.autoconfig.serializer.PartitioningSerializer;
@@ -30,7 +33,7 @@ public class RPGInventory implements ModInitializer {
 
 		// Config
 		AutoConfig.register(ServerConfigWrapper.class, PartitioningSerializer.wrap(JanksonConfigSerializer::new));
-		serverConfig = ((ServerConfigWrapper)AutoConfig.getConfigHolder(ServerConfigWrapper.class).getConfig()).server;
+		serverConfig = ((ServerConfigWrapper) AutoConfig.getConfigHolder(ServerConfigWrapper.class).getConfig()).server;
 
 		// Packets
 		ServerPacketRegistry.init();

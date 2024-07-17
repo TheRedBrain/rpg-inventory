@@ -3,10 +3,8 @@ package com.github.theredbrain.rpginventory.config;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
-import oshi.util.tuples.Pair;
 
 import java.util.LinkedHashMap;
-import java.util.List;
 
 @Config(
 		name = "client"

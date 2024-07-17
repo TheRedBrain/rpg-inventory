@@ -1,12 +1,12 @@
 {
-  "values": [
-    {
-      "id": "#trinkets:hand/ring",
-      "required": false
-    },
-    {
-      "id": "#trinkets:offhand/ring",
-      "required": false
-    }
-  ]
+	"values": [
+		{
+			"id": "#trinkets:hand/ring",
+			"required": false
+		},
+		{
+			"id": "#trinkets:offhand/ring",
+			"required": false
+		}
+	]
 }

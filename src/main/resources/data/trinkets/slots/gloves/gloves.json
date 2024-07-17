@@ -1,9 +1,9 @@
 {
-  "icon": "rpginventory:item/empty_armor_slot_gloves",
-  "quick_move_predicates": [
-    "rpginventory:can_change_equipment"
-  ],
-  "tooltip_predicates": [
-    "trinkets:relevant"
-  ]
+	"icon": "rpginventory:item/empty_armor_slot_gloves",
+	"quick_move_predicates": [
+		"rpginventory:can_change_equipment"
+	],
+	"tooltip_predicates": [
+		"trinkets:relevant"
+	]
 }

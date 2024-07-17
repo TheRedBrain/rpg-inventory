@@ -18,25 +18,27 @@ import org.spongepowered.asm.mixin.Shadow;
 @Mixin(targets = {"net/minecraft/screen/PlayerScreenHandler$2"})
 public abstract class PlayerScreenHandlerOffHandSlotMixin extends Slot {
 
-    @Shadow @Final PlayerEntity field_42464;
+	@Shadow
+	@Final
+	PlayerEntity field_42464;
 
-    public PlayerScreenHandlerOffHandSlotMixin(Inventory inventory, int index, int x, int y) {
-        super(inventory, index, x, y);
-    }
+	public PlayerScreenHandlerOffHandSlotMixin(Inventory inventory, int index, int x, int y) {
+		super(inventory, index, x, y);
+	}
 
-    @Override
-    public boolean canInsert(ItemStack stack) {
-        boolean bl = true;
-        if (this.field_42464.getServer() != null) {
-            bl = this.field_42464.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT);
-        }
+	@Override
+	public boolean canInsert(ItemStack stack) {
+		boolean bl = true;
+		if (this.field_42464.getServer() != null) {
+			bl = this.field_42464.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT);
+		}
 
-        StatusEffect civilisation_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.civilisation_status_effect_identifier));
-        boolean hasCivilisationEffect = civilisation_status_effect != null && this.field_42464.hasStatusEffect(civilisation_status_effect);
+		StatusEffect civilisation_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.civilisation_status_effect_identifier));
+		boolean hasCivilisationEffect = civilisation_status_effect != null && this.field_42464.hasStatusEffect(civilisation_status_effect);
 
-        StatusEffect wilderness_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.wilderness_status_effect_identifier));
-        boolean hasWildernessEffect = wilderness_status_effect != null && this.field_42464.hasStatusEffect(wilderness_status_effect);
+		StatusEffect wilderness_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.wilderness_status_effect_identifier));
+		boolean hasWildernessEffect = wilderness_status_effect != null && this.field_42464.hasStatusEffect(wilderness_status_effect);
 
-        return stack.isIn(Tags.OFFHAND_ITEMS) && (hasCivilisationEffect || this.field_42464.isCreative() || (bl && !hasWildernessEffect)) && !((DuckPlayerEntityMixin)this.field_42464).rpginventory$isOffHandStackSheathed();
-    }
+		return stack.isIn(Tags.OFFHAND_ITEMS) && (hasCivilisationEffect || this.field_42464.isCreative() || (bl && !hasWildernessEffect)) && !((DuckPlayerEntityMixin) this.field_42464).rpginventory$isOffHandStackSheathed();
+	}
 }

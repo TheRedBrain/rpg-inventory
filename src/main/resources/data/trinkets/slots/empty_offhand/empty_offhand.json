@@ -1,7 +1,7 @@
 {
-  "icon": "minecraft:item/empty_armor_slot_shield",
-  "drop_rule": "keep",
-  "tooltip_predicates": [
-    "trinkets:none"
-  ]
+	"icon": "minecraft:item/empty_armor_slot_shield",
+	"drop_rule": "keep",
+	"tooltip_predicates": [
+		"trinkets:none"
+	]
 }

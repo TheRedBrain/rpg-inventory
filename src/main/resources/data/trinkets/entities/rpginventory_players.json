@@ -1,29 +1,29 @@
 {
-  "replace": true,
-  "entities": [
-    "player"
-  ],
-  "slots": [
-    "alternative_main_hand/alternative_main_hand",
-    "alternative_offhand/alternative_offhand",
-    "belts/belt",
-    "empty_main_hand/empty_main_hand",
-    "empty_offhand/empty_offhand",
-    "gloves/gloves",
-    "main_hand/main_hand",
-    "necklaces/necklace",
-    "rings_1/ring",
-    "rings_2/ring",
-    "sheathed_main_hand/sheathed_main_hand",
-    "sheathed_offhand/sheathed_offhand",
-    "shoulders/shoulders",
-    "spell_slot_1/spell",
-    "spell_slot_2/spell",
-    "spell_slot_3/spell",
-    "spell_slot_4/spell",
-    "spell_slot_5/spell",
-    "spell_slot_6/spell",
-    "spell_slot_7/spell",
-    "spell_slot_8/spell"
-  ]
+	"replace": true,
+	"entities": [
+		"player"
+	],
+	"slots": [
+		"alternative_main_hand/alternative_main_hand",
+		"alternative_offhand/alternative_offhand",
+		"belts/belt",
+		"empty_main_hand/empty_main_hand",
+		"empty_offhand/empty_offhand",
+		"gloves/gloves",
+		"main_hand/main_hand",
+		"necklaces/necklace",
+		"rings_1/ring",
+		"rings_2/ring",
+		"sheathed_main_hand/sheathed_main_hand",
+		"sheathed_offhand/sheathed_offhand",
+		"shoulders/shoulders",
+		"spell_slot_1/spell",
+		"spell_slot_2/spell",
+		"spell_slot_3/spell",
+		"spell_slot_4/spell",
+		"spell_slot_5/spell",
+		"spell_slot_6/spell",
+		"spell_slot_7/spell",
+		"spell_slot_8/spell"
+	]
 }

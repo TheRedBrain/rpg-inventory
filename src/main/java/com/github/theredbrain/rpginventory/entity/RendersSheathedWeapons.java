@@ -4,6 +4,7 @@ import net.minecraft.item.ItemStack;
 
 public interface RendersSheathedWeapons {
 
-    ItemStack rpginventory$getSheathedMainHandItemStack();
-    ItemStack rpginventory$getSheathedOffHandItemStack();
+	ItemStack rpginventory$getSheathedMainHandItemStack();
+
+	ItemStack rpginventory$getSheathedOffHandItemStack();
 }

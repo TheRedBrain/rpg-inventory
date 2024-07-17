@@ -1,12 +1,12 @@
 {
-  "icon": "minecraft:item/empty_armor_slot_shield",
-  "quick_move_predicates": [
-    "rpginventory:can_change_sheathed_offhand_slot"
-  ],
-  "tooltip_predicates": [
-    "trinkets:none"
-  ],
-  "validator_predicates": [
-    "rpginventory:are_hand_slots_restricted_to_tags"
-  ]
+	"icon": "minecraft:item/empty_armor_slot_shield",
+	"quick_move_predicates": [
+		"rpginventory:can_change_sheathed_offhand_slot"
+	],
+	"tooltip_predicates": [
+		"trinkets:none"
+	],
+	"validator_predicates": [
+		"rpginventory:are_hand_slots_restricted_to_tags"
+	]
 }

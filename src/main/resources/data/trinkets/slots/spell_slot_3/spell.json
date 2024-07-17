@@ -1,10 +1,13 @@
 {
-  "icon": "rpginventory:item/empty_slot_spell",
-  "quick_move_predicates": [
-    "rpginventory:can_change_equipment"
-  ],
-  "tooltip_predicates": [
-    "trinkets:none"
-  ],
-  "validator_predicates": [ "spell_engine:spell_book", "trinkets:tag" ]
+	"icon": "rpginventory:item/empty_slot_spell",
+	"quick_move_predicates": [
+		"rpginventory:can_change_equipment"
+	],
+	"tooltip_predicates": [
+		"trinkets:none"
+	],
+	"validator_predicates": [
+		"spell_engine:spell_book",
+		"trinkets:tag"
+	]
 }

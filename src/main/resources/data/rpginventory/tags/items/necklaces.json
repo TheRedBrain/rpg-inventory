@@ -1,8 +1,8 @@
 {
-  "values": [
-    {
-      "id": "#trinkets:chest/necklace",
-      "required": false
-    }
-  ]
+	"values": [
+		{
+			"id": "#trinkets:chest/necklace",
+			"required": false
+		}
+	]
 }

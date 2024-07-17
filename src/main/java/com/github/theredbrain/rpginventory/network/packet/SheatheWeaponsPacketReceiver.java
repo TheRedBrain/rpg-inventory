@@ -13,40 +13,40 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 
 public class SheatheWeaponsPacketReceiver implements ServerPlayNetworking.PlayPacketHandler<SheatheWeaponsPacket> {
-    @Override
-    public void receive(SheatheWeaponsPacket packet, ServerPlayerEntity player, PacketSender responseSender) {
+	@Override
+	public void receive(SheatheWeaponsPacket packet, ServerPlayerEntity player, PacketSender responseSender) {
 
-        ItemStack mainHandItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getMainHand().copy();
-        if (mainHandItemStack.isEmpty()) {
-            mainHandItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSheathedMainHand().copy();
-        }
-        ItemStack offHandItemStack = player.getInventory().offHand.get(0).copy();
-        if (offHandItemStack.isEmpty()) {
-            offHandItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSheathedOffhand().copy();
-        }
+		ItemStack mainHandItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getMainHand().copy();
+		if (mainHandItemStack.isEmpty()) {
+			mainHandItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSheathedMainHand().copy();
+		}
+		ItemStack offHandItemStack = player.getInventory().offHand.get(0).copy();
+		if (offHandItemStack.isEmpty()) {
+			offHandItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSheathedOffhand().copy();
+		}
 
-        if (RPGInventory.isStaminaAttributesLoaded && RPGInventory.serverConfig.sheathing_hand_items_requires_stamina && ((StaminaUsingEntity) player).staminaattributes$getStamina() <= 0 && !player.isCreative()) {
-            player.sendMessageToClient(Text.translatable("hud.message.staminaTooLow"), true);
-            return;
-        }
-        if (((DuckPlayerEntityMixin) player).rpginventory$isMainHandStackSheathed() && ((DuckPlayerEntityMixin) player).rpginventory$isOffHandStackSheathed()) {
-            ((DuckPlayerEntityMixin) player).rpginventory$setIsMainHandStackSheathed(false);
-            ((DuckPlayerEntityMixin) player).rpginventory$setIsOffHandStackSheathed(false);
-            ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setMainHand(mainHandItemStack);
-            ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedMainHand(ItemStack.EMPTY);
-            player.getInventory().offHand.set(0, offHandItemStack);
-            ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedOffhand(ItemStack.EMPTY);
-        } else {
-            ((DuckPlayerEntityMixin) player).rpginventory$setIsMainHandStackSheathed(true);
-            ((DuckPlayerEntityMixin) player).rpginventory$setIsOffHandStackSheathed(true);
-            ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setMainHand(ItemStack.EMPTY);
-            ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedMainHand(mainHandItemStack);
-            player.getInventory().offHand.set(0, ItemStack.EMPTY);
-            ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedOffhand(offHandItemStack);
-        }
-        if (RPGInventory.isStaminaAttributesLoaded && !player.isCreative()) {
-            ((StaminaUsingEntity) player).staminaattributes$addStamina(-RPGInventory.serverConfig.sheathing_hand_items_stamina_cost);
-        }
-        player.getServerWorld().playSound(null, player.getBlockPos(), SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.PLAYERS, 1.0F, 1.0F);
-    }
+		if (RPGInventory.isStaminaAttributesLoaded && RPGInventory.serverConfig.sheathing_hand_items_requires_stamina && ((StaminaUsingEntity) player).staminaattributes$getStamina() <= 0 && !player.isCreative()) {
+			player.sendMessageToClient(Text.translatable("hud.message.staminaTooLow"), true);
+			return;
+		}
+		if (((DuckPlayerEntityMixin) player).rpginventory$isMainHandStackSheathed() && ((DuckPlayerEntityMixin) player).rpginventory$isOffHandStackSheathed()) {
+			((DuckPlayerEntityMixin) player).rpginventory$setIsMainHandStackSheathed(false);
+			((DuckPlayerEntityMixin) player).rpginventory$setIsOffHandStackSheathed(false);
+			((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setMainHand(mainHandItemStack);
+			((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedMainHand(ItemStack.EMPTY);
+			player.getInventory().offHand.set(0, offHandItemStack);
+			((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedOffhand(ItemStack.EMPTY);
+		} else {
+			((DuckPlayerEntityMixin) player).rpginventory$setIsMainHandStackSheathed(true);
+			((DuckPlayerEntityMixin) player).rpginventory$setIsOffHandStackSheathed(true);
+			((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setMainHand(ItemStack.EMPTY);
+			((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedMainHand(mainHandItemStack);
+			player.getInventory().offHand.set(0, ItemStack.EMPTY);
+			((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedOffhand(offHandItemStack);
+		}
+		if (RPGInventory.isStaminaAttributesLoaded && !player.isCreative()) {
+			((StaminaUsingEntity) player).staminaattributes$addStamina(-RPGInventory.serverConfig.sheathing_hand_items_stamina_cost);
+		}
+		player.getServerWorld().playSound(null, player.getBlockPos(), SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.PLAYERS, 1.0F, 1.0F);
+	}
 }

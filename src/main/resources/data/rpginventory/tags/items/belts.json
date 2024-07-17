@@ -1,8 +1,8 @@
 {
-  "values": [
-    {
-      "id": "#trinkets:legs/belt",
-      "required": false
-    }
-  ]
+	"values": [
+		{
+			"id": "#trinkets:legs/belt",
+			"required": false
+		}
+	]
 }

@@ -24,25 +24,25 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<AbstractClientPlayerEntity, PlayerEntityModel<AbstractClientPlayerEntity>> {
 
 
-    public PlayerEntityRendererMixin(EntityRendererFactory.Context ctx, PlayerEntityModel<AbstractClientPlayerEntity> model, float shadowRadius) {
-        super(ctx, model, shadowRadius);
-    }
+	public PlayerEntityRendererMixin(EntityRendererFactory.Context ctx, PlayerEntityModel<AbstractClientPlayerEntity> model, float shadowRadius) {
+		super(ctx, model, shadowRadius);
+	}
 
-    @Inject(method = "<init>", at = @At("TAIL"))
-    private void rpginventory$init(EntityRendererFactory.Context ctx, boolean slim, CallbackInfo info) {
-        this.addFeature(new SheathedMainHandItemFeatureRenderer<>(this, ctx.getHeldItemRenderer()));
-        this.addFeature(new SheathedOffHandItemFeatureRenderer<>(this, ctx.getHeldItemRenderer()));
-    } 
+	@Inject(method = "<init>", at = @At("TAIL"))
+	private void rpginventory$init(EntityRendererFactory.Context ctx, boolean slim, CallbackInfo info) {
+		this.addFeature(new SheathedMainHandItemFeatureRenderer<>(this, ctx.getHeldItemRenderer()));
+		this.addFeature(new SheathedOffHandItemFeatureRenderer<>(this, ctx.getHeldItemRenderer()));
+	}
 
-    /**
-     * @author TheRedBrain
-     */
-    @Inject(method = "getArmPose", at = @At("HEAD"), cancellable = true)
-    private static void rpginventory$pre_getArmPose(AbstractClientPlayerEntity player, Hand hand, CallbackInfoReturnable<BipedEntityModel.ArmPose> cir) {
-        ItemStack itemStack = player.getStackInHand(hand);
-        if (itemStack.isEmpty() || itemStack.isIn(Tags.EMPTY_HAND_WEAPONS)) {
-            cir.setReturnValue(BipedEntityModel.ArmPose.EMPTY);
-            cir.cancel();
-        }
-    }
+	/**
+	 * @author TheRedBrain
+	 */
+	@Inject(method = "getArmPose", at = @At("HEAD"), cancellable = true)
+	private static void rpginventory$pre_getArmPose(AbstractClientPlayerEntity player, Hand hand, CallbackInfoReturnable<BipedEntityModel.ArmPose> cir) {
+		ItemStack itemStack = player.getStackInHand(hand);
+		if (itemStack.isEmpty() || itemStack.isIn(Tags.EMPTY_HAND_WEAPONS)) {
+			cir.setReturnValue(BipedEntityModel.ArmPose.EMPTY);
+			cir.cancel();
+		}
+	}
 }

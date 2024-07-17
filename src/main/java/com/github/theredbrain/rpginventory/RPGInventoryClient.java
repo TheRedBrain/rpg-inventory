@@ -1,9 +1,9 @@
 package com.github.theredbrain.rpginventory;
 
-import com.github.theredbrain.rpginventory.registry.ClientPacketRegistry;
 import com.github.theredbrain.rpginventory.config.ClientConfig;
 import com.github.theredbrain.rpginventory.config.ClientConfigWrapper;
-import com.github.theredbrain.rpginventory.registry.*;
+import com.github.theredbrain.rpginventory.registry.ClientPacketRegistry;
+import com.github.theredbrain.rpginventory.registry.KeyBindingsRegistry;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import me.shedaniel.autoconfig.serializer.PartitioningSerializer;
@@ -12,21 +12,21 @@ import net.fabricmc.api.ClientModInitializer;
 
 public class RPGInventoryClient implements ClientModInitializer {
 
-    public static ClientConfig clientConfig;
+	public static ClientConfig clientConfig;
 
-    public RPGInventoryClient(){
-    }
+	public RPGInventoryClient() {
+	}
 
-    @Override
-    public void onInitializeClient() {
-        // Config
-        AutoConfig.register(ClientConfigWrapper.class, PartitioningSerializer.wrap(JanksonConfigSerializer::new));
-        clientConfig = ((ClientConfigWrapper)AutoConfig.getConfigHolder(ClientConfigWrapper.class).getConfig()).client;
+	@Override
+	public void onInitializeClient() {
+		// Config
+		AutoConfig.register(ClientConfigWrapper.class, PartitioningSerializer.wrap(JanksonConfigSerializer::new));
+		clientConfig = ((ClientConfigWrapper) AutoConfig.getConfigHolder(ClientConfigWrapper.class).getConfig()).client;
 
-        // Packets
-        ClientPacketRegistry.init();
+		// Packets
+		ClientPacketRegistry.init();
 
-        // Registry
-        KeyBindingsRegistry.registerKeyBindings();
-    }
+		// Registry
+		KeyBindingsRegistry.registerKeyBindings();
+	}
 }
