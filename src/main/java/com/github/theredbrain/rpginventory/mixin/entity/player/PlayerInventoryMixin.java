@@ -69,7 +69,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
         ItemStack emptyOffHandStack = rpginventory$getEmptyOffhand();
         ItemStack offHandStack = this.offHand.get(0);
         if (!((DuckPlayerEntityMixin) player).rpginventory$isOffHandStackSheathed()) {
-            return ItemUtils.isUsable(offHandStack) ? offHandStack : emptyOffHandStack;
+            return ItemUtils.isUsable(offHandStack) && !offHandStack.isEmpty() ? offHandStack : emptyOffHandStack;
         }
         return ItemStack.EMPTY;
     }

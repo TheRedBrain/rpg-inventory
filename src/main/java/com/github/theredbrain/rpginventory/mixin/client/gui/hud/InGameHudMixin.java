@@ -67,7 +67,7 @@ public abstract class InGameHudMixin {
         if (playerEntity != null) {
             ClientConfig clientConfig = RPGInventoryClient.clientConfig;
             ItemStack itemStackMainHand = ((DuckPlayerInventoryMixin) playerEntity.getInventory()).rpginventory$getMainHand();
-            ItemStack itemStackOffHand = playerEntity.getEquippedStack(EquipmentSlot.OFFHAND);
+            ItemStack itemStackOffHand = playerEntity.getInventory().offHand.get(0);
             ItemStack itemStackAlternativeMainHand = ((DuckPlayerInventoryMixin) playerEntity.getInventory()).rpginventory$getAlternativeMainHand();
             ItemStack itemStackAlternativeOffHand = ((DuckPlayerInventoryMixin) playerEntity.getInventory()).rpginventory$getAlternativeOffhand();
             boolean isMainHandSheathed = ((DuckPlayerEntityMixin) playerEntity).rpginventory$isMainHandStackSheathed();

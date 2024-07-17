@@ -219,6 +219,14 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
         }
     }
 
+    @Inject(method = "getEquippedStack", at = @At("HEAD"), cancellable = true)
+    public void rpginventory$getEquippedStack(EquipmentSlot slot, CallbackInfoReturnable<ItemStack> cir) {
+        if (slot == EquipmentSlot.OFFHAND) {
+            cir.setReturnValue(((DuckPlayerInventoryMixin)this.inventory).rpginventory$getOffHandStack());
+            cir.cancel();
+        }
+    }
+
     /**
      * @author TheRedBrain
      * @reason

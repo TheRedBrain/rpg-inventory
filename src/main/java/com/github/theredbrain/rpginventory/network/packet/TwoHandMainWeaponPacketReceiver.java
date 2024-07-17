@@ -7,7 +7,6 @@ import com.github.theredbrain.rpginventory.registry.Tags;
 import com.github.theredbrain.staminaattributes.entity.StaminaUsingEntity;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
@@ -22,7 +21,7 @@ public class TwoHandMainWeaponPacketReceiver implements ServerPlayNetworking.Pla
         if (mainHandItemStack.isEmpty()) {
             mainHandItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSheathedMainHand().copy();
         }
-        ItemStack offHandItemStack = player.getEquippedStack(EquipmentSlot.OFFHAND).copy();
+        ItemStack offHandItemStack = player.getInventory().offHand.get(0).copy();
         if (offHandItemStack.isEmpty()) {
             offHandItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSheathedOffhand().copy();
         }
@@ -44,11 +43,11 @@ public class TwoHandMainWeaponPacketReceiver implements ServerPlayNetworking.Pla
             }
         } else if (((DuckPlayerEntityMixin) player).rpginventory$isOffHandStackSheathed()) {
             ((DuckPlayerEntityMixin) player).rpginventory$setIsOffHandStackSheathed(false);
-            player.equipStack(EquipmentSlot.OFFHAND, offHandItemStack);
+            player.getInventory().offHand.set(0, offHandItemStack);
             ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedOffhand(ItemStack.EMPTY);
         } else {
             ((DuckPlayerEntityMixin) player).rpginventory$setIsOffHandStackSheathed(true);
-            player.equipStack(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
+            player.getInventory().offHand.set(0, ItemStack.EMPTY);
             ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedOffhand(offHandItemStack);
         }
         if (RPGInventory.isStaminaAttributesLoaded && !player.isCreative()) {
