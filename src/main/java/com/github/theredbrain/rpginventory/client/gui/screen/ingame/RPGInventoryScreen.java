@@ -31,8 +31,6 @@ import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffectUtil;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.StonecuttingRecipe;
 import net.minecraft.registry.Registries;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.ScreenTexts;
@@ -177,7 +175,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 		this.showAttributeScreen = !this.showAttributeScreen;
 		((ToggleInventoryScreenWidget) this.toggleShowAttributeScreenButton).setIsPressed(this.showAttributeScreen);
 		this.toggleShowAttributeScreenButton.setTooltip(this.showAttributeScreen ? Tooltip.of(TOGGLE_SHOW_ATTRIBUTES_BUTTON_TOOLTIP_TEXT_ON) : Tooltip.of(TOGGLE_SHOW_ATTRIBUTES_BUTTON_TOOLTIP_TEXT_OFF));
-		((DuckPlayerScreenHandlerMixin)this.handler).setIsAttributeScreenVisible(this.showAttributeScreen);
+		((DuckPlayerScreenHandlerMixin)this.handler).rpginventory$setIsAttributeScreenVisible(this.showAttributeScreen);
 	}
 
 	@Override
@@ -192,7 +190,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 		}
 		super.init();
 		this.showAttributeScreen = RPGInventoryClient.clientConfig.show_attribute_screen_when_opening_inventory_screen;
-		((DuckPlayerScreenHandlerMixin)this.handler).setIsAttributeScreenVisible(this.showAttributeScreen);
+		((DuckPlayerScreenHandlerMixin)this.handler).rpginventory$setIsAttributeScreenVisible(this.showAttributeScreen);
 		this.toggleShowAttributeScreenButton = this.addDrawableChild(new ToggleInventoryScreenWidget(this.x + 6, this.y + 19, this.showAttributeScreen, button -> this.toggleShowAttributeScreen()));
 		this.toggleShowAttributeScreenButton.setTooltip(Tooltip.of(this.showAttributeScreen ? TOGGLE_SHOW_ATTRIBUTES_BUTTON_TOOLTIP_TEXT_ON : TOGGLE_SHOW_ATTRIBUTES_BUTTON_TOOLTIP_TEXT_OFF));
 

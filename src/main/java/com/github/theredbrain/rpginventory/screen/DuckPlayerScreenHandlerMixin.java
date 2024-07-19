@@ -1,6 +1,6 @@
 package com.github.theredbrain.rpginventory.screen;
 
 public interface DuckPlayerScreenHandlerMixin {
-	boolean isAttributeScreenVisible();
-	void setIsAttributeScreenVisible(boolean isAttributeScreenVisible);
+	boolean rpginventory$isAttributeScreenVisible();
+	void rpginventory$setIsAttributeScreenVisible(boolean isAttributeScreenVisible);
 }

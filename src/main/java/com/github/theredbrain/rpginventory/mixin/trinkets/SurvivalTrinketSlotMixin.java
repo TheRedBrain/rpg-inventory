@@ -106,7 +106,7 @@ public abstract class SurvivalTrinketSlotMixin extends Slot {
 	@Inject(method = "isEnabled", at = @At(value = "HEAD"), cancellable = true)
 	public void rpginventory$isEnabled_checkForRecipeBook(CallbackInfoReturnable<Boolean> cir) {
 		if (alwaysVisible && x < 0 && trinketInventory.getComponent().getEntity() instanceof PlayerEntity player) {
-			if (player.currentScreenHandler instanceof DuckPlayerScreenHandlerMixin playerScreenHandler && playerScreenHandler.isAttributeScreenVisible()) {
+			if (player.currentScreenHandler instanceof DuckPlayerScreenHandlerMixin playerScreenHandler && playerScreenHandler.rpginventory$isAttributeScreenVisible()) {
 				cir.setReturnValue(false);
 				cir.cancel();
 			}

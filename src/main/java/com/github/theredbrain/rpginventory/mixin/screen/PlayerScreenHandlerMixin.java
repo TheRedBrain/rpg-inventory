@@ -504,12 +504,12 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 	}
 
 	@Override
-	public boolean isAttributeScreenVisible() {
-		return isAttributeScreenVisible;
+	public boolean rpginventory$isAttributeScreenVisible() {
+		return this.isAttributeScreenVisible;
 	}
 
 	@Override
-	public void setIsAttributeScreenVisible(boolean isAttributeScreenVisible) {
-		isAttributeScreenVisible = isAttributeScreenVisible;
+	public void rpginventory$setIsAttributeScreenVisible(boolean isAttributeScreenVisible) {
+		this.isAttributeScreenVisible = isAttributeScreenVisible;
 	}
 }
