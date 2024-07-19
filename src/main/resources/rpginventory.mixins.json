@@ -8,6 +8,8 @@
 		"entity.attribute.EntityAttributesMixin",
 		"entity.player.PlayerEntityMixin",
 		"entity.player.PlayerInventoryMixin",
+		"item.ItemMixin",
+		"item.ItemStackMixin",
 		"screen.PlayerScreenHandlerEquipmentSlotsMixin",
 		"screen.PlayerScreenHandlerMixin",
 		"screen.PlayerScreenHandlerOffHandSlotMixin",

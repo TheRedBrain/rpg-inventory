@@ -19,6 +19,9 @@ public class ClientConfig implements ConfigData {
 	public int alternative_hand_slots_y_offset = -23;
 	public boolean show_armor_bar = false;
 	public boolean show_attribute_screen_when_opening_inventory_screen = false;
+	public boolean slots_with_unusable_items_have_overlay = true;
+	public int first_overlay_colour_for_slots_with_unusable_items = -1602211792;
+	public int second_overlay_colour_for_slots_with_unusable_items = -1602211792;
 	// TODO
 	//  format where only difference to base value is shown
 	@Comment("""

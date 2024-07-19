@@ -118,7 +118,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 		for (int var6 = 0; var6 < var5; ++var6) {
 			int i = var4[var6];
 			ItemStack itemStack = (ItemStack) this.armor.get(i);
-			if ((!damageSource.isIn(DamageTypeTags.IS_FIRE) || !itemStack.getItem().isFireproof()) && itemStack.getItem() instanceof ArmorItem) {
+			if ((!damageSource.isIn(DamageTypeTags.IS_FIRE) || !itemStack.getItem().isFireproof()) && itemStack.getItem() instanceof ArmorItem && ItemUtils.isUsable(itemStack)) {
 				itemStack.damage((int) finalAmount, (LivingEntity) this.player, (Consumer) ((player) -> {
 					((LivingEntity) player).sendEquipmentBreakStatus(EquipmentSlot.fromTypeIndex(EquipmentSlot.Type.ARMOR, i));
 				}));
@@ -129,7 +129,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 			// armor trinkets
 			TrinketsApi.getTrinketComponent(player).ifPresent(trinkets ->
 					trinkets.forEach((slotReference, itemStack) -> {
-						if ((!(damageSource.isIn(DamageTypeTags.IS_FIRE)) || itemStack.getItem().isFireproof()) && itemStack.isIn(Tags.ARMOR_TRINKETS) && ItemUtils.isUsable(itemStack)) {
+						if ((!damageSource.isIn(DamageTypeTags.IS_FIRE) || itemStack.getItem().isFireproof()) && itemStack.isIn(Tags.ARMOR_TRINKETS) && ItemUtils.isUsable(itemStack)) {
 							itemStack.damage((int) finalAmount, this.player, player -> TrinketsApi.onTrinketBroken(itemStack, slotReference, player));
 						}
 					}));

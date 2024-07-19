@@ -66,6 +66,10 @@ Active and visible status effects are listed on the right side of the inventory 
 Attributes and their values are listed on the left side of the inventory. This can be toggled on/off with a button.
 The client config allows extensive customization of the attribute screen.
 
+## Unusable Items
+Items in the "unusable_when_low_durability" item tag have the same behaviour as elytra. Instead of getting destroyed when losing all durability, they become unusable until they are repaired. Unusable items have a different translation key (default one + "_broken").
+Inventory slots that contain unusable items have an overlay of a configurable colour. This can be disabled in the client config.
+
 ## Additional settings and features
 The 2x2 crafting grid in the player inventory can be disabled.
 

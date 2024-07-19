@@ -1,3 +1,8 @@
+# 1.8.0
+
+- the "unusable items" feature is now properly implemented
+- fixed an issue where connecting to a dedicated server would fail (for real this time!)
+
 # 1.7.1
 
 - fixed an issue where connecting to a dedicated server would fail

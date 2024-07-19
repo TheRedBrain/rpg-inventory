@@ -8,7 +8,6 @@ import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.screen.DuckPlayerScreenHandlerMixin;
 import com.github.theredbrain.slotcustomizationapi.api.SlotCustomization;
 import com.google.common.collect.Ordering;
-import com.mojang.blaze3d.systems.RenderSystem;
 import dev.emi.trinkets.Point;
 import dev.emi.trinkets.TrinketPlayerScreenHandler;
 import dev.emi.trinkets.TrinketScreen;
@@ -23,7 +22,6 @@ import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.StatusEffectSpriteManager;
 import net.minecraft.client.util.math.Rect2i;
@@ -32,7 +30,6 @@ import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffectUtil;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.ScreenTexts;
@@ -174,9 +171,10 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 	}
 
 	private void toggleShowAttributeScreen() {
-		((ToggleInventoryScreenWidget) this.toggleShowAttributeScreenButton).setIsPressed(!this.showAttributeScreen);
-		this.toggleShowAttributeScreenButton.setTooltip(this.showAttributeScreen ? Tooltip.of(TOGGLE_SHOW_ATTRIBUTES_BUTTON_TOOLTIP_TEXT_OFF) : Tooltip.of(TOGGLE_SHOW_ATTRIBUTES_BUTTON_TOOLTIP_TEXT_ON));
 		this.showAttributeScreen = !this.showAttributeScreen;
+		((ToggleInventoryScreenWidget) this.toggleShowAttributeScreenButton).setIsPressed(this.showAttributeScreen);
+		this.toggleShowAttributeScreenButton.setTooltip(this.showAttributeScreen ? Tooltip.of(TOGGLE_SHOW_ATTRIBUTES_BUTTON_TOOLTIP_TEXT_ON) : Tooltip.of(TOGGLE_SHOW_ATTRIBUTES_BUTTON_TOOLTIP_TEXT_OFF));
+		((DuckPlayerScreenHandlerMixin)this.handler).setIsAttributeScreenVisible(this.showAttributeScreen);
 	}
 
 	@Override
@@ -191,6 +189,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 		}
 		super.init();
 		this.showAttributeScreen = RPGInventoryClient.clientConfig.show_attribute_screen_when_opening_inventory_screen;
+		((DuckPlayerScreenHandlerMixin)this.handler).setIsAttributeScreenVisible(this.showAttributeScreen);
 		this.toggleShowAttributeScreenButton = this.addDrawableChild(new ToggleInventoryScreenWidget(this.x + 6, this.y + 19, this.showAttributeScreen, button -> this.toggleShowAttributeScreen()));
 		this.toggleShowAttributeScreenButton.setTooltip(Tooltip.of(this.showAttributeScreen ? TOGGLE_SHOW_ATTRIBUTES_BUTTON_TOOLTIP_TEXT_ON : TOGGLE_SHOW_ATTRIBUTES_BUTTON_TOOLTIP_TEXT_OFF));
 
@@ -258,8 +257,6 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 		TrinketScreenManager.drawExtraGroups(context);
 	}
 
-	@Override
-	public void drawSlot(DrawContext context, Slot slot) {
 	private void drawAttributeScreen(DrawContext context, int mouseX, int mouseY) {
 		if (!this.showAttributeScreen) {
 			return;
