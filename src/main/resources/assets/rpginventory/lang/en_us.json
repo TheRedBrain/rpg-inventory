@@ -41,6 +41,22 @@
 
 	"item.rpginventory.default_empty_hand_weapon": "",
 
+	"item.additional_tooltip.functionality.two_handed_item": "Needs to be held with both hands",
+
+	"item.additional_tooltip.equipment_slot.helmet": "Can be equipped in the helmet slot",
+	"item.additional_tooltip.equipment_slot.necklace": "Can be equipped in the necklace slot",
+	"item.additional_tooltip.equipment_slot.chest_plate": "Can be equipped in the chest plate slot",
+	"item.additional_tooltip.equipment_slot.shoulders": "Can be equipped in the shoulders slot",
+	"item.additional_tooltip.equipment_slot.gloves": "Can be equipped in the gloves slot",
+	"item.additional_tooltip.equipment_slot.ring_unique": "Can be equipped in a ring slot, but only once at a time",
+	"item.additional_tooltip.equipment_slot.ring": "Can be equipped in a ring slot",
+	"item.additional_tooltip.equipment_slot.belt": "Can be equipped in the belt slot",
+	"item.additional_tooltip.equipment_slot.both_hands": "Can be held in both hands",
+	"item.additional_tooltip.equipment_slot.main_hand": "Can be held in the main hand",
+	"item.additional_tooltip.equipment_slot.offhand": "Can be held in the offhand",
+	"item.additional_tooltip.equipment_slot.spell": "Can be equipped in a spell slot",
+	"item.additional_tooltip.equipment_slot.leggings": "Can be equipped in the leggings slot",
+	"item.additional_tooltip.equipment_slot.boots": "Can be equipped in the boots slot",
 
 	"key.rpginventory.sheatheWeapons": "Sheathe Weapons",
 	"key.rpginventory.twoHandMainWeapon": "Toggle Two-handing Stance",

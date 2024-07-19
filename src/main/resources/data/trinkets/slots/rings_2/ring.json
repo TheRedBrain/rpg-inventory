@@ -4,6 +4,6 @@
 		"rpginventory:can_change_equipment"
 	],
 	"tooltip_predicates": [
-		"rpginventory:rings_predicate"
+		"trinkets:none"
 	]
 }

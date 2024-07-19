@@ -17,26 +17,6 @@ import java.util.Objects;
 public class PredicateRegistry {
 
 	static {
-		TrinketsApi.registerTrinketPredicate(RPGInventory.identifier("rings_predicate"), (stack, ref, entity) -> {
-			// TODO
-			String group = ref.inventory().getSlotType().getGroup();
-//            stack.isIn(Tags.SPELLS)
-//            var map = TrinketsApi.getTrinket(stack.getItem()).getModifiers(stack, ref, entity, SlotAttributes.getUuid(ref));
-			if (Objects.equals(group, "rings_1")) {
-				return TriState.TRUE;
-			}
-			return TriState.FALSE;
-		});
-		TrinketsApi.registerTrinketPredicate(RPGInventory.identifier("spells_predicate"), (stack, ref, entity) -> {
-			// TODO
-			String group = ref.inventory().getSlotType().getGroup();
-//            stack.isIn(Tags.SPELLS)
-//            var map = TrinketsApi.getTrinket(stack.getItem()).getModifiers(stack, ref, entity, SlotAttributes.getUuid(ref));
-			if (Objects.equals(group, "spell_slot_1")) {
-				return TriState.TRUE;
-			}
-			return TriState.FALSE;
-		});
 		TrinketsApi.registerTrinketPredicate(RPGInventory.identifier("can_change_equipment"), (stack, ref, entity) -> {
 
 			StatusEffect civilisation_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.civilisation_status_effect_identifier));

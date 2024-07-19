@@ -9,8 +9,12 @@ import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 )
 public class ServerConfig implements ConfigData {
 
-	@Comment("When true, all main and offhand slots can only hold items in the item tags 'rpginventory:main_hand_items' and 'rpginventory:offhand_items', respectively.")
-	public boolean are_hand_items_restricted_to_item_tags = false;
+	@Comment("""
+			When true, all main and offhand slots can only hold items in the item tags 'rpginventory:main_hand_items' and 'rpginventory:offhand_items', respectively.
+			
+			It is recommended to not set this to false and instead add items to the item tags when necessary. All other items can still be accessed via the hotbar.
+			""")
+	public boolean are_hand_items_restricted_to_item_tags = true;
 
 	@Comment("When false, toggling the two-handed stance is not possible when the main hand is sheathed.")
 	public boolean always_allow_toggling_two_handed_stance = false;
