@@ -8,12 +8,12 @@ public class ClientEventsRegistry {
 
 	public static void initializeClientEvents() {
 		ItemTooltipCallback.EVENT.register((stack, context, lines) -> {
-			if (stack.isIn(Tags.TWO_HANDED_ITEMS) && RPGInventoryClient.clientConfig.show_tooltip_two_handed_items) {
+			if (stack.isIn(Tags.TWO_HANDED_ITEMS) && RPGInventoryClient.clientConfig.show_item_tooltip_two_handed_items) {
 				lines.add(Text.translatable("item.additional_tooltip.functionality.two_handed_item"));
 			}
 
 			// equipment slots
-			if (RPGInventoryClient.clientConfig.show_tooltip_equipment_slots) {
+			if (RPGInventoryClient.clientConfig.show_item_tooltip_equipment_slots) {
 				if (stack.isIn(Tags.HELMETS)) {
 					lines.add(Text.translatable("item.additional_tooltip.equipment_slot.helmet"));
 				}

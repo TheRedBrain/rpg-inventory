@@ -6,6 +6,7 @@ import com.github.theredbrain.rpginventory.RPGInventoryClient;
 import com.github.theredbrain.rpginventory.client.gui.widget.ToggleInventoryScreenWidget;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.screen.DuckPlayerScreenHandlerMixin;
+import com.github.theredbrain.rpginventory.screen.DuckSlotMixin;
 import com.github.theredbrain.slotcustomizationapi.api.SlotCustomization;
 import com.google.common.collect.Ordering;
 import dev.emi.trinkets.Point;
@@ -30,6 +31,8 @@ import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffectUtil;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.recipe.StonecuttingRecipe;
 import net.minecraft.registry.Registries;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.ScreenTexts;
@@ -193,6 +196,19 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 		this.toggleShowAttributeScreenButton = this.addDrawableChild(new ToggleInventoryScreenWidget(this.x + 6, this.y + 19, this.showAttributeScreen, button -> this.toggleShowAttributeScreen()));
 		this.toggleShowAttributeScreenButton.setTooltip(Tooltip.of(this.showAttributeScreen ? TOGGLE_SHOW_ATTRIBUTES_BUTTON_TOOLTIP_TEXT_ON : TOGGLE_SHOW_ATTRIBUTES_BUTTON_TOOLTIP_TEXT_OFF));
 
+	}
+
+	@Override
+	protected void drawMouseoverTooltip(DrawContext context, int x, int y) {
+		super.drawMouseoverTooltip(context, x, y);
+		if (RPGInventoryClient.clientConfig.show_slot_tooltips && this.handler.getCursorStack().isEmpty() && this.focusedSlot != null && !this.focusedSlot.hasStack()) {
+			if (this.focusedSlot instanceof DuckSlotMixin slotWithTooltip) {
+				List<Text> list = slotWithTooltip.rpginventory$getSlotTooltipText();
+				if (!list.isEmpty()) {
+					context.drawTooltip(this.textRenderer, list, Optional.empty(), x, y);
+				}
+			}
+		}
 	}
 
 	@Override

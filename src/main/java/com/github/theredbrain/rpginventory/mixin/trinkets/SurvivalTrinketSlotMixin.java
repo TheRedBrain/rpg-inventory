@@ -4,8 +4,10 @@ import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
 import com.github.theredbrain.rpginventory.screen.DuckPlayerScreenHandlerMixin;
+import com.github.theredbrain.rpginventory.screen.DuckSlotMixin;
 import dev.emi.trinkets.SurvivalTrinketSlot;
 import dev.emi.trinkets.api.SlotGroup;
+import dev.emi.trinkets.api.SlotType;
 import dev.emi.trinkets.api.TrinketInventory;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
@@ -14,14 +16,19 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Mixin(value = SurvivalTrinketSlot.class)
@@ -39,6 +46,21 @@ public abstract class SurvivalTrinketSlotMixin extends Slot {
 
 	public SurvivalTrinketSlotMixin(Inventory inventory, int index, int x, int y) {
 		super(inventory, index, x, y);
+	}
+
+	@Inject(method = "<init>", at = @At("TAIL"))
+	public void SurvivalTrinketSlot(TrinketInventory inventory, int index, int x, int y, SlotGroup group, SlotType type, int slotOffset, boolean alwaysVisible, CallbackInfo ci) {
+		addSlotTooltip(this, group.getName(), type.getName());
+	}
+
+	@Unique
+	private static void addSlotTooltip(Slot slot, String groupName, String slotName) {
+		List<Text> list = new ArrayList<>();
+		Text text = Text.translatable("slot.tooltip." + groupName + "." + slotName);
+		if (!text.getString().isEmpty()) {
+			list.add(text);
+			((DuckSlotMixin)slot).rpginventory$setSlotTooltipText(list);
+		}
 	}
 
 	@Inject(method = "canInsert", at = @At("RETURN"), cancellable = true)

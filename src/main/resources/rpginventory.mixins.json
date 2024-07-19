@@ -13,6 +13,7 @@
 		"screen.PlayerScreenHandlerEquipmentSlotsMixin",
 		"screen.PlayerScreenHandlerMixin",
 		"screen.PlayerScreenHandlerOffHandSlotMixin",
+		"screen.SlotMixin",
 		"server.network.EntityTrackerEntryMixin",
 		"server.network.ServerPlayerEntityMixin",
 		"server.network.ServerPlayNetworkHandlerMixin",

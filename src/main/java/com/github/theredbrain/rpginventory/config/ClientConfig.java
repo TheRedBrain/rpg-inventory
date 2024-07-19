@@ -22,8 +22,9 @@ public class ClientConfig implements ConfigData {
 	public boolean slots_with_unusable_items_have_overlay = true;
 	public int first_overlay_colour_for_slots_with_unusable_items = -1602211792;
 	public int second_overlay_colour_for_slots_with_unusable_items = -1602211792;
-	public boolean show_tooltip_two_handed_items = true;
-	public boolean show_tooltip_equipment_slots = true;
+	public boolean show_slot_tooltips = true;
+	public boolean show_item_tooltip_two_handed_items = true;
+	public boolean show_item_tooltip_equipment_slots = true;
 	// TODO
 	//  format where only difference to base value is shown
 	@Comment("""
