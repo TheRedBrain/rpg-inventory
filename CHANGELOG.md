@@ -1,6 +1,7 @@
 # 1.8.0
 
 - the "unusable items" feature is now properly implemented
+- added various tooltips to items/inventory slots. This is customizable via the client config
 - fixed an issue where connecting to a dedicated server would fail (for real this time!)
 
 # 1.7.1

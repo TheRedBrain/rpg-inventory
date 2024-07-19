@@ -70,6 +70,24 @@ The client config allows extensive customization of the attribute screen.
 Items in the "unusable_when_low_durability" item tag have the same behaviour as elytra. Instead of getting destroyed when losing all durability, they become unusable until they are repaired. Unusable items have a different translation key (default one + "_broken").
 Inventory slots that contain unusable items have an overlay of a configurable colour. This can be disabled in the client config.
 
+## Additional Item Tooltips
+These are separated into categories. Each category can be disabled in the client config.
+- the slots an item can be equipped in, this is controlled by item tags.
+- if an item is in the "two_handed_items" item tag.
+
+## Slot Tooltips
+Equipment and trinket slots now have a tooltip. It is only shown when the slot and the cursor stack are empty. This feature can be disabled in the client config.
+
+All trinket slots have a tooltip. It can be set in the lang file with this schema:
+
+```json
+{
+	"slot.tooltip.<group_name>.<slot_name>": "Test Slot"
+}
+```
+
+When the string is empty, no tooltip will be shown.
+
 ## Additional settings and features
 The 2x2 crafting grid in the player inventory can be disabled.
 
