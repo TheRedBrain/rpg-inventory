@@ -5,6 +5,7 @@ import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.RPGInventoryClient;
 import com.github.theredbrain.rpginventory.client.gui.widget.ToggleInventoryScreenWidget;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
+import com.github.theredbrain.rpginventory.screen.DuckPlayerScreenHandlerMixin;
 import com.github.theredbrain.slotcustomizationapi.api.SlotCustomization;
 import com.google.common.collect.Ordering;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -259,23 +260,6 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 
 	@Override
 	public void drawSlot(DrawContext context, Slot slot) {
-		super.drawSlot(context, slot);
-
-		// draw slot overlay
-		ItemStack stack = slot.getStack();
-		if (!stack.isEmpty() && stack.isDamageable() && stack.getDamage() >= stack.getMaxDamage() - 1) {
-			drawDisabledItemSlotHighlight(context, slot.x, slot.y, 0);
-		}
-	}
-
-	public static void drawDisabledItemSlotHighlight(DrawContext context, int x, int y, int z) {
-		RenderSystem.disableDepthTest();
-		RenderSystem.colorMask(true, true, true, false);
-		context.fillGradient(RenderLayer.getGuiOverlay(), x, y, x + 16, y + 16, -1602211792, -1602211792, z);
-		RenderSystem.colorMask(true, true, true, true);
-		RenderSystem.enableDepthTest();
-	}
-
 	private void drawAttributeScreen(DrawContext context, int mouseX, int mouseY) {
 		if (!this.showAttributeScreen) {
 			return;

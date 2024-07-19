@@ -2,6 +2,7 @@ package com.github.theredbrain.rpginventory.mixin.screen;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
+import com.github.theredbrain.rpginventory.screen.DuckPlayerScreenHandlerMixin;
 import com.github.theredbrain.slotcustomizationapi.api.SlotCustomization;
 import com.google.common.collect.ImmutableList;
 import dev.emi.trinkets.Point;
@@ -45,7 +46,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @Mixin(PlayerScreenHandler.class)
-public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements TrinketPlayerScreenHandler {
+public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements TrinketPlayerScreenHandler, DuckPlayerScreenHandlerMixin {
 	@Shadow
 	@Final
 	private PlayerEntity owner;
@@ -68,6 +69,9 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 	private int groupCount = 0;
 	@Unique
 	private PlayerInventory inventory;
+
+	@Unique
+	private boolean isAttributeScreenVisible = false;
 
 	public PlayerScreenHandlerMixin() {
 		super(null, 0);
@@ -473,5 +477,15 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 			}
 		}
 		return itemStack;
+	}
+
+	@Override
+	public boolean isAttributeScreenVisible() {
+		return isAttributeScreenVisible;
+	}
+
+	@Override
+	public void setIsAttributeScreenVisible(boolean isAttributeScreenVisible) {
+		isAttributeScreenVisible = isAttributeScreenVisible;
 	}
 }

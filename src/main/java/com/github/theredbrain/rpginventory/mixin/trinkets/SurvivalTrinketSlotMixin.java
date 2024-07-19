@@ -1,14 +1,12 @@
 package com.github.theredbrain.rpginventory.mixin.trinkets;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
-import com.github.theredbrain.rpginventory.client.gui.screen.ingame.RPGInventoryScreen;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
-import com.llamalad7.mixinextras.sugar.Local;
+import com.github.theredbrain.rpginventory.screen.DuckPlayerScreenHandlerMixin;
 import dev.emi.trinkets.SurvivalTrinketSlot;
 import dev.emi.trinkets.api.SlotGroup;
 import dev.emi.trinkets.api.TrinketInventory;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.player.PlayerEntity;
@@ -36,6 +34,8 @@ public abstract class SurvivalTrinketSlotMixin extends Slot {
 	@Shadow
 	@Final
 	private SlotGroup group;
+
+	@Shadow @Final private boolean alwaysVisible;
 
 	public SurvivalTrinketSlotMixin(Inventory inventory, int index, int x, int y) {
 		super(inventory, index, x, y);
@@ -81,10 +81,10 @@ public abstract class SurvivalTrinketSlotMixin extends Slot {
 		cir.setReturnValue(cir.getReturnValue() && (hasCivilisationEffect || (bl && !hasWildernessEffect) || player.isCreative()));
 	}
 
-	@Inject(method = "isEnabled", at = @At(value = "JUMP", ordinal = 3), cancellable = true)
-	public void rpginventory$isEnabled_checkForRecipeBook(CallbackInfoReturnable<Boolean> cir, @Local Screen s) {
-		if (s instanceof RPGInventoryScreen rpgInventoryScreen) {
-			if (rpgInventoryScreen.trinkets$isRecipeBookOpen()) {
+	@Inject(method = "isEnabled", at = @At(value = "HEAD"), cancellable = true)
+	public void rpginventory$isEnabled_checkForRecipeBook(CallbackInfoReturnable<Boolean> cir) {
+		if (alwaysVisible && x < 0 && trinketInventory.getComponent().getEntity() instanceof PlayerEntity player) {
+			if (player.currentScreenHandler instanceof DuckPlayerScreenHandlerMixin playerScreenHandler && playerScreenHandler.isAttributeScreenVisible()) {
 				cir.setReturnValue(false);
 				cir.cancel();
 			}
