@@ -2,6 +2,7 @@ package com.github.theredbrain.rpginventory.mixin.screen;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
+import com.github.theredbrain.rpginventory.registry.Tags;
 import com.github.theredbrain.rpginventory.screen.DuckPlayerScreenHandlerMixin;
 import com.github.theredbrain.rpginventory.screen.DuckSlotMixin;
 import com.github.theredbrain.slotcustomizationapi.api.SlotCustomization;
@@ -377,8 +378,6 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 		}
 	}
 
-	// TODO find way to reliably insert into alternative hand slots only if main slot is not empty
-
 	/**
 	 * @author TheRedBrain
 	 * @reason total overhaul
@@ -387,26 +386,39 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 	public ItemStack quickMove(PlayerEntity player, int index) {
 		Slot slot = slots.get(index);
 
-		StatusEffect civilisation_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.civilisation_status_effect_identifier));
-		boolean hasCivilisationEffect = civilisation_status_effect != null && player.hasStatusEffect(civilisation_status_effect);
+		// TODO adventure hotbar items
+//		StatusEffect civilisation_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.civilisation_status_effect_identifier));
+//		boolean hasCivilisationEffect = civilisation_status_effect != null && player.hasStatusEffect(civilisation_status_effect);
+//
+//		StatusEffect wilderness_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.wilderness_status_effect_identifier));
+//		boolean hasWildernessEffect = wilderness_status_effect != null && player.hasStatusEffect(wilderness_status_effect);
+//
+//		boolean canChangeEquipment = true;
+//
+//		if (player.getServer() != null) {
+//			canChangeEquipment = player.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT);
+//		}
+//		hasCivilisationEffect = hasCivilisationEffect || (canChangeEquipment && !hasWildernessEffect);
 
-		StatusEffect wilderness_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.wilderness_status_effect_identifier));
-		boolean hasWildernessEffect = wilderness_status_effect != null && player.hasStatusEffect(wilderness_status_effect);
+		ItemStack itemStack = ItemStack.EMPTY;
+		boolean mainHandSlotIsEmpty = false;
+		int mainHandSlotIndex = -1;
+		boolean alternativeMainHandSlotIsEmpty = false;
+		int alternativeMainHandSlotIndex = -1;
+		boolean alternativeOffHandSlotIsEmpty = false;
+		int alternativeOffHandSlotIndex = -1;
 
-		if (player.getServer() != null) {
-			hasCivilisationEffect = hasCivilisationEffect || (player.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT) && !hasWildernessEffect);
-		}
 		if (slot.hasStack()) {
 			ItemStack stack = slot.getStack();
-			hasCivilisationEffect = true;//hasCivilisationEffect || stack.isIn(Tags.ADVENTURE_HOTBAR_ITEMS); // TODO disabled for now
+//			hasCivilisationEffect = true;//hasCivilisationEffect || stack.isIn(Tags.ADVENTURE_HOTBAR_ITEMS); // TODO disabled for now
 			if (index >= trinketSlotStart && index < trinketSlotEnd) {
-				if (!this.insertItem(stack, 9, hasCivilisationEffect ? 45 : 36, false)) {
+				if (!this.insertItem(stack, 9, 45/*hasCivilisationEffect ? 45 : 36*/, false)) {
 					return ItemStack.EMPTY;
 				} else {
 					return stack;
 				}
 			} else if (index >= 9 && index < 45) {
-				TrinketsApi.getTrinketComponent(player).ifPresent(trinkets -> {
+				if (TrinketsApi.getTrinketComponent(player).isPresent()) {
 					for (int i = trinketSlotStart; i < trinketSlotEnd; i++) {
 						Slot s = slots.get(i);
 						if (!(s instanceof SurvivalTrinketSlot) || !s.canInsert(stack)) {
@@ -429,6 +441,22 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 							continue;
 						}
 
+						if (Objects.equals(type.getGroup(), "main_hand") && Objects.equals(type.getName(), "main_hand")) {
+							mainHandSlotIsEmpty = s.getStack().isEmpty();
+							mainHandSlotIndex = i;
+							continue;
+						}
+						if (Objects.equals(type.getGroup(), "alternative_main_hand") && Objects.equals(type.getName(), "alternative_main_hand")) {
+							alternativeMainHandSlotIsEmpty = s.getStack().isEmpty();
+							alternativeMainHandSlotIndex = i;
+							continue;
+						}
+						if (Objects.equals(type.getGroup(), "alternative_offhand") && Objects.equals(type.getName(), "alternative_offhand")) {
+							alternativeOffHandSlotIsEmpty = s.getStack().isEmpty();
+							alternativeOffHandSlotIndex = i;
+							continue;
+						}
+
 						boolean res = TrinketsApi.evaluatePredicateSet(type.getQuickMovePredicates(), stack, ref, player);
 
 						if (res) {
@@ -445,25 +473,25 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 							}
 						}
 					}
-				});
+				}
 			}
 		}
-		ItemStack itemStack = ItemStack.EMPTY;
 		if (slot.hasStack()) {
 			ItemStack itemStack2 = slot.getStack();
+//			hasCivilisationEffect = hasCivilisationEffect || itemStack2.isIn(Tags.ADVENTURE_HOTBAR_ITEMS); // TODO adventure hotbar items
 			itemStack = itemStack2.copy();
 			EquipmentSlot equipmentSlot = MobEntity.getPreferredEquipmentSlot(itemStack);
 			if (index == 0) {
-				if (!this.insertItem(itemStack2, 9, 45, true)) {
+				if (!this.insertItem(itemStack2, 9, 45, true)) {// TODO adventure hotbar items
 					return ItemStack.EMPTY;
 				}
 				slot.onQuickTransfer(itemStack2, itemStack);
 			} else if (index >= 1 && index < 5) {
-				if (!this.insertItem(itemStack2, 9, 45, false)) {
+				if (!this.insertItem(itemStack2, 9, 45, false)) {// TODO adventure hotbar items
 					return ItemStack.EMPTY;
 				}
 			} else if (index >= 5 && index < 9) {
-				if (!this.insertItem(itemStack2, 9, 45, false)) {
+				if (!this.insertItem(itemStack2, 9, 45, false)) {// TODO adventure hotbar items
 					return ItemStack.EMPTY;
 				}
 			} else if (equipmentSlot.getType() == EquipmentSlot.Type.ARMOR && !((Slot) this.slots.get(8 - equipmentSlot.getEntitySlotId())).hasStack()) {
@@ -471,19 +499,50 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 				if (!this.insertItem(itemStack2, i, i + 1, false)) {
 					return ItemStack.EMPTY;
 				}
-			} else if (equipmentSlot == EquipmentSlot.OFFHAND && !((Slot) this.slots.get(45)).hasStack()) {
+			} else if (index >= 9 && index < 45 && itemStack2.isIn(Tags.MAIN_HAND_ITEMS) && mainHandSlotIsEmpty) {
+				Slot s = slots.get(mainHandSlotIndex);
+				if (s instanceof SurvivalTrinketSlot ts && s.canInsert(itemStack2)) {
+
+					SlotType type = ts.getType();
+					SlotReference ref = new SlotReference((TrinketInventory) ts.inventory, ts.getIndex());
+					boolean res = TrinketsApi.evaluatePredicateSet(type.getQuickMovePredicates(), itemStack2, ref, player);
+
+					if (res) {
+						if (!this.insertItem(itemStack2, mainHandSlotIndex, mainHandSlotIndex + 1, false)) {
+							return ItemStack.EMPTY;
+						}
+						if (player.getWorld().isClient) {
+							TrinketsClient.quickMoveTimer = 20;
+							TrinketsClient.quickMoveGroup = TrinketsApi.getPlayerSlots(this.owner).get(type.getGroup());
+							if (ref.index() > 0) {
+								TrinketsClient.quickMoveType = type;
+							} else {
+								TrinketsClient.quickMoveType = null;
+							}
+						}
+					}
+				}
+			} else if (index >= 9 && index < 45 && !((Slot) this.slots.get(45)).hasStack()) {
 				if (!this.insertItem(itemStack2, 45, 46, false)) {
 					return ItemStack.EMPTY;
 				}
+			} else if (index >= 9 && index < 45 && itemStack2.isIn(Tags.MAIN_HAND_ITEMS) && alternativeMainHandSlotIsEmpty) {
+				if (!this.insertItem(itemStack2, alternativeMainHandSlotIndex, alternativeMainHandSlotIndex + 1, false)) {
+					return ItemStack.EMPTY;
+				}
+			} else if (index >= 9 && index < 45 && itemStack2.isIn(Tags.OFFHAND_ITEMS) && alternativeOffHandSlotIsEmpty) {
+				if (!this.insertItem(itemStack2, alternativeOffHandSlotIndex, alternativeOffHandSlotIndex + 1, false)) {
+					return ItemStack.EMPTY;
+				}
 			} else if (index >= 9 && index < 36) {
-				if (!this.insertItem(itemStack2, 36, 45, false)) {
+				if (!this.insertItem(itemStack2, 36, 45, false)) {// TODO adventure hotbar items
 					return ItemStack.EMPTY;
 				}
 			} else if (index >= 36 && index < 45) {
 				if (!this.insertItem(itemStack2, 9, 36, false)) {
 					return ItemStack.EMPTY;
 				}
-			} else if (!this.insertItem(itemStack2, 9, 45, false)) {
+			} else if (!this.insertItem(itemStack2, 9, 45, false)) {// TODO adventure hotbar items
 				return ItemStack.EMPTY;
 			}
 

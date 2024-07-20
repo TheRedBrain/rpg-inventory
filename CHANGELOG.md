@@ -1,3 +1,7 @@
+# next version
+
+- improved quick moving (shift-clicking) items in the RPG inventory screen
+
 # 1.8.0
 
 - the "unusable items" feature is now properly implemented
