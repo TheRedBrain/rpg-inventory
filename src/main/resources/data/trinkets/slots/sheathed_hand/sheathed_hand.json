@@ -1,7 +1,7 @@
 {
 	"icon": "minecraft:item/empty_slot_sword",
 	"quick_move_predicates": [
-		"rpginventory:can_change_main_hand_slot"
+		"rpginventory:can_change_sheathed_hand_slot"
 	],
 	"tooltip_predicates": [
 		"trinkets:none"

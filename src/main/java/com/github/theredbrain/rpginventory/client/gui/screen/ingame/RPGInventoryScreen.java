@@ -254,8 +254,8 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 		context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.rings_1_group_x_offset - 1, j + serverConfig.rings_1_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
 		context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.rings_2_group_x_offset - 1, j + serverConfig.rings_2_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
 		context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.gloves_group_x_offset - 1, j + serverConfig.gloves_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
-		context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.main_hand_group_x_offset - 1, j + serverConfig.main_hand_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
-		context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.alternative_main_hand_group_x_offset - 1, j + serverConfig.alternative_main_hand_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
+		context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.hand_group_x_offset - 1, j + serverConfig.hand_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
+		context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.alternative_hand_group_x_offset - 1, j + serverConfig.alternative_hand_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
 		context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.alternative_offhand_group_x_offset - 1, j + serverConfig.alternative_offhand_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
 
 		if (this.showAttributeScreen) {

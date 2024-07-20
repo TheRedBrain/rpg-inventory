@@ -205,13 +205,13 @@ public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScre
 			return new Rect2i(134, 5, 17, 17);
 		} else if (Objects.equals(groupName, "gloves")) {
 			return new Rect2i(8, 32, 17, 17);
-		} else if (Objects.equals(groupName, "main_hand")) {
+		} else if (Objects.equals(groupName, "hand")) {
 			return new Rect2i(98, 32, 17, 17);
-		} else if (Objects.equals(groupName, "sheathed_main_hand")) {
+		} else if (Objects.equals(groupName, "sheathed_hand")) {
 			return new Rect2i(98, 32, 17, 17);
 		} else if (Objects.equals(groupName, "sheathed_offhand")) {
 			return new Rect2i(116, 32, 17, 17);
-		} else if (Objects.equals(groupName, "alternative_main_hand")) {
+		} else if (Objects.equals(groupName, "alternative_hand")) {
 			return new Rect2i(134, 32, 17, 17);
 		} else if (Objects.equals(groupName, "alternative_offhand")) {
 			return new Rect2i(152, 32, 17, 17);

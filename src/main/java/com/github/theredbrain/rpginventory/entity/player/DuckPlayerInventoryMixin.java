@@ -11,29 +11,29 @@ public interface DuckPlayerInventoryMixin {
 	ItemStack rpginventory$getOffHandStack();
 
 	// these methods get/set the ItemStacks in the TrinketSlot inventories
-	ItemStack rpginventory$getEmptyMainHand();
+	ItemStack rpginventory$getEmptyHand();
 
-	ItemStack rpginventory$setEmptyMainHand(ItemStack itemStack);
+	ItemStack rpginventory$setEmptyHand(ItemStack itemStack);
 
 	ItemStack rpginventory$getEmptyOffhand();
 
 	ItemStack rpginventory$setEmptyOffhand(ItemStack itemStack);
 
-	ItemStack rpginventory$getSheathedMainHand();
+	ItemStack rpginventory$getSheathedHand();
 
-	ItemStack rpginventory$setSheathedMainHand(ItemStack itemStack);
+	ItemStack rpginventory$setSheathedHand(ItemStack itemStack);
 
 	ItemStack rpginventory$getSheathedOffhand();
 
 	ItemStack rpginventory$setSheathedOffhand(ItemStack itemStack);
 
-	ItemStack rpginventory$getMainHand();
+	ItemStack rpginventory$getHand();
 
-	ItemStack rpginventory$setMainHand(ItemStack itemStack);
+	ItemStack rpginventory$setHand(ItemStack itemStack);
 
-	ItemStack rpginventory$getAlternativeMainHand();
+	ItemStack rpginventory$getAlternativeHand();
 
-	ItemStack rpginventory$setAlternativeMainHand(ItemStack itemStack);
+	ItemStack rpginventory$setAlternativeHand(ItemStack itemStack);
 
 	ItemStack rpginventory$getAlternativeOffhand();
 

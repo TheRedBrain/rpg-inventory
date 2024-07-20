@@ -21,12 +21,12 @@ public class SwapHandItemsPacketReceiver implements ServerPlayNetworking.PlayPac
 		ItemStack itemStack;
 		ItemStack alternativeItemStack;
 
-		boolean mainHandIsSheathed = ((DuckPlayerEntityMixin) player).rpginventory$isMainHandStackSheathed();
+		boolean handIsSheathed = ((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed();
 		boolean offHandIsSheathed = ((DuckPlayerEntityMixin) player).rpginventory$isOffHandStackSheathed();
 
 		if (mainHand) {
-			itemStack = mainHandIsSheathed ? ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSheathedMainHand().copy() : ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getMainHand().copy();
-			alternativeItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getAlternativeMainHand().copy();
+			itemStack = handIsSheathed ? ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSheathedHand().copy() : ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getHand().copy();
+			alternativeItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getAlternativeHand().copy();
 		} else {
 			itemStack = offHandIsSheathed ? ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSheathedOffhand().copy() : player.getInventory().offHand.get(0).copy();
 			alternativeItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getAlternativeOffhand().copy();
@@ -41,12 +41,12 @@ public class SwapHandItemsPacketReceiver implements ServerPlayNetworking.PlayPac
 		}
 
 		if (mainHand) {
-			if (mainHandIsSheathed) {
-				((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedMainHand(alternativeItemStack);
+			if (handIsSheathed) {
+				((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedHand(alternativeItemStack);
 			} else {
-				((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setMainHand(alternativeItemStack);
+				((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setHand(alternativeItemStack);
 			}
-			((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setAlternativeMainHand(itemStack);
+			((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setAlternativeHand(itemStack);
 		} else {
 			if (offHandIsSheathed) {
 				((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedOffhand(alternativeItemStack);

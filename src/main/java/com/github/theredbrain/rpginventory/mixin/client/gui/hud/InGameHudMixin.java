@@ -65,14 +65,14 @@ public abstract class InGameHudMixin {
 		PlayerEntity playerEntity = this.getCameraPlayer();
 		if (playerEntity != null) {
 			ClientConfig clientConfig = RPGInventoryClient.clientConfig;
-			ItemStack itemStackMainHand = ((DuckPlayerInventoryMixin) playerEntity.getInventory()).rpginventory$getMainHand();
+			ItemStack itemStackHand = ((DuckPlayerInventoryMixin) playerEntity.getInventory()).rpginventory$getHand();
 			ItemStack itemStackOffHand = playerEntity.getInventory().offHand.get(0);
-			ItemStack itemStackAlternativeMainHand = ((DuckPlayerInventoryMixin) playerEntity.getInventory()).rpginventory$getAlternativeMainHand();
+			ItemStack itemStackAlternativeHand = ((DuckPlayerInventoryMixin) playerEntity.getInventory()).rpginventory$getAlternativeHand();
 			ItemStack itemStackAlternativeOffHand = ((DuckPlayerInventoryMixin) playerEntity.getInventory()).rpginventory$getAlternativeOffhand();
-			boolean isMainHandSheathed = ((DuckPlayerEntityMixin) playerEntity).rpginventory$isMainHandStackSheathed();
+			boolean isHandSheathed = ((DuckPlayerEntityMixin) playerEntity).rpginventory$isHandStackSheathed();
 			boolean isOffhandSheathed = ((DuckPlayerEntityMixin) playerEntity).rpginventory$isOffHandStackSheathed();
-			if (isMainHandSheathed) {
-				itemStackMainHand = ((DuckPlayerInventoryMixin) playerEntity.getInventory()).rpginventory$getSheathedMainHand();
+			if (isHandSheathed) {
+				itemStackHand = ((DuckPlayerInventoryMixin) playerEntity.getInventory()).rpginventory$getSheathedHand();
 			}
 			if (isOffhandSheathed) {
 				itemStackOffHand = ((DuckPlayerInventoryMixin) playerEntity.getInventory()).rpginventory$getSheathedOffhand();
@@ -83,14 +83,14 @@ public abstract class InGameHudMixin {
 			int x = this.scaledWidth / 2 + clientConfig.hand_slots_x_offset;
 			int y = this.scaledHeight + 4 + clientConfig.hand_slots_y_offset;
 			boolean offhand_slot_is_right = clientConfig.offhand_item_is_right;
-			this.renderHotbarItem(context, x + 23, y, tickDelta, playerEntity, offhand_slot_is_right ? itemStackOffHand : itemStackMainHand, l++);
-			this.renderHotbarItem(context, x + 3, y, tickDelta, playerEntity, offhand_slot_is_right ? itemStackMainHand : itemStackOffHand, l++);
+			this.renderHotbarItem(context, x + 23, y, tickDelta, playerEntity, offhand_slot_is_right ? itemStackOffHand : itemStackHand, l++);
+			this.renderHotbarItem(context, x + 3, y, tickDelta, playerEntity, offhand_slot_is_right ? itemStackHand : itemStackOffHand, l++);
 
 			// sheathed hand indicator
-			if ((!isMainHandSheathed && offhand_slot_is_right) || (!isOffhandSheathed && !offhand_slot_is_right)) {
+			if ((!isHandSheathed && offhand_slot_is_right) || (!isOffhandSheathed && !offhand_slot_is_right)) {
 				context.drawTexture(WIDGETS_TEXTURE, x - 1, y - 4, 0, 22, 24, 24);
 			}
-			if ((!isOffhandSheathed && offhand_slot_is_right) || (!isMainHandSheathed && !offhand_slot_is_right)) {
+			if ((!isOffhandSheathed && offhand_slot_is_right) || (!isHandSheathed && !offhand_slot_is_right)) {
 				context.drawTexture(UNSHEATHED_RIGHT_HAND_SLOT_SELECTOR_TEXTURE, x + 19, y - 4, 0, 0, 24, 24, 24, 24);
 			}
 
@@ -98,8 +98,8 @@ public abstract class InGameHudMixin {
 			x = this.scaledWidth / 2 + clientConfig.alternative_hand_slots_x_offset;
 			y = this.scaledHeight + 4 + clientConfig.alternative_hand_slots_y_offset;
 			boolean alternative_offhand_slot_is_right = clientConfig.alternative_offhand_item_is_right;
-			this.renderHotbarItem(context, x + 10, y, tickDelta, playerEntity, alternative_offhand_slot_is_right ? itemStackAlternativeMainHand : itemStackAlternativeOffHand, l++);
-			this.renderHotbarItem(context, x + 30, y, tickDelta, playerEntity, alternative_offhand_slot_is_right ? itemStackAlternativeOffHand : itemStackAlternativeMainHand, l);
+			this.renderHotbarItem(context, x + 10, y, tickDelta, playerEntity, alternative_offhand_slot_is_right ? itemStackAlternativeHand : itemStackAlternativeOffHand, l++);
+			this.renderHotbarItem(context, x + 30, y, tickDelta, playerEntity, alternative_offhand_slot_is_right ? itemStackAlternativeOffHand : itemStackAlternativeHand, l);
 		}
 	}
 
@@ -108,12 +108,12 @@ public abstract class InGameHudMixin {
 			at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V", ordinal = 1)
 	)
 	private boolean rpginventory$checkIfSelectedHotbarSlotIndicatorShouldBeRendered(DrawContext instance, Identifier texture, int x, int y, int u, int v, int width, int height) {
-		boolean isMainHandSheathed = false;
+		boolean isHandSheathed = false;
 		PlayerEntity playerEntity = this.getCameraPlayer();
 		if (playerEntity != null) {
-			isMainHandSheathed = ((DuckPlayerEntityMixin) playerEntity).rpginventory$isMainHandStackSheathed();
+			isHandSheathed = ((DuckPlayerEntityMixin) playerEntity).rpginventory$isHandStackSheathed();
 		}
-		return isMainHandSheathed || RPGInventoryClient.clientConfig.always_show_selected_hotbar_slot;
+		return isHandSheathed || RPGInventoryClient.clientConfig.always_show_selected_hotbar_slot;
 	}
 
 	// effectively disables rendering of the normal offhand slot in the HUD

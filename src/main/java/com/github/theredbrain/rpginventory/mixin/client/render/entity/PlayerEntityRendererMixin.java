@@ -1,6 +1,6 @@
 package com.github.theredbrain.rpginventory.mixin.client.render.entity;
 
-import com.github.theredbrain.rpginventory.client.render.renderer.SheathedMainHandItemFeatureRenderer;
+import com.github.theredbrain.rpginventory.client.render.renderer.SheathedHandItemFeatureRenderer;
 import com.github.theredbrain.rpginventory.client.render.renderer.SheathedOffHandItemFeatureRenderer;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import net.fabricmc.api.EnvType;
@@ -30,7 +30,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
 
 	@Inject(method = "<init>", at = @At("TAIL"))
 	private void rpginventory$init(EntityRendererFactory.Context ctx, boolean slim, CallbackInfo info) {
-		this.addFeature(new SheathedMainHandItemFeatureRenderer<>(this, ctx.getHeldItemRenderer()));
+		this.addFeature(new SheathedHandItemFeatureRenderer<>(this, ctx.getHeldItemRenderer()));
 		this.addFeature(new SheathedOffHandItemFeatureRenderer<>(this, ctx.getHeldItemRenderer()));
 	}
 

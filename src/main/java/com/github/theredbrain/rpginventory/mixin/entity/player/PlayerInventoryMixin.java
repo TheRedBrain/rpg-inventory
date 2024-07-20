@@ -60,10 +60,10 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 
 	@Inject(method = "getMainHandStack", at = @At("HEAD"), cancellable = true)
 	public void rpginventory$getMainHandStack(CallbackInfoReturnable<ItemStack> cir) {
-		ItemStack emptyMainHandStack = rpginventory$getEmptyMainHand();
-		ItemStack mainHandStack = rpginventory$getMainHand();
-		if (!((DuckPlayerEntityMixin) player).rpginventory$isMainHandStackSheathed()) {
-			cir.setReturnValue(ItemUtils.isUsable(mainHandStack) ? mainHandStack : emptyMainHandStack);
+		ItemStack emptyHandStack = rpginventory$getEmptyHand();
+		ItemStack handStack = rpginventory$getHand();
+		if (!((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed()) {
+			cir.setReturnValue(ItemUtils.isUsable(handStack) ? handStack : emptyHandStack);
 			cir.cancel();
 		}
 	}
@@ -136,52 +136,52 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 		}
 	}
 
-	public ItemStack rpginventory$getMainHand() {
-		ItemStack mainHandStack = this.main.get(this.selectedSlot);
+	public ItemStack rpginventory$getHand() {
+		ItemStack handStack = this.main.get(this.selectedSlot);
 		Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
 		if (trinkets.isPresent()) {
-			if (trinkets.get().getInventory().get("main_hand") != null) {
-				if (trinkets.get().getInventory().get("main_hand").get("main_hand") != null) {
-					mainHandStack = trinkets.get().getInventory().get("main_hand").get("main_hand").getStack(0);
+			if (trinkets.get().getInventory().get("hand") != null) {
+				if (trinkets.get().getInventory().get("hand").get("hand") != null) {
+					handStack = trinkets.get().getInventory().get("hand").get("hand").getStack(0);
 				}
 			}
 		}
-		return mainHandStack;
+		return handStack;
 	}
 
-	public ItemStack rpginventory$setMainHand(ItemStack itemStack) {
-		ItemStack oldStack = rpginventory$getMainHand();
+	public ItemStack rpginventory$setHand(ItemStack itemStack) {
+		ItemStack oldStack = rpginventory$getHand();
 		Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
 		if (trinkets.isPresent()) {
-			if (trinkets.get().getInventory().get("main_hand") != null) {
-				if (trinkets.get().getInventory().get("main_hand").get("main_hand") != null) {
-					trinkets.get().getInventory().get("main_hand").get("main_hand").setStack(0, itemStack);
+			if (trinkets.get().getInventory().get("hand") != null) {
+				if (trinkets.get().getInventory().get("hand").get("hand") != null) {
+					trinkets.get().getInventory().get("hand").get("hand").setStack(0, itemStack);
 				}
 			}
 		}
 		return oldStack;
 	}
 
-	public ItemStack rpginventory$getAlternativeMainHand() {
-		ItemStack alternativeMainHandStack = ItemStack.EMPTY;
+	public ItemStack rpginventory$getAlternativeHand() {
+		ItemStack alternativeHandStack = ItemStack.EMPTY;
 		Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
 		if (trinkets.isPresent()) {
-			if (trinkets.get().getInventory().get("alternative_main_hand") != null) {
-				if (trinkets.get().getInventory().get("alternative_main_hand").get("alternative_main_hand") != null) {
-					alternativeMainHandStack = trinkets.get().getInventory().get("alternative_main_hand").get("alternative_main_hand").getStack(0);
+			if (trinkets.get().getInventory().get("alternative_hand") != null) {
+				if (trinkets.get().getInventory().get("alternative_hand").get("alternative_hand") != null) {
+					alternativeHandStack = trinkets.get().getInventory().get("alternative_hand").get("alternative_hand").getStack(0);
 				}
 			}
 		}
-		return alternativeMainHandStack;
+		return alternativeHandStack;
 	}
 
-	public ItemStack rpginventory$setAlternativeMainHand(ItemStack itemStack) {
-		ItemStack oldStack = rpginventory$getAlternativeMainHand();
+	public ItemStack rpginventory$setAlternativeHand(ItemStack itemStack) {
+		ItemStack oldStack = rpginventory$getAlternativeHand();
 		Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
 		if (trinkets.isPresent()) {
-			if (trinkets.get().getInventory().get("alternative_main_hand") != null) {
-				if (trinkets.get().getInventory().get("alternative_main_hand").get("alternative_main_hand") != null) {
-					trinkets.get().getInventory().get("alternative_main_hand").get("alternative_main_hand").setStack(0, itemStack);
+			if (trinkets.get().getInventory().get("alternative_hand") != null) {
+				if (trinkets.get().getInventory().get("alternative_hand").get("alternative_hand") != null) {
+					trinkets.get().getInventory().get("alternative_hand").get("alternative_hand").setStack(0, itemStack);
 				}
 			}
 		}
@@ -214,26 +214,26 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 		return oldStack;
 	}
 
-	public ItemStack rpginventory$getEmptyMainHand() {
-		ItemStack emptyMainHandStack = ItemStack.EMPTY;
+	public ItemStack rpginventory$getEmptyHand() {
+		ItemStack emptyHandStack = ItemStack.EMPTY;
 		Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
 		if (trinkets.isPresent()) {
-			if (trinkets.get().getInventory().get("empty_main_hand") != null) {
-				if (trinkets.get().getInventory().get("empty_main_hand").get("empty_main_hand") != null) {
-					emptyMainHandStack = trinkets.get().getInventory().get("empty_main_hand").get("empty_main_hand").getStack(0);
+			if (trinkets.get().getInventory().get("empty_hand") != null) {
+				if (trinkets.get().getInventory().get("empty_hand").get("empty_hand") != null) {
+					emptyHandStack = trinkets.get().getInventory().get("empty_hand").get("empty_hand").getStack(0);
 				}
 			}
 		}
-		return emptyMainHandStack;
+		return emptyHandStack;
 	}
 
-	public ItemStack rpginventory$setEmptyMainHand(ItemStack itemStack) {
-		ItemStack oldStack = rpginventory$getEmptyMainHand();
+	public ItemStack rpginventory$setEmptyHand(ItemStack itemStack) {
+		ItemStack oldStack = rpginventory$getEmptyHand();
 		Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
 		if (trinkets.isPresent()) {
-			if (trinkets.get().getInventory().get("empty_main_hand") != null) {
-				if (trinkets.get().getInventory().get("empty_main_hand").get("empty_main_hand") != null) {
-					trinkets.get().getInventory().get("empty_main_hand").get("empty_main_hand").setStack(0, itemStack);
+			if (trinkets.get().getInventory().get("empty_hand") != null) {
+				if (trinkets.get().getInventory().get("empty_hand").get("empty_hand") != null) {
+					trinkets.get().getInventory().get("empty_hand").get("empty_hand").setStack(0, itemStack);
 				}
 			}
 		}
@@ -266,26 +266,26 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 		return oldStack;
 	}
 
-	public ItemStack rpginventory$getSheathedMainHand() {
+	public ItemStack rpginventory$getSheathedHand() {
 		ItemStack sheathedMainHandStack = ItemStack.EMPTY;
 		Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
 		if (trinkets.isPresent()) {
-			if (trinkets.get().getInventory().get("sheathed_main_hand") != null) {
-				if (trinkets.get().getInventory().get("sheathed_main_hand").get("sheathed_main_hand") != null) {
-					sheathedMainHandStack = trinkets.get().getInventory().get("sheathed_main_hand").get("sheathed_main_hand").getStack(0);
+			if (trinkets.get().getInventory().get("sheathed_hand") != null) {
+				if (trinkets.get().getInventory().get("sheathed_hand").get("sheathed_hand") != null) {
+					sheathedMainHandStack = trinkets.get().getInventory().get("sheathed_hand").get("sheathed_hand").getStack(0);
 				}
 			}
 		}
 		return sheathedMainHandStack;
 	}
 
-	public ItemStack rpginventory$setSheathedMainHand(ItemStack itemStack) {
-		ItemStack oldStack = rpginventory$getSheathedMainHand();
+	public ItemStack rpginventory$setSheathedHand(ItemStack itemStack) {
+		ItemStack oldStack = rpginventory$getSheathedHand();
 		Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
 		if (trinkets.isPresent()) {
-			if (trinkets.get().getInventory().get("sheathed_main_hand") != null) {
-				if (trinkets.get().getInventory().get("sheathed_main_hand").get("sheathed_main_hand") != null) {
-					trinkets.get().getInventory().get("sheathed_main_hand").get("sheathed_main_hand").setStack(0, itemStack);
+			if (trinkets.get().getInventory().get("sheathed_hand") != null) {
+				if (trinkets.get().getInventory().get("sheathed_hand").get("sheathed_hand") != null) {
+					trinkets.get().getInventory().get("sheathed_hand").get("sheathed_hand").setStack(0, itemStack);
 				}
 			}
 		}

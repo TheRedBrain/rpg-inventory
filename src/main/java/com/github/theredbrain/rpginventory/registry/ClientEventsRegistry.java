@@ -39,10 +39,10 @@ public class ClientEventsRegistry {
 				if (stack.isIn(Tags.BELTS)) {
 					lines.add(Text.translatable("item.additional_tooltip.equipment_slot.belt"));
 				}
-				if (stack.isIn(Tags.MAIN_HAND_ITEMS) && stack.isIn(Tags.OFFHAND_ITEMS)) {
+				if (stack.isIn(Tags.HAND_ITEMS) && stack.isIn(Tags.OFFHAND_ITEMS)) {
 					lines.add(Text.translatable("item.additional_tooltip.equipment_slot.both_hands"));
-				} else if (stack.isIn(Tags.MAIN_HAND_ITEMS)) {
-					lines.add(Text.translatable("item.additional_tooltip.equipment_slot.main_hand"));
+				} else if (stack.isIn(Tags.HAND_ITEMS)) {
+					lines.add(Text.translatable("item.additional_tooltip.equipment_slot.hand"));
 				} else if (stack.isIn(Tags.OFFHAND_ITEMS)) {
 					lines.add(Text.translatable("item.additional_tooltip.equipment_slot.offhand"));
 				}

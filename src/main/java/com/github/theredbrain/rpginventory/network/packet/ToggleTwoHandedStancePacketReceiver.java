@@ -13,13 +13,13 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 
-public class TwoHandMainWeaponPacketReceiver implements ServerPlayNetworking.PlayPacketHandler<TwoHandMainWeaponPacket> {
+public class ToggleTwoHandedStancePacketReceiver implements ServerPlayNetworking.PlayPacketHandler<ToggleTwoHandedStancePacket> {
 	@Override
-	public void receive(TwoHandMainWeaponPacket packet, ServerPlayerEntity player, PacketSender responseSender) {
+	public void receive(ToggleTwoHandedStancePacket packet, ServerPlayerEntity player, PacketSender responseSender) {
 
-		ItemStack mainHandItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getMainHand().copy();
-		if (mainHandItemStack.isEmpty()) {
-			mainHandItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSheathedMainHand().copy();
+		ItemStack handItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getHand().copy();
+		if (handItemStack.isEmpty()) {
+			handItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSheathedHand().copy();
 		}
 		ItemStack offHandItemStack = player.getInventory().offHand.get(0).copy();
 		if (offHandItemStack.isEmpty()) {
@@ -32,14 +32,14 @@ public class TwoHandMainWeaponPacketReceiver implements ServerPlayNetworking.Pla
 		} else if (player.getMainHandStack().isIn(Tags.NON_TWO_HANDED_ITEMS)) {
 			player.sendMessageToClient(Text.translatable("hud.message.nonTwoHandedWeaponEquipped"), true);
 			return;
-		} else if (((DuckPlayerEntityMixin) player).rpginventory$isMainHandStackSheathed() && ((DuckPlayerEntityMixin) player).rpginventory$isOffHandStackSheathed()) {
+		} else if (((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed() && ((DuckPlayerEntityMixin) player).rpginventory$isOffHandStackSheathed()) {
 			if (!RPGInventory.serverConfig.always_allow_toggling_two_handed_stance) {
 				player.sendMessageToClient(Text.translatable("hud.message.weaponsAreSheathed"), true);
 				return;
 			} else {
-				((DuckPlayerEntityMixin) player).rpginventory$setIsMainHandStackSheathed(false);
-				((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setMainHand(mainHandItemStack);
-				((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedMainHand(ItemStack.EMPTY);
+				((DuckPlayerEntityMixin) player).rpginventory$setIsHandStackSheathed(false);
+				((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setHand(handItemStack);
+				((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedHand(ItemStack.EMPTY);
 			}
 		} else if (((DuckPlayerEntityMixin) player).rpginventory$isOffHandStackSheathed()) {
 			((DuckPlayerEntityMixin) player).rpginventory$setIsOffHandStackSheathed(false);

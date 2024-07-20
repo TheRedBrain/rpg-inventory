@@ -1,6 +1,7 @@
 # next version
 
 - improved quick moving (shift-clicking) items in the RPG inventory screen
+- refactored "main_hand" slots to "hand" slots. This should improve compatibility with other mods.
 
 # 1.8.0
 

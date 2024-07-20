@@ -10,7 +10,7 @@ public class Tags {
 	public static final TagKey<Item> ATTACK_ITEMS = TagKey.of(RegistryKeys.ITEM, RPGInventory.identifier("attack_items"));
 	public static final TagKey<Item> TWO_HANDED_ITEMS = TagKey.of(RegistryKeys.ITEM, RPGInventory.identifier("two_handed_items"));
 	public static final TagKey<Item> NON_TWO_HANDED_ITEMS = TagKey.of(RegistryKeys.ITEM, RPGInventory.identifier("non_two_handed_items"));
-	public static final TagKey<Item> MAIN_HAND_ITEMS = TagKey.of(RegistryKeys.ITEM, RPGInventory.identifier("main_hand_items"));
+	public static final TagKey<Item> HAND_ITEMS = TagKey.of(RegistryKeys.ITEM, RPGInventory.identifier("hand_items"));
 	public static final TagKey<Item> OFFHAND_ITEMS = TagKey.of(RegistryKeys.ITEM, RPGInventory.identifier("offhand_items"));
 	public static final TagKey<Item> EMPTY_HAND_WEAPONS = TagKey.of(RegistryKeys.ITEM, RPGInventory.identifier("empty_hand_weapons"));
 	public static final TagKey<Item> HELMETS = TagKey.of(RegistryKeys.ITEM, RPGInventory.identifier("helmets"));

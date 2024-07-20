@@ -125,8 +125,8 @@ public abstract class SurvivalTrinketSlotMixin extends Slot {
 				|| (Objects.equals(this.group.getName(), "spell_slot_6") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 6)
 				|| (Objects.equals(this.group.getName(), "spell_slot_7") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 7)
 				|| (Objects.equals(this.group.getName(), "spell_slot_8") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 8)
-				|| (Objects.equals(this.group.getName(), "main_hand") && trinketInventory.getComponent().getEntity() instanceof PlayerEntity && ((DuckPlayerEntityMixin) trinketInventory.getComponent().getEntity()).rpginventory$isMainHandStackSheathed())
-				|| (Objects.equals(this.group.getName(), "sheathed_main_hand") && trinketInventory.getComponent().getEntity() instanceof PlayerEntity && !((DuckPlayerEntityMixin) trinketInventory.getComponent().getEntity()).rpginventory$isMainHandStackSheathed())
+				|| (Objects.equals(this.group.getName(), "hand") && trinketInventory.getComponent().getEntity() instanceof PlayerEntity && ((DuckPlayerEntityMixin) trinketInventory.getComponent().getEntity()).rpginventory$isHandStackSheathed())
+				|| (Objects.equals(this.group.getName(), "sheathed_hand") && trinketInventory.getComponent().getEntity() instanceof PlayerEntity && !((DuckPlayerEntityMixin) trinketInventory.getComponent().getEntity()).rpginventory$isHandStackSheathed())
 				|| (Objects.equals(this.group.getName(), "sheathed_offhand") && trinketInventory.getComponent().getEntity() instanceof PlayerEntity && !((DuckPlayerEntityMixin) trinketInventory.getComponent().getEntity()).rpginventory$isOffHandStackSheathed())
 		));
 	}
@@ -144,8 +144,8 @@ public abstract class SurvivalTrinketSlotMixin extends Slot {
 				|| (Objects.equals(this.group.getName(), "spell_slot_6") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 6)
 				|| (Objects.equals(this.group.getName(), "spell_slot_7") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 7)
 				|| (Objects.equals(this.group.getName(), "spell_slot_8") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 8)
-				|| (Objects.equals(this.group.getName(), "main_hand") && trinketInventory.getComponent().getEntity() instanceof PlayerEntity && ((DuckPlayerEntityMixin) trinketInventory.getComponent().getEntity()).rpginventory$isMainHandStackSheathed())
-				|| (Objects.equals(this.group.getName(), "sheathed_main_hand") && trinketInventory.getComponent().getEntity() instanceof PlayerEntity && !((DuckPlayerEntityMixin) trinketInventory.getComponent().getEntity()).rpginventory$isMainHandStackSheathed())
+				|| (Objects.equals(this.group.getName(), "hand") && trinketInventory.getComponent().getEntity() instanceof PlayerEntity && ((DuckPlayerEntityMixin) trinketInventory.getComponent().getEntity()).rpginventory$isHandStackSheathed())
+				|| (Objects.equals(this.group.getName(), "sheathed_hand") && trinketInventory.getComponent().getEntity() instanceof PlayerEntity && !((DuckPlayerEntityMixin) trinketInventory.getComponent().getEntity()).rpginventory$isHandStackSheathed())
 				|| (Objects.equals(this.group.getName(), "sheathed_offhand") && trinketInventory.getComponent().getEntity() instanceof PlayerEntity && !((DuckPlayerEntityMixin) trinketInventory.getComponent().getEntity()).rpginventory$isOffHandStackSheathed())
 		) {
 			cir.setReturnValue(false);

@@ -16,9 +16,9 @@ public class SheatheWeaponsPacketReceiver implements ServerPlayNetworking.PlayPa
 	@Override
 	public void receive(SheatheWeaponsPacket packet, ServerPlayerEntity player, PacketSender responseSender) {
 
-		ItemStack mainHandItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getMainHand().copy();
-		if (mainHandItemStack.isEmpty()) {
-			mainHandItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSheathedMainHand().copy();
+		ItemStack handItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getHand().copy();
+		if (handItemStack.isEmpty()) {
+			handItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSheathedHand().copy();
 		}
 		ItemStack offHandItemStack = player.getInventory().offHand.get(0).copy();
 		if (offHandItemStack.isEmpty()) {
@@ -29,18 +29,18 @@ public class SheatheWeaponsPacketReceiver implements ServerPlayNetworking.PlayPa
 			player.sendMessageToClient(Text.translatable("hud.message.staminaTooLow"), true);
 			return;
 		}
-		if (((DuckPlayerEntityMixin) player).rpginventory$isMainHandStackSheathed() && ((DuckPlayerEntityMixin) player).rpginventory$isOffHandStackSheathed()) {
-			((DuckPlayerEntityMixin) player).rpginventory$setIsMainHandStackSheathed(false);
+		if (((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed() && ((DuckPlayerEntityMixin) player).rpginventory$isOffHandStackSheathed()) {
+			((DuckPlayerEntityMixin) player).rpginventory$setIsHandStackSheathed(false);
 			((DuckPlayerEntityMixin) player).rpginventory$setIsOffHandStackSheathed(false);
-			((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setMainHand(mainHandItemStack);
-			((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedMainHand(ItemStack.EMPTY);
+			((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setHand(handItemStack);
+			((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedHand(ItemStack.EMPTY);
 			player.getInventory().offHand.set(0, offHandItemStack);
 			((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedOffhand(ItemStack.EMPTY);
 		} else {
-			((DuckPlayerEntityMixin) player).rpginventory$setIsMainHandStackSheathed(true);
+			((DuckPlayerEntityMixin) player).rpginventory$setIsHandStackSheathed(true);
 			((DuckPlayerEntityMixin) player).rpginventory$setIsOffHandStackSheathed(true);
-			((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setMainHand(ItemStack.EMPTY);
-			((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedMainHand(mainHandItemStack);
+			((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setHand(ItemStack.EMPTY);
+			((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedHand(handItemStack);
 			player.getInventory().offHand.set(0, ItemStack.EMPTY);
 			((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedOffhand(offHandItemStack);
 		}

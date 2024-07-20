@@ -12,8 +12,6 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 
-import java.util.Objects;
-
 public class PredicateRegistry {
 
 	static {
@@ -44,7 +42,7 @@ public class PredicateRegistry {
 			}
 			return TriState.FALSE;
 		});
-		TrinketsApi.registerTrinketPredicate(RPGInventory.identifier("can_change_main_hand_slot"), (stack, ref, entity) -> {
+		TrinketsApi.registerTrinketPredicate(RPGInventory.identifier("can_change_hand_slot"), (stack, ref, entity) -> {
 
 			StatusEffect civilisation_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.civilisation_status_effect_identifier));
 			boolean hasCivilisationEffect = civilisation_status_effect != null && entity.hasStatusEffect(civilisation_status_effect);
@@ -53,23 +51,23 @@ public class PredicateRegistry {
 			boolean hasWildernessEffect = wilderness_status_effect != null && entity.hasStatusEffect(wilderness_status_effect);
 
 			boolean isPlayerCreative = false;
-			boolean isMainHandSheathed = false;
+			boolean isHandSheathed = false;
 
 			if (entity instanceof PlayerEntity playerEntity) {
 				isPlayerCreative = playerEntity.isCreative();
-				isMainHandSheathed = ((DuckPlayerEntityMixin) playerEntity).rpginventory$isMainHandStackSheathed();
+				isHandSheathed = ((DuckPlayerEntityMixin) playerEntity).rpginventory$isHandStackSheathed();
 			}
 
 			if ((hasCivilisationEffect
 					|| isPlayerCreative
 					|| entity.getServer() == null
 					|| (entity.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT) && !hasWildernessEffect)
-			) && !isMainHandSheathed) {
+			) && !isHandSheathed) {
 				return TriState.TRUE;
 			}
 			return TriState.FALSE;
 		});
-		TrinketsApi.registerTrinketPredicate(RPGInventory.identifier("can_change_sheathed_main_hand_slot"), (stack, ref, entity) -> {
+		TrinketsApi.registerTrinketPredicate(RPGInventory.identifier("can_change_sheathed_hand_slot"), (stack, ref, entity) -> {
 
 			StatusEffect civilisation_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.civilisation_status_effect_identifier));
 			boolean hasCivilisationEffect = civilisation_status_effect != null && entity.hasStatusEffect(civilisation_status_effect);
@@ -78,18 +76,18 @@ public class PredicateRegistry {
 			boolean hasWildernessEffect = wilderness_status_effect != null && entity.hasStatusEffect(wilderness_status_effect);
 
 			boolean isPlayerCreative = false;
-			boolean isMainHandSheathed = false;
+			boolean isHandSheathed = false;
 
 			if (entity instanceof PlayerEntity playerEntity) {
 				isPlayerCreative = playerEntity.isCreative();
-				isMainHandSheathed = ((DuckPlayerEntityMixin) playerEntity).rpginventory$isMainHandStackSheathed();
+				isHandSheathed = ((DuckPlayerEntityMixin) playerEntity).rpginventory$isHandStackSheathed();
 			}
 
 			if ((hasCivilisationEffect
 					|| isPlayerCreative
 					|| entity.getServer() == null
 					|| (entity.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT) && !hasWildernessEffect)
-			) && isMainHandSheathed) {
+			) && isHandSheathed) {
 				return TriState.TRUE;
 			}
 			return TriState.FALSE;

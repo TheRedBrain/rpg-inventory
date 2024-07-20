@@ -50,7 +50,7 @@ public class ClientConfig implements ConfigData {
 			"ATTRIBUTE_VALUE:minecraft:generic.armor_toughness",
 			"ATTRIBUTE_VALUE:minecraft:generic.luck"
 	};
-	public LinkedHashMap<String, Float[]> sheathed_main_hand_item_positions = new LinkedHashMap<>() {{
+	public LinkedHashMap<String, Float[]> sheathed_hand_item_positions = new LinkedHashMap<>() {{
 		put("minecraft:crossbow", new Float[]{-0.3F, 0.1F, 0.16F, 0.0F, 0.0F, 0.06F, 0.0F, 90.0F, -10.0F});
 	}};
 	public LinkedHashMap<String, Float[]> sheathed_offhand_item_positions = new LinkedHashMap<>() {{

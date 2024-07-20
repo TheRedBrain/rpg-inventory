@@ -87,7 +87,6 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 	@Inject(method = "<init>", at = @At("TAIL"))
 	public void PlayerScreenHandler(PlayerInventory inventory, boolean onServer, PlayerEntity owner, CallbackInfo ci) {
 		this.inventory = inventory;
-		trinkets$updateTrinketSlots(true);
 
 		var serverConfig = RPGInventory.serverConfig;
 
@@ -157,6 +156,8 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 		List<Text> list45 = new ArrayList<>();
 		list45.add(Text.translatable("slot.tooltip.offhand"));
 		((DuckSlotMixin) this.slots.get(45)).rpginventory$setSlotTooltipText(list45);
+
+		trinkets$updateTrinketSlots(true);
 	}
 
 	@Override
@@ -175,7 +176,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 				trinketSlotEnd--;
 			}
 
-			int groupNum = 1; // Start at 1 because offhand exists
+			int groupNum = 0;//1; // Start at 1 because offhand exists
 			int extraGroupCount = 0;
 
 			for (SlotGroup group : groups.values().stream().sorted(Comparator.comparing(SlotGroup::getOrder)).toList()) {
@@ -213,12 +214,12 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 					} else if (Objects.equals(groupName, "gloves")) {
 						x = serverConfig.gloves_group_x_offset;
 						y = serverConfig.gloves_group_y_offset;
-					} else if (Objects.equals(groupName, "main_hand")) {
-						x = serverConfig.main_hand_group_x_offset;
-						y = serverConfig.main_hand_group_y_offset;
-					} else if (Objects.equals(groupName, "alternative_main_hand")) {
-						x = serverConfig.alternative_main_hand_group_x_offset;
-						y = serverConfig.alternative_main_hand_group_y_offset;
+					} else if (Objects.equals(groupName, "hand")) {
+						x = serverConfig.hand_group_x_offset;
+						y = serverConfig.hand_group_y_offset;
+					} else if (Objects.equals(groupName, "alternative_hand")) {
+						x = serverConfig.alternative_hand_group_x_offset;
+						y = serverConfig.alternative_hand_group_y_offset;
 					} else if (Objects.equals(groupName, "alternative_offhand")) {
 						x = serverConfig.alternative_offhand_group_x_offset;
 						y = serverConfig.alternative_offhand_group_y_offset;
@@ -246,13 +247,13 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 					} else if (Objects.equals(groupName, "spell_slot_8")) {
 						x = serverConfig.spell_slots_x_offset + 54;
 						y = serverConfig.spell_slots_y_offset + 18;
-					} else if (Objects.equals(groupName, "sheathed_main_hand")) {
-						x = serverConfig.main_hand_group_x_offset;
-						y = serverConfig.main_hand_group_y_offset;
+					} else if (Objects.equals(groupName, "sheathed_hand")) {
+						x = serverConfig.hand_group_x_offset;
+						y = serverConfig.hand_group_y_offset;
 					} else if (Objects.equals(groupName, "sheathed_offhand")) {
 						x = serverConfig.offhand_slot_x_offset;
 						y = serverConfig.offhand_slot_y_offset;
-					} else if (Objects.equals(groupName, "empty_main_hand") || Objects.equals(groupName, "empty_offhand")) {
+					} else if (Objects.equals(groupName, "empty_hand") || Objects.equals(groupName, "empty_offhand")) {
 						continue;
 					} else {
 						x = -14 - (extraGroupCount / 4) * 18;
@@ -441,12 +442,12 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 							continue;
 						}
 
-						if (Objects.equals(type.getGroup(), "main_hand") && Objects.equals(type.getName(), "main_hand")) {
+						if (Objects.equals(type.getGroup(), "hand") && Objects.equals(type.getName(), "hand")) {
 							mainHandSlotIsEmpty = s.getStack().isEmpty();
 							mainHandSlotIndex = i;
 							continue;
 						}
-						if (Objects.equals(type.getGroup(), "alternative_main_hand") && Objects.equals(type.getName(), "alternative_main_hand")) {
+						if (Objects.equals(type.getGroup(), "alternative_hand") && Objects.equals(type.getName(), "alternative_hand")) {
 							alternativeMainHandSlotIsEmpty = s.getStack().isEmpty();
 							alternativeMainHandSlotIndex = i;
 							continue;
@@ -499,7 +500,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 				if (!this.insertItem(itemStack2, i, i + 1, false)) {
 					return ItemStack.EMPTY;
 				}
-			} else if (index >= 9 && index < 45 && itemStack2.isIn(Tags.MAIN_HAND_ITEMS) && mainHandSlotIsEmpty) {
+			} else if (index >= 9 && index < 45 && itemStack2.isIn(Tags.HAND_ITEMS) && mainHandSlotIsEmpty) {
 				Slot s = slots.get(mainHandSlotIndex);
 				if (s instanceof SurvivalTrinketSlot ts && s.canInsert(itemStack2)) {
 
@@ -526,7 +527,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 				if (!this.insertItem(itemStack2, 45, 46, false)) {
 					return ItemStack.EMPTY;
 				}
-			} else if (index >= 9 && index < 45 && itemStack2.isIn(Tags.MAIN_HAND_ITEMS) && alternativeMainHandSlotIsEmpty) {
+			} else if (index >= 9 && index < 45 && itemStack2.isIn(Tags.HAND_ITEMS) && alternativeMainHandSlotIsEmpty) {
 				if (!this.insertItem(itemStack2, alternativeMainHandSlotIndex, alternativeMainHandSlotIndex + 1, false)) {
 					return ItemStack.EMPTY;
 				}

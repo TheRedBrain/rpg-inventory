@@ -2,7 +2,7 @@ package com.github.theredbrain.rpginventory.registry;
 
 import com.github.theredbrain.rpginventory.network.packet.SheatheWeaponsPacket;
 import com.github.theredbrain.rpginventory.network.packet.SwapHandItemsPacket;
-import com.github.theredbrain.rpginventory.network.packet.TwoHandMainWeaponPacket;
+import com.github.theredbrain.rpginventory.network.packet.ToggleTwoHandedStancePacket;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -13,12 +13,12 @@ import org.lwjgl.glfw.GLFW;
 public class KeyBindingsRegistry {
 
 	public static KeyBinding sheatheWeapons;
-	public static KeyBinding twoHandMainWeapon;
-	public static KeyBinding swapMainHand;
+	public static KeyBinding toggleTwoHandedStance;
+	public static KeyBinding swapHand;
 	public static KeyBinding swapOffHand;
 	public static boolean sheatheWeaponsBoolean;
-	public static boolean twoHandMainWeaponBoolean;
-	public static boolean swapMainHandBoolean;
+	public static boolean toggleTwoHandedStanceBoolean;
+	public static boolean swapHandBoolean;
 	public static boolean swapOffHandBoolean;
 
 	public static void registerKeyBindings() {
@@ -28,14 +28,14 @@ public class KeyBindingsRegistry {
 				GLFW.GLFW_KEY_G,
 				"category.rpginventory.category"
 		));
-		KeyBindingsRegistry.twoHandMainWeapon = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-				"key.rpginventory.twoHandMainWeapon",
+		KeyBindingsRegistry.toggleTwoHandedStance = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+				"key.rpginventory.toggleTwoHandedStance",
 				InputUtil.Type.KEYSYM,
 				GLFW.GLFW_KEY_H,
 				"category.rpginventory.category"
 		));
-		KeyBindingsRegistry.swapMainHand = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-				"key.rpginventory.swapMainHand",
+		KeyBindingsRegistry.swapHand = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+				"key.rpginventory.swapHand",
 				InputUtil.Type.KEYSYM,
 				GLFW.GLFW_KEY_X,
 				"category.rpginventory.category"
@@ -47,13 +47,13 @@ public class KeyBindingsRegistry {
 				"category.rpginventory.category"
 		));
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
-			if (KeyBindingsRegistry.swapMainHand.wasPressed()) {
-				if (!swapMainHandBoolean) {
+			if (KeyBindingsRegistry.swapHand.wasPressed()) {
+				if (!swapHandBoolean) {
 					syncSlotSwapHand(true);
 				}
-				swapMainHandBoolean = true;
-			} else if (swapMainHandBoolean) {
-				swapMainHandBoolean = false;
+				swapHandBoolean = true;
+			} else if (swapHandBoolean) {
+				swapHandBoolean = false;
 			}
 			if (KeyBindingsRegistry.swapOffHand.wasPressed()) {
 				if (!swapOffHandBoolean) {
@@ -71,13 +71,13 @@ public class KeyBindingsRegistry {
 			} else if (sheatheWeaponsBoolean) {
 				sheatheWeaponsBoolean = false;
 			}
-			if (KeyBindingsRegistry.twoHandMainWeapon.wasPressed()) {
-				if (!twoHandMainWeaponBoolean) {
-					twoHandMainWeapon();
+			if (KeyBindingsRegistry.toggleTwoHandedStance.wasPressed()) {
+				if (!toggleTwoHandedStanceBoolean) {
+					toggleTwoHandedStance();
 				}
-				twoHandMainWeaponBoolean = true;
-			} else if (twoHandMainWeaponBoolean) {
-				twoHandMainWeaponBoolean = false;
+				toggleTwoHandedStanceBoolean = true;
+			} else if (toggleTwoHandedStanceBoolean) {
+				toggleTwoHandedStanceBoolean = false;
 			}
 		});
 	}
@@ -86,8 +86,8 @@ public class KeyBindingsRegistry {
 		ClientPlayNetworking.send(new SheatheWeaponsPacket());
 	}
 
-	public static void twoHandMainWeapon() {
-		ClientPlayNetworking.send(new TwoHandMainWeaponPacket());
+	public static void toggleTwoHandedStance() {
+		ClientPlayNetworking.send(new ToggleTwoHandedStancePacket());
 	}
 
 	public static void syncSlotSwapHand(boolean mainHand) {

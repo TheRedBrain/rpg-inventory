@@ -124,8 +124,9 @@ public class TrinketScreenManagerMixin {
 						|| (Objects.equals(g.getName(), "spell_slot_6") && player.getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 6)
 						|| (Objects.equals(g.getName(), "spell_slot_7") && player.getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 7)
 						|| (Objects.equals(g.getName(), "spell_slot_8") && player.getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 8)
-						|| (Objects.equals(g.getName(), "main_hand") && ((DuckPlayerEntityMixin) player).rpginventory$isMainHandStackSheathed())
-						|| (Objects.equals(g.getName(), "sheathed_main_hand") && !((DuckPlayerEntityMixin) player).rpginventory$isMainHandStackSheathed())
+						|| (Objects.equals(g.getName(), "hand") && ((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed())
+						|| (Objects.equals(g.getName(), "offhand") && ((DuckPlayerEntityMixin) player).rpginventory$isOffHandStackSheathed())
+						|| (Objects.equals(g.getName(), "sheathed_hand") && !((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed())
 						|| (Objects.equals(g.getName(), "sheathed_offhand") && !((DuckPlayerEntityMixin) player).rpginventory$isOffHandStackSheathed())
 				)) {
 					continue;

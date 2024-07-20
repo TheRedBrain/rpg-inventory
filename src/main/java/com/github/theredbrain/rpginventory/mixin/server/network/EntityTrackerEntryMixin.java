@@ -29,7 +29,7 @@ public class EntityTrackerEntryMixin {
 	public void rpginventory$startTracking(ServerPlayerEntity serverPlayer, CallbackInfo info) {
 		if (this.entity instanceof PlayerEntity) {
 			PlayerEntity player = (PlayerEntity) entity;
-			if (!((DuckPlayerInventoryMixin) serverPlayer.getInventory()).rpginventory$getMainHand().isEmpty() || !((DuckPlayerInventoryMixin) serverPlayer.getInventory()).rpginventory$getAlternativeMainHand().isEmpty()) {
+			if (!((DuckPlayerInventoryMixin) serverPlayer.getInventory()).rpginventory$getHand().isEmpty() || !((DuckPlayerInventoryMixin) serverPlayer.getInventory()).rpginventory$getAlternativeHand().isEmpty()) {
 				PacketByteBuf data = new PacketByteBuf(Unpooled.buffer());
 				data.writeInt(serverPlayer.getId());
 				data.writeBoolean(true);
@@ -41,11 +41,11 @@ public class EntityTrackerEntryMixin {
 				data.writeBoolean(false);
 				ServerPlayNetworking.send((ServerPlayerEntity) player, ServerPacketRegistry.SWAPPED_HAND_ITEMS_PACKET, data); // TODO convert to packet
 			}
-			if (!((DuckPlayerInventoryMixin) serverPlayer.getInventory()).rpginventory$getMainHand().isEmpty() || !((DuckPlayerInventoryMixin) serverPlayer.getInventory()).rpginventory$getSheathedMainHand().isEmpty()) {
+			if (!((DuckPlayerInventoryMixin) serverPlayer.getInventory()).rpginventory$getHand().isEmpty() || !((DuckPlayerInventoryMixin) serverPlayer.getInventory()).rpginventory$getSheathedHand().isEmpty()) {
 				PacketByteBuf data = new PacketByteBuf(Unpooled.buffer());
 				data.writeInt(serverPlayer.getId());
 				data.writeBoolean(true);
-				data.writeBoolean(((DuckPlayerEntityMixin) player).rpginventory$isMainHandStackSheathed());
+				data.writeBoolean(((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed());
 				ServerPlayNetworking.send((ServerPlayerEntity) player, ServerPacketRegistry.SHEATHED_WEAPONS_PACKET, data); // TODO convert to packet
 			}
 			if (!serverPlayer.getEquippedStack(EquipmentSlot.OFFHAND).isEmpty() || !((DuckPlayerInventoryMixin) serverPlayer.getInventory()).rpginventory$getSheathedOffhand().isEmpty()) {

@@ -10,7 +10,7 @@ import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 public class ServerConfig implements ConfigData {
 
 	@Comment("""
-			When true, all main and offhand slots can only hold items in the item tags 'rpginventory:main_hand_items' and 'rpginventory:offhand_items', respectively.
+			When true, all (off)hand slots can only hold items in the item tags 'rpginventory:hand_items' and 'rpginventory:offhand_items', respectively.
 			
 			It is recommended to not set this to false and instead add items to the item tags when necessary. All other items can still be accessed via the hotbar.
 			""")
@@ -123,9 +123,9 @@ public class ServerConfig implements ConfigData {
 	public int gloves_group_y_offset = 72;
 
 	@Comment("default: 8")
-	public int main_hand_group_x_offset = 8;
+	public int hand_group_x_offset = 8;
 	@Comment("default: 108")
-	public int main_hand_group_y_offset = 108;
+	public int hand_group_y_offset = 108;
 
 	@Comment("default: 26")
 	public int offhand_slot_x_offset = 26;
@@ -133,9 +133,9 @@ public class ServerConfig implements ConfigData {
 	public int offhand_slot_y_offset = 108;
 
 	@Comment("default: 59")
-	public int alternative_main_hand_group_x_offset = 59;
+	public int alternative_hand_group_x_offset = 59;
 	@Comment("default: 108")
-	public int alternative_main_hand_group_y_offset = 108;
+	public int alternative_hand_group_y_offset = 108;
 
 	@Comment("default: 77")
 	public int alternative_offhand_group_x_offset = 77;

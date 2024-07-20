@@ -5,16 +5,16 @@ import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.minecraft.network.PacketByteBuf;
 
-public class TwoHandMainWeaponPacket implements FabricPacket {
-	public static final PacketType<TwoHandMainWeaponPacket> TYPE = PacketType.create(
-			RPGInventory.identifier("two_hand_main_weapon"),
-			TwoHandMainWeaponPacket::new
+public class ToggleTwoHandedStancePacket implements FabricPacket {
+	public static final PacketType<ToggleTwoHandedStancePacket> TYPE = PacketType.create(
+			RPGInventory.identifier("toggle_two_handed_stance"),
+			ToggleTwoHandedStancePacket::new
 	);
 
-	public TwoHandMainWeaponPacket() {
+	public ToggleTwoHandedStancePacket() {
 	}
 
-	public TwoHandMainWeaponPacket(PacketByteBuf buf) {
+	public ToggleTwoHandedStancePacket(PacketByteBuf buf) {
 		this();
 	}
 

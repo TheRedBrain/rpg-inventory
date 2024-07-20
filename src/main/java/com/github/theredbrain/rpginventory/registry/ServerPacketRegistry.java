@@ -6,8 +6,8 @@ import com.github.theredbrain.rpginventory.network.packet.SheatheWeaponsPacket;
 import com.github.theredbrain.rpginventory.network.packet.SheatheWeaponsPacketReceiver;
 import com.github.theredbrain.rpginventory.network.packet.SwapHandItemsPacket;
 import com.github.theredbrain.rpginventory.network.packet.SwapHandItemsPacketReceiver;
-import com.github.theredbrain.rpginventory.network.packet.TwoHandMainWeaponPacket;
-import com.github.theredbrain.rpginventory.network.packet.TwoHandMainWeaponPacketReceiver;
+import com.github.theredbrain.rpginventory.network.packet.ToggleTwoHandedStancePacket;
+import com.github.theredbrain.rpginventory.network.packet.ToggleTwoHandedStancePacketReceiver;
 import com.google.gson.Gson;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -24,7 +24,7 @@ public class ServerPacketRegistry {
 
 		ServerPlayNetworking.registerGlobalReceiver(SheatheWeaponsPacket.TYPE, new SheatheWeaponsPacketReceiver());
 
-		ServerPlayNetworking.registerGlobalReceiver(TwoHandMainWeaponPacket.TYPE, new TwoHandMainWeaponPacketReceiver());
+		ServerPlayNetworking.registerGlobalReceiver(ToggleTwoHandedStancePacket.TYPE, new ToggleTwoHandedStancePacketReceiver());
 
 	}
 

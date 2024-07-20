@@ -28,10 +28,10 @@ import java.util.Collection;
 public abstract class ServerPlayerEntityMixin extends PlayerEntity implements DuckPlayerEntityMixin {
 
 	@Unique
-	ItemStack mainHandSlotStack = ItemStack.EMPTY;
+	ItemStack handSlotStack = ItemStack.EMPTY;
 
 	@Unique
-	ItemStack alternateMainHandSlotStack = ItemStack.EMPTY;
+	ItemStack alternateHandSlotStack = ItemStack.EMPTY;
 
 	@Unique
 	ItemStack offHandSlotStack = ItemStack.EMPTY;
@@ -40,7 +40,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Du
 	ItemStack alternateOffHandSlotStack = ItemStack.EMPTY;
 
 	@Unique
-	boolean isMainHandWeaponSheathed = false;
+	boolean isHandWeaponSheathed = false;
 
 	@Unique
 	boolean isOffHandWeaponSheathed = false;
@@ -52,19 +52,19 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Du
 	@Inject(method = "tick", at = @At("TAIL"))
 	public void rpginventory$tick(CallbackInfo ci) {
 		if (!this.getWorld().isClient) {
-			if (!((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$getEmptyMainHand().isOf(ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON)) {
-				((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$setEmptyMainHand(ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON.getDefaultStack());
+			if (!((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$getEmptyHand().isOf(ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON)) {
+				((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$setEmptyHand(ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON.getDefaultStack());
 			}
 			if (!((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$getEmptyOffhand().isOf(ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON)) {
 				((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$setEmptyOffhand(ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON.getDefaultStack());
 			}
-			ItemStack newMainHandStack = ((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$getMainHand();
-			ItemStack newAlternativeMainHandStack = ((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$getAlternativeMainHand();
-			if (!ItemStack.areItemsEqual(mainHandSlotStack, newMainHandStack) || !ItemStack.areItemsEqual(alternateMainHandSlotStack, newAlternativeMainHandStack)) {
+			ItemStack newHandStack = ((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$getHand();
+			ItemStack newAlternativeHandStack = ((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$getAlternativeHand();
+			if (!ItemStack.areItemsEqual(handSlotStack, newHandStack) || !ItemStack.areItemsEqual(alternateHandSlotStack, newAlternativeHandStack)) {
 				rpginventory$sendChangedHandSlotsPacket(true);
 			}
-			mainHandSlotStack = newMainHandStack;
-			alternateMainHandSlotStack = newAlternativeMainHandStack;
+			handSlotStack = newHandStack;
+			alternateHandSlotStack = newAlternativeHandStack;
 			ItemStack newOffHandStack = this.getEquippedStack(EquipmentSlot.OFFHAND);
 			ItemStack newAlternativeOffHandStack = ((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$getAlternativeOffhand();
 			if (!ItemStack.areItemsEqual(offHandSlotStack, newOffHandStack) || !ItemStack.areItemsEqual(alternateOffHandSlotStack, newAlternativeOffHandStack)) {
@@ -72,10 +72,10 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Du
 			}
 			offHandSlotStack = newOffHandStack;
 			alternateOffHandSlotStack = newAlternativeOffHandStack;
-			boolean isMainHandWeaponSheathed = this.rpginventory$isMainHandStackSheathed();
-			if (this.isMainHandWeaponSheathed != isMainHandWeaponSheathed) {
-				rpginventory$sendSheathedWeaponsPacket(true, isMainHandWeaponSheathed);
-				this.isMainHandWeaponSheathed = isMainHandWeaponSheathed;
+			boolean isHandWeaponSheathed = this.rpginventory$isHandStackSheathed();
+			if (this.isHandWeaponSheathed != isHandWeaponSheathed) {
+				rpginventory$sendSheathedWeaponsPacket(true, isHandWeaponSheathed);
+				this.isHandWeaponSheathed = isHandWeaponSheathed;
 			}
 			boolean isOffHandWeaponSheathed = this.rpginventory$isOffHandStackSheathed();
 			if (this.isOffHandWeaponSheathed != isOffHandWeaponSheathed) {

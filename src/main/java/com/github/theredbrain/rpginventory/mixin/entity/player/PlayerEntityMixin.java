@@ -71,7 +71,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 	private boolean isAdventureHotbarCleanedUp = false;
 
 	@Unique
-	private static final TrackedData<Boolean> IS_MAIN_HAND_STACK_SHEATHED = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+	private static final TrackedData<Boolean> IS_HAND_STACK_SHEATHED = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
 	@Unique
 	private static final TrackedData<Boolean> IS_OFFHAND_STACK_SHEATHED = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
@@ -92,7 +92,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
 	@Inject(method = "initDataTracker", at = @At("RETURN"))
 	protected void rpginventory$initDataTracker(CallbackInfo ci) {
-		this.dataTracker.startTracking(IS_MAIN_HAND_STACK_SHEATHED, false);
+		this.dataTracker.startTracking(IS_HAND_STACK_SHEATHED, false);
 		this.dataTracker.startTracking(IS_OFFHAND_STACK_SHEATHED, false);
 		this.dataTracker.startTracking(OLD_ACTIVE_SPELL_SLOT_AMOUNT, -1);
 
@@ -149,7 +149,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
 		StatusEffect needs_two_handing_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.needs_two_handing_status_effect_identifier));
 		if (needs_two_handing_status_effect != null) {
-			if (itemStackMainHand.isIn(Tags.TWO_HANDED_ITEMS) && (this.rpginventory$isMainHandStackSheathed() || !this.rpginventory$isOffHandStackSheathed()) && !this.isCreative() && !hasAdventureBuildingEffect) {
+			if (itemStackMainHand.isIn(Tags.TWO_HANDED_ITEMS) && (this.rpginventory$isHandStackSheathed() || !this.rpginventory$isOffHandStackSheathed()) && !this.isCreative() && !hasAdventureBuildingEffect) {
 				if (!this.hasStatusEffect(needs_two_handing_status_effect)) {
 					this.addStatusEffect(new StatusEffectInstance(needs_two_handing_status_effect, -1, 0, false, false, false));
 				}
@@ -162,8 +162,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 	@Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
 	public void rpginventory$readCustomDataFromNbt(NbtCompound nbt, CallbackInfo ci) {
 
-		if (nbt.contains("is_main_hand_stack_sheathed", NbtElement.BYTE_TYPE)) {
-			this.rpginventory$setIsMainHandStackSheathed(nbt.getBoolean("is_main_hand_stack_sheathed"));
+		if (nbt.contains("is_hand_stack_sheathed", NbtElement.BYTE_TYPE)) {
+			this.rpginventory$setIsHandStackSheathed(nbt.getBoolean("is_hand_stack_sheathed"));
 		}
 
 		if (nbt.contains("is_offhand_stack_sheathed", NbtElement.BYTE_TYPE)) {
@@ -178,9 +178,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 	@Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
 	public void rpginventory$writeCustomDataToNbt(NbtCompound nbt, CallbackInfo ci) {
 
-		boolean is_main_hand_stack_sheathed = this.rpginventory$isMainHandStackSheathed();
-		if (is_main_hand_stack_sheathed) {
-			nbt.putBoolean("is_main_hand_stack_sheathed", this.rpginventory$isMainHandStackSheathed());
+		boolean is_hand_stack_sheathed = this.rpginventory$isHandStackSheathed();
+		if (is_hand_stack_sheathed) {
+			nbt.putBoolean("is_hand_stack_sheathed", this.rpginventory$isHandStackSheathed());
 		}
 
 		boolean is_offhand_stack_sheathed = this.rpginventory$isOffHandStackSheathed();
@@ -202,7 +202,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 	public void equipStack(EquipmentSlot slot, ItemStack stack) {
 		this.processEquippedStack(stack);
 		if (slot == EquipmentSlot.MAINHAND) {
-			this.onEquipStack(slot, ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setMainHand(stack), stack);
+			this.onEquipStack(slot, ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setHand(stack), stack);
 		} else if (slot == EquipmentSlot.OFFHAND) {
 			this.onEquipStack(slot, this.inventory.offHand.set(0, stack), stack);
 		} else if (slot.getType() == EquipmentSlot.Type.ARMOR) {
@@ -249,9 +249,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 	}
 
 	@Override
-	public ItemStack rpginventory$getSheathedMainHandItemStack() {
-		ItemStack itemStack = ((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$getSheathedMainHand();
-		return rpginventory$isMainHandStackSheathed() && !itemStack.isIn(Tags.EMPTY_HAND_WEAPONS) && ItemUtils.isUsable(itemStack) ? itemStack : ItemStack.EMPTY;
+	public ItemStack rpginventory$getSheathedHandItemStack() {
+		ItemStack itemStack = ((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$getSheathedHand();
+		return rpginventory$isHandStackSheathed() && !itemStack.isIn(Tags.EMPTY_HAND_WEAPONS) && ItemUtils.isUsable(itemStack) ? itemStack : ItemStack.EMPTY;
 	}
 
 	@Override
@@ -261,13 +261,13 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 	}
 
 	@Override
-	public boolean rpginventory$isMainHandStackSheathed() {
-		return this.dataTracker.get(IS_MAIN_HAND_STACK_SHEATHED);
+	public boolean rpginventory$isHandStackSheathed() {
+		return this.dataTracker.get(IS_HAND_STACK_SHEATHED);
 	}
 
 	@Override
-	public void rpginventory$setIsMainHandStackSheathed(boolean isMainHandStackSheathed) {
-		this.dataTracker.set(IS_MAIN_HAND_STACK_SHEATHED, isMainHandStackSheathed);
+	public void rpginventory$setIsHandStackSheathed(boolean isHandStackSheathed) {
+		this.dataTracker.set(IS_HAND_STACK_SHEATHED, isHandStackSheathed);
 	}
 
 	@Override
