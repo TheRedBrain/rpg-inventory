@@ -1,5 +1,4 @@
 {
-	"replace": true,
 	"entities": [
 		"player"
 	],
@@ -24,10 +23,6 @@
 		"spell_slot_5/spell",
 		"spell_slot_6/spell",
 		"spell_slot_7/spell",
-		"spell_slot_8/spell",
-		"chest/cape",
-		"chest/necklace",
-		"hand/ring",
-		"offhand/ring"
+		"spell_slot_8/spell"
 	]
 }
