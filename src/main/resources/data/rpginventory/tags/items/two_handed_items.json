@@ -27,6 +27,14 @@
 			"required": false
 		},
 		{
+			"id": "#rpg_series:double_axes",
+			"required": false
+		},
+		{
+			"id": "#rpg_series:glaives",
+			"required": false
+		},
+		{
 			"id": "#wizards:staves",
 			"required": false
 		}

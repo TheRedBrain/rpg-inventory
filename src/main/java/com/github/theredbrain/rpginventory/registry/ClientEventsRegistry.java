@@ -2,6 +2,8 @@ package com.github.theredbrain.rpginventory.registry;
 
 import com.github.theredbrain.rpginventory.RPGInventoryClient;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.text.Text;
 
 public class ClientEventsRegistry {
@@ -14,13 +16,13 @@ public class ClientEventsRegistry {
 
 			// equipment slots
 			if (RPGInventoryClient.clientConfig.show_item_tooltip_equipment_slots) {
-				if (stack.isIn(Tags.HELMETS)) {
+				if (stack.isIn(Tags.HELMETS) || MobEntity.getPreferredEquipmentSlot(stack) == EquipmentSlot.HEAD) {
 					lines.add(Text.translatable("item.additional_tooltip.equipment_slot.helmet"));
 				}
 				if (stack.isIn(Tags.NECKLACES)) {
 					lines.add(Text.translatable("item.additional_tooltip.equipment_slot.necklace"));
 				}
-				if (stack.isIn(Tags.CHEST_PLATES)) {
+				if (stack.isIn(Tags.CHEST_PLATES) || MobEntity.getPreferredEquipmentSlot(stack) == EquipmentSlot.CHEST) {
 					lines.add(Text.translatable("item.additional_tooltip.equipment_slot.chest_plate"));
 				}
 				if (stack.isIn(Tags.SHOULDERS)) {
@@ -49,10 +51,10 @@ public class ClientEventsRegistry {
 				if (stack.isIn(Tags.SPELLS)) {
 					lines.add(Text.translatable("item.additional_tooltip.equipment_slot.spell"));
 				}
-				if (stack.isIn(Tags.LEGGINGS)) {
+				if (stack.isIn(Tags.LEGGINGS) || MobEntity.getPreferredEquipmentSlot(stack) == EquipmentSlot.LEGS) {
 					lines.add(Text.translatable("item.additional_tooltip.equipment_slot.leggings"));
 				}
-				if (stack.isIn(Tags.BOOTS)) {
+				if (stack.isIn(Tags.BOOTS) || MobEntity.getPreferredEquipmentSlot(stack) == EquipmentSlot.FEET) {
 					lines.add(Text.translatable("item.additional_tooltip.equipment_slot.boots"));
 				}
 			}

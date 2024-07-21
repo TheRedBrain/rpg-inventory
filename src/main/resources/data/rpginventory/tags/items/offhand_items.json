@@ -6,6 +6,10 @@
 		"minecraft:diamond_sword",
 		"minecraft:golden_sword",
 		"minecraft:netherite_sword",
-		"minecraft:shield"
+		"minecraft:shield",
+		{
+			"id": "#paladins:shields",
+			"required": false
+		}
 	]
 }

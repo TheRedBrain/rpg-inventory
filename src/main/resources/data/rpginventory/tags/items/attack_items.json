@@ -22,6 +22,22 @@
 		{
 			"id": "#paladins:maces",
 			"required": false
+		},
+		{
+			"id": "#rpg_series:daggers",
+			"required": false
+		},
+		{
+			"id": "#rpg_series:double_axes",
+			"required": false
+		},
+		{
+			"id": "#rpg_series:glaives",
+			"required": false
+		},
+		{
+			"id": "#rpg_series:sickles",
+			"required": false
 		}
 	]
 }
