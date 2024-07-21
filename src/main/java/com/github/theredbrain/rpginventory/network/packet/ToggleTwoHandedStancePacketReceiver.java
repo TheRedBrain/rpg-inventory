@@ -32,7 +32,7 @@ public class ToggleTwoHandedStancePacketReceiver implements ServerPlayNetworking
 		} else if (player.getMainHandStack().isIn(Tags.NON_TWO_HANDED_ITEMS)) {
 			player.sendMessageToClient(Text.translatable("hud.message.nonTwoHandedWeaponEquipped"), true);
 			return;
-		} else if (((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed() && ((DuckPlayerEntityMixin) player).rpginventory$isOffHandStackSheathed()) {
+		} else if (((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed() && ((DuckPlayerEntityMixin) player).rpginventory$isOffhandStackSheathed()) {
 			if (!RPGInventory.serverConfig.always_allow_toggling_two_handed_stance) {
 				player.sendMessageToClient(Text.translatable("hud.message.weaponsAreSheathed"), true);
 				return;
@@ -41,12 +41,12 @@ public class ToggleTwoHandedStancePacketReceiver implements ServerPlayNetworking
 				((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setHand(handItemStack);
 				((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedHand(ItemStack.EMPTY);
 			}
-		} else if (((DuckPlayerEntityMixin) player).rpginventory$isOffHandStackSheathed()) {
-			((DuckPlayerEntityMixin) player).rpginventory$setIsOffHandStackSheathed(false);
+		} else if (((DuckPlayerEntityMixin) player).rpginventory$isOffhandStackSheathed()) {
+			((DuckPlayerEntityMixin) player).rpginventory$setIsOffhandStackSheathed(false);
 			player.getInventory().offHand.set(0, offHandItemStack);
 			((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedOffhand(ItemStack.EMPTY);
 		} else {
-			((DuckPlayerEntityMixin) player).rpginventory$setIsOffHandStackSheathed(true);
+			((DuckPlayerEntityMixin) player).rpginventory$setIsOffhandStackSheathed(true);
 			player.getInventory().offHand.set(0, ItemStack.EMPTY);
 			((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedOffhand(offHandItemStack);
 		}

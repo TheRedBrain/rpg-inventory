@@ -7,9 +7,9 @@ public interface DuckPlayerEntityMixin {
 
 	void rpginventory$setIsHandStackSheathed(boolean isHandStackSheathed);
 
-	boolean rpginventory$isOffHandStackSheathed();
+	boolean rpginventory$isOffhandStackSheathed();
 
-	void rpginventory$setIsOffHandStackSheathed(boolean isOffHandStackSheathed);
+	void rpginventory$setIsOffhandStackSheathed(boolean isOffhandStackSheathed);
 
 	int rpginventory$oldActiveSpellSlotAmount();
 

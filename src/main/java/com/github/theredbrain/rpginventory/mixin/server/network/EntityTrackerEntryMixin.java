@@ -52,7 +52,7 @@ public class EntityTrackerEntryMixin {
 				PacketByteBuf data = new PacketByteBuf(Unpooled.buffer());
 				data.writeInt(serverPlayer.getId());
 				data.writeBoolean(false);
-				data.writeBoolean(((DuckPlayerEntityMixin) player).rpginventory$isOffHandStackSheathed());
+				data.writeBoolean(((DuckPlayerEntityMixin) player).rpginventory$isOffhandStackSheathed());
 				ServerPlayNetworking.send((ServerPlayerEntity) player, ServerPacketRegistry.SHEATHED_WEAPONS_PACKET, data); // TODO convert to packet
 			}
 		}

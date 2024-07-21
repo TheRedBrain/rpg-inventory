@@ -86,7 +86,7 @@ public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScre
 			((SlotCustomization) this.handler.slots.get(45)).slotcustomizationapi$setY(33);
 
 			if (this.client != null && this.client.player != null) {
-				((SlotCustomization) this.client.player.playerScreenHandler.slots.get(45)).slotcustomizationapi$setDisabledOverride(((DuckPlayerEntityMixin) this.client.player).rpginventory$isOffHandStackSheathed());
+				((SlotCustomization) this.client.player.playerScreenHandler.slots.get(45)).slotcustomizationapi$setDisabledOverride(((DuckPlayerEntityMixin) this.client.player).rpginventory$isOffhandStackSheathed());
 			}
 		}
 	}

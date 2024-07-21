@@ -77,7 +77,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Du
 				rpginventory$sendSheathedWeaponsPacket(true, isHandWeaponSheathed);
 				this.isHandWeaponSheathed = isHandWeaponSheathed;
 			}
-			boolean isOffHandWeaponSheathed = this.rpginventory$isOffHandStackSheathed();
+			boolean isOffHandWeaponSheathed = this.rpginventory$isOffhandStackSheathed();
 			if (this.isOffHandWeaponSheathed != isOffHandWeaponSheathed) {
 				rpginventory$sendSheathedWeaponsPacket(false, isOffHandWeaponSheathed);
 				this.isOffHandWeaponSheathed = isOffHandWeaponSheathed;

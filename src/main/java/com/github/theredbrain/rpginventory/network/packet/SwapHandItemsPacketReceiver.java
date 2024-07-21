@@ -22,7 +22,7 @@ public class SwapHandItemsPacketReceiver implements ServerPlayNetworking.PlayPac
 		ItemStack alternativeItemStack;
 
 		boolean handIsSheathed = ((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed();
-		boolean offHandIsSheathed = ((DuckPlayerEntityMixin) player).rpginventory$isOffHandStackSheathed();
+		boolean offHandIsSheathed = ((DuckPlayerEntityMixin) player).rpginventory$isOffhandStackSheathed();
 
 		if (mainHand) {
 			itemStack = handIsSheathed ? ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSheathedHand().copy() : ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getHand().copy();

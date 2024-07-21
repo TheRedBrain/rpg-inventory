@@ -63,7 +63,7 @@ public class ClientPacketRegistry {
 								((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedHand(ItemStack.EMPTY);
 							}
 						} else {
-							((DuckPlayerEntityMixin) player).rpginventory$setIsOffHandStackSheathed(isWeaponSheathed);
+							((DuckPlayerEntityMixin) player).rpginventory$setIsOffhandStackSheathed(isWeaponSheathed);
 							itemStack = player.getEquippedStack(EquipmentSlot.OFFHAND).copy();
 							if (itemStack.isEmpty()) {
 								itemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSheathedOffhand().copy();

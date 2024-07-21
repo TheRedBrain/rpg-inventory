@@ -1,13 +1,12 @@
 package com.github.theredbrain.rpginventory.mixin.screen;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
-import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
+import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import com.github.theredbrain.rpginventory.screen.DuckPlayerScreenHandlerMixin;
 import com.github.theredbrain.rpginventory.screen.DuckSlotMixin;
 import com.github.theredbrain.slotcustomizationapi.api.SlotCustomization;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import dev.emi.trinkets.Point;
 import dev.emi.trinkets.SurvivalTrinketSlot;
 import dev.emi.trinkets.TrinketPlayerScreenHandler;
@@ -20,27 +19,24 @@ import dev.emi.trinkets.api.TrinketInventory;
 import dev.emi.trinkets.api.TrinketsApi;
 import dev.emi.trinkets.mixin.accessor.ScreenHandlerAccessor;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -76,6 +72,21 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 
 	@Unique
 	private boolean isAttributeScreenVisible = false;
+
+	@Unique
+	private int handSlotIndex = -1;
+
+	@Unique
+	private int sheathedHandSlotIndex = -1;
+
+	@Unique
+	private int sheathedOffhandSlotIndex = -1;
+
+	@Unique
+	private int alternativeHandSlotIndex = -1;
+
+	@Unique
+	private int alternativeOffHandSlotIndex = -1;
 
 	public PlayerScreenHandlerMixin() {
 		super(null, 0);
@@ -379,15 +390,11 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 		}
 	}
 
-	/**
-	 * @author TheRedBrain
-	 * @reason total overhaul
-	 */
-	@Overwrite
-	public ItemStack quickMove(PlayerEntity player, int index) {
-		Slot slot = slots.get(index);
+	@Inject(at = @At("HEAD"), method = "quickMove", cancellable = true)
+	private void rpginventory$quickMove(PlayerEntity player, int slot, CallbackInfoReturnable<ItemStack> cir) {
+		Slot slot1 = slots.get(slot);
 
-		// TODO adventure hotbar items
+//		// TODO adventure hotbar items
 //		StatusEffect civilisation_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.civilisation_status_effect_identifier));
 //		boolean hasCivilisationEffect = civilisation_status_effect != null && player.hasStatusEffect(civilisation_status_effect);
 //
@@ -401,67 +408,202 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 //		}
 //		hasCivilisationEffect = hasCivilisationEffect || (canChangeEquipment && !hasWildernessEffect);
 
-		ItemStack itemStack = ItemStack.EMPTY;
-		boolean mainHandSlotIsEmpty = false;
-		int mainHandSlotIndex = -1;
-		boolean alternativeMainHandSlotIsEmpty = false;
-		int alternativeMainHandSlotIndex = -1;
-		boolean alternativeOffHandSlotIsEmpty = false;
-		int alternativeOffHandSlotIndex = -1;
-
-		if (slot.hasStack()) {
-			ItemStack stack = slot.getStack();
-//			hasCivilisationEffect = true;//hasCivilisationEffect || stack.isIn(Tags.ADVENTURE_HOTBAR_ITEMS); // TODO disabled for now
-			if (index >= trinketSlotStart && index < trinketSlotEnd) {
-				if (!this.insertItem(stack, 9, 45/*hasCivilisationEffect ? 45 : 36*/, false)) {
-					return ItemStack.EMPTY;
+		if (slot1.hasStack()) {
+			ItemStack stack = slot1.getStack();
+			if (slot >= trinketSlotStart && slot < trinketSlotEnd) {
+				if (!this.insertItem(stack, 9, 45, false)) {   // TODO adventure hotbar items
+					cir.setReturnValue(ItemStack.EMPTY);
+					cir.cancel();
 				} else {
-					return stack;
+					cir.setReturnValue(stack);
+					cir.cancel();
 				}
-			} else if (index >= 9 && index < 45) {
-				if (TrinketsApi.getTrinketComponent(player).isPresent()) {
-					for (int i = trinketSlotStart; i < trinketSlotEnd; i++) {
-						Slot s = slots.get(i);
-						if (!(s instanceof SurvivalTrinketSlot) || !s.canInsert(stack)) {
-							continue;
-						}
+			} else if (slot >= 9 && slot < 45) {
+				TrinketsApi.getTrinketComponent(player).ifPresent(trinkets -> {
+							for (int i = trinketSlotStart; i < trinketSlotEnd; i++) {
+								Slot s = slots.get(i);
+								if (!(s instanceof SurvivalTrinketSlot) || !s.canInsert(stack)) {
+									continue;
+								}
 
-						SurvivalTrinketSlot ts = (SurvivalTrinketSlot) s;
+								SurvivalTrinketSlot ts = (SurvivalTrinketSlot) s;
+								SlotType type = ts.getType();
+								SlotReference ref = new SlotReference((TrinketInventory) ts.inventory, ts.getIndex());
+
+								if ((Objects.equals(type.getGroup(), "spell_slot_1") && player.getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 1)
+										|| (Objects.equals(type.getGroup(), "spell_slot_2") && player.getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 2)
+										|| (Objects.equals(type.getGroup(), "spell_slot_3") && player.getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 3)
+										|| (Objects.equals(type.getGroup(), "spell_slot_4") && player.getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 4)
+										|| (Objects.equals(type.getGroup(), "spell_slot_5") && player.getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 5)
+										|| (Objects.equals(type.getGroup(), "spell_slot_6") && player.getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 6)
+										|| (Objects.equals(type.getGroup(), "spell_slot_7") && player.getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 7)
+										|| (Objects.equals(type.getGroup(), "spell_slot_8") && player.getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 8)
+								) {
+									continue;
+								}
+
+								if (Objects.equals(type.getGroup(), "hand") && Objects.equals(type.getName(), "hand")) {
+									handSlotIndex = i;
+									continue;
+								}
+								if (Objects.equals(type.getGroup(), "sheathed_hand") && Objects.equals(type.getName(), "sheathed_hand")) {
+									sheathedHandSlotIndex = i;
+									continue;
+								}
+								if (Objects.equals(type.getGroup(), "sheathed_offhand") && Objects.equals(type.getName(), "sheathed_offhand")) {
+									sheathedOffhandSlotIndex = i;
+									continue;
+								}
+								if (Objects.equals(type.getGroup(), "alternative_hand") && Objects.equals(type.getName(), "alternative_hand")) {
+									alternativeHandSlotIndex = i;
+									continue;
+								}
+								if (Objects.equals(type.getGroup(), "alternative_offhand") && Objects.equals(type.getName(), "alternative_offhand")) {
+									alternativeOffHandSlotIndex = i;
+									continue;
+								}
+
+								boolean res = TrinketsApi.evaluatePredicateSet(type.getQuickMovePredicates(), stack, ref, player);
+
+								if (res) {
+									if (this.insertItem(stack, i, i + 1, false)) {
+										handSlotIndex = -1;
+										sheathedHandSlotIndex = -1;
+										sheathedOffhandSlotIndex = -1;
+										alternativeHandSlotIndex = -1;
+										alternativeOffHandSlotIndex = -1;
+										if (player.getWorld().isClient) {
+											TrinketsClient.quickMoveTimer = 20;
+											TrinketsClient.quickMoveGroup = TrinketsApi.getPlayerSlots(this.owner).get(type.getGroup());
+											if (ref.index() > 0) {
+												TrinketsClient.quickMoveType = type;
+											} else {
+												TrinketsClient.quickMoveType = null;
+											}
+										}
+									}
+								}
+							}
+						}
+				);
+
+				EquipmentSlot equipmentSlot = MobEntity.getPreferredEquipmentSlot(stack);
+
+				if (((DuckPlayerEntityMixin) this.owner).rpginventory$isHandStackSheathed()) {
+					if (!stack.isEmpty() && sheathedHandSlotIndex > -1 && stack.isIn(Tags.HAND_ITEMS)) {
+						Slot s = slots.get(sheathedHandSlotIndex);
+						if (s instanceof SurvivalTrinketSlot ts && s.canInsert(stack)) {
+
+							SlotType type = ts.getType();
+							SlotReference ref = new SlotReference((TrinketInventory) ts.inventory, ts.getIndex());
+							boolean res = TrinketsApi.evaluatePredicateSet(type.getQuickMovePredicates(), stack, ref, player);
+
+							if (res) {
+								if (this.insertItem(stack, sheathedHandSlotIndex, sheathedHandSlotIndex + 1, false)) {
+									if (player.getWorld().isClient) {
+										TrinketsClient.quickMoveTimer = 20;
+										TrinketsClient.quickMoveGroup = TrinketsApi.getPlayerSlots(this.owner).get(type.getGroup());
+										if (ref.index() > 0) {
+											TrinketsClient.quickMoveType = type;
+										} else {
+											TrinketsClient.quickMoveType = null;
+										}
+									}
+								}
+							}
+						}
+					}
+				} else {
+					if (!stack.isEmpty() && handSlotIndex > -1 && stack.isIn(Tags.HAND_ITEMS)) {
+						Slot s = slots.get(handSlotIndex);
+						if (s instanceof SurvivalTrinketSlot ts && s.canInsert(stack)) {
+
+							SlotType type = ts.getType();
+							SlotReference ref = new SlotReference((TrinketInventory) ts.inventory, ts.getIndex());
+							boolean res = TrinketsApi.evaluatePredicateSet(type.getQuickMovePredicates(), stack, ref, player);
+
+							if (res) {
+								if (this.insertItem(stack, handSlotIndex, handSlotIndex + 1, false)) {
+									if (player.getWorld().isClient) {
+										TrinketsClient.quickMoveTimer = 20;
+										TrinketsClient.quickMoveGroup = TrinketsApi.getPlayerSlots(this.owner).get(type.getGroup());
+										if (ref.index() > 0) {
+											TrinketsClient.quickMoveType = type;
+										} else {
+											TrinketsClient.quickMoveType = null;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+
+				if (((DuckPlayerEntityMixin) this.owner).rpginventory$isOffhandStackSheathed()) {
+					if (!stack.isEmpty() && sheathedOffhandSlotIndex > -1 && (equipmentSlot == EquipmentSlot.OFFHAND || stack.isIn(Tags.OFFHAND_ITEMS))) {
+						Slot s = slots.get(sheathedOffhandSlotIndex);
+						if (s instanceof SurvivalTrinketSlot ts && s.canInsert(stack)) {
+
+							SlotType type = ts.getType();
+							SlotReference ref = new SlotReference((TrinketInventory) ts.inventory, ts.getIndex());
+							boolean res = TrinketsApi.evaluatePredicateSet(type.getQuickMovePredicates(), stack, ref, player);
+
+							if (res) {
+								if (this.insertItem(stack, sheathedOffhandSlotIndex, sheathedOffhandSlotIndex + 1, false)) {
+									if (player.getWorld().isClient) {
+										TrinketsClient.quickMoveTimer = 20;
+										TrinketsClient.quickMoveGroup = TrinketsApi.getPlayerSlots(this.owner).get(type.getGroup());
+										if (ref.index() > 0) {
+											TrinketsClient.quickMoveType = type;
+										} else {
+											TrinketsClient.quickMoveType = null;
+										}
+									}
+								}
+							}
+						}
+					}
+				} else {
+					if (!stack.isEmpty() && (equipmentSlot == EquipmentSlot.OFFHAND || stack.isIn(Tags.OFFHAND_ITEMS)) && !this.slots.get(45).hasStack()) {
+						if (!this.insertItem(stack, 45, 46, false)) {
+							cir.setReturnValue(ItemStack.EMPTY);
+							cir.cancel();
+						}
+					}
+				}
+				if (!stack.isEmpty() && alternativeHandSlotIndex > -1 && stack.isIn(Tags.HAND_ITEMS)) {
+					Slot s = slots.get(alternativeHandSlotIndex);
+					if (s instanceof SurvivalTrinketSlot ts && s.canInsert(stack)) {
+
 						SlotType type = ts.getType();
 						SlotReference ref = new SlotReference((TrinketInventory) ts.inventory, ts.getIndex());
-
-						if ((Objects.equals(type.getGroup(), "spell_slot_1") && player.getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 1)
-								|| (Objects.equals(type.getGroup(), "spell_slot_2") && player.getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 2)
-								|| (Objects.equals(type.getGroup(), "spell_slot_3") && player.getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 3)
-								|| (Objects.equals(type.getGroup(), "spell_slot_4") && player.getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 4)
-								|| (Objects.equals(type.getGroup(), "spell_slot_5") && player.getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 5)
-								|| (Objects.equals(type.getGroup(), "spell_slot_6") && player.getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 6)
-								|| (Objects.equals(type.getGroup(), "spell_slot_7") && player.getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 7)
-								|| (Objects.equals(type.getGroup(), "spell_slot_8") && player.getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 8)
-						) {
-							continue;
-						}
-
-						if (Objects.equals(type.getGroup(), "hand") && Objects.equals(type.getName(), "hand")) {
-							mainHandSlotIsEmpty = s.getStack().isEmpty();
-							mainHandSlotIndex = i;
-							continue;
-						}
-						if (Objects.equals(type.getGroup(), "alternative_hand") && Objects.equals(type.getName(), "alternative_hand")) {
-							alternativeMainHandSlotIsEmpty = s.getStack().isEmpty();
-							alternativeMainHandSlotIndex = i;
-							continue;
-						}
-						if (Objects.equals(type.getGroup(), "alternative_offhand") && Objects.equals(type.getName(), "alternative_offhand")) {
-							alternativeOffHandSlotIsEmpty = s.getStack().isEmpty();
-							alternativeOffHandSlotIndex = i;
-							continue;
-						}
-
 						boolean res = TrinketsApi.evaluatePredicateSet(type.getQuickMovePredicates(), stack, ref, player);
 
 						if (res) {
-							if (this.insertItem(stack, i, i + 1, false)) {
+							if (this.insertItem(stack, alternativeHandSlotIndex, alternativeHandSlotIndex + 1, false)) {
+								if (player.getWorld().isClient) {
+									TrinketsClient.quickMoveTimer = 20;
+									TrinketsClient.quickMoveGroup = TrinketsApi.getPlayerSlots(this.owner).get(type.getGroup());
+									if (ref.index() > 0) {
+										TrinketsClient.quickMoveType = type;
+									} else {
+										TrinketsClient.quickMoveType = null;
+									}
+								}
+							}
+						}
+					}
+				}
+				if (!stack.isEmpty() && alternativeOffHandSlotIndex > -1 && (equipmentSlot == EquipmentSlot.OFFHAND || stack.isIn(Tags.OFFHAND_ITEMS))) {
+					Slot s = slots.get(alternativeOffHandSlotIndex);
+					if (s instanceof SurvivalTrinketSlot ts && s.canInsert(stack)) {
+
+						SlotType type = ts.getType();
+						SlotReference ref = new SlotReference((TrinketInventory) ts.inventory, ts.getIndex());
+						boolean res = TrinketsApi.evaluatePredicateSet(type.getQuickMovePredicates(), stack, ref, player);
+
+						if (res) {
+							if (this.insertItem(stack, alternativeOffHandSlotIndex, alternativeOffHandSlotIndex + 1, false)) {
 								if (player.getWorld().isClient) {
 									TrinketsClient.quickMoveTimer = 20;
 									TrinketsClient.quickMoveGroup = TrinketsApi.getPlayerSlots(this.owner).get(type.getGroup());
@@ -477,90 +619,6 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 				}
 			}
 		}
-		if (slot.hasStack()) {
-			ItemStack itemStack2 = slot.getStack();
-//			hasCivilisationEffect = hasCivilisationEffect || itemStack2.isIn(Tags.ADVENTURE_HOTBAR_ITEMS); // TODO adventure hotbar items
-			itemStack = itemStack2.copy();
-			EquipmentSlot equipmentSlot = MobEntity.getPreferredEquipmentSlot(itemStack);
-			if (index == 0) {
-				if (!this.insertItem(itemStack2, 9, 45, true)) {// TODO adventure hotbar items
-					return ItemStack.EMPTY;
-				}
-				slot.onQuickTransfer(itemStack2, itemStack);
-			} else if (index >= 1 && index < 5) {
-				if (!this.insertItem(itemStack2, 9, 45, false)) {// TODO adventure hotbar items
-					return ItemStack.EMPTY;
-				}
-			} else if (index >= 5 && index < 9) {
-				if (!this.insertItem(itemStack2, 9, 45, false)) {// TODO adventure hotbar items
-					return ItemStack.EMPTY;
-				}
-			} else if (equipmentSlot.getType() == EquipmentSlot.Type.ARMOR && !((Slot) this.slots.get(8 - equipmentSlot.getEntitySlotId())).hasStack()) {
-				int i = 8 - equipmentSlot.getEntitySlotId();
-				if (!this.insertItem(itemStack2, i, i + 1, false)) {
-					return ItemStack.EMPTY;
-				}
-			} else if (index >= 9 && index < 45 && itemStack2.isIn(Tags.HAND_ITEMS) && mainHandSlotIsEmpty) {
-				Slot s = slots.get(mainHandSlotIndex);
-				if (s instanceof SurvivalTrinketSlot ts && s.canInsert(itemStack2)) {
-
-					SlotType type = ts.getType();
-					SlotReference ref = new SlotReference((TrinketInventory) ts.inventory, ts.getIndex());
-					boolean res = TrinketsApi.evaluatePredicateSet(type.getQuickMovePredicates(), itemStack2, ref, player);
-
-					if (res) {
-						if (!this.insertItem(itemStack2, mainHandSlotIndex, mainHandSlotIndex + 1, false)) {
-							return ItemStack.EMPTY;
-						}
-						if (player.getWorld().isClient) {
-							TrinketsClient.quickMoveTimer = 20;
-							TrinketsClient.quickMoveGroup = TrinketsApi.getPlayerSlots(this.owner).get(type.getGroup());
-							if (ref.index() > 0) {
-								TrinketsClient.quickMoveType = type;
-							} else {
-								TrinketsClient.quickMoveType = null;
-							}
-						}
-					}
-				}
-			} else if (index >= 9 && index < 45 && !((Slot) this.slots.get(45)).hasStack()) {
-				if (!this.insertItem(itemStack2, 45, 46, false)) {
-					return ItemStack.EMPTY;
-				}
-			} else if (index >= 9 && index < 45 && itemStack2.isIn(Tags.HAND_ITEMS) && alternativeMainHandSlotIsEmpty) {
-				if (!this.insertItem(itemStack2, alternativeMainHandSlotIndex, alternativeMainHandSlotIndex + 1, false)) {
-					return ItemStack.EMPTY;
-				}
-			} else if (index >= 9 && index < 45 && itemStack2.isIn(Tags.OFFHAND_ITEMS) && alternativeOffHandSlotIsEmpty) {
-				if (!this.insertItem(itemStack2, alternativeOffHandSlotIndex, alternativeOffHandSlotIndex + 1, false)) {
-					return ItemStack.EMPTY;
-				}
-			} else if (index >= 9 && index < 36) {
-				if (!this.insertItem(itemStack2, 36, 45, false)) {// TODO adventure hotbar items
-					return ItemStack.EMPTY;
-				}
-			} else if (index >= 36 && index < 45) {
-				if (!this.insertItem(itemStack2, 9, 36, false)) {
-					return ItemStack.EMPTY;
-				}
-			} else if (!this.insertItem(itemStack2, 9, 45, false)) {// TODO adventure hotbar items
-				return ItemStack.EMPTY;
-			}
-
-			if (itemStack2.isEmpty()) {
-				slot.setStack(ItemStack.EMPTY);
-			} else {
-				slot.markDirty();
-			}
-			if (itemStack2.getCount() == itemStack.getCount()) {
-				return ItemStack.EMPTY;
-			}
-			slot.onTakeItem(player, itemStack2);
-			if (index == 0) {
-				player.dropItem(itemStack2, false);
-			}
-		}
-		return itemStack;
 	}
 
 	@Override

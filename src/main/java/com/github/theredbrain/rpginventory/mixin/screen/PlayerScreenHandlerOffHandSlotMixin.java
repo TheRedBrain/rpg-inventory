@@ -39,6 +39,6 @@ public abstract class PlayerScreenHandlerOffHandSlotMixin extends Slot {
 		StatusEffect wilderness_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.wilderness_status_effect_identifier));
 		boolean hasWildernessEffect = wilderness_status_effect != null && this.field_42464.hasStatusEffect(wilderness_status_effect);
 
-		return stack.isIn(Tags.OFFHAND_ITEMS) && (hasCivilisationEffect || this.field_42464.isCreative() || (bl && !hasWildernessEffect)) && !((DuckPlayerEntityMixin) this.field_42464).rpginventory$isOffHandStackSheathed();
+		return stack.isIn(Tags.OFFHAND_ITEMS) && (hasCivilisationEffect || this.field_42464.isCreative() || (bl && !hasWildernessEffect)) && !((DuckPlayerEntityMixin) this.field_42464).rpginventory$isOffhandStackSheathed();
 	}
 }

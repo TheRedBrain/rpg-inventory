@@ -149,7 +149,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
 		StatusEffect needs_two_handing_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.needs_two_handing_status_effect_identifier));
 		if (needs_two_handing_status_effect != null) {
-			if (itemStackMainHand.isIn(Tags.TWO_HANDED_ITEMS) && (this.rpginventory$isHandStackSheathed() || !this.rpginventory$isOffHandStackSheathed()) && !this.isCreative() && !hasAdventureBuildingEffect) {
+			if (itemStackMainHand.isIn(Tags.TWO_HANDED_ITEMS) && (this.rpginventory$isHandStackSheathed() || !this.rpginventory$isOffhandStackSheathed()) && !this.isCreative() && !hasAdventureBuildingEffect) {
 				if (!this.hasStatusEffect(needs_two_handing_status_effect)) {
 					this.addStatusEffect(new StatusEffectInstance(needs_two_handing_status_effect, -1, 0, false, false, false));
 				}
@@ -167,7 +167,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 		}
 
 		if (nbt.contains("is_offhand_stack_sheathed", NbtElement.BYTE_TYPE)) {
-			this.rpginventory$setIsOffHandStackSheathed(nbt.getBoolean("is_offhand_stack_sheathed"));
+			this.rpginventory$setIsOffhandStackSheathed(nbt.getBoolean("is_offhand_stack_sheathed"));
 		}
 
 		if (nbt.contains("old_active_spell_slot_amount", NbtElement.INT_TYPE)) {
@@ -183,9 +183,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 			nbt.putBoolean("is_hand_stack_sheathed", this.rpginventory$isHandStackSheathed());
 		}
 
-		boolean is_offhand_stack_sheathed = this.rpginventory$isOffHandStackSheathed();
+		boolean is_offhand_stack_sheathed = this.rpginventory$isOffhandStackSheathed();
 		if (is_offhand_stack_sheathed) {
-			nbt.putBoolean("is_offhand_stack_sheathed", this.rpginventory$isOffHandStackSheathed());
+			nbt.putBoolean("is_offhand_stack_sheathed", this.rpginventory$isOffhandStackSheathed());
 		}
 
 		int old_active_spell_slot_amount = this.rpginventory$oldActiveSpellSlotAmount();
@@ -196,15 +196,15 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
 	/**
 	 * @author TheRedBrain
-	 * @reason
+	 * @reason WIP
 	 */
 	@Overwrite
 	public void equipStack(EquipmentSlot slot, ItemStack stack) {
 		this.processEquippedStack(stack);
 		if (slot == EquipmentSlot.MAINHAND) {
-			this.onEquipStack(slot, ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setHand(stack), stack);
+			this.onEquipStack(slot, ((DuckPlayerEntityMixin)this).rpginventory$isHandStackSheathed() ? this.inventory.main.set(this.inventory.selectedSlot, stack) : ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setHand(stack), stack);
 		} else if (slot == EquipmentSlot.OFFHAND) {
-			this.onEquipStack(slot, this.inventory.offHand.set(0, stack), stack);
+			this.onEquipStack(slot, ((DuckPlayerEntityMixin)this).rpginventory$isHandStackSheathed() ? ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setSheathedOffhand(stack) : this.inventory.offHand.set(0, stack), stack);
 		} else if (slot.getType() == EquipmentSlot.Type.ARMOR) {
 			this.onEquipStack(slot, this.inventory.armor.set(slot.getEntitySlotId(), stack), stack);
 		}
@@ -257,7 +257,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 	@Override
 	public ItemStack rpginventory$getSheathedOffHandItemStack() {
 		ItemStack itemStack = ((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$getSheathedOffhand();
-		return rpginventory$isOffHandStackSheathed() && !itemStack.isIn(Tags.EMPTY_HAND_WEAPONS) && ItemUtils.isUsable(itemStack) ? itemStack : ItemStack.EMPTY;
+		return rpginventory$isOffhandStackSheathed() && !itemStack.isIn(Tags.EMPTY_HAND_WEAPONS) && ItemUtils.isUsable(itemStack) ? itemStack : ItemStack.EMPTY;
 	}
 
 	@Override
@@ -271,13 +271,13 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 	}
 
 	@Override
-	public boolean rpginventory$isOffHandStackSheathed() {
+	public boolean rpginventory$isOffhandStackSheathed() {
 		return this.dataTracker.get(IS_OFFHAND_STACK_SHEATHED);
 	}
 
 	@Override
-	public void rpginventory$setIsOffHandStackSheathed(boolean isOffHandStackSheathed) {
-		this.dataTracker.set(IS_OFFHAND_STACK_SHEATHED, isOffHandStackSheathed);
+	public void rpginventory$setIsOffhandStackSheathed(boolean isOffhandStackSheathed) {
+		this.dataTracker.set(IS_OFFHAND_STACK_SHEATHED, isOffhandStackSheathed);
 	}
 
 	@Override

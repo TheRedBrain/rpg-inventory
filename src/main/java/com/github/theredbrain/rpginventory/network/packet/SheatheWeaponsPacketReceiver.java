@@ -29,16 +29,16 @@ public class SheatheWeaponsPacketReceiver implements ServerPlayNetworking.PlayPa
 			player.sendMessageToClient(Text.translatable("hud.message.staminaTooLow"), true);
 			return;
 		}
-		if (((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed() && ((DuckPlayerEntityMixin) player).rpginventory$isOffHandStackSheathed()) {
+		if (((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed() && ((DuckPlayerEntityMixin) player).rpginventory$isOffhandStackSheathed()) {
 			((DuckPlayerEntityMixin) player).rpginventory$setIsHandStackSheathed(false);
-			((DuckPlayerEntityMixin) player).rpginventory$setIsOffHandStackSheathed(false);
+			((DuckPlayerEntityMixin) player).rpginventory$setIsOffhandStackSheathed(false);
 			((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setHand(handItemStack);
 			((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedHand(ItemStack.EMPTY);
 			player.getInventory().offHand.set(0, offHandItemStack);
 			((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedOffhand(ItemStack.EMPTY);
 		} else {
 			((DuckPlayerEntityMixin) player).rpginventory$setIsHandStackSheathed(true);
-			((DuckPlayerEntityMixin) player).rpginventory$setIsOffHandStackSheathed(true);
+			((DuckPlayerEntityMixin) player).rpginventory$setIsOffhandStackSheathed(true);
 			((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setHand(ItemStack.EMPTY);
 			((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedHand(handItemStack);
 			player.getInventory().offHand.set(0, ItemStack.EMPTY);

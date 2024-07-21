@@ -1,7 +1,8 @@
-# next version
+# 1.9.0
 
 - improved quick moving (shift-clicking) items in the RPG inventory screen
 - refactored "main_hand" slots to "hand" slots. This should improve compatibility with other mods.
+- fixed an issue where trinket slots from other mods where not registered correctly
 
 # 1.8.0
 

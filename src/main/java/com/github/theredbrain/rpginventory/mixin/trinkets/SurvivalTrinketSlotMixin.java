@@ -127,7 +127,7 @@ public abstract class SurvivalTrinketSlotMixin extends Slot {
 				|| (Objects.equals(this.group.getName(), "spell_slot_8") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 8)
 				|| (Objects.equals(this.group.getName(), "hand") && trinketInventory.getComponent().getEntity() instanceof PlayerEntity && ((DuckPlayerEntityMixin) trinketInventory.getComponent().getEntity()).rpginventory$isHandStackSheathed())
 				|| (Objects.equals(this.group.getName(), "sheathed_hand") && trinketInventory.getComponent().getEntity() instanceof PlayerEntity && !((DuckPlayerEntityMixin) trinketInventory.getComponent().getEntity()).rpginventory$isHandStackSheathed())
-				|| (Objects.equals(this.group.getName(), "sheathed_offhand") && trinketInventory.getComponent().getEntity() instanceof PlayerEntity && !((DuckPlayerEntityMixin) trinketInventory.getComponent().getEntity()).rpginventory$isOffHandStackSheathed())
+				|| (Objects.equals(this.group.getName(), "sheathed_offhand") && trinketInventory.getComponent().getEntity() instanceof PlayerEntity && !((DuckPlayerEntityMixin) trinketInventory.getComponent().getEntity()).rpginventory$isOffhandStackSheathed())
 		));
 	}
 
@@ -146,7 +146,7 @@ public abstract class SurvivalTrinketSlotMixin extends Slot {
 				|| (Objects.equals(this.group.getName(), "spell_slot_8") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 8)
 				|| (Objects.equals(this.group.getName(), "hand") && trinketInventory.getComponent().getEntity() instanceof PlayerEntity && ((DuckPlayerEntityMixin) trinketInventory.getComponent().getEntity()).rpginventory$isHandStackSheathed())
 				|| (Objects.equals(this.group.getName(), "sheathed_hand") && trinketInventory.getComponent().getEntity() instanceof PlayerEntity && !((DuckPlayerEntityMixin) trinketInventory.getComponent().getEntity()).rpginventory$isHandStackSheathed())
-				|| (Objects.equals(this.group.getName(), "sheathed_offhand") && trinketInventory.getComponent().getEntity() instanceof PlayerEntity && !((DuckPlayerEntityMixin) trinketInventory.getComponent().getEntity()).rpginventory$isOffHandStackSheathed())
+				|| (Objects.equals(this.group.getName(), "sheathed_offhand") && trinketInventory.getComponent().getEntity() instanceof PlayerEntity && !((DuckPlayerEntityMixin) trinketInventory.getComponent().getEntity()).rpginventory$isOffhandStackSheathed())
 		) {
 			cir.setReturnValue(false);
 			cir.cancel();

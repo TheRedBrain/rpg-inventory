@@ -105,7 +105,7 @@ public class PredicateRegistry {
 
 			if (entity instanceof PlayerEntity playerEntity) {
 				isPlayerCreative = playerEntity.isCreative();
-				isOffhandSheathed = ((DuckPlayerEntityMixin) playerEntity).rpginventory$isOffHandStackSheathed();
+				isOffhandSheathed = ((DuckPlayerEntityMixin) playerEntity).rpginventory$isOffhandStackSheathed();
 			}
 
 			if ((hasCivilisationEffect

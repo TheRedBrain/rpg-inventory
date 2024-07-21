@@ -186,7 +186,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 				this.client.setScreen(new CreativeInventoryScreen(this.client.player, this.client.player.networkHandler.getEnabledFeatures(), this.client.options.getOperatorItemsTab().getValue()));
 				return;
 			}
-			((SlotCustomization) this.handler.slots.get(45)).slotcustomizationapi$setDisabledOverride(((DuckPlayerEntityMixin) this.client.player).rpginventory$isOffHandStackSheathed());
+			((SlotCustomization) this.handler.slots.get(45)).slotcustomizationapi$setDisabledOverride(((DuckPlayerEntityMixin) this.client.player).rpginventory$isOffhandStackSheathed());
 		}
 		super.init();
 		this.showAttributeScreen = RPGInventoryClient.clientConfig.show_attribute_screen_when_opening_inventory_screen;
