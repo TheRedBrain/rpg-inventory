@@ -231,6 +231,16 @@ public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScre
 			return new Rect2i(210, 43, 17, 17);
 		} else if (Objects.equals(groupName, "spell_slot_8")) {
 			return new Rect2i(210, 61, 17, 17);
+		} else if (Objects.equals(groupName, "head")) {
+			return new Rect2i(8, 5, 17, 17);
+		} else if (Objects.equals(groupName, "chest")) {
+			return new Rect2i(44, 5, 17, 17);
+		} else if (Objects.equals(groupName, "legs")) {
+			return new Rect2i(26, 32, 17, 17);
+		} else if (Objects.equals(groupName, "feet")) {
+			return new Rect2i(44, 32, 17, 17);
+		} else if (Objects.equals(groupName, "offhand")) {
+			return new Rect2i(116, 32, 17, 17);
 		}
 		Point pos = trinkets$getHandler().trinkets$getGroupPos(group);
 		if (pos != null) {
