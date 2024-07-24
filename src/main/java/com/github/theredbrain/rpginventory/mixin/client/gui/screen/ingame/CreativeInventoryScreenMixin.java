@@ -55,11 +55,17 @@ public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScre
 		super(null, null, null);
 	}
 
+	/**
+	 * @author Emi
+	 */
 	@Redirect(at = @At(value = "INVOKE", target = "net/minecraft/util/collection/DefaultedList.size()I"), method = "setSelectedTab")
 	private int size(DefaultedList<ItemStack> list) {
 		return 46;
 	}
 
+	/**
+	 * @author Emi
+	 */
 	@Inject(method = "setSelectedTab", at = @At("HEAD"))
 	private void rpginventory$pre_setSelectedTab(ItemGroup g, CallbackInfo info) {
 		if (g.getType() != ItemGroup.Type.INVENTORY) {
@@ -67,6 +73,9 @@ public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScre
 		}
 	}
 
+	/**
+	 * Modified and expanded code by @Emi
+	 */
 	@Inject(method = "setSelectedTab", at = @At("TAIL"))
 	private void rpginventory$post_setSelectedTab(ItemGroup group, CallbackInfo ci) {
 
@@ -91,6 +100,9 @@ public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScre
 		}
 	}
 
+	/**
+	 * @author Emi
+	 */
 	@Inject(at = @At(value = "INVOKE", target = "net/minecraft/screen/slot/Slot.<init>(Lnet/minecraft/inventory/Inventory;III)V"), method = "setSelectedTab")
 	private void rpginventory$addCreativeTrinketSlots(ItemGroup g, CallbackInfo info) {
 		TrinketPlayerScreenHandler handler = trinkets$getHandler();
@@ -110,21 +122,33 @@ public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScre
 		}
 	}
 
+	/**
+	 * @author Emi
+	 */
 	@Inject(at = @At("HEAD"), method = "init")
 	private void rpginventory$init(CallbackInfo info) {
 		TrinketScreenManager.init(this);
 	}
 
+	/**
+	 * @author Emi
+	 */
 	@Inject(at = @At("HEAD"), method = "removed")
 	private void rpginventory$removed(CallbackInfo info) {
 		TrinketScreenManager.removeSelections();
 	}
 
+	/**
+	 * @author Emi
+	 */
 	@Inject(at = @At("TAIL"), method = "handledScreenTick")
 	private void rpginventory$handledScreenTick(CallbackInfo info) {
 		TrinketScreenManager.tick();
 	}
 
+	/**
+	 * @author Emi
+	 */
 	@Inject(at = @At("HEAD"), method = "render")
 	private void rpginventory$render(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo info) {
 		if (selectedTab.getType() == ItemGroup.Type.INVENTORY) {
@@ -132,6 +156,9 @@ public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScre
 		}
 	}
 
+	/**
+	 * Modified and expanded code by @Emi
+	 */
 	@Inject(at = @At("RETURN"), method = "drawBackground")
 	private void rpginventory$drawBackground(DrawContext context, float delta, int mouseX, int mouseY, CallbackInfo info) {
 		if (selectedTab.getType() == ItemGroup.Type.INVENTORY) {
@@ -142,21 +169,22 @@ public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScre
 		}
 	}
 
-	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/TextFieldWidget;render(Lnet/minecraft/client/gui/DrawContext;IIF)V"), method = "drawBackground")
+	@Inject(method = "drawBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/TextFieldWidget;render(Lnet/minecraft/client/gui/DrawContext;IIF)V"))
 	private void rpginventory$drawAdventureInventoryBackground(DrawContext context, float delta, int mouseX, int mouseY, CallbackInfo ci) {
 		if (selectedTab.getType() == ItemGroup.Type.INVENTORY) {
 			context.drawTexture(TAB_ADVENTURE_INVENTORY_TEXTURE, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 		}
 	}
 
-	@ModifyArgs(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/InventoryScreen;drawEntity(Lnet/minecraft/client/gui/DrawContext;IIIFFLnet/minecraft/entity/LivingEntity;)V"), method = "drawBackground")
+	@ModifyArgs(method = "drawBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/InventoryScreen;drawEntity(Lnet/minecraft/client/gui/DrawContext;IIIIIFFFLnet/minecraft/entity/LivingEntity;)V"))
 	private void rpginventory$moveDrawnPlayerEntity(Args args, DrawContext context, float delta, int mouseX, int mouseY) {
-		args.set(1, this.x + 80);
-		args.set(2, this.y + 46);
-		args.set(4, (float) (this.x + 80 - mouseX));
-		args.set(5, (float) (this.y + 46 - 30 - mouseY));
+		args.set(1, this.x + 64);
+		args.set(3, this.x + 96);
 	}
 
+	/**
+	 * @author Emi
+	 */
 	@Inject(at = @At("TAIL"), method = "drawForeground")
 	private void rpginventory$drawForeground(DrawContext context, int mouseX, int mouseY, CallbackInfo info) {
 		if (selectedTab.getType() == ItemGroup.Type.INVENTORY) {
@@ -164,6 +192,9 @@ public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScre
 		}
 	}
 
+	/**
+	 * @author Emi
+	 */
 	@Inject(at = @At("HEAD"), method = "isClickOutsideBounds", cancellable = true)
 	private void rpginventory$isClickOutsideBounds(double mouseX, double mouseY, int left, int top, int button, CallbackInfoReturnable<Boolean> info) {
 		if (selectedTab.getType() == ItemGroup.Type.INVENTORY && TrinketScreenManager.isClickInsideTrinketBounds(mouseX, mouseY)) {
@@ -171,6 +202,9 @@ public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScre
 		}
 	}
 
+	/**
+	 * @author Emi
+	 */
 	@Inject(at = @At("HEAD"), method = "isClickInTab", cancellable = true)
 	private void rpginventory$isClickInTab(ItemGroup group, double mouseX, double mouseY, CallbackInfoReturnable<Boolean> info) {
 		if (TrinketsClient.activeGroup != null) {
@@ -178,6 +212,9 @@ public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScre
 		}
 	}
 
+	/**
+	 * @author Emi
+	 */
 	@Inject(at = @At("HEAD"), method = "renderTabTooltipIfHovered", cancellable = true)
 	private void rpginventory$renderTabTooltipIfHovered(DrawContext context, ItemGroup group, int mouseX, int mouseY, CallbackInfoReturnable<Boolean> info) {
 		if (TrinketsClient.activeGroup != null) {
@@ -185,11 +222,17 @@ public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScre
 		}
 	}
 
+	/**
+	 * @author Emi
+	 */
 	@Override
 	public TrinketPlayerScreenHandler trinkets$getHandler() {
 		return (TrinketPlayerScreenHandler) this.client.player.playerScreenHandler;
 	}
 
+	/**
+	 * Modified and expanded code by @Emi
+	 */
 	@Override
 	public Rect2i trinkets$getGroupRect(SlotGroup group) {
 		String groupName = group.getName();
@@ -249,26 +292,41 @@ public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScre
 		return new Rect2i(0, 0, 0, 0);
 	}
 
+	/**
+	 * @author Emi
+	 */
 	@Override
 	public Slot trinkets$getFocusedSlot() {
 		return this.focusedSlot;
 	}
 
+	/**
+	 * @author Emi
+	 */
 	@Override
 	public int trinkets$getX() {
 		return this.x;
 	}
 
+	/**
+	 * @author Emi
+	 */
 	@Override
 	public int trinkets$getY() {
 		return this.y;
 	}
 
+	/**
+	 * @author Emi
+	 */
 	@Override
 	public boolean trinkets$isRecipeBookOpen() {
 		return false;
 	}
 
+	/**
+	 * @author Emi
+	 */
 	@Override
 	public void trinkets$updateTrinketSlots() {
 		setSelectedTab(selectedTab);

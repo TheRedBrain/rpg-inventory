@@ -1,30 +1,23 @@
 package com.github.theredbrain.rpginventory.network.packet;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
-import net.fabricmc.fabric.api.networking.v1.FabricPacket;
-import net.fabricmc.fabric.api.networking.v1.PacketType;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.packet.CustomPayload;
 
-public class ToggleTwoHandedStancePacket implements FabricPacket {
-	public static final PacketType<ToggleTwoHandedStancePacket> TYPE = PacketType.create(
-			RPGInventory.identifier("toggle_two_handed_stance"),
-			ToggleTwoHandedStancePacket::new
-	);
+public record ToggleTwoHandedStancePacket() implements CustomPayload {
+	public static final CustomPayload.Id<ToggleTwoHandedStancePacket> PACKET_ID = new CustomPayload.Id<>(RPGInventory.identifier("toggle_two_handed_stance"));
+	public static final PacketCodec<RegistryByteBuf, ToggleTwoHandedStancePacket> PACKET_CODEC = PacketCodec.of(ToggleTwoHandedStancePacket::write, ToggleTwoHandedStancePacket::new);
 
-	public ToggleTwoHandedStancePacket() {
-	}
-
-	public ToggleTwoHandedStancePacket(PacketByteBuf buf) {
+	public ToggleTwoHandedStancePacket(RegistryByteBuf registryByteBuf) {
 		this();
 	}
 
-	@Override
-	public PacketType<?> getType() {
-		return TYPE;
+	private void write(RegistryByteBuf registryByteBuf) {
 	}
 
 	@Override
-	public void write(PacketByteBuf buf) {
+	public CustomPayload.Id<? extends CustomPayload> getId() {
+		return PACKET_ID;
 	}
-
 }

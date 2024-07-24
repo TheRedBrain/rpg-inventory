@@ -1,34 +1,24 @@
 package com.github.theredbrain.rpginventory.network.packet;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
-import net.fabricmc.fabric.api.networking.v1.FabricPacket;
-import net.fabricmc.fabric.api.networking.v1.PacketType;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.packet.CustomPayload;
 
-public class SwapHandItemsPacket implements FabricPacket {
-	public static final PacketType<SwapHandItemsPacket> TYPE = PacketType.create(
-			RPGInventory.identifier("swap_hand_items"),
-			SwapHandItemsPacket::new
-	);
+public record SwapHandItemsPacket(boolean mainHand) implements CustomPayload {
+	public static final CustomPayload.Id<SwapHandItemsPacket> PACKET_ID = new CustomPayload.Id<>(RPGInventory.identifier("swap_hand_items"));
+	public static final PacketCodec<RegistryByteBuf, SwapHandItemsPacket> PACKET_CODEC = PacketCodec.of(SwapHandItemsPacket::write, SwapHandItemsPacket::new);
 
-	public final boolean mainHand;
-
-	public SwapHandItemsPacket(boolean mainHand) {
-		this.mainHand = mainHand;
+	public SwapHandItemsPacket(RegistryByteBuf registryByteBuf) {
+		this(registryByteBuf.readBoolean());
 	}
 
-	public SwapHandItemsPacket(PacketByteBuf buf) {
-		this(buf.readBoolean());
+	private void write(RegistryByteBuf registryByteBuf) {
+		registryByteBuf.writeBoolean(mainHand);
 	}
 
 	@Override
-	public PacketType<?> getType() {
-		return TYPE;
+	public CustomPayload.Id<? extends CustomPayload> getId() {
+		return PACKET_ID;
 	}
-
-	@Override
-	public void write(PacketByteBuf buf) {
-		buf.writeBoolean(this.mainHand);
-	}
-
 }

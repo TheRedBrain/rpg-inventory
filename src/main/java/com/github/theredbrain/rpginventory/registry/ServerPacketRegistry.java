@@ -1,48 +1,39 @@
 package com.github.theredbrain.rpginventory.registry;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
-import com.github.theredbrain.rpginventory.config.ServerConfig;
+import com.github.theredbrain.rpginventory.network.packet.ServerConfigSyncPacket;
 import com.github.theredbrain.rpginventory.network.packet.SheatheWeaponsPacket;
 import com.github.theredbrain.rpginventory.network.packet.SheatheWeaponsPacketReceiver;
+import com.github.theredbrain.rpginventory.network.packet.SheathedWeaponsPacket;
 import com.github.theredbrain.rpginventory.network.packet.SwapHandItemsPacket;
 import com.github.theredbrain.rpginventory.network.packet.SwapHandItemsPacketReceiver;
+import com.github.theredbrain.rpginventory.network.packet.SwappedHandItemsPacket;
 import com.github.theredbrain.rpginventory.network.packet.ToggleTwoHandedStancePacket;
 import com.github.theredbrain.rpginventory.network.packet.ToggleTwoHandedStancePacketReceiver;
-import com.google.gson.Gson;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Identifier;
 
 public class ServerPacketRegistry {
 
-	public static final Identifier SWAPPED_HAND_ITEMS_PACKET = RPGInventory.identifier("swapped_hand_items");
-	public static final Identifier SHEATHED_WEAPONS_PACKET = RPGInventory.identifier("sheathed_weapons"); // TODO if weapon sheathing is not visible in multiplayer
-
 	public static void init() {
-		ServerPlayNetworking.registerGlobalReceiver(SwapHandItemsPacket.TYPE, new SwapHandItemsPacketReceiver());
 
-		ServerPlayNetworking.registerGlobalReceiver(SheatheWeaponsPacket.TYPE, new SheatheWeaponsPacketReceiver());
+		PayloadTypeRegistry.playS2C().register(ServerConfigSyncPacket.PACKET_ID, ServerConfigSyncPacket.PACKET_CODEC);
+		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+			ServerPlayNetworking.send(handler.player, new ServerConfigSyncPacket(RPGInventory.serverConfig));
+		});
 
-		ServerPlayNetworking.registerGlobalReceiver(ToggleTwoHandedStancePacket.TYPE, new ToggleTwoHandedStancePacketReceiver());
+		PayloadTypeRegistry.playS2C().register(SheathedWeaponsPacket.PACKET_ID, SheathedWeaponsPacket.PACKET_CODEC);
 
-	}
+		PayloadTypeRegistry.playS2C().register(SwappedHandItemsPacket.PACKET_ID, SwappedHandItemsPacket.PACKET_CODEC);
 
-	public static class ServerConfigSync {
-		public static Identifier ID = RPGInventory.identifier("server_config_sync");
+		PayloadTypeRegistry.playC2S().register(SwapHandItemsPacket.PACKET_ID, SwapHandItemsPacket.PACKET_CODEC);
+		ServerPlayNetworking.registerGlobalReceiver(SwapHandItemsPacket.PACKET_ID, new SwapHandItemsPacketReceiver());
 
-		public static PacketByteBuf write(ServerConfig serverConfig) {
-			var gson = new Gson();
-			var json = gson.toJson(serverConfig);
-			var buffer = PacketByteBufs.create();
-			buffer.writeString(json);
-			return buffer;
-		}
+		PayloadTypeRegistry.playC2S().register(SheatheWeaponsPacket.PACKET_ID, SheatheWeaponsPacket.PACKET_CODEC);
+		ServerPlayNetworking.registerGlobalReceiver(SheatheWeaponsPacket.PACKET_ID, new SheatheWeaponsPacketReceiver());
 
-		public static ServerConfig read(PacketByteBuf buffer) {
-			var gson = new Gson();
-			var json = buffer.readString();
-			return gson.fromJson(json, ServerConfig.class);
-		}
+		PayloadTypeRegistry.playC2S().register(ToggleTwoHandedStancePacket.PACKET_ID, ToggleTwoHandedStancePacket.PACKET_CODEC);
+		ServerPlayNetworking.registerGlobalReceiver(ToggleTwoHandedStancePacket.PACKET_ID, new ToggleTwoHandedStancePacketReceiver());
 	}
 }

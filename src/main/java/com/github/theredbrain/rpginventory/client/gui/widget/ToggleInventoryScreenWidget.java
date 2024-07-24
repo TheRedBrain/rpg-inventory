@@ -12,7 +12,7 @@ import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
 public class ToggleInventoryScreenWidget extends ButtonWidget {
-	public static final Identifier BOOK_TEXTURE = new Identifier("textures/gui/book.png");
+	public static final Identifier BOOK_TEXTURE = Identifier.of("textures/gui/book.png");
 	private boolean isPressed;
 
 	public ToggleInventoryScreenWidget(int x, int y, boolean isPressed, PressAction action) {
@@ -29,7 +29,7 @@ public class ToggleInventoryScreenWidget extends ButtonWidget {
 	}
 
 	@Override
-	public void renderButton(DrawContext context, int mouseX, int mouseY, float delta) {
+	public void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
 		int i = 0;
 		int j = 205;
 		if (this.isHovered()) {

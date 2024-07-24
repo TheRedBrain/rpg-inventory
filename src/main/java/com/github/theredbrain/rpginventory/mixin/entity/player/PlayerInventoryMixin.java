@@ -97,44 +97,55 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 		}
 	}
 
-	/**
-	 * @author TheRedBrain
-	 * @reason overhaul armor
-	 */
-	@Overwrite
-	public void damageArmor(DamageSource damageSource, float amount, int[] slots) {
-		if (amount <= 0.0f) {
-			return;
-		}
-		// divide by 6 because gloves and shoulders exist
-		if ((amount /= 6.0f) < 1.0f) {
-			amount = 1.0f;
-		}
-		float finalAmount = amount;
-
-		int[] var4 = slots;
-		int var5 = slots.length;
-
-		for (int var6 = 0; var6 < var5; ++var6) {
-			int i = var4[var6];
-			ItemStack itemStack = (ItemStack) this.armor.get(i);
-			if ((!damageSource.isIn(DamageTypeTags.IS_FIRE) || !itemStack.getItem().isFireproof()) && itemStack.getItem() instanceof ArmorItem && ItemUtils.isUsable(itemStack)) {
-				itemStack.damage((int) finalAmount, (LivingEntity) this.player, (Consumer) ((player) -> {
-					((LivingEntity) player).sendEquipmentBreakStatus(EquipmentSlot.fromTypeIndex(EquipmentSlot.Type.ARMOR, i));
-				}));
-			}
-		}
-
-		if (var5 > 1) {
-			// armor trinkets
-			TrinketsApi.getTrinketComponent(player).ifPresent(trinkets ->
-					trinkets.forEach((slotReference, itemStack) -> {
-						if ((!damageSource.isIn(DamageTypeTags.IS_FIRE) || itemStack.getItem().isFireproof()) && itemStack.isIn(Tags.ARMOR_TRINKETS) && ItemUtils.isUsable(itemStack)) {
-							itemStack.damage((int) finalAmount, this.player, player -> TrinketsApi.onTrinketBroken(itemStack, slotReference, player));
-						}
-					}));
-		}
-	}
+//	/**
+//	 * @author TheRedBrain
+//	 * @reason overhaul armor
+//	 */
+//	@Overwrite
+//	public void damageEquipment(DamageSource damageSource, float amount, EquipmentSlot... slots) {
+//		if (!(amount <= 0.0F)) {
+//			int i = (int)Math.max(1.0F, amount / 6.0F);
+//
+//			for (EquipmentSlot equipmentSlot : slots) {
+//				ItemStack itemStack = this.getEquippedStack(equipmentSlot);
+//				if (itemStack.getItem() instanceof ArmorItem && itemStack.takesDamageFrom(source)) {
+//					itemStack.damage(i, this, equipmentSlot);
+//				}
+//			}
+//		}
+//
+//		if (amount <= 0.0f) {
+//			return;
+//		}
+//		// divide by 6 because gloves and shoulders exist
+//		if ((amount /= 6.0f) < 1.0f) {
+//			amount = 1.0f;
+//		}
+//		float finalAmount = amount;
+//
+//		int[] var4 = slots;
+//		int var5 = slots.length;
+//
+//		for (int var6 = 0; var6 < var5; ++var6) {
+//			int i = var4[var6];
+//			ItemStack itemStack = (ItemStack) this.armor.get(i);
+//			if ((!damageSource.isIn(DamageTypeTags.IS_FIRE) || !itemStack.getItem().isFireproof()) && itemStack.getItem() instanceof ArmorItem && ItemUtils.isUsable(itemStack)) {
+//				itemStack.damage((int) finalAmount, (LivingEntity) this.player, (Consumer) ((player) -> {
+//					((LivingEntity) player).sendEquipmentBreakStatus(EquipmentSlot.fromTypeIndex(EquipmentSlot.Type.ARMOR, i));
+//				}));
+//			}
+//		}
+//
+//		if (var5 > 1) {
+//			// armor trinkets
+//			TrinketsApi.getTrinketComponent(player).ifPresent(trinkets ->
+//					trinkets.forEach((slotReference, itemStack) -> {
+//						if ((!damageSource.isIn(DamageTypeTags.IS_FIRE) || itemStack.getItem().isFireproof()) && itemStack.isIn(Tags.ARMOR_TRINKETS) && ItemUtils.isUsable(itemStack)) {
+//							itemStack.damage((int) finalAmount, this.player, player -> TrinketsApi.onTrinketBroken(itemStack, slotReference, player));
+//						}
+//					}));
+//		}
+//	}
 
 	public ItemStack rpginventory$getHand() {
 		ItemStack handStack = this.main.get(this.selectedSlot);

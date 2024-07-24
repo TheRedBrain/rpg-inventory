@@ -2,7 +2,7 @@
 	"required": true,
 	"minVersion": "0.8",
 	"package": "com.github.theredbrain.rpginventory.mixin",
-	"compatibilityLevel": "JAVA_17",
+	"compatibilityLevel": "JAVA_21",
 	"mixins": [
 		"entity.LivingEntityMixin",
 		"entity.attribute.EntityAttributesMixin",
@@ -10,7 +10,7 @@
 		"entity.player.PlayerInventoryMixin",
 		"item.ItemMixin",
 		"item.ItemStackMixin",
-		"screen.PlayerScreenHandlerEquipmentSlotsMixin",
+		"screen.ArmorSlotMixin",
 		"screen.PlayerScreenHandlerMixin",
 		"screen.PlayerScreenHandlerOffHandSlotMixin",
 		"screen.SlotMixin",

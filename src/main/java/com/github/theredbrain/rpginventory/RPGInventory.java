@@ -13,6 +13,7 @@ import me.shedaniel.autoconfig.serializer.PartitioningSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.attribute.EntityAttribute;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +23,7 @@ public class RPGInventory implements ModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	public static ServerConfig serverConfig;
 
-	public static EntityAttribute ACTIVE_SPELL_SLOT_AMOUNT;
+	public static RegistryEntry<EntityAttribute> ACTIVE_SPELL_SLOT_AMOUNT;
 
 	public static final boolean isFoodOverhaulLoaded = FabricLoader.getInstance().isModLoaded("foodoverhaul");
 	public static final boolean isStaminaAttributesLoaded = FabricLoader.getInstance().isModLoaded("staminaattributes");
@@ -46,7 +47,7 @@ public class RPGInventory implements ModInitializer {
 	}
 
 	public static Identifier identifier(String path) {
-		return new Identifier(MOD_ID, path);
+		return Identifier.of(MOD_ID, path);
 	}
 
 	public static void info(String message) {

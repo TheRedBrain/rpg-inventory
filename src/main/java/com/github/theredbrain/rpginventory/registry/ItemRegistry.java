@@ -21,7 +21,7 @@ public class ItemRegistry {
 				content.add(item);
 			});
 		}
-		return Registry.register(Registries.ITEM, RPGInventory.identifier(name), item);
+		return Registry.register(Registries.ITEM, RegistryKey.of(Registries.ITEM.getKey(), RPGInventory.identifier(name)), item);
 	}
 
 	public static void init() {

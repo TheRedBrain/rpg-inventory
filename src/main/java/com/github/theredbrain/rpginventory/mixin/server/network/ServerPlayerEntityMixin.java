@@ -2,21 +2,21 @@ package com.github.theredbrain.rpginventory.mixin.server.network;
 
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerInventoryMixin;
+import com.github.theredbrain.rpginventory.network.packet.SheathedWeaponsPacket;
+import com.github.theredbrain.rpginventory.network.packet.SwappedHandItemsPacket;
 import com.github.theredbrain.rpginventory.registry.ItemRegistry;
-import com.github.theredbrain.rpginventory.registry.ServerPacketRegistry;
 import com.mojang.authlib.GameProfile;
-import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -24,8 +24,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Collection;
 
-@Mixin(value = ServerPlayerEntity.class, priority = 950)
+@Mixin(value = ServerPlayerEntity.class/*, priority = 950*/) // TODO test if priority is needed
 public abstract class ServerPlayerEntityMixin extends PlayerEntity implements DuckPlayerEntityMixin {
+
+	@Shadow public abstract boolean isCreative();
 
 	@Unique
 	ItemStack handSlotStack = ItemStack.EMPTY;
@@ -88,19 +90,12 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Du
 	@Unique
 	private void rpginventory$sendChangedHandSlotsPacket(boolean mainHand) {
 		Collection<ServerPlayerEntity> players = PlayerLookup.tracking((ServerWorld) this.getWorld(), this.getBlockPos());
-		PacketByteBuf data = new PacketByteBuf(Unpooled.buffer());
-		data.writeInt(this.getId());
-		data.writeBoolean(mainHand);
-		players.forEach(player -> ServerPlayNetworking.send(player, ServerPacketRegistry.SWAPPED_HAND_ITEMS_PACKET, data)); // TODO convert to packet
+		players.forEach(player -> ServerPlayNetworking.send(player, new SwappedHandItemsPacket(this.getId(), mainHand)));
 	}
 
 	@Unique
 	private void rpginventory$sendSheathedWeaponsPacket(boolean mainHand, boolean isSheathed) {
 		Collection<ServerPlayerEntity> players = PlayerLookup.tracking((ServerWorld) this.getWorld(), this.getBlockPos());
-		PacketByteBuf data = new PacketByteBuf(Unpooled.buffer());
-		data.writeInt(this.getId());
-		data.writeBoolean(mainHand);
-		data.writeBoolean(isSheathed);
-		players.forEach(player -> ServerPlayNetworking.send(player, ServerPacketRegistry.SHEATHED_WEAPONS_PACKET, data)); // TODO convert to packet
+		players.forEach(player -> ServerPlayNetworking.send(player, new SheathedWeaponsPacket(this.getId(), mainHand, isSheathed)));
 	}
 }

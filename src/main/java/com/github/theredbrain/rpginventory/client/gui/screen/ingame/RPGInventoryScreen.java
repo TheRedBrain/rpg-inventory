@@ -27,11 +27,14 @@ import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.StatusEffectSpriteManager;
 import net.minecraft.client.util.math.Rect2i;
 import net.minecraft.entity.attribute.EntityAttribute;
+import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffectUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.screen.slot.Slot;
@@ -149,13 +152,15 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 			this.neutralScrollAmount = 0.0f;
 
 			for (StatusEffectInstance statusEffectInstance : visibleEffectsList) {
+				Optional<RegistryKey<StatusEffect>> todo = statusEffectInstance.getEffectType().getKey();
+				todo.get();
 				if (RPGInventory.isFoodOverhaulLoaded && statusEffectInstance.getEffectType() instanceof FoodStatusEffect) {
 					this.foodEffectsList.add(statusEffectInstance);
-				} else if (statusEffectInstance.getEffectType().getCategory() == StatusEffectCategory.HARMFUL) {
+				} else if (statusEffectInstance.getEffectType().value().getCategory() == StatusEffectCategory.HARMFUL) {
 					this.negativeEffectsList.add(statusEffectInstance);
-				} else if (statusEffectInstance.getEffectType().getCategory() == StatusEffectCategory.BENEFICIAL) {
+				} else if (statusEffectInstance.getEffectType().value().getCategory() == StatusEffectCategory.BENEFICIAL) {
 					this.positiveEffectsList.add(statusEffectInstance);
-				} else if (statusEffectInstance.getEffectType().getCategory() == StatusEffectCategory.NEUTRAL) {
+				} else if (statusEffectInstance.getEffectType().value().getCategory() == StatusEffectCategory.NEUTRAL) {
 					this.neutralEffectsList.add(statusEffectInstance);
 				}
 			}
@@ -265,8 +270,8 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 			context.drawTexture(ADVENTURE_INVENTORY_SIDES_BACKGROUND_TEXTURE, i + this.backgroundWidth, j, 0, 0, this.sidesBackgroundWidth, this.backgroundHeight, this.sidesBackgroundWidth, this.backgroundHeight);
 		}
 		if (this.client != null && this.client.player != null) {
-//            InventoryScreen.drawEntity(context, i + 26, j + 36, i + 75, j + 106, 30, 0.0625f, this.mouseX, this.mouseY, this.client.player);
-			InventoryScreen.drawEntity(context, i + 51, j + 103, 30, (float) (i + 51) - this.mouseX, (float) (j + 103 - 50) - this.mouseY, this.client.player);
+            InventoryScreen.drawEntity(context, i + 26, j + 36, i + 75, j + 106, 30, 0.0625f, this.mouseX, this.mouseY, this.client.player);
+//			InventoryScreen.drawEntity(context, i + 51, j + 103, 30, (float) (i + 51) - this.mouseX, (float) (j + 103 - 50) - this.mouseY, this.client.player);
 		}
 		TrinketScreenManager.drawExtraGroups(context);
 	}
@@ -390,7 +395,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 		List<Text> list = new ArrayList<>(List.of(getStatusEffectName(statusEffectInstance)));
 		if (!(statusEffectInstance.isInfinite())) {
 //            return List.of(getStatusEffectName(statusEffectInstance), );
-			list.add(StatusEffectUtil.getDurationText(statusEffectInstance, 1.0f/*, this.client.world.getTickManager().getTickRate()*/));
+			list.add(StatusEffectUtil.getDurationText(statusEffectInstance, 1.0f, this.client.world.getTickManager().getTickRate()));
 		}
 		Text description = getStatusEffectDescription(statusEffectInstance);
 		if (!description.getString().isEmpty()) {
@@ -401,7 +406,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 	}
 
 	private Text getStatusEffectName(StatusEffectInstance statusEffectInstance) {
-		MutableText mutableText = statusEffectInstance.getEffectType().getName().copy();
+		MutableText mutableText = statusEffectInstance.getEffectType().value().getName().copy();
 		if (statusEffectInstance.getAmplifier() >= 1 && statusEffectInstance.getAmplifier() <= 9) {
 			mutableText.append(ScreenTexts.SPACE).append(Text.translatable("enchantment.level." + (statusEffectInstance.getAmplifier() + 1)));
 		}
@@ -409,7 +414,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 	}
 
 	private Text getStatusEffectDescription(StatusEffectInstance statusEffectInstance) {
-		String translationKey = statusEffectInstance.getEffectType().getTranslationKey() + ".description";
+		String translationKey = statusEffectInstance.getEffectType().value().getTranslationKey() + ".description";
 		Text description = Text.translatable(translationKey);
 		if (description.getString().equals(translationKey)) {
 			description = Text.empty();
@@ -444,11 +449,11 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 				if (stringArray[0].equals("ATTRIBUTE_VALUE")) {
 
 					Identifier attributeId = Identifier.of(stringArray[1], stringArray[2]);
-					EntityAttribute attribute = Registries.ATTRIBUTE.get(attributeId);
-					if (attribute != null && player.getAttributes().hasAttribute(attribute)) {
-						MutableText mutableText = Text.translatable(attribute.getTranslationKey());
+					Optional<RegistryEntry.Reference<EntityAttribute>> attribute = Registries.ATTRIBUTE.getEntry(attributeId);
+					if (attribute.isPresent() && player.getAttributes().hasAttribute(attribute.get())) {
+						MutableText mutableText = Text.translatable(attribute.get().value().getTranslationKey());
 						mutableText.append(Text.of(": "));
-						mutableText.append(Text.of(Double.toString(player.getAttributeValue(attribute))));
+						mutableText.append(Text.of(Double.toString(player.getAttributeValue(attribute.get()))));
 						list.add(mutableText);
 					}
 				}
@@ -457,9 +462,9 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 					MutableText mutableText = Text.translatable(stringArray[1]);
 
 					Identifier attributeId = Identifier.of(stringArray[2], stringArray[3]);
-					EntityAttribute attribute = Registries.ATTRIBUTE.get(attributeId);
-					if (attribute != null && player.getAttributes().hasAttribute(attribute)) {
-						mutableText.append(Text.of(Double.toString(player.getAttributeValue(attribute))));
+					Optional<RegistryEntry.Reference<EntityAttribute>> attribute = Registries.ATTRIBUTE.getEntry(attributeId);
+					if (attribute.isPresent() && player.getAttributes().hasAttribute(attribute.get())) {
+						mutableText.append(Text.of(Double.toString(player.getAttributeValue(attribute.get()))));
 						list.add(mutableText);
 					}
 				}
@@ -469,12 +474,12 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 
 					Identifier firstAttributeId = Identifier.of(stringArray[2], stringArray[3]);
 					Identifier secondAttributeId = Identifier.of(stringArray[4], stringArray[5]);
-					EntityAttribute firstAttribute = Registries.ATTRIBUTE.get(firstAttributeId);
-					EntityAttribute secondAttribute = Registries.ATTRIBUTE.get(secondAttributeId);
-					if (firstAttribute != null && secondAttribute != null && player.getAttributes().hasAttribute(firstAttribute) && player.getAttributes().hasAttribute(secondAttribute)) {
-						mutableText.append(Text.of(Double.toString(player.getAttributeValue(firstAttribute))));
+					Optional<RegistryEntry.Reference<EntityAttribute>> firstAttribute = Registries.ATTRIBUTE.getEntry(firstAttributeId);
+					Optional<RegistryEntry.Reference<EntityAttribute>> secondAttribute = Registries.ATTRIBUTE.getEntry(secondAttributeId);
+					if (firstAttribute.isPresent() && secondAttribute.isPresent() && player.getAttributes().hasAttribute(firstAttribute.get()) && player.getAttributes().hasAttribute(secondAttribute.get())) {
+						mutableText.append(Text.of(Double.toString(player.getAttributeValue(firstAttribute.get()))));
 						mutableText.append(Text.of("/"));
-						mutableText.append(Text.of(Double.toString(player.getAttributeValue(secondAttribute))));
+						mutableText.append(Text.of(Double.toString(player.getAttributeValue(secondAttribute.get()))));
 						list.add(mutableText);
 					}
 				}
@@ -597,7 +602,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 	}
 
 	@Override
-	public boolean mouseScrolled(double mouseX, double mouseY/*, double horizontalAmount*/, double verticalAmount) {
+	public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
 		int scrollAreaStartX = this.x + this.backgroundWidth + 7;
 		int scrollAreaWidth = 119;
 		int scrollAreaStartY = this.y + 33;

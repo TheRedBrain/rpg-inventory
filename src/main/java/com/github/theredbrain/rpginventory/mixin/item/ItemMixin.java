@@ -26,7 +26,7 @@ public abstract class ItemMixin {
 	@Unique
 	private String rpginventory$getOrCreateTranslationKeyBroken() {
 		if (this.rpginventory$translationKeyBroken == null) {
-			this.rpginventory$translationKeyBroken = Util.createTranslationKey("item", new Identifier(Registries.ITEM.getId((Item) (Object) this).getNamespace() + ":" + Registries.ITEM.getId((Item) (Object) this).getPath() + "_broken"));
+			this.rpginventory$translationKeyBroken = Util.createTranslationKey("item", Identifier.of(Registries.ITEM.getId((Item) (Object) this).getNamespace() + ":" + Registries.ITEM.getId((Item) (Object) this).getPath() + "_broken"));
 		}
 		return this.rpginventory$translationKeyBroken;
 	}

@@ -9,19 +9,22 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
+
+import java.util.Optional;
 
 public class PredicateRegistry {
 
 	static {
 		TrinketsApi.registerTrinketPredicate(RPGInventory.identifier("can_change_equipment"), (stack, ref, entity) -> {
 
-			StatusEffect civilisation_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.civilisation_status_effect_identifier));
-			boolean hasCivilisationEffect = civilisation_status_effect != null && entity.hasStatusEffect(civilisation_status_effect);
+			Optional<RegistryEntry.Reference<StatusEffect>> civilisation_status_effect = Registries.STATUS_EFFECT.getEntry(Identifier.tryParse(RPGInventory.serverConfig.civilisation_status_effect_identifier));
+			boolean hasCivilisationEffect = civilisation_status_effect.isPresent() && entity.hasStatusEffect(civilisation_status_effect.get());
 
-			StatusEffect wilderness_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.wilderness_status_effect_identifier));
-			boolean hasWildernessEffect = wilderness_status_effect != null && entity.hasStatusEffect(wilderness_status_effect);
+			Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(Identifier.tryParse(RPGInventory.serverConfig.wilderness_status_effect_identifier));
+			boolean hasWildernessEffect = wilderness_status_effect.isPresent() && entity.hasStatusEffect(wilderness_status_effect.get());
 
 			if (hasCivilisationEffect
 					|| entity instanceof PlayerEntity playerEntity && playerEntity.isCreative()
@@ -34,8 +37,8 @@ public class PredicateRegistry {
 		TrinketsApi.registerTrinketPredicate(RPGInventory.identifier("are_hand_slots_restricted_to_tags"), (stack, ref, entity) -> {
 			SlotType slot = ref.inventory().getSlotType();
 			if (
-					stack.isIn(TagKey.of(RegistryKeys.ITEM, new Identifier("trinkets", slot.getGroup() + "/" + slot.getName())))
-							|| stack.isIn(TagKey.of(RegistryKeys.ITEM, new Identifier("trinkets", "all")))
+					stack.isIn(TagKey.of(RegistryKeys.ITEM, Identifier.of("trinkets", slot.getGroup() + "/" + slot.getName())))
+							|| stack.isIn(TagKey.of(RegistryKeys.ITEM, Identifier.of("trinkets", "all")))
 							|| !RPGInventory.serverConfig.are_hand_items_restricted_to_item_tags
 			) {
 				return TriState.TRUE;
@@ -44,11 +47,11 @@ public class PredicateRegistry {
 		});
 		TrinketsApi.registerTrinketPredicate(RPGInventory.identifier("can_change_hand_slot"), (stack, ref, entity) -> {
 
-			StatusEffect civilisation_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.civilisation_status_effect_identifier));
-			boolean hasCivilisationEffect = civilisation_status_effect != null && entity.hasStatusEffect(civilisation_status_effect);
+			Optional<RegistryEntry.Reference<StatusEffect>> civilisation_status_effect = Registries.STATUS_EFFECT.getEntry(Identifier.tryParse(RPGInventory.serverConfig.civilisation_status_effect_identifier));
+			boolean hasCivilisationEffect = civilisation_status_effect.isPresent() && entity.hasStatusEffect(civilisation_status_effect.get());
 
-			StatusEffect wilderness_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.wilderness_status_effect_identifier));
-			boolean hasWildernessEffect = wilderness_status_effect != null && entity.hasStatusEffect(wilderness_status_effect);
+			Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(Identifier.tryParse(RPGInventory.serverConfig.wilderness_status_effect_identifier));
+			boolean hasWildernessEffect = wilderness_status_effect.isPresent() && entity.hasStatusEffect(wilderness_status_effect.get());
 
 			boolean isPlayerCreative = false;
 			boolean isHandSheathed = false;
@@ -69,11 +72,11 @@ public class PredicateRegistry {
 		});
 		TrinketsApi.registerTrinketPredicate(RPGInventory.identifier("can_change_sheathed_hand_slot"), (stack, ref, entity) -> {
 
-			StatusEffect civilisation_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.civilisation_status_effect_identifier));
-			boolean hasCivilisationEffect = civilisation_status_effect != null && entity.hasStatusEffect(civilisation_status_effect);
+			Optional<RegistryEntry.Reference<StatusEffect>> civilisation_status_effect = Registries.STATUS_EFFECT.getEntry(Identifier.tryParse(RPGInventory.serverConfig.civilisation_status_effect_identifier));
+			boolean hasCivilisationEffect = civilisation_status_effect != null && entity.hasStatusEffect(civilisation_status_effect.get());
 
-			StatusEffect wilderness_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.wilderness_status_effect_identifier));
-			boolean hasWildernessEffect = wilderness_status_effect != null && entity.hasStatusEffect(wilderness_status_effect);
+			Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(Identifier.tryParse(RPGInventory.serverConfig.wilderness_status_effect_identifier));
+			boolean hasWildernessEffect = wilderness_status_effect != null && entity.hasStatusEffect(wilderness_status_effect.get());
 
 			boolean isPlayerCreative = false;
 			boolean isHandSheathed = false;
@@ -94,11 +97,11 @@ public class PredicateRegistry {
 		});
 		TrinketsApi.registerTrinketPredicate(RPGInventory.identifier("can_change_sheathed_offhand_slot"), (stack, ref, entity) -> {
 
-			StatusEffect civilisation_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.civilisation_status_effect_identifier));
-			boolean hasCivilisationEffect = civilisation_status_effect != null && entity.hasStatusEffect(civilisation_status_effect);
+			Optional<RegistryEntry.Reference<StatusEffect>> civilisation_status_effect = Registries.STATUS_EFFECT.getEntry(Identifier.tryParse(RPGInventory.serverConfig.civilisation_status_effect_identifier));
+			boolean hasCivilisationEffect = civilisation_status_effect.isPresent() && entity.hasStatusEffect(civilisation_status_effect.get());
 
-			StatusEffect wilderness_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.wilderness_status_effect_identifier));
-			boolean hasWildernessEffect = wilderness_status_effect != null && entity.hasStatusEffect(wilderness_status_effect);
+			Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(Identifier.tryParse(RPGInventory.serverConfig.wilderness_status_effect_identifier));
+			boolean hasWildernessEffect = wilderness_status_effect.isPresent() && entity.hasStatusEffect(wilderness_status_effect.get());
 
 			boolean isPlayerCreative = false;
 			boolean isOffhandSheathed = false;

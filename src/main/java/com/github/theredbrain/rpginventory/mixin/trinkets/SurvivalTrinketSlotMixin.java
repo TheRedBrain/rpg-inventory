@@ -15,6 +15,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -30,6 +31,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Mixin(value = SurvivalTrinketSlot.class)
 public abstract class SurvivalTrinketSlotMixin extends Slot {
@@ -75,11 +77,11 @@ public abstract class SurvivalTrinketSlotMixin extends Slot {
 		if (livingEntity.getServer() != null) {
 			bl2 = livingEntity.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT);
 		}
-		StatusEffect civilisation_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.civilisation_status_effect_identifier));
-		boolean hasCivilisationEffect = civilisation_status_effect != null && livingEntity.hasStatusEffect(civilisation_status_effect);
+		Optional<RegistryEntry.Reference<StatusEffect>> civilisation_status_effect = Registries.STATUS_EFFECT.getEntry(Identifier.tryParse(RPGInventory.serverConfig.civilisation_status_effect_identifier));
+		boolean hasCivilisationEffect = civilisation_status_effect.isPresent() && livingEntity.hasStatusEffect(civilisation_status_effect.get());
 
-		StatusEffect wilderness_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.wilderness_status_effect_identifier));
-		boolean hasWildernessEffect = wilderness_status_effect != null && livingEntity.hasStatusEffect(wilderness_status_effect);
+		Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(Identifier.tryParse(RPGInventory.serverConfig.wilderness_status_effect_identifier));
+		boolean hasWildernessEffect = wilderness_status_effect.isPresent() && livingEntity.hasStatusEffect(wilderness_status_effect.get());
 
 		cir.setReturnValue(cir.getReturnValue() && (hasCivilisationEffect || bl || (bl2 && !hasWildernessEffect)));
 	}
@@ -94,11 +96,11 @@ public abstract class SurvivalTrinketSlotMixin extends Slot {
 			bl = player.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT);
 		}
 
-		StatusEffect civilisation_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.civilisation_status_effect_identifier));
-		boolean hasCivilisationEffect = civilisation_status_effect != null && player.hasStatusEffect(civilisation_status_effect);
+		Optional<RegistryEntry.Reference<StatusEffect>> civilisation_status_effect = Registries.STATUS_EFFECT.getEntry(Identifier.tryParse(RPGInventory.serverConfig.civilisation_status_effect_identifier));
+		boolean hasCivilisationEffect = civilisation_status_effect.isPresent() && player.hasStatusEffect(civilisation_status_effect.get());
 
-		StatusEffect wilderness_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.wilderness_status_effect_identifier));
-		boolean hasWildernessEffect = wilderness_status_effect != null && player.hasStatusEffect(wilderness_status_effect);
+		Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(Identifier.tryParse(RPGInventory.serverConfig.wilderness_status_effect_identifier));
+		boolean hasWildernessEffect = wilderness_status_effect.isPresent() && player.hasStatusEffect(wilderness_status_effect.get());
 
 		cir.setReturnValue(cir.getReturnValue() && (hasCivilisationEffect || (bl && !hasWildernessEffect) || player.isCreative()));
 	}

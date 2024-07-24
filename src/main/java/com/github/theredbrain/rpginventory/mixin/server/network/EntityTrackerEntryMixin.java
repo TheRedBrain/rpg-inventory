@@ -2,13 +2,12 @@ package com.github.theredbrain.rpginventory.mixin.server.network;
 
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerInventoryMixin;
-import com.github.theredbrain.rpginventory.registry.ServerPacketRegistry;
-import io.netty.buffer.Unpooled;
+import com.github.theredbrain.rpginventory.network.packet.SheathedWeaponsPacket;
+import com.github.theredbrain.rpginventory.network.packet.SwappedHandItemsPacket;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.EntityTrackerEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Final;
@@ -30,30 +29,16 @@ public class EntityTrackerEntryMixin {
 		if (this.entity instanceof PlayerEntity) {
 			PlayerEntity player = (PlayerEntity) entity;
 			if (!((DuckPlayerInventoryMixin) serverPlayer.getInventory()).rpginventory$getHand().isEmpty() || !((DuckPlayerInventoryMixin) serverPlayer.getInventory()).rpginventory$getAlternativeHand().isEmpty()) {
-				PacketByteBuf data = new PacketByteBuf(Unpooled.buffer());
-				data.writeInt(serverPlayer.getId());
-				data.writeBoolean(true);
-				ServerPlayNetworking.send((ServerPlayerEntity) player, ServerPacketRegistry.SWAPPED_HAND_ITEMS_PACKET, data); // TODO convert to packet
+				ServerPlayNetworking.send((ServerPlayerEntity) player, new SwappedHandItemsPacket(serverPlayer.getId(), true));
 			}
 			if (!serverPlayer.getEquippedStack(EquipmentSlot.OFFHAND).isEmpty() || !((DuckPlayerInventoryMixin) serverPlayer.getInventory()).rpginventory$getAlternativeOffhand().isEmpty()) {
-				PacketByteBuf data = new PacketByteBuf(Unpooled.buffer());
-				data.writeInt(serverPlayer.getId());
-				data.writeBoolean(false);
-				ServerPlayNetworking.send((ServerPlayerEntity) player, ServerPacketRegistry.SWAPPED_HAND_ITEMS_PACKET, data); // TODO convert to packet
+				ServerPlayNetworking.send((ServerPlayerEntity) player, new SwappedHandItemsPacket(serverPlayer.getId(), false));
 			}
 			if (!((DuckPlayerInventoryMixin) serverPlayer.getInventory()).rpginventory$getHand().isEmpty() || !((DuckPlayerInventoryMixin) serverPlayer.getInventory()).rpginventory$getSheathedHand().isEmpty()) {
-				PacketByteBuf data = new PacketByteBuf(Unpooled.buffer());
-				data.writeInt(serverPlayer.getId());
-				data.writeBoolean(true);
-				data.writeBoolean(((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed());
-				ServerPlayNetworking.send((ServerPlayerEntity) player, ServerPacketRegistry.SHEATHED_WEAPONS_PACKET, data); // TODO convert to packet
+				ServerPlayNetworking.send((ServerPlayerEntity) player, new SheathedWeaponsPacket(serverPlayer.getId(), true, ((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed()));
 			}
 			if (!serverPlayer.getEquippedStack(EquipmentSlot.OFFHAND).isEmpty() || !((DuckPlayerInventoryMixin) serverPlayer.getInventory()).rpginventory$getSheathedOffhand().isEmpty()) {
-				PacketByteBuf data = new PacketByteBuf(Unpooled.buffer());
-				data.writeInt(serverPlayer.getId());
-				data.writeBoolean(false);
-				data.writeBoolean(((DuckPlayerEntityMixin) player).rpginventory$isOffhandStackSheathed());
-				ServerPlayNetworking.send((ServerPlayerEntity) player, ServerPacketRegistry.SHEATHED_WEAPONS_PACKET, data); // TODO convert to packet
+				ServerPlayNetworking.send((ServerPlayerEntity) player, new SheathedWeaponsPacket(serverPlayer.getId(), false, ((DuckPlayerEntityMixin) player).rpginventory$isOffhandStackSheathed()));
 			}
 		}
 	}

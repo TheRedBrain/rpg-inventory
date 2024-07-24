@@ -31,13 +31,13 @@
 		"rpginventory.mixins.json"
 	],
 	"depends": {
-		"java": ">=17",
-		"minecraft": "1.20.1",
-		"fabricloader": ">=0.14.20",
+		"java": ">=21",
+		"minecraft": "1.21",
+		"fabricloader": ">=0.15.11",
 		"fabric-api": "*",
-		"cloth-config": ">=11.1.106",
-		"trinkets": ">=3.7.1",
-		"slotcustomizationapi": ">=1.0.0-1.20.1"
+		"cloth-config": ">=15.0.127",
+		"trinkets": ">=3.10.0",
+		"slotcustomizationapi": ">=2.0.0"
 	},
 	"suggests": {
 		"scriptblocks": "*",

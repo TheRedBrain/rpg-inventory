@@ -4,7 +4,6 @@ import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.staminaattributes.entity.StaminaUsingEntity;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -12,9 +11,12 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 
-public class SheatheWeaponsPacketReceiver implements ServerPlayNetworking.PlayPacketHandler<SheatheWeaponsPacket> {
+public class SheatheWeaponsPacketReceiver implements ServerPlayNetworking.PlayPayloadHandler<SheatheWeaponsPacket> {
+
 	@Override
-	public void receive(SheatheWeaponsPacket packet, ServerPlayerEntity player, PacketSender responseSender) {
+	public void receive(SheatheWeaponsPacket payload, ServerPlayNetworking.Context context) {
+
+		ServerPlayerEntity player = context.player();
 
 		ItemStack handItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getHand().copy();
 		if (handItemStack.isEmpty()) {
@@ -47,6 +49,6 @@ public class SheatheWeaponsPacketReceiver implements ServerPlayNetworking.PlayPa
 		if (RPGInventory.isStaminaAttributesLoaded && !player.isCreative()) {
 			((StaminaUsingEntity) player).staminaattributes$addStamina(-RPGInventory.serverConfig.sheathing_hand_items_stamina_cost);
 		}
-		player.getServerWorld().playSound(null, player.getBlockPos(), SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.PLAYERS, 1.0F, 1.0F);
+		player.getServerWorld().playSound(null, player.getBlockPos().getX(), player.getBlockPos().getY(), player.getBlockPos().getZ(), SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.PLAYERS, 1.0F, 1.0F);
 	}
 }

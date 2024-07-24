@@ -19,7 +19,6 @@ import dev.emi.trinkets.api.TrinketInventory;
 import dev.emi.trinkets.api.TrinketsApi;
 import dev.emi.trinkets.mixin.accessor.ScreenHandlerAccessor;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -171,6 +170,9 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 		trinkets$updateTrinketSlots(true);
 	}
 
+	/**
+	 * Modified and expanded code by @Emi
+	 */
 	@Override
 	public void trinkets$updateTrinketSlots(boolean slotsChanged) {
 
@@ -321,6 +323,9 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 		});
 	}
 
+	/**
+	 * @author Emi
+	 */
 	@Unique
 	private boolean rpginventory$hasSlots(TrinketComponent comp, SlotGroup group) {
 		for (TrinketInventory inv : comp.getInventory().get(group.getName()).values()) {
@@ -331,23 +336,35 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 		return false;
 	}
 
+	/**
+	 * @author Emi
+	 */
 	@Override
 	public int trinkets$getGroupNum(SlotGroup group) {
 		return groupNums.getOrDefault(group, 0);
 	}
 
+	/**
+	 * @author Emi
+	 */
 	@Nullable
 	@Override
 	public Point trinkets$getGroupPos(SlotGroup group) {
 		return groupPos.get(group);
 	}
 
+	/**
+	 * @author Emi
+	 */
 	@NotNull
 	@Override
 	public List<Point> trinkets$getSlotHeights(SlotGroup group) {
 		return slotHeights.getOrDefault(group, ImmutableList.of());
 	}
 
+	/**
+	 * @author Emi
+	 */
 	@Nullable
 	@Override
 	public Point trinkets$getSlotHeight(SlotGroup group, int i) {
@@ -355,32 +372,50 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 		return i < points.size() ? points.get(i) : null;
 	}
 
+	/**
+	 * @author Emi
+	 */
 	@NotNull
 	@Override
 	public List<SlotType> trinkets$getSlotTypes(SlotGroup group) {
 		return slotTypes.getOrDefault(group, ImmutableList.of());
 	}
 
+	/**
+	 * @author Emi
+	 */
 	@Override
 	public int trinkets$getSlotWidth(SlotGroup group) {
 		return slotWidths.getOrDefault(group, 0);
 	}
 
+	/**
+	 * @author Emi
+	 */
 	@Override
 	public int trinkets$getGroupCount() {
 		return groupCount;
 	}
 
+	/**
+	 * @author Emi
+	 */
 	@Override
 	public int trinkets$getTrinketSlotStart() {
 		return trinketSlotStart;
 	}
 
+	/**
+	 * @author Emi
+	 */
 	@Override
 	public int trinkets$getTrinketSlotEnd() {
 		return trinketSlotEnd;
 	}
 
+	/**
+	 * @author Emi
+	 */
 	@Inject(at = @At("HEAD"), method = "onClosed")
 	private void rpginventory$onClosed(PlayerEntity player, CallbackInfo info) {
 		if (player.getWorld().isClient) {
@@ -390,6 +425,9 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 		}
 	}
 
+	/**
+	 * Modified and expanded code by @Emi
+	 */
 	@Inject(at = @At("HEAD"), method = "quickMove", cancellable = true)
 	private void rpginventory$quickMove(PlayerEntity player, int slot, CallbackInfoReturnable<ItemStack> cir) {
 		Slot slot1 = slots.get(slot);
@@ -430,14 +468,14 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 								SlotType type = ts.getType();
 								SlotReference ref = new SlotReference((TrinketInventory) ts.inventory, ts.getIndex());
 
-								if ((Objects.equals(type.getGroup(), "spell_slot_1") && player.getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 1)
-										|| (Objects.equals(type.getGroup(), "spell_slot_2") && player.getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 2)
-										|| (Objects.equals(type.getGroup(), "spell_slot_3") && player.getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 3)
-										|| (Objects.equals(type.getGroup(), "spell_slot_4") && player.getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 4)
-										|| (Objects.equals(type.getGroup(), "spell_slot_5") && player.getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 5)
-										|| (Objects.equals(type.getGroup(), "spell_slot_6") && player.getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 6)
-										|| (Objects.equals(type.getGroup(), "spell_slot_7") && player.getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 7)
-										|| (Objects.equals(type.getGroup(), "spell_slot_8") && player.getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 8)
+								if ((Objects.equals(type.getGroup(), "spell_slot_1") && ((DuckPlayerEntityMixin)player).rpginventory$getActiveSpellSlotAmount() < 1)
+										|| (Objects.equals(type.getGroup(), "spell_slot_2") && ((DuckPlayerEntityMixin)player).rpginventory$getActiveSpellSlotAmount() < 2)
+										|| (Objects.equals(type.getGroup(), "spell_slot_3") && ((DuckPlayerEntityMixin)player).rpginventory$getActiveSpellSlotAmount() < 3)
+										|| (Objects.equals(type.getGroup(), "spell_slot_4") && ((DuckPlayerEntityMixin)player).rpginventory$getActiveSpellSlotAmount() < 4)
+										|| (Objects.equals(type.getGroup(), "spell_slot_5") && ((DuckPlayerEntityMixin)player).rpginventory$getActiveSpellSlotAmount() < 5)
+										|| (Objects.equals(type.getGroup(), "spell_slot_6") && ((DuckPlayerEntityMixin)player).rpginventory$getActiveSpellSlotAmount() < 6)
+										|| (Objects.equals(type.getGroup(), "spell_slot_7") && ((DuckPlayerEntityMixin)player).rpginventory$getActiveSpellSlotAmount() < 7)
+										|| (Objects.equals(type.getGroup(), "spell_slot_8") && ((DuckPlayerEntityMixin)player).rpginventory$getActiveSpellSlotAmount() < 8)
 								) {
 									continue;
 								}
@@ -487,7 +525,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 						}
 				);
 
-				EquipmentSlot equipmentSlot = MobEntity.getPreferredEquipmentSlot(stack);
+				EquipmentSlot equipmentSlot = this.owner.getPreferredEquipmentSlot(stack);
 
 				if (((DuckPlayerEntityMixin) this.owner).rpginventory$isHandStackSheathed()) {
 					if (!stack.isEmpty() && sheathedHandSlotIndex > -1 && stack.isIn(Tags.HAND_ITEMS)) {

@@ -4,10 +4,12 @@ import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,31 +19,29 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(targets = {"net/minecraft/screen/PlayerScreenHandler$1"})
-public class PlayerScreenHandlerEquipmentSlotsMixin {
+import java.util.Optional;
 
-	@Shadow
-	@Final
-	EquipmentSlot field_7834;
+@Mixin(targets = {"net/minecraft/screen/slot/ArmorSlot"})
+public class ArmorSlotMixin {
 
-	@Shadow
-	@Final
-	PlayerEntity field_39410;
+	@Shadow @Final private LivingEntity entity;
+
+	@Shadow @Final private EquipmentSlot equipmentSlot;
 
 	@Inject(method = "canInsert", at = @At("RETURN"), cancellable = true)
 	public void rpginventory$canInsert(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
 		boolean bl = true;
-		if (this.field_39410.getServer() != null) {
-			bl = this.field_39410.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT);
+		if (this.entity.getServer() != null) {
+			bl = this.entity.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT);
 		}
 
-		StatusEffect civilisation_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.civilisation_status_effect_identifier));
-		boolean hasCivilisationEffect = civilisation_status_effect != null && this.field_39410.hasStatusEffect(civilisation_status_effect);
+		Optional<RegistryEntry.Reference<StatusEffect>> civilisation_status_effect = Registries.STATUS_EFFECT.getEntry(Identifier.tryParse(RPGInventory.serverConfig.civilisation_status_effect_identifier));
+		boolean hasCivilisationEffect = civilisation_status_effect.isPresent() && this.entity.hasStatusEffect(civilisation_status_effect.get());
 
-		StatusEffect wilderness_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.wilderness_status_effect_identifier));
-		boolean hasWildernessEffect = wilderness_status_effect != null && this.field_39410.hasStatusEffect(wilderness_status_effect);
+		Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(Identifier.tryParse(RPGInventory.serverConfig.wilderness_status_effect_identifier));
+		boolean hasWildernessEffect = wilderness_status_effect.isPresent() && this.entity.hasStatusEffect(wilderness_status_effect.get());
 
-		cir.setReturnValue((cir.getReturnValue() || rpginventory$isOfEquipmentTag(stack, this.field_7834)) && (hasCivilisationEffect || this.field_39410.isCreative() || (bl && !hasWildernessEffect)));
+		cir.setReturnValue((cir.getReturnValue() || rpginventory$isOfEquipmentTag(stack, this.equipmentSlot)) && (hasCivilisationEffect || (this.entity instanceof PlayerEntity player && player.isCreative()) || (bl && !hasWildernessEffect)));
 	}
 
 	@Unique
