@@ -6,6 +6,8 @@
 		"minecraft:diamond_sword",
 		"minecraft:golden_sword",
 		"minecraft:netherite_sword",
+		"minecraft:trident",
+		"minecraft:mace",
 		"rpginventory:default_empty_hand_weapon",
 		{
 			"id": "#archers:spears",
