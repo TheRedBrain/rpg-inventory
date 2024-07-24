@@ -35,7 +35,7 @@
 		"minecraft": "1.21",
 		"fabricloader": ">=0.15.11",
 		"fabric-api": "*",
-		"cloth-config": ">=15.0.127",
+		"cloth-config": ">=15.0.128",
 		"trinkets": ">=3.10.0",
 		"slotcustomizationapi": ">=2.0.0"
 	},
