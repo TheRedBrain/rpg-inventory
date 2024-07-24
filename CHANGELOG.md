@@ -1,3 +1,7 @@
+# 2.0.0
+
+Update to 1.21
+
 # 1.9.0
 
 - improved quick moving (shift-clicking) items in the RPG inventory screen

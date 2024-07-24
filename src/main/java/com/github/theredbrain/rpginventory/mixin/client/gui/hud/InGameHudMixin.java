@@ -14,7 +14,6 @@ import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -32,22 +31,21 @@ public abstract class InGameHudMixin {
 
 	@Shadow protected abstract void renderHotbarItem(DrawContext context, int x, int y, RenderTickCounter tickCounter, PlayerEntity player, ItemStack stack, int seed);
 
-	@Shadow @Final private static Identifier HOTBAR_SELECTION_TEXTURE;
 	@Unique
-	private static final Identifier UNSHEATHED_RIGHT_HAND_SLOT_SELECTOR_TEXTURE = RPGInventory.identifier("textures/gui/sprites/hud/unsheathed_right_hand_slot_selector.png");
+	private static final Identifier HOTBAR_SELECTION_FIXED_TEXTURE = RPGInventory.identifier("hud/hotbar_selection_fixed");
 	@Unique
-	private static final Identifier HOTBAR_HAND_SLOTS_TEXTURE = RPGInventory.identifier("textures/gui/sprites/hud/hotbar_hand_slots.png");
+	private static final Identifier UNSHEATHED_RIGHT_HAND_SLOT_SELECTOR_TEXTURE = RPGInventory.identifier("hud/unsheathed_right_hand_slot_selector");
 	@Unique
-	private static final Identifier HOTBAR_ALTERNATE_HAND_SLOTS_TEXTURE = RPGInventory.identifier("textures/gui/sprites/hud/hotbar_alternate_hand_slots.png");
+	private static final Identifier HOTBAR_HAND_SLOTS_TEXTURE = RPGInventory.identifier("hud/hotbar_hand_slots");
+	@Unique
+	private static final Identifier HOTBAR_ALTERNATE_HAND_SLOTS_TEXTURE = RPGInventory.identifier("hud/hotbar_alternate_hand_slots");
 
 	@Inject(method = "renderHotbar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;pop()V"))
 	private void rpginventory$invoke_renderHotbar(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
 
 		int i = context.getScaledWindowWidth() / 2;
 		// slots for all hand items
-//            context.drawGuiTexture(HOTBAR_HAND_SLOTS_TEXTURE, i - 91 - 49, context.getScaledWindowHeight() - 23 - raisedDistance, 49, 24);
 		context.drawGuiTexture(HOTBAR_HAND_SLOTS_TEXTURE, i + RPGInventoryClient.clientConfig.hand_slots_x_offset, context.getScaledWindowHeight() + RPGInventoryClient.clientConfig.hand_slots_y_offset, 49, 24);
-//            context.drawGuiTexture(HOTBAR_ALTERNATE_HAND_SLOTS_TEXTURE, i + 91, context.getScaledWindowHeight() - 23 - raisedDistance, 49, 24);
 		context.drawGuiTexture(HOTBAR_ALTERNATE_HAND_SLOTS_TEXTURE, i + RPGInventoryClient.clientConfig.alternative_hand_slots_x_offset, context.getScaledWindowHeight() + RPGInventoryClient.clientConfig.alternative_hand_slots_y_offset, 49, 24);
 
 	}
@@ -80,7 +78,7 @@ public abstract class InGameHudMixin {
 
 			// sheathed hand indicator
 			if ((!isHandSheathed && offhand_slot_is_right) || (!isOffhandSheathed && !offhand_slot_is_right)) {
-				context.drawGuiTexture(HOTBAR_SELECTION_TEXTURE, x - 1, y - 4, 24, 24);
+				context.drawGuiTexture(HOTBAR_SELECTION_FIXED_TEXTURE, x - 1, y - 4, 24, 24);
 			}
 			if ((!isOffhandSheathed && offhand_slot_is_right) || (!isHandSheathed && !offhand_slot_is_right)) {
 				context.drawGuiTexture(UNSHEATHED_RIGHT_HAND_SLOT_SELECTOR_TEXTURE, x + 19, y - 4, 24, 24);

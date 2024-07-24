@@ -99,7 +99,17 @@
 	"text.autoconfig.rpginventory.option.client.alternative_hand_slots_y_offset": "Alternative hand slots y offset",
 	"text.autoconfig.rpginventory.option.client.show_armor_bar": "Show the armor bar",
 	"text.autoconfig.rpginventory.option.client.show_attribute_screen_when_opening_inventory_screen": "Show attribute screen by default",
+
+	"text.autoconfig.rpginventory.option.client.slots_with_unusable_items_have_overlay": "Slots with unusable items have an overlay",
+	"text.autoconfig.rpginventory.option.client.first_overlay_colour_for_slots_with_unusable_items": "First color of overlay",
+	"text.autoconfig.rpginventory.option.client.second_overlay_colour_for_slots_with_unusable_items": "Second color of overlay",
+	"text.autoconfig.rpginventory.option.client.show_slot_tooltips": "Show slot name tooltip when hovering over empty slot",
+	"text.autoconfig.rpginventory.option.client.show_item_tooltip_two_handed_items": "Show 2 handed requirement in tooltip",
+	"text.autoconfig.rpginventory.option.client.show_item_tooltip_equipment_slots": "Show equipment slot in tooltip",
+
 	"text.autoconfig.rpginventory.option.client.attribute_screen_configuration": "Attribute Screen Configuration",
+	"text.autoconfig.rpginventory.option.client.sheathed_hand_item_positions": "Sheathed Hand Item Positions",
+	"text.autoconfig.rpginventory.option.client.sheathed_offhand_item_positions": "Sheathed Offhand Item Positions",
 
 
 	"trinkets.slot.belts.belt": "Belt",
