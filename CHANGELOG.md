@@ -1,3 +1,7 @@
+# 2.0.1
+
+- fixed an issue where the client would crash when shift-clicking in the RPG inventory, on some items, while hand items where sheathed
+
 # 2.0.0
 
 Update to 1.21

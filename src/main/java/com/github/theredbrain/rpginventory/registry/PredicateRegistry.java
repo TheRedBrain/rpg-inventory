@@ -73,10 +73,10 @@ public class PredicateRegistry {
 		TrinketsApi.registerTrinketPredicate(RPGInventory.identifier("can_change_sheathed_hand_slot"), (stack, ref, entity) -> {
 
 			Optional<RegistryEntry.Reference<StatusEffect>> civilisation_status_effect = Registries.STATUS_EFFECT.getEntry(Identifier.tryParse(RPGInventory.serverConfig.civilisation_status_effect_identifier));
-			boolean hasCivilisationEffect = civilisation_status_effect != null && entity.hasStatusEffect(civilisation_status_effect.get());
+			boolean hasCivilisationEffect = civilisation_status_effect.isPresent() && entity.hasStatusEffect(civilisation_status_effect.get());
 
 			Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(Identifier.tryParse(RPGInventory.serverConfig.wilderness_status_effect_identifier));
-			boolean hasWildernessEffect = wilderness_status_effect != null && entity.hasStatusEffect(wilderness_status_effect.get());
+			boolean hasWildernessEffect = wilderness_status_effect.isPresent() && entity.hasStatusEffect(wilderness_status_effect.get());
 
 			boolean isPlayerCreative = false;
 			boolean isHandSheathed = false;
