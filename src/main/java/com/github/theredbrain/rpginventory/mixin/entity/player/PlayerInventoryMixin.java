@@ -4,6 +4,9 @@ import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import com.github.theredbrain.rpginventory.util.ItemUtils;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketsApi;
 import net.minecraft.entity.EquipmentSlot;
@@ -22,6 +25,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
@@ -44,15 +48,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 	public PlayerEntity player;
 
 	@Shadow
-	private boolean canStackAddMore(ItemStack existingStack, ItemStack stack) {
-		throw new AssertionError();
-	}
-
-	@Shadow
 	public int selectedSlot;
-
-	@Shadow
-	public abstract ItemStack getStack(int slot);
 
 	@Shadow
 	@Final
@@ -78,23 +74,17 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 		return ItemStack.EMPTY;
 	}
 
-	/**
-	 * @author TheRedBrain
-	 * @reason
-	 */
-	@Overwrite
-	public int getOccupiedSlotWithRoomForStack(ItemStack stack) {
-		if (this.canStackAddMore(this.getStack(this.selectedSlot), stack)) {
-			return this.selectedSlot;
-		} else {
-			for (int i = 0; i < this.main.size(); ++i) {
-				if (this.canStackAddMore(this.main.get(i), stack)) {
-					return i;
-				}
-			}
-
-			return -1;
-		}
+	// picked up items are no longer placed into the offhand slot
+	@WrapOperation(
+			method = "getOccupiedSlotWithRoomForStack",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/entity/player/PlayerInventory;canStackAddMore(Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ItemStack;)Z",
+					ordinal = 1
+			)
+	)
+	public boolean rpginventory$wrap_canStackAddMore(PlayerInventory instance, ItemStack existingStack, ItemStack stack, Operation<Boolean> original) {
+		return false;
 	}
 
 //	/**
