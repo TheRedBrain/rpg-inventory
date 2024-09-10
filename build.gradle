@@ -55,7 +55,7 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
 	// Cloth Config
-	modImplementation ("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config}")
+	modImplementation ("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}")
 
 	// Trinkets
 	modImplementation "dev.emi:trinkets:${project.trinkets_version}"
@@ -84,13 +84,17 @@ dependencies {
 	// Health Regeneration Overhaul
 	modImplementation "maven.modrinth:health-regeneration-overhaul:${project.health_regeneration_overhaul_version}"
 
+	// Inventory Size Attributes
+	modImplementation "maven.modrinth:inventory-size-attributes:${project.inventory_size_attributes_version}"
+
 }
 
 processResources {
 	inputs.property "version", project.version
+	filteringCharset "UTF-8"
 
 	filesMatching("fabric.mod.json") {
-		expand "version": project.version
+		expand(project.properties)
 	}
 }
 

@@ -31,15 +31,17 @@
 		"rpginventory.mixins.json"
 	],
 	"depends": {
-		"java": ">=21",
-		"minecraft": "1.21",
-		"fabricloader": ">=0.15.11",
+		"minecraft": "${minecraft_version}",
+		"fabricloader": ">=${loader_version}",
 		"fabric-api": "*",
-		"cloth-config": ">=15.0.128",
-		"trinkets": ">=3.10.0",
-		"slotcustomizationapi": ">=2.0.0"
+		"cloth-config": ">=${cloth_config_version}",
+		"slotcustomizationapi": ">=${slot_customization_api_version}",
+		"trinkets": ">=${trinkets_version}"
 	},
 	"suggests": {
+		"foodoverhaul": "*",
+		"inventorysizeattributes": "*",
+		"modmenu": "*",
 		"scriptblocks": "*",
 		"staminaattributes": "*",
 		"variousstatuseffects": "*"
