@@ -30,7 +30,7 @@ repositories {
 		url = 'https://maven.ladysnake.org/releases'
 	}
 
-	// Stamina Attributes, Slot Customization API
+	// Stamina Attributes, Slot Customization API, Backpack Attribute
 	maven {
 		name = "Modrinth"
 		url = "https://api.modrinth.com/maven"
@@ -86,6 +86,9 @@ dependencies {
 
 	// Inventory Size Attributes
 	modImplementation "maven.modrinth:inventory-size-attributes:${project.inventory_size_attributes_version}"
+
+	// Inventory Size Attributes
+	modImplementation "maven.modrinth:backpack-attribute:${project.backpack_attribute_version}"
 
 }
 
@@ -148,6 +151,8 @@ if(project.hasProperty('release_type')) {
 				optionalDependency 'food-overhaul-fabric'
 				optionalDependency 'modmenu'
 				optionalDependency 'stamina-attributes'
+				optionalDependency 'inventory-size-attributes'
+				optionalDependency 'backpack-attribute'
 			}
 
 			mainArtifact(remapJar)
@@ -182,6 +187,8 @@ if(project.hasProperty('release_type')) {
 			optional.project 'modmenu'
 			optional.project 'stamina-attributes'
 			optional.project 'various-status-effects'
+			optional.project 'inventory-size-attributes'
+			optional.project 'backpack-attribute'
 		}
 	}
 

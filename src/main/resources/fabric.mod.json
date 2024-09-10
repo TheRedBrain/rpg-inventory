@@ -39,6 +39,7 @@
 		"trinkets": ">=${trinkets_version}"
 	},
 	"suggests": {
+		"backpackattribute": "*",
 		"foodoverhaul": "*",
 		"inventorysizeattributes": "*",
 		"modmenu": "*",
