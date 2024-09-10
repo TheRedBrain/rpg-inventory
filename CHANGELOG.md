@@ -1,3 +1,8 @@
+# 2.1.0
+
+- update to 1.21.1
+- added client option to hide empty hand slots in the HUD
+
 # 2.0.1
 
 - fixed an issue where the client would crash when shift-clicking in the RPG inventory, on some items, while hand items where sheathed

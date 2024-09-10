@@ -5,6 +5,7 @@ import com.github.theredbrain.rpginventory.RPGInventoryClient;
 import com.github.theredbrain.rpginventory.config.ClientConfig;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerInventoryMixin;
+import com.github.theredbrain.rpginventory.registry.Tags;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -41,16 +42,6 @@ public abstract class InGameHudMixin {
 	private static final Identifier HOTBAR_ALTERNATE_HAND_SLOTS_TEXTURE = RPGInventory.identifier("hud/hotbar_alternate_hand_slots");
 
 	@Inject(method = "renderHotbar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;pop()V"))
-	private void rpginventory$invoke_renderHotbar(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
-
-		int i = context.getScaledWindowWidth() / 2;
-		// slots for all hand items
-		context.drawGuiTexture(HOTBAR_HAND_SLOTS_TEXTURE, i + RPGInventoryClient.clientConfig.hand_slots_x_offset, context.getScaledWindowHeight() + RPGInventoryClient.clientConfig.hand_slots_y_offset, 49, 24);
-		context.drawGuiTexture(HOTBAR_ALTERNATE_HAND_SLOTS_TEXTURE, i + RPGInventoryClient.clientConfig.alternative_hand_slots_x_offset, context.getScaledWindowHeight() + RPGInventoryClient.clientConfig.alternative_hand_slots_y_offset, 49, 24);
-
-	}
-
-	@Inject(method = "renderHotbar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;pop()V"))
 	private void rpginventory$post_renderHotbar(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
 		PlayerEntity playerEntity = this.getCameraPlayer();
 		if (playerEntity != null) {
@@ -69,27 +60,38 @@ public abstract class InGameHudMixin {
 			}
 
 			int l = 10;
+			int x;
+			int y;
 
-			int x = context.getScaledWindowWidth() / 2 + clientConfig.hand_slots_x_offset;
-			int y = context.getScaledWindowHeight() + 4 + clientConfig.hand_slots_y_offset;
-			boolean offhand_slot_is_right = clientConfig.offhand_item_is_right;
-			this.renderHotbarItem(context, x + 23, y, tickCounter, playerEntity, offhand_slot_is_right ? itemStackOffHand : itemStackHand, l++);
-			this.renderHotbarItem(context, x + 3, y, tickCounter, playerEntity, offhand_slot_is_right ? itemStackHand : itemStackOffHand, l++);
+			if (clientConfig.show_empty_hand_slots || !(itemStackHand.isEmpty() || itemStackHand.isIn(Tags.EMPTY_HAND_WEAPONS)) || !(itemStackOffHand.isEmpty() || itemStackOffHand.isIn(Tags.EMPTY_HAND_WEAPONS))) {
+				x = context.getScaledWindowWidth() / 2 + clientConfig.hand_slots_x_offset;
+				y = context.getScaledWindowHeight() + clientConfig.hand_slots_y_offset;
 
-			// sheathed hand indicator
-			if ((!isHandSheathed && offhand_slot_is_right) || (!isOffhandSheathed && !offhand_slot_is_right)) {
-				context.drawGuiTexture(HOTBAR_SELECTION_FIXED_TEXTURE, x - 1, y - 4, 24, 24);
+				context.drawGuiTexture(HOTBAR_HAND_SLOTS_TEXTURE, x, y, 49, 24);
+
+				boolean offhand_slot_is_right = clientConfig.offhand_item_is_right;
+				this.renderHotbarItem(context, x + 23, y + 4, tickCounter, playerEntity, offhand_slot_is_right ? itemStackOffHand : itemStackHand, l++);
+				this.renderHotbarItem(context, x + 3, y + 4, tickCounter, playerEntity, offhand_slot_is_right ? itemStackHand : itemStackOffHand, l++);
+
+				// sheathed hand indicator
+				if ((!isHandSheathed && offhand_slot_is_right) || (!isOffhandSheathed && !offhand_slot_is_right)) {
+					context.drawGuiTexture(HOTBAR_SELECTION_FIXED_TEXTURE, x - 1, y, 24, 24);
+				}
+				if ((!isOffhandSheathed && offhand_slot_is_right) || (!isHandSheathed && !offhand_slot_is_right)) {
+					context.drawGuiTexture(UNSHEATHED_RIGHT_HAND_SLOT_SELECTOR_TEXTURE, x + 19, y, 24, 24);
+				}
 			}
-			if ((!isOffhandSheathed && offhand_slot_is_right) || (!isHandSheathed && !offhand_slot_is_right)) {
-				context.drawGuiTexture(UNSHEATHED_RIGHT_HAND_SLOT_SELECTOR_TEXTURE, x + 19, y - 4, 24, 24);
+
+			if (clientConfig.show_empty_alternative_hand_slots || !(itemStackAlternativeHand.isEmpty() || itemStackAlternativeHand.isIn(Tags.EMPTY_HAND_WEAPONS)) || !(itemStackAlternativeOffHand.isEmpty() || itemStackAlternativeOffHand.isIn(Tags.EMPTY_HAND_WEAPONS))) {
+				x = context.getScaledWindowWidth() / 2 + clientConfig.alternative_hand_slots_x_offset;
+				y = context.getScaledWindowHeight() + clientConfig.alternative_hand_slots_y_offset;
+
+				context.drawGuiTexture(HOTBAR_ALTERNATE_HAND_SLOTS_TEXTURE, x, y, 49, 24);
+
+				boolean alternative_offhand_slot_is_right = clientConfig.alternative_offhand_item_is_right;
+				this.renderHotbarItem(context, x + 10, y + 4, tickCounter, playerEntity, alternative_offhand_slot_is_right ? itemStackAlternativeHand : itemStackAlternativeOffHand, l++);
+				this.renderHotbarItem(context, x + 30, y + 4, tickCounter, playerEntity, alternative_offhand_slot_is_right ? itemStackAlternativeOffHand : itemStackAlternativeHand, l);
 			}
-
-
-			x = context.getScaledWindowWidth() / 2 + clientConfig.alternative_hand_slots_x_offset;
-			y = context.getScaledWindowHeight() + 4 + clientConfig.alternative_hand_slots_y_offset;
-			boolean alternative_offhand_slot_is_right = clientConfig.alternative_offhand_item_is_right;
-			this.renderHotbarItem(context, x + 10, y, tickCounter, playerEntity, alternative_offhand_slot_is_right ? itemStackAlternativeHand : itemStackAlternativeOffHand, l++);
-			this.renderHotbarItem(context, x + 30, y, tickCounter, playerEntity, alternative_offhand_slot_is_right ? itemStackAlternativeOffHand : itemStackAlternativeHand, l);
 		}
 	}
 
@@ -129,5 +131,4 @@ public abstract class InGameHudMixin {
 	private static int overhauleddamage$redirect_getArmor(PlayerEntity instance) {
 		return RPGInventoryClient.clientConfig.show_armor_bar ? instance.getArmor() : 0;
 	}
-
 }
