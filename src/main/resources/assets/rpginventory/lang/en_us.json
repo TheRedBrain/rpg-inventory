@@ -25,6 +25,8 @@
 	"gui.adventureInventory.toggleAttributeScreenButton": "Equipment",
 	"gui.adventureInventory.toggleShowAttributeScreenButton.on.tooltip": "Hide Attribute Screen",
 	"gui.adventureInventory.toggleShowAttributeScreenButton.off.tooltip": "Show Attribute Screen",
+	"gui.adventureInventory.toggleShowEffectScreenButton.on.tooltip": "Hide Effect Screen",
+	"gui.adventureInventory.toggleShowEffectScreenButton.off.tooltip": "Show Effect Screen",
 	
 
 	"hud.action_impaired.no_attack_item": "You can't attack with this item",

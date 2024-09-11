@@ -20,7 +20,9 @@ public class ClientConfig implements ConfigData {
 	public int alternative_hand_slots_x_offset = 91;
 	public int alternative_hand_slots_y_offset = -23;
 	public boolean show_armor_bar = false;
+	public boolean can_hide_status_effect_screen = false;
 	public boolean show_attribute_screen_when_opening_inventory_screen = false;
+	public boolean show_effect_screen_when_opening_inventory_screen = true;
 	public boolean slots_with_unusable_items_have_overlay = true;
 	public int first_overlay_colour_for_slots_with_unusable_items = -1602211792;
 	public int second_overlay_colour_for_slots_with_unusable_items = -1602211792;
