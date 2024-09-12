@@ -1,6 +1,7 @@
 package com.github.theredbrain.rpginventory.mixin.client.gui.screen.ingame;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
+import com.github.theredbrain.rpginventory.RPGInventoryClient;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.slotcustomizationapi.api.SlotCustomization;
 import dev.emi.trinkets.CreativeTrinketSlot;
@@ -50,6 +51,8 @@ public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScre
 	private static final Identifier TAB_ADVENTURE_INVENTORY_TEXTURE = RPGInventory.identifier("textures/gui/container/adventure_creative_inventory/tab_adventure_inventory.png");
 	@Unique
 	private static final Identifier SPELL_SLOTS_BACKGROUND = RPGInventory.identifier("textures/gui/container/adventure_creative_inventory/spell_slots_background.png");
+	@Unique
+	private static final Identifier SLOT_TEXTURE = Identifier.ofVanilla("textures/gui/sprites/container/slot.png");
 
 	private CreativeInventoryScreenMixin() {
 		super(null, null, null);
@@ -166,6 +169,27 @@ public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScre
 			int x = this.trinkets$getX() + this.backgroundWidth;
 			int y = this.trinkets$getY();
 			context.drawTexture(SPELL_SLOTS_BACKGROUND, x - 4, y, 0, 0, 44, 86, 44, 86);
+
+			int inventorySize = 0;
+			int hotbarSize = 0;
+			if (this.client != null && this.client.player != null) {
+				hotbarSize = RPGInventory.getActiveHotbarSize(this.client.player);
+				inventorySize = RPGInventory.getActiveInventorySize(this.client.player);
+			}
+
+			int i = this.x;
+			int j = this.y;
+			int k;
+			int m;
+			boolean showInactiveSlots = RPGInventoryClient.clientConfig.show_inactive_inventory_slots;
+			for (k = 0; k < (showInactiveSlots ? 27 : Math.min(inventorySize, 27)); ++k) {
+				m = (k / 9);
+				context.drawTexture(SLOT_TEXTURE, i + 8 + (k - (m * 9)) * 18, j + 53 + (m * 18), 0, 0, 18, 18, 18, 18);
+			}
+			for (k = 0; k < (showInactiveSlots ? 9 : Math.min(hotbarSize, 9)); ++k) {
+				context.drawTexture(SLOT_TEXTURE, i + 8 + k * 18, j + 111, 0, 0, 18, 18, 18, 18);
+			}
+
 		}
 	}
 

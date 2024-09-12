@@ -51,8 +51,10 @@ import java.util.Optional;
 @Environment(EnvType.CLIENT)
 public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> implements TrinketScreen {
 	public static final Identifier ADVENTURE_INVENTORY_SIDES_BACKGROUND_TEXTURE = RPGInventory.identifier("textures/gui/container/adventure_inventory/adventure_inventory_sides_background.png");
-	private static final Identifier INVENTORY_SLOT_TEXTURE = RPGInventory.identifier("textures/gui/container/adventure_inventory/adventure_inventory_spells_background_1.png");
+//	private static final Identifier INVENTORY_SLOT_TEXTURE = RPGInventory.identifier("textures/gui/container/adventure_inventory/adventure_inventory_spells_background_1.png");
 	//    private static final Identifier EFFECT_BACKGROUND_SMALL_TEXTURE = new Identifier("container/inventory/effect_background_small");
+	public static final Identifier SLOT_TEXTURE = Identifier.ofVanilla("textures/gui/sprites/container/slot.png");
+	private static final Identifier EFFECT_BACKGROUND_SMALL_TEXTURE = Identifier.ofVanilla("container/inventory/effect_background_small");
 //    private static final Identifier EFFECT_SCROLLER_BACKGROUND_TEXTURE = RPGInventory.identifier("container/adventure_inventory/scroller_background");
 	private static final Identifier SCROLL_BAR_BACKGROUND_8_206_TEXTURE = RPGInventory.identifier("textures/gui/sprites/scroll_bar/scroll_bar_background_8_206.png");
 	private static final Identifier SCROLL_BAR_BACKGROUND_8_32_TEXTURE = RPGInventory.identifier("textures/gui/sprites/scroll_bar/scroll_bar_background_8_32.png");
@@ -247,11 +249,18 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 	protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
 		int i = this.x;
 		int j = this.y;
+		int k;
+		int m;
 		int activeSpellSlotAmount = 0;
+		int inventorySize = 0;
+		int hotbarSize = 0;
 		var clientConfig = RPGInventoryClient.clientConfig;
 		var serverConfig = RPGInventory.serverConfig;
 		if (this.client != null && this.client.player != null) {
 			activeSpellSlotAmount = (int) ((DuckPlayerEntityMixin) this.client.player).rpginventory$getActiveSpellSlotAmount();
+
+			hotbarSize = RPGInventory.getActiveHotbarSize(this.client.player);
+			inventorySize = RPGInventory.getActiveInventorySize(this.client.player);
 			updateEffectsLists(this.client.player);
 		}
 		context.drawTexture(RPGInventory.identifier("textures/gui/container/adventure_inventory/adventure_inventory_main_background.png"), i, j, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
@@ -266,15 +275,24 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 			context.drawTexture(RPGInventory.identifier("textures/gui/container/adventure_inventory/adventure_inventory_spells_background_" + activeSpellSlotAmount + ".png"), i + serverConfig.spell_slots_x_offset - 1, j + serverConfig.spell_slots_y_offset - 1, 0, 0, width, height, width, height);
 
 		}
-		context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.belts_group_x_offset - 1, j + serverConfig.belts_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
-		context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.shoulders_group_x_offset - 1, j + serverConfig.shoulders_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
-		context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.necklaces_group_x_offset - 1, j + serverConfig.necklaces_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
-		context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.rings_1_group_x_offset - 1, j + serverConfig.rings_1_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
-		context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.rings_2_group_x_offset - 1, j + serverConfig.rings_2_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
-		context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.gloves_group_x_offset - 1, j + serverConfig.gloves_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
-		context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.hand_group_x_offset - 1, j + serverConfig.hand_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
-		context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.alternative_hand_group_x_offset - 1, j + serverConfig.alternative_hand_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
-		context.drawTexture(INVENTORY_SLOT_TEXTURE, i + serverConfig.alternative_offhand_group_x_offset - 1, j + serverConfig.alternative_offhand_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
+		context.drawTexture(SLOT_TEXTURE, i + serverConfig.belts_group_x_offset - 1, j + serverConfig.belts_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
+		context.drawTexture(SLOT_TEXTURE, i + serverConfig.shoulders_group_x_offset - 1, j + serverConfig.shoulders_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
+		context.drawTexture(SLOT_TEXTURE, i + serverConfig.necklaces_group_x_offset - 1, j + serverConfig.necklaces_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
+		context.drawTexture(SLOT_TEXTURE, i + serverConfig.rings_1_group_x_offset - 1, j + serverConfig.rings_1_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
+		context.drawTexture(SLOT_TEXTURE, i + serverConfig.rings_2_group_x_offset - 1, j + serverConfig.rings_2_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
+		context.drawTexture(SLOT_TEXTURE, i + serverConfig.gloves_group_x_offset - 1, j + serverConfig.gloves_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
+		context.drawTexture(SLOT_TEXTURE, i + serverConfig.hand_group_x_offset - 1, j + serverConfig.hand_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
+		context.drawTexture(SLOT_TEXTURE, i + serverConfig.alternative_hand_group_x_offset - 1, j + serverConfig.alternative_hand_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
+		context.drawTexture(SLOT_TEXTURE, i + serverConfig.alternative_offhand_group_x_offset - 1, j + serverConfig.alternative_offhand_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
+
+		boolean showInactiveSlots = clientConfig.show_inactive_inventory_slots;
+		for (k = 0; k < (showInactiveSlots ? 27 : Math.min(inventorySize, 27)); ++k) {
+			m = (k / 9);
+			context.drawTexture(SLOT_TEXTURE, i + 7 + (k - (m * 9)) * 18, j + 137 + (m * 18), 0, 0, 18, 18, 18, 18);
+		}
+		for (k = 0; k < (showInactiveSlots ? 9 : Math.min(hotbarSize, 9)); ++k) {
+			context.drawTexture(SLOT_TEXTURE, i + 7 + k * 18, j + 195, 0, 0, 18, 18, 18, 18);
+		}
 
 		if (this.showAttributeScreen) {
 			context.drawTexture(ADVENTURE_INVENTORY_SIDES_BACKGROUND_TEXTURE, i - this.sidesBackgroundWidth, j, 0, 0, this.sidesBackgroundWidth, this.backgroundHeight, this.sidesBackgroundWidth, this.backgroundHeight);

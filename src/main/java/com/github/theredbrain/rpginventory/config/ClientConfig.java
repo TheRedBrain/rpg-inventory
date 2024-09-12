@@ -15,6 +15,7 @@ public class ClientConfig implements ConfigData {
 	public boolean alternative_offhand_item_is_right = true;
 	public boolean show_empty_hand_slots = true;
 	public boolean show_empty_alternative_hand_slots = true;
+	public boolean show_inactive_inventory_slots = true;
 	public int hand_slots_x_offset = -140;
 	public int hand_slots_y_offset = -23;
 	public int alternative_hand_slots_x_offset = 91;
