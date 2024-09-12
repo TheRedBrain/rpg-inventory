@@ -2,6 +2,7 @@ package com.github.theredbrain.rpginventory.config;
 
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
+import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 
 import java.util.LinkedHashMap;
@@ -16,6 +17,14 @@ public class ClientConfig implements ConfigData {
 	public boolean show_empty_hand_slots = true;
 	public boolean show_empty_alternative_hand_slots = true;
 	public boolean show_inactive_inventory_slots = true;
+	@ConfigEntry.Gui.PrefixText
+	public boolean enable_open_backpack_button = false;
+	public int open_backpack_button_offset_x = 99;
+	public int open_backpack_button_offset_y = 35;
+	@ConfigEntry.Gui.PrefixText
+	public boolean enable_open_hand_crafting_button = false;
+	public int open_hand_crafting_button_offset_x = 99;
+	public int open_hand_crafting_button_offset_y = 57;
 	public int hand_slots_x_offset = -140;
 	public int hand_slots_y_offset = -23;
 	public int alternative_hand_slots_x_offset = 91;

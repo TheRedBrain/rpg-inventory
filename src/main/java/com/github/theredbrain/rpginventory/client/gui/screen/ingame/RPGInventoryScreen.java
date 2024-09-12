@@ -1,9 +1,12 @@
 package com.github.theredbrain.rpginventory.client.gui.screen.ingame;
 
+import com.github.theredbrain.backpackattribute.BackpackAttribute;
+import com.github.theredbrain.backpackattribute.registry.KeyBindingsRegistry;
 import com.github.theredbrain.foodoverhaul.effect.FoodStatusEffect;
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.RPGInventoryClient;
 import com.github.theredbrain.rpginventory.client.gui.widget.ToggleInventoryScreenWidget;
+import com.github.theredbrain.rpginventory.config.ClientConfig;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.screen.DuckPlayerScreenHandlerMixin;
 import com.github.theredbrain.rpginventory.screen.DuckSlotMixin;
@@ -66,8 +69,14 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 	private static final Text TOGGLE_SHOW_ATTRIBUTES_BUTTON_TOOLTIP_TEXT_ON = Text.translatable("gui.adventureInventory.toggleShowAttributeScreenButton.on.tooltip");
 	private static final Text TOGGLE_SHOW_EFFECTS_BUTTON_TOOLTIP_TEXT_OFF = Text.translatable("gui.adventureInventory.toggleShowEffectScreenButton.off.tooltip");
 	private static final Text TOGGLE_SHOW_EFFECTS_BUTTON_TOOLTIP_TEXT_ON = Text.translatable("gui.adventureInventory.toggleShowEffectScreenButton.on.tooltip");
+	private static final Text OPEN_BACKPACK_BUTTON_LABEL_TEXT = Text.translatable("gui.adventureInventory.openBackpackButton");
+	private static final Text OPEN_HAND_CRAFTING_BUTTON_LABEL_TEXT = Text.translatable("gui.adventureInventory.openHandCraftingButton");
+	private static final Text BACKPACK_ATTRIBUTES_NOT_INSTALLED_MESSAGE_TEXT = Text.translatable("hud.message.backpackAttributesNotInstalled");
+	private static final Text RPG_CRAFTING_NOT_INSTALLED_MESSAGE_TEXT = Text.translatable("hud.message.rpgCraftingNotInstalled");
 	private float mouseX;
 	private float mouseY;
+	private ButtonWidget openBackpackButton;
+	private ButtonWidget openHandCraftingButton;
 	private final int sidesBackgroundWidth = 130;
 	private ButtonWidget toggleShowAttributeScreenButton;
 	private boolean showAttributeScreen;
@@ -180,6 +189,26 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 		return statusEffectListSize / 3 + (statusEffectListSize % 3 > 0 ? 1 : 0);
 	}
 
+	private void openBackpack() {
+		if (this.client != null) {
+			if (RPGInventory.isBackpackAttributeLoaded) {
+				KeyBindingsRegistry.openBackpackScreen(this.client);
+			} else if (this.client.player != null) {
+				this.client.player.sendMessage(BACKPACK_ATTRIBUTES_NOT_INSTALLED_MESSAGE_TEXT);
+			}
+		}
+	}
+
+	private void openHandCraftingScreen() {
+		if (this.client != null) {
+			if (RPGInventory.isRPGCraftingLoaded) {
+				// open handcrafting screen // TODO RPG Crafting Integration
+			} else if (this.client.player != null) {
+				this.client.player.sendMessage(RPG_CRAFTING_NOT_INSTALLED_MESSAGE_TEXT);
+			}
+		}
+	}
+
 	private void toggleShowAttributeScreen() {
 		this.showAttributeScreen = !this.showAttributeScreen;
 		((ToggleInventoryScreenWidget) this.toggleShowAttributeScreenButton).setIsPressed(this.showAttributeScreen);
@@ -204,13 +233,18 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 			((SlotCustomization) this.handler.slots.get(45)).slotcustomizationapi$setDisabledOverride(((DuckPlayerEntityMixin) this.client.player).rpginventory$isOffhandStackSheathed());
 		}
 		super.init();
-		this.showAttributeScreen = RPGInventoryClient.clientConfig.show_attribute_screen_when_opening_inventory_screen;
+		ClientConfig clientConfig = RPGInventoryClient.clientConfig;
+		this.showAttributeScreen = clientConfig.show_attribute_screen_when_opening_inventory_screen;
 		((DuckPlayerScreenHandlerMixin)this.handler).rpginventory$setIsAttributeScreenVisible(this.showAttributeScreen);
 		this.toggleShowAttributeScreenButton = this.addDrawableChild(new ToggleInventoryScreenWidget(this.x + 6, this.y + 19, this.showAttributeScreen, false, button -> this.toggleShowAttributeScreen()));
 		this.toggleShowAttributeScreenButton.setTooltip(Tooltip.of(this.showAttributeScreen ? TOGGLE_SHOW_ATTRIBUTES_BUTTON_TOOLTIP_TEXT_ON : TOGGLE_SHOW_ATTRIBUTES_BUTTON_TOOLTIP_TEXT_OFF));
-		this.showEffectScreen = !RPGInventoryClient.clientConfig.can_hide_status_effect_screen || RPGInventoryClient.clientConfig.show_effect_screen_when_opening_inventory_screen;
+		this.showEffectScreen = !clientConfig.can_hide_status_effect_screen || clientConfig.show_effect_screen_when_opening_inventory_screen;
 		this.toggleShowEffectScreenButton = this.addDrawableChild(new ToggleInventoryScreenWidget(this.x + this.backgroundWidth - 29, this.y + 19, this.showEffectScreen, true, button -> this.toggleShowEffectScreen()));
 		this.toggleShowEffectScreenButton.setTooltip(Tooltip.of(this.showEffectScreen ? TOGGLE_SHOW_EFFECTS_BUTTON_TOOLTIP_TEXT_ON : TOGGLE_SHOW_EFFECTS_BUTTON_TOOLTIP_TEXT_OFF));
+		this.openBackpackButton = this.addDrawableChild(ButtonWidget.builder(OPEN_BACKPACK_BUTTON_LABEL_TEXT, button -> this.openBackpack()).dimensions(this.x + clientConfig.open_backpack_button_offset_x, this.y + clientConfig.open_backpack_button_offset_y, 70, 20).build());
+		this.openBackpackButton.visible = RPGInventory.serverConfig.disable_inventory_crafting_slots && clientConfig.enable_open_backpack_button && RPGInventory.isBackpackAttributeLoaded;
+		this.openHandCraftingButton = this.addDrawableChild(ButtonWidget.builder(OPEN_HAND_CRAFTING_BUTTON_LABEL_TEXT, button -> this.openHandCraftingScreen()).dimensions(this.x + clientConfig.open_hand_crafting_button_offset_x, this.y + clientConfig.open_hand_crafting_button_offset_y, 70, 20).build());
+		this.openHandCraftingButton.visible = RPGInventory.serverConfig.disable_inventory_crafting_slots && clientConfig.enable_open_hand_crafting_button/* && RPGInventory.isRPGCraftingLoaded*/; // TODO RPG Crafting Integration
 	}
 
 	@Override

@@ -27,6 +27,8 @@ public class RPGInventory implements ModInitializer {
 
 	public static RegistryEntry<EntityAttribute> ACTIVE_SPELL_SLOT_AMOUNT;
 
+	public static final boolean isRPGCraftingLoaded = FabricLoader.getInstance().isModLoaded("rpgcrafting");
+	public static final boolean isBackpackAttributeLoaded = FabricLoader.getInstance().isModLoaded("backpackattribute");
 	public static final boolean isFoodOverhaulLoaded = FabricLoader.getInstance().isModLoaded("foodoverhaul");
 	public static final boolean isStaminaAttributesLoaded = FabricLoader.getInstance().isModLoaded("staminaattributes");
 
