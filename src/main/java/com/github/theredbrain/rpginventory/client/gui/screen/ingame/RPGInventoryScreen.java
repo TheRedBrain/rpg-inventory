@@ -273,6 +273,10 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 			context.drawTexture(RPGInventory.identifier("textures/gui/container/adventure_inventory/adventure_inventory_spells_background_" + activeSpellSlotAmount + ".png"), i + serverConfig.spell_slots_x_offset - 1, j + serverConfig.spell_slots_y_offset - 1, 0, 0, width, height, width, height);
 
 		}
+		context.drawTexture(SLOT_TEXTURE, i + serverConfig.head_slot_x_offset - 1, j + serverConfig.head_slot_y_offset - 1, 0, 0, 18, 18, 18, 18);
+		context.drawTexture(SLOT_TEXTURE, i + serverConfig.chest_slot_x_offset - 1, j + serverConfig.chest_slot_y_offset - 1, 0, 0, 18, 18, 18, 18);
+		context.drawTexture(SLOT_TEXTURE, i + serverConfig.legs_slot_x_offset - 1, j + serverConfig.legs_slot_y_offset - 1, 0, 0, 18, 18, 18, 18);
+		context.drawTexture(SLOT_TEXTURE, i + serverConfig.feet_slot_x_offset - 1, j + serverConfig.feet_slot_y_offset - 1, 0, 0, 18, 18, 18, 18);
 		context.drawTexture(SLOT_TEXTURE, i + serverConfig.belts_group_x_offset - 1, j + serverConfig.belts_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
 		context.drawTexture(SLOT_TEXTURE, i + serverConfig.shoulders_group_x_offset - 1, j + serverConfig.shoulders_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
 		context.drawTexture(SLOT_TEXTURE, i + serverConfig.necklaces_group_x_offset - 1, j + serverConfig.necklaces_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
@@ -280,6 +284,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 		context.drawTexture(SLOT_TEXTURE, i + serverConfig.rings_2_group_x_offset - 1, j + serverConfig.rings_2_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
 		context.drawTexture(SLOT_TEXTURE, i + serverConfig.gloves_group_x_offset - 1, j + serverConfig.gloves_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
 		context.drawTexture(SLOT_TEXTURE, i + serverConfig.hand_group_x_offset - 1, j + serverConfig.hand_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
+		context.drawTexture(SLOT_TEXTURE, i + serverConfig.offhand_slot_x_offset - 1, j + serverConfig.offhand_slot_y_offset - 1, 0, 0, 18, 18, 18, 18);
 		context.drawTexture(SLOT_TEXTURE, i + serverConfig.alternative_hand_group_x_offset - 1, j + serverConfig.alternative_hand_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
 		context.drawTexture(SLOT_TEXTURE, i + serverConfig.alternative_offhand_group_x_offset - 1, j + serverConfig.alternative_offhand_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
 
