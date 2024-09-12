@@ -1,6 +1,7 @@
 package com.github.theredbrain.rpginventory.registry;
 
 import com.github.theredbrain.rpginventory.RPGInventoryClient;
+import com.github.theredbrain.rpginventory.config.ClientConfig;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.Equipment;
@@ -10,12 +11,13 @@ public class ClientEventsRegistry {
 
 	public static void initializeClientEvents() {
 		ItemTooltipCallback.EVENT.register((stack, context, type, lines) -> {
-			if (stack.isIn(Tags.TWO_HANDED_ITEMS) && RPGInventoryClient.clientConfig.show_item_tooltip_two_handed_items) {
+			ClientConfig.GeneralClientConfig generalClientConfig = RPGInventoryClient.clientConfigHolder.getConfig().generalClientConfig;
+			if (stack.isIn(Tags.TWO_HANDED_ITEMS) && generalClientConfig.show_item_tooltip_two_handed_items) {
 				lines.add(Text.translatable("item.additional_tooltip.functionality.two_handed_item"));
 			}
 
 			// equipment slots
-			if (RPGInventoryClient.clientConfig.show_item_tooltip_equipment_slots) {
+			if (generalClientConfig.show_item_tooltip_equipment_slots) {
 				Equipment equipment = Equipment.fromStack(stack);
 				if (stack.isIn(Tags.HELMETS) || (equipment != null && equipment.getSlotType() == EquipmentSlot.HEAD)) {
 					lines.add(Text.translatable("item.additional_tooltip.equipment_slot.helmet"));

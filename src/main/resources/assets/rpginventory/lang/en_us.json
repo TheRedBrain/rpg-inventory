@@ -28,7 +28,7 @@
 	"gui.adventureInventory.toggleShowEffectScreenButton.on.tooltip": "Hide Effect Screen",
 	"gui.adventureInventory.toggleShowEffectScreenButton.off.tooltip": "Show Effect Screen",
 	"gui.adventureInventory.openBackpackButton": "Backpack",
-	"gui.adventureInventory.openHandCraftingButton": "Crafting",
+	"gui.adventureInventory.openHandCraftingButton": "WIP",
 
 
 	"hud.action_impaired.no_attack_item": "You can't attack with this item",
@@ -36,7 +36,7 @@
 	"hud.action_impaired.overburdened": "You are overburdened",
 
 	"hud.message.backpackAttributesNotInstalled": "Install 'Backpack Attribute' to use this feature",
-	"hud.message.rpgCraftingNotInstalled": "Install 'RPG Crafting' to use this feature",
+	"hud.message.rpgCraftingNotInstalled": "This feature is WIP",
 	"hud.message.nonTwoHandedWeaponEquipped": "Your weapon can't be two-handed",
 	"hud.message.spellsRemovedFromInactiveSpellSlots": "The maximum amount of spells you can equip was lowered and some items were transferred to your normal inventory. If your inventory was full, they were dropped at your location.",
 	"hud.message.weaponsAreSheathed": "Your weapons are sheathed already",
@@ -96,26 +96,62 @@
 	"slot.tooltip.spell_slot_8.spell": "Spell",
 
 	"text.autoconfig.rpginventory.title": "RPG Inventory",
-	"text.autoconfig.rpginventory.option.client.always_show_selected_hotbar_slot": "Always show selected hotbar slot",
-	"text.autoconfig.rpginventory.option.client.offhand_item_is_right": "Offhand item is right",
-	"text.autoconfig.rpginventory.option.client.alternative_offhand_item_is_right": "Alternative offhand item is right",
-	"text.autoconfig.rpginventory.option.client.hand_slots_x_offset": "Hand slots x offset",
-	"text.autoconfig.rpginventory.option.client.hand_slots_y_offset": "Hand slots y offset",
-	"text.autoconfig.rpginventory.option.client.alternative_hand_slots_x_offset": "Alternative hand slots x offset",
-	"text.autoconfig.rpginventory.option.client.alternative_hand_slots_y_offset": "Alternative hand slots y offset",
-	"text.autoconfig.rpginventory.option.client.show_armor_bar": "Show the armor bar",
-	"text.autoconfig.rpginventory.option.client.show_attribute_screen_when_opening_inventory_screen": "Show attribute screen by default",
 
-	"text.autoconfig.rpginventory.option.client.slots_with_unusable_items_have_overlay": "Slots with unusable items have an overlay",
-	"text.autoconfig.rpginventory.option.client.first_overlay_colour_for_slots_with_unusable_items": "First color of overlay",
-	"text.autoconfig.rpginventory.option.client.second_overlay_colour_for_slots_with_unusable_items": "Second color of overlay",
-	"text.autoconfig.rpginventory.option.client.show_slot_tooltips": "Show slot name tooltip for empty slot",
-	"text.autoconfig.rpginventory.option.client.show_item_tooltip_two_handed_items": "Show 2 handed requirement in tooltip",
-	"text.autoconfig.rpginventory.option.client.show_item_tooltip_equipment_slots": "Show equipment slot in tooltip",
+	"text.autoconfig.rpginventory.category.generalClientConfig": "General",
 
-	"text.autoconfig.rpginventory.option.client.attribute_screen_configuration": "Attribute Screen Configuration",
-	"text.autoconfig.rpginventory.option.client.sheathed_hand_item_positions": "Sheathed Hand Item Positions",
-	"text.autoconfig.rpginventory.option.client.sheathed_offhand_item_positions": "Sheathed Offhand Item Positions",
+	"text.autoconfig.rpginventory.option.generalClientConfig.always_show_selected_hotbar_slot.@PrefixText": "HUD Settings",
+	"text.autoconfig.rpginventory.option.generalClientConfig.always_show_selected_hotbar_slot": "Always show selected hotbar slot",
+
+	"text.autoconfig.rpginventory.option.generalClientConfig.show_empty_hand_slots": "The hand slots are displayed when they are empty",
+	"text.autoconfig.rpginventory.option.generalClientConfig.hand_slots_offset_x": "Hand slots X offset",
+	"text.autoconfig.rpginventory.option.generalClientConfig.hand_slots_offset_y": "Hand slots Y offset",
+	"text.autoconfig.rpginventory.option.generalClientConfig.offhand_item_is_right": "Offhand item is right",
+
+	"text.autoconfig.rpginventory.option.generalClientConfig.show_empty_alternative_hand_slots": "The alternative hand slots are displayed when they are empty",
+	"text.autoconfig.rpginventory.option.generalClientConfig.alternative_hand_slots_offset_x": "Alternative hand slots X offset",
+	"text.autoconfig.rpginventory.option.generalClientConfig.alternative_hand_slots_offset_y": "Alternative hand slots Y offset",
+	"text.autoconfig.rpginventory.option.generalClientConfig.alternative_offhand_item_is_right": "Alternative offhand item is right",
+
+	"text.autoconfig.rpginventory.option.generalClientConfig.show_armor_bar": "Show the armor bar",
+
+	"text.autoconfig.rpginventory.option.generalClientConfig.show_attribute_screen_when_opening_inventory_screen.@PrefixText": "\n\nInventory Screen Settings",
+	"text.autoconfig.rpginventory.option.generalClientConfig.show_attribute_screen_when_opening_inventory_screen": "Show attribute screen by default",
+	"text.autoconfig.rpginventory.option.generalClientConfig.can_hide_status_effect_screen": "The effect screen can be hidden",
+	"text.autoconfig.rpginventory.option.generalClientConfig.show_effect_screen_when_opening_inventory_screen": "Show effect screen by default (only has an effect when the effect screen can be hidden)",
+
+	"text.autoconfig.rpginventory.option.generalClientConfig.show_inactive_inventory_slots.@PrefixText": "\nThis setting is only active when 'Inventory Size Attributes' is installed",
+	"text.autoconfig.rpginventory.option.generalClientConfig.show_inactive_inventory_slots": "The background of inactive inventory slots is displayed",
+
+	"text.autoconfig.rpginventory.option.generalClientConfig.enable_open_backpack_button.@PrefixText": "\nThis setting is only active when 'Backpack Attribute' is installed",
+	"text.autoconfig.rpginventory.option.generalClientConfig.enable_open_backpack_button": "Enables a button that opens the backpack screen",
+	"text.autoconfig.rpginventory.option.generalClientConfig.open_backpack_button_offset_x": "Open Backpack Button X offset",
+	"text.autoconfig.rpginventory.option.generalClientConfig.open_backpack_button_offset_y": "Open Backpack Button Y offset",
+
+	"text.autoconfig.rpginventory.option.generalClientConfig.enable_open_hand_crafting_button.@PrefixText": "\nThis setting is only active when 'RPG Crafting' is installed\nNote that this mod is not publicly available yet.",
+	"text.autoconfig.rpginventory.option.generalClientConfig.enable_open_hand_crafting_button": "Enables a button that opens the hand crafting screen",
+	"text.autoconfig.rpginventory.option.generalClientConfig.open_hand_crafting_button_offset_x": "Open Crafting Button X offset",
+	"text.autoconfig.rpginventory.option.generalClientConfig.open_hand_crafting_button_offset_y": "Open Crafting Button Y offset",
+
+	"text.autoconfig.rpginventory.option.generalClientConfig.slots_with_unusable_items_have_overlay.@PrefixText": "\n",
+	"text.autoconfig.rpginventory.option.generalClientConfig.slots_with_unusable_items_have_overlay": "Slots with unusable items have an overlay",
+	"text.autoconfig.rpginventory.option.generalClientConfig.first_overlay_colour_for_slots_with_unusable_items": "First color of overlay",
+	"text.autoconfig.rpginventory.option.generalClientConfig.second_overlay_colour_for_slots_with_unusable_items": "Second color of overlay",
+	"text.autoconfig.rpginventory.option.generalClientConfig.show_slot_tooltips": "Show slot name tooltip for empty equipment and trinket slots",
+	"text.autoconfig.rpginventory.option.generalClientConfig.show_item_tooltip_two_handed_items": "Show 2 handed requirement in tooltip",
+	"text.autoconfig.rpginventory.option.generalClientConfig.show_item_tooltip_equipment_slots": "Show equipment slot in tooltip",
+
+
+	"text.autoconfig.rpginventory.category.attributeScreenClientConfig": "Attribute Screen",
+
+	"text.autoconfig.rpginventory.option.attributeScreenClientConfig.attribute_screen_configuration.@PrefixText": "Defines what attributes are displayed on the attribute screen\nEach string must follow one of these formats:\n\nATTRIBUTE_VALUE:attribute_id_namespace:attribute_id_path\nATTRIBUTE_RELATION:translation_key:attribute_id_namespace:attribute_id_path:attribute_id_namespace:attribute_id_path\nEMPTY_LINE\nSTRING:string\nTRANSLATABLE_STRING:translation_key\n\nThe strings will be split at the positions marked by the colons.\nThe uppercase string before the first colon determines how the line is displayed.\nEvery string after the first colon is a placeholder.\nStrings with other formats are ignored.",
+	"text.autoconfig.rpginventory.option.attributeScreenClientConfig.attribute_screen_configuration": "Attribute Screen Configuration",
+
+
+	"text.autoconfig.rpginventory.category.sheathedItemPositionsClientConfig": "Sheathed Item Positions",
+
+	"text.autoconfig.rpginventory.option.sheathedItemPositionsClientConfig.sheathed_hand_item_positions.@PrefixText": "The positions of sheathed items are saved in a format that is not supported by Mod Menu. Please edit the config file directly",
+	"text.autoconfig.rpginventory.option.sheathedItemPositionsClientConfig.sheathed_hand_item_positions": "Sheathed Hand Item Positions",
+	"text.autoconfig.rpginventory.option.sheathedItemPositionsClientConfig.sheathed_offhand_item_positions": "Sheathed Offhand Item Positions",
 
 
 	"trinkets.slot.belts.belt": "Belt",

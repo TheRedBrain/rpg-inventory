@@ -1,6 +1,7 @@
 package com.github.theredbrain.rpginventory.mixin.client.gui.screen.ingame;
 
 import com.github.theredbrain.rpginventory.RPGInventoryClient;
+import com.github.theredbrain.rpginventory.config.ClientConfig;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.DrawContext;
@@ -57,7 +58,7 @@ public class HandledScreenMixin {
 	private void rpginventory$drawSlot(DrawContext context, Slot slot, CallbackInfo ci) {
 		// draw slot overlay
 		ItemStack stack = slot.getStack();
-		if (!stack.isEmpty() && stack.isDamageable() && stack.getDamage() >= stack.getMaxDamage() - 1 && stack.isIn(Tags.UNUSABLE_WHEN_LOW_DURABILITY) && RPGInventoryClient.clientConfig.slots_with_unusable_items_have_overlay) {
+		if (!stack.isEmpty() && stack.isDamageable() && stack.getDamage() >= stack.getMaxDamage() - 1 && stack.isIn(Tags.UNUSABLE_WHEN_LOW_DURABILITY) && RPGInventoryClient.clientConfigHolder.getConfig().generalClientConfig.slots_with_unusable_items_have_overlay) {
 			rpginventory$drawDisabledItemSlotHighlight(context, slot.x, slot.y, 0);
 		}
 	}
@@ -66,7 +67,8 @@ public class HandledScreenMixin {
 	private static void rpginventory$drawDisabledItemSlotHighlight(DrawContext context, int x, int y, int z) {
 		RenderSystem.disableDepthTest();
 		RenderSystem.colorMask(true, true, true, false);
-		context.fillGradient(RenderLayer.getGuiOverlay(), x, y, x + 16, y + 16, RPGInventoryClient.clientConfig.first_overlay_colour_for_slots_with_unusable_items, RPGInventoryClient.clientConfig.second_overlay_colour_for_slots_with_unusable_items, z);
+		ClientConfig.GeneralClientConfig generalClientConfig = RPGInventoryClient.clientConfigHolder.getConfig().generalClientConfig;
+		context.fillGradient(RenderLayer.getGuiOverlay(), x, y, x + 16, y + 16, generalClientConfig.first_overlay_colour_for_slots_with_unusable_items, generalClientConfig.second_overlay_colour_for_slots_with_unusable_items, z);
 		RenderSystem.colorMask(true, true, true, true);
 		RenderSystem.enableDepthTest();
 	}

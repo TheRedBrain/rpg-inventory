@@ -1,12 +1,12 @@
 package com.github.theredbrain.rpginventory.client.gui.screen.ingame;
 
-import com.github.theredbrain.backpackattribute.BackpackAttribute;
 import com.github.theredbrain.backpackattribute.registry.KeyBindingsRegistry;
 import com.github.theredbrain.foodoverhaul.effect.FoodStatusEffect;
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.RPGInventoryClient;
 import com.github.theredbrain.rpginventory.client.gui.widget.ToggleInventoryScreenWidget;
 import com.github.theredbrain.rpginventory.config.ClientConfig;
+import com.github.theredbrain.rpginventory.config.ServerConfig;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.screen.DuckPlayerScreenHandlerMixin;
 import com.github.theredbrain.rpginventory.screen.DuckSlotMixin;
@@ -30,13 +30,11 @@ import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.StatusEffectSpriteManager;
 import net.minecraft.client.util.math.Rect2i;
 import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffectUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.ScreenTexts;
@@ -234,24 +232,24 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 			((SlotCustomization) this.handler.slots.get(45)).slotcustomizationapi$setDisabledOverride(((DuckPlayerEntityMixin) this.client.player).rpginventory$isOffhandStackSheathed());
 		}
 		super.init();
-		ClientConfig clientConfig = RPGInventoryClient.clientConfig;
-		this.showAttributeScreen = clientConfig.show_attribute_screen_when_opening_inventory_screen;
+		ClientConfig.GeneralClientConfig generalClientConfig = RPGInventoryClient.clientConfigHolder.getConfig().generalClientConfig;
+		this.showAttributeScreen = generalClientConfig.show_attribute_screen_when_opening_inventory_screen;
 		((DuckPlayerScreenHandlerMixin)this.handler).rpginventory$setIsAttributeScreenVisible(this.showAttributeScreen);
 		this.toggleShowAttributeScreenButton = this.addDrawableChild(new ToggleInventoryScreenWidget(this.x + 6, this.y + 19, this.showAttributeScreen, false, button -> this.toggleShowAttributeScreen()));
 		this.toggleShowAttributeScreenButton.setTooltip(Tooltip.of(this.showAttributeScreen ? TOGGLE_SHOW_ATTRIBUTES_BUTTON_TOOLTIP_TEXT_ON : TOGGLE_SHOW_ATTRIBUTES_BUTTON_TOOLTIP_TEXT_OFF));
-		this.showEffectScreen = !clientConfig.can_hide_status_effect_screen || clientConfig.show_effect_screen_when_opening_inventory_screen;
+		this.showEffectScreen = !generalClientConfig.can_hide_status_effect_screen || generalClientConfig.show_effect_screen_when_opening_inventory_screen;
 		this.toggleShowEffectScreenButton = this.addDrawableChild(new ToggleInventoryScreenWidget(this.x + this.backgroundWidth - 29, this.y + 19, this.showEffectScreen, true, button -> this.toggleShowEffectScreen()));
 		this.toggleShowEffectScreenButton.setTooltip(Tooltip.of(this.showEffectScreen ? TOGGLE_SHOW_EFFECTS_BUTTON_TOOLTIP_TEXT_ON : TOGGLE_SHOW_EFFECTS_BUTTON_TOOLTIP_TEXT_OFF));
-		this.openBackpackButton = this.addDrawableChild(ButtonWidget.builder(OPEN_BACKPACK_BUTTON_LABEL_TEXT, button -> this.openBackpack()).dimensions(this.x + clientConfig.open_backpack_button_offset_x, this.y + clientConfig.open_backpack_button_offset_y, 70, 20).build());
-		this.openBackpackButton.visible = RPGInventory.serverConfig.disable_inventory_crafting_slots && clientConfig.enable_open_backpack_button && RPGInventory.isBackpackAttributeLoaded;
-		this.openHandCraftingButton = this.addDrawableChild(ButtonWidget.builder(OPEN_HAND_CRAFTING_BUTTON_LABEL_TEXT, button -> this.openHandCraftingScreen()).dimensions(this.x + clientConfig.open_hand_crafting_button_offset_x, this.y + clientConfig.open_hand_crafting_button_offset_y, 70, 20).build());
-		this.openHandCraftingButton.visible = RPGInventory.serverConfig.disable_inventory_crafting_slots && clientConfig.enable_open_hand_crafting_button/* && RPGInventory.isRPGCraftingLoaded*/; // TODO RPG Crafting Integration
+		this.openBackpackButton = this.addDrawableChild(ButtonWidget.builder(OPEN_BACKPACK_BUTTON_LABEL_TEXT, button -> this.openBackpack()).dimensions(this.x + generalClientConfig.open_backpack_button_offset_x, this.y + generalClientConfig.open_backpack_button_offset_y, 70, 20).build());
+		this.openBackpackButton.visible = RPGInventory.serverConfig.disable_inventory_crafting_slots && generalClientConfig.enable_open_backpack_button && RPGInventory.isBackpackAttributeLoaded;
+		this.openHandCraftingButton = this.addDrawableChild(ButtonWidget.builder(OPEN_HAND_CRAFTING_BUTTON_LABEL_TEXT, button -> this.openHandCraftingScreen()).dimensions(this.x + generalClientConfig.open_hand_crafting_button_offset_x, this.y + generalClientConfig.open_hand_crafting_button_offset_y, 70, 20).build());
+		this.openHandCraftingButton.visible = RPGInventory.serverConfig.disable_inventory_crafting_slots && generalClientConfig.enable_open_hand_crafting_button/* && RPGInventory.isRPGCraftingLoaded*/; // TODO RPG Crafting Integration
 	}
 
 	@Override
 	protected void drawMouseoverTooltip(DrawContext context, int x, int y) {
 		super.drawMouseoverTooltip(context, x, y);
-		if (RPGInventoryClient.clientConfig.show_slot_tooltips && this.handler.getCursorStack().isEmpty() && this.focusedSlot != null && !this.focusedSlot.hasStack()) {
+		if (RPGInventoryClient.clientConfigHolder.getConfig().generalClientConfig.show_slot_tooltips && this.handler.getCursorStack().isEmpty() && this.focusedSlot != null && !this.focusedSlot.hasStack()) {
 			if (this.focusedSlot instanceof DuckSlotMixin slotWithTooltip) {
 				List<Text> list = slotWithTooltip.rpginventory$getSlotTooltipText();
 				if (!list.isEmpty()) {
@@ -287,8 +285,8 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 		int activeSpellSlotAmount = 0;
 		int inventorySize = 0;
 		int hotbarSize = 0;
-		var clientConfig = RPGInventoryClient.clientConfig;
-		var serverConfig = RPGInventory.serverConfig;
+		ClientConfig.GeneralClientConfig generalClientConfig = RPGInventoryClient.clientConfigHolder.getConfig().generalClientConfig;
+		ServerConfig serverConfig = RPGInventory.serverConfig;
 		if (this.client != null && this.client.player != null) {
 			activeSpellSlotAmount = (int) ((DuckPlayerEntityMixin) this.client.player).rpginventory$getActiveSpellSlotAmount();
 
@@ -323,7 +321,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 		context.drawTexture(SLOT_TEXTURE, i + serverConfig.alternative_hand_group_x_offset - 1, j + serverConfig.alternative_hand_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
 		context.drawTexture(SLOT_TEXTURE, i + serverConfig.alternative_offhand_group_x_offset - 1, j + serverConfig.alternative_offhand_group_y_offset - 1, 0, 0, 18, 18, 18, 18);
 
-		boolean showInactiveSlots = clientConfig.show_inactive_inventory_slots;
+		boolean showInactiveSlots = generalClientConfig.show_inactive_inventory_slots;
 		for (k = 0; k < (showInactiveSlots ? 27 : Math.min(inventorySize, 27)); ++k) {
 			m = (k / 9);
 			context.drawTexture(SLOT_TEXTURE, i + 7 + (k - (m * 9)) * 18, j + 137 + (m * 18), 0, 0, 18, 18, 18, 18);
@@ -335,10 +333,10 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 		if (this.showAttributeScreen) {
 			context.drawTexture(ADVENTURE_INVENTORY_SIDES_BACKGROUND_TEXTURE, i - this.sidesBackgroundWidth, j, 0, 0, this.sidesBackgroundWidth, this.backgroundHeight, this.sidesBackgroundWidth, this.backgroundHeight);
 		}
-		if (this.oldEffectsListSize > 0 && (this.showEffectScreen || !clientConfig.can_hide_status_effect_screen)) {
+		if (this.oldEffectsListSize > 0 && (this.showEffectScreen || !generalClientConfig.can_hide_status_effect_screen)) {
 			context.drawTexture(ADVENTURE_INVENTORY_SIDES_BACKGROUND_TEXTURE, i + this.backgroundWidth, j, 0, 0, this.sidesBackgroundWidth, this.backgroundHeight, this.sidesBackgroundWidth, this.backgroundHeight);
 		}
-		this.toggleShowEffectScreenButton.visible = clientConfig.can_hide_status_effect_screen && this.oldEffectsListSize > 0;
+		this.toggleShowEffectScreenButton.visible = generalClientConfig.can_hide_status_effect_screen && this.oldEffectsListSize > 0;
 		if (this.client != null && this.client.player != null) {
             InventoryScreen.drawEntity(context, i + 26, j + 36, i + 75, j + 106, 30, 0.0625f, this.mouseX, this.mouseY, this.client.player);
 		}
@@ -482,7 +480,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 	}
 
 	private List<Text> getAttributeList() {
-		String[] attribute_screen_configuration = RPGInventoryClient.clientConfig.attribute_screen_configuration;
+		String[] attribute_screen_configuration = RPGInventoryClient.clientConfigHolder.getConfig().attributeScreenClientConfig.attribute_screen_configuration;
 		List<Text> list = new ArrayList<>(List.of());
 		this.attributeTooltipsList.clear();
 
@@ -604,7 +602,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 		this.neutralMouseClicked = false;
 		int i = this.x + this.backgroundWidth + this.sidesBackgroundWidth - 15;
 		int j;
-		if (!RPGInventoryClient.clientConfig.can_hide_status_effect_screen || this.showEffectScreen) {
+		if (!RPGInventoryClient.clientConfigHolder.getConfig().generalClientConfig.can_hide_status_effect_screen || this.showEffectScreen) {
 			if (this.foodEffectsRowAmount > 1) {
 				j = this.y + 34;
 				if (mouseX >= (double) i && mouseX < (double) (i + 6) && mouseY >= (double) j && mouseY < (double) (j + 30)) {
@@ -643,7 +641,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 
 	@Override
 	public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-		if (!RPGInventoryClient.clientConfig.can_hide_status_effect_screen || this.showEffectScreen) {
+		if (!RPGInventoryClient.clientConfigHolder.getConfig().generalClientConfig.can_hide_status_effect_screen || this.showEffectScreen) {
 			if (this.foodEffectsRowAmount > 1 && this.foodMouseClicked) {
 				int i = this.foodEffectsRowAmount - 1;
 				float f = (float) deltaY / (float) i;
@@ -684,7 +682,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 		int scrollAreaWidth = 119;
 		int scrollAreaStartY = this.y + 33;
 		int scrollAreaHeight = 32;
-		if (!RPGInventoryClient.clientConfig.can_hide_status_effect_screen || this.showEffectScreen) {
+		if (!RPGInventoryClient.clientConfigHolder.getConfig().generalClientConfig.can_hide_status_effect_screen || this.showEffectScreen) {
 			if (this.foodEffectsRowAmount > 1 && mouseX >= scrollAreaStartX && mouseX <= scrollAreaStartX + scrollAreaWidth && mouseY >= scrollAreaStartY && mouseY <= scrollAreaStartY + scrollAreaHeight) {
 				int i = this.foodEffectsRowAmount - 1;
 				float f = (float) verticalAmount / (float) i;
