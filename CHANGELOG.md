@@ -1,7 +1,13 @@
 # 2.1.0
 
 - update to 1.21.1
+- client config is now much more organized and better documented
 - added client option to hide empty hand slots in the HUD
+- added client option to hide the status effect screen
+- added compatibility with "Backpack Attribute"
+- added compatibility with "Inventory Size Attributes"
+- fixed several issues with the status effect screen
+- prepared several features that are coming in the future
 
 # 2.0.1
 
