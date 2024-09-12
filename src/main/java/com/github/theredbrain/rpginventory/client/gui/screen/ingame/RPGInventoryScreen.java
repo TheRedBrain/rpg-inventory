@@ -158,9 +158,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 			this.neutralScrollAmount = 0.0f;
 
 			for (StatusEffectInstance statusEffectInstance : visibleEffectsList) {
-				Optional<RegistryKey<StatusEffect>> todo = statusEffectInstance.getEffectType().getKey();
-				todo.get();
-				if (RPGInventory.isFoodOverhaulLoaded && statusEffectInstance.getEffectType() instanceof FoodStatusEffect) {
+				if (RPGInventory.isFoodOverhaulLoaded && statusEffectInstance.getEffectType().value() instanceof FoodStatusEffect) {
 					this.foodEffectsList.add(statusEffectInstance);
 				} else if (statusEffectInstance.getEffectType().value().getCategory() == StatusEffectCategory.HARMFUL) {
 					this.negativeEffectsList.add(statusEffectInstance);
@@ -346,8 +344,6 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 					context.drawTexture(SCROLLER_VERTICAL_6_7_TEXTURE, i + 110, j + 1 + k, 0, 0, 6, 7, 6, 7);
 				}
 				j += 37;
-			} else {
-				j += 50;
 			}
 			if (!this.negativeEffectsList.isEmpty()) {
 
@@ -362,8 +358,6 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 					context.drawTexture(SCROLLER_VERTICAL_6_7_TEXTURE, i + 110, j + 1 + k, 0, 0, 6, 7, 6, 7);
 				}
 				j += 37;
-			} else {
-				j += 50;
 			}
 			if (!this.positiveEffectsList.isEmpty()) {
 
@@ -378,8 +372,6 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 					context.drawTexture(SCROLLER_VERTICAL_6_7_TEXTURE, i + 110, j + 1 + k, 0, 0, 6, 7, 6, 7);
 				}
 				j += 37;
-			} else {
-				j += 50;
 			}
 			if (!this.neutralEffectsList.isEmpty()) {
 
@@ -401,7 +393,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 		if (this.client != null) {
 			StatusEffectSpriteManager statusEffectSpriteManager = this.client.getStatusEffectSpriteManager();
 			int i = x + 3 + ((z % 3) * 35);
-			context.drawTexture(BACKGROUND_TEXTURE, i, y, 0, 198, 32, 32); // TODO get correct texture
+			context.drawGuiTexture(EFFECT_BACKGROUND_SMALL_TEXTURE, i, y, 32, 32);
 			Sprite sprite = statusEffectSpriteManager.getSprite(statusEffectInstance.getEffectType());
 			context.drawSprite(i + 7, y + 7, 0, 18, 18, sprite);
 			if (mouseX >= i && mouseX <= i + 32 && mouseY >= y && mouseY <= y + 32) {
