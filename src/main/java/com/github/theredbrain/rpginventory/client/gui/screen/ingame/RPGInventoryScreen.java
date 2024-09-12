@@ -88,6 +88,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 	private List<StatusEffectInstance> negativeEffectsList = new ArrayList<>(Collections.emptyList());
 	private List<StatusEffectInstance> positiveEffectsList = new ArrayList<>(Collections.emptyList());
 	private List<StatusEffectInstance> neutralEffectsList = new ArrayList<>(Collections.emptyList());
+	private List<List<Text>> attributeTooltipsList = new ArrayList<>();
 	private int attributeScrollPosition = 0;
 	private int foodScrollPosition = 0;
 	private int negativeScrollPosition = 0;
@@ -350,10 +351,19 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 		}
 		int x = this.x - this.sidesBackgroundWidth + 7;
 		int y = this.y + 7;
+		int currentY;
 		List<Text> list = this.getAttributeList();
 		this.attributeListSize = list.size();
 		for (int i = this.attributeScrollPosition; i < Math.min(this.attributeListSize, this.attributeScrollPosition + 15); i++) {
-			context.drawText(this.textRenderer, list.get(i), x, y + ((i - this.attributeScrollPosition) * 13), 0x404040, false);
+			currentY = y + ((i - this.attributeScrollPosition) * 13);
+			context.drawText(this.textRenderer, list.get(i), x, currentY, 0x404040, false);
+			// TODO draw optional tooltip
+			if (mouseX >= x && mouseX <= x + this.sidesBackgroundWidth - 7 && mouseY >= currentY && mouseY <= currentY + 13) {
+				List<Text> tooltipList = this.attributeTooltipsList.get(i);
+				if (!tooltipList.isEmpty()) {
+					context.drawTooltip(this.textRenderer, tooltipList, Optional.empty(), mouseX, mouseY);
+				}
+			}
 		}
 		if (list.size() > 15) {
 			context.drawTexture(SCROLL_BAR_BACKGROUND_8_206_TEXTURE, x + 108, y, 0, 0, 8, 206, 8, 206);
@@ -474,6 +484,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 	private List<Text> getAttributeList() {
 		String[] attribute_screen_configuration = RPGInventoryClient.clientConfig.attribute_screen_configuration;
 		List<Text> list = new ArrayList<>(List.of());
+		this.attributeTooltipsList.clear();
 
 		PlayerEntity player = null;
 		if (this.client != null) {
@@ -487,12 +498,18 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 			if (stringArray.length == 1) {
 				if (stringArray[0].equals("EMPTY_LINE")) {
 					list.add(Text.empty());
+//					List<Text> tooltipList = new ArrayList<>(List.of());
+//					tooltipList.add(Text.literal("Test"));
+//					this.attributeTooltipsList.add(tooltipList);
+					this.attributeTooltipsList.add(new ArrayList<>(List.of()));
 				}
 			} else if (stringArray.length == 2) {
 				if (stringArray[0].equals("TRANSLATABLE_STRING")) {
 					list.add(Text.translatable(stringArray[1]));
+					this.attributeTooltipsList.add(new ArrayList<>(List.of()));
 				} else if (stringArray[0].equals("STRING")) {
 					list.add(Text.of(stringArray[1]));
+					this.attributeTooltipsList.add(new ArrayList<>(List.of()));
 				}
 			} else if (stringArray.length == 3) {
 				if (stringArray[0].equals("ATTRIBUTE_VALUE")) {
@@ -504,6 +521,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 						mutableText.append(Text.of(": "));
 						mutableText.append(Text.of(Double.toString(player.getAttributeValue(attribute.get()))));
 						list.add(mutableText);
+						this.attributeTooltipsList.add(new ArrayList<>(List.of()));
 					}
 				}
 			} else if (stringArray.length == 4) {
@@ -515,6 +533,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 					if (attribute.isPresent() && player.getAttributes().hasAttribute(attribute.get())) {
 						mutableText.append(Text.of(Double.toString(player.getAttributeValue(attribute.get()))));
 						list.add(mutableText);
+						this.attributeTooltipsList.add(new ArrayList<>(List.of()));
 					}
 				}
 			} else if (stringArray.length == 6) {
@@ -530,6 +549,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 						mutableText.append(Text.of("/"));
 						mutableText.append(Text.of(Double.toString(player.getAttributeValue(secondAttribute.get()))));
 						list.add(mutableText);
+						this.attributeTooltipsList.add(new ArrayList<>(List.of()));
 					}
 				}
 			}
