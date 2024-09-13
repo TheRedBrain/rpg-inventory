@@ -55,7 +55,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 	public static final Identifier ADVENTURE_INVENTORY_SIDES_BACKGROUND_TEXTURE = RPGInventory.identifier("textures/gui/container/adventure_inventory/adventure_inventory_sides_background.png");
 	public static final Identifier SLOT_TEXTURE = Identifier.ofVanilla("textures/gui/sprites/container/slot.png");
 	private static final Identifier EFFECT_BACKGROUND_SMALL_TEXTURE = Identifier.ofVanilla("container/inventory/effect_background_small");
-    private static final Identifier CRAFTING_SLOTS_BACKGROUND_TEXTURE = RPGInventory.identifier("textures/gui/container/adventure_inventory/adventure_inventory_crafting_background.png");
+	private static final Identifier CRAFTING_SLOTS_BACKGROUND_TEXTURE = RPGInventory.identifier("textures/gui/container/adventure_inventory/adventure_inventory_crafting_background.png");
 	private static final Identifier SCROLL_BAR_BACKGROUND_8_206_TEXTURE = RPGInventory.identifier("textures/gui/sprites/scroll_bar/scroll_bar_background_8_206.png");
 	private static final Identifier SCROLL_BAR_BACKGROUND_8_32_TEXTURE = RPGInventory.identifier("textures/gui/sprites/scroll_bar/scroll_bar_background_8_32.png");
 	private static final Identifier SCROLLER_VERTICAL_6_7_TEXTURE = RPGInventory.identifier("textures/gui/sprites/scroll_bar/scroller_vertical_6_7.png");
@@ -208,7 +208,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 		this.showAttributeScreen = !this.showAttributeScreen;
 		((ToggleInventoryScreenWidget) this.toggleShowAttributeScreenButton).setIsPressed(this.showAttributeScreen);
 		this.toggleShowAttributeScreenButton.setTooltip(this.showAttributeScreen ? Tooltip.of(TOGGLE_SHOW_ATTRIBUTES_BUTTON_TOOLTIP_TEXT_ON) : Tooltip.of(TOGGLE_SHOW_ATTRIBUTES_BUTTON_TOOLTIP_TEXT_OFF));
-		((DuckPlayerScreenHandlerMixin)this.handler).rpginventory$setIsAttributeScreenVisible(this.showAttributeScreen);
+		((DuckPlayerScreenHandlerMixin) this.handler).rpginventory$setIsAttributeScreenVisible(this.showAttributeScreen);
 	}
 
 	private void toggleShowEffectScreen() {
@@ -230,7 +230,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 		super.init();
 		ClientConfig.GeneralClientConfig generalClientConfig = RPGInventoryClient.clientConfigHolder.getConfig().generalClientConfig;
 		this.showAttributeScreen = generalClientConfig.show_attribute_screen_when_opening_inventory_screen;
-		((DuckPlayerScreenHandlerMixin)this.handler).rpginventory$setIsAttributeScreenVisible(this.showAttributeScreen);
+		((DuckPlayerScreenHandlerMixin) this.handler).rpginventory$setIsAttributeScreenVisible(this.showAttributeScreen);
 		this.toggleShowAttributeScreenButton = this.addDrawableChild(new ToggleInventoryScreenWidget(this.x + 6, this.y + 19, this.showAttributeScreen, false, button -> this.toggleShowAttributeScreen()));
 		this.toggleShowAttributeScreenButton.setTooltip(Tooltip.of(this.showAttributeScreen ? TOGGLE_SHOW_ATTRIBUTES_BUTTON_TOOLTIP_TEXT_ON : TOGGLE_SHOW_ATTRIBUTES_BUTTON_TOOLTIP_TEXT_OFF));
 		this.showEffectScreen = !generalClientConfig.can_hide_status_effect_screen || generalClientConfig.show_effect_screen_when_opening_inventory_screen;
@@ -333,7 +333,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 		}
 		this.toggleShowEffectScreenButton.visible = generalClientConfig.can_hide_status_effect_screen && this.oldEffectsListSize > 0;
 		if (this.client != null && this.client.player != null) {
-            InventoryScreen.drawEntity(context, i + 26, j + 36, i + 75, j + 106, 30, 0.0625f, this.mouseX, this.mouseY, this.client.player);
+			InventoryScreen.drawEntity(context, i + 26, j + 36, i + 75, j + 106, 30, 0.0625f, this.mouseX, this.mouseY, this.client.player);
 		}
 		TrinketScreenManager.drawExtraGroups(context);
 	}

@@ -468,14 +468,14 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 								SlotType type = ts.getType();
 								SlotReference ref = new SlotReference((TrinketInventory) ts.inventory, ts.getIndex());
 
-								if ((Objects.equals(type.getGroup(), "spell_slot_1") && ((DuckPlayerEntityMixin)player).rpginventory$getActiveSpellSlotAmount() < 1)
-										|| (Objects.equals(type.getGroup(), "spell_slot_2") && ((DuckPlayerEntityMixin)player).rpginventory$getActiveSpellSlotAmount() < 2)
-										|| (Objects.equals(type.getGroup(), "spell_slot_3") && ((DuckPlayerEntityMixin)player).rpginventory$getActiveSpellSlotAmount() < 3)
-										|| (Objects.equals(type.getGroup(), "spell_slot_4") && ((DuckPlayerEntityMixin)player).rpginventory$getActiveSpellSlotAmount() < 4)
-										|| (Objects.equals(type.getGroup(), "spell_slot_5") && ((DuckPlayerEntityMixin)player).rpginventory$getActiveSpellSlotAmount() < 5)
-										|| (Objects.equals(type.getGroup(), "spell_slot_6") && ((DuckPlayerEntityMixin)player).rpginventory$getActiveSpellSlotAmount() < 6)
-										|| (Objects.equals(type.getGroup(), "spell_slot_7") && ((DuckPlayerEntityMixin)player).rpginventory$getActiveSpellSlotAmount() < 7)
-										|| (Objects.equals(type.getGroup(), "spell_slot_8") && ((DuckPlayerEntityMixin)player).rpginventory$getActiveSpellSlotAmount() < 8)
+								if ((Objects.equals(type.getGroup(), "spell_slot_1") && ((DuckPlayerEntityMixin) player).rpginventory$getActiveSpellSlotAmount() < 1)
+										|| (Objects.equals(type.getGroup(), "spell_slot_2") && ((DuckPlayerEntityMixin) player).rpginventory$getActiveSpellSlotAmount() < 2)
+										|| (Objects.equals(type.getGroup(), "spell_slot_3") && ((DuckPlayerEntityMixin) player).rpginventory$getActiveSpellSlotAmount() < 3)
+										|| (Objects.equals(type.getGroup(), "spell_slot_4") && ((DuckPlayerEntityMixin) player).rpginventory$getActiveSpellSlotAmount() < 4)
+										|| (Objects.equals(type.getGroup(), "spell_slot_5") && ((DuckPlayerEntityMixin) player).rpginventory$getActiveSpellSlotAmount() < 5)
+										|| (Objects.equals(type.getGroup(), "spell_slot_6") && ((DuckPlayerEntityMixin) player).rpginventory$getActiveSpellSlotAmount() < 6)
+										|| (Objects.equals(type.getGroup(), "spell_slot_7") && ((DuckPlayerEntityMixin) player).rpginventory$getActiveSpellSlotAmount() < 7)
+										|| (Objects.equals(type.getGroup(), "spell_slot_8") && ((DuckPlayerEntityMixin) player).rpginventory$getActiveSpellSlotAmount() < 8)
 								) {
 									continue;
 								}

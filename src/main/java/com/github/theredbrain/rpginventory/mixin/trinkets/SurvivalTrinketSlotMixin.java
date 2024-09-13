@@ -44,7 +44,9 @@ public abstract class SurvivalTrinketSlotMixin extends Slot {
 	@Final
 	private SlotGroup group;
 
-	@Shadow @Final private boolean alwaysVisible;
+	@Shadow
+	@Final
+	private boolean alwaysVisible;
 
 	public SurvivalTrinketSlotMixin(Inventory inventory, int index, int x, int y) {
 		super(inventory, index, x, y);
@@ -61,7 +63,7 @@ public abstract class SurvivalTrinketSlotMixin extends Slot {
 		Text text = Text.translatable("slot.tooltip." + groupName + "." + slotName);
 		if (!text.getString().isEmpty()) {
 			list.add(text);
-			((DuckSlotMixin)slot).rpginventory$setSlotTooltipText(list);
+			((DuckSlotMixin) slot).rpginventory$setSlotTooltipText(list);
 		}
 	}
 

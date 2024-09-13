@@ -24,9 +24,13 @@ import java.util.Optional;
 @Mixin(targets = {"net/minecraft/screen/slot/ArmorSlot"})
 public class ArmorSlotMixin {
 
-	@Shadow @Final private LivingEntity entity;
+	@Shadow
+	@Final
+	private LivingEntity entity;
 
-	@Shadow @Final private EquipmentSlot equipmentSlot;
+	@Shadow
+	@Final
+	private EquipmentSlot equipmentSlot;
 
 	@Inject(method = "canInsert", at = @At("RETURN"), cancellable = true)
 	public void rpginventory$canInsert(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {

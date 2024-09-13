@@ -27,7 +27,8 @@ import java.util.Collection;
 @Mixin(value = ServerPlayerEntity.class/*, priority = 950*/) // TODO test if priority is needed
 public abstract class ServerPlayerEntityMixin extends PlayerEntity implements DuckPlayerEntityMixin {
 
-	@Shadow public abstract boolean isCreative();
+	@Shadow
+	public abstract boolean isCreative();
 
 	@Unique
 	ItemStack handSlotStack = ItemStack.EMPTY;

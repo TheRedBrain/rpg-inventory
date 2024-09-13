@@ -21,7 +21,7 @@ public class ServerConfig implements ConfigData {
 
 	@Comment("""
 			When the mod 'Stamina Attributes' is installed, the following 6 options take effect
-			            
+			
 			When true, stamina must be above 0 for swapping hand items.
 			""")
 	public boolean swapping_hand_items_requires_stamina = true;

@@ -108,29 +108,29 @@ public class ClientConfig extends PartitioningSerializer.GlobalData {
 		// TODO register GUI provider for java.util.LinkedHashMap
 		@ConfigEntry.Gui.PrefixText
 		@Comment("""
-			These values describe how the matrixStack is manipulated.
-			
-			They are defined like so:
-			
-			initial_translation_x
-			initial_translation_y
-			initial_translation_z
-			equipped_chest_offset_x
-			equipped_chest_offset_y
-			equipped_chest_offset_z
-			rotation_positive_z
-			rotation_positive_y
-			rotation_positive_x
-			
-			Manipulations:
-			matrixStack.translate(initial_translation_x, initial_translation_y, initial_translation_z);
-			if (hasStackEquippedInChestSlot) {
-				matrixStack.translate(equipped_chest_offset_x, equipped_chest_offset_y, equipped_chest_offset_z);
-			}
-			matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(rotation_positive_z));
-			matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rotation_positive_y));
-			matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(rotation_positive_x));
-			""")
+				These values describe how the matrixStack is manipulated.
+				
+				They are defined like so:
+				
+				initial_translation_x
+				initial_translation_y
+				initial_translation_z
+				equipped_chest_offset_x
+				equipped_chest_offset_y
+				equipped_chest_offset_z
+				rotation_positive_z
+				rotation_positive_y
+				rotation_positive_x
+				
+				Manipulations:
+				matrixStack.translate(initial_translation_x, initial_translation_y, initial_translation_z);
+				if (hasStackEquippedInChestSlot) {
+					matrixStack.translate(equipped_chest_offset_x, equipped_chest_offset_y, equipped_chest_offset_z);
+				}
+				matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(rotation_positive_z));
+				matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rotation_positive_y));
+				matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(rotation_positive_x));
+				""")
 		@ConfigEntry.Gui.Excluded
 		public LinkedHashMap<String, Float[]> sheathed_hand_item_positions = new LinkedHashMap<>() {{
 			put("minecraft:crossbow", new Float[]{-0.3F, 0.1F, 0.16F, 0.0F, 0.0F, 0.06F, 0.0F, 90.0F, -10.0F});

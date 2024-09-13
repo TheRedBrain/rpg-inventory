@@ -203,9 +203,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 	public void equipStack(EquipmentSlot slot, ItemStack stack) {
 		this.processEquippedStack(stack);
 		if (slot == EquipmentSlot.MAINHAND) {
-			this.onEquipStack(slot, ((DuckPlayerEntityMixin)this).rpginventory$isHandStackSheathed() ? this.inventory.main.set(this.inventory.selectedSlot, stack) : ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setHand(stack), stack);
+			this.onEquipStack(slot, ((DuckPlayerEntityMixin) this).rpginventory$isHandStackSheathed() ? this.inventory.main.set(this.inventory.selectedSlot, stack) : ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setHand(stack), stack);
 		} else if (slot == EquipmentSlot.OFFHAND) {
-			this.onEquipStack(slot, ((DuckPlayerEntityMixin)this).rpginventory$isHandStackSheathed() ? ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setSheathedOffhand(stack) : this.inventory.offHand.set(0, stack), stack);
+			this.onEquipStack(slot, ((DuckPlayerEntityMixin) this).rpginventory$isHandStackSheathed() ? ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setSheathedOffhand(stack) : this.inventory.offHand.set(0, stack), stack);
 		} else if (slot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR) {
 			this.onEquipStack(slot, this.inventory.armor.set(slot.getEntitySlotId(), stack), stack);
 		}
