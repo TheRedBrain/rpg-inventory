@@ -51,12 +51,11 @@ import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
 public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> implements TrinketScreen {
+	public static final Identifier ADVENTURE_INVENTORY_MAIN_BACKGROUND_TEXTURE = RPGInventory.identifier("textures/gui/container/adventure_inventory/adventure_inventory_main_background.png");
 	public static final Identifier ADVENTURE_INVENTORY_SIDES_BACKGROUND_TEXTURE = RPGInventory.identifier("textures/gui/container/adventure_inventory/adventure_inventory_sides_background.png");
-//	private static final Identifier INVENTORY_SLOT_TEXTURE = RPGInventory.identifier("textures/gui/container/adventure_inventory/adventure_inventory_spells_background_1.png");
-	//    private static final Identifier EFFECT_BACKGROUND_SMALL_TEXTURE = new Identifier("container/inventory/effect_background_small");
 	public static final Identifier SLOT_TEXTURE = Identifier.ofVanilla("textures/gui/sprites/container/slot.png");
 	private static final Identifier EFFECT_BACKGROUND_SMALL_TEXTURE = Identifier.ofVanilla("container/inventory/effect_background_small");
-//    private static final Identifier EFFECT_SCROLLER_BACKGROUND_TEXTURE = RPGInventory.identifier("container/adventure_inventory/scroller_background");
+    private static final Identifier CRAFTING_SLOTS_BACKGROUND_TEXTURE = RPGInventory.identifier("textures/gui/container/adventure_inventory/adventure_inventory_crafting_background.png");
 	private static final Identifier SCROLL_BAR_BACKGROUND_8_206_TEXTURE = RPGInventory.identifier("textures/gui/sprites/scroll_bar/scroll_bar_background_8_206.png");
 	private static final Identifier SCROLL_BAR_BACKGROUND_8_32_TEXTURE = RPGInventory.identifier("textures/gui/sprites/scroll_bar/scroll_bar_background_8_32.png");
 	private static final Identifier SCROLLER_VERTICAL_6_7_TEXTURE = RPGInventory.identifier("textures/gui/sprites/scroll_bar/scroller_vertical_6_7.png");
@@ -118,9 +117,6 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 	}
 
 	public void handledScreenTick() {
-//        PlayerEntity player = this.handler.player();
-//        this.updateAttributeScreen(player);
-//        this.updateEffectsScreen(player);
 		TrinketScreenManager.tick();
 	}
 
@@ -294,17 +290,16 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 			inventorySize = RPGInventory.getActiveInventorySize(this.client.player);
 			updateEffectsLists(this.client.player);
 		}
-		context.drawTexture(RPGInventory.identifier("textures/gui/container/adventure_inventory/adventure_inventory_main_background.png"), i, j, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
+		context.drawTexture(ADVENTURE_INVENTORY_MAIN_BACKGROUND_TEXTURE, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
 		if (!serverConfig.disable_inventory_crafting_slots) {
 			context.drawText(this.textRenderer, CRAFTING_LABEL_TEXT, i + serverConfig.inventory_crafting_slots_x_offset, j + serverConfig.inventory_crafting_slots_y_offset - 11, 4210752, false);
-			context.drawTexture(RPGInventory.identifier("textures/gui/container/adventure_inventory/adventure_inventory_crafting_background.png"), i + serverConfig.inventory_crafting_slots_x_offset - 1, j + serverConfig.inventory_crafting_slots_y_offset - 1, 0, 0, 74, 36, 74, 36);
+			context.drawTexture(CRAFTING_SLOTS_BACKGROUND_TEXTURE, i + serverConfig.inventory_crafting_slots_x_offset - 1, j + serverConfig.inventory_crafting_slots_y_offset - 1, 0, 0, 74, 36, 74, 36);
 		}
 		if (activeSpellSlotAmount > 0) {
 			context.drawText(this.textRenderer, SPELLS_LABEL_TEXT, i + serverConfig.spell_slots_x_offset, j + serverConfig.spell_slots_y_offset - 11, 4210752, false);
-			int width = activeSpellSlotAmount < 5 ? (activeSpellSlotAmount % 5) * 18 : 72;
-			int height = activeSpellSlotAmount < 5 ? 18 : 36;
-			context.drawTexture(RPGInventory.identifier("textures/gui/container/adventure_inventory/adventure_inventory_spells_background_" + activeSpellSlotAmount + ".png"), i + serverConfig.spell_slots_x_offset - 1, j + serverConfig.spell_slots_y_offset - 1, 0, 0, width, height, width, height);
-
+			for (k = 0; k < activeSpellSlotAmount; k++) {
+				context.drawTexture(SLOT_TEXTURE, i + serverConfig.spell_slots_x_offset - 1 + ((k % 4) * 18), j + serverConfig.spell_slots_y_offset - 1 + ((k / 4) * 18), 0, 0, 18, 18, 18, 18);
+			}
 		}
 		context.drawTexture(SLOT_TEXTURE, i + serverConfig.head_slot_x_offset - 1, j + serverConfig.head_slot_y_offset - 1, 0, 0, 18, 18, 18, 18);
 		context.drawTexture(SLOT_TEXTURE, i + serverConfig.chest_slot_x_offset - 1, j + serverConfig.chest_slot_y_offset - 1, 0, 0, 18, 18, 18, 18);
@@ -355,7 +350,6 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 		for (int i = this.attributeScrollPosition; i < Math.min(this.attributeListSize, this.attributeScrollPosition + 15); i++) {
 			currentY = y + ((i - this.attributeScrollPosition) * 13);
 			context.drawText(this.textRenderer, list.get(i), x, currentY, 0x404040, false);
-			// TODO draw optional tooltip
 			if (mouseX >= x && mouseX <= x + this.sidesBackgroundWidth - 7 && mouseY >= currentY && mouseY <= currentY + 13) {
 				List<Text> tooltipList = this.attributeTooltipsList.get(i);
 				if (!tooltipList.isEmpty()) {
@@ -452,7 +446,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 
 	private List<Text> getStatusEffectTooltip(StatusEffectInstance statusEffectInstance) {
 		List<Text> list = new ArrayList<>(List.of(getStatusEffectName(statusEffectInstance)));
-		if (!(statusEffectInstance.isInfinite())) {
+		if (!(statusEffectInstance.isInfinite()) && this.client != null && this.client.world != null) {
 			list.add(StatusEffectUtil.getDurationText(statusEffectInstance, 1.0f, this.client.world.getTickManager().getTickRate()));
 		}
 		Text description = getStatusEffectDescription(statusEffectInstance);
