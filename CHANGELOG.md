@@ -1,3 +1,8 @@
+# 2.2.0
+
+- removed feature: Attribute Screen, this feature was exported into a standalone mod called "Player Attribute Screen". The "attribute_screen_configuration" config value should work in the new mods config file.
+- added compatibility with "Player Attribute Screen"
+
 # 2.1.0
 
 - update to 1.21.1

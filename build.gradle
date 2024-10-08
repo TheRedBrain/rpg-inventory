@@ -30,7 +30,7 @@ repositories {
 		url = 'https://maven.ladysnake.org/releases'
 	}
 
-	// Stamina Attributes, Slot Customization API, Backpack Attribute
+	// Stamina Attributes, Slot Customization API, Inventory Size Attributes, Backpack Attribute, Player Attribute Screen
 	maven {
 		name = "Modrinth"
 		url = "https://api.modrinth.com/maven"
@@ -87,8 +87,11 @@ dependencies {
 	// Inventory Size Attributes
 	modImplementation "maven.modrinth:inventory-size-attributes:${project.inventory_size_attributes_version}"
 
-	// Inventory Size Attributes
+	// Backpack Attribute
 	modImplementation "maven.modrinth:backpack-attribute:${project.backpack_attribute_version}"
+
+	// Player Attributes Screen
+	modImplementation "maven.modrinth:player-attribute-screen:${project.player_attribute_screen_version}"
 
 }
 
@@ -153,6 +156,7 @@ if(project.hasProperty('release_type')) {
 				optionalDependency 'stamina-attributes'
 				optionalDependency 'inventory-size-attributes'
 				optionalDependency 'backpack-attribute'
+				optionalDependency 'player-attribute-screen'
 			}
 
 			mainArtifact(remapJar)
@@ -189,6 +193,7 @@ if(project.hasProperty('release_type')) {
 			optional.project 'various-status-effects'
 			optional.project 'inventory-size-attributes'
 			optional.project 'backpack-attribute'
+			optional.project 'player-attribute-screen'
 		}
 	}
 

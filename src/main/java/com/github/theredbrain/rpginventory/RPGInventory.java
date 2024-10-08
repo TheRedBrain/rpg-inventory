@@ -42,6 +42,8 @@ public class RPGInventory implements ModInitializer {
 		return isInventorySizeAttributesLoaded ? ((DuckPlayerEntityMixin) player).inventorysizeattributes$getActiveHotbarSlotAmount() : 9;
 	}
 
+	public static final boolean isPlayerAttributeScreenLoaded = FabricLoader.getInstance().isModLoaded("playerattributescreen");
+
 	@Override
 	public void onInitialize() {
 		LOGGER.info("We are going on an adventure!");

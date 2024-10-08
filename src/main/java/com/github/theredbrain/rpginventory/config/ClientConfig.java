@@ -15,9 +15,6 @@ public class ClientConfig extends PartitioningSerializer.GlobalData {
 	@ConfigEntry.Category("generalClientConfig")
 	@ConfigEntry.Gui.TransitiveObject
 	public GeneralClientConfig generalClientConfig = new GeneralClientConfig();
-	@ConfigEntry.Category("attributeScreenClientConfig")
-	@ConfigEntry.Gui.TransitiveObject
-	public AttributeScreenClientConfig attributeScreenClientConfig = new AttributeScreenClientConfig();
 	@ConfigEntry.Category("sheathedItemPositionsClientConfig")
 	@ConfigEntry.Gui.TransitiveObject
 	public SheathedItemPositionsClientConfig sheathedItemPositionsClientConfig = new SheathedItemPositionsClientConfig();
@@ -71,32 +68,6 @@ public class ClientConfig extends PartitioningSerializer.GlobalData {
 		public boolean show_item_tooltip_equipment_slots = true;
 
 		public GeneralClientConfig() {
-		}
-
-	}
-
-	@Config(
-			name = "attributeScreenClientConfig"
-	)
-	public static class AttributeScreenClientConfig implements ConfigData {
-		// TODO
-		//  format where only difference to base value is shown
-		@ConfigEntry.Gui.PrefixText
-		public String[] attribute_screen_configuration = {
-				"TRANSLATABLE_STRING:gui.adventureInventory.attributes",
-				"EMPTY_LINE",
-				"ATTRIBUTE_VALUE:minecraft:generic.max_health",
-				"ATTRIBUTE_VALUE:healthregenerationoverhaul:generic.health_regeneration",
-				"ATTRIBUTE_VALUE:manaattributes:generic.max_mana",
-				"ATTRIBUTE_VALUE:manaattributes:generic.mana_regeneration",
-				"ATTRIBUTE_VALUE:staminaattributes:generic.max_stamina",
-				"ATTRIBUTE_VALUE:staminaattributes:generic.stamina_regeneration",
-				"ATTRIBUTE_VALUE:minecraft:generic.armor",
-				"ATTRIBUTE_VALUE:minecraft:generic.armor_toughness",
-				"ATTRIBUTE_VALUE:minecraft:generic.luck"
-		};
-
-		public AttributeScreenClientConfig() {
 		}
 
 	}

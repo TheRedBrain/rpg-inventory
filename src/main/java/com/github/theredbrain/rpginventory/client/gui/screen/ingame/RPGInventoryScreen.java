@@ -1,6 +1,5 @@
 package com.github.theredbrain.rpginventory.client.gui.screen.ingame;
 
-import com.github.theredbrain.backpackattribute.registry.KeyBindingsRegistry;
 import com.github.theredbrain.foodoverhaul.effect.FoodStatusEffect;
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.RPGInventoryClient;
@@ -29,13 +28,10 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.StatusEffectSpriteManager;
 import net.minecraft.client.util.math.Rect2i;
-import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffectUtil;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.screen.slot.Slot;
@@ -43,6 +39,7 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
+import org.apache.commons.lang3.tuple.MutablePair;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -68,8 +65,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 	private static final Text TOGGLE_SHOW_EFFECTS_BUTTON_TOOLTIP_TEXT_ON = Text.translatable("gui.adventureInventory.toggleShowEffectScreenButton.on.tooltip");
 	private static final Text OPEN_BACKPACK_BUTTON_LABEL_TEXT = Text.translatable("gui.adventureInventory.openBackpackButton");
 	private static final Text OPEN_HAND_CRAFTING_BUTTON_LABEL_TEXT = Text.translatable("gui.adventureInventory.openHandCraftingButton");
-	private static final Text BACKPACK_ATTRIBUTES_NOT_INSTALLED_MESSAGE_TEXT = Text.translatable("hud.message.backpackAttributesNotInstalled");
-	private static final Text RPG_CRAFTING_NOT_INSTALLED_MESSAGE_TEXT = Text.translatable("hud.message.rpgCraftingNotInstalled");
+	private static final int MAX_ATTRIBUTE_SCREEN_LINES = 15;
 	private float mouseX;
 	private float mouseY;
 	private ButtonWidget openBackpackButton;
@@ -85,7 +81,6 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 	private List<StatusEffectInstance> negativeEffectsList = new ArrayList<>(Collections.emptyList());
 	private List<StatusEffectInstance> positiveEffectsList = new ArrayList<>(Collections.emptyList());
 	private List<StatusEffectInstance> neutralEffectsList = new ArrayList<>(Collections.emptyList());
-	private List<List<Text>> attributeTooltipsList = new ArrayList<>();
 	private int attributeScrollPosition = 0;
 	private int foodScrollPosition = 0;
 	private int negativeScrollPosition = 0;
@@ -186,21 +181,13 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 
 	private void openBackpack() {
 		if (this.client != null) {
-			if (RPGInventory.isBackpackAttributeLoaded) {
-				KeyBindingsRegistry.openBackpackScreen(this.client);
-			} else if (this.client.player != null) {
-				this.client.player.sendMessage(BACKPACK_ATTRIBUTES_NOT_INSTALLED_MESSAGE_TEXT);
-			}
+			RPGInventory.openBackPackScreen(this.client);
 		}
 	}
 
 	private void openHandCraftingScreen() {
 		if (this.client != null) {
-			if (RPGInventory.isRPGCraftingLoaded) {
-				// open handcrafting screen // TODO RPG Crafting Integration
-			} else if (this.client.player != null) {
-				this.client.player.sendMessage(RPG_CRAFTING_NOT_INSTALLED_MESSAGE_TEXT);
-			}
+			RPGInventory.openHandCraftingScreen(this.client);
 		}
 	}
 
@@ -229,7 +216,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 		}
 		super.init();
 		ClientConfig.GeneralClientConfig generalClientConfig = RPGInventoryClient.clientConfigHolder.getConfig().generalClientConfig;
-		this.showAttributeScreen = generalClientConfig.show_attribute_screen_when_opening_inventory_screen;
+		this.showAttributeScreen = generalClientConfig.show_attribute_screen_when_opening_inventory_screen && RPGInventory.isPlayerAttributeScreenLoaded;
 		((DuckPlayerScreenHandlerMixin) this.handler).rpginventory$setIsAttributeScreenVisible(this.showAttributeScreen);
 		this.toggleShowAttributeScreenButton = this.addDrawableChild(new ToggleInventoryScreenWidget(this.x + 6, this.y + 19, this.showAttributeScreen, false, button -> this.toggleShowAttributeScreen()));
 		this.toggleShowAttributeScreenButton.setTooltip(Tooltip.of(this.showAttributeScreen ? TOGGLE_SHOW_ATTRIBUTES_BUTTON_TOOLTIP_TEXT_ON : TOGGLE_SHOW_ATTRIBUTES_BUTTON_TOOLTIP_TEXT_OFF));
@@ -239,7 +226,8 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 		this.openBackpackButton = this.addDrawableChild(ButtonWidget.builder(OPEN_BACKPACK_BUTTON_LABEL_TEXT, button -> this.openBackpack()).dimensions(this.x + generalClientConfig.open_backpack_button_offset_x, this.y + generalClientConfig.open_backpack_button_offset_y, 70, 20).build());
 		this.openBackpackButton.visible = RPGInventory.serverConfig.disable_inventory_crafting_slots && generalClientConfig.enable_open_backpack_button && RPGInventory.isBackpackAttributeLoaded;
 		this.openHandCraftingButton = this.addDrawableChild(ButtonWidget.builder(OPEN_HAND_CRAFTING_BUTTON_LABEL_TEXT, button -> this.openHandCraftingScreen()).dimensions(this.x + generalClientConfig.open_hand_crafting_button_offset_x, this.y + generalClientConfig.open_hand_crafting_button_offset_y, 70, 20).build());
-		this.openHandCraftingButton.visible = RPGInventory.serverConfig.disable_inventory_crafting_slots && generalClientConfig.enable_open_hand_crafting_button/* && RPGInventory.isRPGCraftingLoaded*/; // TODO RPG Crafting Integration
+		this.openHandCraftingButton.visible = RPGInventory.serverConfig.disable_inventory_crafting_slots && generalClientConfig.enable_open_hand_crafting_button && RPGInventory.isRPGCraftingLoaded;
+		this.toggleShowAttributeScreenButton.visible = RPGInventory.isPlayerAttributeScreenLoaded;
 	}
 
 	@Override
@@ -345,19 +333,19 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 		int x = this.x - this.sidesBackgroundWidth + 7;
 		int y = this.y + 7;
 		int currentY;
-		List<Text> list = this.getAttributeList();
+		List<MutablePair<Text, List<Text>>> list = RPGInventoryClient.getPlayerAttributeScreenData(this.client);
 		this.attributeListSize = list.size();
 		for (int i = this.attributeScrollPosition; i < Math.min(this.attributeListSize, this.attributeScrollPosition + 15); i++) {
 			currentY = y + ((i - this.attributeScrollPosition) * 13);
-			context.drawText(this.textRenderer, list.get(i), x, currentY, 0x404040, false);
+			context.drawText(this.textRenderer, list.get(i).left, x, currentY, 0x404040, false);
 			if (mouseX >= x && mouseX <= x + this.sidesBackgroundWidth - 7 && mouseY >= currentY && mouseY <= currentY + 13) {
-				List<Text> tooltipList = this.attributeTooltipsList.get(i);
+				List<Text> tooltipList = list.get(i).right;
 				if (!tooltipList.isEmpty()) {
 					context.drawTooltip(this.textRenderer, tooltipList, Optional.empty(), mouseX, mouseY);
 				}
 			}
 		}
-		if (list.size() > 15) {
+		if (list.size() > MAX_ATTRIBUTE_SCREEN_LINES) {
 			context.drawTexture(SCROLL_BAR_BACKGROUND_8_206_TEXTURE, x + 108, y, 0, 0, 8, 206, 8, 206);
 			int k = (int) (189.0f * this.attributeScrollAmount);
 			context.drawTexture(SCROLLER_VERTICAL_6_15_TEXTURE, x + 109, y + 1 + k, 0, 0, 6, 15, 6, 15);
@@ -471,82 +459,6 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 			description = Text.empty();
 		}
 		return description;
-	}
-
-	private List<Text> getAttributeList() {
-		String[] attribute_screen_configuration = RPGInventoryClient.clientConfigHolder.getConfig().attributeScreenClientConfig.attribute_screen_configuration;
-		List<Text> list = new ArrayList<>(List.of());
-		this.attributeTooltipsList.clear();
-
-		PlayerEntity player = null;
-		if (this.client != null) {
-			player = this.client.player;
-		}
-		if (player == null) {
-			return list;
-		}
-		for (String string : attribute_screen_configuration) {
-			String[] stringArray = string.split(":");
-			if (stringArray.length == 1) {
-				if (stringArray[0].equals("EMPTY_LINE")) {
-					list.add(Text.empty());
-//					List<Text> tooltipList = new ArrayList<>(List.of());
-//					tooltipList.add(Text.literal("Test"));
-//					this.attributeTooltipsList.add(tooltipList);
-					this.attributeTooltipsList.add(new ArrayList<>(List.of()));
-				}
-			} else if (stringArray.length == 2) {
-				if (stringArray[0].equals("TRANSLATABLE_STRING")) {
-					list.add(Text.translatable(stringArray[1]));
-					this.attributeTooltipsList.add(new ArrayList<>(List.of()));
-				} else if (stringArray[0].equals("STRING")) {
-					list.add(Text.of(stringArray[1]));
-					this.attributeTooltipsList.add(new ArrayList<>(List.of()));
-				}
-			} else if (stringArray.length == 3) {
-				if (stringArray[0].equals("ATTRIBUTE_VALUE")) {
-
-					Identifier attributeId = Identifier.of(stringArray[1], stringArray[2]);
-					Optional<RegistryEntry.Reference<EntityAttribute>> attribute = Registries.ATTRIBUTE.getEntry(attributeId);
-					if (attribute.isPresent() && player.getAttributes().hasAttribute(attribute.get())) {
-						MutableText mutableText = Text.translatable(attribute.get().value().getTranslationKey());
-						mutableText.append(Text.of(": "));
-						mutableText.append(Text.of(Double.toString(player.getAttributeValue(attribute.get()))));
-						list.add(mutableText);
-						this.attributeTooltipsList.add(new ArrayList<>(List.of()));
-					}
-				}
-			} else if (stringArray.length == 4) {
-				if (stringArray[0].equals("CUSTOM_ATTRIBUTE_VALUE")) {
-					MutableText mutableText = Text.translatable(stringArray[1]);
-
-					Identifier attributeId = Identifier.of(stringArray[2], stringArray[3]);
-					Optional<RegistryEntry.Reference<EntityAttribute>> attribute = Registries.ATTRIBUTE.getEntry(attributeId);
-					if (attribute.isPresent() && player.getAttributes().hasAttribute(attribute.get())) {
-						mutableText.append(Text.of(Double.toString(player.getAttributeValue(attribute.get()))));
-						list.add(mutableText);
-						this.attributeTooltipsList.add(new ArrayList<>(List.of()));
-					}
-				}
-			} else if (stringArray.length == 6) {
-				if (stringArray[0].equals("ATTRIBUTE_RELATION")) {
-					MutableText mutableText = Text.translatable(stringArray[1]);
-
-					Identifier firstAttributeId = Identifier.of(stringArray[2], stringArray[3]);
-					Identifier secondAttributeId = Identifier.of(stringArray[4], stringArray[5]);
-					Optional<RegistryEntry.Reference<EntityAttribute>> firstAttribute = Registries.ATTRIBUTE.getEntry(firstAttributeId);
-					Optional<RegistryEntry.Reference<EntityAttribute>> secondAttribute = Registries.ATTRIBUTE.getEntry(secondAttributeId);
-					if (firstAttribute.isPresent() && secondAttribute.isPresent() && player.getAttributes().hasAttribute(firstAttribute.get()) && player.getAttributes().hasAttribute(secondAttribute.get())) {
-						mutableText.append(Text.of(Double.toString(player.getAttributeValue(firstAttribute.get()))));
-						mutableText.append(Text.of("/"));
-						mutableText.append(Text.of(Double.toString(player.getAttributeValue(secondAttribute.get()))));
-						list.add(mutableText);
-						this.attributeTooltipsList.add(new ArrayList<>(List.of()));
-					}
-				}
-			}
-		}
-		return list;
 	}
 
 	@Override
