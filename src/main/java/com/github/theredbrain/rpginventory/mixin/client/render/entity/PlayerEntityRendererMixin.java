@@ -3,6 +3,7 @@ package com.github.theredbrain.rpginventory.mixin.client.render.entity;
 import com.github.theredbrain.rpginventory.client.render.renderer.SheathedHandItemFeatureRenderer;
 import com.github.theredbrain.rpginventory.client.render.renderer.SheathedOffHandItemFeatureRenderer;
 import com.github.theredbrain.rpginventory.registry.Tags;
+import com.github.theredbrain.rpginventory.util.ItemUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
@@ -40,7 +41,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
 	@Inject(method = "getArmPose", at = @At("HEAD"), cancellable = true)
 	private static void rpginventory$pre_getArmPose(AbstractClientPlayerEntity player, Hand hand, CallbackInfoReturnable<BipedEntityModel.ArmPose> cir) {
 		ItemStack itemStack = player.getStackInHand(hand);
-		if (itemStack.isEmpty() || itemStack.isIn(Tags.EMPTY_HAND_WEAPONS)) {
+		if (itemStack.isEmpty() || itemStack.isIn(Tags.EMPTY_HAND_WEAPONS) || !ItemUtils.isUsable(itemStack)) {
 			cir.setReturnValue(BipedEntityModel.ArmPose.EMPTY);
 			cir.cancel();
 		}

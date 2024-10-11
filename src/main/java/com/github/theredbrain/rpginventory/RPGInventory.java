@@ -3,7 +3,6 @@ package com.github.theredbrain.rpginventory;
 import com.github.theredbrain.inventorysizeattributes.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.config.ServerConfig;
 import com.github.theredbrain.rpginventory.config.ServerConfigWrapper;
-import com.github.theredbrain.rpginventory.registry.EventsRegistry;
 import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
 import com.github.theredbrain.rpginventory.registry.ItemRegistry;
 import com.github.theredbrain.rpginventory.registry.PredicateRegistry;
@@ -31,7 +30,6 @@ public class RPGInventory implements ModInitializer {
 	public static final boolean isBackpackAttributeLoaded = FabricLoader.getInstance().isModLoaded("backpackattribute");
 	public static final boolean isFoodOverhaulLoaded = FabricLoader.getInstance().isModLoaded("foodoverhaul");
 	public static final boolean isStaminaAttributesLoaded = FabricLoader.getInstance().isModLoaded("staminaattributes");
-
 	public static final boolean isInventorySizeAttributesLoaded = FabricLoader.getInstance().isModLoaded("inventorysizeattributes");
 
 	public static int getActiveInventorySize(PlayerEntity player) {
@@ -56,7 +54,6 @@ public class RPGInventory implements ModInitializer {
 		ServerPacketRegistry.init();
 
 		// Registry
-		EventsRegistry.initializeEvents();
 		ItemRegistry.init();
 		GameRulesRegistry.init();
 		PredicateRegistry.init();

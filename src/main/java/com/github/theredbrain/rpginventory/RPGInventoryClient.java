@@ -32,6 +32,22 @@ public class RPGInventoryClient implements ClientModInitializer {
 		return newData;
 	}
 
+	public static void openBackPackScreen(MinecraftClient client) {
+		if (RPGInventory.isBackpackAttributeLoaded) {
+			com.github.theredbrain.backpackattribute.registry.KeyBindingsRegistry.openBackpackScreen(client);
+		} else if (client.player != null) {
+			client.player.sendMessage(Text.translatable("hud.message.backpackAttributesNotInstalled"));
+		}
+	}
+
+	public static void openHandCraftingScreen(MinecraftClient client) {
+		if (RPGInventory.isRPGCraftingLoaded) {
+			// open handcrafting screen // TODO RPG Crafting Integration
+		} else if (client.player != null) {
+			client.player.sendMessage(Text.translatable("hud.message.rpgCraftingNotInstalled"));
+		}
+	}
+
 	@Override
 	public void onInitializeClient() {
 		// Config

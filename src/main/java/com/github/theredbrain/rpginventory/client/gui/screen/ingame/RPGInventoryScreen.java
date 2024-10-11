@@ -181,13 +181,13 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 
 	private void openBackpack() {
 		if (this.client != null) {
-			RPGInventory.openBackPackScreen(this.client);
+			RPGInventoryClient.openBackPackScreen(this.client);
 		}
 	}
 
 	private void openHandCraftingScreen() {
 		if (this.client != null) {
-			RPGInventory.openHandCraftingScreen(this.client);
+			RPGInventoryClient.openHandCraftingScreen(this.client);
 		}
 	}
 
