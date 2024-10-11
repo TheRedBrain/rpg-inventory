@@ -1,5 +1,9 @@
 {
 	"values": [
-		"rpginventory:default_empty_hand_weapon"
+		"rpginventory:default_empty_hand_weapon",
+		{
+			"id": "#forcemaster_rpg:knuckles",
+			"required": false
+		}
 	]
 }

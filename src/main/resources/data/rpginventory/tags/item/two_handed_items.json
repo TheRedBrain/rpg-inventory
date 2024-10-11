@@ -37,6 +37,14 @@
 		{
 			"id": "#wizards:staves",
 			"required": false
+		},
+		{
+			"id": "#witcher_rpg:witcher_swords",
+			"required": false
+		},
+		{
+			"id": "#elemental_wizards_rpg:elemental_staves",
+			"required": false
 		}
 	]
 }

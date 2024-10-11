@@ -26,6 +26,14 @@
 		{
 			"id": "#wizards:wands",
 			"required": false
+		},
+		{
+			"id": "#elemental_wizards_rpg:elemental_staves",
+			"required": false
+		},
+		{
+			"id": "#elemental_wizards_rpg:elemental_wands",
+			"required": false
 		}
 	]
 }

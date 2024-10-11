@@ -1,5 +1,11 @@
 {
 	"values": [
+		"minecraft:wooden_axe",
+		"minecraft:stone_axe",
+		"minecraft:iron_axe",
+		"minecraft:diamond_axe",
+		"minecraft:golden_axe",
+		"minecraft:netherite_axe",
 		"minecraft:wooden_sword",
 		"minecraft:stone_sword",
 		"minecraft:iron_sword",
@@ -39,6 +45,18 @@
 		},
 		{
 			"id": "#rpg_series:sickles",
+			"required": false
+		},
+		{
+			"id": "#forcemaster_rpg:knuckles",
+			"required": false
+		},
+		{
+			"id": "#berserker_rpg:berserker_axes",
+			"required": false
+		},
+		{
+			"id": "#witcher_rpg:witcher_swords",
 			"required": false
 		}
 	]
