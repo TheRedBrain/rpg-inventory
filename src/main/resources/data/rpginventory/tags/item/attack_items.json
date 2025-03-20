@@ -32,19 +32,19 @@
 			"required": false
 		},
 		{
-			"id": "#rpg_series:daggers",
+			"id": "#rogues:daggers",
 			"required": false
 		},
 		{
-			"id": "#rpg_series:double_axes",
+			"id": "#rogues:double_axes",
 			"required": false
 		},
 		{
-			"id": "#rpg_series:glaives",
+			"id": "#rogues:glaives",
 			"required": false
 		},
 		{
-			"id": "#rpg_series:sickles",
+			"id": "#rogues:sickles",
 			"required": false
 		},
 		{
