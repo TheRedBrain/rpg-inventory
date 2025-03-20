@@ -3,18 +3,11 @@
 		"player"
 	],
 	"slots": [
-		"alternative_hand/alternative_hand",
-		"alternative_offhand/alternative_offhand",
 		"belts/belt",
-		"empty_hand/empty_hand",
-		"empty_offhand/empty_offhand",
 		"gloves/gloves",
-		"hand/hand",
 		"necklaces/necklace",
 		"rings_1/ring",
 		"rings_2/ring",
-		"sheathed_hand/sheathed_hand",
-		"sheathed_offhand/sheathed_offhand",
 		"shoulders/shoulders",
 		"spell_slot_1/spell",
 		"spell_slot_2/spell",

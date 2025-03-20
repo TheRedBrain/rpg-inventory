@@ -9,7 +9,6 @@ import com.github.theredbrain.rpginventory.config.ServerConfig;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.screen.DuckPlayerScreenHandlerMixin;
 import com.github.theredbrain.rpginventory.screen.DuckSlotMixin;
-import com.github.theredbrain.slotcustomizationapi.api.SlotCustomization;
 import com.google.common.collect.Ordering;
 import dev.emi.trinkets.Point;
 import dev.emi.trinkets.TrinketPlayerScreenHandler;
@@ -212,7 +211,6 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 				this.client.setScreen(new CreativeInventoryScreen(this.client.player, this.client.player.networkHandler.getEnabledFeatures(), this.client.options.getOperatorItemsTab().getValue()));
 				return;
 			}
-			((SlotCustomization) this.handler.slots.get(45)).slotcustomizationapi$setDisabledOverride(((DuckPlayerEntityMixin) this.client.player).rpginventory$isOffhandStackSheathed());
 		}
 		super.init();
 		ClientConfig clientConfig = RPGInventoryClient.CLIENT_CONFIG;
@@ -299,10 +297,10 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.rings_1_group_x_offset.get() - 1, j + serverConfig.inventorySlots.rings_1_group_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
 		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.rings_2_group_x_offset.get() - 1, j + serverConfig.inventorySlots.rings_2_group_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
 		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.gloves_group_x_offset.get() - 1, j + serverConfig.inventorySlots.gloves_group_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
-		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.hand_group_x_offset.get() - 1, j + serverConfig.inventorySlots.hand_group_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.hand_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.hand_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
 		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.offhand_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.offhand_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
-		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.alternative_hand_group_x_offset.get() - 1, j + serverConfig.inventorySlots.alternative_hand_group_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
-		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.alternative_offhand_group_x_offset.get() - 1, j + serverConfig.inventorySlots.alternative_offhand_group_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.alternative_hand_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.alternative_hand_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.alternative_offhand_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.alternative_offhand_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
 
 		boolean showInactiveSlots = clientConfig.show_inactive_inventory_slots.get();
 		for (k = 0; k < (showInactiveSlots ? 27 : Math.min(inventorySize, 27)); ++k) {

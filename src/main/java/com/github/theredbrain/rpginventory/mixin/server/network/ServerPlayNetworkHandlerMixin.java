@@ -13,7 +13,7 @@ public class ServerPlayNetworkHandlerMixin {
 	/**
 	 * effectively disables the vanilla swap item mechanic
 	 *
-	 * @reason prevent item duplication
+	 * @reason prevent item duplication // TODO slot rewrite, make this depending on whether hand slot overhaul is active
 	 */
 	@Redirect(
 			method = "onPlayerAction",

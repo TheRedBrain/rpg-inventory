@@ -1,12 +1,15 @@
 package com.github.theredbrain.rpginventory.mixin.screen;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
+import com.github.theredbrain.rpginventory.config.ServerConfig;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
+import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import com.github.theredbrain.rpginventory.screen.DuckPlayerScreenHandlerMixin;
 import com.github.theredbrain.rpginventory.screen.DuckSlotMixin;
 import com.github.theredbrain.slotcustomizationapi.api.SlotCustomization;
 import com.google.common.collect.ImmutableList;
+import com.mojang.datafixers.util.Pair;
 import dev.emi.trinkets.Point;
 import dev.emi.trinkets.SurvivalTrinketSlot;
 import dev.emi.trinkets.TrinketPlayerScreenHandler;
@@ -19,13 +22,17 @@ import dev.emi.trinkets.api.TrinketInventory;
 import dev.emi.trinkets.api.TrinketsApi;
 import dev.emi.trinkets.mixin.accessor.ScreenHandlerAccessor;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -43,9 +50,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @Mixin(PlayerScreenHandler.class)
 public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements TrinketPlayerScreenHandler, DuckPlayerScreenHandlerMixin {
+	@Unique
+	private static final Identifier EMPTY_HAND_SLOT = Identifier.ofVanilla("item/empty_slot_sword");
+
 	@Shadow
 	@Final
 	private PlayerEntity owner;
@@ -98,7 +109,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 	public void PlayerScreenHandler(PlayerInventory inventory, boolean onServer, PlayerEntity owner, CallbackInfo ci) {
 		this.inventory = inventory;
 
-		var serverConfig = RPGInventory.SERVER_CONFIG;
+		ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
 
 		for (int i = 0; i < 3; ++i) {
 			for (int j = 0; j < 9; ++j) {
@@ -146,6 +157,141 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 		((SlotCustomization) this.slots.get(45)).slotcustomizationapi$setX(serverConfig.inventorySlots.offhand_slot_x_offset.get());
 		((SlotCustomization) this.slots.get(45)).slotcustomizationapi$setY(serverConfig.inventorySlots.offhand_slot_y_offset.get());
 
+		// main hand slot
+		this.addSlot(new Slot(inventory, 41, serverConfig.inventorySlots.hand_slot_x_offset.get(), serverConfig.inventorySlots.hand_slot_y_offset.get()) {
+			@Override
+			public boolean canInsert(ItemStack stack) {
+				boolean bl = true;
+				if (owner.getServer() != null) {
+					bl = owner.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT);
+				}
+
+				Optional<RegistryEntry.Reference<StatusEffect>> civilisation_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.civilisation_status_effect_identifier.get());
+				boolean hasCivilisationEffect = civilisation_status_effect.isPresent() && owner.hasStatusEffect(civilisation_status_effect.get());
+
+				Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.wilderness_status_effect_identifier.get());
+				boolean hasWildernessEffect = wilderness_status_effect.isPresent() && owner.hasStatusEffect(wilderness_status_effect.get());
+
+				return (stack.isIn(Tags.HAND_ITEMS) || !serverConfig.are_hand_items_restricted_to_item_tags.get()) && (hasCivilisationEffect || owner.isCreative() || (bl && !hasWildernessEffect)) && !((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed();
+			}
+
+			@Override
+			public boolean isEnabled() {
+				return !((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed();
+			}
+
+			@Override
+			public Pair<Identifier, Identifier> getBackgroundSprite() {
+				return Pair.of(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, PlayerScreenHandlerMixin.EMPTY_HAND_SLOT);
+			}
+		});
+
+		// sheathed main hand slot
+		this.addSlot(new Slot(inventory, 42, serverConfig.inventorySlots.hand_slot_x_offset.get(), serverConfig.inventorySlots.hand_slot_y_offset.get()) {
+			@Override
+			public boolean canInsert(ItemStack stack) {
+				boolean bl = true;
+				if (owner.getServer() != null) {
+					bl = owner.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT);
+				}
+
+				Optional<RegistryEntry.Reference<StatusEffect>> civilisation_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.civilisation_status_effect_identifier.get());
+				boolean hasCivilisationEffect = civilisation_status_effect.isPresent() && owner.hasStatusEffect(civilisation_status_effect.get());
+
+				Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.wilderness_status_effect_identifier.get());
+				boolean hasWildernessEffect = wilderness_status_effect.isPresent() && owner.hasStatusEffect(wilderness_status_effect.get());
+
+				return (stack.isIn(Tags.HAND_ITEMS) || !serverConfig.are_hand_items_restricted_to_item_tags.get()) && (hasCivilisationEffect || owner.isCreative() || (bl && !hasWildernessEffect)) && ((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed();
+			}
+
+			@Override
+			public boolean isEnabled() {
+				return ((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed();
+			}
+
+			@Override
+			public Pair<Identifier, Identifier> getBackgroundSprite() {
+				return Pair.of(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, PlayerScreenHandlerMixin.EMPTY_HAND_SLOT);
+			}
+		});
+
+		// sheathed offhand slot
+		this.addSlot(new Slot(inventory, 43, serverConfig.inventorySlots.offhand_slot_x_offset.get(), serverConfig.inventorySlots.offhand_slot_y_offset.get()) {
+			@Override
+			public boolean canInsert(ItemStack stack) {
+				boolean bl = true;
+				if (owner.getServer() != null) {
+					bl = owner.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT);
+				}
+
+				Optional<RegistryEntry.Reference<StatusEffect>> civilisation_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.civilisation_status_effect_identifier.get());
+				boolean hasCivilisationEffect = civilisation_status_effect.isPresent() && owner.hasStatusEffect(civilisation_status_effect.get());
+
+				Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.wilderness_status_effect_identifier.get());
+				boolean hasWildernessEffect = wilderness_status_effect.isPresent() && owner.hasStatusEffect(wilderness_status_effect.get());
+
+				return (stack.isIn(Tags.OFFHAND_ITEMS) || !serverConfig.are_hand_items_restricted_to_item_tags.get()) && (hasCivilisationEffect || owner.isCreative() || (bl && !hasWildernessEffect)) && ((DuckPlayerEntityMixin) owner).rpginventory$isOffhandStackSheathed();
+			}
+
+			@Override
+			public boolean isEnabled() {
+				return ((DuckPlayerEntityMixin) owner).rpginventory$isOffhandStackSheathed();
+			}
+
+			@Override
+			public Pair<Identifier, Identifier> getBackgroundSprite() {
+				return Pair.of(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, PlayerScreenHandler.EMPTY_OFFHAND_ARMOR_SLOT);
+			}
+		});
+
+		// alternative main hand slot
+		this.addSlot(new Slot(inventory, 46, serverConfig.inventorySlots.alternative_hand_slot_x_offset.get(), serverConfig.inventorySlots.alternative_hand_slot_y_offset.get()) {
+			@Override
+			public boolean canInsert(ItemStack stack) {
+				boolean bl = true;
+				if (owner.getServer() != null) {
+					bl = owner.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT);
+				}
+
+				Optional<RegistryEntry.Reference<StatusEffect>> civilisation_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.civilisation_status_effect_identifier.get());
+				boolean hasCivilisationEffect = civilisation_status_effect.isPresent() && owner.hasStatusEffect(civilisation_status_effect.get());
+
+				Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.wilderness_status_effect_identifier.get());
+				boolean hasWildernessEffect = wilderness_status_effect.isPresent() && owner.hasStatusEffect(wilderness_status_effect.get());
+
+				return (stack.isIn(Tags.HAND_ITEMS) || !serverConfig.are_hand_items_restricted_to_item_tags.get()) && (hasCivilisationEffect || owner.isCreative() || (bl && !hasWildernessEffect));
+			}
+
+			@Override
+			public Pair<Identifier, Identifier> getBackgroundSprite() {
+				return Pair.of(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, PlayerScreenHandlerMixin.EMPTY_HAND_SLOT);
+			}
+		});
+
+		// alternative offhand slot
+		this.addSlot(new Slot(inventory, 47, serverConfig.inventorySlots.alternative_offhand_slot_x_offset.get(), serverConfig.inventorySlots.alternative_offhand_slot_y_offset.get()) {
+			@Override
+			public boolean canInsert(ItemStack stack) {
+				boolean bl = true;
+				if (owner.getServer() != null) {
+					bl = owner.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT);
+				}
+
+				Optional<RegistryEntry.Reference<StatusEffect>> civilisation_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.civilisation_status_effect_identifier.get());
+				boolean hasCivilisationEffect = civilisation_status_effect.isPresent() && owner.hasStatusEffect(civilisation_status_effect.get());
+
+				Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.wilderness_status_effect_identifier.get());
+				boolean hasWildernessEffect = wilderness_status_effect.isPresent() && owner.hasStatusEffect(wilderness_status_effect.get());
+
+				return (stack.isIn(Tags.OFFHAND_ITEMS) || !serverConfig.are_hand_items_restricted_to_item_tags.get()) && (hasCivilisationEffect || owner.isCreative() || (bl && !hasWildernessEffect));
+			}
+
+			@Override
+			public Pair<Identifier, Identifier> getBackgroundSprite() {
+				return Pair.of(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, PlayerScreenHandler.EMPTY_OFFHAND_ARMOR_SLOT);
+			}
+		});
+
 		// adding slot tooltips
 		List<Text> list5 = new ArrayList<>();
 		list5.add(Text.translatable("slot.tooltip.head"));
@@ -166,6 +312,26 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 		List<Text> list45 = new ArrayList<>();
 		list45.add(Text.translatable("slot.tooltip.offhand"));
 		((DuckSlotMixin) this.slots.get(45)).rpginventory$setSlotTooltipText(list45);
+
+		List<Text> list46 = new ArrayList<>();
+		list46.add(Text.translatable("slot.tooltip.hand"));
+		((DuckSlotMixin) this.slots.get(46)).rpginventory$setSlotTooltipText(list46);
+
+		List<Text> list47 = new ArrayList<>();
+		list47.add(Text.translatable("slot.tooltip.hand"));
+		((DuckSlotMixin) this.slots.get(47)).rpginventory$setSlotTooltipText(list47);
+
+		List<Text> list48 = new ArrayList<>();
+		list48.add(Text.translatable("slot.tooltip.offhand"));
+		((DuckSlotMixin) this.slots.get(48)).rpginventory$setSlotTooltipText(list48);
+
+		List<Text> list49 = new ArrayList<>();
+		list49.add(Text.translatable("slot.tooltip.alternative_hand"));
+		((DuckSlotMixin) this.slots.get(49)).rpginventory$setSlotTooltipText(list49);
+
+		List<Text> list50 = new ArrayList<>();
+		list50.add(Text.translatable("slot.tooltip.alternative_offhand"));
+		((DuckSlotMixin) this.slots.get(50)).rpginventory$setSlotTooltipText(list50);
 
 		trinkets$updateTrinketSlots(true);
 	}
@@ -227,15 +393,6 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 					} else if (Objects.equals(groupName, "gloves")) {
 						x = serverConfig.inventorySlots.gloves_group_x_offset.get();
 						y = serverConfig.inventorySlots.gloves_group_y_offset.get();
-					} else if (Objects.equals(groupName, "hand")) {
-						x = serverConfig.inventorySlots.hand_group_x_offset.get();
-						y = serverConfig.inventorySlots.hand_group_y_offset.get();
-					} else if (Objects.equals(groupName, "alternative_hand")) {
-						x = serverConfig.inventorySlots.alternative_hand_group_x_offset.get();
-						y = serverConfig.inventorySlots.alternative_hand_group_y_offset.get();
-					} else if (Objects.equals(groupName, "alternative_offhand")) {
-						x = serverConfig.inventorySlots.alternative_offhand_group_x_offset.get();
-						y = serverConfig.inventorySlots.alternative_offhand_group_y_offset.get();
 					} else if (Objects.equals(groupName, "spell_slot_1")) {
 						x = serverConfig.inventorySlots.spell_slots_x_offset.get();
 						y = serverConfig.inventorySlots.spell_slots_y_offset.get();
@@ -260,14 +417,6 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 					} else if (Objects.equals(groupName, "spell_slot_8")) {
 						x = serverConfig.inventorySlots.spell_slots_x_offset.get() + 54;
 						y = serverConfig.inventorySlots.spell_slots_y_offset.get() + 18;
-					} else if (Objects.equals(groupName, "sheathed_hand")) {
-						x = serverConfig.inventorySlots.hand_group_x_offset.get();
-						y = serverConfig.inventorySlots.hand_group_y_offset.get();
-					} else if (Objects.equals(groupName, "sheathed_offhand")) {
-						x = serverConfig.inventorySlots.offhand_slot_x_offset.get();
-						y = serverConfig.inventorySlots.offhand_slot_y_offset.get();
-					} else if (Objects.equals(groupName, "empty_hand") || Objects.equals(groupName, "empty_offhand")) {
-						continue;
 					} else {
 						x = -14 - (extraGroupCount / 4) * 18;
 						y = 8 + (extraGroupCount % 4) * 18;

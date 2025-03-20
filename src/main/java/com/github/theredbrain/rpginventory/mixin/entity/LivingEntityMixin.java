@@ -44,6 +44,7 @@ import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Pair;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -148,10 +149,6 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
 		return i;
 	}
 
-	//	@Redirect(at = @At(value = "INVOKE", target = "Ljava/lang/Math;max(FF)F"), method = "damageEquipment")
-//	private float size(float a, float b) {
-//		return Math.max(1.0F, (b * 4.0F) / 6.0F);
-//	}
 	@ModifyVariable(method = "damageEquipment(Lnet/minecraft/entity/damage/DamageSource;F[Lnet/minecraft/entity/EquipmentSlot;)V", at = @At(value = "INVOKE_ASSIGN", target = "Ljava/lang/Math;max(FF)F"), argsOnly = true)
 	private float rpginventory$damageEquipment_divideAmount(float oldValue, DamageSource source, float amount) {
 		return Math.max(1.0F, amount / 6.0F);
@@ -159,52 +156,22 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
 
 	/**
 	 * @author TheRedBrain
-	 * @reason overhaul armor
 	 */
-	@Inject(method = "damageEquipment(Lnet/minecraft/entity/damage/DamageSource;F[Lnet/minecraft/entity/EquipmentSlot;)V", at = @At(value = "JUMP"))
+	@Inject(method = "damageEquipment(Lnet/minecraft/entity/damage/DamageSource;F[Lnet/minecraft/entity/EquipmentSlot;)V", at = @At(value = "RETURN"))
 	public void damageEquipment(DamageSource source, float amount, EquipmentSlot[] slots, CallbackInfo ci) {
-//		if (!(amount <= 0.0F)) {
-//			int i = (int)Math.max(1.0F, amount / 6.0F);
-//
-//			for (EquipmentSlot equipmentSlot : slots) {
-//				ItemStack itemStack = this.getEquippedStack(equipmentSlot);
-//				if (itemStack.getItem() instanceof ArmorItem && itemStack.takesDamageFrom(source)) {
-//					itemStack.damage(i, ((LivingEntity) (Object) this), equipmentSlot);
-//				}
-//			}
-
-		int newAmount = (int) Math.max(1.0F, amount / 6.0F);
-		if (slots.length > 1 && this.getWorld() instanceof ServerWorld serverWorld && ((LivingEntity) (Object) this) instanceof ServerPlayerEntity serverPlayerEntity) {
-			// armor trinkets
-			TrinketsApi.getTrinketComponent(serverPlayerEntity).ifPresent(trinkets ->
-					trinkets.forEach((slotReference, itemStack) -> {
-						if (itemStack.takesDamageFrom(source) && itemStack.isIn(Tags.ARMOR_TRINKETS) && ItemUtils.isUsable(itemStack)) {
-							itemStack.damage((int) newAmount, serverWorld, serverPlayerEntity, (item) -> TrinketsApi.onTrinketBroken(itemStack, slotReference, serverPlayerEntity));
-						}
-					}));
+		if (!(amount <= 0.0F)) {
+			int newAmount = (int) Math.max(1.0F, amount / 6.0F);
+			// check for slots length prevents damaging trinkets when only a specific armor item is damaged, e.g. boots from fall damage
+			if (slots.length > 1 && this.getWorld() instanceof ServerWorld serverWorld && ((LivingEntity) (Object) this) instanceof ServerPlayerEntity serverPlayerEntity) {
+				// armor trinkets
+				TrinketsApi.getTrinketComponent(serverPlayerEntity).ifPresent(trinkets ->
+						trinkets.forEach((slotReference, itemStack) -> {
+							if (itemStack.takesDamageFrom(source) && itemStack.isIn(Tags.ARMOR_TRINKETS) && ItemUtils.isUsable(itemStack)) {
+								itemStack.damage((int) newAmount, serverWorld, serverPlayerEntity, (item) -> TrinketsApi.onTrinketBroken(itemStack, slotReference, serverPlayerEntity));
+							}
+						}));
+			}
 		}
-
-//		if (amount <= 0.0f) {
-//			return;
-//		}
-//		// divide by 6 because gloves and shoulders exist
-//		if ((amount /= 6.0f) < 1.0f) {
-//			amount = 1.0f;
-//		}
-//		float finalAmount = amount;
-//
-////		int[] var4 = slots;
-//		int var5 = slots.length;
-//
-//		for (int var6 = 0; var6 < var5; ++var6) {
-//			int i = var4[var6];
-//			ItemStack itemStack = (ItemStack) this.armor.get(i);
-//			if ((!damageSource.isIn(DamageTypeTags.IS_FIRE) || !itemStack.getItem().isFireproof()) && itemStack.getItem() instanceof ArmorItem && ItemUtils.isUsable(itemStack)) {
-//				itemStack.damage((int) finalAmount, (LivingEntity) this.player, (Consumer) ((player) -> {
-//					((LivingEntity) player).sendEquipmentBreakStatus(EquipmentSlot.fromTypeIndex(EquipmentSlot.Type.ARMOR, i));
-//				}));
-//			}
-//		}
 	}
 
 	/**

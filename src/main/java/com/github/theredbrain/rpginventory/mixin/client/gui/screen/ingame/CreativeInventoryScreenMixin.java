@@ -4,6 +4,7 @@ import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.RPGInventoryClient;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.slotcustomizationapi.api.SlotCustomization;
+import com.llamalad7.mixinextras.sugar.Local;
 import dev.emi.trinkets.CreativeTrinketSlot;
 import dev.emi.trinkets.Point;
 import dev.emi.trinkets.SurvivalTrinketSlot;
@@ -21,6 +22,7 @@ import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.client.util.math.Rect2i;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
@@ -63,7 +65,7 @@ public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScre
 	 */
 	@Redirect(at = @At(value = "INVOKE", target = "net/minecraft/util/collection/DefaultedList.size()I"), method = "setSelectedTab")
 	private int size(DefaultedList<ItemStack> list) {
-		return 46;
+		return 51;
 	}
 
 	/**
@@ -97,9 +99,17 @@ public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScre
 			((SlotCustomization) this.handler.slots.get(45)).slotcustomizationapi$setX(117);
 			((SlotCustomization) this.handler.slots.get(45)).slotcustomizationapi$setY(33);
 
-			if (this.client != null && this.client.player != null) {
-				((SlotCustomization) this.client.player.playerScreenHandler.slots.get(45)).slotcustomizationapi$setDisabledOverride(((DuckPlayerEntityMixin) this.client.player).rpginventory$isOffhandStackSheathed());
-			}
+			// reposition additional hand slots
+			((SlotCustomization) this.handler.slots.get(46)).slotcustomizationapi$setX(99);
+			((SlotCustomization) this.handler.slots.get(46)).slotcustomizationapi$setY(33);
+			((SlotCustomization) this.handler.slots.get(47)).slotcustomizationapi$setX(99);
+			((SlotCustomization) this.handler.slots.get(47)).slotcustomizationapi$setY(33);
+			((SlotCustomization) this.handler.slots.get(48)).slotcustomizationapi$setX(117);
+			((SlotCustomization) this.handler.slots.get(48)).slotcustomizationapi$setY(33);
+			((SlotCustomization) this.handler.slots.get(49)).slotcustomizationapi$setX(135);
+			((SlotCustomization) this.handler.slots.get(49)).slotcustomizationapi$setY(33);
+			((SlotCustomization) this.handler.slots.get(50)).slotcustomizationapi$setX(153);
+			((SlotCustomization) this.handler.slots.get(50)).slotcustomizationapi$setY(33);
 		}
 	}
 

@@ -2,7 +2,10 @@ package com.github.theredbrain.rpginventory.mixin.entity.player;
 
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerInventoryMixin;
+import com.github.theredbrain.rpginventory.registry.ItemRegistry;
 import com.github.theredbrain.rpginventory.util.ItemUtils;
+import com.google.common.collect.ImmutableList;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.emi.trinkets.api.TrinketComponent;
@@ -10,13 +13,18 @@ import dev.emi.trinkets.api.TrinketsApi;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.util.collection.DefaultedList;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
@@ -38,11 +46,37 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 	public PlayerEntity player;
 
 	@Shadow
-	public int selectedSlot;
-
-	@Shadow
 	@Final
 	public DefaultedList<ItemStack> offHand;
+
+	@Mutable
+	@Shadow
+	@Final
+	private List<DefaultedList<ItemStack>> combinedInventory;
+
+	@Unique
+	private DefaultedList<ItemStack> rpginventory$handSlot;
+
+	@Unique
+	private DefaultedList<ItemStack> rpginventory$sheathedHandSlots;
+
+	@Unique
+	private DefaultedList<ItemStack> rpginventory$emptyHandSlots;
+
+	@Unique
+	private DefaultedList<ItemStack> rpginventory$alternativeHandSlots;
+
+	/**
+	 * @author TheRedBrain
+	 */
+	@Inject(method = "<init>", at = @At("TAIL"))
+	public void PlayerInventory(PlayerEntity player, CallbackInfo ci) {
+		this.rpginventory$handSlot = DefaultedList.ofSize(1, ItemStack.EMPTY);
+		this.rpginventory$sheathedHandSlots = DefaultedList.ofSize(2, ItemStack.EMPTY);
+		this.rpginventory$emptyHandSlots = DefaultedList.ofSize(2, ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON.getDefaultStack());
+		this.rpginventory$alternativeHandSlots = DefaultedList.ofSize(2, ItemStack.EMPTY);
+		this.combinedInventory = ImmutableList.of(this.main, this.armor, this.offHand, this.rpginventory$handSlot, this.rpginventory$sheathedHandSlots, this.rpginventory$emptyHandSlots, this.rpginventory$alternativeHandSlots);
+	}
 
 	@Inject(method = "getMainHandStack", at = @At("HEAD"), cancellable = true)
 	public void rpginventory$getMainHandStack(CallbackInfoReturnable<ItemStack> cir) {
@@ -52,6 +86,140 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 			cir.setReturnValue(ItemUtils.isUsable(handStack) ? handStack : emptyHandStack);
 			cir.cancel();
 		}
+	}
+
+	/**
+	 * @author TheRedBrain
+	 * @reason save additional hand slots
+	 */
+	@Overwrite
+	public NbtList writeNbt(NbtList nbtList) {
+		NbtCompound nbtCompound;
+		int i;
+		for (i = 0; i < this.main.size(); i++) {
+			if (!this.main.get(i).isEmpty()) {
+				nbtCompound = new NbtCompound();
+				nbtCompound.putByte("Slot", (byte)i);
+				nbtList.add(this.main.get(i).encode(this.player.getRegistryManager(), nbtCompound));
+			}
+		}
+
+		for (i = 0; i < this.armor.size(); i++) {
+			if (!this.armor.get(i).isEmpty()) {
+				nbtCompound = new NbtCompound();
+				nbtCompound.putByte("Slot", (byte)(i + 100));
+				nbtList.add(this.armor.get(i).encode(this.player.getRegistryManager(), nbtCompound));
+			}
+		}
+
+		for (int ixx = 0; ixx < this.offHand.size(); ixx++) {
+			if (!this.offHand.get(ixx).isEmpty()) {
+				nbtCompound = new NbtCompound();
+				nbtCompound.putByte("Slot", (byte)(ixx + 150));
+				nbtList.add(this.offHand.get(ixx).encode(this.player.getRegistryManager(), nbtCompound));
+			}
+		}
+
+		for (i = 0; i < this.rpginventory$handSlot.size(); i++) {
+			if (!this.rpginventory$handSlot.get(i).isEmpty()) {
+				nbtCompound = new NbtCompound();
+				nbtCompound.putByte("Slot", (byte)(i + 160));
+				nbtList.add(this.rpginventory$handSlot.get(i).encode(this.player.getRegistryManager(), nbtCompound));
+			}
+		}
+
+		for (i = 0; i < this.rpginventory$sheathedHandSlots.size(); i++) {
+			if (!this.rpginventory$sheathedHandSlots.get(i).isEmpty()) {
+				nbtCompound = new NbtCompound();
+				nbtCompound.putByte("Slot", (byte)(i + 170));
+				nbtList.add(this.rpginventory$sheathedHandSlots.get(i).encode(this.player.getRegistryManager(), nbtCompound));
+			}
+		}
+
+		for (i = 0; i < this.rpginventory$emptyHandSlots.size(); i++) {
+			if (!this.rpginventory$emptyHandSlots.get(i).isEmpty()) {
+				nbtCompound = new NbtCompound();
+				nbtCompound.putByte("Slot", (byte)(i + 180));
+				nbtList.add(this.rpginventory$emptyHandSlots.get(i).encode(this.player.getRegistryManager(), nbtCompound));
+			}
+		}
+
+		for (i = 0; i < this.rpginventory$alternativeHandSlots.size(); i++) {
+			if (!this.rpginventory$alternativeHandSlots.get(i).isEmpty()) {
+				nbtCompound = new NbtCompound();
+				nbtCompound.putByte("Slot", (byte)(i + 190));
+				nbtList.add(this.rpginventory$alternativeHandSlots.get(i).encode(this.player.getRegistryManager(), nbtCompound));
+			}
+		}
+
+		return nbtList;
+	}
+
+	/**
+	 * @author TheRedBrain
+	 * @reason save additional hand slots
+	 */
+	@Overwrite
+	public void readNbt(NbtList nbtList) {
+		this.main.clear();
+		this.armor.clear();
+		this.offHand.clear();
+		this.rpginventory$handSlot.clear();
+		this.rpginventory$sheathedHandSlots.clear();
+		this.rpginventory$emptyHandSlots.clear();
+		this.rpginventory$alternativeHandSlots.clear();
+
+		for (int i = 0; i < nbtList.size(); i++) {
+			NbtCompound nbtCompound = nbtList.getCompound(i);
+			int j = nbtCompound.getByte("Slot") & 255;
+			ItemStack itemStack = (ItemStack)ItemStack.fromNbt(this.player.getRegistryManager(), nbtCompound).orElse(ItemStack.EMPTY);
+			if (j >= 0 && j < this.main.size()) {
+				this.main.set(j, itemStack);
+			} else if (j >= 100 && j < this.armor.size() + 100) {
+				this.armor.set(j - 100, itemStack);
+			} else if (j >= 150 && j < this.offHand.size() + 150) {
+				this.offHand.set(j - 150, itemStack);
+			} else if (j >= 160 && j < this.rpginventory$handSlot.size() + 160) {
+				this.rpginventory$handSlot.set(j - 160, itemStack);
+			} else if (j >= 170 && j < this.rpginventory$sheathedHandSlots.size() + 170) {
+				this.rpginventory$sheathedHandSlots.set(j - 170, itemStack);
+			} else if (j >= 180 && j < this.rpginventory$emptyHandSlots.size() + 180) {
+				this.rpginventory$emptyHandSlots.set(j - 180, itemStack);
+			} else if (j >= 190 && j < this.rpginventory$alternativeHandSlots.size() + 190) {
+				this.rpginventory$alternativeHandSlots.set(j - 190, itemStack);
+			}
+		}
+	}
+
+	@ModifyReturnValue(method = "size", at = @At("RETURN"))
+	public int rpginventory$size(int original) {
+		return original + this.rpginventory$handSlot.size() + this.rpginventory$sheathedHandSlots.size() + this.rpginventory$emptyHandSlots.size() + this.rpginventory$alternativeHandSlots.size();
+	}
+
+	@Inject(method = "isEmpty", at = @At("HEAD"), cancellable = true)
+	public void rpginventory$isEmpty(CallbackInfoReturnable<Boolean> cir) {
+
+		for (ItemStack itemStack : this.rpginventory$handSlot) {
+			if (!itemStack.isEmpty()) {
+				cir.setReturnValue(false);
+				cir.cancel();
+			}
+		}
+
+		for (ItemStack itemStack : this.rpginventory$sheathedHandSlots) {
+			if (!itemStack.isEmpty()) {
+				cir.setReturnValue(false);
+				cir.cancel();
+			}
+		}
+
+		for (ItemStack itemStack : this.rpginventory$alternativeHandSlots) {
+			if (!itemStack.isEmpty()) {
+				cir.setReturnValue(false);
+				cir.cancel();
+			}
+		}
+
 	}
 
 	@Override
@@ -64,6 +232,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 		return ItemStack.EMPTY;
 	}
 
+	// TODO remove? or make configurable
 	// picked up items are no longer placed into the offhand slot
 	@WrapOperation(
 			method = "getOccupiedSlotWithRoomForStack",
@@ -77,235 +246,73 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 		return false;
 	}
 
-//	/**
-//	 * @author TheRedBrain
-//	 * @reason overhaul armor
-//	 */
-//	@Overwrite
-//	public void damageEquipment(DamageSource damageSource, float amount, EquipmentSlot... slots) {
-//		if (!(amount <= 0.0F)) {
-//			int i = (int)Math.max(1.0F, amount / 6.0F);
-//
-//			for (EquipmentSlot equipmentSlot : slots) {
-//				ItemStack itemStack = this.getEquippedStack(equipmentSlot);
-//				if (itemStack.getItem() instanceof ArmorItem && itemStack.takesDamageFrom(source)) {
-//					itemStack.damage(i, this, equipmentSlot);
-//				}
-//			}
-//		}
-//
-//		if (amount <= 0.0f) {
-//			return;
-//		}
-//		// divide by 6 because gloves and shoulders exist
-//		if ((amount /= 6.0f) < 1.0f) {
-//			amount = 1.0f;
-//		}
-//		float finalAmount = amount;
-//
-//		int[] var4 = slots;
-//		int var5 = slots.length;
-//
-//		for (int var6 = 0; var6 < var5; ++var6) {
-//			int i = var4[var6];
-//			ItemStack itemStack = (ItemStack) this.armor.get(i);
-//			if ((!damageSource.isIn(DamageTypeTags.IS_FIRE) || !itemStack.getItem().isFireproof()) && itemStack.getItem() instanceof ArmorItem && ItemUtils.isUsable(itemStack)) {
-//				itemStack.damage((int) finalAmount, (LivingEntity) this.player, (Consumer) ((player) -> {
-//					((LivingEntity) player).sendEquipmentBreakStatus(EquipmentSlot.fromTypeIndex(EquipmentSlot.Type.ARMOR, i));
-//				}));
-//			}
-//		}
-//
-//		if (var5 > 1) {
-//			// armor trinkets
-//			TrinketsApi.getTrinketComponent(player).ifPresent(trinkets ->
-//					trinkets.forEach((slotReference, itemStack) -> {
-//						if ((!damageSource.isIn(DamageTypeTags.IS_FIRE) || itemStack.getItem().isFireproof()) && itemStack.isIn(Tags.ARMOR_TRINKETS) && ItemUtils.isUsable(itemStack)) {
-//							itemStack.damage((int) finalAmount, this.player, player -> TrinketsApi.onTrinketBroken(itemStack, slotReference, player));
-//						}
-//					}));
-//		}
-//	}
-
 	public ItemStack rpginventory$getHand() {
-		ItemStack handStack = this.main.get(this.selectedSlot);
-		Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
-		if (trinkets.isPresent()) {
-			if (trinkets.get().getInventory().get("hand") != null) {
-				if (trinkets.get().getInventory().get("hand").get("hand") != null) {
-					handStack = trinkets.get().getInventory().get("hand").get("hand").getStack(0);
-				}
-			}
-		}
-		return handStack;
+		return this.rpginventory$handSlot.get(0);
 	}
 
 	public ItemStack rpginventory$setHand(ItemStack itemStack) {
 		ItemStack oldStack = rpginventory$getHand();
-		Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
-		if (trinkets.isPresent()) {
-			if (trinkets.get().getInventory().get("hand") != null) {
-				if (trinkets.get().getInventory().get("hand").get("hand") != null) {
-					trinkets.get().getInventory().get("hand").get("hand").setStack(0, itemStack);
-				}
-			}
-		}
+		this.rpginventory$handSlot.set(0, itemStack);
 		return oldStack;
 	}
 
 	public ItemStack rpginventory$getAlternativeHand() {
-		ItemStack alternativeHandStack = ItemStack.EMPTY;
-		Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
-		if (trinkets.isPresent()) {
-			if (trinkets.get().getInventory().get("alternative_hand") != null) {
-				if (trinkets.get().getInventory().get("alternative_hand").get("alternative_hand") != null) {
-					alternativeHandStack = trinkets.get().getInventory().get("alternative_hand").get("alternative_hand").getStack(0);
-				}
-			}
-		}
-		return alternativeHandStack;
+		return this.rpginventory$alternativeHandSlots.get(0);
 	}
 
 	public ItemStack rpginventory$setAlternativeHand(ItemStack itemStack) {
 		ItemStack oldStack = rpginventory$getAlternativeHand();
-		Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
-		if (trinkets.isPresent()) {
-			if (trinkets.get().getInventory().get("alternative_hand") != null) {
-				if (trinkets.get().getInventory().get("alternative_hand").get("alternative_hand") != null) {
-					trinkets.get().getInventory().get("alternative_hand").get("alternative_hand").setStack(0, itemStack);
-				}
-			}
-		}
+		this.rpginventory$alternativeHandSlots.set(0, itemStack);
 		return oldStack;
 	}
 
 	public ItemStack rpginventory$getAlternativeOffhand() {
-		ItemStack alternativeOffHandStack = ItemStack.EMPTY;
-		Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
-		if (trinkets.isPresent()) {
-			if (trinkets.get().getInventory().get("alternative_offhand") != null) {
-				if (trinkets.get().getInventory().get("alternative_offhand").get("alternative_offhand") != null) {
-					alternativeOffHandStack = trinkets.get().getInventory().get("alternative_offhand").get("alternative_offhand").getStack(0);
-				}
-			}
-		}
-		return alternativeOffHandStack;
+		return this.rpginventory$alternativeHandSlots.get(1);
 	}
 
 	public ItemStack rpginventory$setAlternativeOffhand(ItemStack itemStack) {
 		ItemStack oldStack = rpginventory$getAlternativeOffhand();
-		Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
-		if (trinkets.isPresent()) {
-			if (trinkets.get().getInventory().get("alternative_offhand") != null) {
-				if (trinkets.get().getInventory().get("alternative_offhand").get("alternative_offhand") != null) {
-					trinkets.get().getInventory().get("alternative_offhand").get("alternative_offhand").setStack(0, itemStack);
-				}
-			}
-		}
+		this.rpginventory$alternativeHandSlots.set(1, itemStack);
 		return oldStack;
 	}
 
 	public ItemStack rpginventory$getEmptyHand() {
-		ItemStack emptyHandStack = ItemStack.EMPTY;
-		Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
-		if (trinkets.isPresent()) {
-			if (trinkets.get().getInventory().get("empty_hand") != null) {
-				if (trinkets.get().getInventory().get("empty_hand").get("empty_hand") != null) {
-					emptyHandStack = trinkets.get().getInventory().get("empty_hand").get("empty_hand").getStack(0);
-				}
-			}
-		}
-		return emptyHandStack;
+		return this.rpginventory$emptyHandSlots.get(0);
 	}
 
 	public ItemStack rpginventory$setEmptyHand(ItemStack itemStack) {
 		ItemStack oldStack = rpginventory$getEmptyHand();
-		Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
-		if (trinkets.isPresent()) {
-			if (trinkets.get().getInventory().get("empty_hand") != null) {
-				if (trinkets.get().getInventory().get("empty_hand").get("empty_hand") != null) {
-					trinkets.get().getInventory().get("empty_hand").get("empty_hand").setStack(0, itemStack);
-				}
-			}
-		}
+		this.rpginventory$emptyHandSlots.set(0, itemStack);
 		return oldStack;
 	}
 
 	public ItemStack rpginventory$getEmptyOffhand() {
-		ItemStack emptyOffHandStack = ItemStack.EMPTY;
-		Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
-		if (trinkets.isPresent()) {
-			if (trinkets.get().getInventory().get("empty_offhand") != null) {
-				if (trinkets.get().getInventory().get("empty_offhand").get("empty_offhand") != null) {
-					emptyOffHandStack = trinkets.get().getInventory().get("empty_offhand").get("empty_offhand").getStack(0);
-				}
-			}
-		}
-		return emptyOffHandStack;
+		return this.rpginventory$emptyHandSlots.get(1);
 	}
 
 	public ItemStack rpginventory$setEmptyOffhand(ItemStack itemStack) {
 		ItemStack oldStack = rpginventory$getEmptyOffhand();
-		Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
-		if (trinkets.isPresent()) {
-			if (trinkets.get().getInventory().get("empty_offhand") != null) {
-				if (trinkets.get().getInventory().get("empty_offhand").get("empty_offhand") != null) {
-					trinkets.get().getInventory().get("empty_offhand").get("empty_offhand").setStack(0, itemStack);
-				}
-			}
-		}
+		this.rpginventory$emptyHandSlots.set(1, itemStack);
 		return oldStack;
 	}
 
 	public ItemStack rpginventory$getSheathedHand() {
-		ItemStack sheathedMainHandStack = ItemStack.EMPTY;
-		Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
-		if (trinkets.isPresent()) {
-			if (trinkets.get().getInventory().get("sheathed_hand") != null) {
-				if (trinkets.get().getInventory().get("sheathed_hand").get("sheathed_hand") != null) {
-					sheathedMainHandStack = trinkets.get().getInventory().get("sheathed_hand").get("sheathed_hand").getStack(0);
-				}
-			}
-		}
-		return sheathedMainHandStack;
+		return this.rpginventory$sheathedHandSlots.get(0);
 	}
 
 	public ItemStack rpginventory$setSheathedHand(ItemStack itemStack) {
 		ItemStack oldStack = rpginventory$getSheathedHand();
-		Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
-		if (trinkets.isPresent()) {
-			if (trinkets.get().getInventory().get("sheathed_hand") != null) {
-				if (trinkets.get().getInventory().get("sheathed_hand").get("sheathed_hand") != null) {
-					trinkets.get().getInventory().get("sheathed_hand").get("sheathed_hand").setStack(0, itemStack);
-				}
-			}
-		}
+		this.rpginventory$sheathedHandSlots.set(0, itemStack);
 		return oldStack;
 	}
 
 	public ItemStack rpginventory$getSheathedOffhand() {
-		ItemStack sheathedOffHandStack = ItemStack.EMPTY;
-		Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
-		if (trinkets.isPresent()) {
-			if (trinkets.get().getInventory().get("sheathed_offhand") != null) {
-				if (trinkets.get().getInventory().get("sheathed_offhand").get("sheathed_offhand") != null) {
-					sheathedOffHandStack = trinkets.get().getInventory().get("sheathed_offhand").get("sheathed_offhand").getStack(0);
-				}
-			}
-		}
-		return sheathedOffHandStack;
+		return this.rpginventory$sheathedHandSlots.get(1);
 	}
 
 	public ItemStack rpginventory$setSheathedOffhand(ItemStack itemStack) {
 		ItemStack oldStack = rpginventory$getSheathedOffhand();
-		Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
-		if (trinkets.isPresent()) {
-			if (trinkets.get().getInventory().get("sheathed_offhand") != null) {
-				if (trinkets.get().getInventory().get("sheathed_offhand").get("sheathed_offhand") != null) {
-					trinkets.get().getInventory().get("sheathed_offhand").get("sheathed_offhand").setStack(0, itemStack);
-				}
-			}
-		}
+		this.rpginventory$sheathedHandSlots.set(1, itemStack);
 		return oldStack;
 	}
 

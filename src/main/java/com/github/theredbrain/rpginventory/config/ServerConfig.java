@@ -21,8 +21,6 @@ public class ServerConfig extends Config {
 
 	@Comment("""
 			When true, all (off)hand slots can only hold items in the item tags 'rpginventory:hand_items' and 'rpginventory:offhand_items', respectively.
-						
-			It is recommended to not set this to false and instead add items to the item tags when necessary. All other items can still be accessed via the hotbar.
 			""")
 	public ValidatedBoolean are_hand_items_restricted_to_item_tags = new ValidatedBoolean(true);
 
@@ -127,16 +125,16 @@ public class ServerConfig extends Config {
 		public ValidatedInt gloves_group_x_offset = new ValidatedInt(77);
 		public ValidatedInt gloves_group_y_offset = new ValidatedInt(72);
 
-		public ValidatedInt hand_group_x_offset = new ValidatedInt(8);
-		public ValidatedInt hand_group_y_offset = new ValidatedInt(108);
+		public ValidatedInt hand_slot_x_offset = new ValidatedInt(8);
+		public ValidatedInt hand_slot_y_offset = new ValidatedInt(108);
 
 		public ValidatedInt offhand_slot_x_offset = new ValidatedInt(26);
 		public ValidatedInt offhand_slot_y_offset = new ValidatedInt(108);
 
-		public ValidatedInt alternative_hand_group_x_offset = new ValidatedInt(59);
-		public ValidatedInt alternative_hand_group_y_offset = new ValidatedInt(108);
+		public ValidatedInt alternative_hand_slot_x_offset = new ValidatedInt(59);
+		public ValidatedInt alternative_hand_slot_y_offset = new ValidatedInt(108);
 
-		public ValidatedInt alternative_offhand_group_x_offset = new ValidatedInt(77);
-		public ValidatedInt alternative_offhand_group_y_offset = new ValidatedInt(108);
+		public ValidatedInt alternative_offhand_slot_x_offset = new ValidatedInt(77);
+		public ValidatedInt alternative_offhand_slot_y_offset = new ValidatedInt(108);
 	}
 }
