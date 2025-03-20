@@ -2,6 +2,7 @@ package com.github.theredbrain.rpginventory.client.render.renderer;
 
 import com.github.theredbrain.rpginventory.RPGInventoryClient;
 import com.github.theredbrain.rpginventory.entity.RendersSheathedWeapons;
+import com.github.theredbrain.rpginventory.registry.Tags;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.ModelPart;
@@ -36,10 +37,7 @@ public class SheathedHandItemFeatureRenderer<T extends LivingEntity> extends Hel
 
 			ItemStack handStack = renderEquippedTrinkets.rpginventory$getSheathedHandItemStack();
 
-			if (!handStack.isEmpty()) {
-				matrixStack.push();
-				ModelPart modelPart = this.getContextModel().body;
-				modelPart.rotate(matrixStack);
+			if (!handStack.isEmpty() && !handStack.isIn(Tags.NOT_SHOWN_WHEN_IN_SHEATHED_HAND)) {
 				Item handStackItem = handStack.getItem();
 				boolean hasStackedEquippedInChestSlot = livingEntity.hasStackEquipped(EquipmentSlot.CHEST);
 				double initial_translation_x = -0.3;
@@ -64,6 +62,9 @@ public class SheathedHandItemFeatureRenderer<T extends LivingEntity> extends Hel
 					rotation_positive_y = itemConfiguration[7];
 					rotation_positive_x = itemConfiguration[8];
 				}
+				matrixStack.push();
+				ModelPart modelPart = this.getContextModel().body;
+				modelPart.rotate(matrixStack);
 				if (this.getContextModel().child) {
 					matrixStack.translate(0.0F, 0.75F, 0.0F);
 					matrixStack.scale(0.5F, 0.5F, 0.5F);

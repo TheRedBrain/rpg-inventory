@@ -1,7 +1,9 @@
 package com.github.theredbrain.rpginventory.client.render.renderer;
 
+import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.RPGInventoryClient;
 import com.github.theredbrain.rpginventory.entity.RendersSheathedWeapons;
+import com.github.theredbrain.rpginventory.registry.Tags;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.ModelPart;
@@ -36,10 +38,7 @@ public class SheathedOffHandItemFeatureRenderer<T extends LivingEntity> extends 
 
 			ItemStack offHandStack = renderEquippedTrinkets.rpginventory$getSheathedOffHandItemStack();
 
-			if (!offHandStack.isEmpty()) {
-				matrixStack.push();
-				ModelPart modelPart = this.getContextModel().body;
-				modelPart.rotate(matrixStack);
+			if (!offHandStack.isEmpty() && !offHandStack.isIn(Tags.NOT_SHOWN_WHEN_IN_SHEATHED_OFFHAND)) {
 				Item offHandItem = offHandStack.getItem();
 				boolean hasStackedEquippedInChestSlot = livingEntity.hasStackEquipped(EquipmentSlot.CHEST);
 				double initial_translation_x = 0.2;
@@ -64,6 +63,9 @@ public class SheathedOffHandItemFeatureRenderer<T extends LivingEntity> extends 
 					rotation_positive_y = itemConfiguration[7];
 					rotation_positive_x = itemConfiguration[8];
 				}
+				matrixStack.push();
+				ModelPart modelPart = this.getContextModel().body;
+				modelPart.rotate(matrixStack);
 				if (this.getContextModel().child) {
 					float m = 0.5F;
 					matrixStack.translate(0.0F, 0.75F, 0.0F);

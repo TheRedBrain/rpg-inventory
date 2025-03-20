@@ -27,5 +27,7 @@ public class Tags {
 	public static final TagKey<Item> UNUSABLE_WHEN_LOW_DURABILITY = TagKey.of(RegistryKeys.ITEM, RPGInventory.identifier("unusable_when_low_durability"));
 	public static final TagKey<Item> ARMOR_TRINKETS = TagKey.of(RegistryKeys.ITEM, RPGInventory.identifier("armor_trinkets"));
 	public static final TagKey<Item> UNIQUE_RINGS = TagKey.of(RegistryKeys.ITEM, RPGInventory.identifier("unique_rings"));
+	public static final TagKey<Item> NOT_SHOWN_WHEN_IN_SHEATHED_OFFHAND = TagKey.of(RegistryKeys.ITEM, RPGInventory.identifier("not_shown_when_in_sheathed_offhand"));
+	public static final TagKey<Item> NOT_SHOWN_WHEN_IN_SHEATHED_HAND = TagKey.of(RegistryKeys.ITEM, RPGInventory.identifier("not_shown_when_in_sheathed_hand"));
 
 }
