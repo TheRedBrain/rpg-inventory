@@ -21,6 +21,7 @@ import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketInventory;
 import dev.emi.trinkets.api.TrinketsApi;
 import dev.emi.trinkets.mixin.accessor.ScreenHandlerAccessor;
+import net.minecraft.client.util.math.Rect2i;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.player.PlayerEntity;
@@ -352,8 +353,6 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 	@Override
 	public void trinkets$updateTrinketSlots(boolean slotsChanged) {
 
-		var serverConfig = RPGInventory.SERVER_CONFIG;
-
 		TrinketsApi.getTrinketComponent(owner).ifPresent(trinkets -> {
 			if (slotsChanged) trinkets.update();
 			Map<String, SlotGroup> groups = trinkets.getGroups();
@@ -365,7 +364,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 				trinketSlotEnd--;
 			}
 
-			int groupNum = 0;//1; // Start at 1 because offhand exists
+			int groupNum = 0;
 			int extraGroupCount = 0;
 
 			for (SlotGroup group : groups.values().stream().sorted(Comparator.comparing(SlotGroup::getOrder)).toList()) {
@@ -385,48 +384,10 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 				} else {
 					int x;
 					int y;
-					if (Objects.equals(groupName, "belts")) {
-						x = serverConfig.inventorySlots.belts_group_x_offset.get();
-						y = serverConfig.inventorySlots.belts_group_y_offset.get();
-					} else if (Objects.equals(groupName, "shoulders")) {
-						x = serverConfig.inventorySlots.shoulders_group_x_offset.get();
-						y = serverConfig.inventorySlots.shoulders_group_y_offset.get();
-					} else if (Objects.equals(groupName, "necklaces")) {
-						x = serverConfig.inventorySlots.necklaces_group_x_offset.get();
-						y = serverConfig.inventorySlots.necklaces_group_y_offset.get();
-					} else if (Objects.equals(groupName, "rings_1")) {
-						x = serverConfig.inventorySlots.rings_1_group_x_offset.get();
-						y = serverConfig.inventorySlots.rings_1_group_y_offset.get();
-					} else if (Objects.equals(groupName, "rings_2")) {
-						x = serverConfig.inventorySlots.rings_2_group_x_offset.get();
-						y = serverConfig.inventorySlots.rings_2_group_y_offset.get();
-					} else if (Objects.equals(groupName, "gloves")) {
-						x = serverConfig.inventorySlots.gloves_group_x_offset.get();
-						y = serverConfig.inventorySlots.gloves_group_y_offset.get();
-					} else if (Objects.equals(groupName, "spell_slot_1")) {
-						x = serverConfig.inventorySlots.spell_slots_x_offset.get();
-						y = serverConfig.inventorySlots.spell_slots_y_offset.get();
-					} else if (Objects.equals(groupName, "spell_slot_2")) {
-						x = serverConfig.inventorySlots.spell_slots_x_offset.get() + 18;
-						y = serverConfig.inventorySlots.spell_slots_y_offset.get();
-					} else if (Objects.equals(groupName, "spell_slot_3")) {
-						x = serverConfig.inventorySlots.spell_slots_x_offset.get() + 36;
-						y = serverConfig.inventorySlots.spell_slots_y_offset.get();
-					} else if (Objects.equals(groupName, "spell_slot_4")) {
-						x = serverConfig.inventorySlots.spell_slots_x_offset.get() + 54;
-						y = serverConfig.inventorySlots.spell_slots_y_offset.get();
-					} else if (Objects.equals(groupName, "spell_slot_5")) {
-						x = serverConfig.inventorySlots.spell_slots_x_offset.get();
-						y = serverConfig.inventorySlots.spell_slots_y_offset.get() + 18;
-					} else if (Objects.equals(groupName, "spell_slot_6")) {
-						x = serverConfig.inventorySlots.spell_slots_x_offset.get() + 18;
-						y = serverConfig.inventorySlots.spell_slots_y_offset.get() + 18;
-					} else if (Objects.equals(groupName, "spell_slot_7")) {
-						x = serverConfig.inventorySlots.spell_slots_x_offset.get() + 36;
-						y = serverConfig.inventorySlots.spell_slots_y_offset.get() + 18;
-					} else if (Objects.equals(groupName, "spell_slot_8")) {
-						x = serverConfig.inventorySlots.spell_slots_x_offset.get() + 54;
-						y = serverConfig.inventorySlots.spell_slots_y_offset.get() + 18;
+					ServerConfig.InventorySlots.SlotGroupPosition slotGroupPosition = RPGInventory.SERVER_CONFIG.inventorySlots.slot_group_positions.get(groupName);
+					if (slotGroupPosition != null) {
+						x = slotGroupPosition.survival_x;
+						y = slotGroupPosition.survival_y;
 					} else {
 						x = -14 - (extraGroupCount / 4) * 18;
 						y = 8 + (extraGroupCount % 4) * 18;
@@ -629,13 +590,6 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 
 								if ((Objects.equals(type.getGroup(), "spell_slot_1") && ((DuckPlayerEntityMixin) player).rpginventory$getActiveSpellSlotAmount() < 1)
 										|| (Objects.equals(type.getGroup(), "spell_slot_2") && ((DuckPlayerEntityMixin) player).rpginventory$getActiveSpellSlotAmount() < 2)
-										|| (Objects.equals(type.getGroup(), "spell_slot_3") && ((DuckPlayerEntityMixin) player).rpginventory$getActiveSpellSlotAmount() < 3)
-										|| (Objects.equals(type.getGroup(), "spell_slot_4") && ((DuckPlayerEntityMixin) player).rpginventory$getActiveSpellSlotAmount() < 4)
-										|| (Objects.equals(type.getGroup(), "spell_slot_5") && ((DuckPlayerEntityMixin) player).rpginventory$getActiveSpellSlotAmount() < 5)
-										|| (Objects.equals(type.getGroup(), "spell_slot_6") && ((DuckPlayerEntityMixin) player).rpginventory$getActiveSpellSlotAmount() < 6)
-										|| (Objects.equals(type.getGroup(), "spell_slot_7") && ((DuckPlayerEntityMixin) player).rpginventory$getActiveSpellSlotAmount() < 7)
-										|| (Objects.equals(type.getGroup(), "spell_slot_8") && ((DuckPlayerEntityMixin) player).rpginventory$getActiveSpellSlotAmount() < 8)
-								) {
 									continue;
 								}
 

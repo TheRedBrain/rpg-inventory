@@ -85,7 +85,17 @@ public abstract class SurvivalTrinketSlotMixin extends Slot {
 		Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.wilderness_status_effect_identifier.get());
 		boolean hasWildernessEffect = wilderness_status_effect.isPresent() && livingEntity.hasStatusEffect(wilderness_status_effect.get());
 
-		cir.setReturnValue(cir.getReturnValue() && (hasCivilisationEffect || bl || (bl2 && !hasWildernessEffect)));
+		boolean isSpellSlotActive =
+				!((Objects.equals(this.group.getName(), "spell_slot_1") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 1)
+						|| (Objects.equals(this.group.getName(), "spell_slot_2") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 2)
+						|| (Objects.equals(this.group.getName(), "spell_slot_3") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 3)
+						|| (Objects.equals(this.group.getName(), "spell_slot_4") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 4)
+						|| (Objects.equals(this.group.getName(), "spell_slot_5") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 5)
+						|| (Objects.equals(this.group.getName(), "spell_slot_6") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 6)
+						|| (Objects.equals(this.group.getName(), "spell_slot_7") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 7)
+						|| (Objects.equals(this.group.getName(), "spell_slot_8") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 8)
+				);
+		cir.setReturnValue(cir.getReturnValue() && isSpellSlotActive && (hasCivilisationEffect || bl || (bl2 && !hasWildernessEffect)));
 	}
 
 	/**
@@ -129,9 +139,6 @@ public abstract class SurvivalTrinketSlotMixin extends Slot {
 				|| (Objects.equals(this.group.getName(), "spell_slot_6") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 6)
 				|| (Objects.equals(this.group.getName(), "spell_slot_7") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 7)
 				|| (Objects.equals(this.group.getName(), "spell_slot_8") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 8)
-				|| (Objects.equals(this.group.getName(), "hand") && trinketInventory.getComponent().getEntity() instanceof PlayerEntity && ((DuckPlayerEntityMixin) trinketInventory.getComponent().getEntity()).rpginventory$isHandStackSheathed())
-				|| (Objects.equals(this.group.getName(), "sheathed_hand") && trinketInventory.getComponent().getEntity() instanceof PlayerEntity && !((DuckPlayerEntityMixin) trinketInventory.getComponent().getEntity()).rpginventory$isHandStackSheathed())
-				|| (Objects.equals(this.group.getName(), "sheathed_offhand") && trinketInventory.getComponent().getEntity() instanceof PlayerEntity && !((DuckPlayerEntityMixin) trinketInventory.getComponent().getEntity()).rpginventory$isOffhandStackSheathed())
 		));
 	}
 
@@ -148,9 +155,6 @@ public abstract class SurvivalTrinketSlotMixin extends Slot {
 				|| (Objects.equals(this.group.getName(), "spell_slot_6") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 6)
 				|| (Objects.equals(this.group.getName(), "spell_slot_7") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 7)
 				|| (Objects.equals(this.group.getName(), "spell_slot_8") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 8)
-				|| (Objects.equals(this.group.getName(), "hand") && trinketInventory.getComponent().getEntity() instanceof PlayerEntity && ((DuckPlayerEntityMixin) trinketInventory.getComponent().getEntity()).rpginventory$isHandStackSheathed())
-				|| (Objects.equals(this.group.getName(), "sheathed_hand") && trinketInventory.getComponent().getEntity() instanceof PlayerEntity && !((DuckPlayerEntityMixin) trinketInventory.getComponent().getEntity()).rpginventory$isHandStackSheathed())
-				|| (Objects.equals(this.group.getName(), "sheathed_offhand") && trinketInventory.getComponent().getEntity() instanceof PlayerEntity && !((DuckPlayerEntityMixin) trinketInventory.getComponent().getEntity()).rpginventory$isOffhandStackSheathed())
 		) {
 			cir.setReturnValue(false);
 			cir.cancel();

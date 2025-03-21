@@ -6,11 +6,19 @@ import me.fzzyhmstrs.fzzy_config.annotations.ConvertFrom;
 import me.fzzyhmstrs.fzzy_config.annotations.RequiresAction;
 import me.fzzyhmstrs.fzzy_config.config.Config;
 import me.fzzyhmstrs.fzzy_config.config.ConfigSection;
+import me.fzzyhmstrs.fzzy_config.util.Walkable;
+import me.fzzyhmstrs.fzzy_config.validation.collection.ValidatedList;
+import me.fzzyhmstrs.fzzy_config.validation.collection.ValidatedStringMap;
 import me.fzzyhmstrs.fzzy_config.validation.minecraft.ValidatedIdentifier;
+import me.fzzyhmstrs.fzzy_config.validation.misc.ValidatedAny;
 import me.fzzyhmstrs.fzzy_config.validation.misc.ValidatedBoolean;
+import me.fzzyhmstrs.fzzy_config.validation.misc.ValidatedString;
 import me.fzzyhmstrs.fzzy_config.validation.number.ValidatedFloat;
 import me.fzzyhmstrs.fzzy_config.validation.number.ValidatedInt;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
+
+import java.util.HashMap;
+import java.util.List;
 
 @ConvertFrom(fileName = "server.json5", folder = "rpginventory")
 public class ServerConfig extends Config {
@@ -94,8 +102,8 @@ public class ServerConfig extends Config {
 		public ValidatedInt inventory_crafting_slots_x_offset = new ValidatedInt(97);
 		public ValidatedInt inventory_crafting_slots_y_offset = new ValidatedInt(42);
 
-		public ValidatedInt spell_slots_x_offset = new ValidatedInt(98);
-		public ValidatedInt spell_slots_y_offset = new ValidatedInt(90);
+		public ValidatedInt spell_slots_label_x_offset = new ValidatedInt(98);
+		public ValidatedInt spell_slots_label_y_offset = new ValidatedInt(79);
 
 		public ValidatedInt head_slot_x_offset = new ValidatedInt(33);
 		public ValidatedInt head_slot_y_offset = new ValidatedInt(18);
@@ -109,24 +117,6 @@ public class ServerConfig extends Config {
 		public ValidatedInt feet_slot_x_offset = new ValidatedInt(77);
 		public ValidatedInt feet_slot_y_offset = new ValidatedInt(90);
 
-		public ValidatedInt belts_group_x_offset = new ValidatedInt(8);
-		public ValidatedInt belts_group_y_offset = new ValidatedInt(72);
-
-		public ValidatedInt shoulders_group_x_offset = new ValidatedInt(8);
-		public ValidatedInt shoulders_group_y_offset = new ValidatedInt(36);
-
-		public ValidatedInt necklaces_group_x_offset = new ValidatedInt(52);
-		public ValidatedInt necklaces_group_y_offset = new ValidatedInt(18);
-
-		public ValidatedInt rings_1_group_x_offset = new ValidatedInt(77);
-		public ValidatedInt rings_1_group_y_offset = new ValidatedInt(36);
-
-		public ValidatedInt rings_2_group_x_offset = new ValidatedInt(77);
-		public ValidatedInt rings_2_group_y_offset = new ValidatedInt(54);
-
-		public ValidatedInt gloves_group_x_offset = new ValidatedInt(77);
-		public ValidatedInt gloves_group_y_offset = new ValidatedInt(72);
-
 		public ValidatedInt hand_slot_x_offset = new ValidatedInt(8);
 		public ValidatedInt hand_slot_y_offset = new ValidatedInt(108);
 
@@ -138,5 +128,45 @@ public class ServerConfig extends Config {
 
 		public ValidatedInt alternative_offhand_slot_x_offset = new ValidatedInt(77);
 		public ValidatedInt alternative_offhand_slot_y_offset = new ValidatedInt(108);
+
+		public ValidatedStringMap<SlotGroupPosition> slot_group_positions = new ValidatedStringMap<>(new HashMap<>(){{
+			put("belts", new SlotGroupPosition(8, 72, 152, 5));
+			put("shoulders", new SlotGroupPosition(8, 36, 26, 5));
+			put("necklaces", new SlotGroupPosition(52, 18, 98, 5));
+			put("rings_1", new SlotGroupPosition(77, 36, 116, 5));
+			put("rings_2", new SlotGroupPosition(77, 54, 134, 5));
+			put("gloves", new SlotGroupPosition(77, 72, 8, 32));
+			put("spell_slot_1", new SlotGroupPosition(98, 90, 192, 7));
+			put("spell_slot_2", new SlotGroupPosition(116, 90, 192, 25));
+			put("spell_slot_3", new SlotGroupPosition(134, 90, 192, 43));
+			put("spell_slot_4", new SlotGroupPosition(152, 90, 192, 61));
+			put("spell_slot_5", new SlotGroupPosition(98, 108, 210, 7));
+			put("spell_slot_6", new SlotGroupPosition(116, 108, 210, 25));
+			put("spell_slot_7", new SlotGroupPosition(134, 108, 210, 43));
+			put("spell_slot_8", new SlotGroupPosition(152, 108, 210, 61));
+		}}, new ValidatedString(), new ValidatedAny<>(new SlotGroupPosition()));
+
+		public static class SlotGroupPosition implements Walkable {
+
+			public SlotGroupPosition() {
+				new SlotGroupPosition(0, 0, 0, 0);
+			}
+
+			public SlotGroupPosition(int survival_x, int survival_y, int creative_x, int creative_y) {
+				this.survival_x = survival_x;
+				this.survival_y = survival_y;
+				this.creative_x = creative_x;
+				this.creative_y = creative_y;
+			}
+
+			public int survival_x;
+			public int survival_y;
+			public int creative_x;
+			public int creative_y;
+
+			public String toString() {
+				return "survival_x: " + this.survival_x + ", survival_y: " + this.survival_y + ", creative_x: " + this.creative_x + ", creative_y: " + this.creative_y;
+			}
+		}
 	}
 }
