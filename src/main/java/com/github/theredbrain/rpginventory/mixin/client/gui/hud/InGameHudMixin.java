@@ -3,6 +3,7 @@ package com.github.theredbrain.rpginventory.mixin.client.gui.hud;
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.RPGInventoryClient;
 import com.github.theredbrain.rpginventory.config.ClientConfig;
+import com.github.theredbrain.rpginventory.config.ServerConfig;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.rpginventory.registry.Tags;
@@ -45,6 +46,12 @@ public abstract class InGameHudMixin {
 	private static Identifier HOTBAR_SELECTION_TEXTURE;
 	@Shadow
 	@Final
+	private static Identifier HOTBAR_OFFHAND_LEFT_TEXTURE;
+	@Shadow
+	@Final
+	private static Identifier HOTBAR_OFFHAND_RIGHT_TEXTURE;
+	@Shadow
+	@Final
 	private MinecraftClient client;
 	@Shadow
 	@Final
@@ -79,6 +86,7 @@ public abstract class InGameHudMixin {
 		PlayerEntity playerEntity = this.getCameraPlayer();
 		if (playerEntity != null) {
 			ClientConfig clientConfig = RPGInventoryClient.CLIENT_CONFIG;
+			ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
 			ItemStack itemStack = playerEntity.getOffHandStack();
 			Arm arm = playerEntity.getMainArm().getOpposite();
 			int i = context.getScaledWindowWidth() / 2;
@@ -88,16 +96,17 @@ public abstract class InGameHudMixin {
 			context.getMatrices().push();
 			context.getMatrices().translate(0.0F, 0.0F, -90.0F);
 
-//			if (clientConfig.hotBarOverhaul.always_show_all_hotbar_slots.get()) { // TODO show only active hotbar slots
+//			int activeHotbarSize = RPGInventory.getActiveHotbarSize(playerEntity);
+//			if (clientConfig.hotBarOverhaul.always_show_all_hotbar_slots.get() || activeHotbarSize == 9) { // TODO show only active hotbar slots
 				context.drawGuiTexture(HOTBAR_TEXTURE, i - 91, context.getScaledWindowHeight() - 22, 182, 22);
 
-				if (((DuckPlayerEntityMixin) playerEntity).rpginventory$isHandStackSheathed() || clientConfig.hotBarOverhaul.always_show_selected_hotbar_slot.get()) {
+				if (((DuckPlayerEntityMixin) playerEntity).rpginventory$isHandStackSheathed() || clientConfig.hotBarOverhaul.always_show_selected_hotbar_slot.get() || !serverConfig.enable_hand_slot_overhaul.get()) {
 					context.drawGuiTexture(
 							HOTBAR_SELECTION_TEXTURE, i - 91 - 1 + playerEntity.getInventory().selectedSlot * 20, context.getScaledWindowHeight() - 22 - 1, 24, 23
 					);
 				}
 //			} else { // TODO show only active hotbar slots
-//
+//				double offsetSlots = (double) (9 - activeHotbarSize) / 2;
 //			}
 
 			ItemStack itemStackHand = ((DuckPlayerInventoryMixin) playerEntity.getInventory()).rpginventory$getHand();
@@ -113,52 +122,48 @@ public abstract class InGameHudMixin {
 				itemStackOffHand = ((DuckPlayerInventoryMixin) playerEntity.getInventory()).rpginventory$getSheathedOffhand();
 			}
 
-			int l = 10;
 			int x;
 			int y;
 
-			if (clientConfig.hotBarOverhaul.show_empty_hand_slots.get() || !(itemStackHand.isEmpty() || itemStackHand.isIn(Tags.EMPTY_HAND_WEAPONS)) || !(itemStackOffHand.isEmpty() || itemStackOffHand.isIn(Tags.EMPTY_HAND_WEAPONS))) {
-				x = context.getScaledWindowWidth() / 2 + clientConfig.hotBarOverhaul.hand_slots_offset_x.get();
-				y = context.getScaledWindowHeight() + clientConfig.hotBarOverhaul.hand_slots_offset_y.get();
+			if (serverConfig.enable_hand_slot_overhaul.get()) {
+				if (clientConfig.hotBarOverhaul.show_empty_hand_slots.get() || !(itemStackHand.isEmpty() || itemStackHand.isIn(Tags.EMPTY_HAND_WEAPONS)) || !(itemStackOffHand.isEmpty() || itemStackOffHand.isIn(Tags.EMPTY_HAND_WEAPONS))) {
+					x = context.getScaledWindowWidth() / 2 + clientConfig.hotBarOverhaul.hand_slots_offset_x.get();
+					y = context.getScaledWindowHeight() + clientConfig.hotBarOverhaul.hand_slots_offset_y.get();
 
-				context.drawGuiTexture(HOTBAR_HAND_SLOTS_TEXTURE, x, y, 49, 24);
+					context.drawGuiTexture(HOTBAR_HAND_SLOTS_TEXTURE, x, y, 49, 24);
 
-				boolean offhand_slot_is_right = clientConfig.hotBarOverhaul.offhand_item_is_right.get();
-				this.renderHotbarItem(context, x + 23, y + 4, tickCounter, playerEntity, offhand_slot_is_right ? itemStackOffHand : itemStackHand, l++);
-				this.renderHotbarItem(context, x + 3, y + 4, tickCounter, playerEntity, offhand_slot_is_right ? itemStackHand : itemStackOffHand, l++);
+					boolean offhand_slot_is_right = clientConfig.hotBarOverhaul.offhand_item_is_right.get();
 
-				// sheathed hand indicator
-				if ((!isHandSheathed && offhand_slot_is_right) || (!isOffhandSheathed && !offhand_slot_is_right)) {
-					context.drawGuiTexture(HOTBAR_SELECTION_FIXED_TEXTURE, x - 1, y, 24, 24);
+					// sheathed hand indicator
+					if ((!isHandSheathed && offhand_slot_is_right) || (!isOffhandSheathed && !offhand_slot_is_right)) {
+						context.drawGuiTexture(HOTBAR_SELECTION_FIXED_TEXTURE, x - 1, y, 24, 24);
+					}
+					if ((!isOffhandSheathed && offhand_slot_is_right) || (!isHandSheathed && !offhand_slot_is_right)) {
+						context.drawGuiTexture(UNSHEATHED_RIGHT_HAND_SLOT_SELECTOR_TEXTURE, x + 19, y, 24, 24);
+					}
 				}
-				if ((!isOffhandSheathed && offhand_slot_is_right) || (!isHandSheathed && !offhand_slot_is_right)) {
-					context.drawGuiTexture(UNSHEATHED_RIGHT_HAND_SLOT_SELECTOR_TEXTURE, x + 19, y, 24, 24);
+
+				if (clientConfig.hotBarOverhaul.show_empty_alternative_hand_slots.get() || !(itemStackAlternativeHand.isEmpty() || itemStackAlternativeHand.isIn(Tags.EMPTY_HAND_WEAPONS)) || !(itemStackAlternativeOffHand.isEmpty() || itemStackAlternativeOffHand.isIn(Tags.EMPTY_HAND_WEAPONS))) {
+					x = context.getScaledWindowWidth() / 2 + clientConfig.hotBarOverhaul.alternative_hand_slots_offset_x.get();
+					y = context.getScaledWindowHeight() + clientConfig.hotBarOverhaul.alternative_hand_slots_offset_y.get();
+
+					context.drawGuiTexture(HOTBAR_ALTERNATE_HAND_SLOTS_TEXTURE, x, y, 49, 24);
+				}
+			} else {
+				if (!itemStack.isEmpty()) {
+					if (arm == Arm.LEFT) {
+						context.drawGuiTexture(HOTBAR_OFFHAND_LEFT_TEXTURE, i - 91 - 29, context.getScaledWindowHeight() - 23, 29, 24);
+					} else {
+						context.drawGuiTexture(HOTBAR_OFFHAND_RIGHT_TEXTURE, i + 91, context.getScaledWindowHeight() - 23, 29, 24);
+					}
 				}
 			}
-
-			if (clientConfig.hotBarOverhaul.show_empty_alternative_hand_slots.get() || !(itemStackAlternativeHand.isEmpty() || itemStackAlternativeHand.isIn(Tags.EMPTY_HAND_WEAPONS)) || !(itemStackAlternativeOffHand.isEmpty() || itemStackAlternativeOffHand.isIn(Tags.EMPTY_HAND_WEAPONS))) {
-				x = context.getScaledWindowWidth() / 2 + clientConfig.hotBarOverhaul.alternative_hand_slots_offset_x.get();
-				y = context.getScaledWindowHeight() + clientConfig.hotBarOverhaul.alternative_hand_slots_offset_y.get();
-
-				context.drawGuiTexture(HOTBAR_ALTERNATE_HAND_SLOTS_TEXTURE, x, y, 49, 24);
-
-				boolean alternative_offhand_slot_is_right = clientConfig.hotBarOverhaul.alternative_offhand_item_is_right.get();
-				this.renderHotbarItem(context, x + 10, y + 4, tickCounter, playerEntity, alternative_offhand_slot_is_right ? itemStackAlternativeHand : itemStackAlternativeOffHand, l++);
-				this.renderHotbarItem(context, x + 30, y + 4, tickCounter, playerEntity, alternative_offhand_slot_is_right ? itemStackAlternativeOffHand : itemStackAlternativeHand, l);
-			}
-//			if (!itemStack.isEmpty()) {
-//				if (arm == Arm.LEFT) {
-//					context.drawGuiTexture(HOTBAR_OFFHAND_LEFT_TEXTURE, i - 91 - 29, context.getScaledWindowHeight() - 23, 29, 24);
-//				} else {
-//					context.drawGuiTexture(HOTBAR_OFFHAND_RIGHT_TEXTURE, i + 91, context.getScaledWindowHeight() - 23, 29, 24);
-//				}
-//			}
 
 			context.getMatrices().pop();
 			RenderSystem.disableBlend();
-			l = 1;
+			int l = 1;
 
-//			if (clientConfig.hotBarOverhaul.always_show_all_hotbar_slots.get()) { // TODO show only active hotbar slots
+//			if (clientConfig.hotBarOverhaul.always_show_all_hotbar_slots.get() || activeHotbarSize == 9) { // TODO show only active hotbar slots
 				for (int m = 0; m < 9; m++) {
 					int n = i - 90 + m * 20 + 2;
 					int o = context.getScaledWindowHeight() - 16 - 3;
@@ -168,14 +173,30 @@ public abstract class InGameHudMixin {
 //
 //			}
 
-//			if (!itemStack.isEmpty()) {
-//				int m = context.getScaledWindowHeight() - 16 - 3;
-//				if (arm == Arm.LEFT) {
-//					this.renderHotbarItem(context, i - 91 - 26, m, tickCounter, playerEntity, itemStack, l++);
-//				} else {
-//					this.renderHotbarItem(context, i + 91 + 10, m, tickCounter, playerEntity, itemStack, l++);
-//				}
-//			}
+			if (serverConfig.enable_hand_slot_overhaul.get()) {
+				x = context.getScaledWindowWidth() / 2 + clientConfig.hotBarOverhaul.hand_slots_offset_x.get();
+				y = context.getScaledWindowHeight() + clientConfig.hotBarOverhaul.hand_slots_offset_y.get();
+
+				boolean offhand_slot_is_right = clientConfig.hotBarOverhaul.offhand_item_is_right.get();
+				this.renderHotbarItem(context, x + 23, y + 4, tickCounter, playerEntity, offhand_slot_is_right ? itemStackOffHand : itemStackHand, l++);
+				this.renderHotbarItem(context, x + 3, y + 4, tickCounter, playerEntity, offhand_slot_is_right ? itemStackHand : itemStackOffHand, l++);
+
+				x = context.getScaledWindowWidth() / 2 + clientConfig.hotBarOverhaul.alternative_hand_slots_offset_x.get();
+				y = context.getScaledWindowHeight() + clientConfig.hotBarOverhaul.alternative_hand_slots_offset_y.get();
+
+				boolean alternative_offhand_slot_is_right = clientConfig.hotBarOverhaul.alternative_offhand_item_is_right.get();
+				this.renderHotbarItem(context, x + 10, y + 4, tickCounter, playerEntity, alternative_offhand_slot_is_right ? itemStackAlternativeHand : itemStackAlternativeOffHand, l++);
+				this.renderHotbarItem(context, x + 30, y + 4, tickCounter, playerEntity, alternative_offhand_slot_is_right ? itemStackAlternativeOffHand : itemStackAlternativeHand, l);
+			} else {
+				if (!itemStack.isEmpty()) {
+					int m = context.getScaledWindowHeight() - 16 - 3;
+					if (arm == Arm.LEFT) {
+						this.renderHotbarItem(context, i - 91 - 26, m, tickCounter, playerEntity, itemStack, l++);
+					} else {
+						this.renderHotbarItem(context, i + 91 + 10, m, tickCounter, playerEntity, itemStack, l++);
+					}
+				}
+			}
 
 			if (this.client.options.getAttackIndicator().getValue() == AttackIndicator.HOTBAR) {
 				RenderSystem.enableBlend();

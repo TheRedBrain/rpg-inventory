@@ -24,6 +24,8 @@ public class ServerConfig extends Config {
 			""")
 	public ValidatedBoolean are_hand_items_restricted_to_item_tags = new ValidatedBoolean(true);
 
+	public ValidatedBoolean enable_hand_slot_overhaul = new ValidatedBoolean(true);
+
 	@Comment("When false, toggling the two-handed stance is not possible when the main hand is sheathed.")
 	public ValidatedBoolean always_allow_toggling_two_handed_stance = new ValidatedBoolean(false);
 
