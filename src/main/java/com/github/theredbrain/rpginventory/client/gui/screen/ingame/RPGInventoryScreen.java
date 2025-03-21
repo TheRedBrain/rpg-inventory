@@ -297,10 +297,12 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.rings_1_group_x_offset.get() - 1, j + serverConfig.inventorySlots.rings_1_group_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
 		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.rings_2_group_x_offset.get() - 1, j + serverConfig.inventorySlots.rings_2_group_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
 		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.gloves_group_x_offset.get() - 1, j + serverConfig.inventorySlots.gloves_group_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
-		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.hand_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.hand_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
 		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.offhand_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.offhand_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
-		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.alternative_hand_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.alternative_hand_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
-		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.alternative_offhand_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.alternative_offhand_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+		if (serverConfig.enable_hand_slot_overhaul.get()) {
+			context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.hand_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.hand_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+			context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.alternative_hand_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.alternative_hand_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+			context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.alternative_offhand_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.alternative_offhand_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+		}
 
 		boolean showInactiveSlots = clientConfig.show_inactive_inventory_slots.get();
 		for (k = 0; k < (showInactiveSlots ? 27 : Math.min(inventorySize, 27)); ++k) {

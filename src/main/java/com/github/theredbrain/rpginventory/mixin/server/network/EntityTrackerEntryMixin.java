@@ -1,5 +1,6 @@
 package com.github.theredbrain.rpginventory.mixin.server.network;
 
+import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.rpginventory.network.packet.SheathedWeaponsPacket;
@@ -26,7 +27,7 @@ public class EntityTrackerEntryMixin {
 
 	@Inject(method = "startTracking", at = @At(value = "TAIL"))
 	public void rpginventory$startTracking(ServerPlayerEntity serverPlayer, CallbackInfo info) {
-		if (this.entity instanceof PlayerEntity) {
+		if (this.entity instanceof PlayerEntity && RPGInventory.SERVER_CONFIG.enable_hand_slot_overhaul.get()) {
 			PlayerEntity player = (PlayerEntity) entity;
 			if (!((DuckPlayerInventoryMixin) serverPlayer.getInventory()).rpginventory$getHand().isEmpty() || !((DuckPlayerInventoryMixin) serverPlayer.getInventory()).rpginventory$getAlternativeHand().isEmpty()) {
 				ServerPlayNetworking.send((ServerPlayerEntity) player, new SwappedHandItemsPacket(serverPlayer.getId(), true));

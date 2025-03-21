@@ -1,5 +1,6 @@
 package com.github.theredbrain.rpginventory.mixin.entity.player;
 
+import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.rpginventory.registry.ItemRegistry;
@@ -78,17 +79,22 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 		this.combinedInventory = ImmutableList.of(this.main, this.armor, this.offHand, this.rpginventory$handSlot, this.rpginventory$sheathedHandSlots, this.rpginventory$emptyHandSlots, this.rpginventory$alternativeHandSlots);
 	}
 
-	@Inject(method = "getMainHandStack", at = @At("HEAD"), cancellable = true)
-	public void rpginventory$getMainHandStack(CallbackInfoReturnable<ItemStack> cir) {
-		ItemStack emptyHandStack = rpginventory$getEmptyHand();
-		ItemStack handStack = rpginventory$getHand();
-		if (!((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed()) {
-			cir.setReturnValue(ItemUtils.isUsable(handStack) ? handStack : emptyHandStack);
-			cir.cancel();
+	@ModifyReturnValue(method = "getMainHandStack", at = @At("RETURN"))
+	public ItemStack rpginventory$getMainHandStack(ItemStack original) {
+		if (RPGInventory.SERVER_CONFIG.enable_hand_slot_overhaul.get()) {
+			ItemStack emptyHandStack = rpginventory$getEmptyHand();
+			ItemStack handStack = rpginventory$getHand();
+			if (!((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed()) {
+				return ItemUtils.isUsable(handStack) ? handStack : emptyHandStack;
+			}
+			return emptyHandStack;
+		} else {
+			return ItemUtils.isUsable(original) ? original : ItemStack.EMPTY;
 		}
 	}
 
 	/**
+	 *  TODO find more compatible way
 	 * @author TheRedBrain
 	 * @reason save additional hand slots
 	 */
@@ -156,6 +162,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 	}
 
 	/**
+	 *  TODO find more compatible way
 	 * @author TheRedBrain
 	 * @reason save additional hand slots
 	 */
@@ -226,13 +233,15 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 	public ItemStack rpginventory$getOffHandStack() {
 		ItemStack emptyOffHandStack = rpginventory$getEmptyOffhand();
 		ItemStack offHandStack = this.offHand.get(0);
+		if (!RPGInventory.SERVER_CONFIG.enable_hand_slot_overhaul.get()) {
+			return ItemUtils.isUsable(offHandStack) ? offHandStack : ItemStack.EMPTY;
+		}
 		if (!((DuckPlayerEntityMixin) player).rpginventory$isOffhandStackSheathed()) {
 			return ItemUtils.isUsable(offHandStack) && !offHandStack.isEmpty() ? offHandStack : emptyOffHandStack;
 		}
 		return ItemStack.EMPTY;
 	}
 
-	// TODO remove? or make configurable
 	// picked up items are no longer placed into the offhand slot
 	@WrapOperation(
 			method = "getOccupiedSlotWithRoomForStack",
@@ -243,7 +252,11 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 			)
 	)
 	public boolean rpginventory$wrap_canStackAddMore(PlayerInventory instance, ItemStack existingStack, ItemStack stack, Operation<Boolean> original) {
-		return false;
+		if (RPGInventory.SERVER_CONFIG.enable_hand_slot_overhaul.get()) {
+			return false;
+		} else {
+			return original.call(instance, existingStack, stack);
+		}
 	}
 
 	public ItemStack rpginventory$getHand() {

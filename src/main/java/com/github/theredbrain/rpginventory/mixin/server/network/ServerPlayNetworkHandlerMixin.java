@@ -1,21 +1,23 @@
 package com.github.theredbrain.rpginventory.mixin.server.network;
 
+import com.github.theredbrain.rpginventory.RPGInventory;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(ServerPlayNetworkHandler.class)
 public class ServerPlayNetworkHandlerMixin {
 
 	/**
-	 * effectively disables the vanilla swap item mechanic
+	 * effectively disables the vanilla swap item mechanic, when the hand slot overhaul is enabled
 	 *
-	 * @reason prevent item duplication // TODO slot rewrite, make this depending on whether hand slot overhaul is active
+	 * @reason prevent item duplication
 	 */
-	@Redirect(
+	@WrapOperation(
 			method = "onPlayerAction",
 			at = @At(
 					value = "INVOKE",
@@ -23,8 +25,12 @@ public class ServerPlayNetworkHandlerMixin {
 					ordinal = 0
 			)
 	)
-	public boolean rpginventory$redirect_isSpectator(ServerPlayerEntity instance) {
-		instance.sendMessage(Text.translatable("hud.message.disabledVanillaItemSwapMechanic"));
-		return true;
+	public boolean rpginventory$wrap_isSpectator(ServerPlayerEntity instance, Operation<Boolean> original) {
+		if (RPGInventory.SERVER_CONFIG.enable_hand_slot_overhaul.get()) {
+			instance.sendMessage(Text.translatable("hud.message.disabledVanillaItemSwapMechanic"));
+			return true;
+		} else {
+			return original.call(instance);
+		}
 	}
 }

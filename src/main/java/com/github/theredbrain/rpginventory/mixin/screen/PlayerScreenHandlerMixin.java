@@ -177,7 +177,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 
 			@Override
 			public boolean isEnabled() {
-				return !((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed();
+				return RPGInventory.SERVER_CONFIG.enable_hand_slot_overhaul.get() && !((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed();
 			}
 
 			@Override
@@ -206,7 +206,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 
 			@Override
 			public boolean isEnabled() {
-				return ((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed();
+				return RPGInventory.SERVER_CONFIG.enable_hand_slot_overhaul.get() && ((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed();
 			}
 
 			@Override
@@ -235,7 +235,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 
 			@Override
 			public boolean isEnabled() {
-				return ((DuckPlayerEntityMixin) owner).rpginventory$isOffhandStackSheathed();
+				return RPGInventory.SERVER_CONFIG.enable_hand_slot_overhaul.get() && ((DuckPlayerEntityMixin) owner).rpginventory$isOffhandStackSheathed();
 			}
 
 			@Override
@@ -263,6 +263,11 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 			}
 
 			@Override
+			public boolean isEnabled() {
+				return RPGInventory.SERVER_CONFIG.enable_hand_slot_overhaul.get();
+			}
+
+			@Override
 			public Pair<Identifier, Identifier> getBackgroundSprite() {
 				return Pair.of(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, PlayerScreenHandlerMixin.EMPTY_HAND_SLOT);
 			}
@@ -284,6 +289,11 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 				boolean hasWildernessEffect = wilderness_status_effect.isPresent() && owner.hasStatusEffect(wilderness_status_effect.get());
 
 				return (stack.isIn(Tags.OFFHAND_ITEMS) || !serverConfig.are_hand_items_restricted_to_item_tags.get()) && (hasCivilisationEffect || owner.isCreative() || (bl && !hasWildernessEffect));
+			}
+
+			@Override
+			public boolean isEnabled() {
+				return RPGInventory.SERVER_CONFIG.enable_hand_slot_overhaul.get();
 			}
 
 			@Override

@@ -1,6 +1,7 @@
 package com.github.theredbrain.rpginventory.mixin.entity.player;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
+import com.github.theredbrain.rpginventory.config.ServerConfig;
 import com.github.theredbrain.rpginventory.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.rpginventory.entity.RendersSheathedWeapons;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
@@ -30,7 +31,6 @@ import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Final;
@@ -77,6 +77,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 	private static final TrackedData<Boolean> IS_OFFHAND_STACK_SHEATHED = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
 	@Unique
+	private static final TrackedData<Boolean> IS_HAND_SLOT_OVERHAUL_ACTIVE = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+
+	@Unique
 	private static final TrackedData<Integer> OLD_ACTIVE_SPELL_SLOT_AMOUNT = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
 
 	protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
@@ -87,6 +90,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 	protected void rpginventory$initDataTracker(DataTracker.Builder builder, CallbackInfo ci) {
 		builder.add(IS_HAND_STACK_SHEATHED, false);
 		builder.add(IS_OFFHAND_STACK_SHEATHED, false);
+		builder.add(IS_HAND_SLOT_OVERHAUL_ACTIVE, true);
 		builder.add(OLD_ACTIVE_SPELL_SLOT_AMOUNT, -1);
 
 	}
@@ -96,6 +100,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 		if (!this.getWorld().isClient) {
 			this.rpginventory$ejectItemsFromInactiveSpellSlots();
 			this.rpginventory$ejectSecondUniqueRing();
+			this.rpginventory$ejectItemsFromInactiveHandSlots();
 //            this.rpginventory$ejectNonHotbarItemsFromHotbar(); TODO disabled for now, needs overhaul
 		}
 	}
@@ -155,35 +160,45 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 	@Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
 	public void rpginventory$readCustomDataFromNbt(NbtCompound nbt, CallbackInfo ci) {
 
-		if (nbt.contains("is_hand_stack_sheathed", NbtElement.BYTE_TYPE)) {
-			this.rpginventory$setIsHandStackSheathed(nbt.getBoolean("is_hand_stack_sheathed"));
-		}
+		this.rpginventory$setIsHandStackSheathed(nbt.contains("is_hand_stack_sheathed", NbtElement.BYTE_TYPE));
 
-		if (nbt.contains("is_offhand_stack_sheathed", NbtElement.BYTE_TYPE)) {
-			this.rpginventory$setIsOffhandStackSheathed(nbt.getBoolean("is_offhand_stack_sheathed"));
-		}
+		this.rpginventory$setIsOffhandStackSheathed(nbt.contains("is_offhand_stack_sheathed", NbtElement.BYTE_TYPE));
+
+		this.rpginventory$setIsHandSlotOverhaulActive(nbt.contains("is_hand_slot_overhaul_active", NbtElement.BYTE_TYPE));
 
 		if (nbt.contains("old_active_spell_slot_amount", NbtElement.INT_TYPE)) {
 			this.rpginventory$setOldActiveSpellSlotAmount(nbt.getInt("old_active_spell_slot_amount"));
+		} else {
+			this.rpginventory$setOldActiveSpellSlotAmount(-1);
 		}
 	}
 
 	@Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
 	public void rpginventory$writeCustomDataToNbt(NbtCompound nbt, CallbackInfo ci) {
 
-		boolean is_hand_stack_sheathed = this.rpginventory$isHandStackSheathed();
-		if (is_hand_stack_sheathed) {
-			nbt.putBoolean("is_hand_stack_sheathed", this.rpginventory$isHandStackSheathed());
+		if (this.rpginventory$isHandStackSheathed()) {
+			nbt.putBoolean("is_hand_stack_sheathed", true);
+		} else {
+			nbt.remove("is_hand_stack_sheathed");
 		}
 
-		boolean is_offhand_stack_sheathed = this.rpginventory$isOffhandStackSheathed();
-		if (is_offhand_stack_sheathed) {
-			nbt.putBoolean("is_offhand_stack_sheathed", this.rpginventory$isOffhandStackSheathed());
+		if (this.rpginventory$isOffhandStackSheathed()) {
+			nbt.putBoolean("is_offhand_stack_sheathed", true);
+		} else {
+			nbt.remove("is_offhand_stack_sheathed");
+		}
+
+		if (this.rpginventory$isHandSlotOverhaulActive()) {
+			nbt.putBoolean("is_hand_slot_overhaul_active", true);
+		} else {
+			nbt.remove("is_hand_slot_overhaul_active");
 		}
 
 		int old_active_spell_slot_amount = this.rpginventory$oldActiveSpellSlotAmount();
 		if (old_active_spell_slot_amount != -1) {
 			nbt.putInt("old_active_spell_slot_amount", old_active_spell_slot_amount);
+		} else {
+			nbt.remove("old_active_spell_slot_amount");
 		}
 	}
 
@@ -193,11 +208,12 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 	 */
 	@Overwrite
 	public void equipStack(EquipmentSlot slot, ItemStack stack) {
+		ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
 		this.processEquippedStack(stack);
 		if (slot == EquipmentSlot.MAINHAND) {
-			this.onEquipStack(slot, ((DuckPlayerEntityMixin) this).rpginventory$isHandStackSheathed() ? this.inventory.main.set(this.inventory.selectedSlot, stack) : ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setHand(stack), stack);
+			this.onEquipStack(slot, ((DuckPlayerEntityMixin) this).rpginventory$isHandStackSheathed() || !serverConfig.enable_hand_slot_overhaul.get() ? this.inventory.main.set(this.inventory.selectedSlot, stack) : ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setHand(stack), stack);
 		} else if (slot == EquipmentSlot.OFFHAND) {
-			this.onEquipStack(slot, ((DuckPlayerEntityMixin) this).rpginventory$isHandStackSheathed() ? ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setSheathedOffhand(stack) : this.inventory.offHand.set(0, stack), stack);
+			this.onEquipStack(slot, ((DuckPlayerEntityMixin) this).rpginventory$isOffhandStackSheathed() && serverConfig.enable_hand_slot_overhaul.get() ? ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setSheathedOffhand(stack) : this.inventory.offHand.set(0, stack), stack);
 		} else if (slot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR) {
 			this.onEquipStack(slot, this.inventory.armor.set(slot.getEntitySlotId(), stack), stack);
 		}
@@ -274,6 +290,16 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 	}
 
 	@Override
+	public boolean rpginventory$isHandSlotOverhaulActive() {
+		return this.dataTracker.get(IS_HAND_SLOT_OVERHAUL_ACTIVE);
+	}
+
+	@Override
+	public void rpginventory$setIsHandSlotOverhaulActive(boolean isHandSlotOverhaulActive) {
+		this.dataTracker.set(IS_HAND_SLOT_OVERHAUL_ACTIVE, isHandSlotOverhaulActive);
+	}
+
+	@Override
 	public int rpginventory$oldActiveSpellSlotAmount() {
 		return this.dataTracker.get(OLD_ACTIVE_SPELL_SLOT_AMOUNT);
 	}
@@ -300,6 +326,48 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 			}
 
 			this.rpginventory$setOldActiveSpellSlotAmount(activeSpellSlotAmount);
+		}
+	}
+
+	@Unique
+	private void rpginventory$ejectItemsFromInactiveHandSlots() {
+		boolean isHandSlotOverhaulActive = RPGInventory.SERVER_CONFIG.enable_hand_slot_overhaul.get();
+
+		if (this.rpginventory$isHandSlotOverhaulActive() != isHandSlotOverhaulActive) {
+			if (!isHandSlotOverhaulActive) {
+				PlayerInventory playerInventory = this.getInventory();
+				boolean bl = false;
+
+				if (!((DuckPlayerInventoryMixin) playerInventory).rpginventory$getHand().isEmpty()) {
+					playerInventory.offerOrDrop(((DuckPlayerInventoryMixin) playerInventory).rpginventory$setHand(ItemStack.EMPTY));
+					bl = true;
+				}
+
+				if (!((DuckPlayerInventoryMixin) playerInventory).rpginventory$getSheathedHand().isEmpty()) {
+					playerInventory.offerOrDrop(((DuckPlayerInventoryMixin) playerInventory).rpginventory$setSheathedHand(ItemStack.EMPTY));
+					bl = true;
+				}
+
+				if (!((DuckPlayerInventoryMixin) playerInventory).rpginventory$getSheathedOffhand().isEmpty()) {
+					playerInventory.offerOrDrop(((DuckPlayerInventoryMixin) playerInventory).rpginventory$setSheathedOffhand(ItemStack.EMPTY));
+					bl = true;
+				}
+
+				if (!((DuckPlayerInventoryMixin) playerInventory).rpginventory$getAlternativeHand().isEmpty()) {
+					playerInventory.offerOrDrop(((DuckPlayerInventoryMixin) playerInventory).rpginventory$setAlternativeHand(ItemStack.EMPTY));
+					bl = true;
+				}
+
+				if (!((DuckPlayerInventoryMixin) playerInventory).rpginventory$getAlternativeOffhand().isEmpty()) {
+					playerInventory.offerOrDrop(((DuckPlayerInventoryMixin) playerInventory).rpginventory$setAlternativeOffhand(ItemStack.EMPTY));
+					bl = true;
+				}
+
+				if (bl && ((PlayerEntity) (Object) this) instanceof ServerPlayerEntity serverPlayerEntity) {
+					serverPlayerEntity.sendMessage(Text.translatable("hud.message.itemsRemovedFromInactiveHandSlots"), false);
+				}
+			}
+			this.rpginventory$setIsHandSlotOverhaulActive(isHandSlotOverhaulActive);
 		}
 	}
 

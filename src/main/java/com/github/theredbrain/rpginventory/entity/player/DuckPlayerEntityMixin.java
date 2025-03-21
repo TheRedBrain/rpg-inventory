@@ -11,6 +11,10 @@ public interface DuckPlayerEntityMixin {
 
 	void rpginventory$setIsOffhandStackSheathed(boolean isOffhandStackSheathed);
 
+	boolean rpginventory$isHandSlotOverhaulActive();
+
+	void rpginventory$setIsHandSlotOverhaulActive(boolean isHandSlotOverhaulActive);
+
 	int rpginventory$oldActiveSpellSlotAmount();
 
 	void rpginventory$setOldActiveSpellSlotAmount(int oldActiveSpellSlotAmount);

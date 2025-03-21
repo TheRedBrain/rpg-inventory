@@ -1,8 +1,11 @@
 package com.github.theredbrain.rpginventory.mixin.client.gui.screen.ingame;
 
+import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.RPGInventoryClient;
 import com.github.theredbrain.rpginventory.config.ClientConfig;
 import com.github.theredbrain.rpginventory.registry.Tags;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -10,6 +13,7 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -21,11 +25,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class HandledScreenMixin {
 
 	/**
-	 * effectively disables the vanilla swap item mechanic
+	 * effectively disables the vanilla swap item mechanic, when the hand slot overhaul is enabled
 	 *
 	 * @reason prevent item duplication
 	 */
-	@Redirect(
+	@WrapOperation(
 			method = "onMouseClick(I)V",
 			at = @At(
 					value = "INVOKE",
@@ -33,16 +37,20 @@ public class HandledScreenMixin {
 					ordinal = 0
 			)
 	)
-	public boolean rpginventory$redirect_matchesMouse(KeyBinding instance, int code) {
-		return false;
+	public boolean rpginventory$wrap_matchesMouse(KeyBinding instance, int code, Operation<Boolean> original) {
+		if (RPGInventory.SERVER_CONFIG.enable_hand_slot_overhaul.get()) {
+			return false;
+		} else {
+			return original.call(instance, code);
+		}
 	}
 
 	/**
-	 * effectively disables the vanilla swap item mechanic
+	 * effectively disables the vanilla swap item mechanic, when the hand slot overhaul is enabled
 	 *
 	 * @reason prevent item duplication
 	 */
-	@Redirect(
+	@WrapOperation(
 			method = "handleHotbarKeyPressed",
 			at = @At(
 					value = "INVOKE",
@@ -50,8 +58,12 @@ public class HandledScreenMixin {
 					ordinal = 0
 			)
 	)
-	public boolean rpginventory$redirect_matchesKey(KeyBinding instance, int keyCode, int scanCode) {
-		return false;
+	public boolean rpginventory$wrap_matchesKey(KeyBinding instance, int keyCode, int scanCode, Operation<Boolean> original) {
+		if (RPGInventory.SERVER_CONFIG.enable_hand_slot_overhaul.get()) {
+			return false;
+		} else {
+			return original.call(instance, keyCode, scanCode);
+		}
 	}
 
 	@Inject(method = "drawSlot", at = @At("TAIL"))
