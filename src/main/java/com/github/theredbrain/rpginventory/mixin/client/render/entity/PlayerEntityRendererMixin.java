@@ -41,7 +41,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
 	@Inject(method = "getArmPose", at = @At("HEAD"), cancellable = true)
 	private static void rpginventory$pre_getArmPose(AbstractClientPlayerEntity player, Hand hand, CallbackInfoReturnable<BipedEntityModel.ArmPose> cir) {
 		ItemStack itemStack = player.getStackInHand(hand);
-		if (itemStack.isEmpty() || itemStack.isIn(Tags.EMPTY_HAND_WEAPONS) || !ItemUtils.isUsable(itemStack)) {
+		if (itemStack.isEmpty() || itemStack.isIn(Tags.EMPTY_HAND_WEAPONS) || !ItemUtils.isUsable(itemStack) || !ItemUtils.isOwnedByPlayer(itemStack, player.getGameProfile())) {
 			cir.setReturnValue(BipedEntityModel.ArmPose.EMPTY);
 			cir.cancel();
 		}

@@ -9,6 +9,7 @@ import com.github.theredbrain.rpginventory.entity.player.DuckPlayerInventoryMixi
 import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import com.github.theredbrain.rpginventory.util.ItemUtils;
+import com.mojang.authlib.GameProfile;
 import dev.emi.trinkets.api.SlotReference;
 import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketsApi;
@@ -66,6 +67,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
 	@Shadow
 	public abstract boolean isCreative();
+
+	@Shadow public abstract GameProfile getGameProfile();
 
 	@Unique
 	private boolean isAdventureHotbarCleanedUp = false;
@@ -260,13 +263,13 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 	@Override
 	public ItemStack rpginventory$getSheathedHandItemStack() {
 		ItemStack itemStack = ((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$getSheathedHand();
-		return rpginventory$isHandStackSheathed() && !itemStack.isIn(Tags.EMPTY_HAND_WEAPONS) && ItemUtils.isUsable(itemStack) ? itemStack : ItemStack.EMPTY;
+		return rpginventory$isHandStackSheathed() && !itemStack.isIn(Tags.EMPTY_HAND_WEAPONS) && ItemUtils.isUsable(itemStack) && ItemUtils.isOwnedByPlayer(itemStack, this.getGameProfile()) ? itemStack : ItemStack.EMPTY;
 	}
 
 	@Override
 	public ItemStack rpginventory$getSheathedOffHandItemStack() {
 		ItemStack itemStack = ((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$getSheathedOffhand();
-		return rpginventory$isOffhandStackSheathed() && !itemStack.isIn(Tags.EMPTY_HAND_WEAPONS) && ItemUtils.isUsable(itemStack) ? itemStack : ItemStack.EMPTY;
+		return rpginventory$isOffhandStackSheathed() && !itemStack.isIn(Tags.EMPTY_HAND_WEAPONS) && ItemUtils.isUsable(itemStack) && ItemUtils.isOwnedByPlayer(itemStack, this.getGameProfile()) ? itemStack : ItemStack.EMPTY;
 	}
 
 	@Override

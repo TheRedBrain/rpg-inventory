@@ -7,6 +7,7 @@ import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import com.github.theredbrain.rpginventory.screen.DuckPlayerScreenHandlerMixin;
 import com.github.theredbrain.rpginventory.screen.DuckSlotMixin;
+import com.github.theredbrain.rpginventory.util.ItemUtils;
 import com.github.theredbrain.slotcustomizationapi.api.SlotCustomization;
 import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
@@ -173,7 +174,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 				Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.wilderness_status_effect_identifier.get());
 				boolean hasWildernessEffect = wilderness_status_effect.isPresent() && owner.hasStatusEffect(wilderness_status_effect.get());
 
-				return (stack.isIn(Tags.HAND_ITEMS) || !serverConfig.are_hand_items_restricted_to_item_tags.get()) && (hasCivilisationEffect || owner.isCreative() || (bl && !hasWildernessEffect)) && !((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed();
+				return (stack.isIn(Tags.HAND_ITEMS) || !serverConfig.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isOwnedByPlayer(stack, owner.getGameProfile()) && (hasCivilisationEffect || owner.isCreative() || (bl && !hasWildernessEffect)) && !((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed();
 			}
 
 			@Override
@@ -202,7 +203,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 				Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.wilderness_status_effect_identifier.get());
 				boolean hasWildernessEffect = wilderness_status_effect.isPresent() && owner.hasStatusEffect(wilderness_status_effect.get());
 
-				return (stack.isIn(Tags.HAND_ITEMS) || !serverConfig.are_hand_items_restricted_to_item_tags.get()) && (hasCivilisationEffect || owner.isCreative() || (bl && !hasWildernessEffect)) && ((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed();
+				return (stack.isIn(Tags.HAND_ITEMS) || !serverConfig.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isOwnedByPlayer(stack, owner.getGameProfile()) && (hasCivilisationEffect || owner.isCreative() || (bl && !hasWildernessEffect)) && ((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed();
 			}
 
 			@Override
@@ -231,7 +232,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 				Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.wilderness_status_effect_identifier.get());
 				boolean hasWildernessEffect = wilderness_status_effect.isPresent() && owner.hasStatusEffect(wilderness_status_effect.get());
 
-				return (stack.isIn(Tags.OFFHAND_ITEMS) || !serverConfig.are_hand_items_restricted_to_item_tags.get()) && (hasCivilisationEffect || owner.isCreative() || (bl && !hasWildernessEffect)) && ((DuckPlayerEntityMixin) owner).rpginventory$isOffhandStackSheathed();
+				return (stack.isIn(Tags.OFFHAND_ITEMS) || !serverConfig.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isOwnedByPlayer(stack, owner.getGameProfile()) && (hasCivilisationEffect || owner.isCreative() || (bl && !hasWildernessEffect)) && ((DuckPlayerEntityMixin) owner).rpginventory$isOffhandStackSheathed();
 			}
 
 			@Override
@@ -260,7 +261,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 				Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.wilderness_status_effect_identifier.get());
 				boolean hasWildernessEffect = wilderness_status_effect.isPresent() && owner.hasStatusEffect(wilderness_status_effect.get());
 
-				return (stack.isIn(Tags.HAND_ITEMS) || !serverConfig.are_hand_items_restricted_to_item_tags.get()) && (hasCivilisationEffect || owner.isCreative() || (bl && !hasWildernessEffect));
+				return (stack.isIn(Tags.HAND_ITEMS) || !serverConfig.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isOwnedByPlayer(stack, owner.getGameProfile()) && (hasCivilisationEffect || owner.isCreative() || (bl && !hasWildernessEffect));
 			}
 
 			@Override
@@ -289,7 +290,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 				Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.wilderness_status_effect_identifier.get());
 				boolean hasWildernessEffect = wilderness_status_effect.isPresent() && owner.hasStatusEffect(wilderness_status_effect.get());
 
-				return (stack.isIn(Tags.OFFHAND_ITEMS) || !serverConfig.are_hand_items_restricted_to_item_tags.get()) && (hasCivilisationEffect || owner.isCreative() || (bl && !hasWildernessEffect));
+				return (stack.isIn(Tags.OFFHAND_ITEMS) || !serverConfig.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isOwnedByPlayer(stack, owner.getGameProfile()) && (hasCivilisationEffect || owner.isCreative() || (bl && !hasWildernessEffect));
 			}
 
 			@Override

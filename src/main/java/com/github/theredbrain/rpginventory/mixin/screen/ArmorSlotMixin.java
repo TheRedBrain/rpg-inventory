@@ -3,6 +3,7 @@ package com.github.theredbrain.rpginventory.mixin.screen;
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
 import com.github.theredbrain.rpginventory.registry.Tags;
+import com.github.theredbrain.rpginventory.util.ItemUtils;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
@@ -10,7 +11,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -45,7 +45,14 @@ public class ArmorSlotMixin {
 		Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.wilderness_status_effect_identifier.get());
 		boolean hasWildernessEffect = wilderness_status_effect.isPresent() && this.entity.hasStatusEffect(wilderness_status_effect.get());
 
-		cir.setReturnValue((cir.getReturnValue() || rpginventory$isOfEquipmentTag(stack, this.equipmentSlot)) && (hasCivilisationEffect || (this.entity instanceof PlayerEntity player && player.isCreative()) || (bl && !hasWildernessEffect)));
+		boolean isOwned = true;
+		boolean isCreative = false;
+		if (entity instanceof PlayerEntity playerEntity) {
+			isOwned = ItemUtils.isOwnedByPlayer(stack, playerEntity.getGameProfile());
+			isCreative = playerEntity.isCreative();
+		}
+
+		cir.setReturnValue((cir.getReturnValue() || rpginventory$isOfEquipmentTag(stack, this.equipmentSlot)) && isOwned && (hasCivilisationEffect || isCreative || (bl && !hasWildernessEffect)));
 	}
 
 	@Unique

@@ -4,6 +4,7 @@ import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
 import com.github.theredbrain.rpginventory.registry.Tags;
+import com.github.theredbrain.rpginventory.util.ItemUtils;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
@@ -47,6 +48,6 @@ public abstract class PlayerScreenHandlerOffHandSlotMixin extends Slot {
 		Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.wilderness_status_effect_identifier.get());
 		boolean hasWildernessEffect = wilderness_status_effect.isPresent() && this.field_39410.hasStatusEffect(wilderness_status_effect.get());
 
-		return (stack.isIn(Tags.OFFHAND_ITEMS) || !RPGInventory.SERVER_CONFIG.are_hand_items_restricted_to_item_tags.get()) && (hasCivilisationEffect || this.field_39410.isCreative() || (bl && !hasWildernessEffect)) && !((DuckPlayerEntityMixin) this.field_39410).rpginventory$isOffhandStackSheathed();
+		return (stack.isIn(Tags.OFFHAND_ITEMS) || !RPGInventory.SERVER_CONFIG.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isOwnedByPlayer(stack, this.field_39410.getGameProfile()) && (hasCivilisationEffect || this.field_39410.isCreative() || (bl && !hasWildernessEffect)) && !((DuckPlayerEntityMixin) this.field_39410).rpginventory$isOffhandStackSheathed();
 	}
 }

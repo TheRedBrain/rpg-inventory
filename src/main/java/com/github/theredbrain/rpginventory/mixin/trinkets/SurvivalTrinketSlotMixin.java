@@ -1,10 +1,10 @@
 package com.github.theredbrain.rpginventory.mixin.trinkets;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
-import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
 import com.github.theredbrain.rpginventory.screen.DuckPlayerScreenHandlerMixin;
 import com.github.theredbrain.rpginventory.screen.DuckSlotMixin;
+import com.github.theredbrain.rpginventory.util.ItemUtils;
 import dev.emi.trinkets.SurvivalTrinketSlot;
 import dev.emi.trinkets.api.SlotGroup;
 import dev.emi.trinkets.api.SlotType;
@@ -18,7 +18,6 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -72,9 +71,12 @@ public abstract class SurvivalTrinketSlotMixin extends Slot {
 
 		LivingEntity livingEntity = trinketInventory.getComponent().getEntity();
 		boolean bl = false;
-		if (livingEntity instanceof PlayerEntity playerEntity && playerEntity.isCreative()) {
-			bl = true;
+		boolean isOwned = true;
+		if (livingEntity instanceof PlayerEntity playerEntity) {
+			bl = playerEntity.isCreative();
+			isOwned = ItemUtils.isOwnedByPlayer(stack, playerEntity.getGameProfile());
 		}
+
 		boolean bl2 = true;
 		if (livingEntity.getServer() != null) {
 			bl2 = livingEntity.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT);
@@ -95,7 +97,7 @@ public abstract class SurvivalTrinketSlotMixin extends Slot {
 						|| (Objects.equals(this.group.getName(), "spell_slot_7") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 7)
 						|| (Objects.equals(this.group.getName(), "spell_slot_8") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 8)
 				);
-		cir.setReturnValue(cir.getReturnValue() && isSpellSlotActive && (hasCivilisationEffect || bl || (bl2 && !hasWildernessEffect)));
+		cir.setReturnValue(cir.getReturnValue() && isOwned && isSpellSlotActive && (hasCivilisationEffect || bl || (bl2 && !hasWildernessEffect)));
 	}
 
 	/**

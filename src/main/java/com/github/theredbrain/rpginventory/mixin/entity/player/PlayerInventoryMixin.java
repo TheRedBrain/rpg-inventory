@@ -11,6 +11,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketsApi;
+import net.minecraft.component.type.ProfileComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -85,12 +86,10 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 			ItemStack emptyHandStack = rpginventory$getEmptyHand();
 			ItemStack handStack = rpginventory$getHand();
 			if (!((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed()) {
-				return ItemUtils.isUsable(handStack) ? handStack : emptyHandStack;
+				return ItemUtils.isUsable(handStack) && ItemUtils.isOwnedByPlayer(handStack, this.player.getGameProfile()) ? handStack : emptyHandStack;
 			}
-			return emptyHandStack;
-		} else {
-			return ItemUtils.isUsable(original) ? original : ItemStack.EMPTY;
 		}
+		return ItemUtils.isUsable(original) && ItemUtils.isOwnedByPlayer(original, this.player.getGameProfile()) ? original : ItemStack.EMPTY;
 	}
 
 	/**
@@ -229,15 +228,23 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 
 	}
 
+	@Inject(method = "setStack", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/collection/DefaultedList;set(ILjava/lang/Object;)Ljava/lang/Object;"))
+	public void rpginventory$setStack(int slot, ItemStack stack, CallbackInfo ci) {
+		if (stack.contains(RPGInventory.BOUNDS_TO_PLAYER)) {
+			stack.remove(RPGInventory.BOUNDS_TO_PLAYER);
+			stack.set(RPGInventory.PLAYER_BOUND, new ProfileComponent(this.player.getGameProfile()));
+		}
+	}
+
 	@Override
 	public ItemStack rpginventory$getOffHandStack() {
 		ItemStack emptyOffHandStack = rpginventory$getEmptyOffhand();
 		ItemStack offHandStack = this.offHand.get(0);
 		if (!RPGInventory.SERVER_CONFIG.enable_hand_slot_overhaul.get()) {
-			return ItemUtils.isUsable(offHandStack) ? offHandStack : ItemStack.EMPTY;
+			return ItemUtils.isUsable(offHandStack) && ItemUtils.isOwnedByPlayer(offHandStack, this.player.getGameProfile()) ? offHandStack : ItemStack.EMPTY;
 		}
 		if (!((DuckPlayerEntityMixin) player).rpginventory$isOffhandStackSheathed()) {
-			return ItemUtils.isUsable(offHandStack) && !offHandStack.isEmpty() ? offHandStack : emptyOffHandStack;
+			return ItemUtils.isUsable(offHandStack) && ItemUtils.isOwnedByPlayer(offHandStack, this.player.getGameProfile()) && !offHandStack.isEmpty() ? offHandStack : emptyOffHandStack;
 		}
 		return ItemStack.EMPTY;
 	}
@@ -346,9 +353,9 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 		ItemStack oldStack = rpginventory$getGlovesStack();
 		Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(player);
 		if (trinkets.isPresent()) {
-			if (trinkets.get().getInventory().get("boots") != null) {
-				if (trinkets.get().getInventory().get("boots").get("boots") != null) {
-					trinkets.get().getInventory().get("boots").get("boots").setStack(0, itemStack);
+			if (trinkets.get().getInventory().get("gloves") != null) {
+				if (trinkets.get().getInventory().get("gloves").get("gloves") != null) {
+					trinkets.get().getInventory().get("gloves").get("gloves").setStack(0, itemStack);
 				}
 			}
 		}

@@ -1,8 +1,10 @@
 package com.github.theredbrain.rpginventory.registry;
 
+import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.RPGInventoryClient;
 import com.github.theredbrain.rpginventory.config.ClientConfig;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
+import net.minecraft.component.type.ProfileComponent;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.Equipment;
 import net.minecraft.text.Text;
@@ -12,6 +14,15 @@ public class ClientEventsRegistry {
 	public static void initializeClientEvents() {
 		ItemTooltipCallback.EVENT.register((stack, context, type, lines) -> {
 			ClientConfig clientConfig = RPGInventoryClient.CLIENT_CONFIG;
+			ProfileComponent playerBoundComponent = stack.get(RPGInventory.PLAYER_BOUND);
+			if (playerBoundComponent != null && clientConfig.show_item_tooltip_bound_to_player_name.get()) {
+				lines.add(Text.translatable("item.additional_tooltip.player_relation.bound_to", playerBoundComponent.gameProfile().getName()));
+			}
+			ProfileComponent playerCraftedComponent = stack.get(RPGInventory.PLAYER_CRAFTED);
+			if (playerCraftedComponent != null && clientConfig.show_item_tooltip_crafted_by_player_name.get()) {
+				lines.add(Text.translatable("item.additional_tooltip.player_relation.crafted_by", playerCraftedComponent.gameProfile().getName()));
+			}
+
 			if (stack.isIn(Tags.TWO_HANDED_ITEMS) && clientConfig.show_item_tooltip_two_handed_items.get()) {
 				lines.add(Text.translatable("item.additional_tooltip.functionality.two_handed_item"));
 			}
