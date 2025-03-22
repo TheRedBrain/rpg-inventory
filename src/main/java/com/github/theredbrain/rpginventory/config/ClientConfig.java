@@ -19,9 +19,10 @@ public class ClientConfig extends Config {
 
 	public HotBarOverhaul hotBarOverhaul = new HotBarOverhaul();
 
-	public ValidatedBoolean enable_hotbar_overhaul = new ValidatedBoolean(true);
-
 	public static class HotBarOverhaul extends ConfigSection {
+
+		public ValidatedBoolean enable_hotbar_overhaul = new ValidatedBoolean(true);
+
 		public ValidatedBoolean always_show_selected_hotbar_slot = new ValidatedBoolean(false);
 //		public ValidatedBoolean always_show_all_hotbar_slots = new ValidatedBoolean(false); // TODO show only active hotbar slots
 
@@ -38,30 +39,38 @@ public class ClientConfig extends Config {
 
 	public ValidatedBoolean show_armor_bar = new ValidatedBoolean(false);
 
-	//		@ConfigEntry.Gui.PrefixText
-	public ValidatedBoolean show_attribute_screen_when_opening_inventory_screen = new ValidatedBoolean(false);
-	public ValidatedBoolean can_hide_status_effect_screen = new ValidatedBoolean(false);
-	public ValidatedBoolean show_effect_screen_when_opening_inventory_screen = new ValidatedBoolean(true);
+	public RPGInventoryScreenSection rpgInventoryScreenSection = new RPGInventoryScreenSection();
 
-	//		@ConfigEntry.Gui.PrefixText
-	public ValidatedBoolean show_inactive_inventory_slots = new ValidatedBoolean(true);
+	public static class RPGInventoryScreenSection extends ConfigSection {
 
-	//		@ConfigEntry.Gui.PrefixText
-	public ValidatedBoolean enable_open_backpack_button = new ValidatedBoolean(false);
-	public ValidatedInt open_backpack_button_offset_x = new ValidatedInt(99);
-	public ValidatedInt open_backpack_button_offset_y = new ValidatedInt(35);
+		//		@ConfigEntry.Gui.PrefixText
+		public ValidatedBoolean show_attribute_screen_when_opening_inventory_screen = new ValidatedBoolean(false);
+		public ValidatedBoolean can_hide_status_effect_screen = new ValidatedBoolean(false);
+		public ValidatedBoolean show_effect_screen_when_opening_inventory_screen = new ValidatedBoolean(true);
 
-	//		@ConfigEntry.Gui.PrefixText
-	public ValidatedBoolean enable_open_hand_crafting_button = new ValidatedBoolean(false);
-	public ValidatedInt open_hand_crafting_button_offset_x = new ValidatedInt(99);
-	public ValidatedInt open_hand_crafting_button_offset_y = new ValidatedInt(57);
+		//		@ConfigEntry.Gui.PrefixText
+		public ValidatedBoolean show_inactive_inventory_slots = new ValidatedBoolean(true);
+
+		//		@ConfigEntry.Gui.PrefixText
+		public ValidatedBoolean enable_open_backpack_button = new ValidatedBoolean(false);
+		public ValidatedInt open_backpack_button_offset_x = new ValidatedInt(99);
+		public ValidatedInt open_backpack_button_offset_y = new ValidatedInt(35);
+
+		//		@ConfigEntry.Gui.PrefixText
+		public ValidatedBoolean enable_open_hand_crafting_button = new ValidatedBoolean(false);
+		public ValidatedInt open_hand_crafting_button_offset_x = new ValidatedInt(99);
+		public ValidatedInt open_hand_crafting_button_offset_y = new ValidatedInt(57);
+
+		public ValidatedBoolean show_slot_tooltips = new ValidatedBoolean(true);
+	}
 
 	//		@ConfigEntry.Gui.PrefixText
 	public ValidatedBoolean slots_with_unusable_items_have_overlay = new ValidatedBoolean(true);
 	public ValidatedColor first_overlay_colour_for_slots_with_unusable_items = new ValidatedColor(200, 5, 5, 50);
 	public ValidatedColor second_overlay_colour_for_slots_with_unusable_items = new ValidatedColor(200, 5, 5, 50);
 
-	public ValidatedBoolean show_slot_tooltips = new ValidatedBoolean(true);
+	public ValidatedBoolean show_item_tooltip_bound_to_player_name = new ValidatedBoolean(true);
+	public ValidatedBoolean show_item_tooltip_crafted_by_player_name = new ValidatedBoolean(true);
 	public ValidatedBoolean show_item_tooltip_two_handed_items = new ValidatedBoolean(true);
 	public ValidatedBoolean show_item_tooltip_equipment_slots = new ValidatedBoolean(true);
 

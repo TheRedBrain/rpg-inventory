@@ -29,5 +29,6 @@ public class Tags {
 	public static final TagKey<Item> UNIQUE_RINGS = TagKey.of(RegistryKeys.ITEM, RPGInventory.identifier("unique_rings"));
 	public static final TagKey<Item> NOT_SHOWN_WHEN_IN_SHEATHED_OFFHAND = TagKey.of(RegistryKeys.ITEM, RPGInventory.identifier("not_shown_when_in_sheathed_offhand"));
 	public static final TagKey<Item> NOT_SHOWN_WHEN_IN_SHEATHED_HAND = TagKey.of(RegistryKeys.ITEM, RPGInventory.identifier("not_shown_when_in_sheathed_hand"));
+	public static final TagKey<Item> SAVE_CRAFTING_PLAYER = TagKey.of(RegistryKeys.ITEM, RPGInventory.identifier("save_crafting_player"));
 
 }

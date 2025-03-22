@@ -47,6 +47,9 @@
 
 	"item.rpginventory.default_empty_hand_weapon": "",
 
+	"item.additional_tooltip.player_relation.bound_to": "Bound to %s",
+	"item.additional_tooltip.player_relation.crafted_by": "Crafted by %s",
+
 	"item.additional_tooltip.functionality.two_handed_item": "Needs To Be Held With Both Hands",
 
 	"item.additional_tooltip.equipment_slot.helmet": "Can Be Equipped In The Helmet Slot",

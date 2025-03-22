@@ -3,16 +3,20 @@ package com.github.theredbrain.rpginventory;
 import com.github.theredbrain.inventorysizeattributes.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.config.ServerConfig;
 import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
+import com.github.theredbrain.rpginventory.registry.ItemComponentRegistry;
 import com.github.theredbrain.rpginventory.registry.ItemRegistry;
 import com.github.theredbrain.rpginventory.registry.PredicateRegistry;
 import com.github.theredbrain.rpginventory.registry.ServerPacketRegistry;
 import me.fzzyhmstrs.fzzy_config.api.ConfigApiJava;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.component.ComponentType;
+import net.minecraft.component.type.ProfileComponent;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Unit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +26,11 @@ public class RPGInventory implements ModInitializer {
 	public static ServerConfig SERVER_CONFIG;
 
 	public static RegistryEntry<EntityAttribute> ACTIVE_SPELL_SLOT_AMOUNT;
+
+	public static ComponentType<Unit> BOUNDS_TO_PLAYER;
+	public static ComponentType<ProfileComponent> PLAYER_BOUND;
+	public static ComponentType<Unit> SAVES_CRAFTING_PLAYER;
+	public static ComponentType<ProfileComponent> PLAYER_CRAFTED;
 
 	public static final boolean isRPGCraftingLoaded = FabricLoader.getInstance().isModLoaded("rpgcrafting");
 	public static final boolean isBackpackAttributeLoaded = FabricLoader.getInstance().isModLoaded("backpackattribute");
@@ -48,6 +57,7 @@ public class RPGInventory implements ModInitializer {
 		ServerPacketRegistry.init();
 
 		// Registry
+		ItemComponentRegistry.init();
 		ItemRegistry.init();
 		GameRulesRegistry.init();
 		PredicateRegistry.init();

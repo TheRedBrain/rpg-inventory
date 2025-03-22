@@ -73,7 +73,7 @@ public abstract class InGameHudMixin {
 			at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;renderHotbar(Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/client/render/RenderTickCounter;)V")
 	)
 	private void rpginventory$wrap_renderMainHud(InGameHud instance, DrawContext context, RenderTickCounter tickCounter, Operation<Void> original) {
-		if (RPGInventoryClient.CLIENT_CONFIG.enable_hotbar_overhaul.get()) {
+		if (RPGInventoryClient.CLIENT_CONFIG.hotBarOverhaul.enable_hotbar_overhaul.get()) {
 			rpginventory$renderOverhauledHotbar(context, tickCounter);
 		} else {
 			original.call(instance, context, tickCounter);
