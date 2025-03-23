@@ -1,6 +1,24 @@
 # 2.3.0
 
-- added compatibility with "RPG Crafting"
+Important!
+This release has a number of breaking changes. Remove items from player inventories and make back-ups of your worlds before updating!
+
+- Hand slots (including the empty, sheathed and alternative variants) are no longer Trinket slots. This fixes a number of issues, like items in alternative hand slots granting their attributes.
+- The drawback is, that any items on the old slots will be gone, so remove all items from your hand slots, before updating the mod!
+
+
+- the "Hand slot overhaul" can now be completely disabled. This includes the main hand slot, the sheathing mechanic, the alternative hand slots and the empty hand weapons.
+- the vanilla "swap hands mechanic" will only be disabled when the "hand slot overhaul" is active
+
+
+- added compatibility with "RPG Crafting", the handcrafting screen can now be opened with a button on the inventory screen. (needs to be enabled in the config)
+- items can now be excluded from being shown on the player when they are in a sheathed hand slot. This is powered by item tags.
+- trinket slots with special placement are now config-driven
+- items can now have an "owner", preventing other players from equipping or using the item. This mechanic is powered by data components. Thanks Galysso for the suggestion!
+- items can now display the player who crafted it, in a tooltip. This mechanic is powered by data components.
+- disabled hotbar slots can now be hidden
+- removed dependency on Cloth Config
+- added dependency on Fzzy Config
 
 # 2.2.0
 
