@@ -24,7 +24,8 @@ public class ClientConfig extends Config {
 		public ValidatedBoolean enable_hotbar_overhaul = new ValidatedBoolean(true);
 
 		public ValidatedBoolean always_show_selected_hotbar_slot = new ValidatedBoolean(false);
-//		public ValidatedBoolean always_show_all_hotbar_slots = new ValidatedBoolean(false); // TODO show only active hotbar slots
+		public ValidatedBoolean always_show_all_hotbar_slots = new ValidatedBoolean(false);
+		public ValidatedBoolean is_hotbar_centered = new ValidatedBoolean(false);
 
 		public ValidatedBoolean show_empty_hand_slots = new ValidatedBoolean(true);
 		public ValidatedInt hand_slots_offset_x = new ValidatedInt(-140);

@@ -96,18 +96,25 @@ public abstract class InGameHudMixin {
 			context.getMatrices().push();
 			context.getMatrices().translate(0.0F, 0.0F, -90.0F);
 
-//			int activeHotbarSize = RPGInventory.getActiveHotbarSize(playerEntity);
-//			if (clientConfig.hotBarOverhaul.always_show_all_hotbar_slots.get() || activeHotbarSize == 9) { // TODO show only active hotbar slots
-				context.drawGuiTexture(HOTBAR_TEXTURE, i - 91, context.getScaledWindowHeight() - 22, 182, 22);
+			int hotbar_start_x = i - 91;
+			int hotbar_width = 182;
 
-				if (((DuckPlayerEntityMixin) playerEntity).rpginventory$isHandStackSheathed() || clientConfig.hotBarOverhaul.always_show_selected_hotbar_slot.get() || !serverConfig.enable_hand_slot_overhaul.get()) {
-					context.drawGuiTexture(
-							HOTBAR_SELECTION_TEXTURE, i - 91 - 1 + playerEntity.getInventory().selectedSlot * 20, context.getScaledWindowHeight() - 22 - 1, 24, 23
-					);
+			int activeHotbarSize = RPGInventory.getActiveHotbarSize(playerEntity);
+			if (clientConfig.hotBarOverhaul.always_show_all_hotbar_slots.get() || activeHotbarSize == 9) {
+				context.drawGuiTexture(HOTBAR_TEXTURE, hotbar_start_x, context.getScaledWindowHeight() - 22, hotbar_width, 22);
+
+			} else if (activeHotbarSize > 0) {
+				if (clientConfig.hotBarOverhaul.is_hotbar_centered.get()) {
+					hotbar_start_x = hotbar_start_x + ((9 - activeHotbarSize) * 20) / 2;
 				}
-//			} else { // TODO show only active hotbar slots
-//				double offsetSlots = (double) (9 - activeHotbarSize) / 2;
-//			}
+				context.drawGuiTexture(RPGInventory.identifier("hud/hotbar_" + activeHotbarSize), hotbar_start_x, context.getScaledWindowHeight() - 22, 182 - (9 - activeHotbarSize) * 20, 22);
+			}
+
+			if (((DuckPlayerEntityMixin) playerEntity).rpginventory$isHandStackSheathed() || clientConfig.hotBarOverhaul.always_show_selected_hotbar_slot.get() || !serverConfig.enable_hand_slot_overhaul.get()) {
+				context.drawGuiTexture(
+						HOTBAR_SELECTION_FIXED_TEXTURE, hotbar_start_x - 1 + playerEntity.getInventory().selectedSlot * 20, context.getScaledWindowHeight() - 22 - 1, 24, 24
+				);
+			}
 
 			ItemStack itemStackHand = ((DuckPlayerInventoryMixin) playerEntity.getInventory()).rpginventory$getHand();
 			ItemStack itemStackOffHand = playerEntity.getInventory().offHand.get(0);
@@ -154,7 +161,7 @@ public abstract class InGameHudMixin {
 					if (arm == Arm.LEFT) {
 						context.drawGuiTexture(HOTBAR_OFFHAND_LEFT_TEXTURE, i - 91 - 29, context.getScaledWindowHeight() - 23, 29, 24);
 					} else {
-						context.drawGuiTexture(HOTBAR_OFFHAND_RIGHT_TEXTURE, i + 91, context.getScaledWindowHeight() - 23, 29, 24);
+						context.drawGuiTexture(HOTBAR_OFFHAND_RIGHT_TEXTURE, i - 91 + 182, context.getScaledWindowHeight() - 23, 29, 24);
 					}
 				}
 			}
@@ -163,15 +170,11 @@ public abstract class InGameHudMixin {
 			RenderSystem.disableBlend();
 			int l = 1;
 
-//			if (clientConfig.hotBarOverhaul.always_show_all_hotbar_slots.get() || activeHotbarSize == 9) { // TODO show only active hotbar slots
-				for (int m = 0; m < 9; m++) {
-					int n = i - 90 + m * 20 + 2;
-					int o = context.getScaledWindowHeight() - 16 - 3;
-					this.renderHotbarItem(context, n, o, tickCounter, playerEntity, playerEntity.getInventory().main.get(m), l++);
-				}
-//			} else { // TODO show only active hotbar slots
-//
-//			}
+			for (int m = 0; m < activeHotbarSize; m++) {
+				int n = hotbar_start_x + 1 + m * 20 + 2;
+				int o = context.getScaledWindowHeight() - 16 - 3;
+				this.renderHotbarItem(context, n, o, tickCounter, playerEntity, playerEntity.getInventory().main.get(m), l++);
+			}
 
 			if (serverConfig.enable_hand_slot_overhaul.get()) {
 				x = context.getScaledWindowWidth() / 2 + clientConfig.hotBarOverhaul.hand_slots_offset_x.get();
@@ -193,7 +196,7 @@ public abstract class InGameHudMixin {
 					if (arm == Arm.LEFT) {
 						this.renderHotbarItem(context, i - 91 - 26, m, tickCounter, playerEntity, itemStack, l++);
 					} else {
-						this.renderHotbarItem(context, i + 91 + 10, m, tickCounter, playerEntity, itemStack, l++);
+						this.renderHotbarItem(context, i - 91 + 182 + 10, m, tickCounter, playerEntity, itemStack, l++);
 					}
 				}
 			}
