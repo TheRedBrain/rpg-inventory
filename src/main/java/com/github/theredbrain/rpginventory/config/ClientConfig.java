@@ -4,11 +4,15 @@ import com.github.theredbrain.rpginventory.RPGInventory;
 import me.fzzyhmstrs.fzzy_config.annotations.ConvertFrom;
 import me.fzzyhmstrs.fzzy_config.config.Config;
 import me.fzzyhmstrs.fzzy_config.config.ConfigSection;
+import me.fzzyhmstrs.fzzy_config.util.Walkable;
+import me.fzzyhmstrs.fzzy_config.validation.collection.ValidatedMap;
+import me.fzzyhmstrs.fzzy_config.validation.misc.ValidatedAny;
 import me.fzzyhmstrs.fzzy_config.validation.misc.ValidatedBoolean;
 import me.fzzyhmstrs.fzzy_config.validation.misc.ValidatedColor;
+import me.fzzyhmstrs.fzzy_config.validation.misc.ValidatedString;
 import me.fzzyhmstrs.fzzy_config.validation.number.ValidatedInt;
 
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 
 @ConvertFrom(fileName = "client.json5", folder = "rpginventory")
 public class ClientConfig extends Config {
@@ -75,7 +79,6 @@ public class ClientConfig extends Config {
 	public ValidatedBoolean show_item_tooltip_two_handed_items = new ValidatedBoolean(true);
 	public ValidatedBoolean show_item_tooltip_equipment_slots = new ValidatedBoolean(true);
 
-
 	//		@Comment("""
 //				These values describe how the matrixStack is manipulated.
 //
@@ -100,11 +103,62 @@ public class ClientConfig extends Config {
 //				matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rotation_positive_y));
 //				matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(rotation_positive_x));
 //				""")
-	public LinkedHashMap<String, Float[]> sheathed_hand_item_positions = new LinkedHashMap<>() {{
-		put("minecraft:crossbow", new Float[]{-0.3F, 0.1F, 0.16F, 0.0F, 0.0F, 0.06F, 0.0F, 90.0F, -10.0F});
-	}};
-	public LinkedHashMap<String, Float[]> sheathed_offhand_item_positions = new LinkedHashMap<>() {{
-		put("minecraft:shield", new Float[]{0.2F, 0.4F, 0.0F, 0.0F, 0.0F, 0.06F, 0.0F, -90.0F, 15.0F});
-	}};
+	public ValidatedMap<String, ItemConfiguration> sheathed_hand_item_positions = new ValidatedMap<>(new HashMap<>() {{
+		put("minecraft:crossbow", new ItemConfiguration(-0.3F, 0.1F, 0.16F, 0.0F, 0.0F, 0.06F, 0.0F, 90.0F, -10.0F));
+	}}, new ValidatedString(), new ValidatedAny<>(new ItemConfiguration()));
 
+	public ValidatedMap<String, ItemConfiguration> sheathed_offhand_item_positions = new ValidatedMap<>(new HashMap<>() {{
+		put("minecraft:shield", new ItemConfiguration(0.2F, 0.4F, 0.0F, 0.0F, 0.0F, 0.06F, 0.0F, -90.0F, 15.0F));
+	}}, new ValidatedString(), new ValidatedAny<>(new ItemConfiguration()));
+
+	public static class ItemConfiguration implements Walkable {
+
+		public ItemConfiguration() {
+			new ItemConfiguration(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
+		}
+
+		public ItemConfiguration(
+				float initial_translation_x,
+				float initial_translation_y,
+				float initial_translation_z,
+				float equipped_chest_offset_x,
+				float equipped_chest_offset_y,
+				float equipped_chest_offset_z,
+				float rotation_positive_z,
+				float rotation_positive_y,
+				float rotation_positive_x
+		) {
+			this.initial_translation_x = initial_translation_x;
+			this.initial_translation_y = initial_translation_y;
+			this.initial_translation_z = initial_translation_z;
+			this.equipped_chest_offset_x = equipped_chest_offset_x;
+			this.equipped_chest_offset_y = equipped_chest_offset_y;
+			this.equipped_chest_offset_z = equipped_chest_offset_z;
+			this.rotation_positive_z = rotation_positive_z;
+			this.rotation_positive_y = rotation_positive_y;
+			this.rotation_positive_x = rotation_positive_x;
+		}
+
+		public float initial_translation_x;
+		public float initial_translation_y;
+		public float initial_translation_z;
+		public float equipped_chest_offset_x;
+		public float equipped_chest_offset_y;
+		public float equipped_chest_offset_z;
+		public float rotation_positive_z;
+		public float rotation_positive_y;
+		public float rotation_positive_x;
+
+		public String toString() {
+			return "initial_translation_x: " + this.initial_translation_x +
+					", initial_translation_y: " + this.initial_translation_y +
+					", initial_translation_z: " + this.initial_translation_z +
+					", equipped_chest_offset_x: " + this.equipped_chest_offset_x +
+					", equipped_chest_offset_y: " + this.equipped_chest_offset_y +
+					", equipped_chest_offset_z: " + this.equipped_chest_offset_z +
+					", rotation_positive_z: " + this.rotation_positive_z +
+					", rotation_positive_y: " + this.rotation_positive_y +
+					", rotation_positive_x: " + this.rotation_positive_x;
+		}
+	}
 }

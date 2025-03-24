@@ -2,6 +2,7 @@ package com.github.theredbrain.rpginventory.client.render.renderer;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.RPGInventoryClient;
+import com.github.theredbrain.rpginventory.config.ClientConfig;
 import com.github.theredbrain.rpginventory.entity.RendersSheathedWeapons;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import net.fabricmc.api.EnvType;
@@ -51,23 +52,22 @@ public class SheathedOffHandItemFeatureRenderer<T extends LivingEntity> extends 
 				float rotation_positive_y = 90.0F;
 				float rotation_positive_x = -15.0F;
 				String itemId = Registries.ITEM.getId(offHandItem).toString();
-				Float[] itemConfiguration = RPGInventoryClient.CLIENT_CONFIG.sheathed_offhand_item_positions.get(itemId);
-				if (itemConfiguration != null && itemConfiguration.length == 9) {
-					initial_translation_x = itemConfiguration[0];
-					initial_translation_y = itemConfiguration[1];
-					initial_translation_z = itemConfiguration[2];
-					equipped_chest_offset_x = itemConfiguration[3];
-					equipped_chest_offset_y = itemConfiguration[4];
-					equipped_chest_offset_z = itemConfiguration[5];
-					rotation_positive_z = itemConfiguration[6];
-					rotation_positive_y = itemConfiguration[7];
-					rotation_positive_x = itemConfiguration[8];
+				ClientConfig.ItemConfiguration itemConfiguration = RPGInventoryClient.CLIENT_CONFIG.sheathed_offhand_item_positions.get(itemId);
+				if (itemConfiguration != null) {
+					initial_translation_x = itemConfiguration.initial_translation_x;
+					initial_translation_y = itemConfiguration.initial_translation_y;
+					initial_translation_z = itemConfiguration.initial_translation_z;
+					equipped_chest_offset_x = itemConfiguration.equipped_chest_offset_x;
+					equipped_chest_offset_y = itemConfiguration.equipped_chest_offset_y;
+					equipped_chest_offset_z = itemConfiguration.equipped_chest_offset_z;
+					rotation_positive_z = itemConfiguration.rotation_positive_z;
+					rotation_positive_y = itemConfiguration.rotation_positive_y;
+					rotation_positive_x = itemConfiguration.rotation_positive_x;
 				}
 				matrixStack.push();
 				ModelPart modelPart = this.getContextModel().body;
 				modelPart.rotate(matrixStack);
 				if (this.getContextModel().child) {
-					float m = 0.5F;
 					matrixStack.translate(0.0F, 0.75F, 0.0F);
 					matrixStack.scale(0.5F, 0.5F, 0.5F);
 				}
