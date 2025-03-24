@@ -76,6 +76,11 @@ public class ClientConfig extends Config {
 
 	public ValidatedBoolean show_item_tooltip_bound_to_player_name = new ValidatedBoolean(true);
 	public ValidatedString item_tooltip_bound_to_player_name_formatting_string = new ValidatedString("");
+	public ConfigGroup not_owned_item_overlay = new ConfigGroup("not_owned_item_overlay");
+	public ValidatedBoolean slots_with_not_owned_items_have_overlay = new ValidatedBoolean(true);
+	public ValidatedColor first_overlay_colour_for_slots_with_not_owned_items = new ValidatedColor(200, 5, 5, 50);
+	@ConfigGroup.Pop
+	public ValidatedColor second_overlay_colour_for_slots_with_not_owned_items = new ValidatedColor(200, 5, 5, 50);
 
 	public ValidatedBoolean show_item_tooltip_crafted_by_player_name = new ValidatedBoolean(true);
 	public ValidatedString item_tooltip_crafted_by_player_name_formatting_string = new ValidatedString("");

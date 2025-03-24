@@ -20,6 +20,9 @@ This release has a number of breaking changes. Remove items from player inventor
 - removed dependency on Cloth Config
 - added dependency on Fzzy Config
 
+Changes since Pre-Release 1
+- added optional slot overlay for not owned items
+
 # 2.2.0
 
 - removed feature: Attribute Screen, this feature was exported into a standalone mod called "Player Attribute Screen". The "attribute_screen_configuration" config value should work in the new mods config file.

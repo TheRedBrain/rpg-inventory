@@ -8,13 +8,18 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.component.type.ProfileComponent;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -22,7 +27,13 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(HandledScreen.class)
-public class HandledScreenMixin {
+public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen {
+
+	@Shadow @Final protected T handler;
+
+	protected HandledScreenMixin(Text title) {
+		super(title);
+	}
 
 	/**
 	 * effectively disables the vanilla swap item mechanic, when the hand slot overhaul is enabled
@@ -72,6 +83,13 @@ public class HandledScreenMixin {
 		ItemStack stack = slot.getStack();
 		if (!stack.isEmpty() && stack.isDamageable() && stack.getDamage() >= stack.getMaxDamage() - 1 && stack.isIn(Tags.UNUSABLE_WHEN_LOW_DURABILITY) && RPGInventoryClient.CLIENT_CONFIG.slots_with_unusable_items_have_overlay.get()) {
 			rpginventory$drawDisabledItemSlotHighlight(context, slot.x, slot.y, 0);
+		} else if (!stack.isEmpty() && RPGInventoryClient.CLIENT_CONFIG.slots_with_not_owned_items_have_overlay.get()) {
+			ProfileComponent playerBoundComponent = stack.get(RPGInventory.PLAYER_BOUND);
+			if (playerBoundComponent != null) {
+				if (this.client != null && this.client.player != null && !playerBoundComponent.gameProfile().equals(this.client.player.getGameProfile())) {
+					rpginventory$drawNotOwnedItemSlotHighlight(context, slot.x, slot.y, 0);
+				}
+			}
 		}
 	}
 
@@ -81,6 +99,16 @@ public class HandledScreenMixin {
 		RenderSystem.colorMask(true, true, true, false);
 		ClientConfig clientConfig = RPGInventoryClient.CLIENT_CONFIG;
 		context.fillGradient(RenderLayer.getGuiOverlay(), x, y, x + 16, y + 16, clientConfig.first_overlay_colour_for_slots_with_unusable_items.toInt(), clientConfig.second_overlay_colour_for_slots_with_unusable_items.toInt(), z);
+		RenderSystem.colorMask(true, true, true, true);
+		RenderSystem.enableDepthTest();
+	}
+
+	@Unique
+	private static void rpginventory$drawNotOwnedItemSlotHighlight(DrawContext context, int x, int y, int z) {
+		RenderSystem.disableDepthTest();
+		RenderSystem.colorMask(true, true, true, false);
+		ClientConfig clientConfig = RPGInventoryClient.CLIENT_CONFIG;
+		context.fillGradient(RenderLayer.getGuiOverlay(), x, y, x + 16, y + 16, clientConfig.first_overlay_colour_for_slots_with_not_owned_items.toInt(), clientConfig.second_overlay_colour_for_slots_with_not_owned_items.toInt(), z);
 		RenderSystem.colorMask(true, true, true, true);
 		RenderSystem.enableDepthTest();
 	}
