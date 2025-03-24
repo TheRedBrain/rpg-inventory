@@ -75,7 +75,11 @@ public class ClientConfig extends Config {
 	public ValidatedColor second_overlay_colour_for_slots_with_unusable_items = new ValidatedColor(200, 5, 5, 50);
 
 	public ValidatedBoolean show_item_tooltip_bound_to_player_name = new ValidatedBoolean(true);
+	public ValidatedString item_tooltip_bound_to_player_name_formatting_string = new ValidatedString("");
+
 	public ValidatedBoolean show_item_tooltip_crafted_by_player_name = new ValidatedBoolean(true);
+	public ValidatedString item_tooltip_crafted_by_player_name_formatting_string = new ValidatedString("");
+
 	public ValidatedBoolean show_item_tooltip_two_handed_items = new ValidatedBoolean(true);
 	public ValidatedBoolean show_item_tooltip_equipment_slots = new ValidatedBoolean(true);
 

@@ -16,11 +16,25 @@ public class ClientEventsRegistry {
 			ClientConfig clientConfig = RPGInventoryClient.CLIENT_CONFIG;
 			ProfileComponent playerBoundComponent = stack.get(RPGInventory.PLAYER_BOUND);
 			if (playerBoundComponent != null && clientConfig.show_item_tooltip_bound_to_player_name.get()) {
-				lines.add(Text.translatable("item.additional_tooltip.player_relation.bound_to", playerBoundComponent.gameProfile().getName()));
+				String formatting_config_string = clientConfig.item_tooltip_bound_to_player_name_formatting_string.get();
+				StringBuilder formatting_string = new StringBuilder();
+				if (!formatting_config_string.isEmpty()) {
+					for (int i = 0; i < formatting_config_string.length(); i++) {
+						formatting_string.append("§").append(formatting_config_string.charAt(i));
+					}
+				}
+				lines.add(Text.translatable("item.additional_tooltip.player_relation.bound_to", formatting_string + playerBoundComponent.gameProfile().getName()));
 			}
 			ProfileComponent playerCraftedComponent = stack.get(RPGInventory.PLAYER_CRAFTED);
 			if (playerCraftedComponent != null && clientConfig.show_item_tooltip_crafted_by_player_name.get()) {
-				lines.add(Text.translatable("item.additional_tooltip.player_relation.crafted_by", playerCraftedComponent.gameProfile().getName()));
+				String formatting_config_string = clientConfig.item_tooltip_crafted_by_player_name_formatting_string.get();
+				StringBuilder formatting_string = new StringBuilder();
+				if (!formatting_config_string.isEmpty()) {
+					for (int i = 0; i < formatting_config_string.length(); i++) {
+						formatting_string.append("§").append(formatting_config_string.charAt(i));
+					}
+				}
+				lines.add(Text.translatable("item.additional_tooltip.player_relation.crafted_by",formatting_string + playerCraftedComponent.gameProfile().getName()));
 			}
 
 			if (stack.isIn(Tags.TWO_HANDED_ITEMS) && clientConfig.show_item_tooltip_two_handed_items.get()) {
