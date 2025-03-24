@@ -230,7 +230,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 
 	@Inject(method = "setStack", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/collection/DefaultedList;set(ILjava/lang/Object;)Ljava/lang/Object;"))
 	public void rpginventory$setStack(int slot, ItemStack stack, CallbackInfo ci) {
-		if (stack.contains(RPGInventory.BOUNDS_TO_PLAYER)) {
+		if (stack.contains(RPGInventory.BOUNDS_TO_PLAYER) && (!this.player.isCreative() || RPGInventory.SERVER_CONFIG.enable_item_bounding_in_creative.get())) {
 			stack.remove(RPGInventory.BOUNDS_TO_PLAYER);
 			stack.set(RPGInventory.PLAYER_BOUND, new ProfileComponent(this.player.getGameProfile()));
 		}
