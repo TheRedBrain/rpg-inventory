@@ -315,7 +315,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 			context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.alternative_offhand_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.alternative_offhand_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
 		}
 
-		boolean showInactiveSlots = clientConfig.rpgInventoryScreenSection.show_inactive_inventory_slots.get();
+		boolean showInactiveSlots = RPGInventoryClient.showInactiveInventorySlots();
 		for (k = 0; k < (showInactiveSlots ? 27 : Math.min(inventorySize, 27)); ++k) {
 			m = (k / 9);
 			context.drawTexture(SLOT_TEXTURE, i + 7 + (k - (m * 9)) * 18, j + 137 + (m * 18), 0, 0, 18, 18, 18, 18);
