@@ -10,6 +10,10 @@
 		{
 			"id": "#paladins:shields",
 			"required": false
+		},
+		{
+			"id": "#rogues:daggers",
+			"required": false
 		}
 	]
 }

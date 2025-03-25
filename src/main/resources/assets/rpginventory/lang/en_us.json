@@ -28,7 +28,7 @@
 	"gui.adventureInventory.toggleShowEffectScreenButton.on.tooltip": "Hide Effect Screen",
 	"gui.adventureInventory.toggleShowEffectScreenButton.off.tooltip": "Show Effect Screen",
 	"gui.adventureInventory.openBackpackButton": "Backpack",
-	"gui.adventureInventory.openHandCraftingButton": "WIP",
+	"gui.adventureInventory.openHandCraftingButton": "Crafting",
 
 
 	"hud.action_impaired.no_attack_item": "You can't attack with this item",
