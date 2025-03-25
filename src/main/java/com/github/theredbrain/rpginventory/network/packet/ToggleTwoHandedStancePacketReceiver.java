@@ -29,17 +29,20 @@ public class ToggleTwoHandedStancePacketReceiver implements ServerPlayNetworking
 				offHandItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSheathedOffhand().copy();
 			}
 
+			boolean mainHandCanNotBeTwoHanded = player.getMainHandStack().isIn(Tags.NON_TWO_HANDED_ITEMS);
+
 			if (RPGInventory.isStaminaAttributesLoaded && RPGInventory.SERVER_CONFIG.staminaAttributesCompat.toggling_two_handed_stance_requires_stamina.get() && ((StaminaUsingEntity) player).staminaattributes$getStamina() <= 0 && !player.isCreative()) {
 				player.sendMessageToClient(Text.translatable("hud.message.staminaTooLow"), true);
-				return;
-			} else if (player.getMainHandStack().isIn(Tags.NON_TWO_HANDED_ITEMS)) {
-				player.sendMessageToClient(Text.translatable("hud.message.nonTwoHandedWeaponEquipped"), true);
 				return;
 			} else if (((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed() && ((DuckPlayerEntityMixin) player).rpginventory$isOffhandStackSheathed()) {
 				if (!RPGInventory.SERVER_CONFIG.always_allow_toggling_two_handed_stance.get()) {
 					player.sendMessageToClient(Text.translatable("hud.message.weaponsAreSheathed"), true);
 					return;
 				} else {
+					if (mainHandCanNotBeTwoHanded) {
+						player.sendMessageToClient(Text.translatable("hud.message.nonTwoHandedWeaponEquipped"), true);
+						return;
+					}
 					((DuckPlayerEntityMixin) player).rpginventory$setIsHandStackSheathed(false);
 					((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setHand(handItemStack);
 					((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedHand(ItemStack.EMPTY);
@@ -49,6 +52,10 @@ public class ToggleTwoHandedStancePacketReceiver implements ServerPlayNetworking
 				player.getInventory().offHand.set(0, offHandItemStack);
 				((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedOffhand(ItemStack.EMPTY);
 			} else {
+				if (mainHandCanNotBeTwoHanded) {
+					player.sendMessageToClient(Text.translatable("hud.message.nonTwoHandedWeaponEquipped"), true);
+					return;
+				}
 				((DuckPlayerEntityMixin) player).rpginventory$setIsOffhandStackSheathed(true);
 				player.getInventory().offHand.set(0, ItemStack.EMPTY);
 				((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedOffhand(offHandItemStack);
