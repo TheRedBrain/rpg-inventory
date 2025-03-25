@@ -3,6 +3,7 @@ package com.github.theredbrain.rpginventory.config;
 import com.github.theredbrain.rpginventory.RPGInventory;
 import me.fzzyhmstrs.fzzy_config.annotations.ConvertFrom;
 import me.fzzyhmstrs.fzzy_config.config.Config;
+import me.fzzyhmstrs.fzzy_config.config.ConfigGroup;
 import me.fzzyhmstrs.fzzy_config.config.ConfigSection;
 import me.fzzyhmstrs.fzzy_config.util.Walkable;
 import me.fzzyhmstrs.fzzy_config.validation.collection.ValidatedMap;
@@ -31,14 +32,18 @@ public class ClientConfig extends Config {
 		public ValidatedBoolean always_show_all_hotbar_slots = new ValidatedBoolean(false);
 		public ValidatedBoolean is_hotbar_centered = new ValidatedBoolean(false);
 
+		public ConfigGroup hand_slots = new ConfigGroup("hand_slots");
 		public ValidatedBoolean show_empty_hand_slots = new ValidatedBoolean(true);
 		public ValidatedInt hand_slots_offset_x = new ValidatedInt(-140);
 		public ValidatedInt hand_slots_offset_y = new ValidatedInt(-23);
+		@ConfigGroup.Pop
 		public ValidatedBoolean offhand_item_is_right = new ValidatedBoolean(true);
 
+		public ConfigGroup alternative_hand_slots = new ConfigGroup("alternative_hand_slots");
 		public ValidatedBoolean show_empty_alternative_hand_slots = new ValidatedBoolean(true);
 		public ValidatedInt alternative_hand_slots_offset_x = new ValidatedInt(91);
 		public ValidatedInt alternative_hand_slots_offset_y = new ValidatedInt(-23);
+		@ConfigGroup.Pop
 		public ValidatedBoolean alternative_offhand_item_is_right = new ValidatedBoolean(true);
 	}
 
@@ -48,46 +53,50 @@ public class ClientConfig extends Config {
 
 	public static class RPGInventoryScreenSection extends ConfigSection {
 
-		//		@ConfigEntry.Gui.PrefixText
 		public ValidatedBoolean show_attribute_screen_when_opening_inventory_screen = new ValidatedBoolean(false);
 		public ValidatedBoolean can_hide_status_effect_screen = new ValidatedBoolean(false);
 		public ValidatedBoolean show_effect_screen_when_opening_inventory_screen = new ValidatedBoolean(true);
 
-		//		@ConfigEntry.Gui.PrefixText
-		public ValidatedBoolean show_inactive_inventory_slots = new ValidatedBoolean(true);
-
-		//		@ConfigEntry.Gui.PrefixText
+		public ConfigGroup backpack_button = new ConfigGroup("backpack_button");
 		public ValidatedBoolean enable_open_backpack_button = new ValidatedBoolean(false);
 		public ValidatedInt open_backpack_button_offset_x = new ValidatedInt(99);
+		@ConfigGroup.Pop
 		public ValidatedInt open_backpack_button_offset_y = new ValidatedInt(35);
 
-		//		@ConfigEntry.Gui.PrefixText
+		public ConfigGroup crafting_button = new ConfigGroup("crafting_button");
 		public ValidatedBoolean enable_open_hand_crafting_button = new ValidatedBoolean(false);
 		public ValidatedInt open_hand_crafting_button_offset_x = new ValidatedInt(99);
+		@ConfigGroup.Pop
 		public ValidatedInt open_hand_crafting_button_offset_y = new ValidatedInt(57);
 
 		public ValidatedBoolean show_slot_tooltips = new ValidatedBoolean(true);
 	}
 
-	//		@ConfigEntry.Gui.PrefixText
+	public ConfigGroup unusable_item_overlay = new ConfigGroup("unusable_item_overlay");
 	public ValidatedBoolean slots_with_unusable_items_have_overlay = new ValidatedBoolean(true);
 	public ValidatedColor first_overlay_colour_for_slots_with_unusable_items = new ValidatedColor(200, 5, 5, 50);
+	@ConfigGroup.Pop
 	public ValidatedColor second_overlay_colour_for_slots_with_unusable_items = new ValidatedColor(200, 5, 5, 50);
 
-	public ValidatedBoolean show_item_tooltip_bound_to_player_name = new ValidatedBoolean(true);
-	public ValidatedString item_tooltip_bound_to_player_name_formatting_string = new ValidatedString("");
 	public ConfigGroup not_owned_item_overlay = new ConfigGroup("not_owned_item_overlay");
 	public ValidatedBoolean slots_with_not_owned_items_have_overlay = new ValidatedBoolean(true);
 	public ValidatedColor first_overlay_colour_for_slots_with_not_owned_items = new ValidatedColor(200, 5, 5, 50);
 	@ConfigGroup.Pop
 	public ValidatedColor second_overlay_colour_for_slots_with_not_owned_items = new ValidatedColor(200, 5, 5, 50);
 
-	public ValidatedBoolean show_item_tooltip_crafted_by_player_name = new ValidatedBoolean(true);
-	public ValidatedString item_tooltip_crafted_by_player_name_formatting_string = new ValidatedString("");
+	public ItemTooltipSection itemTooltipSection = new ItemTooltipSection();
 
-	public ValidatedBoolean show_item_tooltip_two_handed_items = new ValidatedBoolean(true);
-	public ValidatedBoolean show_item_tooltip_equipment_slots = new ValidatedBoolean(true);
+	public static class ItemTooltipSection extends ConfigSection {
 
+		public ValidatedBoolean show_item_tooltip_bound_to_player_name = new ValidatedBoolean(true);
+		public ValidatedString item_tooltip_bound_to_player_name_formatting_string = new ValidatedString("");
+
+		public ValidatedBoolean show_item_tooltip_crafted_by_player_name = new ValidatedBoolean(true);
+		public ValidatedString item_tooltip_crafted_by_player_name_formatting_string = new ValidatedString("");
+
+		public ValidatedBoolean show_item_tooltip_two_handed_items = new ValidatedBoolean(true);
+		public ValidatedBoolean show_item_tooltip_equipment_slots = new ValidatedBoolean(true);
+	}
 	//		@Comment("""
 //				These values describe how the matrixStack is manipulated.
 //
@@ -112,10 +121,11 @@ public class ClientConfig extends Config {
 //				matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rotation_positive_y));
 //				matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(rotation_positive_x));
 //				""")
+	public ConfigGroup sheathed_item_positions = new ConfigGroup("sheathed_item_positions");
 	public ValidatedMap<String, ItemConfiguration> sheathed_hand_item_positions = new ValidatedMap<>(new HashMap<>() {{
 		put("minecraft:crossbow", new ItemConfiguration(-0.3F, 0.1F, 0.16F, 0.0F, 0.0F, 0.06F, 0.0F, 90.0F, -10.0F));
 	}}, new ValidatedString(), new ValidatedAny<>(new ItemConfiguration()));
-
+	@ConfigGroup.Pop
 	public ValidatedMap<String, ItemConfiguration> sheathed_offhand_item_positions = new ValidatedMap<>(new HashMap<>() {{
 		put("minecraft:shield", new ItemConfiguration(0.2F, 0.4F, 0.0F, 0.0F, 0.0F, 0.06F, 0.0F, -90.0F, 15.0F));
 	}}, new ValidatedString(), new ValidatedAny<>(new ItemConfiguration()));

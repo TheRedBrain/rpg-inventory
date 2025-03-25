@@ -97,6 +97,90 @@
 	"slot.tooltip.spell_slot_7.spell": "Spell",
 	"slot.tooltip.spell_slot_8.spell": "Spell",
 
+	"rpginventory.client": "Client Side Settings",
+
+	"rpginventory.client.hotBarOverhaul": "Hotbar Overhaul",
+
+	"rpginventory.client.hotBarOverhaul.enable_hotbar_overhaul": "Enable Hotbar Overhaul",
+	"rpginventory.client.hotBarOverhaul.always_show_selected_hotbar_slot": "Always Show Selected Hotbar Slot",
+	"rpginventory.client.hotBarOverhaul.always_show_all_hotbar_slots": "Always Show All Hotbar Slots",
+	"rpginventory.client.hotBarOverhaul.is_hotbar_centered": "Is Hotbar Centered",
+
+	"rpginventory.client.hotBarOverhaul.hand_slots": "Hand Slots",
+
+	"rpginventory.client.hotBarOverhaul.show_empty_hand_slots": "Show Empty Hand Slots",
+	"rpginventory.client.hotBarOverhaul.hand_slots_offset_x": "Hand Slots Offset X",
+	"rpginventory.client.hotBarOverhaul.hand_slots_offset_y": "Hand Slots Offset Y",
+	"rpginventory.client.hotBarOverhaul.offhand_item_is_right": "Offhand Item Is Right",
+
+	"rpginventory.client.hotBarOverhaul.alternative_hand_slots": "Alternative Hand Slots",
+
+	"rpginventory.client.hotBarOverhaul.show_empty_alternative_hand_slots": "Show Empty Alternative Hand Slots",
+	"rpginventory.client.hotBarOverhaul.alternative_hand_slots_offset_x": "Alternative Hand Slots Offset X",
+	"rpginventory.client.hotBarOverhaul.alternative_hand_slots_offset_y": "Alternative Hand Slots Offset Y",
+	"rpginventory.client.hotBarOverhaul.alternative_offhand_item_is_right": "Alternative Offhand Item Is Right",
+
+	
+	"rpginventory.client.show_armor_bar": "Show Armor Bar",
+
+
+	"rpginventory.client.rpgInventoryScreenSection": "RPG Inventory",
+
+	"rpginventory.client.rpgInventoryScreenSection.show_attribute_screen_when_opening_inventory_screen": "Show Attribute Screen By Default",
+	"rpginventory.client.rpgInventoryScreenSection.can_hide_status_effect_screen": "Enable Effect Screen Hiding",
+	"rpginventory.client.rpgInventoryScreenSection.show_effect_screen_when_opening_inventory_screen": "Show Effect Screen By Default",
+	"rpginventory.client.rpgInventoryScreenSection.show_effect_screen_when_opening_inventory_screen.desc": "Is always active when effect screen can't be hidden",
+
+	"rpginventory.client.rpgInventoryScreenSection.backpack_button": "Backpack Button",
+
+	"rpginventory.client.rpgInventoryScreenSection.enable_open_backpack_button.prefix": "Requires the mod 'Backpack Attribute' to be installed.",
+	"rpginventory.client.rpgInventoryScreenSection.enable_open_backpack_button": "Show Backpack Button",
+	"rpginventory.client.rpgInventoryScreenSection.open_backpack_button_offset_x": "Backpack Button Offset X",
+	"rpginventory.client.rpgInventoryScreenSection.open_backpack_button_offset_y": "Backpack Button Offset Y",
+
+	"rpginventory.client.rpgInventoryScreenSection.crafting_button": "Crafting Button",
+
+	"rpginventory.client.rpgInventoryScreenSection.enable_open_hand_crafting_button.prefix": "Requires the mod 'RPG Crafting' to be installed.",
+	"rpginventory.client.rpgInventoryScreenSection.enable_open_hand_crafting_button": "Show Crafting Button",
+	"rpginventory.client.rpgInventoryScreenSection.open_hand_crafting_button_offset_x": "Crafting Button Offset X",
+	"rpginventory.client.rpgInventoryScreenSection.open_hand_crafting_button_offset_y": "Crafting Button Offset Y",
+
+	"rpginventory.client.rpgInventoryScreenSection.show_slot_tooltips": "Show Empty Slot Tooltips",
+
+
+	"rpginventory.client.unusable_item_overlay": "Unusable Item Overlay",
+	"rpginventory.client.unusable_item_overlay.prefix": "This affects broken items in the 'rpginventory:unusable_when_low_durability' tag.",
+
+	"rpginventory.client.slots_with_unusable_items_have_overlay": "Show Overlay",
+	"rpginventory.client.first_overlay_colour_for_slots_with_unusable_items": "First Overlay Color",
+	"rpginventory.client.second_overlay_colour_for_slots_with_unusable_items": "Second Overlay Color",
+
+
+	"rpginventory.client.not_owned_item_overlay": "Not Owned Item Overlay",
+
+	"rpginventory.client.slots_with_not_owned_items_have_overlay": "Show Overlay",
+	"rpginventory.client.first_overlay_colour_for_slots_with_not_owned_items": "First Overlay Color",
+	"rpginventory.client.second_overlay_colour_for_slots_with_not_owned_items": "Second Overlay Color",
+
+
+	"rpginventory.client.itemTooltipSection": "Item Tooltips",
+
+	"rpginventory.client.itemTooltipSection.show_item_tooltip_bound_to_player_name": "Show 'Bound to ...' Item Tooltip",
+	"rpginventory.client.itemTooltipSection.item_tooltip_bound_to_player_name_formatting_string": "'Bound to ...' Tooltip Formatting",
+	"rpginventory.client.itemTooltipSection.item_tooltip_bound_to_player_name_formatting_string.desc": "Defines which formatting is applied to the player name.\nValid characters:\n\n0: Black, 1: Dark Blue, 2: Dark Green\n3: Dark Aqua, 4: Dark Red, 5: Dark Purple\n6: Gold, 7: Gray, 8: Dark Gray\n9: Blue, a: Green, b: Aqua\nc: Red, d: Light Purple, e: Yellow\nf: White, k: Obfuscated, l: Bold\nm: Strikethrough, n: Underline, o: Italic\nr: Reset",
+
+	"rpginventory.client.itemTooltipSection.show_item_tooltip_crafted_by_player_name": "Show 'Crafted by ...' Item Tooltip",
+	"rpginventory.client.itemTooltipSection.item_tooltip_crafted_by_player_name_formatting_string": "'Crafted by ...' Tooltip Formatting",
+	"rpginventory.client.itemTooltipSection.item_tooltip_crafted_by_player_name_formatting_string.desc": "Defines which formatting is applied to the player name.\nValid characters:\n\n0: Black, 1: Dark Blue, 2: Dark Green\n3: Dark Aqua, 4: Dark Red, 5: Dark Purple\n6: Gold, 7: Gray, 8: Dark Gray\n9: Blue, a: Green, b: Aqua\nc: Red, d: Light Purple, e: Yellow\nf: White, k: Obfuscated, l: Bold\nm: Strikethrough, n: Underline, o: Italic\nr: Reset",
+
+	"rpginventory.client.itemTooltipSection.show_item_tooltip_two_handed_items": "Show 'Two-Handed Item' Tooltip",
+	"rpginventory.client.itemTooltipSection.show_item_tooltip_equipment_slots": "Show 'Equipment Slot' Tooltip",
+
+
+	"rpginventory.client.sheathed_item_positions": "Sheathed Item Positions",
+
+	"rpginventory.client.sheathed_hand_item_positions": "Hand Items",
+	"rpginventory.client.sheathed_offhand_item_positions": "Offhand Items",
 	"text.autoconfig.rpginventory.title": "RPG Inventory",
 
 	"text.autoconfig.rpginventory.category.generalClientConfig": "General",

@@ -15,8 +15,8 @@ public class ClientEventsRegistry {
 		ItemTooltipCallback.EVENT.register((stack, context, type, lines) -> {
 			ClientConfig clientConfig = RPGInventoryClient.CLIENT_CONFIG;
 			ProfileComponent playerBoundComponent = stack.get(RPGInventory.PLAYER_BOUND);
-			if (playerBoundComponent != null && clientConfig.show_item_tooltip_bound_to_player_name.get()) {
-				String formatting_config_string = clientConfig.item_tooltip_bound_to_player_name_formatting_string.get();
+			if (playerBoundComponent != null && clientConfig.itemTooltipSection.show_item_tooltip_bound_to_player_name.get()) {
+				String formatting_config_string = clientConfig.itemTooltipSection.item_tooltip_bound_to_player_name_formatting_string.get();
 				StringBuilder formatting_string = new StringBuilder();
 				if (!formatting_config_string.isEmpty()) {
 					for (int i = 0; i < formatting_config_string.length(); i++) {
@@ -26,8 +26,8 @@ public class ClientEventsRegistry {
 				lines.add(Text.translatable("item.additional_tooltip.player_relation.bound_to", formatting_string + playerBoundComponent.gameProfile().getName()));
 			}
 			ProfileComponent playerCraftedComponent = stack.get(RPGInventory.PLAYER_CRAFTED);
-			if (playerCraftedComponent != null && clientConfig.show_item_tooltip_crafted_by_player_name.get()) {
-				String formatting_config_string = clientConfig.item_tooltip_crafted_by_player_name_formatting_string.get();
+			if (playerCraftedComponent != null && clientConfig.itemTooltipSection.show_item_tooltip_crafted_by_player_name.get()) {
+				String formatting_config_string = clientConfig.itemTooltipSection.item_tooltip_crafted_by_player_name_formatting_string.get();
 				StringBuilder formatting_string = new StringBuilder();
 				if (!formatting_config_string.isEmpty()) {
 					for (int i = 0; i < formatting_config_string.length(); i++) {
@@ -37,12 +37,12 @@ public class ClientEventsRegistry {
 				lines.add(Text.translatable("item.additional_tooltip.player_relation.crafted_by",formatting_string + playerCraftedComponent.gameProfile().getName()));
 			}
 
-			if (stack.isIn(Tags.TWO_HANDED_ITEMS) && clientConfig.show_item_tooltip_two_handed_items.get()) {
+			if (stack.isIn(Tags.TWO_HANDED_ITEMS) && clientConfig.itemTooltipSection.show_item_tooltip_two_handed_items.get()) {
 				lines.add(Text.translatable("item.additional_tooltip.functionality.two_handed_item"));
 			}
 
 			// equipment slots
-			if (clientConfig.show_item_tooltip_equipment_slots.get()) {
+			if (clientConfig.itemTooltipSection.show_item_tooltip_equipment_slots.get()) {
 				Equipment equipment = Equipment.fromStack(stack);
 				if (stack.isIn(Tags.HELMETS) || (equipment != null && equipment.getSlotType() == EquipmentSlot.HEAD)) {
 					lines.add(Text.translatable("item.additional_tooltip.equipment_slot.helmet"));
