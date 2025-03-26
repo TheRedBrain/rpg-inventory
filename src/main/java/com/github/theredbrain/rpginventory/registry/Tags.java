@@ -23,7 +23,7 @@ public class Tags {
 	public static final TagKey<Item> GLOVES = TagKey.of(RegistryKeys.ITEM, RPGInventory.identifier("gloves"));
 	public static final TagKey<Item> BOOTS = TagKey.of(RegistryKeys.ITEM, RPGInventory.identifier("boots"));
 	public static final TagKey<Item> SPELLS = TagKey.of(RegistryKeys.ITEM, RPGInventory.identifier("spells"));
-	public static final TagKey<Item> KEEPS_INVENTORY_ON_DEATH = TagKey.of(RegistryKeys.ITEM, RPGInventory.identifier("keeps_inventory_on_death"));
+	public static final TagKey<Item> SACRIFICED_TO_KEEP_INVENTORY_ON_DEATH = TagKey.of(RegistryKeys.ITEM, RPGInventory.identifier("sacrificed_to_keep_inventory_on_death"));
 	public static final TagKey<Item> UNUSABLE_WHEN_LOW_DURABILITY = TagKey.of(RegistryKeys.ITEM, RPGInventory.identifier("unusable_when_low_durability"));
 	public static final TagKey<Item> ARMOR_TRINKETS = TagKey.of(RegistryKeys.ITEM, RPGInventory.identifier("armor_trinkets"));
 	public static final TagKey<Item> UNIQUE_RINGS = TagKey.of(RegistryKeys.ITEM, RPGInventory.identifier("unique_rings"));

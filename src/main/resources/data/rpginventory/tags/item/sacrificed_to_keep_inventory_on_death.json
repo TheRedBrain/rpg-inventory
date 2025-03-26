@@ -1,0 +1,8 @@
+{
+	"values": [
+		{
+			"id": "#rpginventory:keeps_inventory_on_death",
+			"required": false
+		}
+	]
+}

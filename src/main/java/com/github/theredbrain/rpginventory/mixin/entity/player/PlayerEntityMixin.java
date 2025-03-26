@@ -112,7 +112,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 	private void rpginventory$updateTurtleHelmet(CallbackInfo ci) {
 
 		boolean keep_inventory_on_death_item_equipped = false;
-		Predicate<ItemStack> keep_inventory_on_death_item_equipped_predicate = stack -> stack.isIn(Tags.KEEPS_INVENTORY_ON_DEATH);
+		Predicate<ItemStack> keep_inventory_on_death_item_equipped_predicate = stack -> stack.isIn(Tags.SACRIFICED_TO_KEEP_INVENTORY_ON_DEATH);
 
 		Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(this);
 		if (trinkets.isPresent()) {
@@ -422,17 +422,17 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 		if (trinkets.isPresent()) {
 			List<Pair<SlotReference, ItemStack>> trinketList = trinkets.get().getAllEquipped();
 			for (net.minecraft.util.Pair<SlotReference, ItemStack> trinket : trinketList) {
-				if (trinket.getRight().isIn(Tags.KEEPS_INVENTORY_ON_DEATH)) {
+				if (trinket.getRight().isIn(Tags.SACRIFICED_TO_KEEP_INVENTORY_ON_DEATH)) {
 					trinket.getLeft().inventory().clear();
 				}
 			}
 		}
 		for (int i = 0; i < this.inventory.armor.size(); i++) {
-			if (this.inventory.armor.get(i).isIn(Tags.KEEPS_INVENTORY_ON_DEATH)) {
+			if (this.inventory.armor.get(i).isIn(Tags.SACRIFICED_TO_KEEP_INVENTORY_ON_DEATH)) {
 				this.inventory.armor.set(i, ItemStack.EMPTY);
 			}
 		}
-		if (this.inventory.offHand.get(0).isIn(Tags.KEEPS_INVENTORY_ON_DEATH)) {
+		if (this.inventory.offHand.get(0).isIn(Tags.SACRIFICED_TO_KEEP_INVENTORY_ON_DEATH)) {
 			this.inventory.offHand.set(0, ItemStack.EMPTY);
 		}
 	}
