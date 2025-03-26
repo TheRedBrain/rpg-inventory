@@ -22,6 +22,14 @@ This release has a number of breaking changes. Remove items from player inventor
 
 Changes since Pre-Release 1
 - added optional slot overlay for not owned items
+- renamed "rpginventory:keeps_inventory_on_death" item tag to "rpginventory:sacrificed_to_keep_inventory_on_death", to better represent its functionality
+- client and server config screens are more organized and have proper localization support
+- fixed an issue where trinket slots added by RPG Inventory would not show up in tooltips
+- integrated the latest "Inventory Size Attributes" version
+- item bounding can now be disabled for creative mode players
+- player names in the "Bound to..." and "Crafted by..." tooltips can now be formatted using a config option
+- added daggers from "Rogues" to "rpginventory:offhand_items" item tag
+- fixed label of crafting button 
 
 # 2.2.0
 
