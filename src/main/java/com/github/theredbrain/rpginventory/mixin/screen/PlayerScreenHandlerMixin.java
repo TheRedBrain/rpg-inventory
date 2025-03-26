@@ -160,12 +160,12 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 				Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.wilderness_status_effect_identifier.get());
 				boolean hasWildernessEffect = wilderness_status_effect.isPresent() && owner.hasStatusEffect(wilderness_status_effect.get());
 
-				return (stack.isIn(Tags.HAND_ITEMS) || !serverConfig.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isOwnedByPlayer(stack, owner.getGameProfile()) && (hasCivilisationEffect || owner.isCreative() || (bl && !hasWildernessEffect)) && !((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed();
+				return (stack.isIn(Tags.HAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isOwnedByPlayer(stack, owner.getGameProfile()) && (hasCivilisationEffect || owner.isCreative() || (bl && !hasWildernessEffect)) && !((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed();
 			}
 
 			@Override
 			public boolean isEnabled() {
-				return RPGInventory.SERVER_CONFIG.enable_hand_slot_overhaul.get() && !((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed();
+				return RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get() && !((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed();
 			}
 
 			@Override
@@ -189,12 +189,12 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 				Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.wilderness_status_effect_identifier.get());
 				boolean hasWildernessEffect = wilderness_status_effect.isPresent() && owner.hasStatusEffect(wilderness_status_effect.get());
 
-				return (stack.isIn(Tags.HAND_ITEMS) || !serverConfig.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isOwnedByPlayer(stack, owner.getGameProfile()) && (hasCivilisationEffect || owner.isCreative() || (bl && !hasWildernessEffect)) && ((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed();
+				return (stack.isIn(Tags.HAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isOwnedByPlayer(stack, owner.getGameProfile()) && (hasCivilisationEffect || owner.isCreative() || (bl && !hasWildernessEffect)) && ((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed();
 			}
 
 			@Override
 			public boolean isEnabled() {
-				return RPGInventory.SERVER_CONFIG.enable_hand_slot_overhaul.get() && ((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed();
+				return RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get() && ((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed();
 			}
 
 			@Override
@@ -218,12 +218,12 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 				Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.wilderness_status_effect_identifier.get());
 				boolean hasWildernessEffect = wilderness_status_effect.isPresent() && owner.hasStatusEffect(wilderness_status_effect.get());
 
-				return (stack.isIn(Tags.OFFHAND_ITEMS) || !serverConfig.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isOwnedByPlayer(stack, owner.getGameProfile()) && (hasCivilisationEffect || owner.isCreative() || (bl && !hasWildernessEffect)) && ((DuckPlayerEntityMixin) owner).rpginventory$isOffhandStackSheathed();
+				return (stack.isIn(Tags.OFFHAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isOwnedByPlayer(stack, owner.getGameProfile()) && (hasCivilisationEffect || owner.isCreative() || (bl && !hasWildernessEffect)) && ((DuckPlayerEntityMixin) owner).rpginventory$isOffhandStackSheathed();
 			}
 
 			@Override
 			public boolean isEnabled() {
-				return RPGInventory.SERVER_CONFIG.enable_hand_slot_overhaul.get() && ((DuckPlayerEntityMixin) owner).rpginventory$isOffhandStackSheathed();
+				return RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get() && ((DuckPlayerEntityMixin) owner).rpginventory$isOffhandStackSheathed();
 			}
 
 			@Override
@@ -247,12 +247,12 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 				Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.wilderness_status_effect_identifier.get());
 				boolean hasWildernessEffect = wilderness_status_effect.isPresent() && owner.hasStatusEffect(wilderness_status_effect.get());
 
-				return (stack.isIn(Tags.HAND_ITEMS) || !serverConfig.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isOwnedByPlayer(stack, owner.getGameProfile()) && (hasCivilisationEffect || owner.isCreative() || (bl && !hasWildernessEffect));
+				return (stack.isIn(Tags.HAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isOwnedByPlayer(stack, owner.getGameProfile()) && (hasCivilisationEffect || owner.isCreative() || (bl && !hasWildernessEffect));
 			}
 
 			@Override
 			public boolean isEnabled() {
-				return RPGInventory.SERVER_CONFIG.enable_hand_slot_overhaul.get();
+				return RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get();
 			}
 
 			@Override
@@ -276,12 +276,12 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 				Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.wilderness_status_effect_identifier.get());
 				boolean hasWildernessEffect = wilderness_status_effect.isPresent() && owner.hasStatusEffect(wilderness_status_effect.get());
 
-				return (stack.isIn(Tags.OFFHAND_ITEMS) || !serverConfig.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isOwnedByPlayer(stack, owner.getGameProfile()) && (hasCivilisationEffect || owner.isCreative() || (bl && !hasWildernessEffect));
+				return (stack.isIn(Tags.OFFHAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isOwnedByPlayer(stack, owner.getGameProfile()) && (hasCivilisationEffect || owner.isCreative() || (bl && !hasWildernessEffect));
 			}
 
 			@Override
 			public boolean isEnabled() {
-				return RPGInventory.SERVER_CONFIG.enable_hand_slot_overhaul.get();
+				return RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get();
 			}
 
 			@Override
@@ -596,10 +596,10 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 						}
 				);
 
-				if (serverConfig.enable_hand_slot_overhaul.get()) {
+				if (serverConfig.handSlotOverhaul.enable_hand_slot_overhaul.get()) {
 					EquipmentSlot equipmentSlot = this.owner.getPreferredEquipmentSlot(stack);
 
-					if (!stack.isEmpty() && (equipmentSlot == EquipmentSlot.MAINHAND || !serverConfig.are_hand_items_restricted_to_item_tags.get() || stack.isIn(Tags.HAND_ITEMS))) {
+					if (!stack.isEmpty() && (equipmentSlot == EquipmentSlot.MAINHAND || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || stack.isIn(Tags.HAND_ITEMS))) {
 						if (((DuckPlayerEntityMixin) this.owner).rpginventory$isHandStackSheathed() && !this.slots.get(47).hasStack()) {
 							if (!this.insertItem(stack, 47, 48, false)) {
 								cir.setReturnValue(ItemStack.EMPTY);
@@ -613,7 +613,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 						}
 					}
 
-					if (!stack.isEmpty() && (equipmentSlot == EquipmentSlot.OFFHAND || !serverConfig.are_hand_items_restricted_to_item_tags.get() || stack.isIn(Tags.OFFHAND_ITEMS))) {
+					if (!stack.isEmpty() && (equipmentSlot == EquipmentSlot.OFFHAND || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || stack.isIn(Tags.OFFHAND_ITEMS))) {
 						if (((DuckPlayerEntityMixin) this.owner).rpginventory$isOffhandStackSheathed() && !this.slots.get(48).hasStack()) {
 							if (!this.insertItem(stack, 48, 49, false)) {
 								cir.setReturnValue(ItemStack.EMPTY);
@@ -627,7 +627,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 						}
 					}
 
-					if (!stack.isEmpty() && (equipmentSlot == EquipmentSlot.MAINHAND || !serverConfig.are_hand_items_restricted_to_item_tags.get() || stack.isIn(Tags.HAND_ITEMS))) {
+					if (!stack.isEmpty() && (equipmentSlot == EquipmentSlot.MAINHAND || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || stack.isIn(Tags.HAND_ITEMS))) {
 						if (!this.slots.get(49).hasStack()) {
 							if (!this.insertItem(stack, 49, 50, false)) {
 								cir.setReturnValue(ItemStack.EMPTY);
@@ -636,7 +636,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 						}
 					}
 
-					if (!stack.isEmpty() && (equipmentSlot == EquipmentSlot.OFFHAND || !serverConfig.are_hand_items_restricted_to_item_tags.get() || stack.isIn(Tags.OFFHAND_ITEMS))) {
+					if (!stack.isEmpty() && (equipmentSlot == EquipmentSlot.OFFHAND || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || stack.isIn(Tags.OFFHAND_ITEMS))) {
 						if (!this.slots.get(50).hasStack()) {
 							if (!this.insertItem(stack, 50, 51, false)) {
 								cir.setReturnValue(ItemStack.EMPTY);
@@ -645,7 +645,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 						}
 					}
 				}
-			} else if (slot >= 45 && slot < 51 && RPGInventory.SERVER_CONFIG.enable_hand_slot_overhaul.get()) {
+			} else if (slot >= 45 && slot < 51 && RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get()) {
 				if (!this.insertItem(stack, 9, 45, false)) {   // TODO adventure hotbar items
 					cir.setReturnValue(ItemStack.EMPTY);
 					cir.cancel();

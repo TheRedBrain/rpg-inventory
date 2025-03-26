@@ -181,64 +181,100 @@
 
 	"rpginventory.client.sheathed_hand_item_positions": "Hand Items",
 	"rpginventory.client.sheathed_offhand_item_positions": "Offhand Items",
-	"text.autoconfig.rpginventory.title": "RPG Inventory",
-
-	"text.autoconfig.rpginventory.category.generalClientConfig": "General",
-
-	"text.autoconfig.rpginventory.option.generalClientConfig.always_show_selected_hotbar_slot.@PrefixText": "HUD Settings",
-	"text.autoconfig.rpginventory.option.generalClientConfig.always_show_selected_hotbar_slot": "Always show selected hotbar slot",
-
-	"text.autoconfig.rpginventory.option.generalClientConfig.show_empty_hand_slots": "The hand slots are displayed when they are empty",
-	"text.autoconfig.rpginventory.option.generalClientConfig.hand_slots_offset_x": "Hand slots X offset",
-	"text.autoconfig.rpginventory.option.generalClientConfig.hand_slots_offset_y": "Hand slots Y offset",
-	"text.autoconfig.rpginventory.option.generalClientConfig.offhand_item_is_right": "Offhand item is right",
-
-	"text.autoconfig.rpginventory.option.generalClientConfig.show_empty_alternative_hand_slots": "The alternative hand slots are displayed when they are empty",
-	"text.autoconfig.rpginventory.option.generalClientConfig.alternative_hand_slots_offset_x": "Alternative hand slots X offset",
-	"text.autoconfig.rpginventory.option.generalClientConfig.alternative_hand_slots_offset_y": "Alternative hand slots Y offset",
-	"text.autoconfig.rpginventory.option.generalClientConfig.alternative_offhand_item_is_right": "Alternative offhand item is right",
-
-	"text.autoconfig.rpginventory.option.generalClientConfig.show_armor_bar": "Show the armor bar",
-
-	"text.autoconfig.rpginventory.option.generalClientConfig.show_attribute_screen_when_opening_inventory_screen.@PrefixText": "\n\nInventory Screen Settings",
-	"text.autoconfig.rpginventory.option.generalClientConfig.show_attribute_screen_when_opening_inventory_screen": "Show attribute screen by default",
-	"text.autoconfig.rpginventory.option.generalClientConfig.can_hide_status_effect_screen": "The effect screen can be hidden",
-	"text.autoconfig.rpginventory.option.generalClientConfig.show_effect_screen_when_opening_inventory_screen": "Show effect screen by default (only has an effect when the effect screen can be hidden)",
-
-	"text.autoconfig.rpginventory.option.generalClientConfig.show_inactive_inventory_slots.@PrefixText": "\nThis setting is only active when 'Inventory Size Attributes' is installed",
-	"text.autoconfig.rpginventory.option.generalClientConfig.show_inactive_inventory_slots": "The background of inactive inventory slots is displayed",
-
-	"text.autoconfig.rpginventory.option.generalClientConfig.enable_open_backpack_button.@PrefixText": "\nThis setting is only active when 'Backpack Attribute' is installed",
-	"text.autoconfig.rpginventory.option.generalClientConfig.enable_open_backpack_button": "Enables a button that opens the backpack screen",
-	"text.autoconfig.rpginventory.option.generalClientConfig.open_backpack_button_offset_x": "Open Backpack Button X offset",
-	"text.autoconfig.rpginventory.option.generalClientConfig.open_backpack_button_offset_y": "Open Backpack Button Y offset",
-
-	"text.autoconfig.rpginventory.option.generalClientConfig.enable_open_hand_crafting_button.@PrefixText": "\nThis setting is only active when 'RPG Crafting' is installed\nNote that this mod is not publicly available yet.",
-	"text.autoconfig.rpginventory.option.generalClientConfig.enable_open_hand_crafting_button": "Enables a button that opens the hand crafting screen",
-	"text.autoconfig.rpginventory.option.generalClientConfig.open_hand_crafting_button_offset_x": "Open Crafting Button X offset",
-	"text.autoconfig.rpginventory.option.generalClientConfig.open_hand_crafting_button_offset_y": "Open Crafting Button Y offset",
-
-	"text.autoconfig.rpginventory.option.generalClientConfig.slots_with_unusable_items_have_overlay.@PrefixText": "\n",
-	"text.autoconfig.rpginventory.option.generalClientConfig.slots_with_unusable_items_have_overlay": "Slots with unusable items have an overlay",
-	"text.autoconfig.rpginventory.option.generalClientConfig.first_overlay_colour_for_slots_with_unusable_items": "First color of overlay",
-	"text.autoconfig.rpginventory.option.generalClientConfig.second_overlay_colour_for_slots_with_unusable_items": "Second color of overlay",
-	"text.autoconfig.rpginventory.option.generalClientConfig.show_slot_tooltips": "Show slot name tooltip for empty equipment and trinket slots",
-	"text.autoconfig.rpginventory.option.generalClientConfig.show_item_tooltip_two_handed_items": "Show 2 handed requirement in tooltip",
-	"text.autoconfig.rpginventory.option.generalClientConfig.show_item_tooltip_equipment_slots": "Show equipment slot in tooltip",
 
 
-	"text.autoconfig.rpginventory.category.attributeScreenClientConfig": "Attribute Screen",
+	"rpginventory.server": "Server Side Settings",
 
-	"text.autoconfig.rpginventory.option.attributeScreenClientConfig.attribute_screen_configuration.@PrefixText": "Defines what attributes are displayed on the attribute screen\nEach string must follow one of these formats:\n\nATTRIBUTE_VALUE:attribute_id_namespace:attribute_id_path\nATTRIBUTE_RELATION:translation_key:attribute_id_namespace:attribute_id_path:attribute_id_namespace:attribute_id_path\nEMPTY_LINE\nSTRING:string\nTRANSLATABLE_STRING:translation_key\n\nThe strings will be split at the positions marked by the colons.\nThe uppercase string before the first colon determines how the line is displayed.\nEvery string after the first colon is a placeholder.\nStrings with other formats are ignored.",
-	"text.autoconfig.rpginventory.option.attributeScreenClientConfig.attribute_screen_configuration": "Attribute Screen Configuration",
+	"rpginventory.server.handSlotOverhaul": "Hand Slot Overhaul",
 
+	"rpginventory.server.handSlotOverhaul.enable_hand_slot_overhaul": "Enable Hand Slot Overhaul",
+	"rpginventory.server.handSlotOverhaul.always_allow_toggling_two_handed_stance": "Always Allow Toggling Two-Handed Stance",
+	"rpginventory.server.handSlotOverhaul.always_allow_toggling_two_handed_stance.desc": "When false, toggling the two-handed stance is not possible when the main hand is sheathed.",
+	"rpginventory.server.handSlotOverhaul.are_hand_items_restricted_to_item_tags": "Enable Restricted Hand Slots",
+	"rpginventory.server.handSlotOverhaul.are_hand_items_restricted_to_item_tags.desc": "When true, all (off)hand slots can only hold items in the item tags 'rpginventory:hand_items' and 'rpginventory:offhand_items', respectively.",
 
-	"text.autoconfig.rpginventory.category.sheathedItemPositionsClientConfig": "Sheathed Item Positions",
+	"rpginventory.server.handSlotOverhaul.staminaAttributesCompat": "'Stamina Attributes' Compat",
 
-	"text.autoconfig.rpginventory.option.sheathedItemPositionsClientConfig.sheathed_hand_item_positions.@PrefixText": "The positions of sheathed items are saved in a format that is not supported by Mod Menu. Please edit the config file directly",
-	"text.autoconfig.rpginventory.option.sheathedItemPositionsClientConfig.sheathed_hand_item_positions": "Sheathed Hand Item Positions",
-	"text.autoconfig.rpginventory.option.sheathedItemPositionsClientConfig.sheathed_offhand_item_positions": "Sheathed Offhand Item Positions",
+	"rpginventory.server.handSlotOverhaul.staminaAttributesCompat.swapping_hand_items": "Swapping Hands",
+	"rpginventory.server.handSlotOverhaul.staminaAttributesCompat.swapping_hand_items_requires_stamina": "Requires Stamina",
+	"rpginventory.server.handSlotOverhaul.staminaAttributesCompat.swapping_hand_items_requires_stamina.desc": "When true, stamina must be above 0 for swapping hand items.",
+	"rpginventory.server.handSlotOverhaul.staminaAttributesCompat.swapping_hand_items_stamina_cost": "Stamina Cost",
 
+	"rpginventory.server.handSlotOverhaul.staminaAttributesCompat.sheathing_hand_items": "Sheathing Hands",
+	"rpginventory.server.handSlotOverhaul.staminaAttributesCompat.sheathing_hand_items_requires_stamina": "Requires Stamina",
+	"rpginventory.server.handSlotOverhaul.staminaAttributesCompat.sheathing_hand_items_requires_stamina.desc": "When true, stamina must be above 0 for sheathing hand items.",
+	"rpginventory.server.handSlotOverhaul.staminaAttributesCompat.sheathing_hand_items_stamina_cost": "Stamina Cost",
+
+	"rpginventory.server.handSlotOverhaul.staminaAttributesCompat.toggling_two_handed_stance": "Toggling Two-Handed Stance",
+	"rpginventory.server.handSlotOverhaul.staminaAttributesCompat.toggling_two_handed_stance_requires_stamina": "Requires Stamina",
+	"rpginventory.server.handSlotOverhaul.staminaAttributesCompat.toggling_two_handed_stance_requires_stamina.desc": "When true, stamina must be above 0 for toggling two-handed stance.",
+	"rpginventory.server.handSlotOverhaul.staminaAttributesCompat.toggling_two_handed_stance_stamina_cost": "Stamina Cost",
+
+	"rpginventory.server.enable_item_bounding_in_creative": "Enable Item Bounding In Creative",
+	"rpginventory.server.allow_attacking_with_non_attack_items": "Allow attacking with every item",
+	"rpginventory.server.allow_attacking_with_non_attack_items.desc": "If false, only items in the 'rpginventory:attack_items' item tag can be used for attacking.",
+
+	"rpginventory.server.statusEffects": "Status Effects",
+	"rpginventory.server.statusEffects.keep_inventory_status_effect_identifier": "'Keep Inventory' Effect Id",
+	"rpginventory.server.statusEffects.civilisation_status_effect_identifier": "'Civilisation' Effect Id",
+	"rpginventory.server.statusEffects.wilderness_status_effect_identifier": "'Wilderness' Effect Id",
+	"rpginventory.server.statusEffects.building_mode_status_effect_identifier": "'Building Mode' Effect Id",
+	"rpginventory.server.statusEffects.needs_two_handing_status_effect_identifier": "'Needs Two-Handing' Effect Id",
+	"rpginventory.server.statusEffects.needs_two_handing_status_effect_identifier.desc": "Applied when main hand item is in 'rpginventory:two_handed_items' item tag and two-handed stance is not toggled",
+	"rpginventory.server.statusEffects.no_attack_item_status_effect_identifier": "'No Attack Item' Effect Id",
+	"rpginventory.server.statusEffects.no_attack_item_status_effect_identifier.desc": "Applied when main hand item is not in 'rpginventory:attack_items' item tag and 'allow_attacking_with_non_attack_items' config option is set to 'false'",
+
+	"rpginventory.server.inventorySlots": "Inventory Slots",
+
+	"rpginventory.server.inventorySlots.crafting_slots.prefix": "\nVanilla\n",
+	"rpginventory.server.inventorySlots.crafting_slots": "Crafting Slots",
+	"rpginventory.server.inventorySlots.disable_inventory_crafting_slots": "Disable The 2x2 Crafting Grid",
+	"rpginventory.server.inventorySlots.inventory_crafting_slots_x_offset": "Offset X",
+	"rpginventory.server.inventorySlots.inventory_crafting_slots_y_offset": "Offset Y",
+
+	"rpginventory.server.inventorySlots.head_slot": "Helmet Slot",
+	"rpginventory.server.inventorySlots.head_slot_x_offset": "Offset X",
+	"rpginventory.server.inventorySlots.head_slot_y_offset": "Offset Y",
+
+	"rpginventory.server.inventorySlots.chest_slot": "Chest Plate Slot",
+	"rpginventory.server.inventorySlots.chest_slot_x_offset": "Offset X",
+	"rpginventory.server.inventorySlots.chest_slot_y_offset": "Offset Y",
+
+	"rpginventory.server.inventorySlots.legs_slot": "Leggings Slot",
+	"rpginventory.server.inventorySlots.legs_slot_x_offset": "Offset X",
+	"rpginventory.server.inventorySlots.legs_slot_y_offset": "Offset Y",
+
+	"rpginventory.server.inventorySlots.feet_slot": "Boots Slot",
+	"rpginventory.server.inventorySlots.feet_slot_x_offset": "Offset X",
+	"rpginventory.server.inventorySlots.feet_slot_y_offset": "Offset Y",
+
+	"rpginventory.server.inventorySlots.offhand_slot": "Offhand Slot",
+	"rpginventory.server.inventorySlots.offhand_slot_x_offset": "Offset X",
+	"rpginventory.server.inventorySlots.offhand_slot_y_offset": "Offset Y",
+
+	"rpginventory.server.inventorySlots.hand_slots.prefix": "\nHand Overhaul\n",
+	"rpginventory.server.inventorySlots.hand_slots": "Hand Slot",
+	"rpginventory.server.inventorySlots.hand_slot_x_offset": "Offset X",
+	"rpginventory.server.inventorySlots.hand_slot_y_offset": "Offset Y",
+
+	"rpginventory.server.inventorySlots.alternative_hand_slots": "Alternative Hand Slot",
+	"rpginventory.server.inventorySlots.alternative_hand_slot_x_offset": "Offset X",
+	"rpginventory.server.inventorySlots.alternative_hand_slot_y_offset": "Offset Y",
+
+	"rpginventory.server.inventorySlots.alternative_offhand_slots": "Alternative Offhand Slot",
+	"rpginventory.server.inventorySlots.alternative_offhand_slot_x_offset": "Offset X",
+	"rpginventory.server.inventorySlots.alternative_offhand_slot_y_offset": "Offset Y",
+
+	"rpginventory.server.inventorySlots.trinket_slots.prefix": "\n",
+	"rpginventory.server.inventorySlots.trinket_slots": "Trinket Slots",
+
+	"rpginventory.server.inventorySlots.default_spell_slot_amount": "Default Spell Slot Amount",
+	"rpginventory.server.inventorySlots.slot_group_positions": "Trinket Slot Positions",
+
+	"rpginventory.server.inventorySlots.slot_group_position.survival_x": "Survival Offset X",
+	"rpginventory.server.inventorySlots.slot_group_position.survival_y": "Survival Offset Y",
+	"rpginventory.server.inventorySlots.slot_group_position.creative_x": "Creative Offset X",
+	"rpginventory.server.inventorySlots.slot_group_position.creative_y": "Creative Offset Y",
 
 	"trinkets.slot.belts.belt": "Belt",
 	"trinkets.slot.gloves.gloves": "Glove",

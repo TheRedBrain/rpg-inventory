@@ -18,7 +18,7 @@ public class ToggleTwoHandedStancePacketReceiver implements ServerPlayNetworking
 
 		ServerPlayerEntity player = context.player();
 
-		if (RPGInventory.SERVER_CONFIG.enable_hand_slot_overhaul.get()) {
+		if (RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get()) {
 
 			ItemStack handItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getHand().copy();
 			if (handItemStack.isEmpty()) {
@@ -31,11 +31,11 @@ public class ToggleTwoHandedStancePacketReceiver implements ServerPlayNetworking
 
 			boolean mainHandCanNotBeTwoHanded = player.getMainHandStack().isIn(Tags.NON_TWO_HANDED_ITEMS);
 
-			if (RPGInventory.isStaminaAttributesLoaded && RPGInventory.SERVER_CONFIG.staminaAttributesCompat.toggling_two_handed_stance_requires_stamina.get() && ((StaminaUsingEntity) player).staminaattributes$getStamina() <= 0 && !player.isCreative()) {
+			if (RPGInventory.isStaminaAttributesLoaded && RPGInventory.SERVER_CONFIG.handSlotOverhaul.staminaAttributesCompat.toggling_two_handed_stance_requires_stamina.get() && ((StaminaUsingEntity) player).staminaattributes$getStamina() <= 0 && !player.isCreative()) {
 				player.sendMessageToClient(Text.translatable("hud.message.staminaTooLow"), true);
 				return;
 			} else if (((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed() && ((DuckPlayerEntityMixin) player).rpginventory$isOffhandStackSheathed()) {
-				if (!RPGInventory.SERVER_CONFIG.always_allow_toggling_two_handed_stance.get()) {
+				if (!RPGInventory.SERVER_CONFIG.handSlotOverhaul.always_allow_toggling_two_handed_stance.get()) {
 					player.sendMessageToClient(Text.translatable("hud.message.weaponsAreSheathed"), true);
 					return;
 				} else {
@@ -61,7 +61,7 @@ public class ToggleTwoHandedStancePacketReceiver implements ServerPlayNetworking
 				((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedOffhand(offHandItemStack);
 			}
 			if (RPGInventory.isStaminaAttributesLoaded && !player.isCreative()) {
-				((StaminaUsingEntity) player).staminaattributes$addStamina(-RPGInventory.SERVER_CONFIG.staminaAttributesCompat.toggling_two_handed_stance_stamina_cost.get());
+				((StaminaUsingEntity) player).staminaattributes$addStamina(-RPGInventory.SERVER_CONFIG.handSlotOverhaul.staminaAttributesCompat.toggling_two_handed_stance_stamina_cost.get());
 			}
 			player.getServerWorld().playSound(null, player.getBlockPos().getX(), player.getBlockPos().getY(), player.getBlockPos().getZ(), SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.PLAYERS, 1.0F, 1.0F);
 		} else {

@@ -4,10 +4,11 @@ import com.github.theredbrain.rpginventory.RPGInventory;
 import me.fzzyhmstrs.fzzy_config.annotations.Action;
 import me.fzzyhmstrs.fzzy_config.annotations.ConvertFrom;
 import me.fzzyhmstrs.fzzy_config.annotations.RequiresAction;
+import me.fzzyhmstrs.fzzy_config.annotations.Translation;
 import me.fzzyhmstrs.fzzy_config.config.Config;
+import me.fzzyhmstrs.fzzy_config.config.ConfigGroup;
 import me.fzzyhmstrs.fzzy_config.config.ConfigSection;
 import me.fzzyhmstrs.fzzy_config.util.Walkable;
-import me.fzzyhmstrs.fzzy_config.validation.collection.ValidatedList;
 import me.fzzyhmstrs.fzzy_config.validation.collection.ValidatedStringMap;
 import me.fzzyhmstrs.fzzy_config.validation.minecraft.ValidatedIdentifier;
 import me.fzzyhmstrs.fzzy_config.validation.misc.ValidatedAny;
@@ -15,10 +16,10 @@ import me.fzzyhmstrs.fzzy_config.validation.misc.ValidatedBoolean;
 import me.fzzyhmstrs.fzzy_config.validation.misc.ValidatedString;
 import me.fzzyhmstrs.fzzy_config.validation.number.ValidatedFloat;
 import me.fzzyhmstrs.fzzy_config.validation.number.ValidatedInt;
-import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
+import net.minecraft.registry.Registries;
+import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
-import java.util.List;
 
 @ConvertFrom(fileName = "server.json5", folder = "rpginventory")
 public class ServerConfig extends Config {
@@ -27,110 +28,116 @@ public class ServerConfig extends Config {
 		super(RPGInventory.identifier("server"));
 	}
 
-	@Comment("""
-			When true, all (off)hand slots can only hold items in the item tags 'rpginventory:hand_items' and 'rpginventory:offhand_items', respectively.
-			""")
-	public ValidatedBoolean are_hand_items_restricted_to_item_tags = new ValidatedBoolean(true);
+	public HandSlotOverhaul handSlotOverhaul = new HandSlotOverhaul();
+
+	public static class HandSlotOverhaul extends ConfigSection {
+
+		public ValidatedBoolean enable_hand_slot_overhaul = new ValidatedBoolean(true);
+
+		public ValidatedBoolean always_allow_toggling_two_handed_stance = new ValidatedBoolean(false);
+
+		public ValidatedBoolean are_hand_items_restricted_to_item_tags = new ValidatedBoolean(true);
+
+		public StaminaAttributesCompat staminaAttributesCompat = new StaminaAttributesCompat();
+
+		public static class StaminaAttributesCompat extends ConfigSection {
+
+			public ConfigGroup swapping_hand_items = new ConfigGroup("swapping_hand_items", true);
+			public ValidatedBoolean swapping_hand_items_requires_stamina = new ValidatedBoolean(true);
+			@ConfigGroup.Pop
+			public ValidatedFloat swapping_hand_items_stamina_cost = new ValidatedFloat(1.0f);
+
+			public ConfigGroup sheathing_hand_items = new ConfigGroup("sheathing_hand_items", true);
+			public ValidatedBoolean sheathing_hand_items_requires_stamina = new ValidatedBoolean(true);
+			@ConfigGroup.Pop
+			public ValidatedFloat sheathing_hand_items_stamina_cost = new ValidatedFloat(1.0f);
+
+			public ConfigGroup toggling_two_handed_stance = new ConfigGroup("toggling_two_handed_stance", true);
+			public ValidatedBoolean toggling_two_handed_stance_requires_stamina = new ValidatedBoolean(true);
+			@ConfigGroup.Pop
+			public ValidatedFloat toggling_two_handed_stance_stamina_cost = new ValidatedFloat(1.0f);
+		}
+
+	}
 
 	public ValidatedBoolean enable_item_bounding_in_creative = new ValidatedBoolean(false);
 
-	public ValidatedBoolean enable_hand_slot_overhaul = new ValidatedBoolean(true);
-
-	@Comment("When false, toggling the two-handed stance is not possible when the main hand is sheathed.")
-	public ValidatedBoolean always_allow_toggling_two_handed_stance = new ValidatedBoolean(false);
-
 	public ValidatedBoolean allow_attacking_with_non_attack_items = new ValidatedBoolean(true);
-
-	@Comment("""
-			When the mod 'Stamina Attributes' is installed, the following 6 options take effect
-			""")
-	public StaminaAttributesCompat staminaAttributesCompat = new StaminaAttributesCompat();
-
-	public static class StaminaAttributesCompat extends ConfigSection {
-		@Comment("When true, stamina must be above 0 for swapping hand items.")
-		public ValidatedBoolean swapping_hand_items_requires_stamina = new ValidatedBoolean(true);
-		@Comment("Stamina cost for toggling two handed stance")
-		public ValidatedFloat swapping_hand_items_stamina_cost = new ValidatedFloat(1.0f);
-
-		@Comment("When true, stamina must be above 0 for sheathing hand items.")
-		public ValidatedBoolean sheathing_hand_items_requires_stamina = new ValidatedBoolean(true);
-		@Comment("Stamina cost for toggling two handed stance")
-		public ValidatedFloat sheathing_hand_items_stamina_cost = new ValidatedFloat(1.0f);
-
-		@Comment("When true, stamina must be above 0 for toggling two handed stance.")
-		public ValidatedBoolean toggling_two_handed_stance_requires_stamina = new ValidatedBoolean(true);
-		@Comment("Stamina cost for toggling two handed stance")
-		public ValidatedFloat toggling_two_handed_stance_stamina_cost = new ValidatedFloat(1.0f);
-	}
 
 	public StatusEffects statusEffects = new StatusEffects();
 
 	public static class StatusEffects extends ConfigSection {
-		public ValidatedIdentifier keep_inventory_status_effect_identifier = new ValidatedIdentifier("variousstatuseffects:keep_inventory");
+		public ValidatedIdentifier keep_inventory_status_effect_identifier = ValidatedIdentifier.ofRegistry(Identifier.of("variousstatuseffects:keep_inventory"), Registries.STATUS_EFFECT);
 
-		public ValidatedIdentifier civilisation_status_effect_identifier = new ValidatedIdentifier("variousstatuseffects:civilisation");
+		public ValidatedIdentifier civilisation_status_effect_identifier = ValidatedIdentifier.ofRegistry(Identifier.of("variousstatuseffects:civilisation"), Registries.STATUS_EFFECT);
 
-		public ValidatedIdentifier wilderness_status_effect_identifier = new ValidatedIdentifier("variousstatuseffects:wilderness");
+		public ValidatedIdentifier wilderness_status_effect_identifier = ValidatedIdentifier.ofRegistry(Identifier.of("variousstatuseffects:wilderness"), Registries.STATUS_EFFECT);
 
-		@Comment("This status effect enables the building mode")
-		public ValidatedIdentifier building_mode_status_effect_identifier = new ValidatedIdentifier("scriptblocks:building_mode");
+		public ValidatedIdentifier building_mode_status_effect_identifier = ValidatedIdentifier.ofRegistry(Identifier.of("scriptblocks:building_mode"), Registries.STATUS_EFFECT);
 
-		@Comment("This status effect is applied when an item in the 'two_handed_items' item tag is equipped and the two-handed stance is not active")
-		public ValidatedIdentifier needs_two_handing_status_effect_identifier = new ValidatedIdentifier("variousstatuseffects:needs_two_handing");
+		public ValidatedIdentifier needs_two_handing_status_effect_identifier = ValidatedIdentifier.ofRegistry(Identifier.of("variousstatuseffects:needs_two_handing"), Registries.STATUS_EFFECT);
 
-		@Comment("This status effect is applied when an item which is not in the 'attack_items' item tag is equipped and the 'allow_attacking_with_non_attack_items' option is set to false")
-		public ValidatedIdentifier no_attack_item_status_effect_identifier = new ValidatedIdentifier("variousstatuseffects:no_attack_item");
+		public ValidatedIdentifier no_attack_item_status_effect_identifier = ValidatedIdentifier.ofRegistry(Identifier.of("variousstatuseffects:no_attack_item"), Registries.STATUS_EFFECT);
 	}
-
-	@Comment("Additional debug log is shown in the console.")
-	public ValidatedBoolean show_debug_log = new ValidatedBoolean(false);
-
-	@Comment("""
-			The default amount of spell slots.
-			Must be between 0 and 8 (both inclusive)
-			""")
-	public ValidatedInt default_spell_slot_amount = new ValidatedInt(0);
 
 	public InventorySlots inventorySlots = new InventorySlots();
 
 	@RequiresAction(action = Action.RELOG) // TODO test if a dedicated server RESTART is required
 	public static class InventorySlots extends ConfigSection {
-		@Comment("""
-				Set to false to enable the 2x2 crafting grid
-				in the adventure inventory screen
-				""")
-		public ValidatedBoolean disable_inventory_crafting_slots = new ValidatedBoolean(false);
 
+		public ConfigGroup crafting_slots = new ConfigGroup("crafting_slots", true);
+
+		public ValidatedBoolean disable_inventory_crafting_slots = new ValidatedBoolean(false);
 		public ValidatedInt inventory_crafting_slots_x_offset = new ValidatedInt(97);
+		@ConfigGroup.Pop
 		public ValidatedInt inventory_crafting_slots_y_offset = new ValidatedInt(42);
 
-		public ValidatedInt spell_slots_label_x_offset = new ValidatedInt(98);
-		public ValidatedInt spell_slots_label_y_offset = new ValidatedInt(79);
-
+		public ConfigGroup head_slot = new ConfigGroup("head_slot", true);
 		public ValidatedInt head_slot_x_offset = new ValidatedInt(33);
+		@ConfigGroup.Pop
 		public ValidatedInt head_slot_y_offset = new ValidatedInt(18);
 
+		public ConfigGroup chest_slot = new ConfigGroup("chest_slot", true);
 		public ValidatedInt chest_slot_x_offset = new ValidatedInt(8);
+		@ConfigGroup.Pop
 		public ValidatedInt chest_slot_y_offset = new ValidatedInt(54);
 
+		public ConfigGroup legs_slot = new ConfigGroup("legs_slot", true);
 		public ValidatedInt legs_slot_x_offset = new ValidatedInt(8);
+		@ConfigGroup.Pop
 		public ValidatedInt legs_slot_y_offset = new ValidatedInt(90);
 
+		public ConfigGroup feet_slot = new ConfigGroup("feet_slot", true);
 		public ValidatedInt feet_slot_x_offset = new ValidatedInt(77);
+		@ConfigGroup.Pop
 		public ValidatedInt feet_slot_y_offset = new ValidatedInt(90);
 
-		public ValidatedInt hand_slot_x_offset = new ValidatedInt(8);
-		public ValidatedInt hand_slot_y_offset = new ValidatedInt(108);
-
+		public ConfigGroup offhand_slot = new ConfigGroup("offhand_slot", true);
 		public ValidatedInt offhand_slot_x_offset = new ValidatedInt(26);
+		@ConfigGroup.Pop
+//		@ConfigGroup.Pop
 		public ValidatedInt offhand_slot_y_offset = new ValidatedInt(108);
 
+		public ConfigGroup hand_slots = new ConfigGroup("hand_slots", true);
+		public ValidatedInt hand_slot_x_offset = new ValidatedInt(8);
+		@ConfigGroup.Pop
+		public ValidatedInt hand_slot_y_offset = new ValidatedInt(108);
+
+		public ConfigGroup alternative_hand_slots = new ConfigGroup("alternative_hand_slots", true);
 		public ValidatedInt alternative_hand_slot_x_offset = new ValidatedInt(59);
+		@ConfigGroup.Pop
 		public ValidatedInt alternative_hand_slot_y_offset = new ValidatedInt(108);
 
+		public ConfigGroup alternative_offhand_slots = new ConfigGroup("alternative_offhand_slots", true);
 		public ValidatedInt alternative_offhand_slot_x_offset = new ValidatedInt(77);
+		@ConfigGroup.Pop
+//		@ConfigGroup.Pop
 		public ValidatedInt alternative_offhand_slot_y_offset = new ValidatedInt(108);
 
+		public ConfigGroup trinket_slots = new ConfigGroup("trinket_slots", true);
+		public ValidatedInt default_spell_slot_amount = new ValidatedInt(0, 8, 0);
+
+		@ConfigGroup.Pop
 		public ValidatedStringMap<SlotGroupPosition> slot_group_positions = new ValidatedStringMap<>(new HashMap<>(){{
 			put("belts", new SlotGroupPosition(8, 72, 152, 5));
 			put("shoulders", new SlotGroupPosition(8, 36, 26, 5));
@@ -148,6 +155,7 @@ public class ServerConfig extends Config {
 			put("spell_slot_8", new SlotGroupPosition(152, 108, 210, 61));
 		}}, new ValidatedString(), new ValidatedAny<>(new SlotGroupPosition()));
 
+		@Translation(prefix = "rpginventory.server.slot_group_position")
 		public static class SlotGroupPosition implements Walkable {
 
 			public SlotGroupPosition() {

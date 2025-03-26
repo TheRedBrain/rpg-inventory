@@ -26,7 +26,7 @@ public class ServerPlayNetworkHandlerMixin {
 			)
 	)
 	public boolean rpginventory$wrap_isSpectator(ServerPlayerEntity instance, Operation<Boolean> original) {
-		if (RPGInventory.SERVER_CONFIG.enable_hand_slot_overhaul.get()) {
+		if (RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get()) {
 			instance.sendMessage(Text.translatable("hud.message.disabledVanillaItemSwapMechanic"));
 			return true;
 		} else {

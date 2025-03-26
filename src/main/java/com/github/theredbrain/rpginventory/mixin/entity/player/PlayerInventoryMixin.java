@@ -82,7 +82,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 
 	@ModifyReturnValue(method = "getMainHandStack", at = @At("RETURN"))
 	public ItemStack rpginventory$getMainHandStack(ItemStack original) {
-		if (RPGInventory.SERVER_CONFIG.enable_hand_slot_overhaul.get()) {
+		if (RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get()) {
 			ItemStack emptyHandStack = rpginventory$getEmptyHand();
 			ItemStack handStack = rpginventory$getHand();
 			if (!((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed()) {
@@ -240,7 +240,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 	public ItemStack rpginventory$getOffHandStack() {
 		ItemStack emptyOffHandStack = rpginventory$getEmptyOffhand();
 		ItemStack offHandStack = this.offHand.get(0);
-		if (!RPGInventory.SERVER_CONFIG.enable_hand_slot_overhaul.get()) {
+		if (!RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get()) {
 			return ItemUtils.isUsable(offHandStack) && ItemUtils.isOwnedByPlayer(offHandStack, this.player.getGameProfile()) ? offHandStack : ItemStack.EMPTY;
 		}
 		if (!((DuckPlayerEntityMixin) player).rpginventory$isOffhandStackSheathed()) {
@@ -259,7 +259,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 			)
 	)
 	public boolean rpginventory$wrap_canStackAddMore(PlayerInventory instance, ItemStack existingStack, ItemStack stack, Operation<Boolean> original) {
-		if (RPGInventory.SERVER_CONFIG.enable_hand_slot_overhaul.get()) {
+		if (RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get()) {
 			return false;
 		} else {
 			return original.call(instance, existingStack, stack);

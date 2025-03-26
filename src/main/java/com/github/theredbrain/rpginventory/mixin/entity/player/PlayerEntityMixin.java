@@ -214,9 +214,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 		ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
 		this.processEquippedStack(stack);
 		if (slot == EquipmentSlot.MAINHAND) {
-			this.onEquipStack(slot, ((DuckPlayerEntityMixin) this).rpginventory$isHandStackSheathed() || !serverConfig.enable_hand_slot_overhaul.get() ? this.inventory.main.set(this.inventory.selectedSlot, stack) : ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setHand(stack), stack);
+			this.onEquipStack(slot, ((DuckPlayerEntityMixin) this).rpginventory$isHandStackSheathed() || !serverConfig.handSlotOverhaul.enable_hand_slot_overhaul.get() ? this.inventory.main.set(this.inventory.selectedSlot, stack) : ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setHand(stack), stack);
 		} else if (slot == EquipmentSlot.OFFHAND) {
-			this.onEquipStack(slot, ((DuckPlayerEntityMixin) this).rpginventory$isOffhandStackSheathed() && serverConfig.enable_hand_slot_overhaul.get() ? ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setSheathedOffhand(stack) : this.inventory.offHand.set(0, stack), stack);
+			this.onEquipStack(slot, ((DuckPlayerEntityMixin) this).rpginventory$isOffhandStackSheathed() && serverConfig.handSlotOverhaul.enable_hand_slot_overhaul.get() ? ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setSheathedOffhand(stack) : this.inventory.offHand.set(0, stack), stack);
 		} else if (slot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR) {
 			this.onEquipStack(slot, this.inventory.armor.set(slot.getEntitySlotId(), stack), stack);
 		}
@@ -257,7 +257,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
 	@Override
 	public float rpginventory$getActiveSpellSlotAmount() {
-		return (float) Math.min(8, Math.max(0, Math.min(8, Math.max(0, RPGInventory.SERVER_CONFIG.default_spell_slot_amount.get())) + this.getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT)));
+		return (float) Math.min(8, Math.max(0, Math.min(8, Math.max(0, RPGInventory.SERVER_CONFIG.inventorySlots.default_spell_slot_amount.get())) + this.getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT)));
 	}
 
 	@Override
@@ -334,7 +334,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
 	@Unique
 	private void rpginventory$ejectItemsFromInactiveHandSlots() {
-		boolean isHandSlotOverhaulActive = RPGInventory.SERVER_CONFIG.enable_hand_slot_overhaul.get();
+		boolean isHandSlotOverhaulActive = RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get();
 
 		if (this.rpginventory$isHandSlotOverhaulActive() != isHandSlotOverhaulActive) {
 			if (!isHandSlotOverhaulActive) {

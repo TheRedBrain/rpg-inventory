@@ -283,7 +283,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 		}
 
 		if (activeSpellSlotAmount > 0) {
-			context.drawText(this.textRenderer, SPELLS_LABEL_TEXT, i + serverConfig.inventorySlots.spell_slots_label_x_offset.get(), j + serverConfig.inventorySlots.spell_slots_label_y_offset.get(), 4210752, false);
+			context.drawText(this.textRenderer, SPELLS_LABEL_TEXT, i + clientConfig.rpgInventoryScreenSection.spell_slots_label_x_offset.get(), j + clientConfig.rpgInventoryScreenSection.spell_slots_label_y_offset.get(), 4210752, false);
 		}
 
 		for (String key : serverConfig.inventorySlots.slot_group_positions.get().keySet()) {
@@ -309,7 +309,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.feet_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.feet_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
 		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.offhand_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.offhand_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
 
-		if (serverConfig.enable_hand_slot_overhaul.get()) {
+		if (serverConfig.handSlotOverhaul.enable_hand_slot_overhaul.get()) {
 			context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.hand_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.hand_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
 			context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.alternative_hand_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.alternative_hand_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
 			context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.alternative_offhand_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.alternative_offhand_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);

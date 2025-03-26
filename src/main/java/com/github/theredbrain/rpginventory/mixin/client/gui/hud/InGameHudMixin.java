@@ -110,7 +110,7 @@ public abstract class InGameHudMixin {
 				context.drawGuiTexture(RPGInventory.identifier("hud/hotbar_" + activeHotbarSize), hotbar_start_x, context.getScaledWindowHeight() - 22, 182 - (9 - activeHotbarSize) * 20, 22);
 			}
 
-			if (((DuckPlayerEntityMixin) playerEntity).rpginventory$isHandStackSheathed() || clientConfig.hotBarOverhaul.always_show_selected_hotbar_slot.get() || !serverConfig.enable_hand_slot_overhaul.get()) {
+			if (((DuckPlayerEntityMixin) playerEntity).rpginventory$isHandStackSheathed() || clientConfig.hotBarOverhaul.always_show_selected_hotbar_slot.get() || !serverConfig.handSlotOverhaul.enable_hand_slot_overhaul.get()) {
 				context.drawGuiTexture(
 						HOTBAR_SELECTION_FIXED_TEXTURE, hotbar_start_x - 1 + playerEntity.getInventory().selectedSlot * 20, context.getScaledWindowHeight() - 22 - 1, 24, 24
 				);
@@ -132,7 +132,7 @@ public abstract class InGameHudMixin {
 			int x;
 			int y;
 
-			if (serverConfig.enable_hand_slot_overhaul.get()) {
+			if (serverConfig.handSlotOverhaul.enable_hand_slot_overhaul.get()) {
 				if (clientConfig.hotBarOverhaul.show_empty_hand_slots.get() || !(itemStackHand.isEmpty() || itemStackHand.isIn(Tags.EMPTY_HAND_WEAPONS)) || !(itemStackOffHand.isEmpty() || itemStackOffHand.isIn(Tags.EMPTY_HAND_WEAPONS))) {
 					x = context.getScaledWindowWidth() / 2 + clientConfig.hotBarOverhaul.hand_slots_offset_x.get();
 					y = context.getScaledWindowHeight() + clientConfig.hotBarOverhaul.hand_slots_offset_y.get();
@@ -176,7 +176,7 @@ public abstract class InGameHudMixin {
 				this.renderHotbarItem(context, n, o, tickCounter, playerEntity, playerEntity.getInventory().main.get(m), l++);
 			}
 
-			if (serverConfig.enable_hand_slot_overhaul.get()) {
+			if (serverConfig.handSlotOverhaul.enable_hand_slot_overhaul.get()) {
 				x = context.getScaledWindowWidth() / 2 + clientConfig.hotBarOverhaul.hand_slots_offset_x.get();
 				y = context.getScaledWindowHeight() + clientConfig.hotBarOverhaul.hand_slots_offset_y.get();
 

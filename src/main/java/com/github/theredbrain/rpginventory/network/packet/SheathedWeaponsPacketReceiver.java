@@ -13,7 +13,7 @@ public class SheathedWeaponsPacketReceiver implements ClientPlayNetworking.PlayP
 	@Override
 	public void receive(SheathedWeaponsPacket payload, ClientPlayNetworking.Context context) {
 
-		if (RPGInventory.SERVER_CONFIG.enable_hand_slot_overhaul.get()) {
+		if (RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get()) {
 
 			int entityId = payload.id();
 			boolean mainHand = payload.mainHand();

@@ -57,6 +57,12 @@ public class ClientConfig extends Config {
 		public ValidatedBoolean can_hide_status_effect_screen = new ValidatedBoolean(false);
 		public ValidatedBoolean show_effect_screen_when_opening_inventory_screen = new ValidatedBoolean(true);
 
+		public ConfigGroup spell_slots_label = new ConfigGroup("spell_slots_label");
+		public ValidatedInt spell_slots_label_x_offset = new ValidatedInt(98);
+		@ConfigGroup.Pop
+		public ValidatedInt spell_slots_label_y_offset = new ValidatedInt(79);
+
+
 		public ConfigGroup backpack_button = new ConfigGroup("backpack_button");
 		public ValidatedBoolean enable_open_backpack_button = new ValidatedBoolean(false);
 		public ValidatedInt open_backpack_button_offset_x = new ValidatedInt(99);

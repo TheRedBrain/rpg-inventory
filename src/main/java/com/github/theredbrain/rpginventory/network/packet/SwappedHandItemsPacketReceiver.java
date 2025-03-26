@@ -12,7 +12,7 @@ public class SwappedHandItemsPacketReceiver implements ClientPlayNetworking.Play
 	@Override
 	public void receive(SwappedHandItemsPacket payload, ClientPlayNetworking.Context context) {
 
-		if (RPGInventory.SERVER_CONFIG.enable_hand_slot_overhaul.get()) {
+		if (RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get()) {
 
 			int entityId = payload.id();
 			boolean mainHand = payload.mainHand();
