@@ -1,4 +1,8 @@
 {
 	"values": [
+		{
+			"id": "spell_engine:scroll",
+			"required": false
+		}
 	]
 }

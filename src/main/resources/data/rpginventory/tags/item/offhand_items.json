@@ -8,11 +8,51 @@
 		"minecraft:netherite_sword",
 		"minecraft:shield",
 		{
-			"id": "#paladins:shields",
+			"id": "#rpg_series:weapon_type/berserker_axe",
 			"required": false
 		},
 		{
-			"id": "#rogues:daggers",
+			"id": "#rpg_series:weapon_type/dagger",
+			"required": false
+		},
+		{
+			"id": "#rpg_series:weapon_type/knuckle",
+			"required": false
+		},
+		{
+			"id": "#rpg_series:weapon_type/mace",
+			"required": false
+		},
+		{
+			"id": "#rpg_series:weapon_type/shield",
+			"required": false
+		},
+		{
+			"id": "#rpg_series:weapon_type/sickle",
+			"required": false
+		},
+		{
+			"id": "#rpg_series:weapon_type/spell_blade",
+			"required": false
+		},
+		{
+			"id": "#rpg_series:weapon_type/spell_scythe",
+			"required": false
+		},
+		{
+			"id": "#rpg_series:weapon_type/sword",
+			"required": false
+		},
+		{
+			"id": "#c:shields",
+			"required": false
+		},
+		{
+			"id": "#c:sword",
+			"required": false
+		},
+		{
+			"id": "#c:tools/melee_weapon",
 			"required": false
 		}
 	]

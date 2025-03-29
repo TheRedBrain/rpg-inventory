@@ -14,49 +14,76 @@
 		"minecraft:netherite_sword",
 		"minecraft:trident",
 		"minecraft:mace",
-		"rpginventory:default_empty_hand_weapon",
 		{
-			"id": "#archers:spears",
+			"id": "#rpginventory:empty_hand_weapons",
 			"required": false
 		},
 		{
-			"id": "#paladins:claymores",
+			"id": "#rpg_series:weapon_type/berserker_axe",
 			"required": false
 		},
 		{
-			"id": "#paladins:great_hammers",
+			"id": "#rpg_series:weapon_type/claymores",
 			"required": false
 		},
 		{
-			"id": "#paladins:maces",
+			"id": "#rpg_series:weapon_type/dagger",
 			"required": false
 		},
 		{
-			"id": "#rogues:daggers",
+			"id": "#rpg_series:weapon_type/damage_staff",
 			"required": false
 		},
 		{
-			"id": "#rogues:double_axes",
+			"id": "#rpg_series:weapon_type/double_axe",
 			"required": false
 		},
 		{
-			"id": "#rogues:glaives",
+			"id": "#rpg_series:weapon_type/glaive",
 			"required": false
 		},
 		{
-			"id": "#rogues:sickles",
+			"id": "#rpg_series:weapon_type/hammer",
 			"required": false
 		},
 		{
-			"id": "#forcemaster_rpg:knuckles",
+			"id": "#rpg_series:weapon_type/healing_staff",
 			"required": false
 		},
 		{
-			"id": "#berserker_rpg:berserker_axes",
+			"id": "#rpg_series:weapon_type/knuckle",
 			"required": false
 		},
 		{
-			"id": "#witcher_rpg:witcher_swords",
+			"id": "#rpg_series:weapon_type/mace",
+			"required": false
+		},
+		{
+			"id": "#rpg_series:weapon_type/sickle",
+			"required": false
+		},
+		{
+			"id": "#rpg_series:weapon_type/spear",
+			"required": false
+		},
+		{
+			"id": "#rpg_series:weapon_type/spell_blade",
+			"required": false
+		},
+		{
+			"id": "#rpg_series:weapon_type/spell_scythe",
+			"required": false
+		},
+		{
+			"id": "#rpg_series:weapon_type/sword",
+			"required": false
+		},
+		{
+			"id": "#c:sword",
+			"required": false
+		},
+		{
+			"id": "#c:tools/melee_weapon",
 			"required": false
 		}
 	]

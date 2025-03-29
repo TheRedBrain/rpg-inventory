@@ -1,8 +1,15 @@
 {
 	"values": [
-		"rpginventory:default_empty_hand_weapon",
 		{
-			"id": "#forcemaster_rpg:knuckles",
+			"id": "#rpginventory:empty_hand_weapons",
+			"required": false
+		},
+		{
+			"id": "#rpg_series:weapon_type/dagger",
+			"required": false
+		},
+		{
+			"id": "#rpg_series:weapon_type/knuckle",
 			"required": false
 		}
 	]

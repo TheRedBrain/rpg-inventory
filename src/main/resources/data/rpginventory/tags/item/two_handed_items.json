@@ -3,43 +3,47 @@
 		"minecraft:bow",
 		"minecraft:crossbow",
 		{
-			"id": "#archers:bows",
+			"id": "#rpg_series:weapon_type/claymores",
 			"required": false
 		},
 		{
-			"id": "#archers:crossbows",
+			"id": "#rpg_series:weapon_type/damage_staff",
 			"required": false
 		},
 		{
-			"id": "#archers:spears",
+			"id": "#rpg_series:weapon_type/double_axe",
 			"required": false
 		},
 		{
-			"id": "#paladins:claymores",
+			"id": "#rpg_series:weapon_type/glaive",
 			"required": false
 		},
 		{
-			"id": "#paladins:great_hammers",
+			"id": "#rpg_series:weapon_type/hammer",
 			"required": false
 		},
 		{
-			"id": "#paladins:staves",
+			"id": "#rpg_series:weapon_type/healing_staff",
 			"required": false
 		},
 		{
-			"id": "#rogues:double_axes",
+			"id": "#rpg_series:weapon_type/heavy_crossbow",
 			"required": false
 		},
 		{
-			"id": "#rogues:glaives",
+			"id": "#rpg_series:weapon_type/long_bow",
 			"required": false
 		},
 		{
-			"id": "#wizards:staves",
+			"id": "#rpg_series:weapon_type/rapid_crossbow",
 			"required": false
 		},
 		{
-			"id": "#witcher_rpg:witcher_swords",
+			"id": "#rpg_series:weapon_type/short_bow",
+			"required": false
+		},
+		{
+			"id": "#rpg_series:weapon_type/spear",
 			"required": false
 		},
 		{
