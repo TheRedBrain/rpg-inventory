@@ -6,7 +6,7 @@ Adds a new inventory screen with more equipment slots and other equipment relate
 
 Requires
 - [Fabric API](https://modrinth.com/mod/fabric-api)
-- [Cloth Config](https://modrinth.com/mod/cloth-config)
+- [Fzzy Config](https://modrinth.com/mod/fzzy-config)
 - [Trinkets](https://modrinth.com/mod/trinkets)
 - [Slot Customization API](https://modrinth.com/mod/slot-customization-api)
 
@@ -28,6 +28,8 @@ The new slots accessible in the inventory are:
   - The value "default_spell_slot_amount" in the server config file controls the amount of spell slots each player has active by default.\
     The new entity attribute "generic.active_spell_slot_amount" controls how many spell slots are added to/removed from the default active amount. This is 0 by default, but with entity attribute modifiers (EAMs) it can be changed.
 These spell slots are intended to be used with spell books powered by Spell Engine, but they should work with other items as well.
+
+If the "hand slot overhaul" is enabled in the server config, these slots become available too:
 - 1 hand slot
 - 1 alternative hand slot
 - 1 alternative offhand slot
@@ -65,7 +67,7 @@ The empty hand slots always contain a item called "Empty Hand Weapon". This is t
 
 Installing [Stamina Attributes](https://modrinth.com/mod/stamina-attributes) allows for swapping. sheathing and toggling the 2-handed stance to have configurable stamina costs/requirements.
 
-### Note: The vanilla 'Swap Item With Offhand' hotkey no longer has a function.
+### Note: The vanilla 'Swap Item With Offhand' hotkey is disabled when the "hand slot overhaul" is enabled
 
 Using it when items where sheathed could duplicate items. Swapping items into the hotbar using the number keys still works.
 
@@ -81,6 +83,22 @@ Active and visible status effects are listed on the right side of the inventory 
 
 Items in the "unusable_when_low_durability" item tag have the same behaviour as elytra. Instead of getting destroyed when losing all durability, they become unusable until they are repaired. Unusable items have a different translation key (default one + "_broken").
 Inventory slots that contain unusable items have an overlay of a configurable colour. This can be disabled in the client config.
+
+## Player Bound Items
+
+Items can be bound to a player. Player bound items can only be used by that player. Player bound items have an additional tooltip line that shows the player name. (Can be disabled in the client config)
+Inventory slots that contain items bound to another player have an overlay of a configurable colour. This can be disabled in the client config.
+
+### How to bind an item to a player
+
+If an item stack has the "rpginventory:bounds_to_player" component, the item stack will bind itself to a player when it is placed in a player inventory.
+At that point, the "rpginventory:bounds_to_player" component will be removed and the "rpginventory:player_bound" component will be added instead. This component saves a player profile.
+
+## Player Crafted Items
+
+Item stacks that have the "rpginventory:saves_crafting_player" component will save the player, that crafted them. That player is then displayed in a line in the item tooltip (Can be disabled in the client config).
+
+This is purely cosmetic.
 
 ## Additional Item Tooltips
 
@@ -124,8 +142,8 @@ When "wilderness_status_effect_identifier" is a valid status effect identifier a
 
 When the gamerule "destroyDroppedItemsOnDeath" is true and the vanilla gamerule "keepInventory" is false, the items in the players inventory are not dropped when they die. They are destroyed instead.
 
-When "keep_inventory_status_effect_identifier" is a valid status effect identifier, that status effect is applied when an item in the "keeps_inventory_on_death" item tag is equipped (in an equipment, trinket or the offhand slot).
-When the player dies while having that status effect, all equipped items in the "keeps_inventory_on_death" item tag are destroyed. The rest of the inventory is kept, regardless of game rules and stuff like "Curse of Vanishing".
+When "keep_inventory_status_effect_identifier" is a valid status effect identifier, that status effect is applied when an item in the "sacrificed_to_keep_inventory_on_death" item tag is equipped (in an equipment, trinket or the offhand slot).
+When the player dies while having that status effect, all equipped items in the "sacrificed_to_keep_inventory_on_death" item tag are destroyed. The rest of the inventory is kept, regardless of game rules and stuff like "Curse of Vanishing".
 
 ### Various Status Effects Compatibility
 
@@ -134,6 +152,18 @@ All status effect identifier options default to status effects implemented by [V
 ### Player Attribute Screen Compatibility
 
 When the "Player Attribute Screen" mod is installed, a button to toggle the attribute screen is active in the RPG Inventory screen.
+
+### Inventory Size Attributes Compatibility
+
+The hotbar in the HUD can be configured to only show enabled hot bar slots.
+
+### RPG Crafting Compatibility
+
+A button that opens the Hand Crafting Screen can be added to the inventory screens. The 2x2 crafting grid has to be disabled.
+
+### Backpack Attribute Compatibility
+
+A button that opens the Backpack Screen can be added to the inventory screens. The 2x2 crafting grid has to be disabled.
 
 ### Additional Trinket slots
 

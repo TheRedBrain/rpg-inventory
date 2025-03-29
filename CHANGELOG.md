@@ -35,6 +35,8 @@ Changes since Pre-Release 2
 - the "default_spell_slot_amount" server config option now actually effects the amount of spell slots
 - improved descriptions of some config options
 - improved sheathed item positions (Thanks @ Galysso for the contribution)
+- added sheathed item positions for more items
+- revamped item tags with modern collection tags. This should make many mods compatible by default 
 
 # 2.2.0
 
