@@ -266,10 +266,10 @@
 	"rpginventory.server.inventorySlots.alternative_offhand_slot_y_offset": "Offset Y",
 
 	"rpginventory.server.inventorySlots.trinket_slots.prefix": "\n",
-	"rpginventory.server.inventorySlots.trinket_slots": "Trinket Slots",
+	"rpginventory.server.inventorySlots.trinket_slots": "Trinket Slot Groups",
 
-	"rpginventory.server.inventorySlots.default_spell_slot_amount": "Default Spell Slot Amount",
-	"rpginventory.server.inventorySlots.slot_group_positions": "Trinket Slot Positions",
+	"rpginventory.server.inventorySlots.default_spell_slot_amount": "Default Spell Slot Group Amount",
+	"rpginventory.server.inventorySlots.slot_group_positions": "Trinket Slot Group Positions",
 
 	"rpginventory.server.inventorySlots.slot_group_position.survival_x": "Survival Offset X",
 	"rpginventory.server.inventorySlots.slot_group_position.survival_y": "Survival Offset Y",
