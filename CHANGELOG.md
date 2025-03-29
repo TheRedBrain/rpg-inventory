@@ -29,7 +29,12 @@ Changes since Pre-Release 1
 - item bounding can now be disabled for creative mode players
 - player names in the "Bound to..." and "Crafted by..." tooltips can now be formatted using a config option
 - added daggers from "Rogues" to "rpginventory:offhand_items" item tag
-- fixed label of crafting button 
+- fixed label of crafting button
+
+Changes since Pre-Release 2
+- the "default_spell_slot_amount" server config option now actually effects the amount of spell slots
+- improved descriptions of some config options
+- improved sheathed item positions (Thanks @ Galysso for the contribution)
 
 # 2.2.0
 
