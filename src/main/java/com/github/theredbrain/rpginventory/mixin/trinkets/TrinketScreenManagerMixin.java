@@ -116,16 +116,19 @@ public class TrinketScreenManagerMixin {
 				if (r.getX() < 0 && currentScreen.trinkets$isRecipeBookOpen()) {
 					continue;
 				}
-				if (player != null && ((Objects.equals(g.getName(), "spell_slot_1") && player.getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 1)
-						|| (Objects.equals(g.getName(), "spell_slot_2") && player.getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 2)
-						|| (Objects.equals(g.getName(), "spell_slot_3") && player.getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 3)
-						|| (Objects.equals(g.getName(), "spell_slot_4") && player.getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 4)
-						|| (Objects.equals(g.getName(), "spell_slot_5") && player.getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 5)
-						|| (Objects.equals(g.getName(), "spell_slot_6") && player.getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 6)
-						|| (Objects.equals(g.getName(), "spell_slot_7") && player.getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 7)
-						|| (Objects.equals(g.getName(), "spell_slot_8") && player.getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 8)
-				)) {
+				if (player != null){
+					int currentActiveSpellSlotAmount = (int) ((DuckPlayerEntityMixin) player).rpginventory$getActiveSpellSlotAmount();
+					if ((Objects.equals(g.getName(), "spell_slot_1") && currentActiveSpellSlotAmount < 1)
+						|| (Objects.equals(g.getName(), "spell_slot_2") && currentActiveSpellSlotAmount < 2)
+						|| (Objects.equals(g.getName(), "spell_slot_3") && currentActiveSpellSlotAmount < 3)
+						|| (Objects.equals(g.getName(), "spell_slot_4") && currentActiveSpellSlotAmount < 4)
+						|| (Objects.equals(g.getName(), "spell_slot_5") && currentActiveSpellSlotAmount < 5)
+						|| (Objects.equals(g.getName(), "spell_slot_6") && currentActiveSpellSlotAmount < 6)
+						|| (Objects.equals(g.getName(), "spell_slot_7") && currentActiveSpellSlotAmount < 7)
+						|| (Objects.equals(g.getName(), "spell_slot_8") && currentActiveSpellSlotAmount < 8)
+				) {
 					continue;
+				}
 				}
 				if (r.contains(Math.round(mouseX) - x, Math.round(mouseY) - y)) {
 					TrinketsClient.activeGroup = g;

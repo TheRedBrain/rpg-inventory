@@ -1,6 +1,7 @@
 package com.github.theredbrain.rpginventory.mixin.trinkets;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
+import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
 import com.github.theredbrain.rpginventory.screen.DuckPlayerScreenHandlerMixin;
 import com.github.theredbrain.rpginventory.screen.DuckSlotMixin;
@@ -87,15 +88,19 @@ public abstract class SurvivalTrinketSlotMixin extends Slot {
 		Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.wilderness_status_effect_identifier.get());
 		boolean hasWildernessEffect = wilderness_status_effect.isPresent() && livingEntity.hasStatusEffect(wilderness_status_effect.get());
 
+		int currentActiveSpellSlotAmount = 0;
+		if (trinketInventory.getComponent().getEntity() instanceof PlayerEntity playerEntity) {
+			currentActiveSpellSlotAmount = (int) ((DuckPlayerEntityMixin) playerEntity).rpginventory$getActiveSpellSlotAmount();
+		}
 		boolean isSpellSlotActive =
-				!((Objects.equals(this.group.getName(), "spell_slot_1") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 1)
-						|| (Objects.equals(this.group.getName(), "spell_slot_2") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 2)
-						|| (Objects.equals(this.group.getName(), "spell_slot_3") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 3)
-						|| (Objects.equals(this.group.getName(), "spell_slot_4") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 4)
-						|| (Objects.equals(this.group.getName(), "spell_slot_5") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 5)
-						|| (Objects.equals(this.group.getName(), "spell_slot_6") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 6)
-						|| (Objects.equals(this.group.getName(), "spell_slot_7") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 7)
-						|| (Objects.equals(this.group.getName(), "spell_slot_8") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 8)
+				!((Objects.equals(this.group.getName(), "spell_slot_1") && currentActiveSpellSlotAmount < 1)
+						|| (Objects.equals(this.group.getName(), "spell_slot_2") && currentActiveSpellSlotAmount < 2)
+						|| (Objects.equals(this.group.getName(), "spell_slot_3") && currentActiveSpellSlotAmount < 3)
+						|| (Objects.equals(this.group.getName(), "spell_slot_4") && currentActiveSpellSlotAmount < 4)
+						|| (Objects.equals(this.group.getName(), "spell_slot_5") && currentActiveSpellSlotAmount < 5)
+						|| (Objects.equals(this.group.getName(), "spell_slot_6") && currentActiveSpellSlotAmount < 6)
+						|| (Objects.equals(this.group.getName(), "spell_slot_7") && currentActiveSpellSlotAmount < 7)
+						|| (Objects.equals(this.group.getName(), "spell_slot_8") && currentActiveSpellSlotAmount < 8)
 				);
 		cir.setReturnValue(cir.getReturnValue() && isOwned && isSpellSlotActive && (hasCivilisationEffect || bl || (bl2 && !hasWildernessEffect)));
 	}
@@ -131,16 +136,20 @@ public abstract class SurvivalTrinketSlotMixin extends Slot {
 
 	@Inject(method = "isEnabled", at = @At(value = "RETURN"), cancellable = true)
 	public void rpginventory$isEnabled_checkForSlotGroup(CallbackInfoReturnable<Boolean> cir) {
+		int currentActiveSpellSlotAmount = 0;
+		if (trinketInventory.getComponent().getEntity() instanceof PlayerEntity playerEntity) {
+			currentActiveSpellSlotAmount = (int) ((DuckPlayerEntityMixin) playerEntity).rpginventory$getActiveSpellSlotAmount();
+		}
 		cir.setReturnValue(cir.getReturnValue()
 				&& super.isEnabled()
-				&& !((Objects.equals(this.group.getName(), "spell_slot_1") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 1)
-				|| (Objects.equals(this.group.getName(), "spell_slot_2") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 2)
-				|| (Objects.equals(this.group.getName(), "spell_slot_3") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 3)
-				|| (Objects.equals(this.group.getName(), "spell_slot_4") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 4)
-				|| (Objects.equals(this.group.getName(), "spell_slot_5") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 5)
-				|| (Objects.equals(this.group.getName(), "spell_slot_6") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 6)
-				|| (Objects.equals(this.group.getName(), "spell_slot_7") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 7)
-				|| (Objects.equals(this.group.getName(), "spell_slot_8") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 8)
+				&& !((Objects.equals(this.group.getName(), "spell_slot_1") && currentActiveSpellSlotAmount < 1)
+				|| (Objects.equals(this.group.getName(), "spell_slot_2") && currentActiveSpellSlotAmount < 2)
+				|| (Objects.equals(this.group.getName(), "spell_slot_3") && currentActiveSpellSlotAmount < 3)
+				|| (Objects.equals(this.group.getName(), "spell_slot_4") && currentActiveSpellSlotAmount < 4)
+				|| (Objects.equals(this.group.getName(), "spell_slot_5") && currentActiveSpellSlotAmount < 5)
+				|| (Objects.equals(this.group.getName(), "spell_slot_6") && currentActiveSpellSlotAmount < 6)
+				|| (Objects.equals(this.group.getName(), "spell_slot_7") && currentActiveSpellSlotAmount < 7)
+				|| (Objects.equals(this.group.getName(), "spell_slot_8") && currentActiveSpellSlotAmount < 8)
 		));
 	}
 
@@ -149,14 +158,18 @@ public abstract class SurvivalTrinketSlotMixin extends Slot {
 	 */
 	@Inject(method = "isTrinketFocused", at = @At("HEAD"), cancellable = true, remap = false)
 	public void rpginventory$isTrinketFocused(CallbackInfoReturnable<Boolean> cir) {
-		if ((Objects.equals(this.group.getName(), "spell_slot_1") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 1)
-				|| (Objects.equals(this.group.getName(), "spell_slot_2") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 2)
-				|| (Objects.equals(this.group.getName(), "spell_slot_3") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 3)
-				|| (Objects.equals(this.group.getName(), "spell_slot_4") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 4)
-				|| (Objects.equals(this.group.getName(), "spell_slot_5") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 5)
-				|| (Objects.equals(this.group.getName(), "spell_slot_6") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 6)
-				|| (Objects.equals(this.group.getName(), "spell_slot_7") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 7)
-				|| (Objects.equals(this.group.getName(), "spell_slot_8") && trinketInventory.getComponent().getEntity().getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT) < 8)
+		int currentActiveSpellSlotAmount = 0;
+		if (trinketInventory.getComponent().getEntity() instanceof PlayerEntity playerEntity) {
+			currentActiveSpellSlotAmount = (int) ((DuckPlayerEntityMixin) playerEntity).rpginventory$getActiveSpellSlotAmount();
+		}
+		if ((Objects.equals(this.group.getName(), "spell_slot_1") && currentActiveSpellSlotAmount < 1)
+				|| (Objects.equals(this.group.getName(), "spell_slot_2") && currentActiveSpellSlotAmount < 2)
+				|| (Objects.equals(this.group.getName(), "spell_slot_3") && currentActiveSpellSlotAmount < 3)
+				|| (Objects.equals(this.group.getName(), "spell_slot_4") && currentActiveSpellSlotAmount < 4)
+				|| (Objects.equals(this.group.getName(), "spell_slot_5") && currentActiveSpellSlotAmount < 5)
+				|| (Objects.equals(this.group.getName(), "spell_slot_6") && currentActiveSpellSlotAmount < 6)
+				|| (Objects.equals(this.group.getName(), "spell_slot_7") && currentActiveSpellSlotAmount < 7)
+				|| (Objects.equals(this.group.getName(), "spell_slot_8") && currentActiveSpellSlotAmount < 8)
 		) {
 			cir.setReturnValue(false);
 			cir.cancel();
