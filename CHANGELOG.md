@@ -36,7 +36,12 @@ Changes since Pre-Release 2
 - improved descriptions of some config options
 - improved sheathed item positions (Thanks @ Galysso for the contribution)
 - added sheathed item positions for more items
-- revamped item tags with modern collection tags. This should make many mods compatible by default 
+- revamped item tags with modern collection tags. This should make many mods compatible by default
+
+Changes since Pre-Release 3
+- fixed quick move in survival inventory not always working
+- fixed tools don't applying their digging speed bonus
+- fixed desync issues with the pick block and drop item hotkeys
 
 # 2.2.0
 

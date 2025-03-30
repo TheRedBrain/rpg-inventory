@@ -7,13 +7,16 @@ import com.github.theredbrain.rpginventory.registry.ItemRegistry;
 import com.github.theredbrain.rpginventory.util.ItemUtils;
 import com.google.common.collect.ImmutableList;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketsApi;
+import net.minecraft.block.BlockState;
 import net.minecraft.component.type.ProfileComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
@@ -55,6 +58,8 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 	@Shadow
 	@Final
 	private List<DefaultedList<ItemStack>> combinedInventory;
+
+	@Shadow public abstract ItemStack getMainHandStack();
 
 	@Unique
 	private DefaultedList<ItemStack> rpginventory$handSlot;
@@ -264,6 +269,29 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 		} else {
 			return original.call(instance, existingStack, stack);
 		}
+	}
+
+	@WrapMethod(
+			method = "getBlockBreakingSpeed"
+	)
+	public float rpginventory$wrap_getBlockBreakingSpeed(BlockState block, Operation<Float> original) {
+		if (RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get()) {
+			return this.getMainHandStack().getMiningSpeedMultiplier(block);
+		} else {
+			return original.call(block);
+		}
+	}
+
+	@WrapMethod(
+			method = "dropSelectedItem"
+	)
+	public ItemStack rpginventory$wrap_dropSelectedItem(boolean entireStack, Operation<ItemStack> original) {
+		if (RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get()) {
+			if (!((DuckPlayerEntityMixin) this.player).rpginventory$isHandStackSheathed() && !this.rpginventory$getHand().isEmpty()) {
+				return Inventories.splitStack(this.rpginventory$handSlot, 0, entireStack ? this.rpginventory$getHand().getCount() : 1);
+			}
+		}
+		return original.call(entireStack);
 	}
 
 	public ItemStack rpginventory$getHand() {

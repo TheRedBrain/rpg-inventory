@@ -43,6 +43,7 @@
 	"hud.message.weaponsAreSheathed": "Your weapons are sheathed already",
 	"hud.message.disabledVanillaItemSwapMechanic": "The vanilla item swap mechanic was disabled by RPG Inventory.",
 	"hud.message.featureIsDisabledByServer": "This feature is disabled. It can be enabled in the server config.",
+	"hud.message.pickBlockDisabledByHandItems": "Your hand items need to be sheathed to use this feature",
 
 
 	"item.rpginventory.default_empty_hand_weapon": "",

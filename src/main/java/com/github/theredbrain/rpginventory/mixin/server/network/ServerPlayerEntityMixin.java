@@ -1,15 +1,19 @@
 package com.github.theredbrain.rpginventory.mixin.server.network;
 
+import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.rpginventory.network.packet.SheathedWeaponsPacket;
 import com.github.theredbrain.rpginventory.network.packet.SwappedHandItemsPacket;
 import com.github.theredbrain.rpginventory.registry.ItemRegistry;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.mojang.authlib.GameProfile;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -29,6 +33,8 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Du
 
 	@Shadow
 	public abstract boolean isCreative();
+
+	@Shadow public abstract void enterCombat();
 
 	@Unique
 	ItemStack handSlotStack = ItemStack.EMPTY;
@@ -86,6 +92,21 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Du
 				this.isOffHandWeaponSheathed = isOffHandWeaponSheathed;
 			}
 		}
+	}
+
+	@WrapMethod(
+			method = "dropSelectedItem"
+	)
+	public boolean dropSelectedItem(boolean entireStack, Operation<Boolean> original) {
+		if (RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get()) {
+			if (!this.rpginventory$isHandStackSheathed()) {
+				PlayerInventory playerInventory = this.getInventory();
+				ItemStack itemStack = playerInventory.dropSelectedItem(entireStack);
+				this.currentScreenHandler.setPreviousTrackedSlot(46, ((DuckPlayerInventoryMixin)playerInventory).rpginventory$getHand());
+				return this.dropItem(itemStack, false, true) != null;
+			}
+		}
+		return original.call(entireStack);
 	}
 
 	@Unique

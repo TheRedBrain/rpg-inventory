@@ -599,7 +599,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 				if (serverConfig.handSlotOverhaul.enable_hand_slot_overhaul.get()) {
 					EquipmentSlot equipmentSlot = this.owner.getPreferredEquipmentSlot(stack);
 
-					if (!stack.isEmpty() && (equipmentSlot == EquipmentSlot.MAINHAND || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || stack.isIn(Tags.HAND_ITEMS))) {
+					if (!stack.isEmpty() && (!serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || stack.isIn(Tags.HAND_ITEMS))) {
 						if (((DuckPlayerEntityMixin) this.owner).rpginventory$isHandStackSheathed() && !this.slots.get(47).hasStack()) {
 							if (!this.insertItem(stack, 47, 48, false)) {
 								cir.setReturnValue(ItemStack.EMPTY);
@@ -627,7 +627,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 						}
 					}
 
-					if (!stack.isEmpty() && (equipmentSlot == EquipmentSlot.MAINHAND || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || stack.isIn(Tags.HAND_ITEMS))) {
+					if (!stack.isEmpty() && (!serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || stack.isIn(Tags.HAND_ITEMS))) {
 						if (!this.slots.get(49).hasStack()) {
 							if (!this.insertItem(stack, 49, 50, false)) {
 								cir.setReturnValue(ItemStack.EMPTY);
