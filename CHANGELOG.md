@@ -42,6 +42,7 @@ Changes since Pre-Release 3
 - fixed quick move in survival inventory not always working
 - fixed tools don't applying their digging speed bonus
 - fixed desync issues with the pick block and drop item hotkeys
+- fixed an issue where the unsheathed hand item would be an empty stack instead of the empty_hand_weapon item
 
 # 2.2.0
 
