@@ -44,6 +44,9 @@ Changes since Pre-Release 3
 - fixed desync issues with the pick block and drop item hotkeys
 - fixed an issue where the unsheathed hand item would be an empty stack instead of the empty_hand_weapon item
 
+Changes since Pre-Release 4
+- fixed empty hand weapons getting equipped in normal hand slots
+
 # 2.2.0
 
 - removed feature: Attribute Screen, this feature was exported into a standalone mod called "Player Attribute Screen". The "attribute_screen_configuration" config value should work in the new mods config file.

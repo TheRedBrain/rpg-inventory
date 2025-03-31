@@ -214,9 +214,17 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 		ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
 		this.processEquippedStack(stack);
 		if (slot == EquipmentSlot.MAINHAND) {
-			this.onEquipStack(slot, ((DuckPlayerEntityMixin) this).rpginventory$isHandStackSheathed() || !serverConfig.handSlotOverhaul.enable_hand_slot_overhaul.get() ? this.inventory.main.set(this.inventory.selectedSlot, stack) : ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setHand(stack), stack);
+			if (stack.isIn(Tags.EMPTY_HAND_WEAPONS)) {
+				this.onEquipStack(slot, ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setEmptyHand(stack), stack);
+			} else {
+				this.onEquipStack(slot, ((DuckPlayerEntityMixin) this).rpginventory$isHandStackSheathed() || !serverConfig.handSlotOverhaul.enable_hand_slot_overhaul.get() ? this.inventory.main.set(this.inventory.selectedSlot, stack) : ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setHand(stack), stack);
+			}
 		} else if (slot == EquipmentSlot.OFFHAND) {
-			this.onEquipStack(slot, ((DuckPlayerEntityMixin) this).rpginventory$isOffhandStackSheathed() && serverConfig.handSlotOverhaul.enable_hand_slot_overhaul.get() ? ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setSheathedOffhand(stack) : this.inventory.offHand.set(0, stack), stack);
+			if (stack.isIn(Tags.EMPTY_HAND_WEAPONS)) {
+				this.onEquipStack(slot, ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setEmptyOffhand(stack), stack);
+			} else {
+				this.onEquipStack(slot, ((DuckPlayerEntityMixin) this).rpginventory$isOffhandStackSheathed() && serverConfig.handSlotOverhaul.enable_hand_slot_overhaul.get() ? ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setSheathedOffhand(stack) : this.inventory.offHand.set(0, stack), stack);
+			}
 		} else if (slot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR) {
 			this.onEquipStack(slot, this.inventory.armor.set(slot.getEntitySlotId(), stack), stack);
 		}
