@@ -23,7 +23,7 @@
 			"required": false
 		},
 		{
-			"id": "#rpg_series:weapon_type/claymores",
+			"id": "#rpg_series:weapon_type/claymore",
 			"required": false
 		},
 		{
