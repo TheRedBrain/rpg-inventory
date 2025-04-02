@@ -100,6 +100,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
 	@Inject(method = "tick", at = @At("TAIL"))
 	public void rpginventory$tick(CallbackInfo ci) {
+		this.rpginventory$updateEquipmentStatusEffects();
 		if (!this.getWorld().isClient) {
 			this.rpginventory$ejectItemsFromInactiveSpellSlots();
 			this.rpginventory$ejectSecondUniqueRing();
@@ -108,8 +109,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 		}
 	}
 
-	@Inject(method = "updateTurtleHelmet", at = @At("TAIL"))
-	private void rpginventory$updateTurtleHelmet(CallbackInfo ci) {
+	@Unique
+	private void rpginventory$updateEquipmentStatusEffects() {
 
 		boolean keep_inventory_on_death_item_equipped = false;
 		Predicate<ItemStack> keep_inventory_on_death_item_equipped_predicate = stack -> stack.isIn(Tags.SACRIFICED_TO_KEEP_INVENTORY_ON_DEATH);
