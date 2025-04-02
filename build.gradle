@@ -19,11 +19,6 @@ repositories {
 		url = "https://maven.fzzyhmstrs.me/"
 	}
 
-	// Cloth Config TODO remove
-	maven {
-		url "https://maven.shedaniel.me/"
-	}
-
 	// Trinkets, Cloth Config, Mod Menu
 	maven {
 		name = "TerraformersMC"
@@ -63,17 +58,11 @@ dependencies {
 	// Fzzy Config
 	modImplementation"me.fzzyhmstrs:fzzy_config:${project.fzzy_config_version}"
 
-	// Cloth Config TODO remove
-	modImplementation ("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}")
-
 	// Trinkets
 	modImplementation "dev.emi:trinkets:${project.trinkets_version}"
 
 	// Mixin Squared
 	include(implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:0.1.2-beta.4")))
-
-	// Mod Menu TODO remove
-	modImplementation "com.terraformersmc:modmenu:${project.mod_menu_version}"
 
 	// Stamina Attributes
 	modImplementation "maven.modrinth:stamina-attributes:${project.stamina_attributes}"
@@ -86,9 +75,6 @@ dependencies {
 
 	// Mana Attributes
 	modImplementation "maven.modrinth:mana-attributes:${project.mana_attributes}"
-
-	// Overhauled Damage
-	modImplementation "maven.modrinth:overhauled-damage:${project.overhauled_damage_version}"
 
 	// Health Regeneration Overhaul
 	modImplementation "maven.modrinth:health-regeneration-overhaul:${project.health_regeneration_overhaul_version}"
