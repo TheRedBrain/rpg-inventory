@@ -347,6 +347,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
 		if (this.rpginventory$isHandSlotOverhaulActive() != isHandSlotOverhaulActive) {
 			if (!isHandSlotOverhaulActive) {
+				this.rpginventory$setIsHandStackSheathed(true);
+				this.rpginventory$setIsOffhandStackSheathed(true);
 				PlayerInventory playerInventory = this.getInventory();
 				boolean bl = false;
 
