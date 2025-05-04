@@ -4,25 +4,26 @@ import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import com.github.theredbrain.rpginventory.util.ItemUtils;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.screen.slot.Slot;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Optional;
 
 @Mixin(targets = {"net/minecraft/screen/slot/ArmorSlot"})
-public class ArmorSlotMixin {
+public abstract class ArmorSlotMixin extends Slot {
 
 	@Shadow
 	@Final
@@ -32,8 +33,12 @@ public class ArmorSlotMixin {
 	@Final
 	private EquipmentSlot equipmentSlot;
 
-	@Inject(method = "canInsert", at = @At("RETURN"), cancellable = true)
-	public void rpginventory$canInsert(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
+	public ArmorSlotMixin(Inventory inventory, int index, int x, int y) {
+		super(inventory, index, x, y);
+	}
+
+	@WrapMethod(method = "canInsert")
+	public boolean rpginventory$canInsert(ItemStack stack, Operation<Boolean> original) {
 		boolean bl = true;
 		if (this.entity.getServer() != null) {
 			bl = this.entity.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT);
@@ -52,7 +57,25 @@ public class ArmorSlotMixin {
 			isCreative = playerEntity.isCreative();
 		}
 
-		cir.setReturnValue((cir.getReturnValue() || rpginventory$isOfEquipmentTag(stack, this.equipmentSlot)) && isOwned && (hasCivilisationEffect || isCreative || (bl && !hasWildernessEffect)));
+		return (original.call(stack) || rpginventory$isOfEquipmentTag(stack, this.equipmentSlot)) && isOwned && (hasCivilisationEffect || isCreative || (bl && !hasWildernessEffect));
+	}
+
+	@WrapMethod(method = "canTakeItems")
+	public boolean rpginventory$canTakeItems(PlayerEntity playerEntity, Operation<Boolean> original) {
+		boolean bl = true;
+		if (this.entity.getServer() != null) {
+			bl = this.entity.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT);
+		}
+
+		Optional<RegistryEntry.Reference<StatusEffect>> civilisation_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.civilisation_status_effect_identifier.get());
+		boolean hasCivilisationEffect = civilisation_status_effect.isPresent() && this.entity.hasStatusEffect(civilisation_status_effect.get());
+
+		Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.wilderness_status_effect_identifier.get());
+		boolean hasWildernessEffect = wilderness_status_effect.isPresent() && this.entity.hasStatusEffect(wilderness_status_effect.get());
+
+		boolean isCreative = playerEntity.isCreative();
+
+		return original.call(playerEntity) && !this.getStack().contains(RPGInventory.LOAD_OUT_ITEM) && (hasCivilisationEffect || isCreative || (bl && !hasWildernessEffect));
 	}
 
 	@Unique

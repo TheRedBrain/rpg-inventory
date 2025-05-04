@@ -4,6 +4,9 @@
 
 	"category.rpginventory.category": "RPG Inventory",
 
+
+	"container.mannequin": "Mannequin",
+
 	
 	"effect.rpginventory.civilisation_effect": "Civilisation",
 	"effect.rpginventory.civilisation_effect.description": "You feel safe here.",
@@ -50,6 +53,8 @@
 
 	"item.additional_tooltip.player_relation.bound_to": "Bound to %s",
 	"item.additional_tooltip.player_relation.crafted_by": "Crafted by %s",
+	"item.additional_tooltip.load_out_item.line_1": "§3Loadout Item",
+	"item.additional_tooltip.load_out_item.line_2": "§3 - Can only be removed in the Mannequin screen",
 
 	"item.additional_tooltip.functionality.two_handed_item": "Needs To Be Held With Both Hands",
 

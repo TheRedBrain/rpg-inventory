@@ -2,10 +2,13 @@ package com.github.theredbrain.rpginventory;
 
 import com.github.theredbrain.inventorysizeattributes.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.config.ServerConfig;
+import com.github.theredbrain.rpginventory.registry.BlockRegistry;
+import com.github.theredbrain.rpginventory.registry.EntityRegistry;
 import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
 import com.github.theredbrain.rpginventory.registry.ItemComponentRegistry;
 import com.github.theredbrain.rpginventory.registry.ItemRegistry;
 import com.github.theredbrain.rpginventory.registry.PredicateRegistry;
+import com.github.theredbrain.rpginventory.registry.ScreenHandlerTypesRegistry;
 import com.github.theredbrain.rpginventory.registry.ServerPacketRegistry;
 import me.fzzyhmstrs.fzzy_config.api.ConfigApiJava;
 import net.fabricmc.api.ModInitializer;
@@ -13,8 +16,11 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.component.ComponentType;
 import net.minecraft.component.type.ProfileComponent;
 import net.minecraft.entity.attribute.EntityAttribute;
+import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Unit;
 import org.slf4j.Logger;
@@ -31,6 +37,16 @@ public class RPGInventory implements ModInitializer {
 	public static ComponentType<ProfileComponent> PLAYER_BOUND;
 	public static ComponentType<Unit> SAVES_CRAFTING_PLAYER;
 	public static ComponentType<ProfileComponent> PLAYER_CRAFTED;
+	/*
+	 * Equipped items with this component can't be unequipped manually and don't drop on death. They are kept or vanish instead.
+	 * Interacting with a 'mannequin' equips items with this component. Slots have to be either empty or contain a stack with this component for that to happen.
+	 *
+	 * Mannequins have a second interaction that removes all equipped items with this component.
+	 */
+	public static ComponentType<Unit> LOAD_OUT_ITEM;
+
+	public static final TagKey<StatusEffect> PREVENTS_MANNEQUIN_INTERACTION = TagKey.of(RegistryKeys.STATUS_EFFECT, identifier("prevents_mannequin_interaction"));
+	public static final TagKey<StatusEffect> PREVENTS_MANNEQUIN_SLOT_INTERACTION = TagKey.of(RegistryKeys.STATUS_EFFECT, identifier("prevents_mannequin_slot_interaction"));
 
 	public static final boolean isRPGCraftingLoaded = FabricLoader.getInstance().isModLoaded("rpgcrafting");
 	public static final boolean isBackpackAttributeLoaded = FabricLoader.getInstance().isModLoaded("backpackattribute");
@@ -57,10 +73,13 @@ public class RPGInventory implements ModInitializer {
 		ServerPacketRegistry.init();
 
 		// Registry
+		BlockRegistry.init();
+		EntityRegistry.init();
 		ItemComponentRegistry.init();
 		ItemRegistry.init();
 		GameRulesRegistry.init();
 		PredicateRegistry.init();
+		ScreenHandlerTypesRegistry.registerAll();
 	}
 
 	public static Identifier identifier(String path) {

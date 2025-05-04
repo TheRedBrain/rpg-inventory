@@ -4,6 +4,7 @@ import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.RPGInventoryClient;
 import com.github.theredbrain.rpginventory.config.ClientConfig;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.component.type.ProfileComponent;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.Equipment;
@@ -14,8 +15,15 @@ public class ClientEventsRegistry {
 	public static void initializeClientEvents() {
 		ItemTooltipCallback.EVENT.register((stack, context, type, lines) -> {
 			ClientConfig clientConfig = RPGInventoryClient.CLIENT_CONFIG;
+			boolean isLoadOutItem = stack.contains(RPGInventory.LOAD_OUT_ITEM);
+			if (isLoadOutItem && clientConfig.itemTooltipSection.show_load_out_item_tooltip.get()) {
+				lines.add(Text.translatable("item.additional_tooltip.load_out_item.line_1"));
+				if (clientConfig.itemTooltipSection.show_load_out_item_description_tooltip.get()) {
+					lines.add(Text.translatable("item.additional_tooltip.load_out_item.line_2"));
+				}
+			}
 			ProfileComponent playerBoundComponent = stack.get(RPGInventory.PLAYER_BOUND);
-			if (playerBoundComponent != null && clientConfig.itemTooltipSection.show_item_tooltip_bound_to_player_name.get()) {
+			if (!isLoadOutItem && playerBoundComponent != null && clientConfig.itemTooltipSection.show_item_tooltip_bound_to_player_name.get()) {
 				String formatting_config_string = clientConfig.itemTooltipSection.item_tooltip_bound_to_player_name_formatting_string.get();
 				StringBuilder formatting_string = new StringBuilder();
 				if (!formatting_config_string.isEmpty()) {
@@ -26,7 +34,7 @@ public class ClientEventsRegistry {
 				lines.add(Text.translatable("item.additional_tooltip.player_relation.bound_to", formatting_string + playerBoundComponent.gameProfile().getName()));
 			}
 			ProfileComponent playerCraftedComponent = stack.get(RPGInventory.PLAYER_CRAFTED);
-			if (playerCraftedComponent != null && clientConfig.itemTooltipSection.show_item_tooltip_crafted_by_player_name.get()) {
+			if (!isLoadOutItem && playerCraftedComponent != null && clientConfig.itemTooltipSection.show_item_tooltip_crafted_by_player_name.get()) {
 				String formatting_config_string = clientConfig.itemTooltipSection.item_tooltip_crafted_by_player_name_formatting_string.get();
 				StringBuilder formatting_string = new StringBuilder();
 				if (!formatting_config_string.isEmpty()) {
@@ -42,7 +50,7 @@ public class ClientEventsRegistry {
 			}
 
 			// equipment slots
-			if (clientConfig.itemTooltipSection.show_item_tooltip_equipment_slots.get()) {
+			if (!isLoadOutItem && clientConfig.itemTooltipSection.show_item_tooltip_equipment_slots.get()) {
 				Equipment equipment = Equipment.fromStack(stack);
 				if (stack.isIn(Tags.HELMETS) || (equipment != null && equipment.getSlotType() == EquipmentSlot.HEAD)) {
 					lines.add(Text.translatable("item.additional_tooltip.equipment_slot.helmet"));

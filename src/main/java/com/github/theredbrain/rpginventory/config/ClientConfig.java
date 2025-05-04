@@ -94,6 +94,9 @@ public class ClientConfig extends Config {
 
 	public static class ItemTooltipSection extends ConfigSection {
 
+		public ValidatedBoolean show_load_out_item_tooltip = new ValidatedBoolean(true);
+		public ValidatedBoolean show_load_out_item_description_tooltip = new ValidatedBoolean(true);
+
 		public ValidatedBoolean show_item_tooltip_bound_to_player_name = new ValidatedBoolean(true);
 		public ValidatedString item_tooltip_bound_to_player_name_formatting_string = new ValidatedString("");
 

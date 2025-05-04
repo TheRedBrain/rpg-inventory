@@ -30,6 +30,11 @@ public class ItemComponentRegistry {
 				RPGInventory.identifier("player_crafted"),
 				ComponentType.<ProfileComponent>builder().codec(ProfileComponent.CODEC).packetCodec(ProfileComponent.PACKET_CODEC).cache().build()
 		);
+		RPGInventory.LOAD_OUT_ITEM = Registry.register(
+				Registries.DATA_COMPONENT_TYPE,
+				RPGInventory.identifier("load_out_item"),
+				ComponentType.<Unit>builder().codec(Unit.CODEC).packetCodec(PacketCodec.unit(Unit.INSTANCE)).build()
+		);
 	}
 
 	public static void init() {

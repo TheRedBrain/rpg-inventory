@@ -5,14 +5,17 @@ import com.github.theredbrain.inventorysizeattributes.InventorySizeAttributesCli
 import com.github.theredbrain.inventorysizeattributes.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.playerattributescreen.PlayerAttributeScreenClient;
 import com.github.theredbrain.rpgcrafting.RPGCraftingClient;
+import com.github.theredbrain.rpginventory.client.gui.screen.ingame.MannequinScreen;
 import com.github.theredbrain.rpginventory.config.ClientConfig;
 import com.github.theredbrain.rpginventory.registry.ClientEventsRegistry;
 import com.github.theredbrain.rpginventory.registry.ClientPacketRegistry;
 import com.github.theredbrain.rpginventory.registry.KeyBindingsRegistry;
+import com.github.theredbrain.rpginventory.registry.ScreenHandlerTypesRegistry;
 import me.fzzyhmstrs.fzzy_config.api.ConfigApiJava;
 import me.fzzyhmstrs.fzzy_config.api.RegisterType;
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import org.apache.commons.lang3.tuple.MutablePair;
@@ -64,5 +67,6 @@ public class RPGInventoryClient implements ClientModInitializer {
 		// Registry
 		ClientEventsRegistry.initializeClientEvents();
 		KeyBindingsRegistry.registerKeyBindings();
+		HandledScreens.register(ScreenHandlerTypesRegistry.MANNEQUIN_SCREEN_HANDLER, MannequinScreen::new);
 	}
 }

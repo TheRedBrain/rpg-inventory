@@ -13,7 +13,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.screen.slot.Slot;
-import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -51,5 +50,23 @@ public abstract class PlayerScreenHandlerOffHandSlotMixin extends Slot {
 		boolean hasWildernessEffect = wilderness_status_effect.isPresent() && this.field_39410.hasStatusEffect(wilderness_status_effect.get());
 
 		return (stack.isIn(Tags.OFFHAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || !serverConfig.handSlotOverhaul.enable_hand_slot_overhaul.get()) && ItemUtils.isOwnedByPlayer(stack, this.field_39410.getGameProfile()) && (hasCivilisationEffect || this.field_39410.isCreative() || (bl && !hasWildernessEffect)) && !((DuckPlayerEntityMixin) this.field_39410).rpginventory$isOffhandStackSheathed();
+	}
+
+	@Override
+	public boolean canTakeItems(PlayerEntity playerEntity) {
+		boolean bl = true;
+		if (this.field_39410.getServer() != null) {
+			bl = this.field_39410.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT);
+		}
+
+		Optional<RegistryEntry.Reference<StatusEffect>> civilisation_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.civilisation_status_effect_identifier.get());
+		boolean hasCivilisationEffect = civilisation_status_effect.isPresent() && this.field_39410.hasStatusEffect(civilisation_status_effect.get());
+
+		Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.wilderness_status_effect_identifier.get());
+		boolean hasWildernessEffect = wilderness_status_effect.isPresent() && this.field_39410.hasStatusEffect(wilderness_status_effect.get());
+
+		boolean isCreative = playerEntity.isCreative();
+
+		return !this.getStack().contains(RPGInventory.LOAD_OUT_ITEM) && (hasCivilisationEffect || isCreative || (bl && !hasWildernessEffect));
 	}
 }
