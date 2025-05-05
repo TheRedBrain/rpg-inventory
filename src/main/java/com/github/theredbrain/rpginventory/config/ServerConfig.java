@@ -92,6 +92,8 @@ public class ServerConfig extends Config {
 		@ConfigGroup.Pop
 		public ValidatedInt inventory_crafting_slots_y_offset = new ValidatedInt(42);
 
+		public ValidatedInt default_spell_slot_amount = new ValidatedInt(0, 8, 0);
+
 		public ConfigGroup head_slot = new ConfigGroup("head_slot", true);
 		public ValidatedInt head_slot_x_offset = new ValidatedInt(33);
 		@ConfigGroup.Pop
@@ -134,49 +136,130 @@ public class ServerConfig extends Config {
 //		@ConfigGroup.Pop
 		public ValidatedInt alternative_offhand_slot_y_offset = new ValidatedInt(108);
 
-		public ConfigGroup trinket_slots = new ConfigGroup("trinket_slots", true);
-		public ValidatedInt default_spell_slot_amount = new ValidatedInt(0, 8, 0);
-
+		public ConfigGroup belt_slots = new ConfigGroup("belt_slots", true);
+		public ValidatedInt belt_slot_x_offset = new ValidatedInt(8);
 		@ConfigGroup.Pop
-		public ValidatedStringMap<SlotGroupPosition> slot_group_positions = new ValidatedStringMap<>(new HashMap<>(){{
-			put("belts", new SlotGroupPosition(8, 72, 152, 5));
-			put("shoulders", new SlotGroupPosition(8, 36, 26, 5));
-			put("necklaces", new SlotGroupPosition(52, 18, 98, 5));
-			put("rings_1", new SlotGroupPosition(77, 36, 116, 5));
-			put("rings_2", new SlotGroupPosition(77, 54, 134, 5));
-			put("gloves", new SlotGroupPosition(77, 72, 8, 32));
-			put("spell_slot_1", new SlotGroupPosition(98, 90, 192, 7));
-			put("spell_slot_2", new SlotGroupPosition(116, 90, 192, 25));
-			put("spell_slot_3", new SlotGroupPosition(134, 90, 192, 43));
-			put("spell_slot_4", new SlotGroupPosition(152, 90, 192, 61));
-			put("spell_slot_5", new SlotGroupPosition(98, 108, 210, 7));
-			put("spell_slot_6", new SlotGroupPosition(116, 108, 210, 25));
-			put("spell_slot_7", new SlotGroupPosition(134, 108, 210, 43));
-			put("spell_slot_8", new SlotGroupPosition(152, 108, 210, 61));
-		}}, new ValidatedString(), new ValidatedAny<>(new SlotGroupPosition()));
+//		@ConfigGroup.Pop
+		public ValidatedInt belt_slot_y_offset = new ValidatedInt(72);
 
-		@Translation(prefix = "rpginventory.server.slot_group_position")
-		public static class SlotGroupPosition implements Walkable {
+		public ConfigGroup gloves_slots = new ConfigGroup("gloves_slots", true);
+		public ValidatedInt gloves_slot_x_offset = new ValidatedInt(77);
+		@ConfigGroup.Pop
+//		@ConfigGroup.Pop
+		public ValidatedInt gloves_slot_y_offset = new ValidatedInt(72);
 
-			public SlotGroupPosition() {
-				new SlotGroupPosition(0, 0, 0, 0);
-			}
+		public ConfigGroup necklace_slots = new ConfigGroup("necklace_slots", true);
+		public ValidatedInt necklace_slot_x_offset = new ValidatedInt(52);
+		@ConfigGroup.Pop
+//		@ConfigGroup.Pop
+		public ValidatedInt necklace_slot_y_offset = new ValidatedInt(18);
 
-			public SlotGroupPosition(int survival_x, int survival_y, int creative_x, int creative_y) {
-				this.survival_x = survival_x;
-				this.survival_y = survival_y;
-				this.creative_x = creative_x;
-				this.creative_y = creative_y;
-			}
+		public ConfigGroup ring_1_slots = new ConfigGroup("ring_1_slots", true);
+		public ValidatedInt ring_1_slot_x_offset = new ValidatedInt(77);
+		@ConfigGroup.Pop
+//		@ConfigGroup.Pop
+		public ValidatedInt ring_1_slot_y_offset = new ValidatedInt(36);
 
-			public int survival_x;
-			public int survival_y;
-			public int creative_x;
-			public int creative_y;
+		public ConfigGroup ring_2_slots = new ConfigGroup("ring_2_slots", true);
+		public ValidatedInt ring_2_slot_x_offset = new ValidatedInt(77);
+		@ConfigGroup.Pop
+//		@ConfigGroup.Pop
+		public ValidatedInt ring_2_slot_y_offset = new ValidatedInt(54);
 
-			public String toString() {
-				return "survival_x: " + this.survival_x + ", survival_y: " + this.survival_y + ", creative_x: " + this.creative_x + ", creative_y: " + this.creative_y;
-			}
-		}
+		public ConfigGroup shoulders_slots = new ConfigGroup("shoulders_slots", true);
+		public ValidatedInt shoulders_slot_x_offset = new ValidatedInt(8);
+		@ConfigGroup.Pop
+//		@ConfigGroup.Pop
+		public ValidatedInt shoulders_slot_y_offset = new ValidatedInt(36);
+
+		public ConfigGroup spell_1_slots = new ConfigGroup("spell_1_slots", true);
+		public ValidatedInt spell_1_slot_x_offset = new ValidatedInt(98);
+		@ConfigGroup.Pop
+//		@ConfigGroup.Pop
+		public ValidatedInt spell_1_slot_y_offset = new ValidatedInt(90);
+
+		public ConfigGroup spell_2_slots = new ConfigGroup("spell_2_slots", true);
+		public ValidatedInt spell_2_slot_x_offset = new ValidatedInt(116);
+		@ConfigGroup.Pop
+//		@ConfigGroup.Pop
+		public ValidatedInt spell_2_slot_y_offset = new ValidatedInt(90);
+
+		public ConfigGroup spell_3_slots = new ConfigGroup("spell_3_slots", true);
+		public ValidatedInt spell_3_slot_x_offset = new ValidatedInt(134);
+		@ConfigGroup.Pop
+//		@ConfigGroup.Pop
+		public ValidatedInt spell_3_slot_y_offset = new ValidatedInt(90);
+
+		public ConfigGroup spell_4_slots = new ConfigGroup("spell_4_slots", true);
+		public ValidatedInt spell_4_slot_x_offset = new ValidatedInt(152);
+		@ConfigGroup.Pop
+//		@ConfigGroup.Pop
+		public ValidatedInt spell_4_slot_y_offset = new ValidatedInt(90);
+
+		public ConfigGroup spell_5_slots = new ConfigGroup("spell_5_slots", true);
+		public ValidatedInt spell_5_slot_x_offset = new ValidatedInt(98);
+		@ConfigGroup.Pop
+//		@ConfigGroup.Pop
+		public ValidatedInt spell_5_slot_y_offset = new ValidatedInt(108);
+
+		public ConfigGroup spell_6_slots = new ConfigGroup("spell_6_slots", true);
+		public ValidatedInt spell_6_slot_x_offset = new ValidatedInt(116);
+		@ConfigGroup.Pop
+//		@ConfigGroup.Pop
+		public ValidatedInt spell_6_slot_y_offset = new ValidatedInt(108);
+
+		public ConfigGroup spell_7_slots = new ConfigGroup("spell_7_slots", true);
+		public ValidatedInt spell_7_slot_x_offset = new ValidatedInt(134);
+		@ConfigGroup.Pop
+//		@ConfigGroup.Pop
+		public ValidatedInt spell_7_slot_y_offset = new ValidatedInt(108);
+
+		public ConfigGroup spell_8_slots = new ConfigGroup("spell_8_slots", true);
+		public ValidatedInt spell_8_slot_x_offset = new ValidatedInt(152);
+		@ConfigGroup.Pop
+//		@ConfigGroup.Pop
+		public ValidatedInt spell_8_slot_y_offset = new ValidatedInt(108);
+
+//		@ConfigGroup.Pop
+//		public ValidatedStringMap<SlotGroupPosition> slot_group_positions = new ValidatedStringMap<>(new HashMap<>(){{
+//			put("belts", new SlotGroupPosition(8, 72, 152, 5));
+//			put("shoulders", new SlotGroupPosition(8, 36, 26, 5));
+//			put("necklaces", new SlotGroupPosition(52, 18, 98, 5));
+//			put("rings_1", new SlotGroupPosition(77, 36, 116, 5));
+//			put("rings_2", new SlotGroupPosition(77, 54, 134, 5));
+//			put("gloves", new SlotGroupPosition(77, 72, 8, 32));
+//			put("spell_slot_1", new SlotGroupPosition(98, 90, 192, 7));
+//			put("spell_slot_2", new SlotGroupPosition(116, 90, 192, 25));
+//			put("spell_slot_3", new SlotGroupPosition(134, 90, 192, 43));
+//			put("spell_slot_4", new SlotGroupPosition(152, 90, 192, 61));
+//			put("spell_slot_5", new SlotGroupPosition(98, 108, 210, 7));
+//			put("spell_slot_6", new SlotGroupPosition(116, 108, 210, 25));
+//			put("spell_slot_7", new SlotGroupPosition(134, 108, 210, 43));
+//			put("spell_slot_8", new SlotGroupPosition(152, 108, 210, 61));
+//		}}, new ValidatedString(), new ValidatedAny<>(new SlotGroupPosition()));
+//
+//		@Translation(prefix = "rpginventory.server.slot_group_position")
+//		public static class SlotGroupPosition implements Walkable {
+//
+//			public SlotGroupPosition() {
+//				new SlotGroupPosition(0, 0, 0, 0);
+//			}
+//
+//			public SlotGroupPosition(int survival_x, int survival_y, int creative_x, int creative_y) {
+//				this.survival_x = survival_x;
+//				this.survival_y = survival_y;
+//				this.creative_x = creative_x;
+//				this.creative_y = creative_y;
+//			}
+//
+//			public int survival_x;
+//			public int survival_y;
+//			public int creative_x;
+//			public int creative_y;
+//
+//			public String toString() {
+//				return "survival_x: " + this.survival_x + ", survival_y: " + this.survival_y + ", creative_x: " + this.creative_x + ", creative_y: " + this.creative_y;
+//			}
+//		}
 	}
 }

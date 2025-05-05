@@ -286,28 +286,58 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 			context.drawText(this.textRenderer, SPELLS_LABEL_TEXT, i + clientConfig.rpgInventoryScreenSection.spell_slots_label_x_offset.get(), j + clientConfig.rpgInventoryScreenSection.spell_slots_label_y_offset.get(), 4210752, false);
 		}
 
-		for (String key : serverConfig.inventorySlots.slot_group_positions.get().keySet()) {
-			ServerConfig.InventorySlots.SlotGroupPosition slotGroupPosition = serverConfig.inventorySlots.slot_group_positions.get(key);
-			if (slotGroupPosition != null) {
-				if ((key.equals("spell_slot_1") && activeSpellSlotAmount < 1) ||
-						(key.equals("spell_slot_2") && activeSpellSlotAmount < 2) ||
-						(key.equals("spell_slot_3") && activeSpellSlotAmount < 3) ||
-						(key.equals("spell_slot_4") && activeSpellSlotAmount < 4) ||
-						(key.equals("spell_slot_5") && activeSpellSlotAmount < 5) ||
-						(key.equals("spell_slot_6") && activeSpellSlotAmount < 6) ||
-						(key.equals("spell_slot_7") && activeSpellSlotAmount < 7) ||
-						(key.equals("spell_slot_8") && activeSpellSlotAmount < 8)
-				) {
-					continue;
-				}
-				context.drawTexture(SLOT_TEXTURE, i + slotGroupPosition.survival_x - 1, j + slotGroupPosition.survival_y - 1, 0, 0, 18, 18, 18, 18);
-			}
-		}
+//		for (String key : serverConfig.inventorySlots.slot_group_positions.get().keySet()) {
+//			ServerConfig.InventorySlots.SlotGroupPosition slotGroupPosition = serverConfig.inventorySlots.slot_group_positions.get(key);
+//			if (slotGroupPosition != null) {
+//				if ((key.equals("spell_slot_1") && activeSpellSlotAmount < 1) ||
+//						(key.equals("spell_slot_2") && activeSpellSlotAmount < 2) ||
+//						(key.equals("spell_slot_3") && activeSpellSlotAmount < 3) ||
+//						(key.equals("spell_slot_4") && activeSpellSlotAmount < 4) ||
+//						(key.equals("spell_slot_5") && activeSpellSlotAmount < 5) ||
+//						(key.equals("spell_slot_6") && activeSpellSlotAmount < 6) ||
+//						(key.equals("spell_slot_7") && activeSpellSlotAmount < 7) ||
+//						(key.equals("spell_slot_8") && activeSpellSlotAmount < 8)
+//				) {
+//					continue;
+//				}
+//				context.drawTexture(SLOT_TEXTURE, i + slotGroupPosition.survival_x - 1, j + slotGroupPosition.survival_y - 1, 0, 0, 18, 18, 18, 18);
+//			}
+//		}
 		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.head_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.head_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
 		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.chest_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.chest_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
 		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.legs_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.legs_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
 		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.feet_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.feet_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
 		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.offhand_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.offhand_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.belt_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.belt_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.gloves_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.gloves_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.necklace_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.necklace_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.ring_1_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.ring_1_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.ring_2_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.ring_2_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.shoulders_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.shoulders_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+		if (activeSpellSlotAmount > 0) {
+			context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.spell_1_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.spell_1_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+		}
+		if (activeSpellSlotAmount > 1) {
+			context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.spell_2_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.spell_2_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+		}
+		if (activeSpellSlotAmount > 2) {
+			context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.spell_3_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.spell_3_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+		}
+		if (activeSpellSlotAmount > 3) {
+			context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.spell_4_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.spell_4_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+		}
+		if (activeSpellSlotAmount > 4) {
+			context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.spell_5_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.spell_5_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+		}
+		if (activeSpellSlotAmount > 5) {
+			context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.spell_6_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.spell_6_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+		}
+		if (activeSpellSlotAmount > 6) {
+			context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.spell_7_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.spell_7_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+		}
+		if (activeSpellSlotAmount > 7) {
+			context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.spell_8_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.spell_8_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+		}
 
 		if (serverConfig.handSlotOverhaul.enable_hand_slot_overhaul.get()) {
 			context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.hand_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.hand_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);

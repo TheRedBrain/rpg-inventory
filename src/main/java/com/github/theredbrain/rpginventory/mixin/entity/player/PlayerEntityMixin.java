@@ -3,12 +3,18 @@ package com.github.theredbrain.rpginventory.mixin.entity.player;
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.config.ServerConfig;
 import com.github.theredbrain.rpginventory.entity.DuckLivingEntityMixin;
+import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
+import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlotType;
 import com.github.theredbrain.rpginventory.entity.RendersSheathedWeapons;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import com.github.theredbrain.rpginventory.util.ItemUtils;
+import com.google.common.collect.Iterables;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.mojang.authlib.GameProfile;
 import dev.emi.trinkets.api.SlotReference;
 import dev.emi.trinkets.api.TrinketComponent;
@@ -16,6 +22,7 @@ import dev.emi.trinkets.api.TrinketsApi;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
@@ -53,7 +60,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
 	@Shadow
 	@Final
-	private PlayerInventory inventory;
+	PlayerInventory inventory;
 
 	@Shadow
 	@Final
@@ -228,6 +235,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 			}
 		} else if (slot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR) {
 			this.onEquipStack(slot, this.inventory.armor.set(slot.getEntitySlotId(), stack), stack);
+		} else if (slot.getType() == ExtendedEquipmentSlotType.RPG_INVENTORY_SLOT_TYPE) {
+			this.onEquipStack(slot, ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setAdditionalEquipmentStack(slot.getEntitySlotId(), stack), stack);
 		}
 	}
 
@@ -245,6 +254,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 		if (this.getWorld().getGameRules().getBoolean(GameRulesRegistry.DESTROY_DROPPED_ITEMS_ON_DEATH)) {
 			this.inventory.clear();
 		}
+
 	}
 
 	@Inject(method = "getEquippedStack", at = @At("HEAD"), cancellable = true)
@@ -255,13 +265,28 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 		}
 	}
 
+	@WrapMethod(method = "isArmorSlot")
+	protected boolean rpginventory$isArmorSlot(EquipmentSlot slot, Operation<Boolean> original) {
+		return original.call(slot) || slot.getType() == ExtendedEquipmentSlotType.RPG_INVENTORY_SLOT_TYPE;
+	}
+
+	@WrapMethod(method = "damageArmor")
+	public void rpginventory$damageArmor(DamageSource source, float amount, Operation<Void> original) {
+		this.damageEquipment(source, amount, new EquipmentSlot[]{EquipmentSlot.FEET, EquipmentSlot.LEGS, EquipmentSlot.CHEST, EquipmentSlot.HEAD, ExtendedEquipmentSlot.GLOVES, ExtendedEquipmentSlot.SHOULDERS});
+	}
+
 	/**
 	 * @author TheRedBrain
-	 * @reason
+	 * @reason WIP
 	 */
 	@Overwrite
 	public Iterable<ItemStack> getArmorItems() {
 		return ((DuckPlayerInventoryMixin) this.inventory).rpginventory$getArmor();
+	}
+
+	@Override
+	public Iterable<ItemStack> getEquippedItems() {
+		return Iterables.concat(this.getHandItems(), this.getAllArmorItems(), ((DuckPlayerInventoryMixin) this.inventory).rpginventory$getAdditionalNonArmorEquipmentItems());
 	}
 
 	@Override
@@ -327,10 +352,10 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
 		if (this.rpginventory$oldActiveSpellSlotAmount() != activeSpellSlotAmount) {
 			PlayerInventory playerInventory = this.getInventory();
-			for (int j = activeSpellSlotAmount + 1; j < 9; j++) {
+			for (int j = activeSpellSlotAmount; j < 8; j++) {
 
-				if (!((DuckPlayerInventoryMixin) playerInventory).rpginventory$getSpellSlotStack(j).isEmpty()) {
-					playerInventory.offerOrDrop(((DuckPlayerInventoryMixin) playerInventory).rpginventory$setSpellSlotStack(ItemStack.EMPTY, j));
+				if (!((DuckPlayerInventoryMixin) playerInventory).rpginventory$getAdditionalEquipmentStack(6 + j).isEmpty()) {
+					playerInventory.offerOrDrop(((DuckPlayerInventoryMixin) playerInventory).rpginventory$setAdditionalEquipmentStack(6 + j, ItemStack.EMPTY));
 					if (((PlayerEntity) (Object) this) instanceof ServerPlayerEntity serverPlayerEntity) {
 						serverPlayerEntity.sendMessage(Text.translatable("hud.message.spellsRemovedFromInactiveSpellSlots"), false);
 					}
@@ -388,10 +413,10 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 	@Unique
 	private void rpginventory$ejectSecondUniqueRing() {
 		PlayerInventory playerInventory = this.getInventory();
-		ItemStack firstRingStack = ((DuckPlayerInventoryMixin) playerInventory).rpginventory$getRing1Stack();
-		ItemStack secondRingStack = ((DuckPlayerInventoryMixin) playerInventory).rpginventory$getRing2Stack();
+		ItemStack firstRingStack = ((DuckPlayerInventoryMixin) playerInventory).rpginventory$getAdditionalEquipmentStack(3);
+		ItemStack secondRingStack = ((DuckPlayerInventoryMixin) playerInventory).rpginventory$getAdditionalEquipmentStack(4);
 		if (firstRingStack.isIn(Tags.UNIQUE_RINGS) && firstRingStack.getItem() == secondRingStack.getItem()) {
-			playerInventory.offerOrDrop(((DuckPlayerInventoryMixin) playerInventory).rpginventory$setRing2Stack(ItemStack.EMPTY));
+			playerInventory.offerOrDrop(((DuckPlayerInventoryMixin) playerInventory).rpginventory$setAdditionalEquipmentStack(4, ItemStack.EMPTY));
 
 		}
 	}

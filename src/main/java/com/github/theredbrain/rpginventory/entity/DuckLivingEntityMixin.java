@@ -1,5 +1,6 @@
 package com.github.theredbrain.rpginventory.entity;
 
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
 
 import java.util.function.Predicate;

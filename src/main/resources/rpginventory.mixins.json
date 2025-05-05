@@ -4,21 +4,24 @@
   "package": "com.github.theredbrain.rpginventory.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "entity.EquipmentSlotMixin",
+    "entity.EquipmentSlotTypeMixin",
     "entity.LivingEntityMixin",
     "entity.attribute.EntityAttributesMixin",
+    "entity.mob.MobEntityMixin",
     "entity.player.PlayerEntityMixin",
     "entity.player.PlayerInventoryMixin",
     "item.ItemMixin",
     "item.ItemStackMixin",
     "screen.ArmorSlotMixin",
     "screen.PlayerScreenHandlerMixin",
+    "screen.PlayerScreenHandlerMixin_TrinketsReplacement",
     "screen.PlayerScreenHandlerOffHandSlotMixin",
     "screen.SlotMixin",
     "server.network.EntityTrackerEntryMixin",
     "server.network.ServerPlayerEntityMixin",
     "server.network.ServerPlayNetworkHandlerMixin",
-    "trinkets.SurvivalTrinketSlotMixin",
-    "trinkets.TrinketScreenManagerMixin"
+    "trinkets.SurvivalTrinketSlotMixin"
   ],
   "injectors": {
     "defaultRequire": 1
@@ -27,8 +30,10 @@
     "client.MinecraftClientMixin",
     "client.gui.hud.InGameHudMixin",
     "client.gui.screen.ingame.CreativeInventoryScreenMixin",
+    "client.gui.screen.ingame.CreativeInventoryScreenMixin_TrinketsReplacement",
     "client.gui.screen.ingame.HandledScreenMixin",
     "client.gui.screen.ingame.InventoryScreenMixin",
     "client.render.entity.PlayerEntityRendererMixin"
-  ]
+  ],
+  "plugin": "com.github.theredbrain.rpginventory.RPGInventoryMixinConfigPlugin"
 }
