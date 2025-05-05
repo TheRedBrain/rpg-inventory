@@ -241,6 +241,17 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 		}
 	}
 
+	@WrapOperation(
+			method = "dropAll",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/item/ItemStack;isEmpty()Z"
+			)
+	)
+	public boolean rpginventory$wrap_isEmpty(ItemStack instance, Operation<Boolean> original) {
+		return original.call(instance) && !instance.isIn(Tags.EMPTY_HAND_WEAPONS);
+	}
+
 	@Override
 	public ItemStack rpginventory$getOffHandStack() {
 		ItemStack emptyOffHandStack = rpginventory$getEmptyOffhand();
