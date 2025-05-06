@@ -1,13 +1,17 @@
 package com.github.theredbrain.rpginventory.client.gui.screen.ingame;
 
+import com.github.theredbrain.rpgcrafting.RPGCraftingClient;
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.RPGInventoryClient;
+import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.screen.DuckSlotMixin;
 import com.github.theredbrain.rpginventory.screen.MannequinScreenHandler;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.screen.ButtonTextures;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.sound.PositionedSoundInstance;
@@ -30,11 +34,15 @@ public class MannequinScreen extends HandledScreen<MannequinScreenHandler> {
 	private static final Identifier RECIPE_TEXTURE = Identifier.ofVanilla("container/stonecutter/recipe");
 	public static final Identifier SLOT_TEXTURE = Identifier.ofVanilla("textures/gui/sprites/container/slot.png");
 	public static final Identifier MANNEQUIN_BACKGROUND_TEXTURE = RPGInventory.identifier("textures/gui/container/mannequin.png");
+	public static final Identifier BUTTON_TEXTURE = Identifier.ofVanilla("widget/button");
+	public static final Identifier BUTTON_HIGHLIGHTED_TEXTURE = Identifier.ofVanilla("widget/button_highlighted");
+	public static final Text EQUIP_BUTTON_LABEL = Text.translatable("gui.mannequin.equip_button_label");
+	public static final Text UNEQUIP_BUTTON_LABEL = Text.translatable("gui.mannequin.unequip_button_label");
 	//	public static final Identifier SLOT_TEXTURE = Identifier.ofVanilla("textures/gui/sprites/container/slot.png");
 //	private static final Identifier SCROLLER_VERTICAL_6_7_TEXTURE = RPGCrafting.identifier("scroll_bar/scroller_vertical_6_7");
 //	private static final Identifier SCROLLER_VERTICAL_6_7_DISABLED_TEXTURE = RPGCrafting.identifier("scroll_bar/scroller_vertical_6_7_disabled");
-	private final int hotbarSize;
-	private final int inventorySize;
+//	private final int hotbarSize;
+//	private final int inventorySize;
 
 //	private List<RecipeEntry<RPGCraftingRecipe>> recipeList = new ArrayList<>();
 
@@ -46,13 +54,22 @@ public class MannequinScreen extends HandledScreen<MannequinScreenHandler> {
 	private float scrollAmount;
 	private boolean mouseClicked;
 	private int scrollPosition;
-	private final PlayerEntity playerEntity;
+//	private final PlayerEntity playerEntity;
 
 	public MannequinScreen(MannequinScreenHandler handler, PlayerInventory inventory, Text title) {
 		super(handler, inventory, title);
-		this.playerEntity = inventory.player;
-		this.hotbarSize = RPGInventory.getActiveHotbarSize(inventory.player);
-		this.inventorySize = RPGInventory.getActiveInventorySize(inventory.player);
+//		this.playerEntity = inventory.player;
+//		this.hotbarSize = RPGInventory.getActiveHotbarSize(inventory.player);
+//		this.inventorySize = RPGInventory.getActiveInventorySize(inventory.player);
+	}
+
+	private void buttonCallback(int index) {
+		if (this.client != null && this.client.interactionManager != null && this.handler.onButtonClick(this.client.player, index)) {
+
+			MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_STONECUTTER_SELECT_RECIPE, 1.0F));
+
+			this.client.interactionManager.clickButton(this.handler.syncId, index);
+		}
 	}
 
 	@Override
@@ -60,11 +77,15 @@ public class MannequinScreen extends HandledScreen<MannequinScreenHandler> {
 		this.backgroundWidth = 176;
 		this.backgroundHeight = 229;
 
-		this.playerInventoryTitleX = 62;
-		this.playerInventoryTitleY = 139;
+		this.titleX = 98;
+		this.titleY = 6;
+		this.playerInventoryTitleX = 8;
+		this.playerInventoryTitleY = 6;
 
 		super.init();
 
+		this.addDrawableChild(ButtonWidget.builder(EQUIP_BUTTON_LABEL, button -> this.buttonCallback(0)).dimensions(this.x + 7, this.y + 125, 72, 20).build());
+		this.addDrawableChild(ButtonWidget.builder(UNEQUIP_BUTTON_LABEL, button -> this.buttonCallback(1)).dimensions(this.x + 97, this.y + 125, 72, 20).build());
 	}
 
 	@Override
@@ -87,48 +108,81 @@ public class MannequinScreen extends HandledScreen<MannequinScreenHandler> {
 	}
 
 	@Override
-	public boolean mouseClicked(double mouseX, double mouseY, int button) {
-
-		double d = mouseX - this.x - 7;
-		double e = mouseY - this.y - 125;
-		if (d >= 0.0 && e >= 0.0 && d < 72.0 && e < 20.0 && this.client != null && this.client.interactionManager != null && this.handler.onButtonClick(this.client.player, 1)) {
-			MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_STONECUTTER_SELECT_RECIPE, 1.0F));
-
-			this.client.interactionManager.clickButton(this.handler.syncId, 1);
-
-			return true;
-		}
-
-		d = mouseX - this.x - 97;
-		e = mouseY - this.y - 125;
-		if (d >= 0.0 && e >= 0.0 && d < 72.0 && e < 20.0 && this.client != null && this.client.interactionManager != null && this.handler.onButtonClick(this.client.player, 2)) {
-			MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_STONECUTTER_SELECT_RECIPE, 1.0F));
-
-			this.client.interactionManager.clickButton(this.handler.syncId, 2);
-
-			return true;
-		}
-
-		return super.mouseClicked(mouseX, mouseY, button);
-	}
-
-	@Override
 	public void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
-		int x = this.x;
-		int y = this.y;
+		int i = this.x;
+		int j = this.y;
 		int k;
 		int m;
+		int activeSpellSlotAmount = 0;
+		int inventorySize = 0;
+		int hotbarSize = 0;
+		if (this.client != null && this.client.player != null) {
+			activeSpellSlotAmount = (int) ((DuckPlayerEntityMixin) this.client.player).rpginventory$getActiveSpellSlotAmount();
 
-		context.drawTexture(MANNEQUIN_BACKGROUND_TEXTURE, x, y, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
+			hotbarSize = RPGInventory.getActiveHotbarSize(this.client.player);
+			inventorySize = RPGInventory.getActiveInventorySize(this.client.player);
+		}
 
-//		boolean showInactiveSlots = true;//RPGCraftingClient.CLIENT_CONFIG.show_inactive_slots.get();
-//		for (k = 0; k < (showInactiveSlots ? 27 : Math.min(this.inventorySize, 27)); ++k) {
-//			m = (k / 9);
-//			context.drawTexture(SLOT_TEXTURE, x + 61 + (k - (m * 9)) * 18, y + 150 + (m * 18), 0, 0, 18, 18, 18, 18);
+		context.drawTexture(MANNEQUIN_BACKGROUND_TEXTURE, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
+
+		if (activeSpellSlotAmount > 0) {
+			context.drawTexture(SLOT_TEXTURE, i + 7, j + 88, 0, 0, 18, 18, 18, 18);
+		}
+		if (activeSpellSlotAmount > 1) {
+			context.drawTexture(SLOT_TEXTURE, i + 25, j + 88, 0, 0, 18, 18, 18, 18);
+		}
+		if (activeSpellSlotAmount > 2) {
+			context.drawTexture(SLOT_TEXTURE, i + 43, j + 88, 0, 0, 18, 18, 18, 18);
+		}
+		if (activeSpellSlotAmount > 3) {
+			context.drawTexture(SLOT_TEXTURE, i + 61, j + 88, 0, 0, 18, 18, 18, 18);
+		}
+		if (activeSpellSlotAmount > 4) {
+			context.drawTexture(SLOT_TEXTURE, i + 7, j + 106, 0, 0, 18, 18, 18, 18);
+		}
+		if (activeSpellSlotAmount > 5) {
+			context.drawTexture(SLOT_TEXTURE, i + 25, j + 106, 0, 0, 18, 18, 18, 18);
+		}
+		if (activeSpellSlotAmount > 6) {
+			context.drawTexture(SLOT_TEXTURE, i + 43, j + 106, 0, 0, 18, 18, 18, 18);
+		}
+		if (activeSpellSlotAmount > 7) {
+			context.drawTexture(SLOT_TEXTURE, i + 61, j + 106, 0, 0, 18, 18, 18, 18);
+		}
+
+		if (RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get()) {
+			context.drawTexture(SLOT_TEXTURE, i + 25, j + 52, 0, 0, 18, 18, 18, 18);
+			context.drawTexture(SLOT_TEXTURE, i + 25, j + 70, 0, 0, 18, 18, 18, 18);
+			context.drawTexture(SLOT_TEXTURE, i + 43, j + 70, 0, 0, 18, 18, 18, 18);
+
+			context.drawTexture(SLOT_TEXTURE, i + 90 + 25, j + 52, 0, 0, 18, 18, 18, 18);
+			context.drawTexture(SLOT_TEXTURE, i + 90 + 25, j + 70, 0, 0, 18, 18, 18, 18);
+			context.drawTexture(SLOT_TEXTURE, i + 90 + 43, j + 70, 0, 0, 18, 18, 18, 18);
+		}
+
+//		int r = mouseX - x;
+//		int s = mouseY - y;
+//
+//		for (int i = 0; i < 2; i++) {
+////			q = 6839882;
+//			if (r >= 7.0 + i * 90 && s >= 125.0 && r < 7.0 + 72.0 + i * 90 && s < 125.0 + 20.0) {
+//				context.drawGuiTexture(BUTTON_HIGHLIGHTED_TEXTURE, x + 7 + i * 90, y + 125, 72, 20);
+////				q = 16777088;
+//			} else {
+//				context.drawGuiTexture(BUTTON_TEXTURE, x + 7 + i * 90, y + 125, 72, 20);
+//			}
+//			RenderSystem.disableBlend();
+//			context.drawTextWithShadow(this.textRenderer, BUTTON_TEXTS[i], x + 9 + i * 90, y + 130, 16777215);
 //		}
-//		for (k = 0; k < (showInactiveSlots ? 9 : Math.min(this.hotbarSize, 9)); ++k) {
-//			context.drawTexture(SLOT_TEXTURE, x + 61 + k * 18, y + 208, 0, 0, 18, 18, 18, 18);
-//		}
+		boolean showInactiveSlots = RPGInventoryClient.showInactiveInventorySlots();
+		for (k = 0; k < (showInactiveSlots ? 27 : Math.min(inventorySize, 27)); ++k) {
+			m = (k / 9);
+			context.drawTexture(SLOT_TEXTURE, i + 7 + (k - (m * 9)) * 18, j + 146 + (m * 18), 0, 0, 18, 18, 18, 18);
+		}
+		for (k = 0; k < (showInactiveSlots ? 9 : Math.min(hotbarSize, 9)); ++k) {
+			context.drawTexture(SLOT_TEXTURE, i + 7 + k * 18, j + 204, 0, 0, 18, 18, 18, 18);
+		}
+
 
 //		int index = 0;
 //		List<RecipeEntry<RPGCraftingRecipe>> recipeList = this.recipeList;

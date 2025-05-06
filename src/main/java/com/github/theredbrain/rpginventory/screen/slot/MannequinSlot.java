@@ -1,9 +1,12 @@
 package com.github.theredbrain.rpginventory.screen.slot;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
+import com.github.theredbrain.rpginventory.component.type.ExtendedAttributeModifierSlot;
+import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import com.github.theredbrain.rpginventory.screen.DuckSlotMixin;
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -47,10 +50,7 @@ public class MannequinSlot extends Slot {
 				break;
 			}
 		}
-//		stack.get
-//		this.equipmentSlot
 		return (equipmentSlot == this.entity.getPreferredEquipmentSlot(stack) || rpginventory$isOfEquipmentTag(stack, equipmentSlot)) && !hasPreventMannequinSlotInteractionEffect;
-//		return true;
 	}
 
 	@Override
@@ -72,12 +72,48 @@ public class MannequinSlot extends Slot {
 
 	@Unique
 	private boolean rpginventory$isOfEquipmentTag(ItemStack itemStack, EquipmentSlot slot) {
-		return switch (slot) {
-			case FEET -> itemStack.isIn(Tags.BOOTS);
-			case LEGS -> itemStack.isIn(Tags.LEGGINGS);
-			case CHEST -> itemStack.isIn(Tags.CHEST_PLATES);
-			case HEAD -> itemStack.isIn(Tags.HELMETS);
-			default -> false;
-		};
+		if (slot == EquipmentSlot.MAINHAND) {
+			return itemStack.isIn(Tags.HAND_ITEMS);
+		} else if (slot == EquipmentSlot.OFFHAND) {
+			return itemStack.isIn(Tags.OFFHAND_ITEMS);
+		} else if (slot == EquipmentSlot.FEET) {
+			return itemStack.isIn(Tags.BOOTS);
+		} else if (slot == EquipmentSlot.LEGS) {
+			return itemStack.isIn(Tags.LEGGINGS);
+		} else if (slot == EquipmentSlot.CHEST) {
+			return itemStack.isIn(Tags.CHEST_PLATES);
+		} else if (slot == EquipmentSlot.HEAD) {
+			return itemStack.isIn(Tags.HELMETS);
+		} else if (slot == ExtendedEquipmentSlot.BELT) {
+			return itemStack.isIn(Tags.BELTS);
+		} else if (slot == ExtendedEquipmentSlot.GLOVES) {
+			return itemStack.isIn(Tags.GLOVES);
+		} else if (slot == ExtendedEquipmentSlot.NECKLACE) {
+			return itemStack.isIn(Tags.NECKLACES);
+		} else if (slot == ExtendedEquipmentSlot.RING_1) {
+			return itemStack.isIn(Tags.RINGS);
+		} else if (slot == ExtendedEquipmentSlot.RING_2) {
+			return itemStack.isIn(Tags.RINGS);
+		} else if (slot == ExtendedEquipmentSlot.SHOULDERS) {
+			return itemStack.isIn(Tags.SHOULDERS);
+		} else if (slot == ExtendedEquipmentSlot.SPELL_1) {
+			return itemStack.isIn(Tags.SPELLS);
+		} else if (slot == ExtendedEquipmentSlot.SPELL_2) {
+			return itemStack.isIn(Tags.SPELLS);
+		} else if (slot == ExtendedEquipmentSlot.SPELL_3) {
+			return itemStack.isIn(Tags.SPELLS);
+		} else if (slot == ExtendedEquipmentSlot.SPELL_4) {
+			return itemStack.isIn(Tags.SPELLS);
+		} else if (slot == ExtendedEquipmentSlot.SPELL_5) {
+			return itemStack.isIn(Tags.SPELLS);
+		} else if (slot == ExtendedEquipmentSlot.SPELL_6) {
+			return itemStack.isIn(Tags.SPELLS);
+		} else if (slot == ExtendedEquipmentSlot.SPELL_7) {
+			return itemStack.isIn(Tags.SPELLS);
+		} else if (slot == ExtendedEquipmentSlot.SPELL_8) {
+			return itemStack.isIn(Tags.SPELLS);
+		} else {
+			return false;
+		}
 	}
 }

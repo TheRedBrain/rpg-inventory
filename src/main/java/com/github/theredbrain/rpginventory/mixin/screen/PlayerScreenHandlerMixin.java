@@ -9,6 +9,7 @@ import com.github.theredbrain.rpginventory.registry.Tags;
 import com.github.theredbrain.rpginventory.screen.DuckPlayerScreenHandlerMixin;
 import com.github.theredbrain.rpginventory.screen.DuckSlotMixin;
 import com.github.theredbrain.rpginventory.screen.slot.AdditionalEquipmentSlot;
+import com.github.theredbrain.rpginventory.screen.slot.CustomArmorSlot;
 import com.github.theredbrain.rpginventory.util.ItemUtils;
 import com.github.theredbrain.slotcustomizationapi.api.SlotCustomization;
 import com.mojang.datafixers.util.Pair;
@@ -298,25 +299,25 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 		});
 
 		// belt slot
-		this.addSlot(new AdditionalEquipmentSlot(inventory, 48, owner, ExtendedEquipmentSlot.BELT, Tags.BELTS, serverConfig.inventorySlots.belt_slot_x_offset.get(), serverConfig.inventorySlots.belt_slot_y_offset.get(), EMPTY_BELT_SLOT, List.of(Text.translatable("slot.tooltip.belt"))));
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.BELT, 48, serverConfig.inventorySlots.belt_slot_x_offset.get(), serverConfig.inventorySlots.belt_slot_y_offset.get(), EMPTY_BELT_SLOT, List.of(Text.translatable("slot.tooltip.belt"))));
 
 		// gloves slot
-		this.addSlot(new AdditionalEquipmentSlot(inventory, 49, owner, ExtendedEquipmentSlot.GLOVES, Tags.GLOVES, serverConfig.inventorySlots.gloves_slot_x_offset.get(), serverConfig.inventorySlots.gloves_slot_y_offset.get(), EMPTY_GLOVES_SLOT, List.of(Text.translatable("slot.tooltip.gloves"))));
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.GLOVES, 49, serverConfig.inventorySlots.gloves_slot_x_offset.get(), serverConfig.inventorySlots.gloves_slot_y_offset.get(), EMPTY_GLOVES_SLOT, List.of(Text.translatable("slot.tooltip.gloves"))));
 
 		// necklace slot
-		this.addSlot(new AdditionalEquipmentSlot(inventory, 50, owner, ExtendedEquipmentSlot.NECKLACE, Tags.NECKLACES, serverConfig.inventorySlots.necklace_slot_x_offset.get(), serverConfig.inventorySlots.necklace_slot_y_offset.get(), EMPTY_NECKLACE_SLOT, List.of(Text.translatable("slot.tooltip.necklace"))));
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.NECKLACE, 50, serverConfig.inventorySlots.necklace_slot_x_offset.get(), serverConfig.inventorySlots.necklace_slot_y_offset.get(), EMPTY_NECKLACE_SLOT, List.of(Text.translatable("slot.tooltip.necklace"))));
 
 		// ring 1 slot
-		this.addSlot(new AdditionalEquipmentSlot(inventory, 51, owner, ExtendedEquipmentSlot.RING_1, Tags.RINGS, serverConfig.inventorySlots.ring_1_slot_x_offset.get(), serverConfig.inventorySlots.ring_1_slot_y_offset.get(), EMPTY_RING_1_SLOT, List.of(Text.translatable("slot.tooltip.ring_1"))));
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.RING_1, 51, serverConfig.inventorySlots.ring_1_slot_x_offset.get(), serverConfig.inventorySlots.ring_1_slot_y_offset.get(), EMPTY_RING_1_SLOT, List.of(Text.translatable("slot.tooltip.ring_1"))));
 
 		// ring 2 slot
-		this.addSlot(new AdditionalEquipmentSlot(inventory, 52, owner, ExtendedEquipmentSlot.RING_2, Tags.RINGS, serverConfig.inventorySlots.ring_2_slot_x_offset.get(), serverConfig.inventorySlots.ring_2_slot_y_offset.get(), EMPTY_RING_2_SLOT, List.of(Text.translatable("slot.tooltip.ring_2"))));
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.RING_2, 52, serverConfig.inventorySlots.ring_2_slot_x_offset.get(), serverConfig.inventorySlots.ring_2_slot_y_offset.get(), EMPTY_RING_2_SLOT, List.of(Text.translatable("slot.tooltip.ring_2"))));
 
 		// shoulders slot
-		this.addSlot(new AdditionalEquipmentSlot(inventory, 53, owner, ExtendedEquipmentSlot.SHOULDERS, Tags.SHOULDERS, serverConfig.inventorySlots.shoulders_slot_x_offset.get(), serverConfig.inventorySlots.shoulders_slot_y_offset.get(), EMPTY_SHOULDERS_SLOT, List.of(Text.translatable("slot.tooltip.shoulders"))));
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SHOULDERS, 53, serverConfig.inventorySlots.shoulders_slot_x_offset.get(), serverConfig.inventorySlots.shoulders_slot_y_offset.get(), EMPTY_SHOULDERS_SLOT, List.of(Text.translatable("slot.tooltip.shoulders"))));
 
 		// spell 1 slot
-		this.addSlot(new AdditionalEquipmentSlot(inventory, 54, owner, ExtendedEquipmentSlot.SPELL_1, Tags.SPELLS, serverConfig.inventorySlots.spell_1_slot_x_offset.get(), serverConfig.inventorySlots.spell_1_slot_y_offset.get(), EMPTY_SPELL_1_SLOT, List.of(Text.translatable("slot.tooltip.spell_1"))) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SPELL_1, 54, serverConfig.inventorySlots.spell_1_slot_x_offset.get(), serverConfig.inventorySlots.spell_1_slot_y_offset.get(), EMPTY_SPELL_1_SLOT, List.of(Text.translatable("slot.tooltip.spell_1"))) {
 
 			@Override
 			public boolean isEnabled() {
@@ -326,7 +327,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 		});
 
 		// spell 2 slot
-		this.addSlot(new AdditionalEquipmentSlot(inventory, 55, owner, ExtendedEquipmentSlot.SPELL_2, Tags.SPELLS, serverConfig.inventorySlots.spell_2_slot_x_offset.get(), serverConfig.inventorySlots.spell_2_slot_y_offset.get(), EMPTY_SPELL_2_SLOT, List.of(Text.translatable("slot.tooltip.spell_2"))) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SPELL_2, 55, serverConfig.inventorySlots.spell_2_slot_x_offset.get(), serverConfig.inventorySlots.spell_2_slot_y_offset.get(), EMPTY_SPELL_2_SLOT, List.of(Text.translatable("slot.tooltip.spell_2"))) {
 
 			@Override
 			public boolean isEnabled() {
@@ -336,7 +337,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 		});
 
 		// spell 3 slot
-		this.addSlot(new AdditionalEquipmentSlot(inventory, 56, owner, ExtendedEquipmentSlot.SPELL_3, Tags.SPELLS, serverConfig.inventorySlots.spell_3_slot_x_offset.get(), serverConfig.inventorySlots.spell_3_slot_y_offset.get(), EMPTY_SPELL_3_SLOT, List.of(Text.translatable("slot.tooltip.spell_3"))) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SPELL_3, 56, serverConfig.inventorySlots.spell_3_slot_x_offset.get(), serverConfig.inventorySlots.spell_3_slot_y_offset.get(), EMPTY_SPELL_3_SLOT, List.of(Text.translatable("slot.tooltip.spell_3"))) {
 
 			@Override
 			public boolean isEnabled() {
@@ -346,7 +347,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 		});
 
 		// spell 4 slot
-		this.addSlot(new AdditionalEquipmentSlot(inventory, 57, owner, ExtendedEquipmentSlot.SPELL_4, Tags.SPELLS, serverConfig.inventorySlots.spell_4_slot_x_offset.get(), serverConfig.inventorySlots.spell_4_slot_y_offset.get(), EMPTY_SPELL_4_SLOT, List.of(Text.translatable("slot.tooltip.spell_4"))) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SPELL_4, 57, serverConfig.inventorySlots.spell_4_slot_x_offset.get(), serverConfig.inventorySlots.spell_4_slot_y_offset.get(), EMPTY_SPELL_4_SLOT, List.of(Text.translatable("slot.tooltip.spell_4"))) {
 
 			@Override
 			public boolean isEnabled() {
@@ -356,7 +357,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 		});
 
 		// spell 5 slot
-		this.addSlot(new AdditionalEquipmentSlot(inventory, 58, owner, ExtendedEquipmentSlot.SPELL_5, Tags.SPELLS, serverConfig.inventorySlots.spell_5_slot_x_offset.get(), serverConfig.inventorySlots.spell_5_slot_y_offset.get(), EMPTY_SPELL_5_SLOT, List.of(Text.translatable("slot.tooltip.spell_5"))) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SPELL_5, 58, serverConfig.inventorySlots.spell_5_slot_x_offset.get(), serverConfig.inventorySlots.spell_5_slot_y_offset.get(), EMPTY_SPELL_5_SLOT, List.of(Text.translatable("slot.tooltip.spell_5"))) {
 
 			@Override
 			public boolean isEnabled() {
@@ -366,7 +367,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 		});
 
 		// spell 6 slot
-		this.addSlot(new AdditionalEquipmentSlot(inventory, 59, owner, ExtendedEquipmentSlot.SPELL_6, Tags.SPELLS, serverConfig.inventorySlots.spell_6_slot_x_offset.get(), serverConfig.inventorySlots.spell_6_slot_y_offset.get(), EMPTY_SPELL_6_SLOT, List.of(Text.translatable("slot.tooltip.spell_6"))) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SPELL_6, 59, serverConfig.inventorySlots.spell_6_slot_x_offset.get(), serverConfig.inventorySlots.spell_6_slot_y_offset.get(), EMPTY_SPELL_6_SLOT, List.of(Text.translatable("slot.tooltip.spell_6"))) {
 
 			@Override
 			public boolean isEnabled() {
@@ -376,7 +377,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 		});
 
 		// spell 7 slot
-		this.addSlot(new AdditionalEquipmentSlot(inventory, 60, owner, ExtendedEquipmentSlot.SPELL_7, Tags.SPELLS, serverConfig.inventorySlots.spell_7_slot_x_offset.get(), serverConfig.inventorySlots.spell_7_slot_y_offset.get(), EMPTY_SPELL_7_SLOT, List.of(Text.translatable("slot.tooltip.spell_7"))) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SPELL_7, 60, serverConfig.inventorySlots.spell_7_slot_x_offset.get(), serverConfig.inventorySlots.spell_7_slot_y_offset.get(), EMPTY_SPELL_7_SLOT, List.of(Text.translatable("slot.tooltip.spell_7"))) {
 
 			@Override
 			public boolean isEnabled() {
@@ -386,7 +387,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 		});
 
 		// spell 8 slot
-		this.addSlot(new AdditionalEquipmentSlot(inventory, 61, owner, ExtendedEquipmentSlot.SPELL_8, Tags.SPELLS, serverConfig.inventorySlots.spell_8_slot_x_offset.get(), serverConfig.inventorySlots.spell_8_slot_y_offset.get(), EMPTY_SPELL_8_SLOT, List.of(Text.translatable("slot.tooltip.spell_8"))) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SPELL_8, 61, serverConfig.inventorySlots.spell_8_slot_x_offset.get(), serverConfig.inventorySlots.spell_8_slot_y_offset.get(), EMPTY_SPELL_8_SLOT, List.of(Text.translatable("slot.tooltip.spell_8"))) {
 
 			@Override
 			public boolean isEnabled() {

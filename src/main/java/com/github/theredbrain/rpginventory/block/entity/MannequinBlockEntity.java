@@ -19,7 +19,7 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 
 public class MannequinBlockEntity extends LockableContainerBlockEntity {
-	public static final int INVENTORY_SIZE = 8;
+	public static final int INVENTORY_SIZE = 22;
 
 	private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(INVENTORY_SIZE, ItemStack.EMPTY);
 

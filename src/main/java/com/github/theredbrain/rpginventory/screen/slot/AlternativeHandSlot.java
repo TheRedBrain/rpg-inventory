@@ -25,24 +25,18 @@ import org.spongepowered.asm.mixin.Unique;
 import java.util.List;
 import java.util.Optional;
 
-public class CustomArmorSlot extends Slot {
+public class AlternativeHandSlot extends Slot {
 	private final PlayerEntity owner;
 	private final EquipmentSlot equipmentSlot;
 	@Nullable
 	private final Identifier backgroundSprite;
 
-	public CustomArmorSlot(Inventory inventory, PlayerEntity playerEntity, EquipmentSlot equipmentSlot, int index, int x, int y, @Nullable Identifier backgroundSprite, List<Text> tooltip) {
+	public AlternativeHandSlot(Inventory inventory, PlayerEntity playerEntity, EquipmentSlot equipmentSlot, int index, int x, int y, @Nullable Identifier backgroundSprite, List<Text> tooltip) {
 		super(inventory, index, x, y);
 		this.owner = playerEntity;
 		this.equipmentSlot = equipmentSlot;
 		this.backgroundSprite = backgroundSprite;
-		((DuckSlotMixin)this).rpginventory$setSlotTooltipText(tooltip);
-	}
-
-	@Override
-	public void setStack(ItemStack stack, ItemStack previousStack) {
-		this.owner.onEquipStack(this.equipmentSlot, previousStack, stack);
-		super.setStack(stack, previousStack);
+		((DuckSlotMixin) this).rpginventory$setSlotTooltipText(tooltip);
 	}
 
 	@Override

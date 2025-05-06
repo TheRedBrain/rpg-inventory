@@ -7,6 +7,9 @@
 
 	"container.mannequin": "Mannequin",
 
+	"gui.mannequin.equip_button_label": "Equip",
+	"gui.mannequin.unequip_button_label": "Unequip",
+
 	
 	"effect.rpginventory.civilisation_effect": "Civilisation",
 	"effect.rpginventory.civilisation_effect.description": "You feel safe here.",
