@@ -16,11 +16,17 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.function.Predicate;
 
 @Mixin(AttributeModifierSlot.class)
 public class AttributeModifierSlotMixin {
 	@Invoker("<init>")
 	private static AttributeModifierSlot init(String enumName, int index, int id, String name, EquipmentSlot slot) {
+		throw new AssertionError(); // unreachable statement
+	}
+
+	@Invoker("<init>")
+	private static AttributeModifierSlot init(String enumName, int index, int id, String name, Predicate<EquipmentSlot> slotPredicate) {
 		throw new AssertionError(); // unreachable statement
 	}
 
@@ -117,6 +123,8 @@ public class AttributeModifierSlotMixin {
 		values.add(init("SPELL_6", last.ordinal() + 12, last.ordinal() + 12, "spell_6", ExtendedEquipmentSlot.SPELL_6));
 		values.add(init("SPELL_7", last.ordinal() + 13, last.ordinal() + 13, "spell_7", ExtendedEquipmentSlot.SPELL_7));
 		values.add(init("SPELL_8", last.ordinal() + 14, last.ordinal() + 14, "spell_8", ExtendedEquipmentSlot.SPELL_8));
+		values.add(init("RINGS", last.ordinal() + 15, last.ordinal() + 15, "rings", ExtendedAttributeModifierSlot::isRingsSlot));
+		values.add(init("SPELLS", last.ordinal() + 16, last.ordinal() + 16, "spells", ExtendedAttributeModifierSlot::isSpellsSlot));
 
 		field_49231 = values.toArray(new AttributeModifierSlot[0]);
 
