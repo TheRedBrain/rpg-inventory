@@ -4,8 +4,10 @@ import com.github.theredbrain.rpginventory.component.type.ExtendedAttributeModif
 import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.mojang.serialization.Codec;
 import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.util.StringIdentifiable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -22,9 +24,21 @@ public class AttributeModifierSlotMixin {
 		throw new AssertionError(); // unreachable statement
 	}
 
+//	@Shadow
+//	@Final
+//	@Mutable
+//	public static final IntFunction<AttributeModifierSlot> ID_TO_VALUE;
+
 	@Shadow
 	@Final
-	private int id;
+	@Mutable
+	public static final Codec<AttributeModifierSlot> CODEC;
+
+//	public static final PacketCodec<ByteBuf, AttributeModifierSlot> PACKET_CODEC = PacketCodecs.indexed(ID_TO_VALUE, id -> id.id);
+
+//	@Shadow
+//	@Final
+//	private int id;
 
 	// synthetic field, find the name in bytecode
 	// if you are using McDev plugin add @SuppressWarnings("ShadowTarget")
@@ -105,5 +119,11 @@ public class AttributeModifierSlotMixin {
 		values.add(init("SPELL_8", last.ordinal() + 14, last.ordinal() + 14, "spell_8", ExtendedEquipmentSlot.SPELL_8));
 
 		field_49231 = values.toArray(new AttributeModifierSlot[0]);
+
+//		ID_TO_VALUE = ValueLists.createIdToValueFunction(
+//				id -> id.id, values(), ValueLists.OutOfBoundsHandling.ZERO
+//		);
+
+		CODEC = StringIdentifiable.createCodec(AttributeModifierSlot::values);
 	}
 }

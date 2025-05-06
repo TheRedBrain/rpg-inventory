@@ -8,7 +8,6 @@ import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import com.github.theredbrain.rpginventory.screen.DuckPlayerScreenHandlerMixin;
 import com.github.theredbrain.rpginventory.screen.DuckSlotMixin;
-import com.github.theredbrain.rpginventory.screen.slot.AdditionalEquipmentSlot;
 import com.github.theredbrain.rpginventory.screen.slot.CustomArmorSlot;
 import com.github.theredbrain.rpginventory.util.ItemUtils;
 import com.github.theredbrain.slotcustomizationapi.api.SlotCustomization;

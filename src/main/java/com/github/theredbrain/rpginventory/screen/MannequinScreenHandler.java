@@ -8,7 +8,6 @@ import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
 import com.github.theredbrain.rpginventory.registry.ScreenHandlerTypesRegistry;
 import com.github.theredbrain.rpginventory.registry.Tags;
-import com.github.theredbrain.rpginventory.screen.slot.AdditionalEquipmentSlot;
 import com.github.theredbrain.rpginventory.screen.slot.AlternativeHandSlot;
 import com.github.theredbrain.rpginventory.screen.slot.CustomArmorSlot;
 import com.github.theredbrain.rpginventory.screen.slot.MannequinSlot;
