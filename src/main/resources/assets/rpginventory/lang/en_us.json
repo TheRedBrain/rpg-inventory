@@ -52,6 +52,24 @@
 	"hud.message.pickBlockDisabledByHandItems": "Your hand items need to be sheathed to use this feature",
 
 
+	"item.modifiers.belt": "When around Waist:",
+	"item.modifiers.gloves": "When on Hands:",
+	"item.modifiers.necklace": "When around Neck:",
+	"item.modifiers.ring_1": "When on Finger:",
+	"item.modifiers.ring_2": "When on Finger:",
+	"item.modifiers.rings": "When on Finger:",
+	"item.modifiers.shoulders": "When on Shoulders:",
+	"item.modifiers.spell_1": "When in Spell Slot:",
+	"item.modifiers.spell_2": "When in Spell Slot:",
+	"item.modifiers.spell_3": "When in Spell Slot:",
+	"item.modifiers.spell_4": "When in Spell Slot:",
+	"item.modifiers.spell_5": "When in Spell Slot:",
+	"item.modifiers.spell_6": "When in Spell Slot:",
+	"item.modifiers.spell_7": "When in Spell Slot:",
+	"item.modifiers.spell_8": "When in Spell Slot:",
+	"item.modifiers.spells": "When in Spell Slot:",
+
+
 	"item.rpginventory.default_empty_hand_weapon": "",
 
 	"item.additional_tooltip.player_relation.bound_to": "Bound to %s",
