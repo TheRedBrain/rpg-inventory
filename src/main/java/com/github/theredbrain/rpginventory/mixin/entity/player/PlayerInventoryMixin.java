@@ -599,4 +599,12 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 		}
 		return list;
 	}
+
+	public List<ItemStack> rpginventory$getSpellProvidingEquipmentItems() {
+		List<ItemStack> list = new ArrayList<>();
+		for (int i = 0; i < 14; i++) {
+			list.add(this.rpginventory$getAdditionalEquipmentStack(i));
+		}
+		return list;
+	}
 }

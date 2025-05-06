@@ -8,6 +8,8 @@ public interface DuckPlayerInventoryMixin {
 
 	List<ItemStack> rpginventory$getAdditionalNonArmorEquipmentItems();
 
+	List<ItemStack> rpginventory$getSpellProvidingEquipmentItems();
+
 	ItemStack rpginventory$getOffHandStack();
 
 	ItemStack rpginventory$getEmptyHand();

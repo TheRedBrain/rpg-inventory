@@ -19,6 +19,11 @@ repositories {
 		url = "https://maven.fzzyhmstrs.me/"
 	}
 
+	// Cloth Config
+	maven {
+		url "https://maven.shedaniel.me/"
+	}
+
 	// Trinkets, Cloth Config, Mod Menu
 	maven {
 		name = "TerraformersMC"
@@ -38,6 +43,12 @@ repositories {
 		content {
 			includeGroup "maven.modrinth"
 		}
+	}
+
+	// Player Animator
+	maven {
+		name "KosmX's maven"
+		url 'https://maven.kosmx.dev/'
 	}
 
 	// Mixin Squared
@@ -93,6 +104,21 @@ dependencies {
 
 	// Resource Bar API
 	modImplementation "maven.modrinth:resource-bar-api:${project.resource_bar_api_version}"
+
+	// Cloth Config
+	modImplementation ("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}")
+
+	// Player Animation Lib
+	modImplementation("dev.kosmx.player-anim:player-animation-lib-fabric:${project.player_animator_version}")
+
+	// Spell Engine
+	modImplementation("maven.modrinth:spell-engine:${project.spell_engine_version}")
+
+	// Spell Power
+	modImplementation("maven.modrinth:spell-power:${project.spell_power_version}")
+
+	// Tiny Config
+	implementation include("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}")
 
 }
 
