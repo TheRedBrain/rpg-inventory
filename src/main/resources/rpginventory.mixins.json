@@ -4,6 +4,7 @@
   "package": "com.github.theredbrain.rpginventory.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "component.type.AttributeModifierSlotMixin",
     "entity.EquipmentSlotMixin",
     "entity.EquipmentSlotTypeMixin",
     "entity.LivingEntityMixin",
