@@ -12,7 +12,6 @@ import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import com.github.theredbrain.rpginventory.util.ItemUtils;
 import com.google.common.collect.Iterables;
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.mojang.authlib.GameProfile;
@@ -49,8 +48,8 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -213,12 +212,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 		}
 	}
 
-	/**
-	 * @author TheRedBrain
-	 * @reason WIP
-	 */
-	@Overwrite
-	public void equipStack(EquipmentSlot slot, ItemStack stack) {
+	@WrapMethod(method = "equipStack")
+	public void equipStack(EquipmentSlot slot, ItemStack stack, Operation<Void> original) {
 		ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
 		this.processEquippedStack(stack);
 		if (slot == EquipmentSlot.MAINHAND) {
@@ -237,6 +232,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 			this.onEquipStack(slot, this.inventory.armor.set(slot.getEntitySlotId(), stack), stack);
 		} else if (slot.getType() == ExtendedEquipmentSlotType.RPG_INVENTORY_SLOT_TYPE) {
 			this.onEquipStack(slot, ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setAdditionalEquipmentStack(slot.getEntitySlotId(), stack), stack);
+		} else {
+			original.call(slot, stack);
 		}
 	}
 
@@ -257,11 +254,14 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
 	}
 
-	@Inject(method = "getEquippedStack", at = @At("HEAD"), cancellable = true)
-	public void rpginventory$getEquippedStack(EquipmentSlot slot, CallbackInfoReturnable<ItemStack> cir) {
+	@WrapMethod(method = "getEquippedStack")
+	public ItemStack rpginventory$getEquippedStack(EquipmentSlot slot, Operation<ItemStack> original) {
 		if (slot == EquipmentSlot.OFFHAND) {
-			cir.setReturnValue(((DuckPlayerInventoryMixin) this.inventory).rpginventory$getOffHandStack());
-			cir.cancel();
+			return ((DuckPlayerInventoryMixin) this.inventory).rpginventory$getOffHandStack();
+		} else if (slot.getType() == ExtendedEquipmentSlotType.RPG_INVENTORY_SLOT_TYPE) {
+			return ((DuckPlayerInventoryMixin) this.inventory).rpginventory$getAdditionalEquipmentStack(slot.getEntitySlotId());
+		} else {
+			return original.call(slot);
 		}
 	}
 
@@ -275,13 +275,13 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 		this.damageEquipment(source, amount, new EquipmentSlot[]{EquipmentSlot.FEET, EquipmentSlot.LEGS, EquipmentSlot.CHEST, EquipmentSlot.HEAD, ExtendedEquipmentSlot.GLOVES, ExtendedEquipmentSlot.SHOULDERS});
 	}
 
-	/**
-	 * @author TheRedBrain
-	 * @reason WIP
-	 */
-	@Overwrite
-	public Iterable<ItemStack> getArmorItems() {
-		return ((DuckPlayerInventoryMixin) this.inventory).rpginventory$getArmor();
+	@WrapMethod(method = "getArmorItems")
+	public Iterable<ItemStack> rpginventory$getArmorItems(Operation<Iterable<ItemStack>> original) {
+		List<ItemStack> list = new ArrayList<>(List.of(((DuckPlayerInventoryMixin)this.inventory).rpginventory$getAdditionalEquipmentStack(1), ((DuckPlayerInventoryMixin)this.inventory).rpginventory$getAdditionalEquipmentStack(5)));
+		for (ItemStack stack : original.call()) {
+			list.add(stack);
+		}
+		return list;
 	}
 
 	@Override

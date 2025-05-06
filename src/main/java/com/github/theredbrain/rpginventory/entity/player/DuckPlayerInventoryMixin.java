@@ -6,8 +6,6 @@ import java.util.List;
 
 public interface DuckPlayerInventoryMixin {
 
-	List<ItemStack> rpginventory$getArmor();
-
 	List<ItemStack> rpginventory$getAdditionalNonArmorEquipmentItems();
 
 	ItemStack rpginventory$getOffHandStack();

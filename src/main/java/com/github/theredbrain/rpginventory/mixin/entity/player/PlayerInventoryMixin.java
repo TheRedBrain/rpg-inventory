@@ -592,12 +592,6 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 //		return oldStack;
 //	}
 
-	public List<ItemStack> rpginventory$getArmor() {
-		List<ItemStack> list = new ArrayList<>(List.of(this.rpginventory$getAdditionalEquipmentStack(1), this.rpginventory$getAdditionalEquipmentStack(5)));
-		list.addAll(this.armor);
-		return list;
-	}
-
 	public List<ItemStack> rpginventory$getAdditionalNonArmorEquipmentItems() {
 		List<ItemStack> list = new ArrayList<>(List.of(this.rpginventory$getAdditionalEquipmentStack(0), this.rpginventory$getAdditionalEquipmentStack(2), this.rpginventory$getAdditionalEquipmentStack(3), this.rpginventory$getAdditionalEquipmentStack(4)));
 		for (int i = 6; i < 14; i++) {
