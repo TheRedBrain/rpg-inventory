@@ -121,100 +121,117 @@ public class ServerConfig extends Config {
 		public ValidatedInt offhand_slot_y_offset = new ValidatedInt(108);
 
 		public ConfigGroup hand_slots = new ConfigGroup("hand_slots", true);
+		public ValidatedIdentifier hand_background_texture = new ValidatedIdentifier("minecraft:item/empty_slot_sword");
 		public ValidatedInt hand_slot_x_offset = new ValidatedInt(8);
 		@ConfigGroup.Pop
 		public ValidatedInt hand_slot_y_offset = new ValidatedInt(108);
 
 		public ConfigGroup alternative_hand_slots = new ConfigGroup("alternative_hand_slots", true);
+		public ValidatedIdentifier alternative_hand_background_texture = new ValidatedIdentifier("minecraft:item/empty_slot_sword");
 		public ValidatedInt alternative_hand_slot_x_offset = new ValidatedInt(59);
 		@ConfigGroup.Pop
 		public ValidatedInt alternative_hand_slot_y_offset = new ValidatedInt(108);
 
 		public ConfigGroup alternative_offhand_slots = new ConfigGroup("alternative_offhand_slots", true);
+		public ValidatedIdentifier alternative_offhand_background_texture = new ValidatedIdentifier("minecraft:item/empty_armor_slot_shield");
 		public ValidatedInt alternative_offhand_slot_x_offset = new ValidatedInt(77);
 		@ConfigGroup.Pop
 //		@ConfigGroup.Pop
 		public ValidatedInt alternative_offhand_slot_y_offset = new ValidatedInt(108);
 
 		public ConfigGroup belt_slots = new ConfigGroup("belt_slots", true);
+		public ValidatedIdentifier belt_background_texture = new ValidatedIdentifier("rpginventory:item/empty_slot_belt");
 		public ValidatedInt belt_slot_x_offset = new ValidatedInt(8);
 		@ConfigGroup.Pop
 //		@ConfigGroup.Pop
 		public ValidatedInt belt_slot_y_offset = new ValidatedInt(72);
 
 		public ConfigGroup gloves_slots = new ConfigGroup("gloves_slots", true);
+		public ValidatedIdentifier gloves_background_texture = new ValidatedIdentifier("rpginventory:item/empty_slot_gloves");
 		public ValidatedInt gloves_slot_x_offset = new ValidatedInt(77);
 		@ConfigGroup.Pop
 //		@ConfigGroup.Pop
 		public ValidatedInt gloves_slot_y_offset = new ValidatedInt(72);
 
 		public ConfigGroup necklace_slots = new ConfigGroup("necklace_slots", true);
+		public ValidatedIdentifier necklace_background_texture = new ValidatedIdentifier("rpginventory:item/empty_slot_necklace");
 		public ValidatedInt necklace_slot_x_offset = new ValidatedInt(52);
 		@ConfigGroup.Pop
 //		@ConfigGroup.Pop
 		public ValidatedInt necklace_slot_y_offset = new ValidatedInt(18);
 
 		public ConfigGroup ring_1_slots = new ConfigGroup("ring_1_slots", true);
+		public ValidatedIdentifier ring_1_background_texture = new ValidatedIdentifier("rpginventory:item/empty_slot_ring");
 		public ValidatedInt ring_1_slot_x_offset = new ValidatedInt(77);
 		@ConfigGroup.Pop
 //		@ConfigGroup.Pop
 		public ValidatedInt ring_1_slot_y_offset = new ValidatedInt(36);
 
 		public ConfigGroup ring_2_slots = new ConfigGroup("ring_2_slots", true);
+		public ValidatedIdentifier ring_2_background_texture = new ValidatedIdentifier("rpginventory:item/empty_slot_ring");
 		public ValidatedInt ring_2_slot_x_offset = new ValidatedInt(77);
 		@ConfigGroup.Pop
 //		@ConfigGroup.Pop
 		public ValidatedInt ring_2_slot_y_offset = new ValidatedInt(54);
 
 		public ConfigGroup shoulders_slots = new ConfigGroup("shoulders_slots", true);
+		public ValidatedIdentifier shoulders_background_texture = new ValidatedIdentifier("rpginventory:item/empty_slot_shoulders");
 		public ValidatedInt shoulders_slot_x_offset = new ValidatedInt(8);
 		@ConfigGroup.Pop
 //		@ConfigGroup.Pop
 		public ValidatedInt shoulders_slot_y_offset = new ValidatedInt(36);
 
 		public ConfigGroup spell_1_slots = new ConfigGroup("spell_1_slots", true);
+		public ValidatedIdentifier spell_1_background_texture = new ValidatedIdentifier("rpginventory:item/empty_slot_spell");
 		public ValidatedInt spell_1_slot_x_offset = new ValidatedInt(98);
 		@ConfigGroup.Pop
 //		@ConfigGroup.Pop
 		public ValidatedInt spell_1_slot_y_offset = new ValidatedInt(90);
 
 		public ConfigGroup spell_2_slots = new ConfigGroup("spell_2_slots", true);
+		public ValidatedIdentifier spell_2_background_texture = new ValidatedIdentifier("rpginventory:item/empty_slot_spell");
 		public ValidatedInt spell_2_slot_x_offset = new ValidatedInt(116);
 		@ConfigGroup.Pop
 //		@ConfigGroup.Pop
 		public ValidatedInt spell_2_slot_y_offset = new ValidatedInt(90);
 
 		public ConfigGroup spell_3_slots = new ConfigGroup("spell_3_slots", true);
+		public ValidatedIdentifier spell_3_background_texture = new ValidatedIdentifier("rpginventory:item/empty_slot_spell");
 		public ValidatedInt spell_3_slot_x_offset = new ValidatedInt(134);
 		@ConfigGroup.Pop
 //		@ConfigGroup.Pop
 		public ValidatedInt spell_3_slot_y_offset = new ValidatedInt(90);
 
 		public ConfigGroup spell_4_slots = new ConfigGroup("spell_4_slots", true);
+		public ValidatedIdentifier spell_4_background_texture = new ValidatedIdentifier("rpginventory:item/empty_slot_spell");
 		public ValidatedInt spell_4_slot_x_offset = new ValidatedInt(152);
 		@ConfigGroup.Pop
 //		@ConfigGroup.Pop
 		public ValidatedInt spell_4_slot_y_offset = new ValidatedInt(90);
 
 		public ConfigGroup spell_5_slots = new ConfigGroup("spell_5_slots", true);
+		public ValidatedIdentifier spell_5_background_texture = new ValidatedIdentifier("rpginventory:item/empty_slot_spell");
 		public ValidatedInt spell_5_slot_x_offset = new ValidatedInt(98);
 		@ConfigGroup.Pop
 //		@ConfigGroup.Pop
 		public ValidatedInt spell_5_slot_y_offset = new ValidatedInt(108);
 
 		public ConfigGroup spell_6_slots = new ConfigGroup("spell_6_slots", true);
+		public ValidatedIdentifier spell_6_background_texture = new ValidatedIdentifier("rpginventory:item/empty_slot_spell");
 		public ValidatedInt spell_6_slot_x_offset = new ValidatedInt(116);
 		@ConfigGroup.Pop
 //		@ConfigGroup.Pop
 		public ValidatedInt spell_6_slot_y_offset = new ValidatedInt(108);
 
 		public ConfigGroup spell_7_slots = new ConfigGroup("spell_7_slots", true);
+		public ValidatedIdentifier spell_7_background_texture = new ValidatedIdentifier("rpginventory:item/empty_slot_spell");
 		public ValidatedInt spell_7_slot_x_offset = new ValidatedInt(134);
 		@ConfigGroup.Pop
 //		@ConfigGroup.Pop
 		public ValidatedInt spell_7_slot_y_offset = new ValidatedInt(108);
 
 		public ConfigGroup spell_8_slots = new ConfigGroup("spell_8_slots", true);
+		public ValidatedIdentifier spell_8_background_texture = new ValidatedIdentifier("rpginventory:item/empty_slot_spell");
 		public ValidatedInt spell_8_slot_x_offset = new ValidatedInt(152);
 		@ConfigGroup.Pop
 //		@ConfigGroup.Pop

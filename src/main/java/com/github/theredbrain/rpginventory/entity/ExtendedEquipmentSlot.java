@@ -1,6 +1,8 @@
 package com.github.theredbrain.rpginventory.entity;
 
+import com.github.theredbrain.rpginventory.registry.Tags;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.item.ItemStack;
 
 public class ExtendedEquipmentSlot {
     public static EquipmentSlot BELT = EquipmentSlot.valueOf("BELT");
@@ -17,4 +19,50 @@ public class ExtendedEquipmentSlot {
     public static EquipmentSlot SPELL_6 = EquipmentSlot.valueOf("SPELL_6");
     public static EquipmentSlot SPELL_7 = EquipmentSlot.valueOf("SPELL_7");
     public static EquipmentSlot SPELL_8 = EquipmentSlot.valueOf("SPELL_8");
+
+    public static boolean rpginventory$isOfEquipmentTag(ItemStack itemStack, EquipmentSlot slot) {
+        if (slot == EquipmentSlot.MAINHAND) {
+            return itemStack.isIn(Tags.HAND_ITEMS);
+        } else if (slot == EquipmentSlot.OFFHAND) {
+            return itemStack.isIn(Tags.OFFHAND_ITEMS);
+        } else if (slot == EquipmentSlot.FEET) {
+            return itemStack.isIn(Tags.BOOTS);
+        } else if (slot == EquipmentSlot.LEGS) {
+            return itemStack.isIn(Tags.LEGGINGS);
+        } else if (slot == EquipmentSlot.CHEST) {
+            return itemStack.isIn(Tags.CHEST_PLATES);
+        } else if (slot == EquipmentSlot.HEAD) {
+            return itemStack.isIn(Tags.HELMETS);
+        } else if (slot == ExtendedEquipmentSlot.BELT) {
+            return itemStack.isIn(Tags.BELTS);
+        } else if (slot == ExtendedEquipmentSlot.GLOVES) {
+            return itemStack.isIn(Tags.GLOVES);
+        } else if (slot == ExtendedEquipmentSlot.NECKLACE) {
+            return itemStack.isIn(Tags.NECKLACES);
+        } else if (slot == ExtendedEquipmentSlot.RING_1) {
+            return itemStack.isIn(Tags.RINGS);
+        } else if (slot == ExtendedEquipmentSlot.RING_2) {
+            return itemStack.isIn(Tags.RINGS);
+        } else if (slot == ExtendedEquipmentSlot.SHOULDERS) {
+            return itemStack.isIn(Tags.SHOULDERS);
+        } else if (slot == ExtendedEquipmentSlot.SPELL_1) {
+            return itemStack.isIn(Tags.SPELLS);
+        } else if (slot == ExtendedEquipmentSlot.SPELL_2) {
+            return itemStack.isIn(Tags.SPELLS);
+        } else if (slot == ExtendedEquipmentSlot.SPELL_3) {
+            return itemStack.isIn(Tags.SPELLS);
+        } else if (slot == ExtendedEquipmentSlot.SPELL_4) {
+            return itemStack.isIn(Tags.SPELLS);
+        } else if (slot == ExtendedEquipmentSlot.SPELL_5) {
+            return itemStack.isIn(Tags.SPELLS);
+        } else if (slot == ExtendedEquipmentSlot.SPELL_6) {
+            return itemStack.isIn(Tags.SPELLS);
+        } else if (slot == ExtendedEquipmentSlot.SPELL_7) {
+            return itemStack.isIn(Tags.SPELLS);
+        } else if (slot == ExtendedEquipmentSlot.SPELL_8) {
+            return itemStack.isIn(Tags.SPELLS);
+        } else {
+            return false;
+        }
+    }
 }

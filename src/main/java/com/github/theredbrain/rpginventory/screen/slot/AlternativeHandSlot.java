@@ -1,8 +1,8 @@
 package com.github.theredbrain.rpginventory.screen.slot;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
+import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
 import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
-import com.github.theredbrain.rpginventory.registry.Tags;
 import com.github.theredbrain.rpginventory.screen.DuckSlotMixin;
 import com.github.theredbrain.rpginventory.util.ItemUtils;
 import com.mojang.datafixers.util.Pair;
@@ -20,7 +20,6 @@ import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Unique;
 
 import java.util.List;
 import java.util.Optional;
@@ -60,7 +59,7 @@ public class AlternativeHandSlot extends Slot {
 		boolean isOwned = ItemUtils.isOwnedByPlayer(stack, this.owner.getGameProfile());
 		boolean isCreative = this.owner.isCreative();
 
-		return (equipmentSlot == this.owner.getPreferredEquipmentSlot(stack) || rpginventory$isOfEquipmentTag(stack, equipmentSlot)) && isOwned && (hasCivilisationEffect || isCreative || (bl && !hasWildernessEffect));
+		return (equipmentSlot == this.owner.getPreferredEquipmentSlot(stack) || ExtendedEquipmentSlot.rpginventory$isOfEquipmentTag(stack, equipmentSlot)) && isOwned && (hasCivilisationEffect || isCreative || (bl && !hasWildernessEffect));
 	}
 
 	@Override
@@ -91,18 +90,5 @@ public class AlternativeHandSlot extends Slot {
 	@Override
 	public Pair<Identifier, Identifier> getBackgroundSprite() {
 		return this.backgroundSprite != null ? Pair.of(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, this.backgroundSprite) : super.getBackgroundSprite();
-	}
-
-	@Unique
-	private boolean rpginventory$isOfEquipmentTag(ItemStack itemStack, EquipmentSlot slot) {
-		return switch (slot) {
-			case FEET -> itemStack.isIn(Tags.BOOTS);
-			case LEGS -> itemStack.isIn(Tags.LEGGINGS);
-			case CHEST -> itemStack.isIn(Tags.CHEST_PLATES);
-			case HEAD -> itemStack.isIn(Tags.HELMETS);
-			case OFFHAND -> itemStack.isIn(Tags.OFFHAND_ITEMS);
-			case MAINHAND -> itemStack.isIn(Tags.HAND_ITEMS);
-			default -> false;
-		};
 	}
 }

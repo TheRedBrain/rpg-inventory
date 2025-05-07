@@ -27,10 +27,10 @@ public class EquipmentSlotMixin {
 	@Mutable
 	private static EquipmentSlot[] field_6176;
 
-	@Shadow
-	@Final
-	@Mutable
-	public static final Codec<EquipmentSlot> CODEC;
+//	@Shadow
+//	@Final
+//	@Mutable
+//	public static Codec<EquipmentSlot> field_45739;
 
 	// add new property from the static constructor
 	// static blocks are merged into the target class (at the end)
@@ -56,6 +56,6 @@ public class EquipmentSlotMixin {
 
 		field_6176 = values.toArray(new EquipmentSlot[0]);
 
-		CODEC = StringIdentifiable.createCodec(EquipmentSlot::values);
+//		field_45739 = StringIdentifiable.createCodec(EquipmentSlot::values);
 	}
 }
