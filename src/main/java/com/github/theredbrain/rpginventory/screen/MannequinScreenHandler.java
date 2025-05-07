@@ -91,11 +91,11 @@ public class MannequinScreenHandler extends ScreenHandler {
 		EQUIPMENT_SLOTS_START = 36;
 		for (int i = 0; i < 4; i++) {
 			EquipmentSlot equipmentSlot = EQUIPMENT_SLOT_ORDER[i];
-			this.addSlot(new CustomArmorSlot(playerInventory, MannequinScreenHandler.this.owner, equipmentSlot, 39 - i, 8, 17 + i * 18, EMPTY_ARMOR_SLOT_TEXTURES.get(equipmentSlot), ARMOR_SLOT_TOOLTIPS.get(i)));
+			this.addSlot(new CustomArmorSlot(playerInventory, MannequinScreenHandler.this.owner, equipmentSlot, 39 - i, 8, 17 + i * 18, EMPTY_ARMOR_SLOT_TEXTURES.get(equipmentSlot), ARMOR_SLOT_TOOLTIPS.get(i), true));
 		}
 
 		// 40 offhand
-		this.addSlot(new CustomArmorSlot(playerInventory, MannequinScreenHandler.this.owner, EquipmentSlot.OFFHAND, 40, 44, 53, PlayerScreenHandler.EMPTY_OFFHAND_ARMOR_SLOT, List.of(Text.translatable("slot.tooltip.offhand"))) {
+		this.addSlot(new CustomArmorSlot(playerInventory, MannequinScreenHandler.this.owner, EquipmentSlot.OFFHAND, 40, 44, 53, PlayerScreenHandler.EMPTY_OFFHAND_ARMOR_SLOT, List.of(Text.translatable("slot.tooltip.offhand")), true) {
 
 			@Override
 			public boolean isEnabled() {
@@ -122,7 +122,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 		});
 
 		// 41 main hand
-		this.addSlot(new CustomArmorSlot(playerInventory, MannequinScreenHandler.this.owner, EquipmentSlot.MAINHAND, 41, 26, 53, serverConfig.inventorySlots.hand_background_texture.get(), List.of(Text.translatable("slot.tooltip.hand"))) {
+		this.addSlot(new CustomArmorSlot(playerInventory, MannequinScreenHandler.this.owner, EquipmentSlot.MAINHAND, 41, 26, 53, serverConfig.inventorySlots.hand_background_texture.get(), List.of(Text.translatable("slot.tooltip.hand")), true) {
 
 			@Override
 			public boolean isEnabled() {
@@ -149,7 +149,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 		});
 
 		// 42 sheathed main hand
-		this.addSlot(new CustomArmorSlot(playerInventory, MannequinScreenHandler.this.owner, EquipmentSlot.MAINHAND, 42, 26, 53, serverConfig.inventorySlots.hand_background_texture.get(), List.of(Text.translatable("slot.tooltip.hand"))) {
+		this.addSlot(new CustomArmorSlot(playerInventory, MannequinScreenHandler.this.owner, EquipmentSlot.MAINHAND, 42, 26, 53, serverConfig.inventorySlots.hand_background_texture.get(), List.of(Text.translatable("slot.tooltip.hand")), true) {
 
 			@Override
 			public boolean isEnabled() {
@@ -176,7 +176,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 		});
 
 		// 43 sheathed offhand
-		this.addSlot(new CustomArmorSlot(playerInventory, MannequinScreenHandler.this.owner, EquipmentSlot.OFFHAND, 43, 44, 53, PlayerScreenHandler.EMPTY_OFFHAND_ARMOR_SLOT, List.of(Text.translatable("slot.tooltip.offhand"))) {
+		this.addSlot(new CustomArmorSlot(playerInventory, MannequinScreenHandler.this.owner, EquipmentSlot.OFFHAND, 43, 44, 53, PlayerScreenHandler.EMPTY_OFFHAND_ARMOR_SLOT, List.of(Text.translatable("slot.tooltip.offhand")), true) {
 
 			@Override
 			public boolean isEnabled() {
@@ -203,7 +203,8 @@ public class MannequinScreenHandler extends ScreenHandler {
 		});
 
 		// 44 alternative main hand slot
-		this.addSlot(new AlternativeHandSlot(playerInventory, MannequinScreenHandler.this.owner, EquipmentSlot.MAINHAND, 46, 26, 71, serverConfig.inventorySlots.alternative_hand_background_texture.get(), List.of(Text.translatable("slot.tooltip.alternative_hand"))) {
+		this.addSlot(new AlternativeHandSlot(playerInventory, MannequinScreenHandler.this.owner, EquipmentSlot.MAINHAND, 46, 26, 71, serverConfig.inventorySlots.alternative_hand_background_texture.get(), List.of(Text.translatable("slot.tooltip.alternative_hand")), true) {
+
 			@Override
 			public boolean canInsert(ItemStack stack) {
 				boolean bl = true;
@@ -229,7 +230,8 @@ public class MannequinScreenHandler extends ScreenHandler {
 		});
 
 		// 45 alternative offhand slot
-		this.addSlot(new AlternativeHandSlot(playerInventory, MannequinScreenHandler.this.owner, EquipmentSlot.OFFHAND, 47, 44, 71, serverConfig.inventorySlots.alternative_offhand_background_texture.get(), List.of(Text.translatable("slot.tooltip.alternative_offhand"))) {
+		this.addSlot(new AlternativeHandSlot(playerInventory, MannequinScreenHandler.this.owner, EquipmentSlot.OFFHAND, 47, 44, 71, serverConfig.inventorySlots.alternative_offhand_background_texture.get(), List.of(Text.translatable("slot.tooltip.alternative_offhand")), true) {
+
 			@Override
 			public boolean canInsert(ItemStack stack) {
 				boolean bl = true;
@@ -257,25 +259,25 @@ public class MannequinScreenHandler extends ScreenHandler {
 		// index 44 & 45 are the empty hand slots
 
 		// 46 belt slot
-		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.BELT, 48, 62, 71, serverConfig.inventorySlots.belt_background_texture.get(), List.of(Text.translatable("slot.tooltip.belt"))));
+		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.BELT, 48, 62, 71, serverConfig.inventorySlots.belt_background_texture.get(), List.of(Text.translatable("slot.tooltip.belt")), true));
 
 		// 47 gloves slot
-		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.GLOVES, 49, 62, 53, serverConfig.inventorySlots.gloves_background_texture.get(), List.of(Text.translatable("slot.tooltip.gloves"))));
+		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.GLOVES, 49, 62, 53, serverConfig.inventorySlots.gloves_background_texture.get(), List.of(Text.translatable("slot.tooltip.gloves")), true));
 
 		// 48 necklace slot
-		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.NECKLACE, 50, 44, 17, serverConfig.inventorySlots.necklace_background_texture.get(), List.of(Text.translatable("slot.tooltip.necklace"))));
+		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.NECKLACE, 50, 44, 17, serverConfig.inventorySlots.necklace_background_texture.get(), List.of(Text.translatable("slot.tooltip.necklace")), true));
 
 		// 49 ring 1 slot
-		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.RING_1, 51, 62, 17, serverConfig.inventorySlots.ring_1_background_texture.get(), List.of(Text.translatable("slot.tooltip.ring_1"))));
+		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.RING_1, 51, 62, 17, serverConfig.inventorySlots.ring_1_background_texture.get(), List.of(Text.translatable("slot.tooltip.ring_1")), true));
 
 		// 50 ring 2 slot
-		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.RING_2, 52, 62, 35, serverConfig.inventorySlots.ring_2_background_texture.get(), List.of(Text.translatable("slot.tooltip.ring_2"))));
+		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.RING_2, 52, 62, 35, serverConfig.inventorySlots.ring_2_background_texture.get(), List.of(Text.translatable("slot.tooltip.ring_2")), true));
 
 		// 51 shoulders slot
-		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.SHOULDERS, 53, 26, 17, serverConfig.inventorySlots.shoulders_background_texture.get(), List.of(Text.translatable("slot.tooltip.shoulders"))));
+		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.SHOULDERS, 53, 26, 17, serverConfig.inventorySlots.shoulders_background_texture.get(), List.of(Text.translatable("slot.tooltip.shoulders")), true));
 
 		// 52 spell 1 slot
-		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.SPELL_1, 54, 8, 89, serverConfig.inventorySlots.spell_1_background_texture.get(), List.of(Text.translatable("slot.tooltip.spell_1"))) {
+		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.SPELL_1, 54, 8, 89, serverConfig.inventorySlots.spell_1_background_texture.get(), List.of(Text.translatable("slot.tooltip.spell_1")), true) {
 
 			@Override
 			public boolean isEnabled() {
@@ -285,7 +287,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 		});
 
 		// 53 spell 2 slot
-		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.SPELL_2, 55, 26, 89, serverConfig.inventorySlots.spell_2_background_texture.get(), List.of(Text.translatable("slot.tooltip.spell_2"))) {
+		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.SPELL_2, 55, 26, 89, serverConfig.inventorySlots.spell_2_background_texture.get(), List.of(Text.translatable("slot.tooltip.spell_2")), true) {
 
 			@Override
 			public boolean isEnabled() {
@@ -295,7 +297,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 		});
 
 		// 54 spell 3 slot
-		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.SPELL_3, 56, 44, 89, serverConfig.inventorySlots.spell_3_background_texture.get(), List.of(Text.translatable("slot.tooltip.spell_3"))) {
+		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.SPELL_3, 56, 44, 89, serverConfig.inventorySlots.spell_3_background_texture.get(), List.of(Text.translatable("slot.tooltip.spell_3")), true) {
 
 			@Override
 			public boolean isEnabled() {
@@ -305,7 +307,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 		});
 
 		// 55 spell 4 slot
-		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.SPELL_4, 57, 62, 89, serverConfig.inventorySlots.spell_4_background_texture.get(), List.of(Text.translatable("slot.tooltip.spell_4"))) {
+		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.SPELL_4, 57, 62, 89, serverConfig.inventorySlots.spell_4_background_texture.get(), List.of(Text.translatable("slot.tooltip.spell_4")), true) {
 
 			@Override
 			public boolean isEnabled() {
@@ -315,7 +317,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 		});
 
 		// 56 spell 5 slot
-		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.SPELL_5, 58, 8, 107, serverConfig.inventorySlots.spell_5_background_texture.get(), List.of(Text.translatable("slot.tooltip.spell_5"))) {
+		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.SPELL_5, 58, 8, 107, serverConfig.inventorySlots.spell_5_background_texture.get(), List.of(Text.translatable("slot.tooltip.spell_5")), true) {
 
 			@Override
 			public boolean isEnabled() {
@@ -325,7 +327,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 		});
 
 		// 57 spell 6 slot
-		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.SPELL_6, 59, 26, 107, serverConfig.inventorySlots.spell_6_background_texture.get(), List.of(Text.translatable("slot.tooltip.spell_6"))) {
+		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.SPELL_6, 59, 26, 107, serverConfig.inventorySlots.spell_6_background_texture.get(), List.of(Text.translatable("slot.tooltip.spell_6")), true) {
 
 			@Override
 			public boolean isEnabled() {
@@ -335,7 +337,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 		});
 
 		// 58 spell 7 slot
-		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.SPELL_7, 60, 44, 107, serverConfig.inventorySlots.spell_7_background_texture.get(), List.of(Text.translatable("slot.tooltip.spell_7"))) {
+		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.SPELL_7, 60, 44, 107, serverConfig.inventorySlots.spell_7_background_texture.get(), List.of(Text.translatable("slot.tooltip.spell_7")), true) {
 
 			@Override
 			public boolean isEnabled() {
@@ -345,7 +347,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 		});
 
 		// 59 spell 8 slot
-		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.SPELL_8, 61, 62, 107, serverConfig.inventorySlots.spell_8_background_texture.get(), List.of(Text.translatable("slot.tooltip.spell_8"))) {
+		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.SPELL_8, 61, 62, 107, serverConfig.inventorySlots.spell_8_background_texture.get(), List.of(Text.translatable("slot.tooltip.spell_8")), true) {
 
 			@Override
 			public boolean isEnabled() {

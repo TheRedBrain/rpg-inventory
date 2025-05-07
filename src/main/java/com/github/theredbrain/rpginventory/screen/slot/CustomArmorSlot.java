@@ -29,13 +29,27 @@ public class CustomArmorSlot extends Slot {
 	private final EquipmentSlot equipmentSlot;
 	@Nullable
 	private final Identifier backgroundSprite;
+	private final boolean allowsLoadoutItemRemoval;
 
 	public CustomArmorSlot(Inventory inventory, PlayerEntity playerEntity, EquipmentSlot equipmentSlot, int index, int x, int y, @Nullable Identifier backgroundSprite, List<Text> tooltip) {
+		this(inventory, playerEntity, equipmentSlot, index, x, y, backgroundSprite, tooltip, false);
+	}
+
+	public CustomArmorSlot(Inventory inventory, PlayerEntity playerEntity, EquipmentSlot equipmentSlot, int index, int x, int y, @Nullable Identifier backgroundSprite, List<Text> tooltip, boolean allowsLoadoutItemRemoval) {
 		super(inventory, index, x, y);
 		this.owner = playerEntity;
 		this.equipmentSlot = equipmentSlot;
 		this.backgroundSprite = backgroundSprite;
+		this.allowsLoadoutItemRemoval = allowsLoadoutItemRemoval;
 		((DuckSlotMixin) this).rpginventory$setSlotTooltipText(tooltip);
+	}
+
+	@Override
+	public void onTakeItem(PlayerEntity player, ItemStack stack) {
+		if (stack.contains(RPGInventory.LOAD_OUT_ITEM) && this.allowsLoadoutItemRemoval) {
+			stack.setCount(0);
+		}
+		super.onTakeItem(player, stack);
 	}
 
 	@Override
@@ -90,7 +104,7 @@ public class CustomArmorSlot extends Slot {
 						&& EnchantmentHelper.hasAnyEnchantmentsWith(itemStack, EnchantmentEffectComponentTypes.PREVENT_ARMOR_CHANGE)
 						? false
 						: super.canTakeItems(playerEntity)
-		) && !this.getStack().contains(RPGInventory.LOAD_OUT_ITEM) && (hasCivilisationEffect || isCreative || (bl && !hasWildernessEffect));
+		) && (!this.getStack().contains(RPGInventory.LOAD_OUT_ITEM) || this.allowsLoadoutItemRemoval) && (hasCivilisationEffect || isCreative || (bl && !hasWildernessEffect));
 	}
 
 	@Override
