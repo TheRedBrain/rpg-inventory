@@ -37,11 +37,11 @@ import java.util.Optional;
 @Mixin(value = PlayerScreenHandler.class, priority = 1050)
 public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements DuckPlayerScreenHandlerMixin {
 	@Unique
-	private static final Identifier EMPTY_HAND_SLOT = Identifier.ofVanilla("item/empty_slot_hand");
+	private static final Identifier EMPTY_HAND_SLOT = RPGInventory.identifier("item/empty_slot_hand");
 	@Unique
-	private static final Identifier EMPTY_ALTERNATIVE_HAND_SLOT = Identifier.ofVanilla("item/empty_slot_alternative_hand");
+	private static final Identifier EMPTY_ALTERNATIVE_HAND_SLOT = RPGInventory.identifier("item/empty_slot_alternative_hand");
 	@Unique
-	private static final Identifier EMPTY_ALTERNATIVE_OFFHAND_SLOT = Identifier.ofVanilla("item/empty_slot_alternative_offhand");
+	private static final Identifier EMPTY_ALTERNATIVE_OFFHAND_SLOT = RPGInventory.identifier("item/empty_slot_alternative_offhand");
 	@Unique
 	private static final Identifier EMPTY_BELT_SLOT = RPGInventory.identifier("item/empty_slot_belt");
 	@Unique

@@ -35,9 +35,9 @@ import java.util.Map;
 import java.util.Optional;
 
 public class MannequinScreenHandler extends ScreenHandler {
-	private static final Identifier EMPTY_HAND_SLOT = Identifier.ofVanilla("item/empty_slot_hand");
-	private static final Identifier EMPTY_ALTERNATIVE_HAND_SLOT = Identifier.ofVanilla("item/empty_slot_alternative_hand");
-	private static final Identifier EMPTY_ALTERNATIVE_OFFHAND_SLOT = Identifier.ofVanilla("item/empty_slot_alternative_offhand");
+	private static final Identifier EMPTY_HAND_SLOT = RPGInventory.identifier("item/empty_slot_hand");
+	private static final Identifier EMPTY_ALTERNATIVE_HAND_SLOT = RPGInventory.identifier("item/empty_slot_alternative_hand");
+	private static final Identifier EMPTY_ALTERNATIVE_OFFHAND_SLOT = RPGInventory.identifier("item/empty_slot_alternative_offhand");
 	private static final Identifier EMPTY_BELT_SLOT = RPGInventory.identifier("item/empty_slot_belt");
 	private static final Identifier EMPTY_GLOVES_SLOT = RPGInventory.identifier("item/empty_slot_gloves");
 	private static final Identifier EMPTY_NECKLACE_SLOT = RPGInventory.identifier("item/empty_slot_necklace");
