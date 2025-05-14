@@ -114,6 +114,9 @@ dependencies {
 	// Player Animation Lib
 	modImplementation("dev.kosmx.player-anim:player-animation-lib-fabric:${project.player_animator_version}")
 
+	// Better Combat
+	modImplementation("maven.modrinth:better-combat:${project.better_combat_version}")
+
 	// Spell Engine
 	modImplementation("maven.modrinth:spell-engine:${project.spell_engine_version}")
 

@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "rpginventory:block/mannequin",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "rpginventory:block/mannequin"
+    },
+    "facing=south": {
+      "model": "rpginventory:block/mannequin",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "rpginventory:block/mannequin",
+      "y": 270
+    }
+  }
+}
