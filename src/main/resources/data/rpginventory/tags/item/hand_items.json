@@ -4,35 +4,19 @@
 		"minecraft:crossbow",
 		"#rpginventory:attack_items",
 		{
-			"id": "#archers:bows",
+			"id": "#rpg_series:weapon_type/heavy_crossbow",
 			"required": false
 		},
 		{
-			"id": "#archers:crossbows",
+			"id": "#rpg_series:weapon_type/long_bow",
 			"required": false
 		},
 		{
-			"id": "#paladins:staves",
+			"id": "#rpg_series:weapon_type/rapid_crossbow",
 			"required": false
 		},
 		{
-			"id": "#paladins:wands",
-			"required": false
-		},
-		{
-			"id": "#wizards:staves",
-			"required": false
-		},
-		{
-			"id": "#wizards:wands",
-			"required": false
-		},
-		{
-			"id": "#elemental_wizards_rpg:elemental_staves",
-			"required": false
-		},
-		{
-			"id": "#elemental_wizards_rpg:elemental_wands",
+			"id": "#rpg_series:weapon_type/short_bow",
 			"required": false
 		}
 	]
