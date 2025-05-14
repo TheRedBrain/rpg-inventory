@@ -49,7 +49,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
 			)
 	)
 	public boolean rpginventory$wrap_matchesMouse(KeyBinding instance, int code, Operation<Boolean> original) {
-		if (RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get()) {
+		if (RPGInventory.isHandSlotOverhaulActive()) {
 			return false;
 		} else {
 			return original.call(instance, code);
@@ -70,7 +70,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
 			)
 	)
 	public boolean rpginventory$wrap_matchesKey(KeyBinding instance, int keyCode, int scanCode, Operation<Boolean> original) {
-		if (RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get()) {
+		if (RPGInventory.isHandSlotOverhaulActive()) {
 			return false;
 		} else {
 			return original.call(instance, keyCode, scanCode);

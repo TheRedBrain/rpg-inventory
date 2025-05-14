@@ -1,6 +1,7 @@
 package com.github.theredbrain.rpginventory;
 
 import com.github.theredbrain.inventorysizeattributes.entity.player.DuckPlayerEntityMixin;
+import com.github.theredbrain.rpginventory.compat.BetterCombatExtensionCompat;
 import com.github.theredbrain.rpginventory.compat.SpellEngineCompat;
 import com.github.theredbrain.rpginventory.config.ServerConfig;
 import com.github.theredbrain.rpginventory.registry.BlockRegistry;
@@ -55,6 +56,9 @@ public class RPGInventory implements ModInitializer {
 	public static final boolean isStaminaAttributesLoaded = FabricLoader.getInstance().isModLoaded("staminaattributes");
 	public static final boolean isInventorySizeAttributesLoaded = FabricLoader.getInstance().isModLoaded("inventorysizeattributes");
 	public static final boolean isSpellEngineLoaded = FabricLoader.getInstance().isModLoaded("spell_engine");
+	public static final boolean isPlayerAttributeScreenLoaded = FabricLoader.getInstance().isModLoaded("playerattributescreen");
+	public static final boolean isBetterCombatExtensionLoaded = FabricLoader.getInstance().isModLoaded("bettercombatextension");
+	public static final boolean isBetterCombatLoaded = FabricLoader.getInstance().isModLoaded("bettercombat");
 
 	public static int getActiveInventorySize(PlayerEntity player) {
 		return isInventorySizeAttributesLoaded ? ((DuckPlayerEntityMixin) player).inventorysizeattributes$getActiveInventorySlotAmount() : 27;
@@ -64,7 +68,15 @@ public class RPGInventory implements ModInitializer {
 		return isInventorySizeAttributesLoaded ? ((DuckPlayerEntityMixin) player).inventorysizeattributes$getActiveHotbarSlotAmount() : 9;
 	}
 
-	public static final boolean isPlayerAttributeScreenLoaded = FabricLoader.getInstance().isModLoaded("playerattributescreen");
+	public static boolean isHandSlotOverhaulActive() {
+		boolean bl = true;
+		if (isBetterCombatExtensionLoaded) {
+			bl = BetterCombatExtensionCompat.isAlternativeHandSwapAlgorithmActive();
+		} else if (isBetterCombatLoaded) {
+			bl = false;
+		}
+		return bl && SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get();
+	}
 
 	@Override
 	public void onInitialize() {

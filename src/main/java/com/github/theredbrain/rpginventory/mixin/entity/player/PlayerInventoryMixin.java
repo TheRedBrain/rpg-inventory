@@ -91,7 +91,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 
 	@ModifyReturnValue(method = "getMainHandStack", at = @At("RETURN"))
 	public ItemStack rpginventory$getMainHandStack(ItemStack original) {
-		if (RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get()) {
+		if (RPGInventory.isHandSlotOverhaulActive()) {
 			ItemStack emptyHandStack = rpginventory$getEmptyHand();
 			ItemStack handStack = rpginventory$getHand();
 			if (!((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed()) {
@@ -280,7 +280,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 	public ItemStack rpginventory$getOffHandStack() {
 		ItemStack emptyOffHandStack = rpginventory$getEmptyOffhand();
 		ItemStack offHandStack = this.offHand.get(0);
-		if (!RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get()) {
+		if (!RPGInventory.isHandSlotOverhaulActive()) {
 			return ItemUtils.isUsable(offHandStack) && ItemUtils.isOwnedByPlayer(offHandStack, this.player.getGameProfile()) ? offHandStack : ItemStack.EMPTY;
 		}
 		if (!((DuckPlayerEntityMixin) player).rpginventory$isOffhandStackSheathed()) {
@@ -299,7 +299,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 			)
 	)
 	public boolean rpginventory$wrap_canStackAddMore(PlayerInventory instance, ItemStack existingStack, ItemStack stack, Operation<Boolean> original) {
-		if (RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get()) {
+		if (RPGInventory.isHandSlotOverhaulActive()) {
 			return false;
 		} else {
 			return original.call(instance, existingStack, stack);
@@ -310,7 +310,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 			method = "getBlockBreakingSpeed"
 	)
 	public float rpginventory$wrap_getBlockBreakingSpeed(BlockState block, Operation<Float> original) {
-		if (RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get()) {
+		if (RPGInventory.isHandSlotOverhaulActive()) {
 			return this.getMainHandStack().getMiningSpeedMultiplier(block);
 		} else {
 			return original.call(block);
@@ -321,7 +321,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 			method = "dropSelectedItem"
 	)
 	public ItemStack rpginventory$wrap_dropSelectedItem(boolean entireStack, Operation<ItemStack> original) {
-		if (RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get()) {
+		if (RPGInventory.isHandSlotOverhaulActive()) {
 			if (!((DuckPlayerEntityMixin) this.player).rpginventory$isHandStackSheathed() && !this.rpginventory$getHand().isEmpty()) {
 				return Inventories.splitStack(this.rpginventory$handSlot, 0, entireStack ? this.rpginventory$getHand().getCount() : 1);
 			}

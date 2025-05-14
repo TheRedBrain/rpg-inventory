@@ -101,7 +101,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return !((DuckPlayerEntityMixin) MannequinScreenHandler.this.owner).rpginventory$isOffhandStackSheathed() || !RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get();
+				return !((DuckPlayerEntityMixin) MannequinScreenHandler.this.owner).rpginventory$isOffhandStackSheathed() || !RPGInventory.isHandSlotOverhaulActive();
 			}
 
 			@Override
@@ -118,7 +118,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 				Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(serverConfig.statusEffects.wilderness_status_effect_identifier.get());
 				boolean hasWildernessEffect = wilderness_status_effect.isPresent() && MannequinScreenHandler.this.owner.hasStatusEffect(wilderness_status_effect.get());
 
-				return (EquipmentSlot.OFFHAND == MannequinScreenHandler.this.owner.getPreferredEquipmentSlot(stack) || stack.isIn(Tags.OFFHAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || !serverConfig.handSlotOverhaul.enable_hand_slot_overhaul.get()) && ItemUtils.isOwnedByPlayer(stack, MannequinScreenHandler.this.owner.getGameProfile()) && (hasCivilisationEffect || MannequinScreenHandler.this.owner.isCreative() || (bl && !hasWildernessEffect)) && !((DuckPlayerEntityMixin) MannequinScreenHandler.this.owner).rpginventory$isOffhandStackSheathed();
+				return (EquipmentSlot.OFFHAND == MannequinScreenHandler.this.owner.getPreferredEquipmentSlot(stack) || stack.isIn(Tags.OFFHAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || !RPGInventory.isHandSlotOverhaulActive()) && ItemUtils.isOwnedByPlayer(stack, MannequinScreenHandler.this.owner.getGameProfile()) && (hasCivilisationEffect || MannequinScreenHandler.this.owner.isCreative() || (bl && !hasWildernessEffect)) && !((DuckPlayerEntityMixin) MannequinScreenHandler.this.owner).rpginventory$isOffhandStackSheathed();
 			}
 
 		});
@@ -128,7 +128,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return !((DuckPlayerEntityMixin) MannequinScreenHandler.this.owner).rpginventory$isHandStackSheathed() && RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get();
+				return !((DuckPlayerEntityMixin) MannequinScreenHandler.this.owner).rpginventory$isHandStackSheathed() && RPGInventory.isHandSlotOverhaulActive();
 			}
 
 			@Override
@@ -155,7 +155,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return ((DuckPlayerEntityMixin) MannequinScreenHandler.this.owner).rpginventory$isHandStackSheathed() && RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get();
+				return ((DuckPlayerEntityMixin) MannequinScreenHandler.this.owner).rpginventory$isHandStackSheathed() && RPGInventory.isHandSlotOverhaulActive();
 			}
 
 			@Override
@@ -182,7 +182,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return ((DuckPlayerEntityMixin) MannequinScreenHandler.this.owner).rpginventory$isOffhandStackSheathed() && RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get();
+				return ((DuckPlayerEntityMixin) MannequinScreenHandler.this.owner).rpginventory$isOffhandStackSheathed() && RPGInventory.isHandSlotOverhaulActive();
 			}
 
 			@Override
@@ -226,7 +226,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get();
+				return RPGInventory.isHandSlotOverhaulActive();
 			}
 
 		});
@@ -253,7 +253,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get();
+				return RPGInventory.isHandSlotOverhaulActive();
 			}
 
 		});

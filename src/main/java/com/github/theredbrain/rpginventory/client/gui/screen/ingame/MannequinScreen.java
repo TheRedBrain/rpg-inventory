@@ -150,7 +150,7 @@ public class MannequinScreen extends HandledScreen<MannequinScreenHandler> {
 			context.drawTexture(SLOT_TEXTURE, i + 61, j + 106, 0, 0, 18, 18, 18, 18);
 		}
 
-		if (RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get()) {
+		if (RPGInventory.isHandSlotOverhaulActive()) {
 			context.drawTexture(SLOT_TEXTURE, i + 25, j + 52, 0, 0, 18, 18, 18, 18);
 			context.drawTexture(SLOT_TEXTURE, i + 25, j + 70, 0, 0, 18, 18, 18, 18);
 			context.drawTexture(SLOT_TEXTURE, i + 43, j + 70, 0, 0, 18, 18, 18, 18);

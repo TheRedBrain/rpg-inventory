@@ -98,7 +98,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Du
 			method = "dropSelectedItem"
 	)
 	public boolean dropSelectedItem(boolean entireStack, Operation<Boolean> original) {
-		if (RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get()) {
+		if (RPGInventory.isHandSlotOverhaulActive()) {
 			if (!this.rpginventory$isHandStackSheathed()) {
 				PlayerInventory playerInventory = this.getInventory();
 				ItemStack itemStack = playerInventory.dropSelectedItem(entireStack);

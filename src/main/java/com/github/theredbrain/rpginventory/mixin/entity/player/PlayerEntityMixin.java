@@ -214,19 +214,19 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
 	@WrapMethod(method = "equipStack")
 	public void equipStack(EquipmentSlot slot, ItemStack stack, Operation<Void> original) {
-		ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
+		boolean isHandSlotOverhaulActive = RPGInventory.isHandSlotOverhaulActive();
 		this.processEquippedStack(stack);
 		if (slot == EquipmentSlot.MAINHAND) {
 			if (stack.isIn(Tags.EMPTY_HAND_WEAPONS)) {
 				this.onEquipStack(slot, ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setEmptyHand(stack), stack);
 			} else {
-				this.onEquipStack(slot, ((DuckPlayerEntityMixin) this).rpginventory$isHandStackSheathed() || !serverConfig.handSlotOverhaul.enable_hand_slot_overhaul.get() ? this.inventory.main.set(this.inventory.selectedSlot, stack) : ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setHand(stack), stack);
+				this.onEquipStack(slot, ((DuckPlayerEntityMixin) this).rpginventory$isHandStackSheathed() || !isHandSlotOverhaulActive ? this.inventory.main.set(this.inventory.selectedSlot, stack) : ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setHand(stack), stack);
 			}
 		} else if (slot == EquipmentSlot.OFFHAND) {
 			if (stack.isIn(Tags.EMPTY_HAND_WEAPONS)) {
 				this.onEquipStack(slot, ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setEmptyOffhand(stack), stack);
 			} else {
-				this.onEquipStack(slot, ((DuckPlayerEntityMixin) this).rpginventory$isOffhandStackSheathed() && serverConfig.handSlotOverhaul.enable_hand_slot_overhaul.get() ? ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setSheathedOffhand(stack) : this.inventory.offHand.set(0, stack), stack);
+				this.onEquipStack(slot, ((DuckPlayerEntityMixin) this).rpginventory$isOffhandStackSheathed() && isHandSlotOverhaulActive ? ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setSheathedOffhand(stack) : this.inventory.offHand.set(0, stack), stack);
 			}
 		} else if (slot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR) {
 			this.onEquipStack(slot, this.inventory.armor.set(slot.getEntitySlotId(), stack), stack);
@@ -368,7 +368,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
 	@Unique
 	private void rpginventory$ejectItemsFromInactiveHandSlots() {
-		boolean isHandSlotOverhaulActive = RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get();
+		boolean isHandSlotOverhaulActive = RPGInventory.isHandSlotOverhaulActive();
 
 		if (this.rpginventory$isHandSlotOverhaulActive() != isHandSlotOverhaulActive) {
 			if (!isHandSlotOverhaulActive) {

@@ -17,7 +17,7 @@ public class SwapHandItemsPacketReceiver implements ServerPlayNetworking.PlayPay
 
 		ServerPlayerEntity player = context.player();
 
-		if (RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get()) {
+		if (RPGInventory.isHandSlotOverhaulActive()) {
 
 			boolean mainHand = payload.mainHand();
 

@@ -176,7 +176,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 
 			@Override
 			public boolean isEnabled() {
-				return RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get() && !((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed();
+				return RPGInventory.isHandSlotOverhaulActive() && !((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed();
 			}
 
 			@Override
@@ -205,7 +205,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 
 			@Override
 			public boolean isEnabled() {
-				return RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get() && ((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed();
+				return RPGInventory.isHandSlotOverhaulActive() && ((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed();
 			}
 
 			@Override
@@ -234,7 +234,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 
 			@Override
 			public boolean isEnabled() {
-				return RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get() && ((DuckPlayerEntityMixin) owner).rpginventory$isOffhandStackSheathed();
+				return RPGInventory.isHandSlotOverhaulActive() && ((DuckPlayerEntityMixin) owner).rpginventory$isOffhandStackSheathed();
 			}
 
 			@Override
@@ -263,7 +263,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 
 			@Override
 			public boolean isEnabled() {
-				return RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get();
+				return RPGInventory.isHandSlotOverhaulActive();
 			}
 
 			@Override
@@ -292,7 +292,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 
 			@Override
 			public boolean isEnabled() {
-				return RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get();
+				return RPGInventory.isHandSlotOverhaulActive();
 			}
 
 			@Override
@@ -755,7 +755,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 //						}
 //					}
 //				}
-//			} else if (slot >= 45 && slot < 51 && RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get()) {
+//			} else if (slot >= 45 && slot < 51 && RPGInventory.isHandSlotOverhaulActive()) {
 //				if (!this.insertItem(stack, 9, 45, false)) {   // TODO adventure hotbar items
 //					cir.setReturnValue(ItemStack.EMPTY);
 //					cir.cancel();

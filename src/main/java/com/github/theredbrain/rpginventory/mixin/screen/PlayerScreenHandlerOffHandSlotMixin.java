@@ -50,7 +50,7 @@ public abstract class PlayerScreenHandlerOffHandSlotMixin extends Slot {
 		Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(serverConfig.statusEffects.wilderness_status_effect_identifier.get());
 		boolean hasWildernessEffect = wilderness_status_effect.isPresent() && this.field_39410.hasStatusEffect(wilderness_status_effect.get());
 
-		return (EquipmentSlot.OFFHAND == this.field_39410.getPreferredEquipmentSlot(stack) || stack.isIn(Tags.OFFHAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || !serverConfig.handSlotOverhaul.enable_hand_slot_overhaul.get()) && ItemUtils.isOwnedByPlayer(stack, this.field_39410.getGameProfile()) && (hasCivilisationEffect || this.field_39410.isCreative() || (bl && !hasWildernessEffect)) && !((DuckPlayerEntityMixin) this.field_39410).rpginventory$isOffhandStackSheathed();
+		return (EquipmentSlot.OFFHAND == this.field_39410.getPreferredEquipmentSlot(stack) || stack.isIn(Tags.OFFHAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || !RPGInventory.isHandSlotOverhaulActive()) && ItemUtils.isOwnedByPlayer(stack, this.field_39410.getGameProfile()) && (hasCivilisationEffect || this.field_39410.isCreative() || (bl && !hasWildernessEffect)) && !((DuckPlayerEntityMixin) this.field_39410).rpginventory$isOffhandStackSheathed();
 	}
 
 	@Override
