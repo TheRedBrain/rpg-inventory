@@ -1,7 +1,0 @@
-{
-	"icon": "rpginventory:item/empty_slot_spell",
-	"validator_predicates": [
-		"spell_engine:spell_book",
-		"trinkets:tag"
-	]
-}

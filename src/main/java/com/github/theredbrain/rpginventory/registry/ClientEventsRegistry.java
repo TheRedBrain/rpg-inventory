@@ -67,11 +67,18 @@ public class ClientEventsRegistry {
 				if (stack.isIn(Tags.GLOVES)) {
 					lines.add(Text.translatable("item.additional_tooltip.equipment_slot.gloves"));
 				}
-				if (stack.isIn(Tags.RINGS)) {
-					if (stack.isIn(Tags.UNIQUE_RINGS)) {
+				boolean is_unique_ring = stack.isIn(Tags.UNIQUE_RINGS);
+				if (stack.isIn(Tags.RINGS_1)) {
+					if (is_unique_ring) {
 						lines.add(Text.translatable("item.additional_tooltip.equipment_slot.ring_unique"));
 					} else {
-						lines.add(Text.translatable("item.additional_tooltip.equipment_slot.ring"));
+						lines.add(Text.translatable("item.additional_tooltip.equipment_slot.ring_1"));
+					}
+				} else if (stack.isIn(Tags.RINGS_2)) {
+					if (is_unique_ring) {
+						lines.add(Text.translatable("item.additional_tooltip.equipment_slot.ring_unique"));
+					} else {
+						lines.add(Text.translatable("item.additional_tooltip.equipment_slot.ring_2"));
 					}
 				}
 				if (stack.isIn(Tags.BELTS)) {
@@ -86,8 +93,22 @@ public class ClientEventsRegistry {
 						lines.add(Text.translatable("item.additional_tooltip.equipment_slot.offhand"));
 					}
 				}
-				if (stack.isIn(Tags.SPELLS)) {
-					lines.add(Text.translatable("item.additional_tooltip.equipment_slot.spell"));
+				if (stack.isIn(Tags.SPELLS_1)) {
+					lines.add(Text.translatable("item.additional_tooltip.equipment_slot.spell_1"));
+				} else if (stack.isIn(Tags.SPELLS_2)) {
+					lines.add(Text.translatable("item.additional_tooltip.equipment_slot.spell_2"));
+				} else if (stack.isIn(Tags.SPELLS_3)) {
+					lines.add(Text.translatable("item.additional_tooltip.equipment_slot.spell_3"));
+				} else if (stack.isIn(Tags.SPELLS_4)) {
+					lines.add(Text.translatable("item.additional_tooltip.equipment_slot.spell_4"));
+				} else if (stack.isIn(Tags.SPELLS_5)) {
+					lines.add(Text.translatable("item.additional_tooltip.equipment_slot.spell_5"));
+				} else if (stack.isIn(Tags.SPELLS_6)) {
+					lines.add(Text.translatable("item.additional_tooltip.equipment_slot.spell_6"));
+				} else if (stack.isIn(Tags.SPELLS_7)) {
+					lines.add(Text.translatable("item.additional_tooltip.equipment_slot.spell_7"));
+				} else if (stack.isIn(Tags.SPELLS_8)) {
+					lines.add(Text.translatable("item.additional_tooltip.equipment_slot.spell_8"));
 				}
 				if (stack.isIn(Tags.LEGGINGS) || (equipment != null && equipment.getSlotType() == EquipmentSlot.LEGS)) {
 					lines.add(Text.translatable("item.additional_tooltip.equipment_slot.leggings"));

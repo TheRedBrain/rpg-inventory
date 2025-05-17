@@ -40,27 +40,27 @@ public class ExtendedEquipmentSlot {
         } else if (slot == ExtendedEquipmentSlot.NECKLACE) {
             return itemStack.isIn(Tags.NECKLACES);
         } else if (slot == ExtendedEquipmentSlot.RING_1) {
-            return itemStack.isIn(Tags.RINGS);
+            return itemStack.isIn(Tags.RINGS_1);
         } else if (slot == ExtendedEquipmentSlot.RING_2) {
-            return itemStack.isIn(Tags.RINGS);
+            return itemStack.isIn(Tags.RINGS_2);
         } else if (slot == ExtendedEquipmentSlot.SHOULDERS) {
             return itemStack.isIn(Tags.SHOULDERS);
         } else if (slot == ExtendedEquipmentSlot.SPELL_1) {
-            return itemStack.isIn(Tags.SPELLS);
+            return itemStack.isIn(Tags.SPELLS_1);
         } else if (slot == ExtendedEquipmentSlot.SPELL_2) {
-            return itemStack.isIn(Tags.SPELLS);
+            return itemStack.isIn(Tags.SPELLS_2);
         } else if (slot == ExtendedEquipmentSlot.SPELL_3) {
-            return itemStack.isIn(Tags.SPELLS);
+            return itemStack.isIn(Tags.SPELLS_3);
         } else if (slot == ExtendedEquipmentSlot.SPELL_4) {
-            return itemStack.isIn(Tags.SPELLS);
+            return itemStack.isIn(Tags.SPELLS_4);
         } else if (slot == ExtendedEquipmentSlot.SPELL_5) {
-            return itemStack.isIn(Tags.SPELLS);
+            return itemStack.isIn(Tags.SPELLS_5);
         } else if (slot == ExtendedEquipmentSlot.SPELL_6) {
-            return itemStack.isIn(Tags.SPELLS);
+            return itemStack.isIn(Tags.SPELLS_6);
         } else if (slot == ExtendedEquipmentSlot.SPELL_7) {
-            return itemStack.isIn(Tags.SPELLS);
+            return itemStack.isIn(Tags.SPELLS_7);
         } else if (slot == ExtendedEquipmentSlot.SPELL_8) {
-            return itemStack.isIn(Tags.SPELLS);
+            return itemStack.isIn(Tags.SPELLS_8);
         } else {
             return false;
         }

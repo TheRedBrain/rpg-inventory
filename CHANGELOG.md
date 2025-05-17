@@ -1,3 +1,21 @@
+# 2.4.0
+
+**Important!**\
+This release has a number of breaking changes. Remove items from player inventories and make back-ups of your worlds before updating!
+
+This update removes all built-in Trinket slots. The additional slots are now a custom implementation, that is based on the vanilla equipment slots. This means that Trinkets is no longer a dependency (but it is still compatible).\
+This has (among others) the following consequences:
+- players on existing worlds should remove all items from their inventory **BEFORE** updating to this version
+- enchantments can now directly target specific custom equipment slots
+- the custom equipment slots make use of vanilla components for stuff like attribute modifiers, this unfortunately means that Trinket items might need a compatibility patch
+- the custom equipment slots are registered with Spell Engine APIs for spell container source and spell ammo supply
+
+The 'hand slot overhaul' now requires 'Better Combat Extension', which implements a fix for an item duplication glitch.\
+If 'Better Combat' is not installed, this restriction does not apply.
+
+Added first iteration of Mannequins, basically equipment load outs for players\
+The inventory of these blocks can hold a complete set of equipment. Players can interact with a mannequin to equip a copy of those items. The mannequin keeps the original. This comes with a catch, tho. Items equipped via a mannequin can not be unequipped manually (only by interacting with a mannequin). These items will also not drop on death. Instead, they either vanish or are kept in the slot.
+
 # 2.3.0
 
 Important!
