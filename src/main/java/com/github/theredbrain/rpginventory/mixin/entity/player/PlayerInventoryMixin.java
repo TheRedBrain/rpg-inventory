@@ -265,15 +265,23 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 		}
 	}
 
-	@WrapOperation(
-			method = "dropAll",
-			at = @At(
-					value = "INVOKE",
-					target = "Lnet/minecraft/item/ItemStack;isEmpty()Z"
-			)
-	)
-	public boolean rpginventory$wrap_isEmpty(ItemStack instance, Operation<Boolean> original) {
-		return original.call(instance) && !instance.isIn(Tags.EMPTY_HAND_WEAPONS);
+	@WrapMethod(method = "dropAll")
+	public void rpginventory$wrap_dropAll(Operation<Void> original) {
+		for (List<ItemStack> list : this.combinedInventory) {
+			for (int i = 0; i < list.size(); i++) {
+				ItemStack itemStack = (ItemStack)list.get(i);
+				if (itemStack.contains(RPGInventory.LOAD_OUT_ITEM)) {
+					if(!RPGInventory.SERVER_CONFIG.should_keep_loadout_items_on_death.get()) {
+						list.set(i, ItemStack.EMPTY);
+					}
+					continue;
+				}
+				if (!itemStack.isEmpty() && !itemStack.isIn(Tags.EMPTY_HAND_WEAPONS)) {
+					this.player.dropItem(itemStack, true, false);
+					list.set(i, ItemStack.EMPTY);
+				}
+			}
+		}
 	}
 
 	@Override
