@@ -512,7 +512,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 	}
 
 	@Override
-	public ItemStack quickMove(PlayerEntity player, int slotIndex) { // TODO
+	public ItemStack quickMove(PlayerEntity player, int slotIndex) {
 		ItemStack itemStack = ItemStack.EMPTY;
 		Slot slot = slots.get(slotIndex);
 		ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
@@ -520,157 +520,155 @@ public class MannequinScreenHandler extends ScreenHandler {
 		if (slot.hasStack()) {
 			ItemStack itemStack1 = slot.getStack();
 			itemStack = itemStack1.copy();
-			EquipmentSlot rpginventory$equipmentSlot = player.getPreferredEquipmentSlot(itemStack1);
+			EquipmentSlot equipmentSlot = player.getPreferredEquipmentSlot(itemStack1);
 			if (slotIndex >= 36 && slotIndex < 82) {
 				if (itemStack.contains(RPGInventory.LOAD_OUT_ITEM)) {
 					slot.setStack(ItemStack.EMPTY);
 					slot.markDirty();
-					itemStack = ItemStack.EMPTY;
+					return ItemStack.EMPTY;
 				} else if (!this.insertItem(itemStack1, 0, 36, false)) {   // TODO adventure hotbar items
 					return ItemStack.EMPTY;
 				} else {
 					return ItemStack.EMPTY;
 				}
-			} else if (slotIndex >= 0 && slotIndex < 35) {
+			} else if (slotIndex >= 0 && slotIndex < 36) {
+				if (equipmentSlot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR && !this.slots.get(63 - equipmentSlot.getEntitySlotId()).hasStack()) {
+					int i = 63 - equipmentSlot.getEntitySlotId();
+					if (!this.insertItem(itemStack1, i, i + 1, false)) {
+						return ItemStack.EMPTY;
+					}
+				}
 
 				if (serverConfig.handSlotOverhaul.enable_hand_slot_overhaul.get()) {
 
-					if (!itemStack1.isEmpty() && (!serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || itemStack1.isIn(Tags.HAND_ITEMS))) {
-						if (((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed() && !this.slots.get(47).hasStack()) {
-							if (!this.insertItem(itemStack1, 47, 48, false)) {
+					if (!itemStack1.isEmpty() && (!serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || itemStack1.isIn(Tags.HAND_ITEMS)) && !this.slots.get(65).hasStack()) {
+							if (!this.insertItem(itemStack1, 65, 66, false)) {
 								return ItemStack.EMPTY;
 							}
-						} else if (!((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed() && !this.slots.get(46).hasStack()) {
-							if (!this.insertItem(itemStack1, 46, 47, false)) {
-								return ItemStack.EMPTY;
-							}
-						}
 					}
 
-					if (!itemStack1.isEmpty() && (rpginventory$equipmentSlot == EquipmentSlot.OFFHAND || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || itemStack1.isIn(Tags.OFFHAND_ITEMS))) {
-						if (((DuckPlayerEntityMixin) player).rpginventory$isOffhandStackSheathed() && !this.slots.get(48).hasStack()) {
-							if (!this.insertItem(itemStack1, 48, 49, false)) {
+					if (!itemStack1.isEmpty() && (equipmentSlot == EquipmentSlot.OFFHAND || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || itemStack1.isIn(Tags.OFFHAND_ITEMS)) && !this.slots.get(64).hasStack()) {
+							if (!this.insertItem(itemStack1, 64, 65, false)) {
 								return ItemStack.EMPTY;
 							}
-						} else if (!((DuckPlayerEntityMixin) player).rpginventory$isOffhandStackSheathed() && !this.slots.get(45).hasStack()) {
-							if (!this.insertItem(itemStack1, 45, 46, false)) {
-								return ItemStack.EMPTY;
-							}
-						}
 					}
 
 					if (!itemStack1.isEmpty() && (!serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || itemStack1.isIn(Tags.HAND_ITEMS))) {
-						if (!this.slots.get(49).hasStack()) {
-							if (!this.insertItem(itemStack1, 49, 50, false)) {
+						if (!this.slots.get(66).hasStack()) {
+							if (!this.insertItem(itemStack1, 66, 67, false)) {
 								return ItemStack.EMPTY;
 							}
 						}
 					}
 
-					if (!itemStack1.isEmpty() && (rpginventory$equipmentSlot == EquipmentSlot.OFFHAND || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || itemStack1.isIn(Tags.OFFHAND_ITEMS))) {
-						if (!this.slots.get(50).hasStack()) {
-							if (!this.insertItem(itemStack1, 50, 51, false)) {
+					if (!itemStack1.isEmpty() && (equipmentSlot == EquipmentSlot.OFFHAND || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || itemStack1.isIn(Tags.OFFHAND_ITEMS))) {
+						if (!this.slots.get(67).hasStack()) {
+							if (!this.insertItem(itemStack1, 67, 68, false)) {
 								return ItemStack.EMPTY;
 							}
 						}
+					}
+				} else if (!itemStack1.isEmpty() && (equipmentSlot == EquipmentSlot.OFFHAND || itemStack1.isIn(Tags.OFFHAND_ITEMS)) && !this.slots.get(64).hasStack()) {
+					if (!this.insertItem(itemStack1, 64, 65, false)) {
+						return ItemStack.EMPTY;
 					}
 				}
 
 				// belt slot 51
-				if (!itemStack1.isEmpty() && (rpginventory$equipmentSlot == ExtendedEquipmentSlot.BELT || itemStack1.isIn(Tags.BELTS)) && !this.slots.get(51).hasStack()) {
-					if (!this.insertItem(itemStack1, 51, 52, false)) {
-								return ItemStack.EMPTY;
+				if (!itemStack1.isEmpty() && (equipmentSlot == ExtendedEquipmentSlot.BELT || itemStack1.isIn(Tags.BELTS)) && !this.slots.get(68).hasStack()) {
+					if (!this.insertItem(itemStack1, 68, 69, false)) {
+						return ItemStack.EMPTY;
 					}
 				}
 
 				// gloves slot 52
-				if (!itemStack1.isEmpty() && (rpginventory$equipmentSlot == ExtendedEquipmentSlot.GLOVES || itemStack1.isIn(Tags.GLOVES)) && !this.slots.get(52).hasStack()) {
-					if (!this.insertItem(itemStack1, 52, 53, false)) {
-								return ItemStack.EMPTY;
+				if (!itemStack1.isEmpty() && (equipmentSlot == ExtendedEquipmentSlot.GLOVES || itemStack1.isIn(Tags.GLOVES)) && !this.slots.get(69).hasStack()) {
+					if (!this.insertItem(itemStack1, 69, 70, false)) {
+						return ItemStack.EMPTY;
 					}
 				}
 
 				// necklace slot 53
-				if (!itemStack1.isEmpty() && (rpginventory$equipmentSlot == ExtendedEquipmentSlot.NECKLACE || itemStack1.isIn(Tags.NECKLACES)) && !this.slots.get(53).hasStack()) {
-					if (!this.insertItem(itemStack1, 53, 54, false)) {
-								return ItemStack.EMPTY;
+				if (!itemStack1.isEmpty() && (equipmentSlot == ExtendedEquipmentSlot.NECKLACE || itemStack1.isIn(Tags.NECKLACES)) && !this.slots.get(70).hasStack()) {
+					if (!this.insertItem(itemStack1, 70, 71, false)) {
+						return ItemStack.EMPTY;
 					}
 				}
 
 				// ring 1 slot 54
-				if (!itemStack1.isEmpty() && (rpginventory$equipmentSlot == ExtendedEquipmentSlot.RING_1 || itemStack1.isIn(Tags.RINGS_1)) && !this.slots.get(54).hasStack()) {
-					if (!this.insertItem(itemStack1, 54, 55, false)) {
-								return ItemStack.EMPTY;
+				if (!itemStack1.isEmpty() && (equipmentSlot == ExtendedEquipmentSlot.RING_1 || itemStack1.isIn(Tags.RINGS_1)) && !this.slots.get(71).hasStack()) {
+					if (!this.insertItem(itemStack1, 71, 72, false)) {
+						return ItemStack.EMPTY;
 					}
 				}
 
 				// ring 2 slot 55
-				if (!itemStack1.isEmpty() && (rpginventory$equipmentSlot == ExtendedEquipmentSlot.RING_2 || itemStack1.isIn(Tags.RINGS_2)) && !this.slots.get(55).hasStack()) {
-					if (!this.insertItem(itemStack1, 55, 56, false)) {
-								return ItemStack.EMPTY;
+				if (!itemStack1.isEmpty() && (equipmentSlot == ExtendedEquipmentSlot.RING_2 || itemStack1.isIn(Tags.RINGS_2)) && !this.slots.get(72).hasStack()) {
+					if (!this.insertItem(itemStack1, 72, 73, false)) {
+						return ItemStack.EMPTY;
 					}
 				}
 
 				// shoulders slot 56
-				if (!itemStack1.isEmpty() && (rpginventory$equipmentSlot == ExtendedEquipmentSlot.SHOULDERS || itemStack1.isIn(Tags.SHOULDERS)) && !this.slots.get(56).hasStack()) {
-					if (!this.insertItem(itemStack1, 56, 57, false)) {
-								return ItemStack.EMPTY;
+				if (!itemStack1.isEmpty() && (equipmentSlot == ExtendedEquipmentSlot.SHOULDERS || itemStack1.isIn(Tags.SHOULDERS)) && !this.slots.get(73).hasStack()) {
+					if (!this.insertItem(itemStack1, 73, 74, false)) {
+						return ItemStack.EMPTY;
 					}
 				}
 
 				// spell 1 slot 57
-				if (!itemStack1.isEmpty() && (rpginventory$equipmentSlot == ExtendedEquipmentSlot.SPELL_1 || itemStack1.isIn(Tags.SPELLS_1)) && !this.slots.get(57).hasStack()) {
-					if (!this.insertItem(itemStack1, 57, 58, false)) {
-								return ItemStack.EMPTY;
+				if (!itemStack1.isEmpty() && (equipmentSlot == ExtendedEquipmentSlot.SPELL_1 || itemStack1.isIn(Tags.SPELLS_1)) && !this.slots.get(74).hasStack()) {
+					if (!this.insertItem(itemStack1, 74, 75, false)) {
+						return ItemStack.EMPTY;
 					}
 				}
 
 				// spell 2 slot 58
-				if (!itemStack1.isEmpty() && (rpginventory$equipmentSlot == ExtendedEquipmentSlot.SPELL_2 || itemStack1.isIn(Tags.SPELLS_2)) && !this.slots.get(58).hasStack()) {
-					if (!this.insertItem(itemStack1, 58, 59, false)) {
-								return ItemStack.EMPTY;
+				if (!itemStack1.isEmpty() && (equipmentSlot == ExtendedEquipmentSlot.SPELL_2 || itemStack1.isIn(Tags.SPELLS_2)) && !this.slots.get(75).hasStack()) {
+					if (!this.insertItem(itemStack1, 75, 76, false)) {
+						return ItemStack.EMPTY;
 					}
 				}
 
 				// spell 3 slot 59
-				if (!itemStack1.isEmpty() && (rpginventory$equipmentSlot == ExtendedEquipmentSlot.SPELL_3 || itemStack1.isIn(Tags.SPELLS_3)) && !this.slots.get(59).hasStack()) {
-					if (!this.insertItem(itemStack1, 59, 60, false)) {
-								return ItemStack.EMPTY;
+				if (!itemStack1.isEmpty() && (equipmentSlot == ExtendedEquipmentSlot.SPELL_3 || itemStack1.isIn(Tags.SPELLS_3)) && !this.slots.get(76).hasStack()) {
+					if (!this.insertItem(itemStack1, 76, 77, false)) {
+						return ItemStack.EMPTY;
 					}
 				}
 
 				// spell 4 slot 60
-				if (!itemStack1.isEmpty() && (rpginventory$equipmentSlot == ExtendedEquipmentSlot.SPELL_4 || itemStack1.isIn(Tags.SPELLS_4)) && !this.slots.get(60).hasStack()) {
-					if (!this.insertItem(itemStack1, 60, 61, false)) {
-								return ItemStack.EMPTY;
+				if (!itemStack1.isEmpty() && (equipmentSlot == ExtendedEquipmentSlot.SPELL_4 || itemStack1.isIn(Tags.SPELLS_4)) && !this.slots.get(77).hasStack()) {
+					if (!this.insertItem(itemStack1, 77, 78, false)) {
+						return ItemStack.EMPTY;
 					}
 				}
 
 				// spell 5 slot 61
-				if (!itemStack1.isEmpty() && (rpginventory$equipmentSlot == ExtendedEquipmentSlot.SPELL_5 || itemStack1.isIn(Tags.SPELLS_5)) && !this.slots.get(61).hasStack()) {
-					if (!this.insertItem(itemStack1, 61, 62, false)) {
-								return ItemStack.EMPTY;
+				if (!itemStack1.isEmpty() && (equipmentSlot == ExtendedEquipmentSlot.SPELL_5 || itemStack1.isIn(Tags.SPELLS_5)) && !this.slots.get(78).hasStack()) {
+					if (!this.insertItem(itemStack1, 78, 79, false)) {
+						return ItemStack.EMPTY;
 					}
 				}
 
 				// spell 6 slot 62
-				if (!itemStack1.isEmpty() && (rpginventory$equipmentSlot == ExtendedEquipmentSlot.SPELL_6 || itemStack1.isIn(Tags.SPELLS_6)) && !this.slots.get(62).hasStack()) {
-					if (!this.insertItem(itemStack1, 62, 63, false)) {
-								return ItemStack.EMPTY;
+				if (!itemStack1.isEmpty() && (equipmentSlot == ExtendedEquipmentSlot.SPELL_6 || itemStack1.isIn(Tags.SPELLS_6)) && !this.slots.get(79).hasStack()) {
+					if (!this.insertItem(itemStack1, 79, 80, false)) {
+						return ItemStack.EMPTY;
 					}
 				}
 
 				// spell 7 slot 63
-				if (!itemStack1.isEmpty() && (rpginventory$equipmentSlot == ExtendedEquipmentSlot.SPELL_7 || itemStack1.isIn(Tags.SPELLS_7)) && !this.slots.get(63).hasStack()) {
-					if (!this.insertItem(itemStack1, 63, 64, false)) {
-								return ItemStack.EMPTY;
+				if (!itemStack1.isEmpty() && (equipmentSlot == ExtendedEquipmentSlot.SPELL_7 || itemStack1.isIn(Tags.SPELLS_7)) && !this.slots.get(80).hasStack()) {
+					if (!this.insertItem(itemStack1, 80, 81, false)) {
+						return ItemStack.EMPTY;
 					}
 				}
 
 				// spell 8 slot 64
-				if (!itemStack1.isEmpty() && (rpginventory$equipmentSlot == ExtendedEquipmentSlot.SPELL_8 || itemStack1.isIn(Tags.SPELLS_8)) && !this.slots.get(64).hasStack()) {
-					if (!this.insertItem(itemStack1, 64, 65, false)) {
-								return ItemStack.EMPTY;
+				if (!itemStack1.isEmpty() && (equipmentSlot == ExtendedEquipmentSlot.SPELL_8 || itemStack1.isIn(Tags.SPELLS_8)) && !this.slots.get(81).hasStack()) {
+					if (!this.insertItem(itemStack1, 81, 82, false)) {
+						return ItemStack.EMPTY;
 					}
 				}
 //			} else if (slot >= 45 && slot < 51 && RPGInventory.isHandSlotOverhaulActive()) {
@@ -681,6 +679,16 @@ public class MannequinScreenHandler extends ScreenHandler {
 //					cir.setReturnValue(itemStack1);
 //					cir.cancel();
 //				}
+			}
+
+			if (itemStack1.isEmpty()) {
+				slot.setStack(ItemStack.EMPTY, itemStack);
+			} else {
+				slot.markDirty();
+			}
+
+			if (itemStack1.getCount() == itemStack.getCount()) {
+				return ItemStack.EMPTY;
 			}
 		}
 		return itemStack;
