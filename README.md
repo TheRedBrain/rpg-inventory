@@ -7,7 +7,6 @@ Adds a new inventory screen with more equipment slots and other equipment relate
 Requires
 - [Fabric API](https://modrinth.com/mod/fabric-api)
 - [Fzzy Config](https://modrinth.com/mod/fzzy-config)
-- [Trinkets](https://modrinth.com/mod/trinkets)
 - [Slot Customization API](https://modrinth.com/mod/slot-customization-api)
 
 Highly recommended
@@ -110,15 +109,17 @@ These are separated into categories. Each category can be disabled in the client
 
 Equipment and trinket slots now have a tooltip. It is only shown when the slot and the cursor stack are empty. This feature can be disabled in the client config.
 
-All trinket slots have a tooltip. It can be set in the lang file with this schema:
-
-```json
-{
-	"slot.tooltip.<group_name>.<slot_name>": "Test Slot"
-}
-```
-
 When the string is empty, no tooltip will be shown.
+
+## Mannequins and Load Out Items
+
+Mannequins are blocks that have storage slots similar to the players equipment slots. Items placed in those slots form a 'load out', which can be equipped by players. Equipping a load out fills the players equipment slots with copies of the load out items. Only slots that are empty or contain a load out item are filled.
+
+### Load out items
+
+Load out items are never dropped, they either vanish or are kept on death (this can be configured in the server config).
+
+These items can also normally not be removed from a slot, only when interacting with a mannequin.
 
 ## Additional settings and features
 
@@ -165,7 +166,16 @@ A button that opens the Hand Crafting Screen can be added to the inventory scree
 
 A button that opens the Backpack Screen can be added to the inventory screens. The 2x2 crafting grid has to be disabled.
 
-### Additional Trinket slots
+### Trinket Compatibility
 
-Trinket slots added by other mods or data packs are displayed and function like normal.
+Trinket slots are displayed on the RPG Inventory screen.
 
+All trinket slots have a tooltip. It can be set in the lang file with this schema:
+
+```json
+{
+	"slot.tooltip.<group_name>.<slot_name>": "Test Slot"
+}
+```
+
+When the string is empty, no tooltip will be shown.

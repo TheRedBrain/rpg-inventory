@@ -16,6 +16,9 @@ If 'Better Combat' is not installed, this restriction does not apply.
 Added first iteration of Mannequins, basically equipment load outs for players\
 The inventory of these blocks can hold a complete set of equipment. Players can interact with a mannequin to equip a copy of those items. The mannequin keeps the original. This comes with a catch, tho. Items equipped via a mannequin can not be unequipped manually (only by interacting with a mannequin). These items will also not drop on death. Instead, they either vanish or are kept in the slot.
 
+Additional Changes:
+- empty hand weapons no longer drop on death and can no longer be used for casting Spell Engine spells
+
 # 2.3.0
 
 Important!
