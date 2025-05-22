@@ -139,36 +139,42 @@ public class ServerConfig extends Config {
 		public ValidatedInt alternative_offhand_slot_y_offset = new ValidatedInt(108);
 
 		public ConfigGroup belt_slots = new ConfigGroup("belt_slots", true);
+		public ValidatedBoolean is_belt_slot_enabled = new ValidatedBoolean(true);
 		public ValidatedInt belt_slot_x_offset = new ValidatedInt(8);
 		@ConfigGroup.Pop
 //		@ConfigGroup.Pop
 		public ValidatedInt belt_slot_y_offset = new ValidatedInt(72);
 
 		public ConfigGroup gloves_slots = new ConfigGroup("gloves_slots", true);
+		public ValidatedBoolean is_gloves_slot_enabled = new ValidatedBoolean(true);
 		public ValidatedInt gloves_slot_x_offset = new ValidatedInt(77);
 		@ConfigGroup.Pop
 //		@ConfigGroup.Pop
 		public ValidatedInt gloves_slot_y_offset = new ValidatedInt(72);
 
 		public ConfigGroup necklace_slots = new ConfigGroup("necklace_slots", true);
+		public ValidatedBoolean is_necklace_slot_enabled = new ValidatedBoolean(true);
 		public ValidatedInt necklace_slot_x_offset = new ValidatedInt(52);
 		@ConfigGroup.Pop
 //		@ConfigGroup.Pop
 		public ValidatedInt necklace_slot_y_offset = new ValidatedInt(18);
 
 		public ConfigGroup ring_1_slots = new ConfigGroup("ring_1_slots", true);
+		public ValidatedBoolean is_ring_1_slot_enabled = new ValidatedBoolean(true);
 		public ValidatedInt ring_1_slot_x_offset = new ValidatedInt(77);
 		@ConfigGroup.Pop
 //		@ConfigGroup.Pop
 		public ValidatedInt ring_1_slot_y_offset = new ValidatedInt(36);
 
 		public ConfigGroup ring_2_slots = new ConfigGroup("ring_2_slots", true);
+		public ValidatedBoolean is_ring_2_slot_enabled = new ValidatedBoolean(true);
 		public ValidatedInt ring_2_slot_x_offset = new ValidatedInt(77);
 		@ConfigGroup.Pop
 //		@ConfigGroup.Pop
 		public ValidatedInt ring_2_slot_y_offset = new ValidatedInt(54);
 
 		public ConfigGroup shoulders_slots = new ConfigGroup("shoulders_slots", true);
+		public ValidatedBoolean is_shoulders_slot_enabled = new ValidatedBoolean(true);
 		public ValidatedInt shoulders_slot_x_offset = new ValidatedInt(8);
 		@ConfigGroup.Pop
 //		@ConfigGroup.Pop

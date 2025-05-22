@@ -3,6 +3,7 @@ package com.github.theredbrain.rpginventory.client.gui.screen.ingame;
 import com.github.theredbrain.rpgcrafting.RPGCraftingClient;
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.RPGInventoryClient;
+import com.github.theredbrain.rpginventory.config.ServerConfig;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.screen.DuckSlotMixin;
 import com.github.theredbrain.rpginventory.screen.MannequinScreenHandler;
@@ -124,6 +125,32 @@ public class MannequinScreen extends HandledScreen<MannequinScreenHandler> {
 		}
 
 		context.drawTexture(MANNEQUIN_BACKGROUND_TEXTURE, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight, this.backgroundWidth, this.backgroundHeight);
+
+		ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
+		if (serverConfig.inventorySlots.is_belt_slot_enabled.get()) {
+			context.drawTexture(SLOT_TEXTURE, i + 61, j + 70, 0, 0, 18, 18, 18, 18);
+			context.drawTexture(SLOT_TEXTURE, i + 61 + 90, j + 70, 0, 0, 18, 18, 18, 18);
+		}
+		if (serverConfig.inventorySlots.is_gloves_slot_enabled.get()) {
+			context.drawTexture(SLOT_TEXTURE, i + 61, j + 52, 0, 0, 18, 18, 18, 18);
+			context.drawTexture(SLOT_TEXTURE, i + 61 + 90, j + 52, 0, 0, 18, 18, 18, 18);
+		}
+		if (serverConfig.inventorySlots.is_necklace_slot_enabled.get()) {
+			context.drawTexture(SLOT_TEXTURE, i + 43, j + 16, 0, 0, 18, 18, 18, 18);
+			context.drawTexture(SLOT_TEXTURE, i + 43 + 90, j + 16, 0, 0, 18, 18, 18, 18);
+		}
+		if (serverConfig.inventorySlots.is_ring_1_slot_enabled.get()) {
+			context.drawTexture(SLOT_TEXTURE, i + 61, j + 16, 0, 0, 18, 18, 18, 18);
+			context.drawTexture(SLOT_TEXTURE, i + 61 + 90, j + 16, 0, 0, 18, 18, 18, 18);
+		}
+		if (serverConfig.inventorySlots.is_ring_2_slot_enabled.get()) {
+			context.drawTexture(SLOT_TEXTURE, i + 61, j + 34, 0, 0, 18, 18, 18, 18);
+			context.drawTexture(SLOT_TEXTURE, i + 61 + 90, j + 34, 0, 0, 18, 18, 18, 18);
+		}
+		if (serverConfig.inventorySlots.is_shoulders_slot_enabled.get()) {
+			context.drawTexture(SLOT_TEXTURE, i + 25, j + 16, 0, 0, 18, 18, 18, 18);
+			context.drawTexture(SLOT_TEXTURE, i + 25 + 90, j + 16, 0, 0, 18, 18, 18, 18);
+		}
 
 		if (activeSpellSlotAmount > 0) {
 			context.drawTexture(SLOT_TEXTURE, i + 7, j + 88, 0, 0, 18, 18, 18, 18);

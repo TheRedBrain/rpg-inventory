@@ -28,7 +28,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Unit;
 import net.minecraft.util.Util;
-import net.minecraft.world.World;
 
 import java.util.List;
 import java.util.Map;
@@ -259,22 +258,64 @@ public class MannequinScreenHandler extends ScreenHandler {
 		// index 44 & 45 are the empty hand slots
 
 		// 46 belt slot
-		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.BELT, 48, 62, 71, EMPTY_BELT_SLOT, List.of(Text.translatable("slot.tooltip.belt")), true));
+		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.BELT, 48, 62, 71, EMPTY_BELT_SLOT, List.of(Text.translatable("slot.tooltip.belt")), true) {
+
+			@Override
+			public boolean isEnabled() {
+				return super.isEnabled() && serverConfig.inventorySlots.is_belt_slot_enabled.get();
+			}
+
+		});
 
 		// 47 gloves slot
-		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.GLOVES, 49, 62, 53, EMPTY_GLOVES_SLOT, List.of(Text.translatable("slot.tooltip.gloves")), true));
+		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.GLOVES, 49, 62, 53, EMPTY_GLOVES_SLOT, List.of(Text.translatable("slot.tooltip.gloves")), true) {
+
+			@Override
+			public boolean isEnabled() {
+				return super.isEnabled() && serverConfig.inventorySlots.is_gloves_slot_enabled.get();
+			}
+
+		});
 
 		// 48 necklace slot
-		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.NECKLACE, 50, 44, 17, EMPTY_NECKLACE_SLOT, List.of(Text.translatable("slot.tooltip.necklace")), true));
+		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.NECKLACE, 50, 44, 17, EMPTY_NECKLACE_SLOT, List.of(Text.translatable("slot.tooltip.necklace")), true) {
+
+			@Override
+			public boolean isEnabled() {
+				return super.isEnabled() && serverConfig.inventorySlots.is_necklace_slot_enabled.get();
+			}
+
+		});
 
 		// 49 ring 1 slot
-		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.RING_1, 51, 62, 17, EMPTY_RING_1_SLOT, List.of(Text.translatable("slot.tooltip.ring_1")), true));
+		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.RING_1, 51, 62, 17, EMPTY_RING_1_SLOT, List.of(Text.translatable("slot.tooltip.ring_1")), true) {
+
+			@Override
+			public boolean isEnabled() {
+				return super.isEnabled() && serverConfig.inventorySlots.is_ring_1_slot_enabled.get();
+			}
+
+		});
 
 		// 50 ring 2 slot
-		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.RING_2, 52, 62, 35, EMPTY_RING_2_SLOT, List.of(Text.translatable("slot.tooltip.ring_2")), true));
+		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.RING_2, 52, 62, 35, EMPTY_RING_2_SLOT, List.of(Text.translatable("slot.tooltip.ring_2")), true) {
+
+			@Override
+			public boolean isEnabled() {
+				return super.isEnabled() && serverConfig.inventorySlots.is_ring_2_slot_enabled.get();
+			}
+
+		});
 
 		// 51 shoulders slot
-		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.SHOULDERS, 53, 26, 17, EMPTY_SHOULDERS_SLOT, List.of(Text.translatable("slot.tooltip.shoulders")), true));
+		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.SHOULDERS, 53, 26, 17, EMPTY_SHOULDERS_SLOT, List.of(Text.translatable("slot.tooltip.shoulders")), true) {
+
+			@Override
+			public boolean isEnabled() {
+				return super.isEnabled() && serverConfig.inventorySlots.is_shoulders_slot_enabled.get();
+			}
+
+		});
 
 		// 52 spell 1 slot
 		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.SPELL_1, 54, 8, 89, EMPTY_SPELL_1_SLOT, List.of(Text.translatable("slot.tooltip.spell_1")), true) {
@@ -367,31 +408,94 @@ public class MannequinScreenHandler extends ScreenHandler {
 		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, EquipmentSlot.OFFHAND, 4, 90 + 44, 53, PlayerScreenHandler.EMPTY_OFFHAND_ARMOR_SLOT, List.of(Text.translatable("slot.tooltip.offhand"))));
 
 		// 65 main hand
-		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, EquipmentSlot.MAINHAND, 5, 90 + 26, 53, EMPTY_HAND_SLOT, List.of(Text.translatable("slot.tooltip.hand"))));
+		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, EquipmentSlot.MAINHAND, 5, 90 + 26, 53, EMPTY_HAND_SLOT, List.of(Text.translatable("slot.tooltip.hand"))) {
+
+			@Override
+			public boolean isEnabled() {
+				return super.isEnabled() && serverConfig.handSlotOverhaul.enable_hand_slot_overhaul.get();
+			}
+
+		});
 
 		// 66 alternative main hand
-		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, EquipmentSlot.MAINHAND, 6, 90 + 26, 71, EMPTY_ALTERNATIVE_HAND_SLOT, List.of(Text.translatable("slot.tooltip.alternative_hand"))));
+		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, EquipmentSlot.MAINHAND, 6, 90 + 26, 71, EMPTY_ALTERNATIVE_HAND_SLOT, List.of(Text.translatable("slot.tooltip.alternative_hand"))) {
+
+			@Override
+			public boolean isEnabled() {
+				return super.isEnabled() && serverConfig.handSlotOverhaul.enable_hand_slot_overhaul.get();
+			}
+
+		});
 
 		// 67 alternative offhand
-		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, EquipmentSlot.OFFHAND, 7, 90 + 44, 71, EMPTY_ALTERNATIVE_OFFHAND_SLOT, List.of(Text.translatable("slot.tooltip.alternative_offhand"))));
+		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, EquipmentSlot.OFFHAND, 7, 90 + 44, 71, EMPTY_ALTERNATIVE_OFFHAND_SLOT, List.of(Text.translatable("slot.tooltip.alternative_offhand"))) {
+
+			@Override
+			public boolean isEnabled() {
+				return super.isEnabled() && serverConfig.handSlotOverhaul.enable_hand_slot_overhaul.get();
+			}
+
+		});
 
 		// 68 belt slot
-		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.BELT, 8, 90 + 62, 71, EMPTY_BELT_SLOT, List.of(Text.translatable("slot.tooltip.belt"))));
+		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.BELT, 8, 90 + 62, 71, EMPTY_BELT_SLOT, List.of(Text.translatable("slot.tooltip.belt"))) {
+
+			@Override
+			public boolean isEnabled() {
+				return super.isEnabled() && serverConfig.inventorySlots.is_belt_slot_enabled.get();
+			}
+
+		});
 
 		// 69 gloves slot
-		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.GLOVES, 9, 90 + 62, 53, EMPTY_GLOVES_SLOT, List.of(Text.translatable("slot.tooltip.gloves"))));
+		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.GLOVES, 9, 90 + 62, 53, EMPTY_GLOVES_SLOT, List.of(Text.translatable("slot.tooltip.gloves"))) {
+
+			@Override
+			public boolean isEnabled() {
+				return super.isEnabled() && serverConfig.inventorySlots.is_gloves_slot_enabled.get();
+			}
+
+		});
 
 		// 70 necklace slot
-		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.NECKLACE, 10, 90 + 44, 17, EMPTY_NECKLACE_SLOT, List.of(Text.translatable("slot.tooltip.necklace"))));
+		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.NECKLACE, 10, 90 + 44, 17, EMPTY_NECKLACE_SLOT, List.of(Text.translatable("slot.tooltip.necklace"))) {
+
+			@Override
+			public boolean isEnabled() {
+				return super.isEnabled() && serverConfig.inventorySlots.is_necklace_slot_enabled.get();
+			}
+
+		});
 
 		// 71 ring 1 slot
-		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.RING_1, 11, 90 + 62, 17, EMPTY_RING_1_SLOT, List.of(Text.translatable("slot.tooltip.ring_1"))));
+		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.RING_1, 11, 90 + 62, 17, EMPTY_RING_1_SLOT, List.of(Text.translatable("slot.tooltip.ring_1"))) {
+
+			@Override
+			public boolean isEnabled() {
+				return super.isEnabled() && serverConfig.inventorySlots.is_ring_1_slot_enabled.get();
+			}
+
+		});
 
 		// 72 ring 2 slot
-		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.RING_2, 12, 90 + 62, 35, EMPTY_RING_2_SLOT, List.of(Text.translatable("slot.tooltip.ring_2"))));
+		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.RING_2, 12, 90 + 62, 35, EMPTY_RING_2_SLOT, List.of(Text.translatable("slot.tooltip.ring_2"))) {
+
+			@Override
+			public boolean isEnabled() {
+				return super.isEnabled() && serverConfig.inventorySlots.is_ring_2_slot_enabled.get();
+			}
+
+		});
 
 		// 73 shoulders slot
-		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.SHOULDERS, 13, 90 + 26, 17, EMPTY_SHOULDERS_SLOT, List.of(Text.translatable("slot.tooltip.shoulders"))));
+		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.SHOULDERS, 13, 90 + 26, 17, EMPTY_SHOULDERS_SLOT, List.of(Text.translatable("slot.tooltip.shoulders"))) {
+
+			@Override
+			public boolean isEnabled() {
+				return super.isEnabled() && serverConfig.inventorySlots.is_shoulders_slot_enabled.get();
+			}
+
+		});
 
 		// 74 spell 1 slot
 		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.SPELL_1, 14, 90 + 8, 89, EMPTY_SPELL_1_SLOT, List.of(Text.translatable("slot.tooltip.spell_1"))));

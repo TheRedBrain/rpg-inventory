@@ -270,22 +270,64 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 		});
 
 		// belt slot 51
-		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.BELT, 48, serverConfig.inventorySlots.belt_slot_x_offset.get(), serverConfig.inventorySlots.belt_slot_y_offset.get(), EMPTY_BELT_SLOT, List.of(Text.translatable("slot.tooltip.belt"))));
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.BELT, 48, serverConfig.inventorySlots.belt_slot_x_offset.get(), serverConfig.inventorySlots.belt_slot_y_offset.get(), EMPTY_BELT_SLOT, List.of(Text.translatable("slot.tooltip.belt"))) {
+
+			@Override
+			public boolean isEnabled() {
+				return super.isEnabled() && serverConfig.inventorySlots.is_belt_slot_enabled.get();
+			}
+
+		});
 
 		// gloves slot 52
-		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.GLOVES, 49, serverConfig.inventorySlots.gloves_slot_x_offset.get(), serverConfig.inventorySlots.gloves_slot_y_offset.get(), EMPTY_GLOVES_SLOT, List.of(Text.translatable("slot.tooltip.gloves"))));
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.GLOVES, 49, serverConfig.inventorySlots.gloves_slot_x_offset.get(), serverConfig.inventorySlots.gloves_slot_y_offset.get(), EMPTY_GLOVES_SLOT, List.of(Text.translatable("slot.tooltip.gloves"))) {
+
+			@Override
+			public boolean isEnabled() {
+				return super.isEnabled() && serverConfig.inventorySlots.is_gloves_slot_enabled.get();
+			}
+
+		});
 
 		// necklace slot 53
-		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.NECKLACE, 50, serverConfig.inventorySlots.necklace_slot_x_offset.get(), serverConfig.inventorySlots.necklace_slot_y_offset.get(), EMPTY_NECKLACE_SLOT, List.of(Text.translatable("slot.tooltip.necklace"))));
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.NECKLACE, 50, serverConfig.inventorySlots.necklace_slot_x_offset.get(), serverConfig.inventorySlots.necklace_slot_y_offset.get(), EMPTY_NECKLACE_SLOT, List.of(Text.translatable("slot.tooltip.necklace"))) {
+
+			@Override
+			public boolean isEnabled() {
+				return super.isEnabled() && serverConfig.inventorySlots.is_necklace_slot_enabled.get();
+			}
+
+		});
 
 		// ring 1 slot 54
-		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.RING_1, 51, serverConfig.inventorySlots.ring_1_slot_x_offset.get(), serverConfig.inventorySlots.ring_1_slot_y_offset.get(), EMPTY_RING_1_SLOT, List.of(Text.translatable("slot.tooltip.ring_1"))));
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.RING_1, 51, serverConfig.inventorySlots.ring_1_slot_x_offset.get(), serverConfig.inventorySlots.ring_1_slot_y_offset.get(), EMPTY_RING_1_SLOT, List.of(Text.translatable("slot.tooltip.ring_1"))) {
+
+			@Override
+			public boolean isEnabled() {
+				return super.isEnabled() && serverConfig.inventorySlots.is_ring_1_slot_enabled.get();
+			}
+
+		});
 
 		// ring 2 slot 55
-		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.RING_2, 52, serverConfig.inventorySlots.ring_2_slot_x_offset.get(), serverConfig.inventorySlots.ring_2_slot_y_offset.get(), EMPTY_RING_2_SLOT, List.of(Text.translatable("slot.tooltip.ring_2"))));
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.RING_2, 52, serverConfig.inventorySlots.ring_2_slot_x_offset.get(), serverConfig.inventorySlots.ring_2_slot_y_offset.get(), EMPTY_RING_2_SLOT, List.of(Text.translatable("slot.tooltip.ring_2"))) {
+
+			@Override
+			public boolean isEnabled() {
+				return super.isEnabled() && serverConfig.inventorySlots.is_ring_2_slot_enabled.get();
+			}
+
+		});
 
 		// shoulders slot 56
-		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SHOULDERS, 53, serverConfig.inventorySlots.shoulders_slot_x_offset.get(), serverConfig.inventorySlots.shoulders_slot_y_offset.get(), EMPTY_SHOULDERS_SLOT, List.of(Text.translatable("slot.tooltip.shoulders"))));
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SHOULDERS, 53, serverConfig.inventorySlots.shoulders_slot_x_offset.get(), serverConfig.inventorySlots.shoulders_slot_y_offset.get(), EMPTY_SHOULDERS_SLOT, List.of(Text.translatable("slot.tooltip.shoulders"))) {
+
+			@Override
+			public boolean isEnabled() {
+				return super.isEnabled() && serverConfig.inventorySlots.is_shoulders_slot_enabled.get();
+			}
+
+		});
 
 		// spell 1 slot 57
 		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SPELL_1, 54, serverConfig.inventorySlots.spell_1_slot_x_offset.get(), serverConfig.inventorySlots.spell_1_slot_y_offset.get(), EMPTY_SPELL_1_SLOT, List.of(Text.translatable("slot.tooltip.spell_1"))) {

@@ -157,7 +157,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
 		Optional<RegistryEntry.Reference<StatusEffect>> needs_two_handing_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.needs_two_handing_status_effect_identifier.get());
 		if (needs_two_handing_status_effect.isPresent()) {
-			if (itemStackMainHand.isIn(Tags.TWO_HANDED_ITEMS) && (this.rpginventory$isHandStackSheathed() || !this.rpginventory$isOffhandStackSheathed()) && !this.isCreative() && !hasAdventureBuildingEffect) {
+			if (itemStackMainHand.isIn(Tags.TWO_HANDED_ITEMS) && !itemStackOffHand.isEmpty() && !this.isCreative() && !hasAdventureBuildingEffect) {
 				if (!this.hasStatusEffect(needs_two_handing_status_effect.get())) {
 					this.addStatusEffect(new StatusEffectInstance(needs_two_handing_status_effect.get(), -1, 0, false, false, false));
 				}

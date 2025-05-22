@@ -5,6 +5,8 @@
 	"category.rpginventory.category": "RPG Inventory",
 
 
+	"block.rpginventory.mannequin": "Mannequin",
+
 	"container.mannequin": "Mannequin",
 
 	"gui.mannequin.equip_button_label": "Equip",

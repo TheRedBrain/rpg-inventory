@@ -308,12 +308,24 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.legs_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.legs_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
 		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.feet_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.feet_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
 		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.offhand_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.offhand_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
-		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.belt_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.belt_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
-		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.gloves_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.gloves_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
-		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.necklace_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.necklace_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+		if (serverConfig.inventorySlots.is_belt_slot_enabled.get()) {
+			context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.belt_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.belt_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+		}
+		if (serverConfig.inventorySlots.is_gloves_slot_enabled.get()) {
+			context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.gloves_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.gloves_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+		}
+		if (serverConfig.inventorySlots.is_necklace_slot_enabled.get()) {
+			context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.necklace_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.necklace_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+		}
+		if (serverConfig.inventorySlots.is_ring_1_slot_enabled.get()) {
 		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.ring_1_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.ring_1_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+		}
+		if (serverConfig.inventorySlots.is_ring_2_slot_enabled.get()) {
 		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.ring_2_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.ring_2_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
-		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.shoulders_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.shoulders_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+		}
+		if (serverConfig.inventorySlots.is_shoulders_slot_enabled.get()) {
+			context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.shoulders_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.shoulders_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+		}
 		if (activeSpellSlotAmount > 0) {
 			context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.spell_1_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.spell_1_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
 		}

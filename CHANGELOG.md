@@ -1,3 +1,9 @@
+# 2.4.1
+
+- reworked check for when the two-handed item status effect should be applied. It is now independent of the hand slot overhaul and simply checks if the offhand slot is empty
+- fixed offhand slot getting disabled when hand slot overhaul is disabled
+- added server config options to disable custom equipment slots
+
 # 2.4.0
 
 **Important!**\
