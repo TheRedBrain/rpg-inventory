@@ -1,3 +1,7 @@
+# 2.4.2
+
+- fixed Trinkets still being required
+
 # 2.4.1
 
 - reworked check for when the two-handed item status effect should be applied. It is now independent of the hand slot overhaul and simply checks if the offhand slot is empty

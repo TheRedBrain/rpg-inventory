@@ -32,8 +32,7 @@
 		"fabricloader": ">=${loader_version}",
 		"fabric-api": "*",
 		"fzzy_config": ">=${fzzy_config_version}",
-		"slotcustomizationapi": ">=${slot_customization_api_version}",
-		"trinkets": ">=${trinkets_version}"
+		"slotcustomizationapi": ">=${slot_customization_api_version}"
 	},
 	"suggests": {
 		"backpackattribute": "*",
@@ -44,6 +43,7 @@
 		"staminaattributes": "*",
 		"variousstatuseffects": "*",
 		"playerattributescreen": "*",
-		"rpgcrafting": "*"
+		"rpgcrafting": "*",
+		"trinkets": "*"
 	}
 }
