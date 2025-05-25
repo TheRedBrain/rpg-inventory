@@ -3,13 +3,13 @@ package com.github.theredbrain.rpginventory;
 import com.github.theredbrain.inventorysizeattributes.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.compat.BetterCombatExtensionCompat;
 import com.github.theredbrain.rpginventory.compat.SpellEngineCompat;
+import com.github.theredbrain.rpginventory.compat.TrinketsCompat;
 import com.github.theredbrain.rpginventory.config.ServerConfig;
 import com.github.theredbrain.rpginventory.registry.BlockRegistry;
 import com.github.theredbrain.rpginventory.registry.EntityRegistry;
 import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
 import com.github.theredbrain.rpginventory.registry.ItemComponentRegistry;
 import com.github.theredbrain.rpginventory.registry.ItemRegistry;
-import com.github.theredbrain.rpginventory.registry.PredicateRegistry;
 import com.github.theredbrain.rpginventory.registry.ScreenHandlerTypesRegistry;
 import com.github.theredbrain.rpginventory.registry.ServerPacketRegistry;
 import me.fzzyhmstrs.fzzy_config.api.ConfigApiJava;
@@ -17,9 +17,11 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.component.ComponentType;
 import net.minecraft.component.type.ProfileComponent;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.TagKey;
@@ -27,6 +29,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Unit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.function.Predicate;
 
 public class RPGInventory implements ModInitializer {
 	public static final String MOD_ID = "rpginventory";
@@ -59,6 +63,7 @@ public class RPGInventory implements ModInitializer {
 	public static final boolean isPlayerAttributeScreenLoaded = FabricLoader.getInstance().isModLoaded("playerattributescreen");
 	public static final boolean isBetterCombatExtensionLoaded = FabricLoader.getInstance().isModLoaded("bettercombatextension");
 	public static final boolean isBetterCombatLoaded = FabricLoader.getInstance().isModLoaded("bettercombat");
+	public static final boolean isTrinketsLoaded = FabricLoader.getInstance().isModLoaded("trinkets");
 
 	public static int getActiveInventorySize(PlayerEntity player) {
 		return isInventorySizeAttributesLoaded ? ((DuckPlayerEntityMixin) player).inventorysizeattributes$getActiveInventorySlotAmount() : 27;
@@ -78,6 +83,20 @@ public class RPGInventory implements ModInitializer {
 		return bl && SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get();
 	}
 
+	public static boolean isTrinketEquipped(LivingEntity livingEntity, Predicate<ItemStack> itemStackPredicate) {
+		boolean bl = false;
+		if (RPGInventory.isTrinketsLoaded) {
+			bl = TrinketsCompat.isTrinketEquipped(livingEntity, itemStackPredicate);
+		}
+		return bl;
+	}
+
+	public static void breakKeepInventoryTrinkets(LivingEntity livingEntity) {
+		if (RPGInventory.isTrinketsLoaded) {
+			TrinketsCompat.breakKeepInventoryTrinkets(livingEntity);
+		}
+	}
+
 	@Override
 	public void onInitialize() {
 		LOGGER.info("We are going on an adventure!");
@@ -92,11 +111,15 @@ public class RPGInventory implements ModInitializer {
 		ItemComponentRegistry.init();
 		ItemRegistry.init();
 		GameRulesRegistry.init();
-		PredicateRegistry.init();
 		ScreenHandlerTypesRegistry.registerAll();
 
 		// Compatibility
-		SpellEngineCompat.init();
+		if (isSpellEngineLoaded) {
+			SpellEngineCompat.init();
+		}
+		if (isTrinketsLoaded) {
+			TrinketsCompat.init();
+		}
 	}
 
 	public static Identifier identifier(String path) {

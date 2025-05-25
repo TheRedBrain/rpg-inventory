@@ -1,3 +1,7 @@
+# 2.4.3
+
+- fixed Trinkets still being required (again)
+
 # 2.4.2
 
 - fixed Trinkets still being required

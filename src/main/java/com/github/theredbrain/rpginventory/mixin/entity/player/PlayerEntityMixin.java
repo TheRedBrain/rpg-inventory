@@ -1,7 +1,6 @@
 package com.github.theredbrain.rpginventory.mixin.entity.player;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
-import com.github.theredbrain.rpginventory.config.ServerConfig;
 import com.github.theredbrain.rpginventory.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
 import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlotType;
@@ -15,9 +14,6 @@ import com.google.common.collect.Iterables;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.mojang.authlib.GameProfile;
-import dev.emi.trinkets.api.SlotReference;
-import dev.emi.trinkets.api.TrinketComponent;
-import dev.emi.trinkets.api.TrinketsApi;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -38,11 +34,9 @@ import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.util.Pair;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -74,7 +68,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 	@Shadow
 	public abstract boolean isCreative();
 
-	@Shadow public abstract GameProfile getGameProfile();
+	@Shadow
+	public abstract GameProfile getGameProfile();
 
 	@Unique
 	private boolean isAdventureHotbarCleanedUp = false;
@@ -118,13 +113,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 	@Unique
 	private void rpginventory$updateEquipmentStatusEffects() {
 
-		boolean keep_inventory_on_death_item_equipped = false;
 		Predicate<ItemStack> keep_inventory_on_death_item_equipped_predicate = stack -> stack.isIn(Tags.SACRIFICED_TO_KEEP_INVENTORY_ON_DEATH);
 
-		Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(this);
-		if (trinkets.isPresent()) {
-			keep_inventory_on_death_item_equipped = trinkets.get().isEquipped(keep_inventory_on_death_item_equipped_predicate);
-		}
+		boolean keep_inventory_on_death_item_equipped = RPGInventory.isTrinketEquipped(this, keep_inventory_on_death_item_equipped_predicate);
 
 		keep_inventory_on_death_item_equipped = keep_inventory_on_death_item_equipped || rpginventory$hasEquipped(keep_inventory_on_death_item_equipped_predicate);
 
@@ -277,7 +268,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
 	@WrapMethod(method = "getArmorItems")
 	public Iterable<ItemStack> rpginventory$getArmorItems(Operation<Iterable<ItemStack>> original) {
-		List<ItemStack> list = new ArrayList<>(List.of(((DuckPlayerInventoryMixin)this.inventory).rpginventory$getAdditionalEquipmentStack(1), ((DuckPlayerInventoryMixin)this.inventory).rpginventory$getAdditionalEquipmentStack(5)));
+		List<ItemStack> list = new ArrayList<>(List.of(((DuckPlayerInventoryMixin) this.inventory).rpginventory$getAdditionalEquipmentStack(1), ((DuckPlayerInventoryMixin) this.inventory).rpginventory$getAdditionalEquipmentStack(5)));
 		for (ItemStack stack : original.call()) {
 			list.add(stack);
 		}
@@ -454,15 +445,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
 	@Unique
 	private void rpginventory$breakKeepInventoryItems() {
-		Optional<TrinketComponent> trinkets = TrinketsApi.getTrinketComponent(this);
-		if (trinkets.isPresent()) {
-			List<Pair<SlotReference, ItemStack>> trinketList = trinkets.get().getAllEquipped();
-			for (net.minecraft.util.Pair<SlotReference, ItemStack> trinket : trinketList) {
-				if (trinket.getRight().isIn(Tags.SACRIFICED_TO_KEEP_INVENTORY_ON_DEATH)) {
-					trinket.getLeft().inventory().clear();
-				}
-			}
-		}
+
+		RPGInventory.breakKeepInventoryTrinkets(this);
+
 		for (int i = 0; i < this.inventory.armor.size(); i++) {
 			if (this.inventory.armor.get(i).isIn(Tags.SACRIFICED_TO_KEEP_INVENTORY_ON_DEATH)) {
 				this.inventory.armor.set(i, ItemStack.EMPTY);
@@ -470,6 +455,29 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 		}
 		if (this.inventory.offHand.get(0).isIn(Tags.SACRIFICED_TO_KEEP_INVENTORY_ON_DEATH)) {
 			this.inventory.offHand.set(0, ItemStack.EMPTY);
+		}
+		if (this.inventory instanceof DuckPlayerInventoryMixin rpg_inventory) {
+
+			if (rpg_inventory.rpginventory$getHand().isIn(Tags.SACRIFICED_TO_KEEP_INVENTORY_ON_DEATH)) {
+				rpg_inventory.rpginventory$setHand(ItemStack.EMPTY);
+			}
+			if (rpg_inventory.rpginventory$getAlternativeHand().isIn(Tags.SACRIFICED_TO_KEEP_INVENTORY_ON_DEATH)) {
+				rpg_inventory.rpginventory$setAlternativeHand(ItemStack.EMPTY);
+			}
+			if (rpg_inventory.rpginventory$getAlternativeOffhand().isIn(Tags.SACRIFICED_TO_KEEP_INVENTORY_ON_DEATH)) {
+				rpg_inventory.rpginventory$setAlternativeOffhand(ItemStack.EMPTY);
+			}
+			if (rpg_inventory.rpginventory$getSheathedHand().isIn(Tags.SACRIFICED_TO_KEEP_INVENTORY_ON_DEATH)) {
+				rpg_inventory.rpginventory$setSheathedHand(ItemStack.EMPTY);
+			}
+			if (rpg_inventory.rpginventory$getSheathedOffhand().isIn(Tags.SACRIFICED_TO_KEEP_INVENTORY_ON_DEATH)) {
+				rpg_inventory.rpginventory$setSheathedOffhand(ItemStack.EMPTY);
+			}
+			for (int i = 0; i < 14; i++) {
+				if (rpg_inventory.rpginventory$getAdditionalEquipmentStack(i).isIn(Tags.SACRIFICED_TO_KEEP_INVENTORY_ON_DEATH)) {
+					rpg_inventory.rpginventory$setAdditionalEquipmentStack(i, ItemStack.EMPTY);
+				}
+			}
 		}
 	}
 }

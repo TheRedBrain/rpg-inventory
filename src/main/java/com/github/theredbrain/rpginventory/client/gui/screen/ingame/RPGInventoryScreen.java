@@ -10,11 +10,6 @@ import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.screen.DuckPlayerScreenHandlerMixin;
 import com.github.theredbrain.rpginventory.screen.DuckSlotMixin;
 import com.google.common.collect.Ordering;
-import dev.emi.trinkets.Point;
-import dev.emi.trinkets.TrinketPlayerScreenHandler;
-import dev.emi.trinkets.TrinketScreen;
-import dev.emi.trinkets.TrinketScreenManager;
-import dev.emi.trinkets.api.SlotGroup;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -26,14 +21,12 @@ import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.StatusEffectSpriteManager;
-import net.minecraft.client.util.math.Rect2i;
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffectUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.ScreenTexts;
-import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -46,7 +39,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
-public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> implements TrinketScreen {
+public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> {
 	public static final Identifier ADVENTURE_INVENTORY_MAIN_BACKGROUND_TEXTURE = RPGInventory.identifier("textures/gui/container/adventure_inventory/adventure_inventory_main_background.png");
 	public static final Identifier ADVENTURE_INVENTORY_SIDES_BACKGROUND_TEXTURE = RPGInventory.identifier("textures/gui/container/adventure_inventory/adventure_inventory_sides_background.png");
 	public static final Identifier SLOT_TEXTURE = Identifier.ofVanilla("textures/gui/sprites/container/slot.png");
@@ -108,10 +101,6 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 		this.titleY = 6;
 		this.playerInventoryTitleX = 8;
 		this.playerInventoryTitleY = this.backgroundHeight - 93;
-	}
-
-	public void handledScreenTick() {
-		TrinketScreenManager.tick();
 	}
 
 	private void updateEffectsLists(PlayerEntity player) {
@@ -205,7 +194,6 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 
 	@Override
 	protected void init() {
-		TrinketScreenManager.init(this);
 		if (this.client != null && this.client.player != null) {
 			if (this.client.interactionManager != null && this.client.interactionManager.hasCreativeInventory()) {
 				this.client.setScreen(new CreativeInventoryScreen(this.client.player, this.client.player.networkHandler.getEnabledFeatures(), this.client.options.getOperatorItemsTab().getValue()));
@@ -243,19 +231,12 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 
 	@Override
 	public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-		TrinketScreenManager.update(mouseX, mouseY);
 		super.render(context, mouseX, mouseY, delta);
 		this.drawStatusEffects(context, mouseX, mouseY);
 		this.drawAttributeScreen(context, mouseX, mouseY);
 		this.drawMouseoverTooltip(context, mouseX, mouseY);
 		this.mouseX = mouseX;
 		this.mouseY = mouseY;
-	}
-
-	@Override
-	protected void drawForeground(DrawContext context, int mouseX, int mouseY) {
-		super.drawForeground(context, mouseX, mouseY);
-		TrinketScreenManager.drawActiveGroup(context);
 	}
 
 	@Override
@@ -286,23 +267,6 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 			context.drawText(this.textRenderer, SPELLS_LABEL_TEXT, i + clientConfig.rpgInventoryScreenSection.spell_slots_label_x_offset.get(), j + clientConfig.rpgInventoryScreenSection.spell_slots_label_y_offset.get(), 4210752, false);
 		}
 
-//		for (String key : serverConfig.inventorySlots.slot_group_positions.get().keySet()) {
-//			ServerConfig.InventorySlots.SlotGroupPosition slotGroupPosition = serverConfig.inventorySlots.slot_group_positions.get(key);
-//			if (slotGroupPosition != null) {
-//				if ((key.equals("spell_slot_1") && activeSpellSlotAmount < 1) ||
-//						(key.equals("spell_slot_2") && activeSpellSlotAmount < 2) ||
-//						(key.equals("spell_slot_3") && activeSpellSlotAmount < 3) ||
-//						(key.equals("spell_slot_4") && activeSpellSlotAmount < 4) ||
-//						(key.equals("spell_slot_5") && activeSpellSlotAmount < 5) ||
-//						(key.equals("spell_slot_6") && activeSpellSlotAmount < 6) ||
-//						(key.equals("spell_slot_7") && activeSpellSlotAmount < 7) ||
-//						(key.equals("spell_slot_8") && activeSpellSlotAmount < 8)
-//				) {
-//					continue;
-//				}
-//				context.drawTexture(SLOT_TEXTURE, i + slotGroupPosition.survival_x - 1, j + slotGroupPosition.survival_y - 1, 0, 0, 18, 18, 18, 18);
-//			}
-//		}
 		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.head_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.head_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
 		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.chest_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.chest_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
 		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.legs_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.legs_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
@@ -318,10 +282,10 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 			context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.necklace_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.necklace_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
 		}
 		if (serverConfig.inventorySlots.is_ring_1_slot_enabled.get()) {
-		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.ring_1_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.ring_1_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+			context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.ring_1_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.ring_1_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
 		}
 		if (serverConfig.inventorySlots.is_ring_2_slot_enabled.get()) {
-		context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.ring_2_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.ring_2_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+			context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.ring_2_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.ring_2_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
 		}
 		if (serverConfig.inventorySlots.is_shoulders_slot_enabled.get()) {
 			context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.shoulders_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.shoulders_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
@@ -376,7 +340,6 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 		if (this.client != null && this.client.player != null) {
 			InventoryScreen.drawEntity(context, i + 26, j + 36, i + 75, j + 106, 30, 0.0625f, this.mouseX, this.mouseY, this.client.player);
 		}
-		TrinketScreenManager.drawExtraGroups(context);
 	}
 
 	private void drawAttributeScreen(DrawContext context, int mouseX, int mouseY) {
@@ -512,11 +475,6 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 			description = Text.empty();
 		}
 		return description;
-	}
-
-	@Override
-	protected boolean isClickOutsideBounds(double mouseX, double mouseY, int left, int top, int button) {
-		return super.isClickOutsideBounds(mouseX, mouseY, left, top, button) && !(TrinketScreenManager.isClickInsideTrinketBounds(mouseX, mouseY));
 	}
 
 	@Override
@@ -681,39 +639,5 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> imple
 			this.attributeScrollPosition = (int) ((double) (this.attributeScrollAmount * (float) i));
 		}
 		return true;
-	}
-
-	@Override
-	public TrinketPlayerScreenHandler trinkets$getHandler() {
-		return ((TrinketPlayerScreenHandler) this.handler);
-	}
-
-	@Override
-	public Rect2i trinkets$getGroupRect(SlotGroup group) {
-		Point pos = ((TrinketPlayerScreenHandler) handler).trinkets$getGroupPos(group);
-		if (pos != null) {
-			return new Rect2i(pos.x() - 1, pos.y() - 1, 17, 17);
-		}
-		return new Rect2i(0, 0, 0, 0);
-	}
-
-	@Override
-	public Slot trinkets$getFocusedSlot() {
-		return this.focusedSlot;
-	}
-
-	@Override
-	public int trinkets$getX() {
-		return this.x;
-	}
-
-	@Override
-	public int trinkets$getY() {
-		return this.y;
-	}
-
-	@Override
-	public boolean trinkets$isRecipeBookOpen() {
-		return this.showAttributeScreen;
 	}
 }

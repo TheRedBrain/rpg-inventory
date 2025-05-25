@@ -41,7 +41,12 @@ public class RPGInventoryMixinConfigPlugin implements IMixinConfigPlugin {
 	@Override
 	public boolean shouldApplyMixin(String s, String s1) {
 
-		if (s1.equals("com.github.theredbrain.rpginventory.mixin.trinkets.SurvivalTrinketSlotMixin") || s1.equals("com.github.theredbrain.rpginventory.mixin.screen.PlayerScreenHandlerMixin_TrinketsReplacement") || s1.equals("com.github.theredbrain.rpginventory.mixin.client.gui.screen.ingame.CreativeInventoryScreenMixin_TrinketsReplacement")) {
+		if (
+				s1.equals("com.github.theredbrain.rpginventory.mixin.trinkets.SurvivalTrinketSlotMixin") ||
+						s1.equals("com.github.theredbrain.rpginventory.mixin.screen.PlayerScreenHandlerMixin_TrinketsReplacement") ||
+						s1.equals("com.github.theredbrain.rpginventory.mixin.client.gui.screen.ingame.CreativeInventoryScreenMixin_TrinketsReplacement") ||
+						s1.equals("com.github.theredbrain.rpginventory.mixin.client.gui.screen.ingame.RPGInventoryScreenMixin")
+		) {
 			return shouldApplyTrinketsMixins();
 		}
 		return true;

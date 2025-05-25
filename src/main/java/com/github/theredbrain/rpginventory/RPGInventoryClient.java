@@ -2,7 +2,6 @@ package com.github.theredbrain.rpginventory;
 
 import com.github.theredbrain.backpackattribute.BackpackAttributeClient;
 import com.github.theredbrain.inventorysizeattributes.InventorySizeAttributesClient;
-import com.github.theredbrain.inventorysizeattributes.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.playerattributescreen.PlayerAttributeScreenClient;
 import com.github.theredbrain.rpgcrafting.RPGCraftingClient;
 import com.github.theredbrain.rpginventory.client.gui.screen.ingame.MannequinScreen;
@@ -16,7 +15,6 @@ import me.fzzyhmstrs.fzzy_config.api.RegisterType;
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import org.apache.commons.lang3.tuple.MutablePair;
 

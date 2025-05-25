@@ -34,6 +34,7 @@
     "client.gui.screen.ingame.CreativeInventoryScreenMixin_TrinketsReplacement",
     "client.gui.screen.ingame.HandledScreenMixin",
     "client.gui.screen.ingame.InventoryScreenMixin",
+    "client.gui.screen.ingame.RPGInventoryScreenMixin",
     "client.render.entity.PlayerEntityRendererMixin"
   ],
   "plugin": "com.github.theredbrain.rpginventory.RPGInventoryMixinConfigPlugin"

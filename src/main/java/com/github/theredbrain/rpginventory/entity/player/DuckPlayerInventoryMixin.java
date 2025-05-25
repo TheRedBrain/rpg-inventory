@@ -43,32 +43,4 @@ public interface DuckPlayerInventoryMixin {
 	ItemStack rpginventory$getAdditionalEquipmentStack(int index);
 
 	ItemStack rpginventory$setAdditionalEquipmentStack(int index, ItemStack itemStack);
-
-//	ItemStack rpginventory$getGlovesStack();
-//
-//	ItemStack rpginventory$setGlovesStack(ItemStack itemStack);
-//
-//	ItemStack rpginventory$getShouldersStack();
-//
-//	ItemStack rpginventory$setShouldersStack(ItemStack itemStack);
-//
-//	ItemStack rpginventory$getRing1Stack();
-//
-//	ItemStack rpginventory$setRing1Stack(ItemStack itemStack);
-//
-//	ItemStack rpginventory$getRing2Stack();
-//
-//	ItemStack rpginventory$setRing2Stack(ItemStack itemStack);
-//
-//	ItemStack rpginventory$getBeltStack();
-//
-//	ItemStack rpginventory$setBeltStack(ItemStack itemStack);
-//
-//	ItemStack rpginventory$getNecklaceStack();
-//
-//	ItemStack rpginventory$setNecklaceStack(ItemStack itemStack);
-//
-//	ItemStack rpginventory$getSpellSlotStack(int spellSlotNumber);
-//
-//	ItemStack rpginventory$setSpellSlotStack(ItemStack itemStack, int spellSlotNumber);
 }

@@ -1,6 +1,5 @@
 package com.github.theredbrain.rpginventory.compat;
 
-import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerInventoryMixin;
 import net.minecraft.item.ItemStack;
 import net.spell_engine.api.spell.container.SpellContainer;
@@ -22,10 +21,8 @@ public class SpellEngineCompat {
 	}, player -> ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSpellProvidingEquipmentItems());
 
 	public static void init() {
-		if (RPGInventory.isSpellEngineLoaded) {
-			ContainerCompat.addProvider((playerEntity) -> ((DuckPlayerInventoryMixin) playerEntity.getInventory()).rpginventory$getSpellProvidingEquipmentItems());
-			SpellContainerSource.addSource(RPG_EQUIPMENT);
-		}
+		ContainerCompat.addProvider((playerEntity) -> ((DuckPlayerInventoryMixin) playerEntity.getInventory()).rpginventory$getSpellProvidingEquipmentItems());
+		SpellContainerSource.addSource(RPG_EQUIPMENT);
 	}
 
 	private static void addSourceIfValid(ItemStack fromItemStack, List<SpellContainerSource.SourcedContainer> sources, String name) {
