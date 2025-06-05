@@ -1,3 +1,7 @@
+# 2.4.4
+
+- fixed RPG Inventory screen Trinkets compat
+
 # 2.4.3
 
 - fixed Trinkets still being required (again)

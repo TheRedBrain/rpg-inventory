@@ -44,8 +44,7 @@ public class RPGInventoryMixinConfigPlugin implements IMixinConfigPlugin {
 		if (
 				s1.equals("com.github.theredbrain.rpginventory.mixin.trinkets.SurvivalTrinketSlotMixin") ||
 						s1.equals("com.github.theredbrain.rpginventory.mixin.screen.PlayerScreenHandlerMixin_TrinketsReplacement") ||
-						s1.equals("com.github.theredbrain.rpginventory.mixin.client.gui.screen.ingame.CreativeInventoryScreenMixin_TrinketsReplacement") ||
-						s1.equals("com.github.theredbrain.rpginventory.mixin.client.gui.screen.ingame.RPGInventoryScreenMixin")
+						s1.equals("com.github.theredbrain.rpginventory.mixin.client.gui.screen.ingame.CreativeInventoryScreenMixin_TrinketsReplacement")
 		) {
 			return shouldApplyTrinketsMixins();
 		}

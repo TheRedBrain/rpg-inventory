@@ -5,6 +5,8 @@ import com.github.theredbrain.inventorysizeattributes.InventorySizeAttributesCli
 import com.github.theredbrain.playerattributescreen.PlayerAttributeScreenClient;
 import com.github.theredbrain.rpgcrafting.RPGCraftingClient;
 import com.github.theredbrain.rpginventory.client.gui.screen.ingame.MannequinScreen;
+import com.github.theredbrain.rpginventory.client.gui.screen.ingame.RPGInventoryScreen;
+import com.github.theredbrain.rpginventory.client.gui.screen.ingame.RPGInventoryTrinketScreen;
 import com.github.theredbrain.rpginventory.config.ClientConfig;
 import com.github.theredbrain.rpginventory.registry.ClientEventsRegistry;
 import com.github.theredbrain.rpginventory.registry.ClientPacketRegistry;
@@ -15,6 +17,7 @@ import me.fzzyhmstrs.fzzy_config.api.RegisterType;
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import org.apache.commons.lang3.tuple.MutablePair;
 
@@ -54,6 +57,14 @@ public class RPGInventoryClient implements ClientModInitializer {
 			RPGCraftingClient.openHandCraftingScreen(client);
 		} else if (client.player != null) {
 			client.player.sendMessage(Text.translatable("hud.message.rpgCraftingNotInstalled"));
+		}
+	}
+
+	public static void openRPGInventoryScreen(MinecraftClient client, PlayerEntity player) {
+		if (RPGInventory.isTrinketsLoaded) {
+			client.setScreen(new RPGInventoryTrinketScreen(player));
+		} else {
+			client.setScreen(new RPGInventoryScreen(player));
 		}
 	}
 

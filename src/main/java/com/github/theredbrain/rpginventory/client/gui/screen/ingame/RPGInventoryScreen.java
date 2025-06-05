@@ -64,7 +64,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> {
 	private ButtonWidget openHandCraftingButton;
 	private final int sidesBackgroundWidth = 130;
 	private ButtonWidget toggleShowAttributeScreenButton;
-	private boolean showAttributeScreen;
+	protected boolean showAttributeScreen;
 	private ButtonWidget toggleShowEffectScreenButton;
 	private boolean showEffectScreen;
 	private int attributeListSize = 0;
