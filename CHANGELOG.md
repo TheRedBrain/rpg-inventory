@@ -1,3 +1,7 @@
+# 2.4.5
+
+- fixed RPG Inventory screen Trinkets compat
+
 # 2.4.4
 
 - fixed RPG Inventory screen Trinkets compat

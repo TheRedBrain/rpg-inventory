@@ -1,12 +1,14 @@
 package com.github.theredbrain.rpginventory.compat;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
+import com.github.theredbrain.rpginventory.client.gui.screen.ingame.RPGInventoryTrinketScreen;
 import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import dev.emi.trinkets.api.SlotReference;
 import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketsApi;
 import net.fabricmc.fabric.api.util.TriState;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.player.PlayerEntity;
@@ -61,6 +63,10 @@ public class TrinketsCompat {
 			}
 			return TriState.FALSE;
 		});
+	}
+
+	public static void openRPGInventoryTrinketsScreen(MinecraftClient client, PlayerEntity player) {
+		client.setScreen(new RPGInventoryTrinketScreen(player));
 	}
 
 	public static void init() {

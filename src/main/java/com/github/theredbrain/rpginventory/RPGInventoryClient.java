@@ -7,6 +7,7 @@ import com.github.theredbrain.rpgcrafting.RPGCraftingClient;
 import com.github.theredbrain.rpginventory.client.gui.screen.ingame.MannequinScreen;
 import com.github.theredbrain.rpginventory.client.gui.screen.ingame.RPGInventoryScreen;
 import com.github.theredbrain.rpginventory.client.gui.screen.ingame.RPGInventoryTrinketScreen;
+import com.github.theredbrain.rpginventory.compat.TrinketsCompat;
 import com.github.theredbrain.rpginventory.config.ClientConfig;
 import com.github.theredbrain.rpginventory.registry.ClientEventsRegistry;
 import com.github.theredbrain.rpginventory.registry.ClientPacketRegistry;
@@ -62,7 +63,7 @@ public class RPGInventoryClient implements ClientModInitializer {
 
 	public static void openRPGInventoryScreen(MinecraftClient client, PlayerEntity player) {
 		if (RPGInventory.isTrinketsLoaded) {
-			client.setScreen(new RPGInventoryTrinketScreen(player));
+			TrinketsCompat.openRPGInventoryTrinketsScreen(client, player);
 		} else {
 			client.setScreen(new RPGInventoryScreen(player));
 		}
