@@ -63,7 +63,7 @@ public class SwapHandItemsPacketReceiver implements ServerPlayNetworking.PlayPay
 			}
 			player.getServerWorld().playSound(null, player.getBlockPos().getX(), player.getBlockPos().getY(), player.getBlockPos().getZ(), SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.PLAYERS, 1.0F, 1.0F);
 		} else {
-			player.sendMessageToClient(Text.translatable("hud.message.featureIsDisabledByServer"), true);
+			player.sendMessageToClient(Text.translatable("hud.message.handSlotOverhaulIsDisabledByServer"), true);
 		}
 	}
 }
