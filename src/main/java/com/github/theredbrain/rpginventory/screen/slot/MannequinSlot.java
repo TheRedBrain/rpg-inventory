@@ -1,12 +1,9 @@
 package com.github.theredbrain.rpginventory.screen.slot;
 
-import com.github.theredbrain.rpginventory.RPGInventory;
-import com.github.theredbrain.rpginventory.component.type.ExtendedAttributeModifierSlot;
 import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import com.github.theredbrain.rpginventory.screen.DuckSlotMixin;
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -18,7 +15,6 @@ import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Unique;
 
 import java.util.List;
 
@@ -33,7 +29,7 @@ public class MannequinSlot extends Slot {
 		this.entity = entity;
 		this.equipmentSlot = equipmentSlot;
 		this.backgroundSprite = backgroundSprite;
-		((DuckSlotMixin)this).rpginventory$setSlotTooltipText(tooltip);
+		((DuckSlotMixin) this).rpginventory$setSlotTooltipText(tooltip);
 	}
 
 	@Override
@@ -45,7 +41,7 @@ public class MannequinSlot extends Slot {
 	public boolean canInsert(ItemStack stack) {
 		boolean hasPreventMannequinSlotInteractionEffect = false;
 		for (StatusEffectInstance instance : this.entity.getStatusEffects()) {
-			if (instance.getEffectType().isIn(RPGInventory.PREVENTS_MANNEQUIN_SLOT_INTERACTION)) {
+			if (instance.getEffectType().isIn(Tags.PREVENTS_MANNEQUIN_SLOT_INTERACTION)) {
 				hasPreventMannequinSlotInteractionEffect = true;
 				break;
 			}
@@ -57,7 +53,7 @@ public class MannequinSlot extends Slot {
 	public boolean canTakeItems(PlayerEntity playerEntity) {
 		boolean hasPreventMannequinSlotInteractionEffect = false;
 		for (StatusEffectInstance instance : this.entity.getStatusEffects()) {
-			if (instance.getEffectType().isIn(RPGInventory.PREVENTS_MANNEQUIN_SLOT_INTERACTION)) {
+			if (instance.getEffectType().isIn(Tags.PREVENTS_MANNEQUIN_SLOT_INTERACTION)) {
 				hasPreventMannequinSlotInteractionEffect = true;
 				break;
 			}

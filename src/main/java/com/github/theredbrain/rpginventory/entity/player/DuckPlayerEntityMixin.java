@@ -18,4 +18,8 @@ public interface DuckPlayerEntityMixin {
 	int rpginventory$oldActiveSpellSlotAmount();
 
 	void rpginventory$setOldActiveSpellSlotAmount(int oldActiveSpellSlotAmount);
+
+	boolean rpginventory$isAdventureHotbarCleanedUp();
+
+	void rpginventory$setIsAdventureHotbarCleanedUp(boolean isAdventureHotbarCleanedUp);
 }

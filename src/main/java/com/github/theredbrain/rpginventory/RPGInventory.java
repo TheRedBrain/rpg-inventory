@@ -52,9 +52,6 @@ public class RPGInventory implements ModInitializer {
 	 */
 	public static ComponentType<Unit> LOAD_OUT_ITEM;
 
-	public static final TagKey<StatusEffect> PREVENTS_MANNEQUIN_INTERACTION = TagKey.of(RegistryKeys.STATUS_EFFECT, identifier("prevents_mannequin_interaction"));
-	public static final TagKey<StatusEffect> PREVENTS_MANNEQUIN_SLOT_INTERACTION = TagKey.of(RegistryKeys.STATUS_EFFECT, identifier("prevents_mannequin_slot_interaction"));
-
 	public static final boolean isRPGCraftingLoaded = FabricLoader.getInstance().isModLoaded("rpgcrafting");
 	public static final boolean isBackpackAttributeLoaded = FabricLoader.getInstance().isModLoaded("backpackattribute");
 	public static final boolean isFoodOverhaulLoaded = FabricLoader.getInstance().isModLoaded("foodoverhaul");

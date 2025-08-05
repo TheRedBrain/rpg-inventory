@@ -1,11 +1,10 @@
 package com.github.theredbrain.rpginventory.block.entity;
 
-import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.registry.EntityRegistry;
+import com.github.theredbrain.rpginventory.registry.Tags;
 import com.github.theredbrain.rpginventory.screen.MannequinScreenHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -45,7 +44,7 @@ public class MannequinBlockEntity extends LockableContainerBlockEntity {
 	public boolean checkUnlocked(PlayerEntity player) {
 		boolean hasPreventMannequinInteractionEffect = false;
 		for (StatusEffectInstance instance : player.getStatusEffects()) {
-			if (instance.getEffectType().isIn(RPGInventory.PREVENTS_MANNEQUIN_INTERACTION)) {
+			if (instance.getEffectType().isIn(Tags.PREVENTS_MANNEQUIN_INTERACTION)) {
 				hasPreventMannequinInteractionEffect = true;
 				break;
 			}

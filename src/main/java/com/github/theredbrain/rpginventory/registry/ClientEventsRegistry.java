@@ -4,7 +4,6 @@ import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.RPGInventoryClient;
 import com.github.theredbrain.rpginventory.config.ClientConfig;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.component.type.ProfileComponent;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.Equipment;
@@ -42,7 +41,7 @@ public class ClientEventsRegistry {
 						formatting_string.append("§").append(formatting_config_string.charAt(i));
 					}
 				}
-				lines.add(Text.translatable("item.additional_tooltip.player_relation.crafted_by",formatting_string + playerCraftedComponent.gameProfile().getName()));
+				lines.add(Text.translatable("item.additional_tooltip.player_relation.crafted_by", formatting_string + playerCraftedComponent.gameProfile().getName()));
 			}
 
 			if (stack.isIn(Tags.TWO_HANDED_ITEMS) && clientConfig.itemTooltipSection.show_item_tooltip_two_handed_items.get()) {
