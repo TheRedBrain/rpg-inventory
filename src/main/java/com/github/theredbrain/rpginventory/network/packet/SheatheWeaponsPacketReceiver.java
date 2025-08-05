@@ -1,9 +1,9 @@
 package com.github.theredbrain.rpginventory.network.packet;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
+import com.github.theredbrain.rpginventory.config.ServerConfig;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerInventoryMixin;
-import com.github.theredbrain.staminaattributes.entity.StaminaUsingEntity;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -20,6 +20,8 @@ public class SheatheWeaponsPacketReceiver implements ServerPlayNetworking.PlayPa
 
 		if (RPGInventory.isHandSlotOverhaulActive()) {
 
+			ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
+
 			ItemStack handItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getHand().copy();
 			if (handItemStack.isEmpty()) {
 				handItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSheathedHand().copy();
@@ -29,7 +31,9 @@ public class SheatheWeaponsPacketReceiver implements ServerPlayNetworking.PlayPa
 				offHandItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSheathedOffhand().copy();
 			}
 
-			if (RPGInventory.isStaminaAttributesLoaded && RPGInventory.SERVER_CONFIG.handSlotOverhaul.staminaAttributesCompat.sheathing_hand_items_requires_stamina.get() && ((StaminaUsingEntity) player).staminaattributes$getStamina() <= 0 && !player.isCreative()) {
+			float staminaCost = RPGInventory.isStaminaAttributesLoaded ? serverConfig.handSlotOverhaul.staminaAttributesCompat.sheathing_hand_items_stamina_cost.get() : 0.0F;
+
+			if (staminaCost > 0.0F && !player.isCreative() && serverConfig.handSlotOverhaul.staminaAttributesCompat.sheathing_hand_items_requires_stamina.get() && RPGInventory.getCurrentStamina(player) <= 0 && (!serverConfig.handSlotOverhaul.staminaAttributesCompat.sheathing_hand_items_requires_stamina_cost.get() || RPGInventory.getCurrentStamina(player) < staminaCost)) {
 				player.sendMessageToClient(Text.translatable("hud.message.staminaTooLow"), true);
 				return;
 			}
@@ -48,8 +52,8 @@ public class SheatheWeaponsPacketReceiver implements ServerPlayNetworking.PlayPa
 				player.getInventory().offHand.set(0, ItemStack.EMPTY);
 				((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedOffhand(offHandItemStack);
 			}
-			if (RPGInventory.isStaminaAttributesLoaded && !player.isCreative()) {
-				((StaminaUsingEntity) player).staminaattributes$addStamina(-RPGInventory.SERVER_CONFIG.handSlotOverhaul.staminaAttributesCompat.sheathing_hand_items_stamina_cost.get());
+			if (staminaCost != 0.0F && !player.isCreative()) {
+				RPGInventory.addStamina(player, -staminaCost);
 			}
 			player.getServerWorld().playSound(null, player.getBlockPos().getX(), player.getBlockPos().getY(), player.getBlockPos().getZ(), SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.PLAYERS, 1.0F, 1.0F);
 		} else {

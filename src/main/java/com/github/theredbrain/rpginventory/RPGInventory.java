@@ -1,8 +1,9 @@
 package com.github.theredbrain.rpginventory;
 
-import com.github.theredbrain.inventorysizeattributes.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.compat.BetterCombatExtensionCompat;
+import com.github.theredbrain.rpginventory.compat.InventorySizeAttributesCompat;
 import com.github.theredbrain.rpginventory.compat.SpellEngineCompat;
+import com.github.theredbrain.rpginventory.compat.StaminaAttributesCompat;
 import com.github.theredbrain.rpginventory.compat.TrinketsCompat;
 import com.github.theredbrain.rpginventory.config.ServerConfig;
 import com.github.theredbrain.rpginventory.registry.BlockRegistry;
@@ -66,11 +67,11 @@ public class RPGInventory implements ModInitializer {
 	public static final boolean isTrinketsLoaded = FabricLoader.getInstance().isModLoaded("trinkets");
 
 	public static int getActiveInventorySize(PlayerEntity player) {
-		return isInventorySizeAttributesLoaded ? ((DuckPlayerEntityMixin) player).inventorysizeattributes$getActiveInventorySlotAmount() : 27;
+		return isInventorySizeAttributesLoaded ? InventorySizeAttributesCompat.getActiveInventorySize(player) : 27;
 	}
 
 	public static int getActiveHotbarSize(PlayerEntity player) {
-		return isInventorySizeAttributesLoaded ? ((DuckPlayerEntityMixin) player).inventorysizeattributes$getActiveHotbarSlotAmount() : 9;
+		return isInventorySizeAttributesLoaded ? InventorySizeAttributesCompat.getActiveHotbarSize(player) : 9;
 	}
 
 	public static boolean isHandSlotOverhaulActive() {
@@ -81,6 +82,20 @@ public class RPGInventory implements ModInitializer {
 			bl = false;
 		}
 		return bl && SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get();
+	}
+
+	public static float getCurrentStamina(LivingEntity livingEntity) {
+		float currentStamina = 0.0F;
+		if (isStaminaAttributesLoaded) {
+			currentStamina = StaminaAttributesCompat.getCurrentStamina(livingEntity);
+		}
+		return currentStamina;
+	}
+
+	public static void addStamina(LivingEntity livingEntity, float amount) {
+		if (isStaminaAttributesLoaded) {
+			StaminaAttributesCompat.addStamina(livingEntity, amount);
+		}
 	}
 
 	public static boolean isTrinketEquipped(LivingEntity livingEntity, Predicate<ItemStack> itemStackPredicate) {

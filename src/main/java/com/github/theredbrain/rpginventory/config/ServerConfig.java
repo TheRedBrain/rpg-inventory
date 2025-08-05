@@ -44,16 +44,21 @@ public class ServerConfig extends Config {
 
 			public ConfigGroup swapping_hand_items = new ConfigGroup("swapping_hand_items", true);
 			public ValidatedBoolean swapping_hand_items_requires_stamina = new ValidatedBoolean(true);
+			public ValidatedBoolean swapping_hand_items_requires_stamina_cost = new ValidatedBoolean(false);
 			@ConfigGroup.Pop
-			public ValidatedFloat swapping_hand_items_stamina_cost = new ValidatedFloat(1.0f);
+			public ValidatedFloat swapping_main_hand_items_stamina_cost = new ValidatedFloat(1.0f);
+			public ValidatedFloat swapping_off_hand_items_stamina_cost = new ValidatedFloat(1.0f);
+			public ValidatedFloat swapping_both_hand_items_stamina_cost_multiplier = new ValidatedFloat(0.5f);
 
 			public ConfigGroup sheathing_hand_items = new ConfigGroup("sheathing_hand_items", true);
 			public ValidatedBoolean sheathing_hand_items_requires_stamina = new ValidatedBoolean(true);
+			public ValidatedBoolean sheathing_hand_items_requires_stamina_cost = new ValidatedBoolean(false);
 			@ConfigGroup.Pop
 			public ValidatedFloat sheathing_hand_items_stamina_cost = new ValidatedFloat(1.0f);
 
 			public ConfigGroup toggling_two_handed_stance = new ConfigGroup("toggling_two_handed_stance", true);
 			public ValidatedBoolean toggling_two_handed_stance_requires_stamina = new ValidatedBoolean(true);
+			public ValidatedBoolean toggling_two_handed_stance_requires_stamina_cost = new ValidatedBoolean(false);
 			@ConfigGroup.Pop
 			public ValidatedFloat toggling_two_handed_stance_stamina_cost = new ValidatedFloat(1.0f);
 		}

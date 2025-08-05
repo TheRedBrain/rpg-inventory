@@ -29,6 +29,7 @@
   },
   "client": [
     "client.MinecraftClientMixin",
+    "client.MouseMixin",
     "client.gui.hud.InGameHudMixin",
     "client.gui.screen.ingame.CreativeInventoryScreenMixin",
     "client.gui.screen.ingame.CreativeInventoryScreenMixin_TrinketsReplacement",

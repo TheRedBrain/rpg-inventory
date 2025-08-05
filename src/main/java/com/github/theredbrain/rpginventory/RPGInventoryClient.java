@@ -1,12 +1,11 @@
 package com.github.theredbrain.rpginventory;
 
-import com.github.theredbrain.backpackattribute.BackpackAttributeClient;
-import com.github.theredbrain.inventorysizeattributes.InventorySizeAttributesClient;
-import com.github.theredbrain.playerattributescreen.PlayerAttributeScreenClient;
-import com.github.theredbrain.rpgcrafting.RPGCraftingClient;
+import com.github.theredbrain.rpginventory.client.compat.BackpackAttributeClientCompat;
+import com.github.theredbrain.rpginventory.client.compat.InventorySizeAttributesClientCompat;
+import com.github.theredbrain.rpginventory.client.compat.PlayerAttributeScreenClientCompat;
+import com.github.theredbrain.rpginventory.client.compat.RPGCraftingClientCompat;
 import com.github.theredbrain.rpginventory.client.gui.screen.ingame.MannequinScreen;
 import com.github.theredbrain.rpginventory.client.gui.screen.ingame.RPGInventoryScreen;
-import com.github.theredbrain.rpginventory.client.gui.screen.ingame.RPGInventoryTrinketScreen;
 import com.github.theredbrain.rpginventory.compat.TrinketsCompat;
 import com.github.theredbrain.rpginventory.config.ClientConfig;
 import com.github.theredbrain.rpginventory.registry.ClientEventsRegistry;
@@ -34,20 +33,20 @@ public class RPGInventoryClient implements ClientModInitializer {
 	}
 
 	public static boolean showInactiveInventorySlots() {
-		return RPGInventory.isInventorySizeAttributesLoaded ? InventorySizeAttributesClient.CLIENT_CONFIG.show_inactive_inventory_slots.get() : true;
+		return !RPGInventory.isInventorySizeAttributesLoaded && InventorySizeAttributesClientCompat.showInactiveInventorySlots();
 	}
 
 	public static List<MutablePair<Text, List<Text>>> getPlayerAttributeScreenData(MinecraftClient client) {
 		List<MutablePair<Text, List<Text>>> newData = new ArrayList<>(List.of());
 		if (RPGInventory.isPlayerAttributeScreenLoaded) {
-			newData = PlayerAttributeScreenClient.getPlayerAttributeScreenData(client);
+			newData.addAll(PlayerAttributeScreenClientCompat.getPlayerAttributeScreenData(client));
 		}
 		return newData;
 	}
 
 	public static void openBackPackScreen(MinecraftClient client) {
 		if (RPGInventory.isBackpackAttributeLoaded) {
-			BackpackAttributeClient.openBackpackScreen(client);
+			BackpackAttributeClientCompat.openBackpackScreen(client);
 		} else if (client.player != null) {
 			client.player.sendMessage(Text.translatable("hud.message.backpackAttributesNotInstalled"));
 		}
@@ -55,7 +54,7 @@ public class RPGInventoryClient implements ClientModInitializer {
 
 	public static void openHandCraftingScreen(MinecraftClient client) {
 		if (RPGInventory.isRPGCraftingLoaded) {
-			RPGCraftingClient.openHandCraftingScreen(client);
+			RPGCraftingClientCompat.openHandCraftingScreen(client);
 		} else if (client.player != null) {
 			client.player.sendMessage(Text.translatable("hud.message.rpgCraftingNotInstalled"));
 		}

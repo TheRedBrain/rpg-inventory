@@ -16,10 +16,12 @@ public class KeyBindingsRegistry {
 	public static KeyBinding toggleTwoHandedStance;
 	public static KeyBinding swapHand;
 	public static KeyBinding swapOffHand;
+	public static KeyBinding swapBothHands;
 	public static boolean sheatheWeaponsBoolean;
 	public static boolean toggleTwoHandedStanceBoolean;
 	public static boolean swapHandBoolean;
 	public static boolean swapOffHandBoolean;
+	public static boolean swapBothHandsBoolean;
 
 	public static void registerKeyBindings() {
 		KeyBindingsRegistry.sheatheWeapons = KeyBindingHelper.registerKeyBinding(new KeyBinding(
@@ -46,10 +48,16 @@ public class KeyBindingsRegistry {
 				GLFW.GLFW_KEY_Y,
 				"category.rpginventory.category"
 		));
+		KeyBindingsRegistry.swapBothHands = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+				"key.rpginventory.swapBothHands",
+				InputUtil.Type.KEYSYM,
+				GLFW.GLFW_KEY_C,
+				"category.rpginventory.category"
+		));
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			if (KeyBindingsRegistry.swapHand.wasPressed()) {
 				if (!swapHandBoolean) {
-					syncSlotSwapHand(true);
+					syncSlotSwapHand(true, false);
 				}
 				swapHandBoolean = true;
 			} else if (swapHandBoolean) {
@@ -57,11 +65,19 @@ public class KeyBindingsRegistry {
 			}
 			if (KeyBindingsRegistry.swapOffHand.wasPressed()) {
 				if (!swapOffHandBoolean) {
-					syncSlotSwapHand(false);
+					syncSlotSwapHand(false, true);
 				}
 				swapOffHandBoolean = true;
 			} else if (swapOffHandBoolean) {
 				swapOffHandBoolean = false;
+			}
+			if (KeyBindingsRegistry.swapBothHands.wasPressed()) {
+				if (!swapBothHandsBoolean) {
+					syncSlotSwapHand(true, true);
+				}
+				swapBothHandsBoolean = true;
+			} else if (swapBothHandsBoolean) {
+				swapBothHandsBoolean = false;
 			}
 			if (KeyBindingsRegistry.sheatheWeapons.wasPressed()) {
 				if (!sheatheWeaponsBoolean) {
@@ -90,7 +106,7 @@ public class KeyBindingsRegistry {
 		ClientPlayNetworking.send(new ToggleTwoHandedStancePacket());
 	}
 
-	public static void syncSlotSwapHand(boolean mainHand) {
-		ClientPlayNetworking.send(new SwapHandItemsPacket(mainHand));
+	public static void syncSlotSwapHand(boolean mainHand, boolean offHand) {
+		ClientPlayNetworking.send(new SwapHandItemsPacket(mainHand, offHand));
 	}
 }
