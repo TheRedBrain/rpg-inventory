@@ -74,6 +74,7 @@
 
 	"item.rpginventory.default_empty_hand_weapon": "",
 
+	"item.additional_tooltip.player_relation.skill_locked": "Requires the %s %s skill",
 	"item.additional_tooltip.player_relation.bound_to": "Bound to %s",
 	"item.additional_tooltip.player_relation.crafted_by": "Crafted by %s",
 	"item.additional_tooltip.load_out_item.line_1": "§3Loadout Item",

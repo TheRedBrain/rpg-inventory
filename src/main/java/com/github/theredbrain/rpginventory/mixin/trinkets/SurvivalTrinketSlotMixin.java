@@ -69,7 +69,7 @@ public abstract class SurvivalTrinketSlotMixin extends Slot {
 		boolean isOwned = true;
 		if (livingEntity instanceof PlayerEntity playerEntity) {
 			bl = playerEntity.isCreative();
-			isOwned = ItemUtils.isOwnedByPlayer(stack, playerEntity.getGameProfile());
+			isOwned = ItemUtils.isUsableByPlayer(stack, playerEntity);
 		}
 
 		boolean bl2 = true;

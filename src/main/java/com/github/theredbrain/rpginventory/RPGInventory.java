@@ -5,6 +5,7 @@ import com.github.theredbrain.rpginventory.compat.InventorySizeAttributesCompat;
 import com.github.theredbrain.rpginventory.compat.SpellEngineCompat;
 import com.github.theredbrain.rpginventory.compat.StaminaAttributesCompat;
 import com.github.theredbrain.rpginventory.compat.TrinketsCompat;
+import com.github.theredbrain.rpginventory.component.type.SkillLockedComponent;
 import com.github.theredbrain.rpginventory.config.ServerConfig;
 import com.github.theredbrain.rpginventory.registry.BlockRegistry;
 import com.github.theredbrain.rpginventory.registry.EntityRegistry;
@@ -44,6 +45,7 @@ public class RPGInventory implements ModInitializer {
 	public static ComponentType<ProfileComponent> PLAYER_BOUND;
 	public static ComponentType<Unit> SAVES_CRAFTING_PLAYER;
 	public static ComponentType<ProfileComponent> PLAYER_CRAFTED;
+	public static ComponentType<SkillLockedComponent> SKILL_LOCKED;
 	/*
 	 * Equipped items with this component can't be unequipped manually and don't drop on death. They are kept or vanish instead.
 	 * Interacting with a 'mannequin' equips items with this component. Slots have to be either empty or contain a stack with this component for that to happen.
@@ -62,6 +64,7 @@ public class RPGInventory implements ModInitializer {
 	public static final boolean isBetterCombatExtensionLoaded = FabricLoader.getInstance().isModLoaded("bettercombatextension");
 	public static final boolean isBetterCombatLoaded = FabricLoader.getInstance().isModLoaded("bettercombat");
 	public static final boolean isTrinketsLoaded = FabricLoader.getInstance().isModLoaded("trinkets");
+	public static final boolean isPufferfishsSkillsLoaded = FabricLoader.getInstance().isModLoaded("puffish_skills");
 
 	public static int getActiveInventorySize(PlayerEntity player) {
 		return isInventorySizeAttributesLoaded ? InventorySizeAttributesCompat.getActiveInventorySize(player) : 27;

@@ -76,7 +76,7 @@ public class CustomArmorSlot extends Slot {
 		Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.wilderness_status_effect_identifier.get());
 		boolean hasWildernessEffect = wilderness_status_effect.isPresent() && this.owner.hasStatusEffect(wilderness_status_effect.get());
 
-		boolean isOwned = ItemUtils.isOwnedByPlayer(stack, this.owner.getGameProfile());
+		boolean isOwned = ItemUtils.isUsableByPlayer(stack, this.owner);
 		boolean isCreative = this.owner.isCreative();
 
 		return (equipmentSlot == this.owner.getPreferredEquipmentSlot(stack) || ExtendedEquipmentSlot.rpginventory$isOfEquipmentTag(stack, equipmentSlot)) && isOwned && (hasCivilisationEffect || isCreative || (bl && !hasWildernessEffect));

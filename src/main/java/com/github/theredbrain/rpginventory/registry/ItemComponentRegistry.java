@@ -1,6 +1,7 @@
 package com.github.theredbrain.rpginventory.registry;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
+import com.github.theredbrain.rpginventory.component.type.SkillLockedComponent;
 import net.minecraft.component.ComponentType;
 import net.minecraft.component.type.ProfileComponent;
 import net.minecraft.network.codec.PacketCodec;
@@ -34,6 +35,11 @@ public class ItemComponentRegistry {
 				Registries.DATA_COMPONENT_TYPE,
 				RPGInventory.identifier("load_out_item"),
 				ComponentType.<Unit>builder().codec(Unit.CODEC).packetCodec(PacketCodec.unit(Unit.INSTANCE)).build()
+		);
+		RPGInventory.SKILL_LOCKED = Registry.register(
+				Registries.DATA_COMPONENT_TYPE,
+				RPGInventory.identifier("skill_locked"),
+				ComponentType.<SkillLockedComponent>builder().codec(SkillLockedComponent.CODEC).packetCodec(SkillLockedComponent.PACKET_CODEC).build()
 		);
 	}
 

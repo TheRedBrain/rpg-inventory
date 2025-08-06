@@ -52,7 +52,7 @@ public abstract class PlayerScreenHandlerOffHandSlotMixin extends Slot {
 
 		boolean handSlotOverhaulIsInactive = !RPGInventory.isHandSlotOverhaulActive();
 
-		return (EquipmentSlot.OFFHAND == this.field_39410.getPreferredEquipmentSlot(stack) || stack.isIn(Tags.OFFHAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || handSlotOverhaulIsInactive) && (handSlotOverhaulIsInactive || !((DuckPlayerEntityMixin) this.field_39410).rpginventory$isOffhandStackSheathed()) && ItemUtils.isOwnedByPlayer(stack, this.field_39410.getGameProfile()) && (hasCivilisationEffect || this.field_39410.isCreative() || (bl && !hasWildernessEffect));
+		return (EquipmentSlot.OFFHAND == this.field_39410.getPreferredEquipmentSlot(stack) || stack.isIn(Tags.OFFHAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || handSlotOverhaulIsInactive) && (handSlotOverhaulIsInactive || !((DuckPlayerEntityMixin) this.field_39410).rpginventory$isOffhandStackSheathed()) && ItemUtils.isUsableByPlayer(stack, this.field_39410) && (hasCivilisationEffect || this.field_39410.isCreative() || (bl && !hasWildernessEffect));
 	}
 
 	@Override

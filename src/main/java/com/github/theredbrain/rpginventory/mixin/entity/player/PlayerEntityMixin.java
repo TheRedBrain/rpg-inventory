@@ -236,13 +236,13 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 	@Override
 	public ItemStack rpginventory$getSheathedHandItemStack() {
 		ItemStack itemStack = ((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$getSheathedHand();
-		return rpginventory$isHandStackSheathed() && !itemStack.isIn(Tags.EMPTY_HAND_WEAPONS) && ItemUtils.isUsable(itemStack) && ItemUtils.isOwnedByPlayer(itemStack, this.getGameProfile()) ? itemStack : ItemStack.EMPTY;
+		return rpginventory$isHandStackSheathed() && !itemStack.isIn(Tags.EMPTY_HAND_WEAPONS) && ItemUtils.isUsable(itemStack) && ItemUtils.isUsableByPlayer(itemStack, ((PlayerEntity) (Object) this)) ? itemStack : ItemStack.EMPTY;
 	}
 
 	@Override
 	public ItemStack rpginventory$getSheathedOffHandItemStack() {
 		ItemStack itemStack = ((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$getSheathedOffhand();
-		return rpginventory$isOffhandStackSheathed() && !itemStack.isIn(Tags.EMPTY_HAND_WEAPONS) && ItemUtils.isUsable(itemStack) && ItemUtils.isOwnedByPlayer(itemStack, this.getGameProfile()) ? itemStack : ItemStack.EMPTY;
+		return rpginventory$isOffhandStackSheathed() && !itemStack.isIn(Tags.EMPTY_HAND_WEAPONS) && ItemUtils.isUsable(itemStack) && ItemUtils.isUsableByPlayer(itemStack, ((PlayerEntity) (Object) this)) ? itemStack : ItemStack.EMPTY;
 	}
 
 	@Override

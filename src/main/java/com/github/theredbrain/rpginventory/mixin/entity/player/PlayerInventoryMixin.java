@@ -95,10 +95,10 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 			ItemStack emptyHandStack = rpginventory$getEmptyHand();
 			ItemStack handStack = rpginventory$getHand();
 			if (!((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed()) {
-				return ItemUtils.isUsable(handStack) && ItemUtils.isOwnedByPlayer(handStack, this.player.getGameProfile()) && !handStack.isEmpty() ? handStack : emptyHandStack;
+				return ItemUtils.isUsable(handStack) && ItemUtils.isUsableByPlayer(original, this.player) && !handStack.isEmpty() ? handStack : emptyHandStack;
 			}
 		}
-		return ItemUtils.isUsable(original) && ItemUtils.isOwnedByPlayer(original, this.player.getGameProfile()) ? original : ItemStack.EMPTY;
+		return ItemUtils.isUsable(original) && ItemUtils.isUsableByPlayer(original, this.player) ? original : ItemStack.EMPTY;
 	}
 
 	/**
@@ -289,10 +289,10 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 		ItemStack emptyOffHandStack = rpginventory$getEmptyOffhand();
 		ItemStack offHandStack = this.offHand.get(0);
 		if (!RPGInventory.isHandSlotOverhaulActive()) {
-			return ItemUtils.isUsable(offHandStack) && ItemUtils.isOwnedByPlayer(offHandStack, this.player.getGameProfile()) ? offHandStack : ItemStack.EMPTY;
+			return ItemUtils.isUsable(offHandStack) && ItemUtils.isUsableByPlayer(offHandStack, this.player) ? offHandStack : ItemStack.EMPTY;
 		}
 		if (!((DuckPlayerEntityMixin) player).rpginventory$isOffhandStackSheathed()) {
-			return ItemUtils.isUsable(offHandStack) && ItemUtils.isOwnedByPlayer(offHandStack, this.player.getGameProfile()) && !offHandStack.isEmpty() ? offHandStack : emptyOffHandStack;
+			return ItemUtils.isUsable(offHandStack) && ItemUtils.isUsableByPlayer(offHandStack, this.player) && !offHandStack.isEmpty() ? offHandStack : emptyOffHandStack;
 		}
 		return ItemStack.EMPTY;
 	}

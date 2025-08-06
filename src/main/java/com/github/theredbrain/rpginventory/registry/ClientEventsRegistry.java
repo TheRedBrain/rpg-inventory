@@ -2,6 +2,8 @@ package com.github.theredbrain.rpginventory.registry;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.RPGInventoryClient;
+import com.github.theredbrain.rpginventory.compat.PufferfishsSkillsCompat;
+import com.github.theredbrain.rpginventory.component.type.SkillLockedComponent;
 import com.github.theredbrain.rpginventory.config.ClientConfig;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.minecraft.component.type.ProfileComponent;
@@ -42,6 +44,19 @@ public class ClientEventsRegistry {
 					}
 				}
 				lines.add(Text.translatable("item.additional_tooltip.player_relation.crafted_by", formatting_string + playerCraftedComponent.gameProfile().getName()));
+			}
+			SkillLockedComponent skillLockedComponent = stack.get(RPGInventory.SKILL_LOCKED);
+			if (skillLockedComponent != null && clientConfig.itemTooltipSection.show_item_tooltip_skill_locked.get()) {
+				String category_formatting_config_string = clientConfig.itemTooltipSection.item_tooltip_skill_locked_category_formatting_string.get();
+				String skill_formatting_config_string = clientConfig.itemTooltipSection.item_tooltip_skill_locked_skill_formatting_string.get();
+
+				Text text = Text.empty();
+				if (RPGInventory.isPufferfishsSkillsLoaded && !skillLockedComponent.category().isEmpty() && !skillLockedComponent.skill().isEmpty()) {
+					text = PufferfishsSkillsCompat.getSkillLockedItemTooltipLine(category_formatting_config_string, skillLockedComponent.category(), skill_formatting_config_string, skillLockedComponent.skill());
+				}
+				if (!text.equals(Text.empty())) {
+					lines.add(text);
+				}
 			}
 
 			if (stack.isIn(Tags.TWO_HANDED_ITEMS) && clientConfig.itemTooltipSection.show_item_tooltip_two_handed_items.get()) {

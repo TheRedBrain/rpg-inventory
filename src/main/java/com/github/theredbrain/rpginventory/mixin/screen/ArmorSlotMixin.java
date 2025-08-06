@@ -53,7 +53,7 @@ public abstract class ArmorSlotMixin extends Slot {
 		boolean isOwned = true;
 		boolean isCreative = false;
 		if (entity instanceof PlayerEntity playerEntity) {
-			isOwned = ItemUtils.isOwnedByPlayer(stack, playerEntity.getGameProfile());
+			isOwned = ItemUtils.isUsableByPlayer(stack, playerEntity);
 			isCreative = playerEntity.isCreative();
 		}
 
