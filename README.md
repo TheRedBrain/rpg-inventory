@@ -2,19 +2,6 @@
 
 Adds a new inventory screen with more equipment slots and other equipment related mechanics.
 
-## Installation
-
-Requires
-- [Fabric API](https://modrinth.com/mod/fabric-api)
-- [Fzzy Config](https://modrinth.com/mod/fzzy-config)
-- [Slot Customization API](https://modrinth.com/mod/slot-customization-api)
-
-Highly recommended
-- [Mod Menu](https://modrinth.com/mod/modmenu)
-- [Food Overhaul](https://modrinth.com/mod/food-overhaul)
-- [Stamina Attributes](https://modrinth.com/mod/stamina-attributes)
-- [Various Status Effects](https://modrinth.com/mod/various-status-effects)
-
 ## New equipment slots
 
 The new slots accessible in the inventory are:
@@ -52,6 +39,8 @@ Swaps the item in the offhand slot with the item in the alternative offhand slot
 ### Sheathe Weapons
 
 Puts the items in the hand and the offhand slot into their corresponding sheathed hand slots. When pressed again, swaps the items back
+
+Items in the sheathed hand slots are rendered on the player model. The exact position can be configured and items in the "rpginventory:not_shown_when_in_sheathed_hand" and "rpginventory:not_shown_when_in_sheathed_offhand" item tags are not rendered when in those slots.
 
 ### Toggle Two-handing Stance
 
@@ -135,7 +124,7 @@ When "building_mode_status_effect_identifier" is a valid status effect identifie
 - every item can be used to attack and to break blocks
 - both hands behave like they are sheathed, so the hand slot contains the item in the selected hotbar slot, like in vanilla.
 
-The gamerule "canChangeEquipment" controls, whether items can be put into or removed from equipment slots.
+The game rule "canChangeEquipment" controls, whether items can be put into or removed from equipment slots.
 
 When "civilisation_status_effect_identifier" is a valid status effect identifier and the player has that status effect items can be put into or removed from equipment slots, regardless of the gamerule "canChangeEquipment".
 
@@ -146,25 +135,29 @@ When the gamerule "destroyDroppedItemsOnDeath" is true and the vanilla gamerule 
 When "keep_inventory_status_effect_identifier" is a valid status effect identifier, that status effect is applied when an item in the "sacrificed_to_keep_inventory_on_death" item tag is equipped (in an equipment, trinket or the offhand slot).
 When the player dies while having that status effect, all equipped items in the "sacrificed_to_keep_inventory_on_death" item tag are destroyed. The rest of the inventory is kept, regardless of game rules and stuff like "Curse of Vanishing".
 
-### Various Status Effects Compatibility
+### Various Status Effects Integration
 
 All status effect identifier options default to status effects implemented by [Various Status Effects](https://modrinth.com/mod/various-status-effects).
 
-### Player Attribute Screen Compatibility
+### Player Attribute Screen Integration
 
 When the "Player Attribute Screen" mod is installed, a button to toggle the attribute screen is active in the RPG Inventory screen.
 
-### Inventory Size Attributes Compatibility
+### Inventory Size Attributes Integration
 
 The hotbar in the HUD can be configured to only show enabled hot bar slots.
 
-### RPG Crafting Compatibility
+### RPG Crafting Integration
 
 A button that opens the Hand Crafting Screen can be added to the inventory screens. The 2x2 crafting grid has to be disabled.
 
-### Backpack Attribute Compatibility
+### Backpack Attribute Integration
 
 A button that opens the Backpack Screen can be added to the inventory screens. The 2x2 crafting grid has to be disabled.
+
+### Pufferfish's Skills Integration
+
+Item stacks with the "rpginventory:skill_locked" component can only be equipped and used if the player has the skill defined by the component unlocked.
 
 ### Trinket Compatibility
 

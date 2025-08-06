@@ -1,3 +1,14 @@
+# 2.5.0
+
+- added 'skill locked' item component. Item stacks with this component can only be equipped and used by players who have unlocked the skill defined by the component. This feature is only active when Pufferfish's Skills is installed.
+- added 'requires_stamina_cost' options for hand swapping/sheathing and toggling 2-handed stance
+- scrolling to another hotbar slot can now sheathe hand items. This can be toggled in the client config
+- added separate stamina costs for swapping main and offhand
+- added hotkey for swapping both hand items (costing the sum of the sheathe costs * a configurable multiplier)
+- improved 'disabled hand slot overhaul' feedback message to account for the feature being disabled when 'Better Combat' is present but 'Better Combat Extension' is not
+- improved optional mod compatibilities
+- several internal refactors to improve maintainability
+
 # 2.4.5
 
 - fixed RPG Inventory screen Trinkets compat
