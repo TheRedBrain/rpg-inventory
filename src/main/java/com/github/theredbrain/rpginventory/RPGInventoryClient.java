@@ -33,7 +33,7 @@ public class RPGInventoryClient implements ClientModInitializer {
 	}
 
 	public static boolean showInactiveInventorySlots() {
-		return !RPGInventory.isInventorySizeAttributesLoaded && InventorySizeAttributesClientCompat.showInactiveInventorySlots();
+		return !RPGInventory.isInventorySizeAttributesLoaded || InventorySizeAttributesClientCompat.showInactiveInventorySlots();
 	}
 
 	public static List<MutablePair<Text, List<Text>>> getPlayerAttributeScreenData(MinecraftClient client) {

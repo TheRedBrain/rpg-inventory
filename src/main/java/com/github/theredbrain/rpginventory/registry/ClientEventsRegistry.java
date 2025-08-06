@@ -47,15 +47,13 @@ public class ClientEventsRegistry {
 			}
 			SkillLockedComponent skillLockedComponent = stack.get(RPGInventory.SKILL_LOCKED);
 			if (skillLockedComponent != null && clientConfig.itemTooltipSection.show_item_tooltip_skill_locked.get()) {
-				String category_formatting_config_string = clientConfig.itemTooltipSection.item_tooltip_skill_locked_category_formatting_string.get();
-				String skill_formatting_config_string = clientConfig.itemTooltipSection.item_tooltip_skill_locked_skill_formatting_string.get();
-
 				Text text = Text.empty();
-				if (RPGInventory.isPufferfishsSkillsLoaded && !skillLockedComponent.category().isEmpty() && !skillLockedComponent.skill().isEmpty()) {
-					text = PufferfishsSkillsCompat.getSkillLockedItemTooltipLine(category_formatting_config_string, skillLockedComponent.category(), skill_formatting_config_string, skillLockedComponent.skill());
+
+				if (RPGInventory.isPufferfishsSkillsLoaded && !skillLockedComponent.category().isEmpty() && !skillLockedComponent.skill().isEmpty() && !skillLockedComponent.tooltipText().isEmpty()) {
+					text = PufferfishsSkillsCompat.getSkillLockedItemTooltipLine(skillLockedComponent);
 				}
 				if (!text.equals(Text.empty())) {
-					lines.add(text);
+					lines.add(Text.translatable(skillLockedComponent.tooltipText()));
 				}
 			}
 
