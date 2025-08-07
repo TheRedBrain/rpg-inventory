@@ -3,7 +3,7 @@ package com.github.theredbrain.rpginventory.mixin.client.gui.screen.ingame;
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.RPGInventoryClient;
 import com.github.theredbrain.rpginventory.config.ClientConfig;
-import com.github.theredbrain.rpginventory.registry.Tags;
+import com.github.theredbrain.rpginventory.util.ItemUtils;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -12,24 +12,18 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.component.type.ProfileComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(HandledScreen.class)
 public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen {
-
-	@Shadow @Final protected T handler;
 
 	protected HandledScreenMixin(Text title) {
 		super(title);
@@ -81,34 +75,23 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
 	private void rpginventory$drawSlot(DrawContext context, Slot slot, CallbackInfo ci) {
 		// draw slot overlay
 		ItemStack stack = slot.getStack();
-		if (!stack.isEmpty() && stack.isDamageable() && stack.getDamage() >= stack.getMaxDamage() - 1 && stack.isIn(Tags.UNUSABLE_WHEN_LOW_DURABILITY) && RPGInventoryClient.CLIENT_CONFIG.slots_with_unusable_items_have_overlay.get()) {
-			rpginventory$drawDisabledItemSlotHighlight(context, slot.x, slot.y, 0);
-		} else if (!stack.isEmpty() && RPGInventoryClient.CLIENT_CONFIG.slots_with_not_owned_items_have_overlay.get()) {
-			ProfileComponent playerBoundComponent = stack.get(RPGInventory.PLAYER_BOUND);
-			if (playerBoundComponent != null) {
-				if (this.client != null && this.client.player != null && !playerBoundComponent.gameProfile().equals(this.client.player.getGameProfile())) {
-					rpginventory$drawNotOwnedItemSlotHighlight(context, slot.x, slot.y, 0);
-				}
+		if (!stack.isEmpty()) {
+			ClientConfig clientConfig = RPGInventoryClient.CLIENT_CONFIG;
+			if (!ItemUtils.isUsable(stack) && RPGInventoryClient.CLIENT_CONFIG.slots_with_unusable_items_have_overlay.get()) {
+				rpginventory$drawSlotHighlight(context, slot.x, slot.y, 0, clientConfig.first_overlay_colour_for_slots_with_unusable_items.toInt(), clientConfig.second_overlay_colour_for_slots_with_unusable_items.toInt());
+			} else if (this.client != null && this.client.player != null && !ItemUtils.isOwnedByPlayer(stack, this.client.player.getGameProfile()) && RPGInventoryClient.CLIENT_CONFIG.slots_with_not_owned_items_have_overlay.get()) {
+				rpginventory$drawSlotHighlight(context, slot.x, slot.y, 0, clientConfig.first_overlay_colour_for_slots_with_not_owned_items.toInt(), clientConfig.second_overlay_colour_for_slots_with_not_owned_items.toInt());
+			} else if (this.client != null && this.client.player != null && !ItemUtils.isAdvancementUnlockedByPlayer(stack, this.client.player) && RPGInventoryClient.CLIENT_CONFIG.slots_with_advancement_locked_items_have_overlay.get()) {
+				rpginventory$drawSlotHighlight(context, slot.x, slot.y, 0, clientConfig.first_overlay_colour_for_slots_with_advancement_locked_items.toInt(), clientConfig.second_overlay_colour_for_slots_with_advancement_locked_items.toInt());
 			}
 		}
 	}
 
 	@Unique
-	private static void rpginventory$drawDisabledItemSlotHighlight(DrawContext context, int x, int y, int z) {
+	private static void rpginventory$drawSlotHighlight(DrawContext context, int x, int y, int z, int colorStart, int colorEnd) {
 		RenderSystem.disableDepthTest();
 		RenderSystem.colorMask(true, true, true, false);
-		ClientConfig clientConfig = RPGInventoryClient.CLIENT_CONFIG;
-		context.fillGradient(RenderLayer.getGuiOverlay(), x, y, x + 16, y + 16, clientConfig.first_overlay_colour_for_slots_with_unusable_items.toInt(), clientConfig.second_overlay_colour_for_slots_with_unusable_items.toInt(), z);
-		RenderSystem.colorMask(true, true, true, true);
-		RenderSystem.enableDepthTest();
-	}
-
-	@Unique
-	private static void rpginventory$drawNotOwnedItemSlotHighlight(DrawContext context, int x, int y, int z) {
-		RenderSystem.disableDepthTest();
-		RenderSystem.colorMask(true, true, true, false);
-		ClientConfig clientConfig = RPGInventoryClient.CLIENT_CONFIG;
-		context.fillGradient(RenderLayer.getGuiOverlay(), x, y, x + 16, y + 16, clientConfig.first_overlay_colour_for_slots_with_not_owned_items.toInt(), clientConfig.second_overlay_colour_for_slots_with_not_owned_items.toInt(), z);
+		context.fillGradient(RenderLayer.getGuiOverlay(), x, y, x + 16, y + 16, colorStart, colorEnd, z);
 		RenderSystem.colorMask(true, true, true, true);
 		RenderSystem.enableDepthTest();
 	}

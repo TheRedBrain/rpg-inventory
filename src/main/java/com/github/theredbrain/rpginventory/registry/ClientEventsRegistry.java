@@ -2,8 +2,7 @@ package com.github.theredbrain.rpginventory.registry;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.RPGInventoryClient;
-import com.github.theredbrain.rpginventory.compat.PufferfishsSkillsCompat;
-import com.github.theredbrain.rpginventory.component.type.SkillLockedComponent;
+import com.github.theredbrain.rpginventory.component.type.AdvancementLockedComponent;
 import com.github.theredbrain.rpginventory.config.ClientConfig;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.minecraft.component.type.ProfileComponent;
@@ -45,15 +44,15 @@ public class ClientEventsRegistry {
 				}
 				lines.add(Text.translatable("item.additional_tooltip.player_relation.crafted_by", formatting_string + playerCraftedComponent.gameProfile().getName()));
 			}
-			SkillLockedComponent skillLockedComponent = stack.get(RPGInventory.SKILL_LOCKED);
-			if (skillLockedComponent != null && clientConfig.itemTooltipSection.show_item_tooltip_skill_locked.get()) {
+			AdvancementLockedComponent advancementLockedComponent = stack.get(RPGInventory.ADVANCEMENT_LOCKED);
+			if (advancementLockedComponent != null && clientConfig.itemTooltipSection.show_item_tooltip_advancement_locked.get()) {
 				Text text = Text.empty();
 
-				if (RPGInventory.isPufferfishsSkillsLoaded && !skillLockedComponent.category().isEmpty() && !skillLockedComponent.skill().isEmpty() && !skillLockedComponent.tooltipText().isEmpty()) {
-					text = PufferfishsSkillsCompat.getSkillLockedItemTooltipLine(skillLockedComponent);
+				if (!advancementLockedComponent.tooltip_text().isEmpty() && !(advancementLockedComponent.lock_advancement().isEmpty() && advancementLockedComponent.unlock_advancement().isEmpty())) {
+					text = Text.translatable(advancementLockedComponent.tooltip_text());
 				}
 				if (!text.equals(Text.empty())) {
-					lines.add(Text.translatable(skillLockedComponent.tooltipText()));
+					lines.add(text);
 				}
 			}
 

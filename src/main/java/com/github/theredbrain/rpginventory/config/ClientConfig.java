@@ -91,6 +91,12 @@ public class ClientConfig extends Config {
 	@ConfigGroup.Pop
 	public ValidatedColor second_overlay_colour_for_slots_with_not_owned_items = new ValidatedColor(200, 5, 5, 50);
 
+	public ConfigGroup advancement_locked_item_overlay = new ConfigGroup("advancement_locked_item_overlay");
+	public ValidatedBoolean slots_with_advancement_locked_items_have_overlay = new ValidatedBoolean(true);
+	public ValidatedColor first_overlay_colour_for_slots_with_advancement_locked_items = new ValidatedColor(200, 5, 5, 50);
+	@ConfigGroup.Pop
+	public ValidatedColor second_overlay_colour_for_slots_with_advancement_locked_items = new ValidatedColor(200, 5, 5, 50);
+
 	public ItemTooltipSection itemTooltipSection = new ItemTooltipSection();
 
 	public static class ItemTooltipSection extends ConfigSection {
@@ -104,9 +110,7 @@ public class ClientConfig extends Config {
 		public ValidatedBoolean show_item_tooltip_crafted_by_player_name = new ValidatedBoolean(true);
 		public ValidatedString item_tooltip_crafted_by_player_name_formatting_string = new ValidatedString("");
 
-		public ValidatedBoolean show_item_tooltip_skill_locked = new ValidatedBoolean(true);
-		public ValidatedString item_tooltip_skill_locked_category_formatting_string = new ValidatedString("");
-		public ValidatedString item_tooltip_skill_locked_skill_formatting_string = new ValidatedString("");
+		public ValidatedBoolean show_item_tooltip_advancement_locked = new ValidatedBoolean(true);
 
 		public ValidatedBoolean show_item_tooltip_two_handed_items = new ValidatedBoolean(true);
 		public ValidatedBoolean show_item_tooltip_equipment_slots = new ValidatedBoolean(true);

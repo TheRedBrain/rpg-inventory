@@ -5,7 +5,7 @@ import com.github.theredbrain.rpginventory.compat.InventorySizeAttributesCompat;
 import com.github.theredbrain.rpginventory.compat.SpellEngineCompat;
 import com.github.theredbrain.rpginventory.compat.StaminaAttributesCompat;
 import com.github.theredbrain.rpginventory.compat.TrinketsCompat;
-import com.github.theredbrain.rpginventory.component.type.SkillLockedComponent;
+import com.github.theredbrain.rpginventory.component.type.AdvancementLockedComponent;
 import com.github.theredbrain.rpginventory.config.ServerConfig;
 import com.github.theredbrain.rpginventory.registry.BlockRegistry;
 import com.github.theredbrain.rpginventory.registry.EntityRegistry;
@@ -21,12 +21,9 @@ import net.minecraft.component.ComponentType;
 import net.minecraft.component.type.ProfileComponent;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Unit;
 import org.slf4j.Logger;
@@ -45,7 +42,7 @@ public class RPGInventory implements ModInitializer {
 	public static ComponentType<ProfileComponent> PLAYER_BOUND;
 	public static ComponentType<Unit> SAVES_CRAFTING_PLAYER;
 	public static ComponentType<ProfileComponent> PLAYER_CRAFTED;
-	public static ComponentType<SkillLockedComponent> SKILL_LOCKED;
+	public static ComponentType<AdvancementLockedComponent> ADVANCEMENT_LOCKED;
 	/*
 	 * Equipped items with this component can't be unequipped manually and don't drop on death. They are kept or vanish instead.
 	 * Interacting with a 'mannequin' equips items with this component. Slots have to be either empty or contain a stack with this component for that to happen.

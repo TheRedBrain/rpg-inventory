@@ -13,11 +13,6 @@ base {
 }
 
 repositories {
-	// Pufferfish's Skills
-	maven {
-		url = "https://maven.puffish.net"
-	}
-
 	// Fzzy Config
 	maven {
 		name = "FzzyMaven"
@@ -131,8 +126,6 @@ dependencies {
 	// Tiny Config
 	implementation include("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}")
 
-	// Pufferfish's Skills
-	modImplementation("net.puffish:skillsmod:${project.pufferfish_skills_version}:fabric")
 }
 
 processResources {
@@ -197,7 +190,6 @@ if(project.hasProperty('release_type')) {
 				optionalDependency 'backpack-attribute'
 				optionalDependency 'player-attribute-screen'
 				optionalDependency 'rpg-crafting'
-				optionalDependency 'puffish-skills'
 			}
 
 			mainArtifact(remapJar)
@@ -235,7 +227,6 @@ if(project.hasProperty('release_type')) {
 			optional.project 'backpack-attribute'
 			optional.project 'player-attribute-screen'
 			optional.project 'rpg-crafting'
-			optional.project 'skills'
 		}
 	}
 
