@@ -93,6 +93,8 @@ public class ClientConfig extends Config {
 
 	public ConfigGroup advancement_locked_item_overlay = new ConfigGroup("advancement_locked_item_overlay");
 	public ValidatedBoolean slots_with_advancement_locked_items_have_overlay = new ValidatedBoolean(true);
+	public ValidatedColor first_overlay_colour_for_slots_with_advancement_not_unlocked_items = new ValidatedColor(200, 5, 5, 50);
+	public ValidatedColor second_overlay_colour_for_slots_with_advancement_not_unlocked_items = new ValidatedColor(200, 5, 5, 50);
 	public ValidatedColor first_overlay_colour_for_slots_with_advancement_locked_items = new ValidatedColor(200, 5, 5, 50);
 	@ConfigGroup.Pop
 	public ValidatedColor second_overlay_colour_for_slots_with_advancement_locked_items = new ValidatedColor(200, 5, 5, 50);

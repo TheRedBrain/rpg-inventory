@@ -32,6 +32,7 @@ public class ServerConfig extends Config {
 
 	public static class HandSlotOverhaul extends ConfigSection {
 
+		@RequiresAction(action = Action.RELOG)
 		public ValidatedBoolean enable_hand_slot_overhaul = new ValidatedBoolean(true);
 
 		public ValidatedBoolean always_allow_toggling_two_handed_stance = new ValidatedBoolean(false);

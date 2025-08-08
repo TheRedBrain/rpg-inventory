@@ -1,8 +1,10 @@
 package com.github.theredbrain.rpginventory.mixin.client.gui.screen.ingame;
 
 import com.github.theredbrain.rpginventory.RPGInventoryClient;
+import com.github.theredbrain.rpginventory.network.packet.UpdateAdvancementLockedItemsPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.entity.player.PlayerInventory;
@@ -24,6 +26,7 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
 	@Inject(method = "handledScreenTick", at = @At("HEAD"), cancellable = true)
 	public void rpginventory$handledScreenTick(CallbackInfo ci) {
 		if (this.client != null && this.client.player != null) {
+			ClientPlayNetworking.send(new UpdateAdvancementLockedItemsPacket());
 			RPGInventoryClient.openRPGInventoryScreen(this.client, this.client.player);
 			ci.cancel();
 		}
@@ -32,6 +35,7 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
 	@Inject(method = "init", at = @At("HEAD"), cancellable = true)
 	protected void rpginventory$init(CallbackInfo ci) {
 		if (this.client != null && this.client.player != null) {
+			ClientPlayNetworking.send(new UpdateAdvancementLockedItemsPacket());
 			RPGInventoryClient.openRPGInventoryScreen(this.client, this.client.player);
 			ci.cancel();
 		}

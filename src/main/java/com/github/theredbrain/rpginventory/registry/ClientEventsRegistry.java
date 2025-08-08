@@ -48,8 +48,12 @@ public class ClientEventsRegistry {
 			if (advancementLockedComponent != null && clientConfig.itemTooltipSection.show_item_tooltip_advancement_locked.get()) {
 				Text text = Text.empty();
 
-				if (!advancementLockedComponent.tooltip_text().isEmpty() && !(advancementLockedComponent.lock_advancement().isEmpty() && advancementLockedComponent.unlock_advancement().isEmpty())) {
+				if (!advancementLockedComponent.not_unlocked_tooltip_text().isEmpty() && advancementLockedComponent.status() == 0) {
+					text = Text.translatable(advancementLockedComponent.not_unlocked_tooltip_text());
+				} else if (!advancementLockedComponent.tooltip_text().isEmpty() && advancementLockedComponent.status() == 1) {
 					text = Text.translatable(advancementLockedComponent.tooltip_text());
+				} else if (!advancementLockedComponent.locked_tooltip_text().isEmpty() && advancementLockedComponent.status() == 2) {
+					text = Text.translatable(advancementLockedComponent.locked_tooltip_text());
 				}
 				if (!text.equals(Text.empty())) {
 					lines.add(text);

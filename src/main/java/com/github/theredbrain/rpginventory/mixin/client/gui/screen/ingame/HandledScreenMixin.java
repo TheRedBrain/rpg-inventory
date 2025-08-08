@@ -2,6 +2,7 @@ package com.github.theredbrain.rpginventory.mixin.client.gui.screen.ingame;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.RPGInventoryClient;
+import com.github.theredbrain.rpginventory.component.type.AdvancementLockedComponent;
 import com.github.theredbrain.rpginventory.config.ClientConfig;
 import com.github.theredbrain.rpginventory.util.ItemUtils;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -81,8 +82,16 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
 				rpginventory$drawSlotHighlight(context, slot.x, slot.y, 0, clientConfig.first_overlay_colour_for_slots_with_unusable_items.toInt(), clientConfig.second_overlay_colour_for_slots_with_unusable_items.toInt());
 			} else if (this.client != null && this.client.player != null && !ItemUtils.isOwnedByPlayer(stack, this.client.player.getGameProfile()) && RPGInventoryClient.CLIENT_CONFIG.slots_with_not_owned_items_have_overlay.get()) {
 				rpginventory$drawSlotHighlight(context, slot.x, slot.y, 0, clientConfig.first_overlay_colour_for_slots_with_not_owned_items.toInt(), clientConfig.second_overlay_colour_for_slots_with_not_owned_items.toInt());
-			} else if (this.client != null && this.client.player != null && !ItemUtils.isAdvancementUnlockedByPlayer(stack, this.client.player) && RPGInventoryClient.CLIENT_CONFIG.slots_with_advancement_locked_items_have_overlay.get()) {
-				rpginventory$drawSlotHighlight(context, slot.x, slot.y, 0, clientConfig.first_overlay_colour_for_slots_with_advancement_locked_items.toInt(), clientConfig.second_overlay_colour_for_slots_with_advancement_locked_items.toInt());
+			} else if (RPGInventoryClient.CLIENT_CONFIG.slots_with_advancement_locked_items_have_overlay.get()) {
+				AdvancementLockedComponent advancementLockedComponent = stack.get(RPGInventory.ADVANCEMENT_LOCKED);
+				if (advancementLockedComponent != null) {
+					int status = advancementLockedComponent.status();
+					if (status == 0) {
+						rpginventory$drawSlotHighlight(context, slot.x, slot.y, 0, clientConfig.first_overlay_colour_for_slots_with_advancement_not_unlocked_items.toInt(), clientConfig.second_overlay_colour_for_slots_with_advancement_not_unlocked_items.toInt());
+					} else if (status == 2) {
+						rpginventory$drawSlotHighlight(context, slot.x, slot.y, 0, clientConfig.first_overlay_colour_for_slots_with_advancement_locked_items.toInt(), clientConfig.second_overlay_colour_for_slots_with_advancement_locked_items.toInt());
+					}
+				}
 			}
 		}
 	}

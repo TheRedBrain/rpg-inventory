@@ -8,6 +8,8 @@ import com.github.theredbrain.rpginventory.network.packet.SwapHandItemsPacketRec
 import com.github.theredbrain.rpginventory.network.packet.SwappedHandItemsPacket;
 import com.github.theredbrain.rpginventory.network.packet.ToggleTwoHandedStancePacket;
 import com.github.theredbrain.rpginventory.network.packet.ToggleTwoHandedStancePacketReceiver;
+import com.github.theredbrain.rpginventory.network.packet.UpdateAdvancementLockedItemsPacket;
+import com.github.theredbrain.rpginventory.network.packet.UpdateAdvancementLockedItemsPacketReceiver;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
@@ -27,5 +29,8 @@ public class ServerPacketRegistry {
 
 		PayloadTypeRegistry.playC2S().register(ToggleTwoHandedStancePacket.PACKET_ID, ToggleTwoHandedStancePacket.PACKET_CODEC);
 		ServerPlayNetworking.registerGlobalReceiver(ToggleTwoHandedStancePacket.PACKET_ID, new ToggleTwoHandedStancePacketReceiver());
+
+		PayloadTypeRegistry.playC2S().register(UpdateAdvancementLockedItemsPacket.PACKET_ID, UpdateAdvancementLockedItemsPacket.PACKET_CODEC);
+		ServerPlayNetworking.registerGlobalReceiver(UpdateAdvancementLockedItemsPacket.PACKET_ID, new UpdateAdvancementLockedItemsPacketReceiver());
 	}
 }
