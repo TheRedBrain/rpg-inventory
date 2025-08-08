@@ -1,0 +1,21 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.github.theredbrain.rpginventory.mixin.client",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "MinecraftClientMixin",
+    "MouseMixin",
+    "gui.hud.InGameHudMixin",
+    "gui.screen.ingame.CreativeInventoryScreenMixin",
+    "gui.screen.ingame.CreativeInventoryScreenMixin_TrinketsReplacement",
+    "gui.screen.ingame.HandledScreenMixin",
+    "gui.screen.ingame.InventoryScreenMixin",
+    "network.ClientAdvancementManagerMixin",
+    "render.entity.PlayerEntityRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "plugin": "com.github.theredbrain.rpginventory.RPGInventoryMixinConfigPlugin"
+}

@@ -27,16 +27,5 @@
   "injectors": {
     "defaultRequire": 1
   },
-  "client": [
-    "client.MinecraftClientMixin",
-    "client.MouseMixin",
-    "client.gui.hud.InGameHudMixin",
-    "client.gui.screen.ingame.CreativeInventoryScreenMixin",
-    "client.gui.screen.ingame.CreativeInventoryScreenMixin_TrinketsReplacement",
-    "client.gui.screen.ingame.HandledScreenMixin",
-    "client.gui.screen.ingame.InventoryScreenMixin",
-    "client.network.ClientAdvancementManagerMixin",
-    "client.render.entity.PlayerEntityRendererMixin"
-  ],
   "plugin": "com.github.theredbrain.rpginventory.RPGInventoryMixinConfigPlugin"
 }
