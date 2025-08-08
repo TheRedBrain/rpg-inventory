@@ -317,8 +317,10 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> {
 
 		if (RPGInventory.isHandSlotOverhaulActive()) {
 			context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.hand_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.hand_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
-			context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.alternative_hand_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.alternative_hand_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
-			context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.alternative_offhand_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.alternative_offhand_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+			if (serverConfig.handSlotOverhaul.enable_alternative_hand_slots.get()) {
+				context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.alternative_hand_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.alternative_hand_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+				context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.alternative_offhand_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.alternative_offhand_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+			}
 		}
 
 		boolean showInactiveSlots = RPGInventoryClient.showInactiveInventorySlots();

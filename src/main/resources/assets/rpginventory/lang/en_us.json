@@ -51,6 +51,7 @@
 	"hud.message.weaponsAreSheathed": "Your weapons are sheathed already",
 	"hud.message.disabledVanillaItemSwapMechanic": "The vanilla item swap mechanic was disabled by RPG Inventory.",
 	"hud.message.handSlotOverhaulIsDisabledByServer": "This feature is disabled. It can be enabled in the server config.\nIf 'Better Combat' is installed, this feature requires 'Better Combat Extension' to be installed.",
+	"hud.message.alternativeHandSlotsDisabledByServer": "This feature is disabled. It can be enabled in the server config.",
 	"hud.message.pickBlockDisabledByHandItems": "Your hand items need to be sheathed to use this feature",
 
 

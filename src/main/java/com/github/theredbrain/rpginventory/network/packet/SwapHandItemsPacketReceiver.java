@@ -17,9 +17,9 @@ public class SwapHandItemsPacketReceiver implements ServerPlayNetworking.PlayPay
 
 		ServerPlayerEntity player = context.player();
 
-		if (RPGInventory.isHandSlotOverhaulActive()) {
+		ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
 
-			ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
+		if (RPGInventory.isHandSlotOverhaulActive() && serverConfig.handSlotOverhaul.enable_alternative_hand_slots.get()) {
 
 			boolean mainHand = payload.mainHand();
 			boolean offHand = payload.offHand();
@@ -81,7 +81,11 @@ public class SwapHandItemsPacketReceiver implements ServerPlayNetworking.PlayPay
 			}
 			player.getServerWorld().playSound(null, player.getBlockPos().getX(), player.getBlockPos().getY(), player.getBlockPos().getZ(), SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.PLAYERS, 1.0F, 1.0F);
 		} else {
-			player.sendMessageToClient(Text.translatable("hud.message.handSlotOverhaulIsDisabledByServer"), true);
+			if (serverConfig.handSlotOverhaul.enable_alternative_hand_slots.get()) {
+				player.sendMessageToClient(Text.translatable("hud.message.alternativeHandSlotsDisabledByServer"), true);
+			} else {
+				player.sendMessageToClient(Text.translatable("hud.message.handSlotOverhaulIsDisabledByServer"), true);
+			}
 		}
 	}
 }

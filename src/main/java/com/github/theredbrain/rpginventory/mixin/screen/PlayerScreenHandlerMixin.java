@@ -237,7 +237,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 
 			@Override
 			public boolean isEnabled() {
-				return RPGInventory.isHandSlotOverhaulActive();
+				return RPGInventory.isHandSlotOverhaulActive() && serverConfig.handSlotOverhaul.enable_alternative_hand_slots.get();
 			}
 
 		});
@@ -264,7 +264,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 
 			@Override
 			public boolean isEnabled() {
-				return RPGInventory.isHandSlotOverhaulActive();
+				return RPGInventory.isHandSlotOverhaulActive() && serverConfig.handSlotOverhaul.enable_alternative_hand_slots.get();
 			}
 
 		});
@@ -717,20 +717,22 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 						}
 					}
 
-					if (!rpginventory$stack.isEmpty() && (!serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || rpginventory$stack.isIn(Tags.HAND_ITEMS))) {
-						if (!this.slots.get(49).hasStack()) {
-							if (!this.insertItem(rpginventory$stack, 49, 50, false)) {
-								cir.setReturnValue(ItemStack.EMPTY);
-								cir.cancel();
+					if (serverConfig.handSlotOverhaul.enable_alternative_hand_slots.get()) {
+						if (!rpginventory$stack.isEmpty() && (!serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || rpginventory$stack.isIn(Tags.HAND_ITEMS))) {
+							if (!this.slots.get(49).hasStack()) {
+								if (!this.insertItem(rpginventory$stack, 49, 50, false)) {
+									cir.setReturnValue(ItemStack.EMPTY);
+									cir.cancel();
+								}
 							}
 						}
-					}
 
-					if (!rpginventory$stack.isEmpty() && (rpginventory$equipmentSlot == EquipmentSlot.OFFHAND || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || rpginventory$stack.isIn(Tags.OFFHAND_ITEMS))) {
-						if (!this.slots.get(50).hasStack()) {
-							if (!this.insertItem(rpginventory$stack, 50, 51, false)) {
-								cir.setReturnValue(ItemStack.EMPTY);
-								cir.cancel();
+						if (!rpginventory$stack.isEmpty() && (rpginventory$equipmentSlot == EquipmentSlot.OFFHAND || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || rpginventory$stack.isIn(Tags.OFFHAND_ITEMS))) {
+							if (!this.slots.get(50).hasStack()) {
+								if (!this.insertItem(rpginventory$stack, 50, 51, false)) {
+									cir.setReturnValue(ItemStack.EMPTY);
+									cir.cancel();
+								}
 							}
 						}
 					}
