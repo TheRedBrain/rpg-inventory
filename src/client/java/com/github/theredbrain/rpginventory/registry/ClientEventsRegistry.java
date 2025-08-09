@@ -20,6 +20,7 @@ public class ClientEventsRegistry {
 		ItemTooltipCallback.EVENT.register((stack, context, type, lines) -> {
 			ClientConfig clientConfig = RPGInventoryClient.CLIENT_CONFIG;
 			boolean isLoadOutItem = stack.contains(RPGInventory.LOAD_OUT_ITEM);
+
 			if (isLoadOutItem && clientConfig.itemTooltipSection.show_load_out_item_tooltip.get()) {
 				int index = clientConfig.itemTooltipSection.item_tooltip_load_out_item_index.get();
 				List<Text> newList = getLoadOutItemsTooltipLines(clientConfig.itemTooltipSection.show_load_out_item_description_tooltip.get());
@@ -29,6 +30,7 @@ public class ClientEventsRegistry {
 					lines.addAll(Math.max(0, Math.min(lines.size() - 1, index)), newList);
 				}
 			}
+
 			if (!isLoadOutItem && clientConfig.itemTooltipSection.show_item_tooltip_bound_to_player_name.get()) {
 				int index = clientConfig.itemTooltipSection.item_tooltip_bound_to_player_index.get();
 				List<Text> newList = getPlayerBoundItemsTooltipLines(stack);
@@ -38,6 +40,7 @@ public class ClientEventsRegistry {
 					lines.addAll(Math.max(0, Math.min(lines.size() - 1, index)), newList);
 				}
 			}
+
 			if (!isLoadOutItem && clientConfig.itemTooltipSection.show_item_tooltip_crafted_by_player_name.get()) {
 				int index = clientConfig.itemTooltipSection.item_tooltip_crafted_by_player_index.get();
 				List<Text> newList = getPlayerCraftedItemsTooltipLines(stack);
@@ -47,19 +50,10 @@ public class ClientEventsRegistry {
 					lines.addAll(Math.max(0, Math.min(lines.size() - 1, index)), newList);
 				}
 			}
+
 			if (!isLoadOutItem && clientConfig.itemTooltipSection.show_item_tooltip_advancement_locked.get()) {
 				int index = clientConfig.itemTooltipSection.item_tooltip_advancement_locked_index.get();
 				List<Text> newList = getAdvancementLockedItemsTooltipLines(stack);
-				if (index < 0) {
-					lines.addAll(newList);
-				} else {
-					lines.addAll(Math.max(0, Math.min(lines.size() - 1, index)), newList);
-				}
-			}
-
-			if (!isLoadOutItem && clientConfig.itemTooltipSection.show_item_tooltip_equipment_slots.get()) {
-				int index = clientConfig.itemTooltipSection.item_tooltip_equipment_slots_index.get();
-				List<Text> newList = getEquipmentSlotTooltipLines(stack);
 				if (index < 0) {
 					lines.addAll(newList);
 				} else {
