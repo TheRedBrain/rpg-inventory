@@ -90,9 +90,13 @@ This is purely cosmetic.
 
 ## Additional Item Tooltips
 
-These are separated into categories. Each category can be disabled in the client config.
-- the slots an item can be equipped in, this is controlled by item tags.
+These can be configured in the client config, including the position.
+- load out items
+- player bound items (disabled for load out items)
+- player crafted items (disabled for load out items)
+- advancement locked items (disabled for load out items)
 - if an item is in the "two_handed_items" item tag.
+- the slots an item can be equipped in, this is controlled by item tags.
 
 ## Slot Tooltips
 
@@ -155,9 +159,24 @@ A button that opens the Hand Crafting Screen can be added to the inventory scree
 
 A button that opens the Backpack Screen can be added to the inventory screens. The 2x2 crafting grid has to be disabled.
 
-### Pufferfish's Skills Integration
+### Advancement Locked Items
 
-Item stacks with the "rpginventory:skill_locked" component can only be equipped and used if the player has the skill defined by the component unlocked.
+An item stack that has the "rpginventory:advancement_locked" component has one of 3 different 'status' modes, saved in the component and updated when opening the inventory screen.
+
+The different modes are:
+- 'not_unlocked'
+- 'unlocked', this has the lowest priority. The item can only be equipped and used if the item is in this mode.
+- 'locked', this has the highest priority
+
+The "advancement_locked" component has 5 string fields:
+- "unlock_advancement": the id of the 'unlock advancement'. If the player has this advancement unlocked, the status is changed to 'unlocked', if not the status is 'not_unlocked'. If this field is an empty string, the item can't be 'not_unlocked'.
+- "lock_advancement": the id of the 'lock advancement'. If the player has this advancement unlocked, the status is 'locked'. If this field is an empty string, the item can't be 'locked'.
+
+- "not_unlocked_tooltip_text": this string is optionally  displayed in the item tooltip, when the item status is 'not_unlocked'. This supports localization.
+- "tooltip_text": this string is optionally  displayed in the item tooltip, when the item status is 'not_unlocked'. This supports localization.
+- "locked_tooltip_text": this string is optionally displayed in the item tooltip, when the item status is 'not_unlocked'. This supports localization.
+
+Inventory slots containing an item with the 'not_unlocked' or 'locked' status modes, can optionally display a slot overlay.
 
 ### Trinket Compatibility
 
