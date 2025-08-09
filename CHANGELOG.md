@@ -11,6 +11,7 @@
 - improved configurability for item tooltips
 - several internal refactors to improve maintainability
 - fixed 'hand slot overhaul' not getting properly disabled when 'Better Combat' is present but 'Better Combat Extension' is not
+- removed optional dependency on 'Food Overhaul', what status effects are listed in the Food list on the effect screen is now controlled by the "rpginventory:food_effects" effect tag
 
 # 2.4.5
 

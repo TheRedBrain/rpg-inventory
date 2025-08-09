@@ -63,9 +63,7 @@ Using it when items where sheathed could duplicate items. Swapping items into th
 
 Active and visible status effects are listed on the right side of the inventory screen. They are sorted by their category (harmful, beneficial and neutral). Effects can have a description (added by assigning a value to <effect_translation_key>.description in the lang files), which is also displayed.
 
-### Food Overhaul Compatibility
-
-[Food Overhauls](https://modrinth.com/mod/food-overhaul) food effects are displayed in a separate list.
+Effects in the "rpginventory:food_effects" effect tag are displayed in a separate list.
 
 ## Unusable Items
 
@@ -88,6 +86,35 @@ Item stacks that have the "rpginventory:saves_crafting_player" component will sa
 
 This is purely cosmetic.
 
+## Mannequins and Load Out Items
+
+Mannequins are blocks that have storage slots similar to the players equipment slots. Items placed in those slots form a 'load out', which can be equipped by players. Equipping a load out fills the players equipment slots with copies of the load out items. Only slots that are empty or contain a load out item are filled.
+
+### Load out items
+
+Load out items are never dropped, they either vanish or are kept on death (this can be configured in the server config).
+
+These items can also normally not be removed from a slot, only when interacting with a mannequin.
+
+## Advancement Locked Items
+
+An item stack that has the "rpginventory:advancement_locked" component has one of 3 different 'status' modes, saved in the component and updated when opening the inventory screen.
+
+The different modes are:
+- 'not_unlocked'
+- 'unlocked', this has the lowest priority. The item can only be equipped and used if the item is in this mode.
+- 'locked', this has the highest priority
+
+The "advancement_locked" component has 5 string fields:
+- "unlock_advancement": the id of the 'unlock advancement'. If the player has this advancement unlocked, the status is changed to 'unlocked', if not the status is 'not_unlocked'. If this field is an empty string, the item can't be 'not_unlocked'.
+- "lock_advancement": the id of the 'lock advancement'. If the player has this advancement unlocked, the status is 'locked'. If this field is an empty string, the item can't be 'locked'.
+
+- "not_unlocked_tooltip_text": this string is optionally  displayed in the item tooltip, when the item status is 'not_unlocked'. This supports localization.
+- "tooltip_text": this string is optionally  displayed in the item tooltip, when the item status is 'not_unlocked'. This supports localization.
+- "locked_tooltip_text": this string is optionally displayed in the item tooltip, when the item status is 'not_unlocked'. This supports localization.
+
+Inventory slots containing an item with the 'not_unlocked' or 'locked' status modes, can optionally display a slot overlay.
+
 ## Additional Item Tooltips
 
 These can be configured in the client config, including the position.
@@ -100,19 +127,9 @@ These can be configured in the client config, including the position.
 
 ## Slot Tooltips
 
-Equipment and trinket slots now have a tooltip. It is only shown when the slot and the cursor stack are empty. This feature can be disabled in the client config.
+Equipment slots can now have a tooltip. It is only shown when the slot and the cursor stack are empty. This feature can be disabled in the client config.
 
 When the string is empty, no tooltip will be shown.
-
-## Mannequins and Load Out Items
-
-Mannequins are blocks that have storage slots similar to the players equipment slots. Items placed in those slots form a 'load out', which can be equipped by players. Equipping a load out fills the players equipment slots with copies of the load out items. Only slots that are empty or contain a load out item are filled.
-
-### Load out items
-
-Load out items are never dropped, they either vanish or are kept on death (this can be configured in the server config).
-
-These items can also normally not be removed from a slot, only when interacting with a mannequin.
 
 ## Additional settings and features
 
@@ -158,25 +175,6 @@ A button that opens the Hand Crafting Screen can be added to the inventory scree
 ### Backpack Attribute Integration
 
 A button that opens the Backpack Screen can be added to the inventory screens. The 2x2 crafting grid has to be disabled.
-
-### Advancement Locked Items
-
-An item stack that has the "rpginventory:advancement_locked" component has one of 3 different 'status' modes, saved in the component and updated when opening the inventory screen.
-
-The different modes are:
-- 'not_unlocked'
-- 'unlocked', this has the lowest priority. The item can only be equipped and used if the item is in this mode.
-- 'locked', this has the highest priority
-
-The "advancement_locked" component has 5 string fields:
-- "unlock_advancement": the id of the 'unlock advancement'. If the player has this advancement unlocked, the status is changed to 'unlocked', if not the status is 'not_unlocked'. If this field is an empty string, the item can't be 'not_unlocked'.
-- "lock_advancement": the id of the 'lock advancement'. If the player has this advancement unlocked, the status is 'locked'. If this field is an empty string, the item can't be 'locked'.
-
-- "not_unlocked_tooltip_text": this string is optionally  displayed in the item tooltip, when the item status is 'not_unlocked'. This supports localization.
-- "tooltip_text": this string is optionally  displayed in the item tooltip, when the item status is 'not_unlocked'. This supports localization.
-- "locked_tooltip_text": this string is optionally displayed in the item tooltip, when the item status is 'not_unlocked'. This supports localization.
-
-Inventory slots containing an item with the 'not_unlocked' or 'locked' status modes, can optionally display a slot overlay.
 
 ### Trinket Compatibility
 
