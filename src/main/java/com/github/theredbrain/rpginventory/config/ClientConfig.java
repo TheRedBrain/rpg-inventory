@@ -105,17 +105,23 @@ public class ClientConfig extends Config {
 
 		public ValidatedBoolean show_load_out_item_tooltip = new ValidatedBoolean(true);
 		public ValidatedBoolean show_load_out_item_description_tooltip = new ValidatedBoolean(true);
+		public ValidatedInt item_tooltip_load_out_item_index = new ValidatedInt(-1);
 
 		public ValidatedBoolean show_item_tooltip_bound_to_player_name = new ValidatedBoolean(true);
 		public ValidatedString item_tooltip_bound_to_player_name_formatting_string = new ValidatedString("");
+		public ValidatedInt item_tooltip_bound_to_player_index = new ValidatedInt(-1);
 
 		public ValidatedBoolean show_item_tooltip_crafted_by_player_name = new ValidatedBoolean(true);
 		public ValidatedString item_tooltip_crafted_by_player_name_formatting_string = new ValidatedString("");
+		public ValidatedInt item_tooltip_crafted_by_player_index = new ValidatedInt(-1);
 
 		public ValidatedBoolean show_item_tooltip_advancement_locked = new ValidatedBoolean(true);
+		public ValidatedInt item_tooltip_advancement_locked_index = new ValidatedInt(-1);
 
 		public ValidatedBoolean show_item_tooltip_two_handed_items = new ValidatedBoolean(true);
+		public ValidatedInt item_tooltip_two_handed_items_index = new ValidatedInt(-1);
 		public ValidatedBoolean show_item_tooltip_equipment_slots = new ValidatedBoolean(true);
+		public ValidatedInt item_tooltip_equipment_slots_index = new ValidatedInt(-1);
 	}
 	//		@Comment("""
 //				These values describe how the matrixStack is manipulated.
