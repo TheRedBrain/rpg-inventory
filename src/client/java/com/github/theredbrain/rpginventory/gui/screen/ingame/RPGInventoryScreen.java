@@ -1,12 +1,12 @@
 package com.github.theredbrain.rpginventory.gui.screen.ingame;
 
-import com.github.theredbrain.foodoverhaul.effect.FoodStatusEffect;
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.RPGInventoryClient;
-import com.github.theredbrain.rpginventory.gui.widget.ToggleInventoryScreenWidget;
 import com.github.theredbrain.rpginventory.config.ClientConfig;
 import com.github.theredbrain.rpginventory.config.ServerConfig;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
+import com.github.theredbrain.rpginventory.gui.widget.ToggleInventoryScreenWidget;
+import com.github.theredbrain.rpginventory.registry.Tags;
 import com.github.theredbrain.rpginventory.screen.DuckPlayerScreenHandlerMixin;
 import com.github.theredbrain.rpginventory.screen.DuckSlotMixin;
 import com.google.common.collect.Ordering;
@@ -145,7 +145,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> {
 			this.neutralScrollAmount = 0.0f;
 
 			for (StatusEffectInstance statusEffectInstance : visibleEffectsList) {
-				if (RPGInventory.isFoodOverhaulLoaded && statusEffectInstance.getEffectType().value() instanceof FoodStatusEffect) {
+				if (statusEffectInstance.getEffectType().isIn(Tags.FOOD_EFFECTS)) {
 					this.foodEffectsList.add(statusEffectInstance);
 				} else if (statusEffectInstance.getEffectType().value().getCategory() == StatusEffectCategory.HARMFUL) {
 					this.negativeEffectsList.add(statusEffectInstance);

@@ -93,9 +93,6 @@ dependencies {
 	// Slot Customization API
 	modImplementation "maven.modrinth:slot-customization-api:${project.slot_customization_api_version}"
 
-	// Food Overhaul
-	modImplementation "maven.modrinth:food-overhaul:${project.food_overhaul_version}"
-
 	// Mana Attributes
 	modImplementation "maven.modrinth:mana-attributes:${project.mana_attributes_version}"
 
@@ -196,7 +193,6 @@ if(project.hasProperty('release_type')) {
 				requiredDependency 'fabric-api'
 				requiredDependency 'slot-customization-api'
 				optionalDependency 'trinkets'
-				optionalDependency 'food-overhaul-fabric'
 				optionalDependency 'stamina-attributes'
 				optionalDependency 'inventory-size-attributes'
 				optionalDependency 'backpack-attribute'
@@ -232,7 +228,6 @@ if(project.hasProperty('release_type')) {
 			required.project 'fabric-api'
 			required.project 'slot-customization-api'
 			optional.project 'trinkets'
-			optional.project 'food-overhaul'
 			optional.project 'stamina-attributes'
 			optional.project 'various-status-effects'
 			optional.project 'inventory-size-attributes'
