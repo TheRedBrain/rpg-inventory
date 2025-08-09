@@ -412,7 +412,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && serverConfig.handSlotOverhaul.enable_hand_slot_overhaul.get();
+				return super.isEnabled() && RPGInventory.isHandSlotOverhaulActive();
 			}
 
 		});
@@ -422,7 +422,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && serverConfig.handSlotOverhaul.enable_hand_slot_overhaul.get();
+				return super.isEnabled() && RPGInventory.isHandSlotOverhaulActive() && serverConfig.handSlotOverhaul.enable_alternative_hand_slots.get();
 			}
 
 		});
@@ -432,7 +432,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && serverConfig.handSlotOverhaul.enable_hand_slot_overhaul.get();
+				return super.isEnabled() && RPGInventory.isHandSlotOverhaulActive() && serverConfig.handSlotOverhaul.enable_alternative_hand_slots.get();
 			}
 
 		});
@@ -643,7 +643,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 					}
 				}
 
-				if (serverConfig.handSlotOverhaul.enable_hand_slot_overhaul.get()) {
+				if (RPGInventory.isHandSlotOverhaulActive()) {
 
 					if (!itemStack1.isEmpty() && (!serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || itemStack1.isIn(Tags.HAND_ITEMS)) && !this.slots.get(65).hasStack()) {
 							if (!this.insertItem(itemStack1, 65, 66, false)) {
@@ -657,18 +657,20 @@ public class MannequinScreenHandler extends ScreenHandler {
 							}
 					}
 
-					if (!itemStack1.isEmpty() && (!serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || itemStack1.isIn(Tags.HAND_ITEMS))) {
-						if (!this.slots.get(66).hasStack()) {
-							if (!this.insertItem(itemStack1, 66, 67, false)) {
-								return ItemStack.EMPTY;
+					if (serverConfig.handSlotOverhaul.enable_alternative_hand_slots.get()) {
+						if (!itemStack1.isEmpty() && (!serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || itemStack1.isIn(Tags.HAND_ITEMS))) {
+							if (!this.slots.get(66).hasStack()) {
+								if (!this.insertItem(itemStack1, 66, 67, false)) {
+									return ItemStack.EMPTY;
+								}
 							}
 						}
-					}
 
-					if (!itemStack1.isEmpty() && (equipmentSlot == EquipmentSlot.OFFHAND || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || itemStack1.isIn(Tags.OFFHAND_ITEMS))) {
-						if (!this.slots.get(67).hasStack()) {
-							if (!this.insertItem(itemStack1, 67, 68, false)) {
-								return ItemStack.EMPTY;
+						if (!itemStack1.isEmpty() && (equipmentSlot == EquipmentSlot.OFFHAND || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || itemStack1.isIn(Tags.OFFHAND_ITEMS))) {
+							if (!this.slots.get(67).hasStack()) {
+								if (!this.insertItem(itemStack1, 67, 68, false)) {
+									return ItemStack.EMPTY;
+								}
 							}
 						}
 					}

@@ -687,7 +687,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 				}
 			} else if (slot >= 9 && slot < 45) {
 
-				if (serverConfig.handSlotOverhaul.enable_hand_slot_overhaul.get()) {
+				if (RPGInventory.isHandSlotOverhaulActive()) {
 
 					if (!rpginventory$stack.isEmpty() && (!serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || rpginventory$stack.isIn(Tags.HAND_ITEMS))) {
 						if (((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed() && !this.slots.get(47).hasStack()) {
