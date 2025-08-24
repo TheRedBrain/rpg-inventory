@@ -202,6 +202,16 @@
 	"rpginventory.client.second_overlay_colour_for_slots_with_not_owned_items": "Second Overlay Color",
 
 
+
+	"rpginventory.client.advancement_locked_item_overlay": "Advancement Locked Item Overlay",
+
+	"rpginventory.client.slots_with_advancement_locked_items_have_overlay": "Show Overlay",
+	"rpginventory.client.first_overlay_colour_for_slots_with_advancement_not_unlocked_items": "First Overlay Color (Not Locked)",
+	"rpginventory.client.second_overlay_colour_for_slots_with_advancement_not_unlocked_items": "Second Overlay Color (Not Locked)",
+	"rpginventory.client.first_overlay_colour_for_slots_with_advancement_locked_items": "First Overlay Color (Locked)",
+	"rpginventory.client.second_overlay_colour_for_slots_with_advancement_locked_items": "Second Overlay Color (Locked)",
+
+
 	"rpginventory.client.itemTooltipSection": "Item Tooltips",
 
 	"rpginventory.client.itemTooltipSection.show_item_tooltip_bound_to_player_name": "Show 'Bound to ...' Item Tooltip",

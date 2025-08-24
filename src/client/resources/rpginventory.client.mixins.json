@@ -6,6 +6,7 @@
   "client": [
     "MinecraftClientMixin",
     "MouseMixin",
+    "gui.DrawContextMixin",
     "gui.hud.InGameHudMixin",
     "gui.screen.ingame.CreativeInventoryScreenMixin",
     "gui.screen.ingame.CreativeInventoryScreenMixin_TrinketsReplacement",

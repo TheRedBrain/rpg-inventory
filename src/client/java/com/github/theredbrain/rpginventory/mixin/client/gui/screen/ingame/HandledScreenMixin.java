@@ -1,21 +1,14 @@
 package com.github.theredbrain.rpginventory.mixin.client.gui.screen.ingame;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
-import com.github.theredbrain.rpginventory.RPGInventoryClient;
-import com.github.theredbrain.rpginventory.component.type.AdvancementLockedComponent;
-import com.github.theredbrain.rpginventory.config.ClientConfig;
-import com.github.theredbrain.rpginventory.util.ItemUtils;
+import com.github.theredbrain.rpginventory.network.packet.UpdateAdvancementLockedItemsPacket;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.DrawContext;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -26,8 +19,25 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(HandledScreen.class)
 public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen {
 
+	@Unique
+	private int cachedInvChangeCount = 0;
+
 	protected HandledScreenMixin(Text title) {
 		super(title);
+	}
+
+	@Inject(method = "handledScreenTick", at = @At("TAIL"))
+	protected void rpginventory$handledScreenTick(CallbackInfo ci) {
+		if (this.client != null && this.client.player != null && this.cachedInvChangeCount != this.client.player.getInventory().getChangeCount()) {
+			ClientPlayNetworking.send(new UpdateAdvancementLockedItemsPacket());
+			this.cachedInvChangeCount = this.client.player.getInventory().getChangeCount();
+		}
+	}
+
+	@Inject(method = "init", at = @At("TAIL"))
+	protected void rpginventory$init(CallbackInfo ci) {
+		this.cachedInvChangeCount = 0;
+		ClientPlayNetworking.send(new UpdateAdvancementLockedItemsPacket());
 	}
 
 	/**
@@ -70,38 +80,5 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
 		} else {
 			return original.call(instance, keyCode, scanCode);
 		}
-	}
-
-	@Inject(method = "drawSlot", at = @At("TAIL"))
-	private void rpginventory$drawSlot(DrawContext context, Slot slot, CallbackInfo ci) {
-		// draw slot overlay
-		ItemStack stack = slot.getStack();
-		if (!stack.isEmpty()) {
-			ClientConfig clientConfig = RPGInventoryClient.CLIENT_CONFIG;
-			if (!ItemUtils.isUsable(stack) && RPGInventoryClient.CLIENT_CONFIG.slots_with_unusable_items_have_overlay.get()) {
-				rpginventory$drawSlotHighlight(context, slot.x, slot.y, 0, clientConfig.first_overlay_colour_for_slots_with_unusable_items.toInt(), clientConfig.second_overlay_colour_for_slots_with_unusable_items.toInt());
-			} else if (this.client != null && this.client.player != null && !ItemUtils.isOwnedByPlayer(stack, this.client.player.getGameProfile()) && RPGInventoryClient.CLIENT_CONFIG.slots_with_not_owned_items_have_overlay.get()) {
-				rpginventory$drawSlotHighlight(context, slot.x, slot.y, 0, clientConfig.first_overlay_colour_for_slots_with_not_owned_items.toInt(), clientConfig.second_overlay_colour_for_slots_with_not_owned_items.toInt());
-			} else if (RPGInventoryClient.CLIENT_CONFIG.slots_with_advancement_locked_items_have_overlay.get()) {
-				AdvancementLockedComponent advancementLockedComponent = stack.get(RPGInventory.ADVANCEMENT_LOCKED);
-				if (advancementLockedComponent != null) {
-					int status = advancementLockedComponent.status();
-					if (status == 0) {
-						rpginventory$drawSlotHighlight(context, slot.x, slot.y, 0, clientConfig.first_overlay_colour_for_slots_with_advancement_not_unlocked_items.toInt(), clientConfig.second_overlay_colour_for_slots_with_advancement_not_unlocked_items.toInt());
-					} else if (status == 2) {
-						rpginventory$drawSlotHighlight(context, slot.x, slot.y, 0, clientConfig.first_overlay_colour_for_slots_with_advancement_locked_items.toInt(), clientConfig.second_overlay_colour_for_slots_with_advancement_locked_items.toInt());
-					}
-				}
-			}
-		}
-	}
-
-	@Unique
-	private static void rpginventory$drawSlotHighlight(DrawContext context, int x, int y, int z, int colorStart, int colorEnd) {
-		RenderSystem.disableDepthTest();
-		RenderSystem.colorMask(true, true, true, false);
-		context.fillGradient(RenderLayer.getGuiOverlay(), x, y, x + 16, y + 16, colorStart, colorEnd, z);
-		RenderSystem.colorMask(true, true, true, true);
-		RenderSystem.enableDepthTest();
 	}
 }

@@ -21,21 +21,22 @@ public class UpdateAdvancementLockedItemsPacketReceiver implements ServerPlayNet
 
 		PlayerInventory playerInventory = serverPlayerEntity.getInventory();
 
+		boolean bl = false;
+
 		for (int i = 0; i < playerInventory.size(); i++) {
 			ItemStack itemStack = playerInventory.getStack(i).copy();
 			AdvancementLockedComponent advancementLockedComponent = itemStack.get(RPGInventory.ADVANCEMENT_LOCKED);
+
 			if (advancementLockedComponent != null) {
-				int status = advancementLockedComponent.status();
-				int newStatus = status;
 				// status 0: not unlocked, 1: unlocked, 2: locked
-				if (status == 0 && advancementLockedComponent.unlock_advancement().isEmpty() || status == 2 && advancementLockedComponent.lock_advancement().isEmpty()) {
+				int newStatus = 0;
+				if (advancementLockedComponent.unlock_advancement().isEmpty() && advancementLockedComponent.lock_advancement().isEmpty()) {
 					newStatus = 1;
 				}
-
 				PlayerAdvancementTracker playerAdvancementTracker = serverPlayerEntity.getAdvancementTracker();
 				ServerAdvancementLoader serverAdvancementLoader = null;
-
 				MinecraftServer minecraftServer = serverPlayerEntity.getServer();
+
 				if (minecraftServer != null) {
 					serverAdvancementLoader = minecraftServer.getAdvancementLoader();
 				}
@@ -50,18 +51,23 @@ public class UpdateAdvancementLockedItemsPacketReceiver implements ServerPlayNet
 						}
 					}
 					if (!advancementLockedComponent.lock_advancement().isEmpty()) {
-
 						AdvancementEntry lockAdvancementEntry = serverAdvancementLoader.get(Identifier.of(advancementLockedComponent.lock_advancement()));
+
 						if (lockAdvancementEntry != null && playerAdvancementTracker.getProgress(lockAdvancementEntry).isDone()) {
 							newStatus = 2;
 						}
 					}
 				}
-				if (status != newStatus) {
+				if (advancementLockedComponent.status() != newStatus) {
 					itemStack.set(RPGInventory.ADVANCEMENT_LOCKED, new AdvancementLockedComponent(advancementLockedComponent.unlock_advancement(), advancementLockedComponent.lock_advancement(), advancementLockedComponent.not_unlocked_tooltip_text(), advancementLockedComponent.tooltip_text(), advancementLockedComponent.locked_tooltip_text(), newStatus));
 					playerInventory.setStack(i, itemStack);
+					bl = true;
 				}
 			}
+		}
+		if (bl) {
+			playerInventory.markDirty();
+			serverPlayerEntity.currentScreenHandler.sendContentUpdates();
 		}
 	}
 }
