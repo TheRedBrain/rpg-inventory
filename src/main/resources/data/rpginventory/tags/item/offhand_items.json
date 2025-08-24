@@ -32,10 +32,6 @@
 			"required": false
 		},
 		{
-			"id": "#rpg_series:weapon_type/spell_blade",
-			"required": false
-		},
-		{
 			"id": "#rpg_series:weapon_type/spell_scythe",
 			"required": false
 		},
@@ -53,6 +49,10 @@
 		},
 		{
 			"id": "#c:tools/melee_weapon",
+			"required": false
+		},
+		{
+			"id": "#spellbladenext:spellblades",
 			"required": false
 		}
 	]
