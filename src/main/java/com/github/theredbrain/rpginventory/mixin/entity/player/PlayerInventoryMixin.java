@@ -261,7 +261,9 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 	public void rpginventory$setStack(int slot, ItemStack stack, CallbackInfo ci) {
 		if (stack.contains(RPGInventory.BOUNDS_TO_PLAYER) && (!this.player.isCreative() || RPGInventory.SERVER_CONFIG.enable_item_bounding_in_creative.get())) {
 			stack.remove(RPGInventory.BOUNDS_TO_PLAYER);
-			stack.set(RPGInventory.PLAYER_BOUND, new ProfileComponent(this.player.getGameProfile()));
+			if (!stack.contains(RPGInventory.PLAYER_BOUND)) {
+				stack.set(RPGInventory.PLAYER_BOUND, new ProfileComponent(this.player.getGameProfile()));
+			}
 		}
 	}
 
