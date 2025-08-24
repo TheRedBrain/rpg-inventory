@@ -27,6 +27,7 @@ public class RPGInventoryTrinketScreen extends RPGInventoryScreen implements Tri
 
 	@Override
 	public void handledScreenTick() {
+		super.handledScreenTick();
 		TrinketScreenManager.tick();
 	}
 

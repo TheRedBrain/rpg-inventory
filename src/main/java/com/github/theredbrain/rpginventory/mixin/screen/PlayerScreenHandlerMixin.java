@@ -466,7 +466,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 
 	@Inject(at = @At("HEAD"), method = "onClosed")
 	private void rpginventory$onClosed(PlayerEntity player, CallbackInfo info) {
-		// TODO trigger adventure hotbar items check
+		// TODO trigger adventure hotbar items check, player_bound check
 	}
 
 	/**

@@ -323,20 +323,5 @@
 	"rpginventory.server.inventorySlots.slot_group_position.survival_x": "Survival Offset X",
 	"rpginventory.server.inventorySlots.slot_group_position.survival_y": "Survival Offset Y",
 	"rpginventory.server.inventorySlots.slot_group_position.creative_x": "Creative Offset X",
-	"rpginventory.server.inventorySlots.slot_group_position.creative_y": "Creative Offset Y",
-
-	"trinkets.slot.belts.belt": "Belt",
-	"trinkets.slot.gloves.gloves": "Glove",
-	"trinkets.slot.necklaces.necklace": "Necklace",
-	"trinkets.slot.rings_1.ring": "Ring",
-	"trinkets.slot.rings_2.ring": "Ring",
-	"trinkets.slot.shoulders.shoulders": "Shoulders",
-	"trinkets.slot.spell_slot_1.spell": "Spell",
-	"trinkets.slot.spell_slot_2.spell": "Spell",
-	"trinkets.slot.spell_slot_3.spell": "Spell",
-	"trinkets.slot.spell_slot_4.spell": "Spell",
-	"trinkets.slot.spell_slot_5.spell": "Spell",
-	"trinkets.slot.spell_slot_6.spell": "Spell",
-	"trinkets.slot.spell_slot_7.spell": "Spell",
-	"trinkets.slot.spell_slot_8.spell": "Spell"
+	"rpginventory.server.inventorySlots.slot_group_position.creative_y": "Creative Offset Y"
 }
