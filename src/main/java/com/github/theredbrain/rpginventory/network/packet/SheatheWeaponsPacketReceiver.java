@@ -31,6 +31,14 @@ public class SheatheWeaponsPacketReceiver implements ServerPlayNetworking.PlayPa
 				offHandItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSheathedOffhand().copy();
 			}
 
+			if (RPGInventory.doesCurrentPlayerStatusPreventHandSlotAction(player) ||
+					player.getItemCooldownManager().isCoolingDown(handItemStack.getItem()) ||
+					player.getItemCooldownManager().isCoolingDown(offHandItemStack.getItem())
+			) {
+				player.sendMessageToClient(Text.translatable("hud.message.handSlotActionWasPrevented"), true);
+				return;
+			}
+
 			float staminaCost = RPGInventory.isStaminaAttributesLoaded ? serverConfig.handSlotOverhaul.staminaAttributesCompat.sheathing_hand_items_stamina_cost.get() : 0.0F;
 
 			if (staminaCost > 0.0F && !player.isCreative() && serverConfig.handSlotOverhaul.staminaAttributesCompat.sheathing_hand_items_requires_stamina.get() && RPGInventory.getCurrentStamina(player) <= 0 && (!serverConfig.handSlotOverhaul.staminaAttributesCompat.sheathing_hand_items_requires_stamina_cost.get() || RPGInventory.getCurrentStamina(player) < staminaCost)) {

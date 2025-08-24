@@ -49,6 +49,7 @@
 	"hud.message.spellsRemovedFromInactiveSpellSlots": "The maximum amount of spells you can equip was lowered and some items were transferred to your normal inventory. If your inventory was full, they were dropped at your location.",
 	"hud.message.itemsRemovedFromInactiveHandSlots": "You had items in inactive hand slots. These items were transferred to your normal inventory. If your inventory was full, they were dropped at your location.",
 	"hud.message.weaponsAreSheathed": "Your weapons are sheathed already",
+	"hud.message.handSlotActionWasPrevented": "This is not possible at the moment.",
 	"hud.message.disabledVanillaItemSwapMechanic": "The vanilla item swap mechanic was disabled by RPG Inventory.",
 	"hud.message.handSlotOverhaulIsDisabledByServer": "This feature is disabled. It can be enabled in the server config.\nIf 'Better Combat' is installed, this feature requires 'Better Combat Extension' to be installed.",
 	"hud.message.alternativeHandSlotsDisabledByServer": "This feature is disabled. It can be enabled in the server config.",

@@ -31,6 +31,14 @@ public class ToggleTwoHandedStancePacketReceiver implements ServerPlayNetworking
 				offHandItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSheathedOffhand().copy();
 			}
 
+			if (RPGInventory.doesCurrentPlayerStatusPreventHandSlotAction(player) ||
+					player.getItemCooldownManager().isCoolingDown(handItemStack.getItem()) ||
+					player.getItemCooldownManager().isCoolingDown(offHandItemStack.getItem())
+			) {
+				player.sendMessageToClient(Text.translatable("hud.message.handSlotActionWasPrevented"), true);
+				return;
+			}
+
 			boolean mainHandCanNotBeTwoHanded = player.getMainHandStack().isIn(Tags.NON_TWO_HANDED_ITEMS);
 
 			float staminaCost = RPGInventory.isStaminaAttributesLoaded ? serverConfig.handSlotOverhaul.staminaAttributesCompat.toggling_two_handed_stance_stamina_cost.get() : 0.0F;

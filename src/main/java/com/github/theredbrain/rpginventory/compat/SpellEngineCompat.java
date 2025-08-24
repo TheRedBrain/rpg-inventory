@@ -2,9 +2,11 @@ package com.github.theredbrain.rpginventory.compat;
 
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerInventoryMixin;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.spell_engine.api.spell.container.SpellContainer;
 import net.spell_engine.api.spell.container.SpellContainerHelper;
 import net.spell_engine.compat.container.ContainerCompat;
+import net.spell_engine.internals.casting.SpellCasterEntity;
 import net.spell_engine.internals.container.SpellContainerSource;
 
 import java.util.ArrayList;
@@ -30,5 +32,9 @@ public class SpellEngineCompat {
 		if (container != null && container.isValid()) {
 			sources.add(new SpellContainerSource.SourcedContainer(name, fromItemStack, container));
 		}
+	}
+
+	public static boolean doesCurrentPlayerStatusPreventHandSlotAction(ServerPlayerEntity serverPlayerEntity) {
+		return ((SpellCasterEntity) serverPlayerEntity).isCastingSpell();
 	}
 }

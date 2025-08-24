@@ -33,16 +33,23 @@ public class SwapHandItemsPacketReceiver implements ServerPlayNetworking.PlayPay
 			boolean offHandIsSheathed = ((DuckPlayerEntityMixin) player).rpginventory$isOffhandStackSheathed();
 
 			float staminaCost = 0.0F;
+			boolean actionIsNotPossible = RPGInventory.doesCurrentPlayerStatusPreventHandSlotAction(player);
 
 			if (mainHand) {
 				handItemStack = handIsSheathed ? ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSheathedHand().copy() : ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getHand().copy();
 				alternativeHandItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getAlternativeHand().copy();
+				actionIsNotPossible = actionIsNotPossible || player.getItemCooldownManager().isCoolingDown(handItemStack.getItem()) || player.getItemCooldownManager().isCoolingDown(alternativeHandItemStack.getItem());
 				staminaCost += RPGInventory.isStaminaAttributesLoaded ? serverConfig.handSlotOverhaul.staminaAttributesCompat.swapping_main_hand_items_stamina_cost.get() : 0.0F;
 			}
 			if (offHand) {
 				offhandItemStack = offHandIsSheathed ? ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSheathedOffhand().copy() : player.getInventory().offHand.get(0).copy();
 				alternativeOffhandItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getAlternativeOffhand().copy();
+				actionIsNotPossible = actionIsNotPossible || player.getItemCooldownManager().isCoolingDown(offhandItemStack.getItem()) || player.getItemCooldownManager().isCoolingDown(alternativeOffhandItemStack.getItem());
 				staminaCost += RPGInventory.isStaminaAttributesLoaded ? serverConfig.handSlotOverhaul.staminaAttributesCompat.swapping_off_hand_items_stamina_cost.get() : 0.0F;
+			}
+			if (actionIsNotPossible) {
+				player.sendMessageToClient(Text.translatable("hud.message.handSlotActionWasPrevented"), true);
+				return;
 			}
 			if (mainHand && offHand) {
 				staminaCost *= serverConfig.handSlotOverhaul.staminaAttributesCompat.swapping_both_hand_items_stamina_cost_multiplier.get();

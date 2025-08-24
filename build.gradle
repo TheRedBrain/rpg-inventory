@@ -117,6 +117,9 @@ dependencies {
 	// Better Combat Extension
 	modImplementation "maven.modrinth:bettercombat-extension:${project.better_combat_extension_version}"
 
+	// Spell Engine Extension
+	modImplementation "maven.modrinth:spell-engine-extension:${project.spell_engine_extension_version}"
+
 	// Cloth Config
 	modImplementation ("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}")
 
@@ -125,6 +128,9 @@ dependencies {
 
 	// Better Combat
 	modImplementation("maven.modrinth:better-combat:${project.better_combat_version}")
+
+	// Combat Roll
+	modImplementation "maven.modrinth:combat-roll:${project.combat_roll_version}-fabric"
 
 	// Spell Engine
 	modImplementation("maven.modrinth:spell-engine:${project.spell_engine_version}")

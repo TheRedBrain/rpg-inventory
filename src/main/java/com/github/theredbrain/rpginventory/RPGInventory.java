@@ -3,6 +3,7 @@ package com.github.theredbrain.rpginventory;
 import com.github.theredbrain.rpginventory.compat.BetterCombatExtensionCompat;
 import com.github.theredbrain.rpginventory.compat.InventorySizeAttributesCompat;
 import com.github.theredbrain.rpginventory.compat.SpellEngineCompat;
+import com.github.theredbrain.rpginventory.compat.SpellEngineExtensionCompat;
 import com.github.theredbrain.rpginventory.compat.StaminaAttributesCompat;
 import com.github.theredbrain.rpginventory.compat.TrinketsCompat;
 import com.github.theredbrain.rpginventory.component.type.AdvancementLockedComponent;
@@ -24,6 +25,7 @@ import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Unit;
 import org.slf4j.Logger;
@@ -53,15 +55,25 @@ public class RPGInventory implements ModInitializer {
 
 	public static final boolean isRPGCraftingLoaded = FabricLoader.getInstance().isModLoaded("rpgcrafting");
 	public static final boolean isBackpackAttributeLoaded = FabricLoader.getInstance().isModLoaded("backpackattribute");
-	public static final boolean isFoodOverhaulLoaded = FabricLoader.getInstance().isModLoaded("foodoverhaul");
 	public static final boolean isStaminaAttributesLoaded = FabricLoader.getInstance().isModLoaded("staminaattributes");
 	public static final boolean isInventorySizeAttributesLoaded = FabricLoader.getInstance().isModLoaded("inventorysizeattributes");
 	public static final boolean isSpellEngineLoaded = FabricLoader.getInstance().isModLoaded("spell_engine");
 	public static final boolean isPlayerAttributeScreenLoaded = FabricLoader.getInstance().isModLoaded("playerattributescreen");
 	public static final boolean isBetterCombatExtensionLoaded = FabricLoader.getInstance().isModLoaded("bettercombatextension");
+	public static final boolean isSpellEngineExtensionLoaded = FabricLoader.getInstance().isModLoaded("bettercombatextension");
 	public static final boolean isBetterCombatLoaded = FabricLoader.getInstance().isModLoaded("bettercombat");
 	public static final boolean isTrinketsLoaded = FabricLoader.getInstance().isModLoaded("trinkets");
-	public static final boolean isPufferfishsSkillsLoaded = FabricLoader.getInstance().isModLoaded("puffish_skills");
+
+	public static boolean doesCurrentPlayerStatusPreventHandSlotAction(ServerPlayerEntity serverPlayerEntity) {
+		boolean bl = false;
+		if (isSpellEngineLoaded) {
+			bl = SpellEngineCompat.doesCurrentPlayerStatusPreventHandSlotAction(serverPlayerEntity);
+		}
+		if (isSpellEngineExtensionLoaded) {
+			bl = bl || SpellEngineExtensionCompat.doesCurrentPlayerStatusPreventHandSlotAction(serverPlayerEntity);
+		}
+		return bl;
+	}
 
 	public static int getActiveInventorySize(PlayerEntity player) {
 		return isInventorySizeAttributesLoaded ? InventorySizeAttributesCompat.getActiveInventorySize(player) : 27;

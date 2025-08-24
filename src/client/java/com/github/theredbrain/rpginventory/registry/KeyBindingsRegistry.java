@@ -1,13 +1,16 @@
 package com.github.theredbrain.rpginventory.registry;
 
+import com.github.theredbrain.rpginventory.RPGInventoryClient;
 import com.github.theredbrain.rpginventory.network.packet.SheatheWeaponsPacket;
 import com.github.theredbrain.rpginventory.network.packet.SwapHandItemsPacket;
 import com.github.theredbrain.rpginventory.network.packet.ToggleTwoHandedStancePacket;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 
 public class KeyBindingsRegistry {
@@ -99,14 +102,32 @@ public class KeyBindingsRegistry {
 	}
 
 	public static void sheatheWeapons() {
+		if (RPGInventoryClient.doesCurrentPlayerStatusPreventHandSlotAction(MinecraftClient.getInstance())) {
+			if (MinecraftClient.getInstance().player != null) {
+				MinecraftClient.getInstance().player.sendMessage(Text.translatable("hud.message.handSlotActionWasPrevented"), true);
+				return;
+			}
+		}
 		ClientPlayNetworking.send(new SheatheWeaponsPacket());
 	}
 
 	public static void toggleTwoHandedStance() {
+		if (RPGInventoryClient.doesCurrentPlayerStatusPreventHandSlotAction(MinecraftClient.getInstance())) {
+			if (MinecraftClient.getInstance().player != null) {
+				MinecraftClient.getInstance().player.sendMessage(Text.translatable("hud.message.handSlotActionWasPrevented"), true);
+				return;
+			}
+		}
 		ClientPlayNetworking.send(new ToggleTwoHandedStancePacket());
 	}
 
 	public static void syncSlotSwapHand(boolean mainHand, boolean offHand) {
+		if (RPGInventoryClient.doesCurrentPlayerStatusPreventHandSlotAction(MinecraftClient.getInstance())) {
+			if (MinecraftClient.getInstance().player != null) {
+				MinecraftClient.getInstance().player.sendMessage(Text.translatable("hud.message.handSlotActionWasPrevented"), true);
+				return;
+			}
+		}
 		ClientPlayNetworking.send(new SwapHandItemsPacket(mainHand, offHand));
 	}
 }

@@ -1,6 +1,8 @@
 package com.github.theredbrain.rpginventory;
 
 import com.github.theredbrain.rpginventory.compat.BackpackAttributeClientCompat;
+import com.github.theredbrain.rpginventory.compat.BetterCombatClientCompat;
+import com.github.theredbrain.rpginventory.compat.CombatRollClientCompat;
 import com.github.theredbrain.rpginventory.compat.InventorySizeAttributesClientCompat;
 import com.github.theredbrain.rpginventory.compat.PlayerAttributeScreenClientCompat;
 import com.github.theredbrain.rpginventory.compat.RPGCraftingClientCompat;
@@ -30,6 +32,18 @@ public class RPGInventoryClient implements ClientModInitializer {
 
 	public RPGInventoryClient() {
 		CLIENT_CONFIG = ConfigApiJava.registerAndLoadConfig(ClientConfig::new, RegisterType.CLIENT);
+	}
+
+	public static boolean doesCurrentPlayerStatusPreventHandSlotAction(MinecraftClient minecraftClient) {
+		boolean bl = false;
+		if (RPGInventory.isBetterCombatLoaded) {
+			bl = BetterCombatClientCompat.doesCurrentPlayerStatusPreventHandSlotAction(minecraftClient);
+		}
+		if (RPGInventory.isBetterCombatLoaded) {
+			bl = bl || CombatRollClientCompat.doesCurrentPlayerStatusPreventHandSlotAction(minecraftClient);
+		}
+
+		return bl;
 	}
 
 	public static boolean showInactiveInventorySlots() {
