@@ -71,6 +71,7 @@
 	"item.modifiers.spell_7": "§7When in Spell Slot:",
 	"item.modifiers.spell_8": "§7When in Spell Slot:",
 	"item.modifiers.spells": "§7When in Spell Slot:",
+	"item.modifiers.relic": "§7When in Relic Slot:",
 
 
 	"item.rpginventory.default_empty_hand_weapon": "",
@@ -133,6 +134,7 @@
 	"slot.tooltip.spell_6": "Spell",
 	"slot.tooltip.spell_7": "Spell",
 	"slot.tooltip.spell_8": "Spell",
+	"slot.tooltip.relic": "Relic",
 
 	"rpginventory.client": "Client Side Settings",
 

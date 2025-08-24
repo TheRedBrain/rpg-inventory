@@ -290,6 +290,9 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> {
 		if (serverConfig.inventorySlots.is_shoulders_slot_enabled.get()) {
 			context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.shoulders_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.shoulders_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
 		}
+		if (serverConfig.inventorySlots.is_relic_slot_enabled.get()) {
+			context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.relic_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.relic_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+		}
 		if (activeSpellSlotAmount > 0) {
 			context.drawTexture(SLOT_TEXTURE, i + serverConfig.inventorySlots.spell_1_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.spell_1_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
 		}

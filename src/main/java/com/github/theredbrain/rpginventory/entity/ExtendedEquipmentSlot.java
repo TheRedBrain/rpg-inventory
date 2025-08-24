@@ -19,6 +19,7 @@ public class ExtendedEquipmentSlot {
     public static EquipmentSlot SPELL_6 = EquipmentSlot.valueOf("SPELL_6");
     public static EquipmentSlot SPELL_7 = EquipmentSlot.valueOf("SPELL_7");
     public static EquipmentSlot SPELL_8 = EquipmentSlot.valueOf("SPELL_8");
+    public static EquipmentSlot RELIC = EquipmentSlot.valueOf("RELIC");
 
     public static boolean rpginventory$isOfEquipmentTag(ItemStack itemStack, EquipmentSlot slot) {
         if (slot == EquipmentSlot.MAINHAND) {
@@ -61,6 +62,8 @@ public class ExtendedEquipmentSlot {
             return itemStack.isIn(Tags.SPELLS_7);
         } else if (slot == ExtendedEquipmentSlot.SPELL_8) {
             return itemStack.isIn(Tags.SPELLS_8);
+        } else if (slot == ExtendedEquipmentSlot.RELIC) {
+            return itemStack.isIn(Tags.RELICS);
         } else {
             return false;
         }

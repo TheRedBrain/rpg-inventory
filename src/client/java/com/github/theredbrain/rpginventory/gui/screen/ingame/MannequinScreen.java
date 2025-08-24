@@ -140,16 +140,20 @@ public class MannequinScreen extends HandledScreen<MannequinScreenHandler> {
 			context.drawTexture(SLOT_TEXTURE, i + 43 + 90, j + 16, 0, 0, 18, 18, 18, 18);
 		}
 		if (serverConfig.inventorySlots.is_ring_1_slot_enabled.get()) {
-			context.drawTexture(SLOT_TEXTURE, i + 61, j + 16, 0, 0, 18, 18, 18, 18);
-			context.drawTexture(SLOT_TEXTURE, i + 61 + 90, j + 16, 0, 0, 18, 18, 18, 18);
-		}
-		if (serverConfig.inventorySlots.is_ring_2_slot_enabled.get()) {
 			context.drawTexture(SLOT_TEXTURE, i + 61, j + 34, 0, 0, 18, 18, 18, 18);
 			context.drawTexture(SLOT_TEXTURE, i + 61 + 90, j + 34, 0, 0, 18, 18, 18, 18);
+		}
+		if (serverConfig.inventorySlots.is_ring_2_slot_enabled.get()) {
+			context.drawTexture(SLOT_TEXTURE, i + 43, j + 34, 0, 0, 18, 18, 18, 18);
+			context.drawTexture(SLOT_TEXTURE, i + 43 + 90, j + 34, 0, 0, 18, 18, 18, 18);
 		}
 		if (serverConfig.inventorySlots.is_shoulders_slot_enabled.get()) {
 			context.drawTexture(SLOT_TEXTURE, i + 25, j + 16, 0, 0, 18, 18, 18, 18);
 			context.drawTexture(SLOT_TEXTURE, i + 25 + 90, j + 16, 0, 0, 18, 18, 18, 18);
+		}
+		if (serverConfig.inventorySlots.is_relic_slot_enabled.get()) {
+			context.drawTexture(SLOT_TEXTURE, i + 61, j + 16, 0, 0, 18, 18, 18, 18);
+			context.drawTexture(SLOT_TEXTURE, i + 61 + 90, j + 16, 0, 0, 18, 18, 18, 18);
 		}
 
 		if (activeSpellSlotAmount > 0) {

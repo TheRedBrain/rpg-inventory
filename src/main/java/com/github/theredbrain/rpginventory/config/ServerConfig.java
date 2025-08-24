@@ -179,7 +179,14 @@ public class ServerConfig extends Config {
 		public ValidatedInt ring_2_slot_x_offset = new ValidatedInt(77);
 		@ConfigGroup.Pop
 //		@ConfigGroup.Pop
-		public ValidatedInt ring_2_slot_y_offset = new ValidatedInt(54);
+		public ValidatedInt ring_2_slot_y_offset = new ValidatedInt(18);
+
+		public ConfigGroup relic_slots = new ConfigGroup("relic_slots", true);
+		public ValidatedBoolean is_relic_slot_enabled = new ValidatedBoolean(true);
+		public ValidatedInt relic_slot_x_offset = new ValidatedInt(77);
+		@ConfigGroup.Pop
+//		@ConfigGroup.Pop
+		public ValidatedInt relic_slot_y_offset = new ValidatedInt(54);
 
 		public ConfigGroup shoulders_slots = new ConfigGroup("shoulders_slots", true);
 		public ValidatedBoolean is_shoulders_slot_enabled = new ValidatedBoolean(true);

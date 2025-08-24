@@ -1,9 +1,7 @@
 package com.github.theredbrain.rpginventory.mixin.entity;
 
 import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlotType;
-import com.mojang.serialization.Codec;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.util.StringIdentifiable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -53,6 +51,7 @@ public class EquipmentSlotMixin {
 		values.add(init("SPELL_6", last.ordinal() + 12, ExtendedEquipmentSlotType.RPG_INVENTORY_SLOT_TYPE, 11, 1, -1, "spell_6"));
 		values.add(init("SPELL_7", last.ordinal() + 13, ExtendedEquipmentSlotType.RPG_INVENTORY_SLOT_TYPE, 12, 1, -1, "spell_7"));
 		values.add(init("SPELL_8", last.ordinal() + 14, ExtendedEquipmentSlotType.RPG_INVENTORY_SLOT_TYPE, 13, 1, -1, "spell_8"));
+		values.add(init("RELIC", last.ordinal() + 15, ExtendedEquipmentSlotType.RPG_INVENTORY_SLOT_TYPE, 14, 1, -1, "relic"));
 
 		field_6176 = values.toArray(new EquipmentSlot[0]);
 

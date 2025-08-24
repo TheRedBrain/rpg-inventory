@@ -85,7 +85,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 		this.rpginventory$sheathedHandSlots = DefaultedList.ofSize(2, ItemStack.EMPTY);
 		this.rpginventory$emptyHandSlots = DefaultedList.ofSize(2, ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON.getDefaultStack());
 		this.rpginventory$alternativeHandSlots = DefaultedList.ofSize(2, ItemStack.EMPTY);
-		this.rpginventory$additionalSlots = DefaultedList.ofSize(14, ItemStack.EMPTY);
+		this.rpginventory$additionalSlots = DefaultedList.ofSize(15, ItemStack.EMPTY);
 		this.combinedInventory = ImmutableList.of(this.main, this.armor, this.offHand, this.rpginventory$handSlot, this.rpginventory$sheathedHandSlots, this.rpginventory$emptyHandSlots, this.rpginventory$alternativeHandSlots, this.rpginventory$additionalSlots);
 	}
 
@@ -419,7 +419,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 
 	public List<ItemStack> rpginventory$getAdditionalNonArmorEquipmentItems() {
 		List<ItemStack> list = new ArrayList<>(List.of(this.rpginventory$getAdditionalEquipmentStack(0), this.rpginventory$getAdditionalEquipmentStack(2), this.rpginventory$getAdditionalEquipmentStack(3), this.rpginventory$getAdditionalEquipmentStack(4)));
-		for (int i = 6; i < 14; i++) {
+		for (int i = 6; i < 15; i++) {
 			list.add(this.rpginventory$getAdditionalEquipmentStack(i));
 		}
 		return list;
@@ -427,7 +427,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 
 	public List<ItemStack> rpginventory$getSpellProvidingEquipmentItems() {
 		List<ItemStack> list = new ArrayList<>();
-		for (int i = 0; i < 14; i++) {
+		for (int i = 0; i < 15; i++) {
 			list.add(this.rpginventory$getAdditionalEquipmentStack(i));
 		}
 		return list;

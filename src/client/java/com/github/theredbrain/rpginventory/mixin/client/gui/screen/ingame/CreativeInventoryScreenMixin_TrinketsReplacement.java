@@ -42,7 +42,8 @@ public abstract class CreativeInventoryScreenMixin_TrinketsReplacement extends A
 
 	@Redirect(at = @At(value = "INVOKE", target = "net/minecraft/util/collection/DefaultedList.size()I"), method = "setSelectedTab")
 	private int size(DefaultedList<ItemStack> list) {
-		return 65;
+		// account for custom equipment slots
+		return 66;
 	}
 
 	@Inject(at = @At("HEAD"), method = "setSelectedTab")

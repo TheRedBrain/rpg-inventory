@@ -71,6 +71,8 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 	private static final Identifier EMPTY_SPELL_7_SLOT = RPGInventory.identifier("item/empty_slot_spell_7");
 	@Unique
 	private static final Identifier EMPTY_SPELL_8_SLOT = RPGInventory.identifier("item/empty_slot_spell_8");
+	@Unique
+	private static final Identifier EMPTY_RELIC_SLOT = RPGInventory.identifier("item/empty_slot_relic");
 
 	@Unique
 	private boolean isAttributeScreenVisible = false;
@@ -156,7 +158,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 				Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(serverConfig.statusEffects.wilderness_status_effect_identifier.get());
 				boolean hasWildernessEffect = wilderness_status_effect.isPresent() && owner.hasStatusEffect(wilderness_status_effect.get());
 
-				return (EquipmentSlot.MAINHAND == owner.getPreferredEquipmentSlot(stack) || stack.isIn(Tags.HAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isUsableByPlayer(stack, owner) && (hasCivilisationEffect || owner.isCreative() || (bl && !hasWildernessEffect)) && !((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed();
+				return (stack.isIn(Tags.HAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isUsableByPlayer(stack, owner) && (hasCivilisationEffect || owner.isCreative() || (bl && !hasWildernessEffect)) && !((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed();
 			}
 
 		});
@@ -183,7 +185,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 				Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(serverConfig.statusEffects.wilderness_status_effect_identifier.get());
 				boolean hasWildernessEffect = wilderness_status_effect.isPresent() && owner.hasStatusEffect(wilderness_status_effect.get());
 
-				return (EquipmentSlot.MAINHAND == owner.getPreferredEquipmentSlot(stack) || stack.isIn(Tags.HAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isUsableByPlayer(stack, owner) && (hasCivilisationEffect || owner.isCreative() || (bl && !hasWildernessEffect)) && ((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed();
+				return (stack.isIn(Tags.HAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isUsableByPlayer(stack, owner) && (hasCivilisationEffect || owner.isCreative() || (bl && !hasWildernessEffect)) && ((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed();
 			}
 
 		});
@@ -405,6 +407,16 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 			@Override
 			public boolean isEnabled() {
 				return super.isEnabled() && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 8;
+			}
+
+		});
+
+		// relic slot 65
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.RELIC, 62, serverConfig.inventorySlots.relic_slot_x_offset.get(), serverConfig.inventorySlots.relic_slot_y_offset.get(), EMPTY_RELIC_SLOT, List.of(Text.translatable("slot.tooltip.relic"))) {
+
+			@Override
+			public boolean isEnabled() {
+				return super.isEnabled() && serverConfig.inventorySlots.is_relic_slot_enabled.get();
 			}
 
 		});
@@ -677,7 +689,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 		if (rpginventory$slot.hasStack()) {
 			ItemStack rpginventory$stack = rpginventory$slot.getStack();
 			EquipmentSlot rpginventory$equipmentSlot = player.getPreferredEquipmentSlot(rpginventory$stack);
-			if (slot >= 44 && slot < 65) {
+			if (slot >= 44 && slot < 66) {
 				if (!this.insertItem(rpginventory$stack, 9, 45, false)) {   // TODO adventure hotbar items
 					cir.setReturnValue(ItemStack.EMPTY);
 					cir.cancel();
@@ -845,6 +857,14 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 				// spell 8 slot 64
 				if (!rpginventory$stack.isEmpty() && (rpginventory$equipmentSlot == ExtendedEquipmentSlot.SPELL_8 || rpginventory$stack.isIn(Tags.SPELLS_8)) && !this.slots.get(64).hasStack()) {
 					if (!this.insertItem(rpginventory$stack, 64, 65, false)) {
+						cir.setReturnValue(ItemStack.EMPTY);
+						cir.cancel();
+					}
+				}
+
+				// relic slot 65
+				if (!rpginventory$stack.isEmpty() && (rpginventory$equipmentSlot == ExtendedEquipmentSlot.RELIC || rpginventory$stack.isIn(Tags.RELICS)) && !this.slots.get(65).hasStack()) {
+					if (!this.insertItem(rpginventory$stack, 65, 66, false)) {
 						cir.setReturnValue(ItemStack.EMPTY);
 						cir.cancel();
 					}

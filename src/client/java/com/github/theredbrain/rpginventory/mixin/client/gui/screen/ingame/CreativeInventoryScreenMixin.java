@@ -92,16 +92,16 @@ public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScre
 			((SlotCustomization) this.handler.slots.get(50)).slotcustomizationapi$setY(33);
 
 			// reposition additional equipment slots
-			((SlotCustomization) this.handler.slots.get(51)).slotcustomizationapi$setX(153);
+			((SlotCustomization) this.handler.slots.get(51)).slotcustomizationapi$setX(117);
 			((SlotCustomization) this.handler.slots.get(51)).slotcustomizationapi$setY(6);
 			((SlotCustomization) this.handler.slots.get(52)).slotcustomizationapi$setX(9);
 			((SlotCustomization) this.handler.slots.get(52)).slotcustomizationapi$setY(33);
 			((SlotCustomization) this.handler.slots.get(53)).slotcustomizationapi$setX(99);
 			((SlotCustomization) this.handler.slots.get(53)).slotcustomizationapi$setY(6);
-			((SlotCustomization) this.handler.slots.get(54)).slotcustomizationapi$setX(117);
+			((SlotCustomization) this.handler.slots.get(54)).slotcustomizationapi$setX(153);
 			((SlotCustomization) this.handler.slots.get(54)).slotcustomizationapi$setY(6);
-			((SlotCustomization) this.handler.slots.get(55)).slotcustomizationapi$setX(135);
-			((SlotCustomization) this.handler.slots.get(55)).slotcustomizationapi$setY(6);
+			((SlotCustomization) this.handler.slots.get(55)).slotcustomizationapi$setX(173);
+			((SlotCustomization) this.handler.slots.get(55)).slotcustomizationapi$setY(19);
 			((SlotCustomization) this.handler.slots.get(56)).slotcustomizationapi$setX(27);
 			((SlotCustomization) this.handler.slots.get(56)).slotcustomizationapi$setY(6);
 			((SlotCustomization) this.handler.slots.get(57)).slotcustomizationapi$setX(193);
@@ -120,6 +120,8 @@ public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScre
 			((SlotCustomization) this.handler.slots.get(63)).slotcustomizationapi$setY(44);
 			((SlotCustomization) this.handler.slots.get(64)).slotcustomizationapi$setX(211);
 			((SlotCustomization) this.handler.slots.get(64)).slotcustomizationapi$setY(62);
+			((SlotCustomization) this.handler.slots.get(65)).slotcustomizationapi$setX(135);
+			((SlotCustomization) this.handler.slots.get(65)).slotcustomizationapi$setY(6);
 		}
 	}
 

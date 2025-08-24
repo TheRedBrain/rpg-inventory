@@ -97,6 +97,8 @@ public class AttributeModifierSlotMixin {
 			return ExtendedAttributeModifierSlot.SPELL_7;
 		} else if (slot == ExtendedEquipmentSlot.SPELL_8) {
 			return ExtendedAttributeModifierSlot.SPELL_8;
+		} else if (slot == ExtendedEquipmentSlot.RELIC) {
+			return ExtendedAttributeModifierSlot.RELIC;
 		} else {
 			return original.call(slot);
 		}
@@ -125,6 +127,7 @@ public class AttributeModifierSlotMixin {
 		values.add(init("SPELL_8", last.ordinal() + 14, last.ordinal() + 14, "spell_8", ExtendedEquipmentSlot.SPELL_8));
 		values.add(init("RINGS", last.ordinal() + 15, last.ordinal() + 15, "rings", ExtendedAttributeModifierSlot::isRingsSlot));
 		values.add(init("SPELLS", last.ordinal() + 16, last.ordinal() + 16, "spells", ExtendedAttributeModifierSlot::isSpellsSlot));
+		values.add(init("RELIC", last.ordinal() + 17, last.ordinal() + 17, "relic", ExtendedEquipmentSlot.RELIC));
 
 		field_49231 = values.toArray(new AttributeModifierSlot[0]);
 
