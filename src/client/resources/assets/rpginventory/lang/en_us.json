@@ -324,5 +324,9 @@
 	"rpginventory.server.inventorySlots.slot_group_position.survival_x": "Survival Offset X",
 	"rpginventory.server.inventorySlots.slot_group_position.survival_y": "Survival Offset Y",
 	"rpginventory.server.inventorySlots.slot_group_position.creative_x": "Creative Offset X",
-	"rpginventory.server.inventorySlots.slot_group_position.creative_y": "Creative Offset Y"
+	"rpginventory.server.inventorySlots.slot_group_position.creative_y": "Creative Offset Y",
+
+	"gamerule.canChangeEquipment": "Can change equipment",
+	"gamerule.destroyDroppedItemsOnDeath": "Destroy dropped items on death",
+	"gamerule.naturalSpellSlotAmount": "Natural amount of active spell slots"
 }
