@@ -10,13 +10,15 @@ import com.github.theredbrain.rpginventory.entity.player.PlayerEntityHelper;
 import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import com.github.theredbrain.rpginventory.util.ItemUtils;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Iterables;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.EntityAttribute;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -29,7 +31,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -51,10 +52,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 	PlayerInventory inventory;
 
 	@Shadow
-	@Final
-	public PlayerScreenHandler playerScreenHandler;
-
-	@Shadow
 	public abstract PlayerInventory getInventory();
 
 	@Shadow
@@ -62,9 +59,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
 	@Shadow
 	public abstract boolean isCreative();
-
-	@Shadow
-	public abstract GameProfile getGameProfile();
 
 	@Unique
 	private boolean isAdventureHotbarCleanedUp = false;
@@ -97,6 +91,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 	@Inject(method = "tick", at = @At("TAIL"))
 	public void rpginventory$tick(CallbackInfo ci) {
 		PlayerEntity playerEntity = (PlayerEntity) (Object) this;
+		this.getAttributes().addTemporaryModifiers(getNaturalAttributeModifiers(this.getWorld()));
 		PlayerEntityHelper.rpginventory$updateEquipmentStatusEffects(playerEntity);
 		if (!this.getWorld().isClient) {
 			PlayerEntityHelper.rpginventory$ejectItemsFromInactiveSpellSlots(playerEntity);
@@ -230,7 +225,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
 	@Override
 	public float rpginventory$getActiveSpellSlotAmount() {
-		return (float) Math.min(8, Math.max(0, RPGInventory.SERVER_CONFIG.inventorySlots.default_spell_slot_amount.get() + this.getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT)));
+		return (float) Math.min(8, Math.max(0, this.getAttributeValue(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT)));
 	}
 
 	@Override
@@ -294,4 +289,12 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 	public void rpginventory$setIsAdventureHotbarCleanedUp(boolean isAdventureHotbarCleanedUp) {
 		this.isAdventureHotbarCleanedUp = isAdventureHotbarCleanedUp;
 	}
+
+	@Unique
+	private HashMultimap<RegistryEntry<EntityAttribute>, EntityAttributeModifier> getNaturalAttributeModifiers(World world) {
+		HashMultimap<RegistryEntry<EntityAttribute>, EntityAttributeModifier> hashMultimap = HashMultimap.create();
+		hashMultimap.put(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT, new EntityAttributeModifier(RPGInventory.identifier("natural_spell_slot_amount_modifier"), world.getGameRules().get(GameRulesRegistry.NATURAL_SPELL_SLOT_AMOUNT).get(), EntityAttributeModifier.Operation.ADD_VALUE));
+		return hashMultimap;
+	}
+
 }
