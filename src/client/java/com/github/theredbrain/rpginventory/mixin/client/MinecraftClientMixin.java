@@ -14,12 +14,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(MinecraftClient.class)
 public class MinecraftClientMixin {
 
-	@Shadow @Nullable public ClientPlayerEntity player;
+	@Shadow
+	@Nullable
+	public ClientPlayerEntity player;
 
 	@Inject(method = "doItemPick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;getInventory()Lnet/minecraft/entity/player/PlayerInventory;"), cancellable = true)
-	private void doItemPick(CallbackInfo ci) {
+	private void rpginventory$doItemPick(CallbackInfo ci) {
 		if (this.player != null) {
-			if (!((DuckPlayerEntityMixin)this.player).rpginventory$isHandStackSheathed() || !((DuckPlayerEntityMixin)this.player).rpginventory$isOffhandStackSheathed()) {
+			if (!((DuckPlayerEntityMixin) this.player).rpginventory$isHandStackSheathed() || !((DuckPlayerEntityMixin) this.player).rpginventory$isOffhandStackSheathed()) {
 				this.player.sendMessage(Text.translatable("hud.message.pickBlockDisabledByHandItems"), true);
 				ci.cancel();
 			}

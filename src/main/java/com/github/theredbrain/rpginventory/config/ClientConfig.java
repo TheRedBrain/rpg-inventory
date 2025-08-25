@@ -123,6 +123,7 @@ public class ClientConfig extends Config {
 		public ValidatedBoolean show_item_tooltip_equipment_slots = new ValidatedBoolean(true);
 		public ValidatedInt item_tooltip_equipment_slots_index = new ValidatedInt(-1);
 	}
+
 	//		@Comment("""
 //				These values describe how the matrixStack is manipulated.
 //

@@ -1,8 +1,8 @@
 package com.github.theredbrain.rpginventory.mixin.client.render.entity;
 
+import com.github.theredbrain.rpginventory.registry.Tags;
 import com.github.theredbrain.rpginventory.render.renderer.SheathedHandItemFeatureRenderer;
 import com.github.theredbrain.rpginventory.render.renderer.SheathedOffHandItemFeatureRenderer;
-import com.github.theredbrain.rpginventory.registry.Tags;
 import com.github.theredbrain.rpginventory.util.ItemUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

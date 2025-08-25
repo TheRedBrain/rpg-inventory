@@ -28,11 +28,16 @@ public abstract class MobEntityMixin extends LivingEntity {
 	@Final
 	private DefaultedList<ItemStack> handItems;
 
-	@Shadow protected float bodyArmorDropChance;
+	@Shadow
+	protected float bodyArmorDropChance;
 
-	@Shadow @Final protected float[] armorDropChances;
+	@Shadow
+	@Final
+	protected float[] armorDropChances;
 
-	@Shadow @Final protected float[] handDropChances;
+	@Shadow
+	@Final
+	protected float[] handDropChances;
 
 	protected MobEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
 		super(entityType, world);

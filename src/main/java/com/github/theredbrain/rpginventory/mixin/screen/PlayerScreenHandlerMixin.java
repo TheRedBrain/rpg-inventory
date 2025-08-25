@@ -86,7 +86,6 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 	 */
 	@Inject(method = "<init>", at = @At("TAIL"))
 	public void PlayerScreenHandler(PlayerInventory inventory, boolean onServer, PlayerEntity owner, CallbackInfo ci) {
-//		this.inventory = inventory;
 
 		ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
 
@@ -137,7 +136,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 		((SlotCustomization) this.slots.get(45)).slotcustomizationapi$setY(serverConfig.inventorySlots.offhand_slot_y_offset.get());
 
 		// main hand slot 46
-		this.addSlot(new CustomArmorSlot(inventory, owner, EquipmentSlot.MAINHAND, 41,  serverConfig.inventorySlots.hand_slot_x_offset.get(), serverConfig.inventorySlots.hand_slot_y_offset.get(), EMPTY_HAND_SLOT, List.of(Text.translatable("slot.tooltip.hand")), false) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, EquipmentSlot.MAINHAND, 41, serverConfig.inventorySlots.hand_slot_x_offset.get(), serverConfig.inventorySlots.hand_slot_y_offset.get(), EMPTY_HAND_SLOT, List.of(Text.translatable("slot.tooltip.hand")), false) {
 
 			@Override
 			public boolean isEnabled() {
@@ -164,7 +163,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 		});
 
 		// sheathed main hand slot 47
-		this.addSlot(new CustomArmorSlot(inventory, owner, EquipmentSlot.MAINHAND, 42,  serverConfig.inventorySlots.hand_slot_x_offset.get(), serverConfig.inventorySlots.hand_slot_y_offset.get(), EMPTY_HAND_SLOT, List.of(Text.translatable("slot.tooltip.hand")), false) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, EquipmentSlot.MAINHAND, 42, serverConfig.inventorySlots.hand_slot_x_offset.get(), serverConfig.inventorySlots.hand_slot_y_offset.get(), EMPTY_HAND_SLOT, List.of(Text.translatable("slot.tooltip.hand")), false) {
 
 			@Override
 			public boolean isEnabled() {
@@ -466,7 +465,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 
 	@Inject(at = @At("HEAD"), method = "onClosed")
 	private void rpginventory$onClosed(PlayerEntity player, CallbackInfo info) {
-		// TODO trigger adventure hotbar items check, player_bound check
+		// TODO trigger adventure hotbar items check
 	}
 
 	/**

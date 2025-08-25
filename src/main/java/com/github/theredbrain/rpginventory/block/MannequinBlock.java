@@ -113,7 +113,7 @@ public class MannequinBlock extends BlockWithEntity {
 
 	@Override
 	protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-		switch ((Direction)state.get(FACING)) {
+		switch ((Direction) state.get(FACING)) {
 			case NORTH:
 				return NORTH_SHAPE;
 			case SOUTH:
@@ -133,7 +133,7 @@ public class MannequinBlock extends BlockWithEntity {
 	}
 
 	protected BlockState rotate(BlockState state, BlockRotation rotation) {
-		return (BlockState)state.with(FACING, rotation.rotate((Direction)state.get(FACING)));
+		return (BlockState) state.with(FACING, rotation.rotate((Direction) state.get(FACING)));
 	}
 
 	@Override

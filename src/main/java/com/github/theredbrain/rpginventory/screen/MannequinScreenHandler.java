@@ -667,15 +667,15 @@ public class MannequinScreenHandler extends ScreenHandler {
 				if (RPGInventory.isHandSlotOverhaulActive()) {
 
 					if (!itemStack1.isEmpty() && (!serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || itemStack1.isIn(Tags.HAND_ITEMS)) && !this.slots.get(65).hasStack()) {
-							if (!this.insertItem(itemStack1, 65, 66, false)) {
-								return ItemStack.EMPTY;
-							}
+						if (!this.insertItem(itemStack1, 65, 66, false)) {
+							return ItemStack.EMPTY;
+						}
 					}
 
 					if (!itemStack1.isEmpty() && (equipmentSlot == EquipmentSlot.OFFHAND || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || itemStack1.isIn(Tags.OFFHAND_ITEMS)) && !this.slots.get(64).hasStack()) {
-							if (!this.insertItem(itemStack1, 64, 65, false)) {
-								return ItemStack.EMPTY;
-							}
+						if (!this.insertItem(itemStack1, 64, 65, false)) {
+							return ItemStack.EMPTY;
+						}
 					}
 
 					if (serverConfig.handSlotOverhaul.enable_alternative_hand_slots.get()) {

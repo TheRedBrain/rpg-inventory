@@ -27,6 +27,9 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+/**
+ * @author Emi
+ */
 @Environment(value = EnvType.CLIENT)
 @Mixin(CreativeInventoryScreen.class)
 public abstract class CreativeInventoryScreenMixin_TrinketsReplacement extends AbstractInventoryScreen<CreativeInventoryScreen.CreativeScreenHandler> implements TrinketScreen {
@@ -40,6 +43,11 @@ public abstract class CreativeInventoryScreenMixin_TrinketsReplacement extends A
 		super(null, null, null);
 	}
 
+	/**
+	 * Modified and expanded code by @Emi
+	 *
+	 * @author TheRedBrain
+	 */
 	@Redirect(at = @At(value = "INVOKE", target = "net/minecraft/util/collection/DefaultedList.size()I"), method = "setSelectedTab")
 	private int size(DefaultedList<ItemStack> list) {
 		// account for custom equipment slots
@@ -47,7 +55,7 @@ public abstract class CreativeInventoryScreenMixin_TrinketsReplacement extends A
 	}
 
 	@Inject(at = @At("HEAD"), method = "setSelectedTab")
-	private void setSelectedTab(ItemGroup g, CallbackInfo info) {
+	private void rpginventory$setSelectedTab(ItemGroup g, CallbackInfo info) {
 		if (g.getType() != ItemGroup.Type.INVENTORY) {
 			TrinketScreenManager.removeSelections();
 		}

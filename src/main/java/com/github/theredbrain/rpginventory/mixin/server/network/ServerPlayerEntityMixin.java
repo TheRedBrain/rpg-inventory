@@ -34,7 +34,8 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Du
 	@Shadow
 	public abstract boolean isCreative();
 
-	@Shadow public abstract void enterCombat();
+	@Shadow
+	public abstract void enterCombat();
 
 	@Unique
 	ItemStack handSlotStack = ItemStack.EMPTY;
@@ -102,7 +103,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Du
 			if (!this.rpginventory$isHandStackSheathed()) {
 				PlayerInventory playerInventory = this.getInventory();
 				ItemStack itemStack = playerInventory.dropSelectedItem(entireStack);
-				this.currentScreenHandler.setPreviousTrackedSlot(46, ((DuckPlayerInventoryMixin)playerInventory).rpginventory$getHand());
+				this.currentScreenHandler.setPreviousTrackedSlot(46, ((DuckPlayerInventoryMixin) playerInventory).rpginventory$getHand());
 				return this.dropItem(itemStack, false, true) != null;
 			}
 		}
