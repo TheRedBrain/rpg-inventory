@@ -19,8 +19,8 @@ public class MouseMixin {
 	@Shadow @Final private MinecraftClient client;
 
 	@Inject(method = "onMouseScroll", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerInventory;scrollInHotbar(D)V"))
-	private void onMouseScroll(long window, double horizontal, double vertical, CallbackInfo ci) {
-		if (RPGInventoryClient.CLIENT_CONFIG.hotBarOverhaul.hotbar_scrolling_tries_to_sheathe_hand_items.get() && this.client.player != null && (!((DuckPlayerEntityMixin) this.client.player).rpginventory$isHandStackSheathed() || !((DuckPlayerEntityMixin) this.client.player).rpginventory$isOffhandStackSheathed())) {
+	private void rpginventory$onMouseScroll(long window, double horizontal, double vertical, CallbackInfo ci) {
+		if (RPGInventoryClient.CLIENT_CONFIG.hotBarOverhaul.hotbar_scrolling_tries_to_sheathe_hand_items.get() && this.client.player != null && (!((DuckPlayerEntityMixin) this.client.player).rpginventory$isHandStackSheathed() || !((DuckPlayerEntityMixin) this.client.player).rpginventory$isOffhandStackSheathed()) && !RPGInventoryClient.doesCurrentPlayerStatusPreventHandSlotAction(MinecraftClient.getInstance())) {
 			ClientPlayNetworking.send(new SheatheWeaponsPacket());
 		}
 	}
