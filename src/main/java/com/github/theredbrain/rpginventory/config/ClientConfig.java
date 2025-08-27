@@ -175,6 +175,18 @@ public class ClientConfig extends Config {
 		put("arsenal:unique_longbow_1", new ItemConfiguration(0.1F, 0.3F, 0.24F, 0.0F, 0.0F, 0.06F, 45.0F, -100.0F, -100.0F));
 		put("arsenal:unique_longbow_2", new ItemConfiguration(0.1F, 0.3F, 0.24F, 0.0F, 0.0F, 0.06F, 45.0F, -100.0F, -100.0F));
 		put("arsenal:unique_longbow_sw", new ItemConfiguration(0.1F, 0.3F, 0.24F, 0.0F, 0.0F, 0.06F, 45.0F, -100.0F, -100.0F));
+		put("minecrawl:spell_casting_crossbow_1", new ItemConfiguration(-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F));
+		put("minecrawl:spell_casting_crossbow_2", new ItemConfiguration(-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F));
+		put("minecrawl:spell_casting_crossbow_4", new ItemConfiguration(-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F));
+		put("minecrawl:spell_casting_crossbow_3", new ItemConfiguration(-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F));
+		put("minecrawl:spell_casting_crossbow_5", new ItemConfiguration(-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F));
+		put("minecrawl:spell_casting_crossbow_6", new ItemConfiguration(-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F));
+		put("minecrawl:spell_casting_crossbow_7", new ItemConfiguration(-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F));
+		put("minecrawl:spell_casting_crossbow_8", new ItemConfiguration(-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F));
+		put("minecrawl:spell_casting_crossbow_9", new ItemConfiguration(-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F));
+		put("minecrawl:spell_casting_crossbow_10", new ItemConfiguration(-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F));
+		put("minecrawl:spell_casting_crossbow_11", new ItemConfiguration(-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F));
+		put("minecrawl:spell_casting_crossbow_12", new ItemConfiguration(-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F));
 	}}, new ValidatedString(), new ValidatedAny<>(new ItemConfiguration()));
 	@ConfigGroup.Pop
 	public ValidatedMap<String, ItemConfiguration> sheathed_offhand_item_positions = new ValidatedMap<>(new HashMap<>() {{
