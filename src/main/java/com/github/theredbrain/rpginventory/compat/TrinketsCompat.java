@@ -1,7 +1,6 @@
 package com.github.theredbrain.rpginventory.compat;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
-import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import dev.emi.trinkets.api.SlotReference;
 import dev.emi.trinkets.api.TrinketComponent;
@@ -56,7 +55,7 @@ public class TrinketsCompat {
 			if (hasCivilisationEffect
 					|| entity instanceof PlayerEntity playerEntity && playerEntity.isCreative()
 					|| entity.getServer() == null
-					|| (entity.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT) && !hasWildernessEffect)) {
+					|| (RPGInventory.SERVER_CONFIG.allow_equipment_changes.get() && !hasWildernessEffect)) {
 				return TriState.TRUE;
 			}
 			return TriState.FALSE;

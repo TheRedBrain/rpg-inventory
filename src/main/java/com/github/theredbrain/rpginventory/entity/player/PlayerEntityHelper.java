@@ -2,7 +2,6 @@ package com.github.theredbrain.rpginventory.entity.player;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.entity.LivingEntityHelper;
-import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.effect.StatusEffect;
@@ -150,8 +149,7 @@ public class PlayerEntityHelper {
 		Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.wilderness_status_effect_identifier.get());
 		boolean hasWildernessEffect = wilderness_status_effect.isPresent() && playerEntity.hasStatusEffect(wilderness_status_effect.get());
 
-		boolean canChangeEquipment = playerEntity.getWorld() != null && playerEntity.getWorld().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT);
-		if (!playerEntity.isCreative() && !hasAdventureBuildingEffect && !((canChangeEquipment && !hasWildernessEffect) || hasCivilisationEffect)) {
+		if (!playerEntity.isCreative() && !hasAdventureBuildingEffect && !((RPGInventory.SERVER_CONFIG.allow_equipment_changes.get() && !hasWildernessEffect) || hasCivilisationEffect)) {
 			if (!((DuckPlayerEntityMixin) playerEntity).rpginventory$isAdventureHotbarCleanedUp()) {
 				for (int i = 0; i < 9; i++) {
 					PlayerInventory playerInventory = playerEntity.getInventory();

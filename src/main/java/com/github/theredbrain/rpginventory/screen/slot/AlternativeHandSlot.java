@@ -2,7 +2,6 @@ package com.github.theredbrain.rpginventory.screen.slot;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
-import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
 import com.github.theredbrain.rpginventory.screen.DuckSlotMixin;
 import com.github.theredbrain.rpginventory.util.ItemUtils;
 import com.mojang.datafixers.util.Pair;
@@ -59,11 +58,6 @@ public class AlternativeHandSlot extends Slot {
 
 	@Override
 	public boolean canInsert(ItemStack stack) {
-		boolean bl = true;
-		if (this.owner.getServer() != null) {
-			bl = this.owner.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT);
-		}
-
 		Optional<RegistryEntry.Reference<StatusEffect>> civilisation_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.civilisation_status_effect_identifier.get());
 		boolean hasCivilisationEffect = civilisation_status_effect.isPresent() && this.owner.hasStatusEffect(civilisation_status_effect.get());
 
@@ -73,16 +67,11 @@ public class AlternativeHandSlot extends Slot {
 		boolean isOwned = ItemUtils.isUsableByPlayer(stack, this.owner);
 		boolean isCreative = this.owner.isCreative();
 
-		return (equipmentSlot == this.owner.getPreferredEquipmentSlot(stack) || ExtendedEquipmentSlot.rpginventory$isOfEquipmentTag(stack, equipmentSlot)) && isOwned && (hasCivilisationEffect || isCreative || (bl && !hasWildernessEffect));
+		return (equipmentSlot == this.owner.getPreferredEquipmentSlot(stack) || ExtendedEquipmentSlot.rpginventory$isOfEquipmentTag(stack, equipmentSlot)) && isOwned && (hasCivilisationEffect || isCreative || (RPGInventory.SERVER_CONFIG.allow_equipment_changes.get() && !hasWildernessEffect));
 	}
 
 	@Override
 	public boolean canTakeItems(PlayerEntity playerEntity) {
-		boolean bl = true;
-		if (owner.getServer() != null) {
-			bl = owner.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT);
-		}
-
 		Optional<RegistryEntry.Reference<StatusEffect>> civilisation_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.civilisation_status_effect_identifier.get());
 		boolean hasCivilisationEffect = civilisation_status_effect.isPresent() && owner.hasStatusEffect(civilisation_status_effect.get());
 
@@ -98,7 +87,7 @@ public class AlternativeHandSlot extends Slot {
 						&& EnchantmentHelper.hasAnyEnchantmentsWith(itemStack, EnchantmentEffectComponentTypes.PREVENT_ARMOR_CHANGE)
 						? false
 						: super.canTakeItems(playerEntity)
-		) && (!this.getStack().contains(RPGInventory.LOAD_OUT_ITEM) || this.allowsLoadoutItemRemoval) && (hasCivilisationEffect || isCreative || (bl && !hasWildernessEffect));
+		) && (!this.getStack().contains(RPGInventory.LOAD_OUT_ITEM) || this.allowsLoadoutItemRemoval) && (hasCivilisationEffect || isCreative || (RPGInventory.SERVER_CONFIG.allow_equipment_changes.get() && !hasWildernessEffect));
 	}
 
 	@Override

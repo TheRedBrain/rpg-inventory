@@ -182,7 +182,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
 	@Inject(method = "dropInventory", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerInventory;dropAll()V", ordinal = 0))
 	private void rpginventory$pre_inventoryDropAll(CallbackInfo ci) {
-		if (this.getWorld().getGameRules().getBoolean(GameRulesRegistry.DESTROY_DROPPED_ITEMS_ON_DEATH)) {
+		if (RPGInventory.SERVER_CONFIG.destroy_dropped_items_on_death.get()) {
 			this.inventory.clear();
 		}
 
@@ -293,7 +293,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 	@Unique
 	private HashMultimap<RegistryEntry<EntityAttribute>, EntityAttributeModifier> getNaturalAttributeModifiers(World world) {
 		HashMultimap<RegistryEntry<EntityAttribute>, EntityAttributeModifier> hashMultimap = HashMultimap.create();
-		hashMultimap.put(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT, new EntityAttributeModifier(RPGInventory.identifier("natural_spell_slot_amount_modifier"), world.getGameRules().get(GameRulesRegistry.NATURAL_SPELL_SLOT_AMOUNT).get(), EntityAttributeModifier.Operation.ADD_VALUE));
+		hashMultimap.put(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT, new EntityAttributeModifier(RPGInventory.identifier("natural_spell_slot_amount_modifier"), RPGInventory.SERVER_CONFIG.inventorySlots.default_spell_slot_amount.get(), EntityAttributeModifier.Operation.ADD_VALUE));
 		return hashMultimap;
 	}
 

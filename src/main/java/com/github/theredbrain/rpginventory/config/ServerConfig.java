@@ -67,6 +67,10 @@ public class ServerConfig extends Config {
 
 	public ValidatedBoolean should_keep_loadout_items_on_death = new ValidatedBoolean(true);
 
+	public ValidatedBoolean allow_equipment_changes = new ValidatedBoolean(true);
+
+	public ValidatedBoolean destroy_dropped_items_on_death = new ValidatedBoolean(false);
+
 	public StatusEffects statusEffects = new StatusEffects();
 
 	public static class StatusEffects extends ConfigSection {
@@ -95,7 +99,7 @@ public class ServerConfig extends Config {
 		@ConfigGroup.Pop
 		public ValidatedInt inventory_crafting_slots_y_offset = new ValidatedInt(42);
 
-		public ValidatedInt default_spell_slot_amount = new ValidatedInt(0, 8, 0);
+		public ValidatedInt default_spell_slot_amount = new ValidatedInt(1, 8, 0);
 
 		public ConfigGroup head_slot = new ConfigGroup("head_slot", true);
 		public ValidatedInt head_slot_x_offset = new ValidatedInt(8);

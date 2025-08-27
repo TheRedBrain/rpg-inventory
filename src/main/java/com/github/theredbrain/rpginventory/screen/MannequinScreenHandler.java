@@ -5,7 +5,6 @@ import com.github.theredbrain.rpginventory.block.entity.MannequinBlockEntity;
 import com.github.theredbrain.rpginventory.config.ServerConfig;
 import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
-import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
 import com.github.theredbrain.rpginventory.registry.ScreenHandlerTypesRegistry;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import com.github.theredbrain.rpginventory.screen.slot.AlternativeHandSlot;
@@ -104,10 +103,6 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean canInsert(ItemStack stack) {
-				boolean bl = true;
-				if (MannequinScreenHandler.this.owner.getServer() != null) {
-					bl = MannequinScreenHandler.this.owner.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT);
-				}
 				ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
 
 				Optional<RegistryEntry.Reference<StatusEffect>> civilisation_status_effect = Registries.STATUS_EFFECT.getEntry(serverConfig.statusEffects.civilisation_status_effect_identifier.get());
@@ -116,7 +111,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 				Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(serverConfig.statusEffects.wilderness_status_effect_identifier.get());
 				boolean hasWildernessEffect = wilderness_status_effect.isPresent() && MannequinScreenHandler.this.owner.hasStatusEffect(wilderness_status_effect.get());
 
-				return (EquipmentSlot.OFFHAND == MannequinScreenHandler.this.owner.getPreferredEquipmentSlot(stack) || stack.isIn(Tags.OFFHAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || !RPGInventory.isHandSlotOverhaulActive()) && ItemUtils.isUsableByPlayer(stack, MannequinScreenHandler.this.owner) && (hasCivilisationEffect || MannequinScreenHandler.this.owner.isCreative() || (bl && !hasWildernessEffect)) && !((DuckPlayerEntityMixin) MannequinScreenHandler.this.owner).rpginventory$isOffhandStackSheathed();
+				return (EquipmentSlot.OFFHAND == MannequinScreenHandler.this.owner.getPreferredEquipmentSlot(stack) || stack.isIn(Tags.OFFHAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || !RPGInventory.isHandSlotOverhaulActive()) && ItemUtils.isUsableByPlayer(stack, MannequinScreenHandler.this.owner) && (hasCivilisationEffect || MannequinScreenHandler.this.owner.isCreative() || (serverConfig.allow_equipment_changes.get() && !hasWildernessEffect)) && !((DuckPlayerEntityMixin) MannequinScreenHandler.this.owner).rpginventory$isOffhandStackSheathed();
 			}
 
 		});
@@ -131,10 +126,6 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean canInsert(ItemStack stack) {
-				boolean bl = true;
-				if (MannequinScreenHandler.this.owner.getServer() != null) {
-					bl = MannequinScreenHandler.this.owner.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT);
-				}
 				ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
 
 				Optional<RegistryEntry.Reference<StatusEffect>> civilisation_status_effect = Registries.STATUS_EFFECT.getEntry(serverConfig.statusEffects.civilisation_status_effect_identifier.get());
@@ -143,7 +134,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 				Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(serverConfig.statusEffects.wilderness_status_effect_identifier.get());
 				boolean hasWildernessEffect = wilderness_status_effect.isPresent() && MannequinScreenHandler.this.owner.hasStatusEffect(wilderness_status_effect.get());
 
-				return (EquipmentSlot.MAINHAND == MannequinScreenHandler.this.owner.getPreferredEquipmentSlot(stack) || stack.isIn(Tags.HAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isUsableByPlayer(stack, MannequinScreenHandler.this.owner) && (hasCivilisationEffect || MannequinScreenHandler.this.owner.isCreative() || (bl && !hasWildernessEffect)) && !((DuckPlayerEntityMixin) MannequinScreenHandler.this.owner).rpginventory$isHandStackSheathed();
+				return (EquipmentSlot.MAINHAND == MannequinScreenHandler.this.owner.getPreferredEquipmentSlot(stack) || stack.isIn(Tags.HAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isUsableByPlayer(stack, MannequinScreenHandler.this.owner) && (hasCivilisationEffect || MannequinScreenHandler.this.owner.isCreative() || (serverConfig.allow_equipment_changes.get() && !hasWildernessEffect)) && !((DuckPlayerEntityMixin) MannequinScreenHandler.this.owner).rpginventory$isHandStackSheathed();
 			}
 
 		});
@@ -158,10 +149,6 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean canInsert(ItemStack stack) {
-				boolean bl = true;
-				if (MannequinScreenHandler.this.owner.getServer() != null) {
-					bl = MannequinScreenHandler.this.owner.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT);
-				}
 				ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
 
 				Optional<RegistryEntry.Reference<StatusEffect>> civilisation_status_effect = Registries.STATUS_EFFECT.getEntry(serverConfig.statusEffects.civilisation_status_effect_identifier.get());
@@ -170,7 +157,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 				Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(serverConfig.statusEffects.wilderness_status_effect_identifier.get());
 				boolean hasWildernessEffect = wilderness_status_effect.isPresent() && MannequinScreenHandler.this.owner.hasStatusEffect(wilderness_status_effect.get());
 
-				return (EquipmentSlot.MAINHAND == MannequinScreenHandler.this.owner.getPreferredEquipmentSlot(stack) || stack.isIn(Tags.HAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isUsableByPlayer(stack, MannequinScreenHandler.this.owner) && (hasCivilisationEffect || MannequinScreenHandler.this.owner.isCreative() || (bl && !hasWildernessEffect)) && ((DuckPlayerEntityMixin) MannequinScreenHandler.this.owner).rpginventory$isHandStackSheathed();
+				return (EquipmentSlot.MAINHAND == MannequinScreenHandler.this.owner.getPreferredEquipmentSlot(stack) || stack.isIn(Tags.HAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isUsableByPlayer(stack, MannequinScreenHandler.this.owner) && (hasCivilisationEffect || MannequinScreenHandler.this.owner.isCreative() || (serverConfig.allow_equipment_changes.get() && !hasWildernessEffect)) && ((DuckPlayerEntityMixin) MannequinScreenHandler.this.owner).rpginventory$isHandStackSheathed();
 			}
 
 		});
@@ -185,10 +172,6 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean canInsert(ItemStack stack) {
-				boolean bl = true;
-				if (MannequinScreenHandler.this.owner.getServer() != null) {
-					bl = MannequinScreenHandler.this.owner.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT);
-				}
 				ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
 
 				Optional<RegistryEntry.Reference<StatusEffect>> civilisation_status_effect = Registries.STATUS_EFFECT.getEntry(serverConfig.statusEffects.civilisation_status_effect_identifier.get());
@@ -197,7 +180,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 				Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(serverConfig.statusEffects.wilderness_status_effect_identifier.get());
 				boolean hasWildernessEffect = wilderness_status_effect.isPresent() && MannequinScreenHandler.this.owner.hasStatusEffect(wilderness_status_effect.get());
 
-				return (EquipmentSlot.OFFHAND == MannequinScreenHandler.this.owner.getPreferredEquipmentSlot(stack) || stack.isIn(Tags.OFFHAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isUsableByPlayer(stack, MannequinScreenHandler.this.owner) && (hasCivilisationEffect || MannequinScreenHandler.this.owner.isCreative() || (bl && !hasWildernessEffect)) && ((DuckPlayerEntityMixin) MannequinScreenHandler.this.owner).rpginventory$isOffhandStackSheathed();
+				return (EquipmentSlot.OFFHAND == MannequinScreenHandler.this.owner.getPreferredEquipmentSlot(stack) || stack.isIn(Tags.OFFHAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isUsableByPlayer(stack, MannequinScreenHandler.this.owner) && (hasCivilisationEffect || MannequinScreenHandler.this.owner.isCreative() || (serverConfig.allow_equipment_changes.get() && !hasWildernessEffect)) && ((DuckPlayerEntityMixin) MannequinScreenHandler.this.owner).rpginventory$isOffhandStackSheathed();
 			}
 
 		});
@@ -207,10 +190,6 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean canInsert(ItemStack stack) {
-				boolean bl = true;
-				if (MannequinScreenHandler.this.owner.getServer() != null) {
-					bl = MannequinScreenHandler.this.owner.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT);
-				}
 				ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
 
 				Optional<RegistryEntry.Reference<StatusEffect>> civilisation_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.civilisation_status_effect_identifier.get());
@@ -219,7 +198,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 				Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.wilderness_status_effect_identifier.get());
 				boolean hasWildernessEffect = wilderness_status_effect.isPresent() && MannequinScreenHandler.this.owner.hasStatusEffect(wilderness_status_effect.get());
 
-				return (stack.isIn(Tags.HAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isUsableByPlayer(stack, MannequinScreenHandler.this.owner) && (hasCivilisationEffect || MannequinScreenHandler.this.owner.isCreative() || (bl && !hasWildernessEffect));
+				return (stack.isIn(Tags.HAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isUsableByPlayer(stack, MannequinScreenHandler.this.owner) && (hasCivilisationEffect || MannequinScreenHandler.this.owner.isCreative() || (serverConfig.allow_equipment_changes.get() && !hasWildernessEffect));
 			}
 
 			@Override
@@ -234,10 +213,6 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean canInsert(ItemStack stack) {
-				boolean bl = true;
-				if (MannequinScreenHandler.this.owner.getServer() != null) {
-					bl = MannequinScreenHandler.this.owner.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT);
-				}
 				ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
 
 				Optional<RegistryEntry.Reference<StatusEffect>> civilisation_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.civilisation_status_effect_identifier.get());
@@ -246,7 +221,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 				Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.wilderness_status_effect_identifier.get());
 				boolean hasWildernessEffect = wilderness_status_effect.isPresent() && MannequinScreenHandler.this.owner.hasStatusEffect(wilderness_status_effect.get());
 
-				return (stack.isIn(Tags.OFFHAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isUsableByPlayer(stack, MannequinScreenHandler.this.owner) && (hasCivilisationEffect || MannequinScreenHandler.this.owner.isCreative() || (bl && !hasWildernessEffect));
+				return (stack.isIn(Tags.OFFHAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isUsableByPlayer(stack, MannequinScreenHandler.this.owner) && (hasCivilisationEffect || MannequinScreenHandler.this.owner.isCreative() || (serverConfig.allow_equipment_changes.get() && !hasWildernessEffect));
 			}
 
 			@Override

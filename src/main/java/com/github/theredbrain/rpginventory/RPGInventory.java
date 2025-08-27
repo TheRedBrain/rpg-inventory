@@ -134,7 +134,6 @@ public class RPGInventory implements ModInitializer {
 		EntityRegistry.init();
 		ItemComponentRegistry.init();
 		ItemRegistry.init();
-		GameRulesRegistry.init();
 		ScreenHandlerTypesRegistry.registerAll();
 
 		// Compatibility

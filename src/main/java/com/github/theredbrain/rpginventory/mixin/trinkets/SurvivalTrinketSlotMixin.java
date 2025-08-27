@@ -1,7 +1,6 @@
 package com.github.theredbrain.rpginventory.mixin.trinkets;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
-import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
 import com.github.theredbrain.rpginventory.screen.DuckPlayerScreenHandlerMixin;
 import com.github.theredbrain.rpginventory.screen.DuckSlotMixin;
 import com.github.theredbrain.rpginventory.util.ItemUtils;
@@ -72,17 +71,13 @@ public abstract class SurvivalTrinketSlotMixin extends Slot {
 			isOwned = ItemUtils.isUsableByPlayer(stack, playerEntity);
 		}
 
-		boolean bl2 = true;
-		if (livingEntity.getServer() != null) {
-			bl2 = livingEntity.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT);
-		}
 		Optional<RegistryEntry.Reference<StatusEffect>> civilisation_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.civilisation_status_effect_identifier.get());
 		boolean hasCivilisationEffect = civilisation_status_effect.isPresent() && livingEntity.hasStatusEffect(civilisation_status_effect.get());
 
 		Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.wilderness_status_effect_identifier.get());
 		boolean hasWildernessEffect = wilderness_status_effect.isPresent() && livingEntity.hasStatusEffect(wilderness_status_effect.get());
 
-		cir.setReturnValue(cir.getReturnValue() && isOwned && (hasCivilisationEffect || bl || (bl2 && !hasWildernessEffect)));
+		cir.setReturnValue(cir.getReturnValue() && isOwned && (hasCivilisationEffect || bl || (RPGInventory.SERVER_CONFIG.allow_equipment_changes.get() && !hasWildernessEffect)));
 	}
 
 	/**
@@ -90,18 +85,13 @@ public abstract class SurvivalTrinketSlotMixin extends Slot {
 	 */
 	@Inject(method = "canTakeItems", at = @At("RETURN"), cancellable = true)
 	public void rpginventory$canTakeItems(PlayerEntity player, CallbackInfoReturnable<Boolean> cir) {
-		boolean bl = true;
-		if (player.getServer() != null) {
-			bl = player.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT);
-		}
-
 		Optional<RegistryEntry.Reference<StatusEffect>> civilisation_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.civilisation_status_effect_identifier.get());
 		boolean hasCivilisationEffect = civilisation_status_effect.isPresent() && player.hasStatusEffect(civilisation_status_effect.get());
 
 		Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.wilderness_status_effect_identifier.get());
 		boolean hasWildernessEffect = wilderness_status_effect.isPresent() && player.hasStatusEffect(wilderness_status_effect.get());
 
-		cir.setReturnValue(cir.getReturnValue() && (hasCivilisationEffect || (bl && !hasWildernessEffect) || player.isCreative()));
+		cir.setReturnValue(cir.getReturnValue() && (hasCivilisationEffect || (RPGInventory.SERVER_CONFIG.allow_equipment_changes.get() && !hasWildernessEffect) || player.isCreative()));
 	}
 
 	@Inject(method = "isEnabled", at = @At(value = "HEAD"), cancellable = true)

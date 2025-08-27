@@ -39,11 +39,6 @@ public abstract class ArmorSlotMixin extends Slot {
 
 	@WrapMethod(method = "canInsert")
 	public boolean rpginventory$canInsert(ItemStack stack, Operation<Boolean> original) {
-		boolean bl = true;
-		if (this.entity.getServer() != null) {
-			bl = this.entity.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT);
-		}
-
 		Optional<RegistryEntry.Reference<StatusEffect>> civilisation_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.civilisation_status_effect_identifier.get());
 		boolean hasCivilisationEffect = civilisation_status_effect.isPresent() && this.entity.hasStatusEffect(civilisation_status_effect.get());
 
@@ -57,16 +52,11 @@ public abstract class ArmorSlotMixin extends Slot {
 			isCreative = playerEntity.isCreative();
 		}
 
-		return (original.call(stack) || rpginventory$isOfEquipmentTag(stack, this.equipmentSlot)) && isOwned && (hasCivilisationEffect || isCreative || (bl && !hasWildernessEffect));
+		return (original.call(stack) || rpginventory$isOfEquipmentTag(stack, this.equipmentSlot)) && isOwned && (hasCivilisationEffect || isCreative || (RPGInventory.SERVER_CONFIG.allow_equipment_changes.get() && !hasWildernessEffect));
 	}
 
 	@WrapMethod(method = "canTakeItems")
 	public boolean rpginventory$canTakeItems(PlayerEntity playerEntity, Operation<Boolean> original) {
-		boolean bl = true;
-		if (this.entity.getServer() != null) {
-			bl = this.entity.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT);
-		}
-
 		Optional<RegistryEntry.Reference<StatusEffect>> civilisation_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.civilisation_status_effect_identifier.get());
 		boolean hasCivilisationEffect = civilisation_status_effect.isPresent() && this.entity.hasStatusEffect(civilisation_status_effect.get());
 
@@ -75,7 +65,7 @@ public abstract class ArmorSlotMixin extends Slot {
 
 		boolean isCreative = playerEntity.isCreative();
 
-		return original.call(playerEntity) && !this.getStack().contains(RPGInventory.LOAD_OUT_ITEM) && (hasCivilisationEffect || isCreative || (bl && !hasWildernessEffect));
+		return original.call(playerEntity) && !this.getStack().contains(RPGInventory.LOAD_OUT_ITEM) && (hasCivilisationEffect || isCreative || (RPGInventory.SERVER_CONFIG.allow_equipment_changes.get() && !hasWildernessEffect));
 	}
 
 	@Unique

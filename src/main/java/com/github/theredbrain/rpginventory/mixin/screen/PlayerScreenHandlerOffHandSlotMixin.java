@@ -3,7 +3,6 @@ package com.github.theredbrain.rpginventory.mixin.screen;
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.config.ServerConfig;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
-import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import com.github.theredbrain.rpginventory.util.ItemUtils;
 import net.minecraft.entity.EquipmentSlot;
@@ -38,10 +37,6 @@ public abstract class PlayerScreenHandlerOffHandSlotMixin extends Slot {
 
 	@Override
 	public boolean canInsert(ItemStack stack) {
-		boolean bl = true;
-		if (this.field_39410.getServer() != null) {
-			bl = this.field_39410.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT);
-		}
 		ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
 
 		Optional<RegistryEntry.Reference<StatusEffect>> civilisation_status_effect = Registries.STATUS_EFFECT.getEntry(serverConfig.statusEffects.civilisation_status_effect_identifier.get());
@@ -52,16 +47,11 @@ public abstract class PlayerScreenHandlerOffHandSlotMixin extends Slot {
 
 		boolean handSlotOverhaulIsInactive = !RPGInventory.isHandSlotOverhaulActive();
 
-		return (EquipmentSlot.OFFHAND == this.field_39410.getPreferredEquipmentSlot(stack) || stack.isIn(Tags.OFFHAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || handSlotOverhaulIsInactive) && (handSlotOverhaulIsInactive || !((DuckPlayerEntityMixin) this.field_39410).rpginventory$isOffhandStackSheathed()) && ItemUtils.isUsableByPlayer(stack, this.field_39410) && (hasCivilisationEffect || this.field_39410.isCreative() || (bl && !hasWildernessEffect));
+		return (EquipmentSlot.OFFHAND == this.field_39410.getPreferredEquipmentSlot(stack) || stack.isIn(Tags.OFFHAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || handSlotOverhaulIsInactive) && (handSlotOverhaulIsInactive || !((DuckPlayerEntityMixin) this.field_39410).rpginventory$isOffhandStackSheathed()) && ItemUtils.isUsableByPlayer(stack, this.field_39410) && (hasCivilisationEffect || this.field_39410.isCreative() || (serverConfig.allow_equipment_changes.get() && !hasWildernessEffect));
 	}
 
 	@Override
 	public boolean canTakeItems(PlayerEntity playerEntity) {
-		boolean bl = true;
-		if (this.field_39410.getServer() != null) {
-			bl = this.field_39410.getServer().getGameRules().getBoolean(GameRulesRegistry.CAN_CHANGE_EQUIPMENT);
-		}
-
 		Optional<RegistryEntry.Reference<StatusEffect>> civilisation_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.civilisation_status_effect_identifier.get());
 		boolean hasCivilisationEffect = civilisation_status_effect.isPresent() && this.field_39410.hasStatusEffect(civilisation_status_effect.get());
 
@@ -70,6 +60,6 @@ public abstract class PlayerScreenHandlerOffHandSlotMixin extends Slot {
 
 		boolean isCreative = playerEntity.isCreative();
 
-		return !this.getStack().contains(RPGInventory.LOAD_OUT_ITEM) && (hasCivilisationEffect || isCreative || (bl && !hasWildernessEffect));
+		return !this.getStack().contains(RPGInventory.LOAD_OUT_ITEM) && (hasCivilisationEffect || isCreative || (RPGInventory.SERVER_CONFIG.allow_equipment_changes.get() && !hasWildernessEffect));
 	}
 }
