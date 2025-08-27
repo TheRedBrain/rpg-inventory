@@ -1,3 +1,23 @@
+# 2.6.0
+
+- added relic slot
+- reworked "default_spell_slot_amount" server config option and adjusted the "generic.active_spell_slot_amount" entity attribute
+- reworked game rules into server config settings
+- tweaked several item tags
+- tweaked default positions of several equipment slots
+- ring 2 slot is now disabled by default
+- refactored advancement locked items
+- refactored custom item slot overlays
+- refactored custom item tooltip lines
+- updated sheathed_hand_item_positions default client config setting
+- hand slot actions (hand swapping/hand sheathing/2-handed-stance toggling) can no longer be done in certain situations. This currently checks for:
+  - Spell Engine: spell casting
+  - Spell Engine Extension: after casting movement lock
+  - Better Combat: attack swing
+  - Combat Roll: active roll
+  - Minecraft: items on cooldown
+- fixed an issue where items could bind themselves to a player when they were already bound to another player
+
 # 2.5.0
 
 - added 'advancement locked' item component. Item stacks with this component can only be equipped and used by players who have unlocked the advancement defined by the component.

@@ -7,13 +7,14 @@ Adds a new inventory screen with more equipment slots and other equipment relate
 The new slots accessible in the inventory are:
 - 1 belt slot
 - 1 necklace slot
-- 2 ring slots
+- 2 ring slots (the second one is disabled by default)
 - 1 gloves slot
 - 1 shoulders slot
+- 1 relic slot
 - 8 spell slots
-  - The value "default_spell_slot_amount" in the server config file controls the amount of spell slots each player has active by default.\
-    The new entity attribute "generic.active_spell_slot_amount" controls how many spell slots are added to/removed from the default active amount. This is 0 by default, but with entity attribute modifiers (EAMs) it can be changed.
-These spell slots are intended to be used with spell books powered by Spell Engine, but they should work with other items as well.
+  - The new entity attribute "generic.active_spell_slot_amount" controls how many spell slots are active. This is 0 by default, but with entity attribute modifiers (EAMs) it can be changed.\
+  The "default_spell_slot_amount" server config option controls the amount of spell slots each player has active by default.
+These spell slots are intended to be used with spell books powered by Spell Engine, but they can work with other items as well.
 
 If the "hand slot overhaul" is enabled in the server config, these slots become available too:
 - 1 hand slot
@@ -98,7 +99,7 @@ These items can also normally not be removed from a slot, only when interacting 
 
 ## Advancement Locked Items
 
-An item stack that has the "rpginventory:advancement_locked" component has one of 3 different 'status' modes, saved in the component and updated when opening the inventory screen.
+An item stack that has the "rpginventory:advancement_locked" component has one of 3 different 'status' modes, which is saved in the component.
 
 The different modes are:
 - 'not_unlocked'
@@ -109,7 +110,7 @@ The "advancement_locked" component has 5 string fields:
 - "unlock_advancement": the id of the 'unlock advancement'. If the player has this advancement unlocked, the status is changed to 'unlocked', if not the status is 'not_unlocked'. If this field is an empty string, the item can't be 'not_unlocked'.
 - "lock_advancement": the id of the 'lock advancement'. If the player has this advancement unlocked, the status is 'locked'. If this field is an empty string, the item can't be 'locked'.
 
-- "not_unlocked_tooltip_text": this string is optionally  displayed in the item tooltip, when the item status is 'not_unlocked'. This supports localization.
+- "not_unlocked_tooltip_text": this string is optionally displayed in the item tooltip, when the item status is 'not_unlocked'. This supports localization.
 - "tooltip_text": this string is optionally  displayed in the item tooltip, when the item status is 'not_unlocked'. This supports localization.
 - "locked_tooltip_text": this string is optionally displayed in the item tooltip, when the item status is 'not_unlocked'. This supports localization.
 
@@ -145,16 +146,18 @@ When "building_mode_status_effect_identifier" is a valid status effect identifie
 - every item can be used to attack and to break blocks
 - both hands behave like they are sheathed, so the hand slot contains the item in the selected hotbar slot, like in vanilla.
 
-The game rule "canChangeEquipment" controls, whether items can be put into or removed from equipment slots.
-
-When "civilisation_status_effect_identifier" is a valid status effect identifier and the player has that status effect items can be put into or removed from equipment slots, regardless of the gamerule "canChangeEquipment".
-
-When "wilderness_status_effect_identifier" is a valid status effect identifier and the player has that status effect items can not be put into or removed from equipment slots, regardless of the gamerule "canChangeEquipment".
-
-When the gamerule "destroyDroppedItemsOnDeath" is true and the vanilla gamerule "keepInventory" is false, the items in the players inventory are not dropped when they die. They are destroyed instead.
+When the server config setting "destroy_dropped_items_on_death" is true and the vanilla game rule "keepInventory" is false, the items in the players inventory are not dropped when they die. They are destroyed instead.
 
 When "keep_inventory_status_effect_identifier" is a valid status effect identifier, that status effect is applied when an item in the "sacrificed_to_keep_inventory_on_death" item tag is equipped (in an equipment, trinket or the offhand slot).
 When the player dies while having that status effect, all equipped items in the "sacrificed_to_keep_inventory_on_death" item tag are destroyed. The rest of the inventory is kept, regardless of game rules and stuff like "Curse of Vanishing".
+
+### Restricted Equipment Changes
+
+The server config setting "allow_equipment_changes" controls, whether items can be put into or removed from equipment slots.
+
+When "civilisation_status_effect_identifier" is a valid status effect identifier and the player has that status effect items can be put into or removed from equipment slots, regardless of the config setting.
+
+When "wilderness_status_effect_identifier" is a valid status effect identifier and the player has that status effect items can not be put into or removed from equipment slots, regardless of the config setting.
 
 ### Various Status Effects Integration
 
