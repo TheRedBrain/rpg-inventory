@@ -1,7 +1,6 @@
 package com.github.theredbrain.rpginventory.mixin.screen;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
-import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import com.github.theredbrain.rpginventory.util.ItemUtils;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;

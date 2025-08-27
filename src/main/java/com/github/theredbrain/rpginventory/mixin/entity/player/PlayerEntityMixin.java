@@ -7,7 +7,6 @@ import com.github.theredbrain.rpginventory.entity.RendersSheathedWeapons;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.rpginventory.entity.player.PlayerEntityHelper;
-import com.github.theredbrain.rpginventory.registry.GameRulesRegistry;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import com.github.theredbrain.rpginventory.util.ItemUtils;
 import com.google.common.collect.HashMultimap;
