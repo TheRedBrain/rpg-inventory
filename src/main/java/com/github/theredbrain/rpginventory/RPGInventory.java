@@ -2,6 +2,7 @@ package com.github.theredbrain.rpginventory;
 
 import com.github.theredbrain.rpginventory.compat.BetterCombatExtensionCompat;
 import com.github.theredbrain.rpginventory.compat.InventorySizeAttributesCompat;
+import com.github.theredbrain.rpginventory.compat.NumismaticOverhaulCompat;
 import com.github.theredbrain.rpginventory.compat.SpellEngineCompat;
 import com.github.theredbrain.rpginventory.compat.SpellEngineExtensionCompat;
 import com.github.theredbrain.rpginventory.compat.StaminaAttributesCompat;
@@ -14,6 +15,7 @@ import com.github.theredbrain.rpginventory.registry.ItemComponentRegistry;
 import com.github.theredbrain.rpginventory.registry.ItemRegistry;
 import com.github.theredbrain.rpginventory.registry.ScreenHandlerTypesRegistry;
 import com.github.theredbrain.rpginventory.registry.ServerPacketRegistry;
+import com.github.theredbrain.rpginventory.util.SwapHandAttributesHelper;
 import me.fzzyhmstrs.fzzy_config.api.ConfigApiJava;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
@@ -54,6 +56,8 @@ public class RPGInventory implements ModInitializer {
 
 	public static final boolean isRPGCraftingLoaded = FabricLoader.getInstance().isModLoaded("rpgcrafting");
 	public static final boolean isBackpackAttributeLoaded = FabricLoader.getInstance().isModLoaded("backpackattribute");
+	public static final boolean isCombatRollLoaded = FabricLoader.getInstance().isModLoaded("combat_roll");
+	public static final boolean isNumismaticOverhaulLoaded = FabricLoader.getInstance().isModLoaded("numismatic-overhaul");
 	public static final boolean isStaminaAttributesLoaded = FabricLoader.getInstance().isModLoaded("staminaattributes");
 	public static final boolean isInventorySizeAttributesLoaded = FabricLoader.getInstance().isModLoaded("inventorysizeattributes");
 	public static final boolean isSpellEngineLoaded = FabricLoader.getInstance().isModLoaded("spell_engine");
@@ -62,6 +66,12 @@ public class RPGInventory implements ModInitializer {
 	public static final boolean isSpellEngineExtensionLoaded = FabricLoader.getInstance().isModLoaded("bettercombatextension");
 	public static final boolean isBetterCombatLoaded = FabricLoader.getInstance().isModLoaded("bettercombat");
 	public static final boolean isTrinketsLoaded = FabricLoader.getInstance().isModLoaded("trinkets");
+
+	public static void swapHandAttributes(PlayerEntity playerEntity, Runnable runnable) {
+		if (SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get()) {
+			SwapHandAttributesHelper.swapHandAttributes(playerEntity, runnable);
+		}
+	}
 
 	public static boolean doesCurrentPlayerStatusPreventHandSlotAction(ServerPlayerEntity serverPlayerEntity) {
 		boolean bl = false;
