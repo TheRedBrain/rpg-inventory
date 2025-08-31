@@ -39,7 +39,7 @@ public class RPGInventoryClient implements ClientModInitializer {
 		if (RPGInventory.isBetterCombatLoaded) {
 			bl = BetterCombatClientCompat.doesCurrentPlayerStatusPreventHandSlotAction(minecraftClient);
 		}
-		if (RPGInventory.isBetterCombatLoaded) {
+		if (RPGInventory.isCombatRollLoaded) {
 			bl = bl || CombatRollClientCompat.doesCurrentPlayerStatusPreventHandSlotAction(minecraftClient);
 		}
 
