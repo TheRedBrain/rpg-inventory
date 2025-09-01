@@ -4,6 +4,7 @@ import com.github.theredbrain.rpginventory.compat.BackpackAttributeClientCompat;
 import com.github.theredbrain.rpginventory.compat.BetterCombatClientCompat;
 import com.github.theredbrain.rpginventory.compat.CombatRollClientCompat;
 import com.github.theredbrain.rpginventory.compat.InventorySizeAttributesClientCompat;
+import com.github.theredbrain.rpginventory.compat.NumismaticOverhaulClientCompat;
 import com.github.theredbrain.rpginventory.compat.PlayerAttributeScreenClientCompat;
 import com.github.theredbrain.rpginventory.compat.RPGCraftingClientCompat;
 import com.github.theredbrain.rpginventory.compat.TrinketsClientCompat;
@@ -89,5 +90,8 @@ public class RPGInventoryClient implements ClientModInitializer {
 		ClientEventsRegistry.initializeClientEvents();
 		KeyBindingsRegistry.registerKeyBindings();
 		HandledScreens.register(ScreenHandlerTypesRegistry.MANNEQUIN_SCREEN_HANDLER, MannequinScreen::new);
+		if (RPGInventory.isNumismaticOverhaulLoaded && RPGInventory.isOwoLibLoaded) {
+			NumismaticOverhaulClientCompat.init();
+		}
 	}
 }

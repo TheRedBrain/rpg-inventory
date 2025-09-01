@@ -2,7 +2,6 @@ package com.github.theredbrain.rpginventory;
 
 import com.github.theredbrain.rpginventory.compat.BetterCombatExtensionCompat;
 import com.github.theredbrain.rpginventory.compat.InventorySizeAttributesCompat;
-import com.github.theredbrain.rpginventory.compat.NumismaticOverhaulCompat;
 import com.github.theredbrain.rpginventory.compat.SpellEngineCompat;
 import com.github.theredbrain.rpginventory.compat.SpellEngineExtensionCompat;
 import com.github.theredbrain.rpginventory.compat.StaminaAttributesCompat;
@@ -58,6 +57,7 @@ public class RPGInventory implements ModInitializer {
 	public static final boolean isBackpackAttributeLoaded = FabricLoader.getInstance().isModLoaded("backpackattribute");
 	public static final boolean isCombatRollLoaded = FabricLoader.getInstance().isModLoaded("combat_roll");
 	public static final boolean isNumismaticOverhaulLoaded = FabricLoader.getInstance().isModLoaded("numismatic-overhaul");
+	public static final boolean isOwoLibLoaded = FabricLoader.getInstance().isModLoaded("owo");
 	public static final boolean isStaminaAttributesLoaded = FabricLoader.getInstance().isModLoaded("staminaattributes");
 	public static final boolean isInventorySizeAttributesLoaded = FabricLoader.getInstance().isModLoaded("inventorysizeattributes");
 	public static final boolean isSpellEngineLoaded = FabricLoader.getInstance().isModLoaded("spell_engine");

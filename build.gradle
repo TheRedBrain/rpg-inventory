@@ -55,6 +55,11 @@ repositories {
 	maven {
 		url 'https://jitpack.io'
 	}
+
+	// Owo Lib
+	maven {
+		url 'https://maven.wispforest.io'
+	}
 }
 
 loom {
@@ -140,6 +145,14 @@ dependencies {
 
 	// Tiny Config
 	implementation include("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}")
+
+	// Numismatic Overhaul
+	modImplementation ("maven.modrinth:numismatic-overhaul:${project.numismatic_overhaul_version}") {
+		exclude(group: "net.fabricmc.fabric-api")
+	}
+
+	// Owo Lib
+	modImplementation "io.wispforest:owo-lib:${project.owo_lib_version}"
 
 }
 
