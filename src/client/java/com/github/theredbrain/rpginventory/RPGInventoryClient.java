@@ -30,10 +30,6 @@ import java.util.List;
 public class RPGInventoryClient implements ClientModInitializer {
 	public static ClientConfig CLIENT_CONFIG;
 
-	public RPGInventoryClient() {
-		CLIENT_CONFIG = ConfigApiJava.registerAndLoadConfig(ClientConfig::new, RegisterType.CLIENT);
-	}
-
 	public static boolean doesCurrentPlayerStatusPreventHandSlotAction(MinecraftClient minecraftClient) {
 		boolean bl = false;
 		if (RPGInventory.isBetterCombatLoaded) {
@@ -84,6 +80,8 @@ public class RPGInventoryClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
+		CLIENT_CONFIG = ConfigApiJava.registerAndLoadConfig(ClientConfig::new, RegisterType.CLIENT);
+
 		// Packets
 		ClientPacketRegistry.init();
 
