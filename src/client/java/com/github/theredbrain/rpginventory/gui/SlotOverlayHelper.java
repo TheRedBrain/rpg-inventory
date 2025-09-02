@@ -22,6 +22,8 @@ public class SlotOverlayHelper {
 		ClientConfig clientConfig = RPGInventoryClient.CLIENT_CONFIG;
 		if (!ItemUtils.isUsable(itemStack) && RPGInventoryClient.CLIENT_CONFIG.slots_with_unusable_items_have_overlay.get()) {
 			drawSlotHighlight(context, x, y, 0, clientConfig.first_overlay_colour_for_slots_with_unusable_items.toInt(), clientConfig.second_overlay_colour_for_slots_with_unusable_items.toInt());
+		} else if (itemStack.contains(RPGInventory.LOAD_OUT_ITEM) && RPGInventoryClient.CLIENT_CONFIG.slots_with_loadout_items_have_overlay.get()) {
+			drawSlotHighlight(context, x, y, 0, clientConfig.first_overlay_colour_for_slots_with_loadout_items.toInt(), clientConfig.second_overlay_colour_for_slots_with_loadout_items.toInt());
 		} else if (!ItemUtils.isOwnedByPlayer(itemStack, clientPlayerEntity.getGameProfile()) && RPGInventoryClient.CLIENT_CONFIG.slots_with_not_owned_items_have_overlay.get()) {
 			drawSlotHighlight(context, x, y, 0, clientConfig.first_overlay_colour_for_slots_with_not_owned_items.toInt(), clientConfig.second_overlay_colour_for_slots_with_not_owned_items.toInt());
 		} else if (RPGInventoryClient.CLIENT_CONFIG.slots_with_advancement_locked_items_have_overlay.get()) {

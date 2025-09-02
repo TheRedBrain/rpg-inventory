@@ -85,6 +85,12 @@ public class ClientConfig extends Config {
 	@ConfigGroup.Pop
 	public ValidatedColor second_overlay_colour_for_slots_with_unusable_items = new ValidatedColor(200, 5, 5, 50);
 
+	public ConfigGroup loadout_item_overlay = new ConfigGroup("loadout_item_overlay");
+	public ValidatedBoolean slots_with_loadout_items_have_overlay = new ValidatedBoolean(true);
+	public ValidatedColor first_overlay_colour_for_slots_with_loadout_items = new ValidatedColor(200, 5, 5, 50);
+	@ConfigGroup.Pop
+	public ValidatedColor second_overlay_colour_for_slots_with_loadout_items = new ValidatedColor(200, 5, 5, 50);
+
 	public ConfigGroup not_owned_item_overlay = new ConfigGroup("not_owned_item_overlay");
 	public ValidatedBoolean slots_with_not_owned_items_have_overlay = new ValidatedBoolean(true);
 	public ValidatedColor first_overlay_colour_for_slots_with_not_owned_items = new ValidatedColor(200, 5, 5, 50);
