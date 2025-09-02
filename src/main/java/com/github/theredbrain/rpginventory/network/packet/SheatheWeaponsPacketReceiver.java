@@ -63,6 +63,10 @@ public class SheatheWeaponsPacketReceiver implements ServerPlayNetworking.PlayPa
 			if (staminaCost != 0.0F && !player.isCreative()) {
 				RPGInventory.addStamina(player, -staminaCost);
 			}
+//			if (serverConfig.handSlotOverhaul.enable_item_cooldown_after_hand_sheathing.get()) {
+//				player.getItemCooldownManager().set(player.getMainHandStack().getItem(), serverConfig.handSlotOverhaul.sheathing_main_hand_cooldown.get());
+//				player.getItemCooldownManager().set(player.getOffHandStack().getItem(), serverConfig.handSlotOverhaul.sheathing_offhand_cooldown.get());
+//			}
 			player.getServerWorld().playSound(null, player.getBlockPos().getX(), player.getBlockPos().getY(), player.getBlockPos().getZ(), SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.PLAYERS, 1.0F, 1.0F);
 		} else {
 			player.sendMessageToClient(Text.translatable("hud.message.handSlotOverhaulIsDisabledByServer"), true);

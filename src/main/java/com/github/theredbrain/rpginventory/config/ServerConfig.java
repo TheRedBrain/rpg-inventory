@@ -34,6 +34,12 @@ public class ServerConfig extends Config {
 
 		public ValidatedBoolean are_hand_items_restricted_to_item_tags = new ValidatedBoolean(true);
 
+//		public ValidatedBoolean enable_item_cooldown_after_hand_sheathing = new ValidatedBoolean(true);
+//
+//		public ValidatedBoolean enable_item_cooldown_after_hand_swapping = new ValidatedBoolean(true);
+//
+//		public ValidatedBoolean enable_item_cooldown_after_toggling_2_handed_stance = new ValidatedBoolean(true);
+
 		public StaminaAttributesCompat staminaAttributesCompat = new StaminaAttributesCompat();
 
 		public static class StaminaAttributesCompat extends ConfigSection {
