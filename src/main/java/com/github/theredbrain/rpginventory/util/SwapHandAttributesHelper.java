@@ -16,7 +16,7 @@ public class SwapHandAttributesHelper {
 			boolean isOffhandEmpty = player.getInventory().offHand.get(0).isEmpty();
 			synchronized (player) {
 				PlayerInventory inventory = player.getInventory();
-				ItemStack mainHandStack = isMainHandEmpty ? ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getEmptyHand() : player.getMainHandStack();
+				ItemStack mainHandStack = isMainHandEmpty ? ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getEmptyHand() : ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getHand();
 				ItemStack offHandStack = isOffhandEmpty ? ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getEmptyOffhand() : inventory.offHand.get(0);
 
 				setAttributesForOffHandAttack(player, true, mainHandStack, offHandStack);
@@ -47,44 +47,6 @@ public class SwapHandAttributesHelper {
 			}
 		}
 	}
-
-//	/**
-//	 * @author TheRedBrain
-//	 * @reason experimental fix for incompatibility between RPG Inventory and Better Combats offhand attacking
-//	 */
-//	@Overwrite
-//	public static void swapHandAttributes(PlayerEntity player, boolean useOffHand, Runnable runnable) {
-//		if (!useOffHand) {
-//			runnable.run();
-//		} else {
-//			synchronized (player) {
-//				PlayerInventory inventory = player.getInventory();
-//				ItemStack mainHandStack = player.getMainHandStack();
-//				ItemStack offHandStack = player.getOffHandStack();
-//				setAttributesForOffHandAttack(player, true);
-//				if (BetterCombatExtension.shouldAlternativeHandSwapAlgorithmBeEnabled()) {
-//					BetterCombatExtension.setRPGInventoryMainHandSlot(inventory, offHandStack);
-//					inventory.offHand.set(0, offHandStack);
-//				} else {
-//					inventory.main.set(inventory.selectedSlot, offHandStack);
-//					inventory.offHand.set(0, offHandStack);
-//				}
-//				runnable.run();
-//				if (BetterCombatExtension.shouldAlternativeHandSwapAlgorithmBeEnabled()) {
-//					if (!mainHandStack.isIn(BetterCombatExtension.EMPTY_HAND_WEAPONS)) {
-//						BetterCombatExtension.setRPGInventoryMainHandSlot(inventory, mainHandStack);
-//					} else {
-//						BetterCombatExtension.setRPGInventoryMainHandSlot(inventory, ItemStack.EMPTY);
-//					}
-//					inventory.offHand.set(0, offHandStack);
-//				} else {
-//					inventory.main.set(inventory.selectedSlot, mainHandStack);
-//					inventory.offHand.set(0, offHandStack);
-//				}
-//				setAttributesForOffHandAttack(player, false);
-//			}
-//		}
-//	}
 
 	private static void setAttributesForOffHandAttack(PlayerEntity player, boolean useOffHand, ItemStack mainHandStack, ItemStack offHandStack) {
 		ItemStack add;
