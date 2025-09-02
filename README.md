@@ -37,6 +37,10 @@ Swaps the item in the hand slot with the item in the alternative hand slot
 
 Swaps the item in the offhand slot with the item in the alternative offhand slot
 
+### Swap both hands
+
+Swaps the items in the hand slots with the items in the corresponding alternative hand slots.
+
 ### Sheathe Weapons
 
 Puts the items in the hand and the offhand slot into their corresponding sheathed hand slots. When pressed again, swaps the items back
@@ -179,7 +183,11 @@ A button that opens the Hand Crafting Screen can be added to the inventory scree
 
 A button that opens the Backpack Screen can be added to the inventory screens. The 2x2 crafting grid has to be disabled.
 
-### Trinket Compatibility
+### Numismatic Overhaul Integration
+
+The purse widget is displayed on the RPG Inventory screen.
+
+### Trinket Integration
 
 Trinket slots are displayed on the RPG Inventory screen.
 

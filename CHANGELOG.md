@@ -1,3 +1,10 @@
+# 2.7.0
+
+- added Numismatic Overhaul Integration
+- added item slot overlay for loadout items
+- fixed all known issues with the Better Combat X Hand Slot Overhaul compatibility (also requires updating Better Combat Extension)
+- fixed Combat Roll integration
+
 # 2.6.0
 
 - added relic slot
