@@ -1,6 +1,5 @@
 package com.github.theredbrain.rpginventory.compat;
 
-import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.gui.screen.ingame.RPGInventoryScreen;
 import com.github.theredbrain.rpginventory.gui.screen.ingame.RPGInventoryTrinketScreen;
 import com.glisco.numismaticoverhaul.NumismaticOverhaul;
@@ -48,7 +47,7 @@ public class NumismaticOverhaulClientCompat {
 		@Override
 		protected void drawChildren(OwoUIDrawContext context, int mouseX, int mouseY, float partialTicks, float delta, List<? extends Component> children) {
 			context.getMatrices().push();
-//			context.getMatrices().translate(0, 0, 300);
+			context.getMatrices().translate(0, 0, 300);
 			super.drawChildren(context, mouseX, mouseY, partialTicks, delta, children);
 			context.getMatrices().pop();
 		}
