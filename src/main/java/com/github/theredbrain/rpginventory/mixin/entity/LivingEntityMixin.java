@@ -3,6 +3,7 @@ package com.github.theredbrain.rpginventory.mixin.entity;
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
 import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlotType;
+import com.github.theredbrain.rpginventory.entity.player.PlayerEntityHelper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
@@ -17,9 +18,13 @@ import net.minecraft.entity.attribute.AttributeContainer;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.s2c.play.EntityEquipmentUpdateS2CPacket;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.ItemTags;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
@@ -35,6 +40,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Mixin(value = LivingEntity.class, priority = 1050)
 @SuppressWarnings("UnreachableCode")
@@ -71,6 +77,9 @@ public abstract class LivingEntityMixin extends Entity {
 	@Shadow
 	protected abstract void setSyncedArmorStack(EquipmentSlot slot, ItemStack armor);
 
+	@Shadow
+	public abstract boolean hasStatusEffect(RegistryEntry<StatusEffect> effect);
+
 	public LivingEntityMixin(EntityType<?> type, World world) {
 		super(type, world);
 	}
@@ -92,6 +101,19 @@ public abstract class LivingEntityMixin extends Entity {
 				&& !this.getEquippedStack(ExtendedEquipmentSlot.NECKLACE).isIn(ItemTags.FREEZE_IMMUNE_WEARABLES)
 				&& !this.getEquippedStack(ExtendedEquipmentSlot.RELIC).isIn(ItemTags.FREEZE_IMMUNE_WEARABLES);
 		return original.call() && bl;
+	}
+
+	@WrapMethod(method = "tryUseTotem")
+	private boolean rpginventory$wrap_tryUseTotem(DamageSource source, Operation<Boolean> original) {
+
+		LivingEntity thisLivingEntity = ((LivingEntity) (Object) this);
+		Optional<RegistryEntry.Reference<StatusEffect>> pvp_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.pvp_status_effect_identifier.get());
+		if (pvp_status_effect.isPresent() && thisLivingEntity instanceof ServerPlayerEntity serverPlayerEntity && this.hasStatusEffect(pvp_status_effect.get())) {
+			if (PlayerEntityHelper.rpginventory$onPVPDeath(serverPlayerEntity, pvp_status_effect.get())) {
+				return true;
+			}
+		}
+		return original.call(source);
 	}
 
 	// TODO find better mixin

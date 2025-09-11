@@ -60,6 +60,10 @@ repositories {
 	maven {
 		url 'https://maven.wispforest.io'
 	}
+
+	flatDir {
+		dirs("libs")
+	}
 }
 
 loom {
@@ -115,6 +119,10 @@ dependencies {
 
 	// RPG Crafting
 	modImplementation "maven.modrinth:rpg-crafting:${project.rpg_crafting_version}"
+
+	// Script Blocks
+//	modImplementation "maven.modrinth:script-blocks:${project.script_blocks_version}"
+	modImplementation(files("libs/script-blocks-${project.script_blocks_version}.jar"))
 
 	// Resource Bar API
 	modImplementation "maven.modrinth:resource-bar-api:${project.resource_bar_api_version}"

@@ -10,15 +10,84 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import org.apache.commons.lang3.tuple.MutablePair;
 
 import java.util.Optional;
 import java.util.function.Predicate;
 
 public class PlayerEntityHelper {
+
+	public static boolean rpginventory$onPVPDeath(ServerPlayerEntity serverPlayerEntity, RegistryEntry.Reference<StatusEffect> pvpStatusEffect) {
+
+		StatusEffectInstance pvpEffectInstance = serverPlayerEntity.getStatusEffect(pvpStatusEffect);
+		if (pvpEffectInstance != null) {
+			for (StatusEffectInstance instance : serverPlayerEntity.getStatusEffects()) {
+				if (!(instance.getEffectType().isIn(Tags.KEPT_ON_PVP_DEATH) || instance.getEffectType() == pvpStatusEffect)) {
+					serverPlayerEntity.removeStatusEffect(instance.getEffectType());
+				}
+			}
+			int newAmplifier = pvpEffectInstance.getAmplifier() - 1;
+			if (newAmplifier >= 0) {
+				resetPlayerStatus(serverPlayerEntity);
+				serverPlayerEntity.addStatusEffect(new StatusEffectInstance(pvpEffectInstance.getEffectType(), pvpEffectInstance.getDuration(), newAmplifier, pvpEffectInstance.isAmbient(), pvpEffectInstance.shouldShowParticles(), pvpEffectInstance.shouldShowIcon()));
+				teleportToPVPRespawnPosition(serverPlayerEntity, false);
+			} else {
+				resetPlayerStatus(serverPlayerEntity);
+				serverPlayerEntity.removeStatusEffect(pvpEffectInstance.getEffectType());
+				teleportToPVPRespawnPosition(serverPlayerEntity, true);
+			}
+			return true;
+		}
+		return false;
+	}
+
+	public static void resetPlayerStatus(ServerPlayerEntity serverPlayerEntity, boolean endOfBattle) {
+		serverPlayerEntity.setHealth(serverPlayerEntity.getMaxHealth());
+		RPGInventory.resetModdedPlayerStatus(serverPlayerEntity, endOfBattle);
+	}
+
+	public static void teleportToPVPRespawnPosition(ServerPlayerEntity serverPlayerEntity, boolean endOfBattle) {
+
+		MinecraftServer server = serverPlayerEntity.getServer();
+		if (server != null) {
+			ServerWorld targetWorld = null;
+			BlockPos targetPos = null;
+			double targetYaw = 0.0;
+			double targetPitch = 0.0;
+			MutablePair<RegistryKey<World>, MutablePair<BlockPos, MutablePair<Double, Double>>> pvp_respawn_position = RPGInventory.getPVPRespawnPosition(serverPlayerEntity, endOfBattle);
+
+			if (pvp_respawn_position != null) {
+				targetWorld = server.getWorld(pvp_respawn_position.getLeft());
+				targetPos = pvp_respawn_position.getRight().getLeft();
+				targetYaw = pvp_respawn_position.getRight().getRight().getLeft();
+				targetPitch = pvp_respawn_position.getRight().getRight().getRight();
+			}
+
+			if (targetWorld == null || targetPos == null) {
+				targetWorld = server.getOverworld();
+				targetPos = server.getOverworld().getSpawnPos();
+				targetYaw = server.getOverworld().getSpawnAngle();
+				targetPitch = 0.0;
+			}
+
+			if (targetWorld != null && targetPos != null) {
+				serverPlayerEntity.fallDistance = 0;
+				serverPlayerEntity.teleport(targetWorld, (targetPos.getX() + 0.5), (targetPos.getY() + 0.01), (targetPos.getZ() + 0.5), (float) targetYaw, (float) targetPitch);
+				serverPlayerEntity.closeHandledScreen();
+			}
+		}
+	}
 
 	public static void rpginventory$updateEquipmentStatusEffects(PlayerEntity playerEntity) {
 

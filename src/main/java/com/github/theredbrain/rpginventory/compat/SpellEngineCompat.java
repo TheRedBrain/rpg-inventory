@@ -6,6 +6,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.spell_engine.api.spell.container.SpellContainer;
 import net.spell_engine.api.spell.container.SpellContainerHelper;
 import net.spell_engine.compat.container.ContainerCompat;
+import net.spell_engine.internals.SpellCooldownManager;
 import net.spell_engine.internals.casting.SpellCasterEntity;
 import net.spell_engine.internals.container.SpellContainerSource;
 
@@ -32,6 +33,12 @@ public class SpellEngineCompat {
 		if (container != null && container.isValid()) {
 			sources.add(new SpellContainerSource.SourcedContainer(name, fromItemStack, container));
 		}
+	}
+
+	public static void resetSpellCooldowns(ServerPlayerEntity serverPlayerEntity) {
+		SpellCooldownManager spellCooldownManager = ((SpellCasterEntity) serverPlayerEntity).getCooldownManager();
+		spellCooldownManager.spellsOnCooldown().clear();
+		spellCooldownManager.pushSync();
 	}
 
 	public static boolean doesCurrentPlayerStatusPreventHandSlotAction(ServerPlayerEntity serverPlayerEntity) {

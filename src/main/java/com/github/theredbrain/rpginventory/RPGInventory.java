@@ -2,6 +2,8 @@ package com.github.theredbrain.rpginventory;
 
 import com.github.theredbrain.rpginventory.compat.BetterCombatExtensionCompat;
 import com.github.theredbrain.rpginventory.compat.InventorySizeAttributesCompat;
+import com.github.theredbrain.rpginventory.compat.ManaAttributesCompat;
+import com.github.theredbrain.rpginventory.compat.ScriptBlocksCompat;
 import com.github.theredbrain.rpginventory.compat.SpellEngineCompat;
 import com.github.theredbrain.rpginventory.compat.SpellEngineExtensionCompat;
 import com.github.theredbrain.rpginventory.compat.StaminaAttributesCompat;
@@ -24,13 +26,19 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Unit;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Optional;
 import java.util.function.Predicate;
 
 public class RPGInventory implements ModInitializer {
@@ -58,6 +66,7 @@ public class RPGInventory implements ModInitializer {
 	public static final boolean isCombatRollLoaded = FabricLoader.getInstance().isModLoaded("combat_roll");
 	public static final boolean isNumismaticOverhaulLoaded = FabricLoader.getInstance().isModLoaded("numismatic-overhaul");
 	public static final boolean isOwoLibLoaded = FabricLoader.getInstance().isModLoaded("owo");
+	public static final boolean isManaAttributesLoaded = FabricLoader.getInstance().isModLoaded("manaattributes");
 	public static final boolean isStaminaAttributesLoaded = FabricLoader.getInstance().isModLoaded("staminaattributes");
 	public static final boolean isInventorySizeAttributesLoaded = FabricLoader.getInstance().isModLoaded("inventorysizeattributes");
 	public static final boolean isSpellEngineLoaded = FabricLoader.getInstance().isModLoaded("spell_engine");
@@ -65,6 +74,7 @@ public class RPGInventory implements ModInitializer {
 	public static final boolean isBetterCombatExtensionLoaded = FabricLoader.getInstance().isModLoaded("bettercombatextension");
 	public static final boolean isSpellEngineExtensionLoaded = FabricLoader.getInstance().isModLoaded("spellengineextension");
 	public static final boolean isBetterCombatLoaded = FabricLoader.getInstance().isModLoaded("bettercombat");
+	public static final boolean isScriptBlocksLoaded = FabricLoader.getInstance().isModLoaded("scriptblocks");
 	public static final boolean isTrinketsLoaded = FabricLoader.getInstance().isModLoaded("trinkets");
 
 	public static void swapHandAttributes(PlayerEntity playerEntity, Runnable runnable) {
@@ -128,6 +138,41 @@ public class RPGInventory implements ModInitializer {
 		if (RPGInventory.isTrinketsLoaded) {
 			TrinketsCompat.breakKeepInventoryTrinkets(livingEntity);
 		}
+	}
+
+	public static void resetModdedPlayerStatus(ServerPlayerEntity serverPlayerEntity, boolean endOfBattle) {
+		if (RPGInventory.isManaAttributesLoaded) {
+			ManaAttributesCompat.resetMana(serverPlayerEntity);
+		}
+		if (RPGInventory.isStaminaAttributesLoaded) {
+			StaminaAttributesCompat.resetStamina(serverPlayerEntity);
+		}
+		if (RPGInventory.isSpellEngineLoaded) {
+			SpellEngineCompat.resetSpellCooldowns(serverPlayerEntity);
+		}
+		if (RPGInventory.isScriptBlocksLoaded && endOfBattle) {
+			ScriptBlocksCompat.setCurrentPVPControllerBlockPosition(serverPlayerEntity, Optional.empty());
+		}
+	}
+
+	public static MutablePair<RegistryKey<World>, MutablePair<BlockPos, MutablePair<Double, Double>>> getPVPRespawnPosition(ServerPlayerEntity serverPlayerEntity, boolean endOfBattle) {
+		if (RPGInventory.isScriptBlocksLoaded) {
+			return ScriptBlocksCompat.getPVPRespawnPosition(serverPlayerEntity, endOfBattle);
+		} else {
+			MinecraftServer server = serverPlayerEntity.getServer();
+			if (server != null) {
+				return new MutablePair<>(
+						serverPlayerEntity.getSpawnPointDimension(),
+						new MutablePair<>(
+								serverPlayerEntity.getSpawnPointPosition(),
+								new MutablePair<>(
+										(double) serverPlayerEntity.getSpawnAngle(),
+										0.0)
+						)
+				);
+			}
+		}
+		return null;
 	}
 
 	@Override

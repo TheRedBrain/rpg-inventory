@@ -11,4 +11,8 @@ public class StaminaAttributesCompat {
 	public static void addStamina(LivingEntity livingEntity, float amount) {
 		((StaminaUsingEntity) livingEntity).staminaattributes$addStamina(amount);
 	}
+
+	public static void resetStamina(LivingEntity livingEntity) {
+		((StaminaUsingEntity) livingEntity).staminaattributes$setStamina(((StaminaUsingEntity) livingEntity).staminaattributes$getUnreservedStamina());
+	}
 }

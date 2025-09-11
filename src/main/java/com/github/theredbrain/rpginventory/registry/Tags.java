@@ -42,5 +42,6 @@ public class Tags {
 	public static final TagKey<StatusEffect> PREVENTS_MANNEQUIN_INTERACTION = TagKey.of(RegistryKeys.STATUS_EFFECT, RPGInventory.identifier("prevents_mannequin_interaction"));
 	public static final TagKey<StatusEffect> PREVENTS_MANNEQUIN_SLOT_INTERACTION = TagKey.of(RegistryKeys.STATUS_EFFECT, RPGInventory.identifier("prevents_mannequin_slot_interaction"));
 	public static final TagKey<StatusEffect> FOOD_EFFECTS = TagKey.of(RegistryKeys.STATUS_EFFECT, RPGInventory.identifier("food_effects"));
+	public static final TagKey<StatusEffect> KEPT_ON_PVP_DEATH = TagKey.of(RegistryKeys.STATUS_EFFECT, RPGInventory.identifier("kept_on_pvp_death"));
 
 }

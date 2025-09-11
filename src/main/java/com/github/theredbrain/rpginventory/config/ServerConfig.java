@@ -91,6 +91,8 @@ public class ServerConfig extends Config {
 		public ValidatedIdentifier needs_two_handing_status_effect_identifier = ValidatedIdentifier.ofRegistry(Identifier.of("variousstatuseffects:needs_two_handing"), Registries.STATUS_EFFECT);
 
 		public ValidatedIdentifier no_attack_item_status_effect_identifier = ValidatedIdentifier.ofRegistry(Identifier.of("variousstatuseffects:no_attack_item"), Registries.STATUS_EFFECT);
+
+		public ValidatedIdentifier pvp_status_effect_identifier = ValidatedIdentifier.ofRegistry(Identifier.of("variousstatuseffects:pvp"), Registries.STATUS_EFFECT);
 	}
 
 	public InventorySlots inventorySlots = new InventorySlots();
