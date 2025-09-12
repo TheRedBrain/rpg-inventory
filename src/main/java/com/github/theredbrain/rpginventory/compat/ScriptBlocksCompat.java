@@ -14,6 +14,7 @@ public class ScriptBlocksCompat {
 	public static MutablePair<RegistryKey<World>, MutablePair<BlockPos, MutablePair<Double, Double>>> getPVPRespawnPosition(ServerPlayerEntity serverPlayerEntity, boolean endOfBattle) {
 		return ScriptBlocks.getPVPRespawnPosition(serverPlayerEntity, endOfBattle);
 	}
+
 	public static void setCurrentPVPControllerBlockPosition(PlayerEntity playerEntity, Optional<BlockPos> currentPVPControllerBlockPosition) {
 		ScriptBlocks.setCurrentPVPControllerBlockPosition(playerEntity, currentPVPControllerBlockPosition);
 	}

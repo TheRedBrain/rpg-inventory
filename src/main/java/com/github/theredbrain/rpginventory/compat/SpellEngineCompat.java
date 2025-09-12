@@ -2,9 +2,12 @@ package com.github.theredbrain.rpginventory.compat;
 
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerInventoryMixin;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.spell_engine.api.spell.Spell;
 import net.spell_engine.api.spell.container.SpellContainer;
 import net.spell_engine.api.spell.container.SpellContainerHelper;
+import net.spell_engine.api.spell.registry.SpellRegistry;
 import net.spell_engine.compat.container.ContainerCompat;
 import net.spell_engine.internals.SpellCooldownManager;
 import net.spell_engine.internals.casting.SpellCasterEntity;
@@ -37,8 +40,9 @@ public class SpellEngineCompat {
 
 	public static void resetSpellCooldowns(ServerPlayerEntity serverPlayerEntity) {
 		SpellCooldownManager spellCooldownManager = ((SpellCasterEntity) serverPlayerEntity).getCooldownManager();
-		spellCooldownManager.spellsOnCooldown().clear();
-		spellCooldownManager.pushSync();
+		for (RegistryEntry.Reference<Spell> spell : SpellRegistry.stream(serverPlayerEntity.getWorld()).toList()) {
+			spellCooldownManager.remove(spell.registryKey().getValue());
+		}
 	}
 
 	public static boolean doesCurrentPlayerStatusPreventHandSlotAction(ServerPlayerEntity serverPlayerEntity) {

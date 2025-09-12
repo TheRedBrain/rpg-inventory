@@ -11,15 +11,15 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.scoreboard.AbstractTeam;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.MutablePair;
 
@@ -38,18 +38,37 @@ public class PlayerEntityHelper {
 				}
 			}
 			int newAmplifier = pvpEffectInstance.getAmplifier() - 1;
-			if (newAmplifier >= 0) {
-				resetPlayerStatus(serverPlayerEntity);
-				serverPlayerEntity.addStatusEffect(new StatusEffectInstance(pvpEffectInstance.getEffectType(), pvpEffectInstance.getDuration(), newAmplifier, pvpEffectInstance.isAmbient(), pvpEffectInstance.shouldShowParticles(), pvpEffectInstance.shouldShowIcon()));
-				teleportToPVPRespawnPosition(serverPlayerEntity, false);
+			boolean endOfBattle = newAmplifier < 0;
+
+			resetPlayerStatus(serverPlayerEntity, endOfBattle);
+			if (endOfBattle) {
+				serverPlayerEntity.removeStatusEffect(pvpStatusEffect);
 			} else {
-				resetPlayerStatus(serverPlayerEntity);
-				serverPlayerEntity.removeStatusEffect(pvpEffectInstance.getEffectType());
-				teleportToPVPRespawnPosition(serverPlayerEntity, true);
+				serverPlayerEntity.setStatusEffect(new StatusEffectInstance(pvpStatusEffect, pvpEffectInstance.getDuration(), newAmplifier, pvpEffectInstance.isAmbient(), pvpEffectInstance.shouldShowParticles(), pvpEffectInstance.shouldShowIcon()), null);
 			}
+			teleportToPVPRespawnPosition(serverPlayerEntity, endOfBattle);
+			sendPVPDeathMessage(serverPlayerEntity, endOfBattle);
+			// TODO pvp deaths/kills statistic, score boards for active match
+//			serverPlayerEntity.incrementStat(Stats.DEATHS.USED.getOrCreateStat(Items.TOTEM_OF_UNDYING));
 			return true;
 		}
 		return false;
+	}
+
+	public static void sendPVPDeathMessage(ServerPlayerEntity serverPlayerEntity, boolean endOfBattle) {
+		boolean bl = serverPlayerEntity.getWorld().getGameRules().getBoolean(GameRules.SHOW_DEATH_MESSAGES);
+		if (bl) {
+			Text text = serverPlayerEntity.getDamageTracker().getDeathMessage(); // TODO custom PVP death messages
+			AbstractTeam abstractTeam = serverPlayerEntity.getScoreboardTeam();
+			if (abstractTeam == null || abstractTeam.getDeathMessageVisibilityRule() == AbstractTeam.VisibilityRule.ALWAYS) {
+				serverPlayerEntity.server.getPlayerManager().broadcast(text, false);
+			} else if (abstractTeam.getDeathMessageVisibilityRule() == AbstractTeam.VisibilityRule.HIDE_FOR_OTHER_TEAMS) {
+				serverPlayerEntity.server.getPlayerManager().sendToTeam(serverPlayerEntity, text);
+			} else if (abstractTeam.getDeathMessageVisibilityRule() == AbstractTeam.VisibilityRule.HIDE_FOR_OWN_TEAM) {
+				serverPlayerEntity.server.getPlayerManager().sendToOtherTeams(serverPlayerEntity, text);
+			}
+		}
+
 	}
 
 	public static void resetPlayerStatus(ServerPlayerEntity serverPlayerEntity, boolean endOfBattle) {
