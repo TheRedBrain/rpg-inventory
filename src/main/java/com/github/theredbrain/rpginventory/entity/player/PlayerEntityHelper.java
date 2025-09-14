@@ -4,6 +4,7 @@ import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.entity.LivingEntityHelper;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
@@ -28,7 +29,7 @@ import java.util.function.Predicate;
 
 public class PlayerEntityHelper {
 
-	public static boolean rpginventory$onPVPDeath(ServerPlayerEntity serverPlayerEntity, RegistryEntry.Reference<StatusEffect> pvpStatusEffect) {
+	public static boolean rpginventory$onPVPDeath(DamageSource source, ServerPlayerEntity serverPlayerEntity, RegistryEntry.Reference<StatusEffect> pvpStatusEffect) {
 
 		StatusEffectInstance pvpEffectInstance = serverPlayerEntity.getStatusEffect(pvpStatusEffect);
 		if (pvpEffectInstance != null) {
@@ -38,16 +39,17 @@ public class PlayerEntityHelper {
 				}
 			}
 			int newAmplifier = pvpEffectInstance.getAmplifier() - 1;
+			boolean playerRemovedFromBattle = source.isIn(Tags.REMOVES_PLAYER_FROM_PVP);
 			boolean endOfBattle = newAmplifier < 0;
 
-			resetPlayerStatus(serverPlayerEntity, endOfBattle);
-			if (endOfBattle) {
+			resetPlayerStatus(serverPlayerEntity, endOfBattle || playerRemovedFromBattle);
+			if (endOfBattle || playerRemovedFromBattle) {
 				serverPlayerEntity.removeStatusEffect(pvpStatusEffect);
 			} else {
 				serverPlayerEntity.setStatusEffect(new StatusEffectInstance(pvpStatusEffect, pvpEffectInstance.getDuration(), newAmplifier, pvpEffectInstance.isAmbient(), pvpEffectInstance.shouldShowParticles(), pvpEffectInstance.shouldShowIcon()), null);
 			}
-			teleportToPVPRespawnPosition(serverPlayerEntity, endOfBattle);
-			sendPVPDeathMessage(serverPlayerEntity, endOfBattle);
+			teleportToPVPRespawnPosition(serverPlayerEntity, endOfBattle || playerRemovedFromBattle);
+			sendPVPDeathMessage(serverPlayerEntity, endOfBattle, playerRemovedFromBattle);
 			// TODO pvp deaths/kills statistic, score boards for active match
 //			serverPlayerEntity.incrementStat(Stats.DEATHS.USED.getOrCreateStat(Items.TOTEM_OF_UNDYING));
 			return true;
@@ -55,7 +57,7 @@ public class PlayerEntityHelper {
 		return false;
 	}
 
-	public static void sendPVPDeathMessage(ServerPlayerEntity serverPlayerEntity, boolean endOfBattle) {
+	public static void sendPVPDeathMessage(ServerPlayerEntity serverPlayerEntity, boolean endOfBattle, boolean playerRemovedFromBattle) {
 		boolean bl = serverPlayerEntity.getWorld().getGameRules().getBoolean(GameRules.SHOW_DEATH_MESSAGES);
 		if (bl) {
 			Text text = serverPlayerEntity.getDamageTracker().getDeathMessage(); // TODO custom PVP death messages

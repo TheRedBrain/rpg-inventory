@@ -109,7 +109,7 @@ public abstract class LivingEntityMixin extends Entity {
 		LivingEntity thisLivingEntity = ((LivingEntity) (Object) this);
 		Optional<RegistryEntry.Reference<StatusEffect>> pvp_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.pvp_status_effect_identifier.get());
 		if (pvp_status_effect.isPresent() && thisLivingEntity instanceof ServerPlayerEntity serverPlayerEntity && this.hasStatusEffect(pvp_status_effect.get())) {
-			if (PlayerEntityHelper.rpginventory$onPVPDeath(serverPlayerEntity, pvp_status_effect.get())) {
+			if (PlayerEntityHelper.rpginventory$onPVPDeath(source, serverPlayerEntity, pvp_status_effect.get())) {
 				return true;
 			}
 		}

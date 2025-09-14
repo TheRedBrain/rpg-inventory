@@ -1,6 +1,8 @@
 package com.github.theredbrain.rpginventory.registry;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageType;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryKeys;
@@ -43,5 +45,7 @@ public class Tags {
 	public static final TagKey<StatusEffect> PREVENTS_MANNEQUIN_SLOT_INTERACTION = TagKey.of(RegistryKeys.STATUS_EFFECT, RPGInventory.identifier("prevents_mannequin_slot_interaction"));
 	public static final TagKey<StatusEffect> FOOD_EFFECTS = TagKey.of(RegistryKeys.STATUS_EFFECT, RPGInventory.identifier("food_effects"));
 	public static final TagKey<StatusEffect> KEPT_ON_PVP_DEATH = TagKey.of(RegistryKeys.STATUS_EFFECT, RPGInventory.identifier("kept_on_pvp_death"));
+
+	public static final TagKey<DamageType> REMOVES_PLAYER_FROM_PVP = TagKey.of(RegistryKeys.DAMAGE_TYPE, RPGInventory.identifier("removes_player_from_pvp"));
 
 }
