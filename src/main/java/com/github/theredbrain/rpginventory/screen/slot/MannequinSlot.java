@@ -23,12 +23,14 @@ public class MannequinSlot extends Slot {
 	private final EquipmentSlot equipmentSlot;
 	@Nullable
 	private final Identifier backgroundSprite;
+	private final boolean canChangeInventory;
 
-	public MannequinSlot(Inventory inventory, LivingEntity entity, EquipmentSlot equipmentSlot, int index, int x, int y, @Nullable Identifier backgroundSprite, List<Text> tooltip) {
+	public MannequinSlot(Inventory inventory, LivingEntity entity, EquipmentSlot equipmentSlot, int index, int x, int y, @Nullable Identifier backgroundSprite, boolean canChangeInventory, List<Text> tooltip) {
 		super(inventory, index, x, y);
 		this.entity = entity;
 		this.equipmentSlot = equipmentSlot;
 		this.backgroundSprite = backgroundSprite;
+		this.canChangeInventory = canChangeInventory;
 		((DuckSlotMixin) this).rpginventory$setSlotTooltipText(tooltip);
 	}
 
@@ -46,7 +48,7 @@ public class MannequinSlot extends Slot {
 				break;
 			}
 		}
-		return (equipmentSlot == this.entity.getPreferredEquipmentSlot(stack) || ExtendedEquipmentSlot.rpginventory$isOfEquipmentTag(stack, equipmentSlot)) && !hasPreventMannequinSlotInteractionEffect;
+		return (equipmentSlot == this.entity.getPreferredEquipmentSlot(stack) || ExtendedEquipmentSlot.rpginventory$isOfEquipmentTag(stack, equipmentSlot)) && !hasPreventMannequinSlotInteractionEffect && this.canChangeInventory;
 	}
 
 	@Override
@@ -58,7 +60,7 @@ public class MannequinSlot extends Slot {
 				break;
 			}
 		}
-		return super.canTakeItems(playerEntity) && !hasPreventMannequinSlotInteractionEffect;
+		return super.canTakeItems(playerEntity) && !hasPreventMannequinSlotInteractionEffect && this.canChangeInventory;
 	}
 
 	@Override

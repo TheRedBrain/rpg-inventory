@@ -1,7 +1,9 @@
 package com.github.theredbrain.rpginventory.block;
 
 import com.github.theredbrain.rpginventory.block.entity.MannequinBlockEntity;
+import com.github.theredbrain.rpginventory.screen.MannequinScreenHandler;
 import com.mojang.serialization.MapCodec;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -11,13 +13,18 @@ import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.screen.NamedScreenHandlerFactory;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
@@ -94,11 +101,31 @@ public class MannequinBlock extends BlockWithEntity {
 	@Override
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
 		BlockEntity blockEntity = world.getBlockEntity(pos);
-		if (blockEntity instanceof MannequinBlockEntity mannequinBlockEntity) {
-			player.openHandledScreen(mannequinBlockEntity);
+		if (blockEntity instanceof MannequinBlockEntity mannequinBlockEntity && !mannequinBlockEntity.isLockedForPlayer(player)) {
+			player.openHandledScreen(createMannequinBlockScreenHandlerFactory(pos, player, mannequinBlockEntity));
 			return ActionResult.success(world.isClient);
 		}
 		return ActionResult.PASS;
+	}
+
+	public static NamedScreenHandlerFactory createMannequinBlockScreenHandlerFactory(BlockPos pos, PlayerEntity player, MannequinBlockEntity mannequinBlockEntity) {
+		return new ExtendedScreenHandlerFactory<>() {
+			@Override
+			public MannequinScreenHandler.MannequinBlockData getScreenOpeningData(ServerPlayerEntity player) {
+				return new MannequinScreenHandler.MannequinBlockData(pos, mannequinBlockEntity.canChangeInventory() || player.isCreative(), mannequinBlockEntity.canEquip() || player.isCreative());
+			}
+
+			@Override
+			public Text getDisplayName() {
+				return mannequinBlockEntity.getDisplayName();
+			}
+
+			@Nullable
+			@Override
+			public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
+				return new MannequinScreenHandler(syncId, playerInventory, mannequinBlockEntity, pos, mannequinBlockEntity.canChangeInventory() || player.isCreative(), mannequinBlockEntity.canEquip() || player.isCreative());
+			}
+		};
 	}
 
 	@Override
