@@ -11,10 +11,10 @@ import net.minecraft.item.ItemStack;
 public class SwapHandAttributesHelper {
 	public static void swapHandAttributes(PlayerEntity player, Runnable runnable) {
 
-		if (!((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed() && !((DuckPlayerEntityMixin) player).rpginventory$isOffhandStackSheathed()) {
-			boolean isMainHandEmpty = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getHand().isEmpty();
-			boolean isOffhandEmpty = player.getInventory().offHand.get(0).isEmpty();
-			synchronized (player) {
+		synchronized (player) {
+			if (!((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed() && !((DuckPlayerEntityMixin) player).rpginventory$isOffhandStackSheathed()) {
+				boolean isMainHandEmpty = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getHand().isEmpty();
+				boolean isOffhandEmpty = player.getInventory().offHand.get(0).isEmpty();
 				PlayerInventory inventory = player.getInventory();
 				ItemStack mainHandStack = isMainHandEmpty ? ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getEmptyHand() : ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getHand();
 				ItemStack offHandStack = isOffhandEmpty ? ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getEmptyOffhand() : inventory.offHand.get(0);
@@ -36,7 +36,7 @@ public class SwapHandAttributesHelper {
 				if (isMainHandEmpty) {
 					((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setEmptyHand(mainHandStack);
 				} else {
-					((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setHand(offHandStack);
+					((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setHand(mainHandStack);
 				}
 				if (isOffhandEmpty) {
 					((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setEmptyOffhand(offHandStack);
