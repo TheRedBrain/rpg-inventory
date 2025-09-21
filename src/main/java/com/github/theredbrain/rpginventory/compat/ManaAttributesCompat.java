@@ -5,6 +5,6 @@ import net.minecraft.entity.LivingEntity;
 
 public class ManaAttributesCompat {
 	public static void resetMana(LivingEntity livingEntity) {
-		((ManaUsingEntity) livingEntity).manaattributes$setMana(((ManaUsingEntity) livingEntity).manaattributes$getUnreservedMana());
+		((ManaUsingEntity) livingEntity).manaattributes$setApplyMaxMana(true);
 	}
 }

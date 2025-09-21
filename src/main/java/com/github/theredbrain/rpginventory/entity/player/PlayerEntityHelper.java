@@ -14,6 +14,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.scoreboard.AbstractTeam;
+import net.minecraft.scoreboard.Team;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -24,6 +25,7 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.MutablePair;
 
+import java.util.Iterator;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -33,7 +35,11 @@ public class PlayerEntityHelper {
 
 		StatusEffectInstance pvpEffectInstance = serverPlayerEntity.getStatusEffect(pvpStatusEffect);
 		if (pvpEffectInstance != null) {
-			for (StatusEffectInstance instance : serverPlayerEntity.getStatusEffects()) {
+			Team team = serverPlayerEntity.getScoreboardTeam();
+			Iterator<StatusEffectInstance> iterator = serverPlayerEntity.getStatusEffects().iterator();
+
+			while(iterator.hasNext()) {
+				StatusEffectInstance instance = iterator.next();
 				if (!(instance.getEffectType().isIn(Tags.KEPT_ON_PVP_DEATH) || instance.getEffectType() == pvpStatusEffect)) {
 					serverPlayerEntity.removeStatusEffect(instance.getEffectType());
 				}
@@ -48,8 +54,10 @@ public class PlayerEntityHelper {
 			} else {
 				serverPlayerEntity.setStatusEffect(new StatusEffectInstance(pvpStatusEffect, pvpEffectInstance.getDuration(), newAmplifier, pvpEffectInstance.isAmbient(), pvpEffectInstance.shouldShowParticles(), pvpEffectInstance.shouldShowIcon()), null);
 			}
-			teleportToPVPRespawnPosition(serverPlayerEntity, endOfBattle || playerRemovedFromBattle);
-			sendPVPDeathMessage(serverPlayerEntity, endOfBattle, playerRemovedFromBattle);
+			teleportToPVPRespawnPosition(team, serverPlayerEntity, endOfBattle || playerRemovedFromBattle);
+			if (!source.isIn(Tags.PREVENTS_PVP_DEATH_MESSAGE)) {
+				sendPVPDeathMessage(serverPlayerEntity, endOfBattle, playerRemovedFromBattle);
+			}
 			// TODO pvp deaths/kills statistic, score boards for active match
 //			serverPlayerEntity.incrementStat(Stats.DEATHS.USED.getOrCreateStat(Items.TOTEM_OF_UNDYING));
 			return true;
@@ -59,8 +67,9 @@ public class PlayerEntityHelper {
 
 	public static void sendPVPDeathMessage(ServerPlayerEntity serverPlayerEntity, boolean endOfBattle, boolean playerRemovedFromBattle) {
 		boolean bl = serverPlayerEntity.getWorld().getGameRules().getBoolean(GameRules.SHOW_DEATH_MESSAGES);
-		if (bl) {
-			Text text = serverPlayerEntity.getDamageTracker().getDeathMessage(); // TODO custom PVP death messages
+		if (bl && playerRemovedFromBattle) {
+			Text pvpSuffix = endOfBattle ? Text.translatable("death.pvp.prefix") : Text.empty();
+			Text text = Text.translatable("death.pvp.prefix", serverPlayerEntity.getDamageTracker().getDeathMessage(), pvpSuffix); // TODO custom PVP death messages
 			AbstractTeam abstractTeam = serverPlayerEntity.getScoreboardTeam();
 			if (abstractTeam == null || abstractTeam.getDeathMessageVisibilityRule() == AbstractTeam.VisibilityRule.ALWAYS) {
 				serverPlayerEntity.server.getPlayerManager().broadcast(text, false);
@@ -74,11 +83,10 @@ public class PlayerEntityHelper {
 	}
 
 	public static void resetPlayerStatus(ServerPlayerEntity serverPlayerEntity, boolean endOfBattle) {
-		serverPlayerEntity.setHealth(serverPlayerEntity.getMaxHealth());
-		RPGInventory.resetModdedPlayerStatus(serverPlayerEntity, endOfBattle);
+		RPGInventory.resetPlayerStatus(serverPlayerEntity, endOfBattle);
 	}
 
-	public static void teleportToPVPRespawnPosition(ServerPlayerEntity serverPlayerEntity, boolean endOfBattle) {
+	public static void teleportToPVPRespawnPosition(Team team, ServerPlayerEntity serverPlayerEntity, boolean endOfBattle) {
 
 		MinecraftServer server = serverPlayerEntity.getServer();
 		if (server != null) {
@@ -86,7 +94,7 @@ public class PlayerEntityHelper {
 			BlockPos targetPos = null;
 			double targetYaw = 0.0;
 			double targetPitch = 0.0;
-			MutablePair<RegistryKey<World>, MutablePair<BlockPos, MutablePair<Double, Double>>> pvp_respawn_position = RPGInventory.getPVPRespawnPosition(serverPlayerEntity, endOfBattle);
+			MutablePair<RegistryKey<World>, MutablePair<BlockPos, MutablePair<Double, Double>>> pvp_respawn_position = RPGInventory.getPVPRespawnPosition(team, serverPlayerEntity, endOfBattle);
 
 			if (pvp_respawn_position != null) {
 				targetWorld = server.getWorld(pvp_respawn_position.getLeft());

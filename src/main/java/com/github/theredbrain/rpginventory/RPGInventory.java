@@ -1,6 +1,7 @@
 package com.github.theredbrain.rpginventory;
 
 import com.github.theredbrain.rpginventory.compat.BetterCombatExtensionCompat;
+import com.github.theredbrain.rpginventory.compat.HealthRegenerationOverhaulCompat;
 import com.github.theredbrain.rpginventory.compat.InventorySizeAttributesCompat;
 import com.github.theredbrain.rpginventory.compat.ManaAttributesCompat;
 import com.github.theredbrain.rpginventory.compat.ScriptBlocksCompat;
@@ -28,6 +29,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.scoreboard.Team;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
@@ -64,6 +66,7 @@ public class RPGInventory implements ModInitializer {
 	public static final boolean isRPGCraftingLoaded = FabricLoader.getInstance().isModLoaded("rpgcrafting");
 	public static final boolean isBackpackAttributeLoaded = FabricLoader.getInstance().isModLoaded("backpackattribute");
 	public static final boolean isCombatRollLoaded = FabricLoader.getInstance().isModLoaded("combat_roll");
+	public static final boolean isHealthRegenerationOverhaulLoaded = FabricLoader.getInstance().isModLoaded("healthregenerationoverhaul");
 	public static final boolean isNumismaticOverhaulLoaded = FabricLoader.getInstance().isModLoaded("numismatic-overhaul");
 	public static final boolean isOwoLibLoaded = FabricLoader.getInstance().isModLoaded("owo");
 	public static final boolean isManaAttributesLoaded = FabricLoader.getInstance().isModLoaded("manaattributes");
@@ -140,12 +143,17 @@ public class RPGInventory implements ModInitializer {
 		}
 	}
 
-	public static void resetModdedPlayerStatus(ServerPlayerEntity serverPlayerEntity, boolean endOfBattle) {
+	public static void resetPlayerStatus(ServerPlayerEntity serverPlayerEntity, boolean endOfBattle) {
 		if (RPGInventory.isManaAttributesLoaded) {
 			ManaAttributesCompat.resetMana(serverPlayerEntity);
 		}
 		if (RPGInventory.isStaminaAttributesLoaded) {
 			StaminaAttributesCompat.resetStamina(serverPlayerEntity);
+		}
+		if (RPGInventory.isHealthRegenerationOverhaulLoaded) {
+			HealthRegenerationOverhaulCompat.resetHealth(serverPlayerEntity);
+		} else {
+			serverPlayerEntity.setHealth(serverPlayerEntity.getMaxHealth());
 		}
 		if (RPGInventory.isSpellEngineLoaded) {
 			SpellEngineCompat.resetSpellCooldowns(serverPlayerEntity);
@@ -155,9 +163,9 @@ public class RPGInventory implements ModInitializer {
 		}
 	}
 
-	public static MutablePair<RegistryKey<World>, MutablePair<BlockPos, MutablePair<Double, Double>>> getPVPRespawnPosition(ServerPlayerEntity serverPlayerEntity, boolean endOfBattle) {
+	public static MutablePair<RegistryKey<World>, MutablePair<BlockPos, MutablePair<Double, Double>>> getPVPRespawnPosition(Team team, ServerPlayerEntity serverPlayerEntity, boolean endOfBattle) {
 		if (RPGInventory.isScriptBlocksLoaded) {
-			return ScriptBlocksCompat.getPVPRespawnPosition(serverPlayerEntity, endOfBattle);
+			return ScriptBlocksCompat.getPVPRespawnPosition(team, serverPlayerEntity, endOfBattle);
 		} else {
 			MinecraftServer server = serverPlayerEntity.getServer();
 			if (server != null) {

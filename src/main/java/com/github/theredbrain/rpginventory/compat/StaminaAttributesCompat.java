@@ -13,6 +13,6 @@ public class StaminaAttributesCompat {
 	}
 
 	public static void resetStamina(LivingEntity livingEntity) {
-		((StaminaUsingEntity) livingEntity).staminaattributes$setStamina(((StaminaUsingEntity) livingEntity).staminaattributes$getUnreservedStamina());
+		((StaminaUsingEntity) livingEntity).staminaattributes$setApplyMaxStamina(true);
 	}
 }

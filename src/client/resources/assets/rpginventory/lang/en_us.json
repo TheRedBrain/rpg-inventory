@@ -9,6 +9,9 @@
 
 	"container.mannequin": "Mannequin",
 
+	"death.pvp.prefix": "[PVP] %s%s",
+	"death.pvp.suffix": " This was their last life.",
+
 	"gui.mannequin.equip_button_label": "Equip",
 	"gui.mannequin.unequip_button_label": "Unequip",
 

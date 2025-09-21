@@ -47,5 +47,6 @@ public class Tags {
 	public static final TagKey<StatusEffect> KEPT_ON_PVP_DEATH = TagKey.of(RegistryKeys.STATUS_EFFECT, RPGInventory.identifier("kept_on_pvp_death"));
 
 	public static final TagKey<DamageType> REMOVES_PLAYER_FROM_PVP = TagKey.of(RegistryKeys.DAMAGE_TYPE, RPGInventory.identifier("removes_player_from_pvp"));
+	public static final TagKey<DamageType> PREVENTS_PVP_DEATH_MESSAGE = TagKey.of(RegistryKeys.DAMAGE_TYPE, RPGInventory.identifier("prevents_pvp_death_message"));
 
 }
