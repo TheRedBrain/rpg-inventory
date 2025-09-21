@@ -1,8 +1,12 @@
 {
-	"values": [
-		{
-			"id": "spell_engine:scroll",
-			"required": false
-		}
-	]
+  "values": [
+    {
+      "id": "spell_engine:scroll",
+      "required": false
+    },
+    {
+      "id": "#spell_engine:spell_books",
+      "required": false
+    }
+  ]
 }

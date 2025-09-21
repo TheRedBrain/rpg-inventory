@@ -3,6 +3,14 @@
 		{
 			"id": "#trinkets:legs/belt",
 			"required": false
+		},
+		{
+			"id": "#archers:quivers",
+			"required": false
+		},
+		{
+			"id": "#runes:pouches",
+			"required": false
 		}
 	]
 }
