@@ -67,8 +67,8 @@ public class PlayerEntityHelper {
 
 	public static void sendPVPDeathMessage(ServerPlayerEntity serverPlayerEntity, boolean endOfBattle, boolean playerRemovedFromBattle) {
 		boolean bl = serverPlayerEntity.getWorld().getGameRules().getBoolean(GameRules.SHOW_DEATH_MESSAGES);
-		if (bl && playerRemovedFromBattle) {
-			Text pvpSuffix = endOfBattle ? Text.translatable("death.pvp.prefix") : Text.empty();
+		if (bl && !playerRemovedFromBattle) {
+			Text pvpSuffix = endOfBattle ? Text.translatable("death.pvp.suffix") : Text.empty();
 			Text text = Text.translatable("death.pvp.prefix", serverPlayerEntity.getDamageTracker().getDeathMessage(), pvpSuffix); // TODO custom PVP death messages
 			AbstractTeam abstractTeam = serverPlayerEntity.getScoreboardTeam();
 			if (abstractTeam == null || abstractTeam.getDeathMessageVisibilityRule() == AbstractTeam.VisibilityRule.ALWAYS) {
