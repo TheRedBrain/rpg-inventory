@@ -25,7 +25,8 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.MutablePair;
 
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -36,13 +37,15 @@ public class PlayerEntityHelper {
 		StatusEffectInstance pvpEffectInstance = serverPlayerEntity.getStatusEffect(pvpStatusEffect);
 		if (pvpEffectInstance != null) {
 			Team team = serverPlayerEntity.getScoreboardTeam();
-			Iterator<StatusEffectInstance> iterator = serverPlayerEntity.getStatusEffects().iterator();
+			List<RegistryEntry<StatusEffect>> effectsToBeRemoved = new ArrayList<>();
 
-			while(iterator.hasNext()) {
-				StatusEffectInstance instance = iterator.next();
+			for (StatusEffectInstance instance : serverPlayerEntity.getStatusEffects()) {
 				if (!(instance.getEffectType().isIn(Tags.KEPT_ON_PVP_DEATH) || instance.getEffectType() == pvpStatusEffect)) {
-					serverPlayerEntity.removeStatusEffect(instance.getEffectType());
+					effectsToBeRemoved.add(instance.getEffectType());
 				}
+			}
+			for (RegistryEntry<StatusEffect> entry : effectsToBeRemoved) {
+				serverPlayerEntity.removeStatusEffect(entry);
 			}
 			int newAmplifier = pvpEffectInstance.getAmplifier() - 1;
 			boolean playerRemovedFromBattle = source.isIn(Tags.REMOVES_PLAYER_FROM_PVP);
@@ -69,7 +72,7 @@ public class PlayerEntityHelper {
 		boolean bl = serverPlayerEntity.getWorld().getGameRules().getBoolean(GameRules.SHOW_DEATH_MESSAGES);
 		if (bl && !playerRemovedFromBattle) {
 			Text pvpSuffix = endOfBattle ? Text.translatable("death.pvp.suffix") : Text.empty();
-			Text text = Text.translatable("death.pvp.prefix", serverPlayerEntity.getDamageTracker().getDeathMessage(), pvpSuffix); // TODO custom PVP death messages
+			Text text = Text.translatable("death.pvp.prefix", serverPlayerEntity.getDamageTracker().getDeathMessage(), pvpSuffix);
 			AbstractTeam abstractTeam = serverPlayerEntity.getScoreboardTeam();
 			if (abstractTeam == null || abstractTeam.getDeathMessageVisibilityRule() == AbstractTeam.VisibilityRule.ALWAYS) {
 				serverPlayerEntity.server.getPlayerManager().broadcast(text, false);
