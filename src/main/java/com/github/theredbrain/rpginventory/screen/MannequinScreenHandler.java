@@ -248,6 +248,16 @@ public class MannequinScreenHandler extends ScreenHandler {
 				return super.isEnabled() && serverConfig.inventorySlots.is_belt_slot_enabled.get();
 			}
 
+			@Override
+			public boolean canInsert(ItemStack stack) {
+				return super.canInsert(stack) && serverConfig.inventorySlots.allow_belt_item_insertion.get();
+			}
+
+			@Override
+			public boolean canTakeItems(PlayerEntity playerEntity) {
+				return super.canTakeItems(playerEntity) && serverConfig.inventorySlots.allow_belt_item_taking.get();
+			}
+
 		});
 
 		// 47 gloves slot
@@ -256,6 +266,16 @@ public class MannequinScreenHandler extends ScreenHandler {
 			@Override
 			public boolean isEnabled() {
 				return super.isEnabled() && serverConfig.inventorySlots.is_gloves_slot_enabled.get();
+			}
+
+			@Override
+			public boolean canInsert(ItemStack stack) {
+				return super.canInsert(stack) && serverConfig.inventorySlots.allow_gloves_item_insertion.get();
+			}
+
+			@Override
+			public boolean canTakeItems(PlayerEntity playerEntity) {
+				return super.canTakeItems(playerEntity) && serverConfig.inventorySlots.allow_gloves_item_taking.get();
 			}
 
 		});
@@ -268,6 +288,16 @@ public class MannequinScreenHandler extends ScreenHandler {
 				return super.isEnabled() && serverConfig.inventorySlots.is_necklace_slot_enabled.get();
 			}
 
+			@Override
+			public boolean canInsert(ItemStack stack) {
+				return super.canInsert(stack) && serverConfig.inventorySlots.allow_necklace_item_insertion.get();
+			}
+
+			@Override
+			public boolean canTakeItems(PlayerEntity playerEntity) {
+				return super.canTakeItems(playerEntity) && serverConfig.inventorySlots.allow_necklace_item_taking.get();
+			}
+
 		});
 
 		// 49 ring 1 slot
@@ -276,6 +306,16 @@ public class MannequinScreenHandler extends ScreenHandler {
 			@Override
 			public boolean isEnabled() {
 				return super.isEnabled() && serverConfig.inventorySlots.is_ring_1_slot_enabled.get();
+			}
+
+			@Override
+			public boolean canInsert(ItemStack stack) {
+				return super.canInsert(stack) && serverConfig.inventorySlots.allow_ring_1_item_insertion.get();
+			}
+
+			@Override
+			public boolean canTakeItems(PlayerEntity playerEntity) {
+				return super.canTakeItems(playerEntity) && serverConfig.inventorySlots.allow_ring_1_item_taking.get();
 			}
 
 		});
@@ -288,6 +328,16 @@ public class MannequinScreenHandler extends ScreenHandler {
 				return super.isEnabled() && serverConfig.inventorySlots.is_ring_2_slot_enabled.get();
 			}
 
+			@Override
+			public boolean canInsert(ItemStack stack) {
+				return super.canInsert(stack) && serverConfig.inventorySlots.allow_ring_2_item_insertion.get();
+			}
+
+			@Override
+			public boolean canTakeItems(PlayerEntity playerEntity) {
+				return super.canTakeItems(playerEntity) && serverConfig.inventorySlots.allow_ring_2_item_taking.get();
+			}
+
 		});
 
 		// 51 shoulders slot
@@ -296,6 +346,16 @@ public class MannequinScreenHandler extends ScreenHandler {
 			@Override
 			public boolean isEnabled() {
 				return super.isEnabled() && serverConfig.inventorySlots.is_shoulders_slot_enabled.get();
+			}
+
+			@Override
+			public boolean canInsert(ItemStack stack) {
+				return super.canInsert(stack) && serverConfig.inventorySlots.allow_shoulders_item_insertion.get();
+			}
+
+			@Override
+			public boolean canTakeItems(PlayerEntity playerEntity) {
+				return super.canTakeItems(playerEntity) && serverConfig.inventorySlots.allow_shoulders_item_taking.get();
 			}
 
 		});
@@ -388,6 +448,16 @@ public class MannequinScreenHandler extends ScreenHandler {
 				return super.isEnabled() && serverConfig.inventorySlots.is_relic_slot_enabled.get();
 			}
 
+			@Override
+			public boolean canInsert(ItemStack stack) {
+				return super.canInsert(stack) && serverConfig.inventorySlots.allow_relic_item_insertion.get();
+			}
+
+			@Override
+			public boolean canTakeItems(PlayerEntity playerEntity) {
+				return super.canTakeItems(playerEntity) && serverConfig.inventorySlots.allow_relic_item_taking.get();
+			}
+
 		});
 
 
@@ -435,7 +505,17 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && serverConfig.inventorySlots.is_belt_slot_enabled.get();
+				return super.isEnabled() && serverConfig.inventorySlots.is_belt_slot_enabled.get() && serverConfig.inventorySlots.is_belt_mannequin_slot_enabled.get();
+			}
+
+			@Override
+			public boolean canInsert(ItemStack stack) {
+				return super.canInsert(stack) && serverConfig.inventorySlots.allow_belt_item_insertion.get();
+			}
+
+			@Override
+			public boolean canTakeItems(PlayerEntity playerEntity) {
+				return super.canTakeItems(playerEntity) && serverConfig.inventorySlots.allow_belt_item_taking.get();
 			}
 
 		});
@@ -445,7 +525,17 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && serverConfig.inventorySlots.is_gloves_slot_enabled.get();
+				return super.isEnabled() && serverConfig.inventorySlots.is_gloves_slot_enabled.get() && serverConfig.inventorySlots.is_gloves_mannequin_slot_enabled.get();
+			}
+
+			@Override
+			public boolean canInsert(ItemStack stack) {
+				return super.canInsert(stack) && serverConfig.inventorySlots.allow_gloves_item_insertion.get();
+			}
+
+			@Override
+			public boolean canTakeItems(PlayerEntity playerEntity) {
+				return super.canTakeItems(playerEntity) && serverConfig.inventorySlots.allow_gloves_item_taking.get();
 			}
 
 		});
@@ -455,7 +545,17 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && serverConfig.inventorySlots.is_necklace_slot_enabled.get();
+				return super.isEnabled() && serverConfig.inventorySlots.is_necklace_slot_enabled.get() && serverConfig.inventorySlots.is_necklace_mannequin_slot_enabled.get();
+			}
+
+			@Override
+			public boolean canInsert(ItemStack stack) {
+				return super.canInsert(stack) && serverConfig.inventorySlots.allow_necklace_item_insertion.get();
+			}
+
+			@Override
+			public boolean canTakeItems(PlayerEntity playerEntity) {
+				return super.canTakeItems(playerEntity) && serverConfig.inventorySlots.allow_necklace_item_taking.get();
 			}
 
 		});
@@ -465,7 +565,17 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && serverConfig.inventorySlots.is_ring_1_slot_enabled.get();
+				return super.isEnabled() && serverConfig.inventorySlots.is_ring_1_slot_enabled.get() && serverConfig.inventorySlots.is_ring_1_mannequin_slot_enabled.get();
+			}
+
+			@Override
+			public boolean canInsert(ItemStack stack) {
+				return super.canInsert(stack) && serverConfig.inventorySlots.allow_ring_1_item_insertion.get();
+			}
+
+			@Override
+			public boolean canTakeItems(PlayerEntity playerEntity) {
+				return super.canTakeItems(playerEntity) && serverConfig.inventorySlots.allow_ring_1_item_taking.get();
 			}
 
 		});
@@ -475,7 +585,17 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && serverConfig.inventorySlots.is_ring_2_slot_enabled.get();
+				return super.isEnabled() && serverConfig.inventorySlots.is_ring_2_slot_enabled.get() && serverConfig.inventorySlots.is_ring_2_mannequin_slot_enabled.get();
+			}
+
+			@Override
+			public boolean canInsert(ItemStack stack) {
+				return super.canInsert(stack) && serverConfig.inventorySlots.allow_ring_2_item_insertion.get();
+			}
+
+			@Override
+			public boolean canTakeItems(PlayerEntity playerEntity) {
+				return super.canTakeItems(playerEntity) && serverConfig.inventorySlots.allow_ring_2_item_taking.get();
 			}
 
 		});
@@ -485,41 +605,117 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && serverConfig.inventorySlots.is_shoulders_slot_enabled.get();
+				return super.isEnabled() && serverConfig.inventorySlots.is_shoulders_slot_enabled.get() && serverConfig.inventorySlots.is_shoulders_mannequin_slot_enabled.get();
+			}
+
+			@Override
+			public boolean canInsert(ItemStack stack) {
+				return super.canInsert(stack) && serverConfig.inventorySlots.allow_shoulders_item_insertion.get();
+			}
+
+			@Override
+			public boolean canTakeItems(PlayerEntity playerEntity) {
+				return super.canTakeItems(playerEntity) && serverConfig.inventorySlots.allow_shoulders_item_taking.get();
 			}
 
 		});
 
 		// 75 spell 1 slot
-		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.SPELL_1, 14, 90 + 8, 89, EMPTY_SPELL_1_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.spell_1"))));
+		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.SPELL_1, 14, 90 + 8, 89, EMPTY_SPELL_1_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.spell_1"))) {
+
+			@Override
+			public boolean isEnabled() {
+				return super.isEnabled() && serverConfig.inventorySlots.is_spell_1_mannequin_slot_enabled.get();
+			}
+
+		});
 
 		// 76 spell 2 slot
-		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.SPELL_2, 15, 90 + 26, 89, EMPTY_SPELL_2_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.spell_2"))));
+		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.SPELL_2, 15, 90 + 26, 89, EMPTY_SPELL_2_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.spell_2"))) {
+
+			@Override
+			public boolean isEnabled() {
+				return super.isEnabled() && serverConfig.inventorySlots.is_spell_2_mannequin_slot_enabled.get();
+			}
+
+		});
 
 		// 77 spell 3 slot
-		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.SPELL_3, 16, 90 + 44, 89, EMPTY_SPELL_3_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.spell_3"))));
+		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.SPELL_3, 16, 90 + 44, 89, EMPTY_SPELL_3_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.spell_3"))) {
+
+			@Override
+			public boolean isEnabled() {
+				return super.isEnabled() && serverConfig.inventorySlots.is_spell_3_mannequin_slot_enabled.get();
+			}
+
+		});
 
 		// 78 spell 4 slot
-		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.SPELL_4, 17, 90 + 62, 89, EMPTY_SPELL_4_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.spell_4"))));
+		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.SPELL_4, 17, 90 + 62, 89, EMPTY_SPELL_4_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.spell_4"))) {
+
+			@Override
+			public boolean isEnabled() {
+				return super.isEnabled() && serverConfig.inventorySlots.is_spell_4_mannequin_slot_enabled.get();
+			}
+
+		});
 
 		// 79 spell 5 slot
-		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.SPELL_5, 18, 90 + 8, 107, EMPTY_SPELL_5_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.spell_5"))));
+		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.SPELL_5, 18, 90 + 8, 107, EMPTY_SPELL_5_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.spell_5"))) {
+
+			@Override
+			public boolean isEnabled() {
+				return super.isEnabled() && serverConfig.inventorySlots.is_spell_5_mannequin_slot_enabled.get();
+			}
+
+		});
 
 		// 80 spell 6 slot
-		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.SPELL_6, 19, 90 + 26, 107, EMPTY_SPELL_6_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.spell_6"))));
+		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.SPELL_6, 19, 90 + 26, 107, EMPTY_SPELL_6_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.spell_6"))) {
+
+			@Override
+			public boolean isEnabled() {
+				return super.isEnabled() && serverConfig.inventorySlots.is_spell_6_mannequin_slot_enabled.get();
+			}
+
+		});
 
 		// 81 spell 7 slot
-		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.SPELL_7, 20, 90 + 44, 107, EMPTY_SPELL_7_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.spell_7"))));
+		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.SPELL_7, 20, 90 + 44, 107, EMPTY_SPELL_7_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.spell_7"))) {
+
+			@Override
+			public boolean isEnabled() {
+				return super.isEnabled() && serverConfig.inventorySlots.is_spell_7_mannequin_slot_enabled.get();
+			}
+
+		});
 
 		// 82 spell 8 slot
-		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.SPELL_8, 21, 90 + 62, 107, EMPTY_SPELL_8_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.spell_8"))));
+		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.SPELL_8, 21, 90 + 62, 107, EMPTY_SPELL_8_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.spell_8"))) {
+
+			@Override
+			public boolean isEnabled() {
+				return super.isEnabled() && serverConfig.inventorySlots.is_spell_8_mannequin_slot_enabled.get();
+			}
+
+		});
 
 		// 83 relic slot
 		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.RELIC, 22, 90 + 62, 17, EMPTY_RELIC_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.relic"))) {
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && serverConfig.inventorySlots.is_relic_slot_enabled.get();
+				return super.isEnabled() && serverConfig.inventorySlots.is_relic_slot_enabled.get() && serverConfig.inventorySlots.is_relic_mannequin_slot_enabled.get();
+			}
+
+			@Override
+			public boolean canInsert(ItemStack stack) {
+				return super.canInsert(stack) && serverConfig.inventorySlots.allow_relic_item_insertion.get();
+			}
+
+			@Override
+			public boolean canTakeItems(PlayerEntity playerEntity) {
+				return super.canTakeItems(playerEntity) && serverConfig.inventorySlots.allow_relic_item_taking.get();
 			}
 
 		});

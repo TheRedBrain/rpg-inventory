@@ -151,82 +151,111 @@ public class ServerConfig extends Config {
 
 		public ConfigGroup belt_slots = new ConfigGroup("belt_slots", true);
 		public ValidatedBoolean is_belt_slot_enabled = new ValidatedBoolean(true);
+		public ValidatedBoolean is_belt_mannequin_slot_enabled = new ValidatedBoolean(true);
+		public ValidatedBoolean allow_belt_item_insertion = new ValidatedBoolean(true);
+		public ValidatedBoolean allow_belt_item_taking = new ValidatedBoolean(true);
 		public ValidatedInt belt_slot_x_offset = new ValidatedInt(77);
 		@ConfigGroup.Pop
 		public ValidatedInt belt_slot_y_offset = new ValidatedInt(90);
 
 		public ConfigGroup gloves_slots = new ConfigGroup("gloves_slots", true);
 		public ValidatedBoolean is_gloves_slot_enabled = new ValidatedBoolean(true);
+		public ValidatedBoolean is_gloves_mannequin_slot_enabled = new ValidatedBoolean(true);
+		public ValidatedBoolean allow_gloves_item_insertion = new ValidatedBoolean(true);
+		public ValidatedBoolean allow_gloves_item_taking = new ValidatedBoolean(true);
 		public ValidatedInt gloves_slot_x_offset = new ValidatedInt(77);
 		@ConfigGroup.Pop
 		public ValidatedInt gloves_slot_y_offset = new ValidatedInt(72);
 
 		public ConfigGroup necklace_slots = new ConfigGroup("necklace_slots", true);
 		public ValidatedBoolean is_necklace_slot_enabled = new ValidatedBoolean(true);
+		public ValidatedBoolean is_necklace_mannequin_slot_enabled = new ValidatedBoolean(true);
+		public ValidatedBoolean allow_necklace_item_insertion = new ValidatedBoolean(true);
+		public ValidatedBoolean allow_necklace_item_taking = new ValidatedBoolean(true);
 		public ValidatedInt necklace_slot_x_offset = new ValidatedInt(52);
 		@ConfigGroup.Pop
 		public ValidatedInt necklace_slot_y_offset = new ValidatedInt(18);
 
 		public ConfigGroup ring_1_slots = new ConfigGroup("ring_1_slots", true);
 		public ValidatedBoolean is_ring_1_slot_enabled = new ValidatedBoolean(true);
+		public ValidatedBoolean is_ring_1_mannequin_slot_enabled = new ValidatedBoolean(true);
+		public ValidatedBoolean allow_ring_1_item_insertion = new ValidatedBoolean(true);
+		public ValidatedBoolean allow_ring_1_item_taking = new ValidatedBoolean(true);
 		public ValidatedInt ring_1_slot_x_offset = new ValidatedInt(77);
 		@ConfigGroup.Pop
 		public ValidatedInt ring_1_slot_y_offset = new ValidatedInt(36);
 
 		public ConfigGroup ring_2_slots = new ConfigGroup("ring_2_slots", true);
 		public ValidatedBoolean is_ring_2_slot_enabled = new ValidatedBoolean(false);
+		public ValidatedBoolean is_ring_2_mannequin_slot_enabled = new ValidatedBoolean(false);
+		public ValidatedBoolean allow_ring_2_item_insertion = new ValidatedBoolean(false);
+		public ValidatedBoolean allow_ring_2_item_taking = new ValidatedBoolean(false);
 		public ValidatedInt ring_2_slot_x_offset = new ValidatedInt(77);
 		@ConfigGroup.Pop
 		public ValidatedInt ring_2_slot_y_offset = new ValidatedInt(18);
 
 		public ConfigGroup relic_slots = new ConfigGroup("relic_slots", true);
 		public ValidatedBoolean is_relic_slot_enabled = new ValidatedBoolean(true);
+		public ValidatedBoolean is_relic_mannequin_slot_enabled = new ValidatedBoolean(true);
+		public ValidatedBoolean allow_relic_item_insertion = new ValidatedBoolean(true);
+		public ValidatedBoolean allow_relic_item_taking = new ValidatedBoolean(true);
 		public ValidatedInt relic_slot_x_offset = new ValidatedInt(77);
 		@ConfigGroup.Pop
 		public ValidatedInt relic_slot_y_offset = new ValidatedInt(54);
 
 		public ConfigGroup shoulders_slots = new ConfigGroup("shoulders_slots", true);
 		public ValidatedBoolean is_shoulders_slot_enabled = new ValidatedBoolean(true);
+		public ValidatedBoolean is_shoulders_mannequin_slot_enabled = new ValidatedBoolean(true);
+		public ValidatedBoolean allow_shoulders_item_insertion = new ValidatedBoolean(true);
+		public ValidatedBoolean allow_shoulders_item_taking = new ValidatedBoolean(true);
 		public ValidatedInt shoulders_slot_x_offset = new ValidatedInt(33);
 		@ConfigGroup.Pop
 		public ValidatedInt shoulders_slot_y_offset = new ValidatedInt(18);
 
 		public ConfigGroup spell_1_slots = new ConfigGroup("spell_1_slots", true);
+		public ValidatedBoolean is_spell_1_mannequin_slot_enabled = new ValidatedBoolean(true);
 		public ValidatedInt spell_1_slot_x_offset = new ValidatedInt(98);
 		@ConfigGroup.Pop
 		public ValidatedInt spell_1_slot_y_offset = new ValidatedInt(90);
 
 		public ConfigGroup spell_2_slots = new ConfigGroup("spell_2_slots", true);
+		public ValidatedBoolean is_spell_2_mannequin_slot_enabled = new ValidatedBoolean(true);
 		public ValidatedInt spell_2_slot_x_offset = new ValidatedInt(116);
 		@ConfigGroup.Pop
 		public ValidatedInt spell_2_slot_y_offset = new ValidatedInt(90);
 
 		public ConfigGroup spell_3_slots = new ConfigGroup("spell_3_slots", true);
+		public ValidatedBoolean is_spell_3_mannequin_slot_enabled = new ValidatedBoolean(true);
 		public ValidatedInt spell_3_slot_x_offset = new ValidatedInt(134);
 		@ConfigGroup.Pop
 		public ValidatedInt spell_3_slot_y_offset = new ValidatedInt(90);
 
 		public ConfigGroup spell_4_slots = new ConfigGroup("spell_4_slots", true);
+		public ValidatedBoolean is_spell_4_mannequin_slot_enabled = new ValidatedBoolean(true);
 		public ValidatedInt spell_4_slot_x_offset = new ValidatedInt(152);
 		@ConfigGroup.Pop
 		public ValidatedInt spell_4_slot_y_offset = new ValidatedInt(90);
 
 		public ConfigGroup spell_5_slots = new ConfigGroup("spell_5_slots", true);
+		public ValidatedBoolean is_spell_5_mannequin_slot_enabled = new ValidatedBoolean(true);
 		public ValidatedInt spell_5_slot_x_offset = new ValidatedInt(98);
 		@ConfigGroup.Pop
 		public ValidatedInt spell_5_slot_y_offset = new ValidatedInt(108);
 
 		public ConfigGroup spell_6_slots = new ConfigGroup("spell_6_slots", true);
+		public ValidatedBoolean is_spell_6_mannequin_slot_enabled = new ValidatedBoolean(true);
 		public ValidatedInt spell_6_slot_x_offset = new ValidatedInt(116);
 		@ConfigGroup.Pop
 		public ValidatedInt spell_6_slot_y_offset = new ValidatedInt(108);
 
 		public ConfigGroup spell_7_slots = new ConfigGroup("spell_7_slots", true);
+		public ValidatedBoolean is_spell_7_mannequin_slot_enabled = new ValidatedBoolean(true);
 		public ValidatedInt spell_7_slot_x_offset = new ValidatedInt(134);
 		@ConfigGroup.Pop
 		public ValidatedInt spell_7_slot_y_offset = new ValidatedInt(108);
 
 		public ConfigGroup spell_8_slots = new ConfigGroup("spell_8_slots", true);
+		public ValidatedBoolean is_spell_8_mannequin_slot_enabled = new ValidatedBoolean(true);
 		public ValidatedInt spell_8_slot_x_offset = new ValidatedInt(152);
 		@ConfigGroup.Pop
 		public ValidatedInt spell_8_slot_y_offset = new ValidatedInt(108);

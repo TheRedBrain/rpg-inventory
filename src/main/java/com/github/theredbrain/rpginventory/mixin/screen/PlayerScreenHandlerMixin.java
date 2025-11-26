@@ -257,6 +257,16 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 				return super.isEnabled() && serverConfig.inventorySlots.is_belt_slot_enabled.get();
 			}
 
+			@Override
+			public boolean canInsert(ItemStack stack) {
+				return super.canInsert(stack) && serverConfig.inventorySlots.allow_belt_item_insertion.get();
+			}
+
+			@Override
+			public boolean canTakeItems(PlayerEntity playerEntity) {
+				return super.canTakeItems(playerEntity) && serverConfig.inventorySlots.allow_belt_item_taking.get();
+			}
+
 		});
 
 		// gloves slot 52
@@ -265,6 +275,16 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 			@Override
 			public boolean isEnabled() {
 				return super.isEnabled() && serverConfig.inventorySlots.is_gloves_slot_enabled.get();
+			}
+
+			@Override
+			public boolean canInsert(ItemStack stack) {
+				return super.canInsert(stack) && serverConfig.inventorySlots.allow_gloves_item_insertion.get();
+			}
+
+			@Override
+			public boolean canTakeItems(PlayerEntity playerEntity) {
+				return super.canTakeItems(playerEntity) && serverConfig.inventorySlots.allow_gloves_item_taking.get();
 			}
 
 		});
@@ -277,6 +297,16 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 				return super.isEnabled() && serverConfig.inventorySlots.is_necklace_slot_enabled.get();
 			}
 
+			@Override
+			public boolean canInsert(ItemStack stack) {
+				return super.canInsert(stack) && serverConfig.inventorySlots.allow_necklace_item_insertion.get();
+			}
+
+			@Override
+			public boolean canTakeItems(PlayerEntity playerEntity) {
+				return super.canTakeItems(playerEntity) && serverConfig.inventorySlots.allow_necklace_item_taking.get();
+			}
+
 		});
 
 		// ring 1 slot 54
@@ -285,6 +315,16 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 			@Override
 			public boolean isEnabled() {
 				return super.isEnabled() && serverConfig.inventorySlots.is_ring_1_slot_enabled.get();
+			}
+
+			@Override
+			public boolean canInsert(ItemStack stack) {
+				return super.canInsert(stack) && serverConfig.inventorySlots.allow_ring_1_item_insertion.get();
+			}
+
+			@Override
+			public boolean canTakeItems(PlayerEntity playerEntity) {
+				return super.canTakeItems(playerEntity) && serverConfig.inventorySlots.allow_ring_1_item_taking.get();
 			}
 
 		});
@@ -297,6 +337,16 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 				return super.isEnabled() && serverConfig.inventorySlots.is_ring_2_slot_enabled.get();
 			}
 
+			@Override
+			public boolean canInsert(ItemStack stack) {
+				return super.canInsert(stack) && serverConfig.inventorySlots.allow_ring_2_item_insertion.get();
+			}
+
+			@Override
+			public boolean canTakeItems(PlayerEntity playerEntity) {
+				return super.canTakeItems(playerEntity) && serverConfig.inventorySlots.allow_ring_2_item_taking.get();
+			}
+
 		});
 
 		// shoulders slot 56
@@ -305,6 +355,16 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 			@Override
 			public boolean isEnabled() {
 				return super.isEnabled() && serverConfig.inventorySlots.is_shoulders_slot_enabled.get();
+			}
+
+			@Override
+			public boolean canInsert(ItemStack stack) {
+				return super.canInsert(stack) && serverConfig.inventorySlots.allow_shoulders_item_insertion.get();
+			}
+
+			@Override
+			public boolean canTakeItems(PlayerEntity playerEntity) {
+				return super.canTakeItems(playerEntity) && serverConfig.inventorySlots.allow_shoulders_item_taking.get();
 			}
 
 		});
@@ -395,6 +455,16 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 			@Override
 			public boolean isEnabled() {
 				return super.isEnabled() && serverConfig.inventorySlots.is_relic_slot_enabled.get();
+			}
+
+			@Override
+			public boolean canInsert(ItemStack stack) {
+				return super.canInsert(stack) && serverConfig.inventorySlots.allow_relic_item_insertion.get();
+			}
+
+			@Override
+			public boolean canTakeItems(PlayerEntity playerEntity) {
+				return super.canTakeItems(playerEntity) && serverConfig.inventorySlots.allow_relic_item_taking.get();
 			}
 
 		});
