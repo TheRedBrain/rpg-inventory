@@ -41,6 +41,11 @@ public class ItemComponentRegistry {
 				RPGInventory.identifier("advancement_locked"),
 				ComponentType.<AdvancementLockedComponent>builder().codec(AdvancementLockedComponent.CODEC).packetCodec(AdvancementLockedComponent.PACKET_CODEC).build()
 		);
+		RPGInventory.IGNORES_EQUIPMENT_CHANGE_RESTRICTIONS = Registry.register(
+				Registries.DATA_COMPONENT_TYPE,
+				RPGInventory.identifier("ignores_equipment_change_restrictions"),
+				ComponentType.<Unit>builder().codec(Unit.CODEC).packetCodec(PacketCodec.unit(Unit.INSTANCE)).build()
+		);
 	}
 
 	public static void init() {

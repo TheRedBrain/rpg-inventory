@@ -67,7 +67,7 @@ public class AlternativeHandSlot extends Slot {
 		boolean isOwned = ItemUtils.isUsableByPlayer(stack, this.owner);
 		boolean isCreative = this.owner.isCreative();
 
-		return (equipmentSlot == this.owner.getPreferredEquipmentSlot(stack) || ExtendedEquipmentSlot.rpginventory$isOfEquipmentTag(stack, equipmentSlot)) && isOwned && (hasCivilisationEffect || isCreative || (RPGInventory.SERVER_CONFIG.allow_equipment_changes.get() && !hasWildernessEffect));
+		return (equipmentSlot == this.owner.getPreferredEquipmentSlot(stack) || ExtendedEquipmentSlot.rpginventory$isOfEquipmentTag(stack, equipmentSlot)) && isOwned && (stack.contains(RPGInventory.IGNORES_EQUIPMENT_CHANGE_RESTRICTIONS) || hasCivilisationEffect || isCreative || (RPGInventory.SERVER_CONFIG.allow_equipment_changes.get() && !hasWildernessEffect));
 	}
 
 	@Override
@@ -87,7 +87,7 @@ public class AlternativeHandSlot extends Slot {
 						&& EnchantmentHelper.hasAnyEnchantmentsWith(itemStack, EnchantmentEffectComponentTypes.PREVENT_ARMOR_CHANGE)
 						? false
 						: super.canTakeItems(playerEntity)
-		) && (!this.getStack().contains(RPGInventory.LOAD_OUT_ITEM) || this.allowsLoadoutItemRemoval) && (hasCivilisationEffect || isCreative || (RPGInventory.SERVER_CONFIG.allow_equipment_changes.get() && !hasWildernessEffect));
+		) && (!itemStack.contains(RPGInventory.LOAD_OUT_ITEM) || this.allowsLoadoutItemRemoval) && (itemStack.contains(RPGInventory.IGNORES_EQUIPMENT_CHANGE_RESTRICTIONS) || hasCivilisationEffect || isCreative || (RPGInventory.SERVER_CONFIG.allow_equipment_changes.get() && !hasWildernessEffect));
 	}
 
 	@Override

@@ -62,6 +62,7 @@ public class RPGInventory implements ModInitializer {
 	 * Mannequins have a second interaction that removes all equipped items with this component.
 	 */
 	public static ComponentType<Unit> LOAD_OUT_ITEM;
+	public static ComponentType<Unit> IGNORES_EQUIPMENT_CHANGE_RESTRICTIONS;
 
 	public static final boolean isRPGCraftingLoaded = FabricLoader.getInstance().isModLoaded("rpgcrafting");
 	public static final boolean isBackpackAttributeLoaded = FabricLoader.getInstance().isModLoaded("backpackattribute");

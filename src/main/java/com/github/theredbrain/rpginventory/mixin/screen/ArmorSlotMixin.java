@@ -51,7 +51,7 @@ public abstract class ArmorSlotMixin extends Slot {
 			isCreative = playerEntity.isCreative();
 		}
 
-		return (original.call(stack) || rpginventory$isOfEquipmentTag(stack, this.equipmentSlot)) && isOwned && (hasCivilisationEffect || isCreative || (RPGInventory.SERVER_CONFIG.allow_equipment_changes.get() && !hasWildernessEffect));
+		return (original.call(stack) || rpginventory$isOfEquipmentTag(stack, this.equipmentSlot)) && isOwned && (stack.contains(RPGInventory.IGNORES_EQUIPMENT_CHANGE_RESTRICTIONS) || hasCivilisationEffect || isCreative || (RPGInventory.SERVER_CONFIG.allow_equipment_changes.get() && !hasWildernessEffect));
 	}
 
 	@WrapMethod(method = "canTakeItems")
@@ -64,7 +64,7 @@ public abstract class ArmorSlotMixin extends Slot {
 
 		boolean isCreative = playerEntity.isCreative();
 
-		return original.call(playerEntity) && !this.getStack().contains(RPGInventory.LOAD_OUT_ITEM) && (hasCivilisationEffect || isCreative || (RPGInventory.SERVER_CONFIG.allow_equipment_changes.get() && !hasWildernessEffect));
+		return original.call(playerEntity) && !this.getStack().contains(RPGInventory.LOAD_OUT_ITEM) && (this.getStack().contains(RPGInventory.IGNORES_EQUIPMENT_CHANGE_RESTRICTIONS) || hasCivilisationEffect || isCreative || (RPGInventory.SERVER_CONFIG.allow_equipment_changes.get() && !hasWildernessEffect));
 	}
 
 	@Unique

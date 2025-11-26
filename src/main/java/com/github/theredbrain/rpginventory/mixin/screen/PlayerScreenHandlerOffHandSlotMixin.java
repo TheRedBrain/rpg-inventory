@@ -47,7 +47,7 @@ public abstract class PlayerScreenHandlerOffHandSlotMixin extends Slot {
 
 		boolean handSlotOverhaulIsInactive = !RPGInventory.isHandSlotOverhaulActive();
 
-		return (EquipmentSlot.OFFHAND == this.field_39410.getPreferredEquipmentSlot(stack) || stack.isIn(Tags.OFFHAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || handSlotOverhaulIsInactive) && (handSlotOverhaulIsInactive || !((DuckPlayerEntityMixin) this.field_39410).rpginventory$isOffhandStackSheathed()) && ItemUtils.isUsableByPlayer(stack, this.field_39410) && (hasCivilisationEffect || this.field_39410.isCreative() || (serverConfig.allow_equipment_changes.get() && !hasWildernessEffect));
+		return (EquipmentSlot.OFFHAND == this.field_39410.getPreferredEquipmentSlot(stack) || stack.isIn(Tags.OFFHAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || handSlotOverhaulIsInactive) && (handSlotOverhaulIsInactive || !((DuckPlayerEntityMixin) this.field_39410).rpginventory$isOffhandStackSheathed()) && ItemUtils.isUsableByPlayer(stack, this.field_39410) && (stack.contains(RPGInventory.IGNORES_EQUIPMENT_CHANGE_RESTRICTIONS) || hasCivilisationEffect || this.field_39410.isCreative() || (serverConfig.allow_equipment_changes.get() && !hasWildernessEffect));
 	}
 
 	@Override
@@ -60,6 +60,6 @@ public abstract class PlayerScreenHandlerOffHandSlotMixin extends Slot {
 
 		boolean isCreative = playerEntity.isCreative();
 
-		return !this.getStack().contains(RPGInventory.LOAD_OUT_ITEM) && (hasCivilisationEffect || isCreative || (RPGInventory.SERVER_CONFIG.allow_equipment_changes.get() && !hasWildernessEffect));
+		return !this.getStack().contains(RPGInventory.LOAD_OUT_ITEM) && (this.getStack().contains(RPGInventory.IGNORES_EQUIPMENT_CHANGE_RESTRICTIONS) || hasCivilisationEffect || isCreative || (RPGInventory.SERVER_CONFIG.allow_equipment_changes.get() && !hasWildernessEffect));
 	}
 }
