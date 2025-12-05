@@ -13,19 +13,11 @@ public class RPGInventoryMixinConfigPlugin implements IMixinConfigPlugin {
 	private static boolean needsLoad = true;
 
 	private static boolean applyTrinketsMixins = false;
-	private static boolean applyAzureLibMixins = false;
-	private static boolean applyAzureLibArmorMixins = false;
 
 	private static void loadIfNeeded() {
 		if (needsLoad) {
 			if (FabricLoader.getInstance().isModLoaded("trinkets")) {
 				applyTrinketsMixins = true;
-			}
-			if (FabricLoader.getInstance().isModLoaded("azurelib")) {
-				applyAzureLibMixins = true;
-			}
-			if (FabricLoader.getInstance().isModLoaded("azurelibarmor")) {
-				applyAzureLibArmorMixins = true;
 			}
 			needsLoad = false;
 		}
@@ -34,16 +26,6 @@ public class RPGInventoryMixinConfigPlugin implements IMixinConfigPlugin {
 	static boolean shouldApplyTrinketsMixins() {
 		loadIfNeeded();
 		return applyTrinketsMixins;
-	}
-
-	static boolean shouldApplyAzureLibMixins() {
-		loadIfNeeded();
-		return applyAzureLibMixins;
-	}
-
-	static boolean shouldApplyAzureLibArmorMixins() {
-		loadIfNeeded();
-		return applyAzureLibArmorMixins;
 	}
 
 	@Override
@@ -65,20 +47,6 @@ public class RPGInventoryMixinConfigPlugin implements IMixinConfigPlugin {
 						s1.equals("com.github.theredbrain.rpginventory.mixin.client.gui.screen.ingame.CreativeInventoryScreenMixin_TrinketsReplacement")
 		) {
 			return shouldApplyTrinketsMixins();
-		}
-		if (
-				s1.equals("com.github.theredbrain.rpginventory.mixin.client.azurelib.AzArmorBoneContextMixin") ||
-						s1.equals("com.github.theredbrain.rpginventory.mixin.client.azurelib.AzArmorBoneProviderMixin") ||
-						s1.equals("com.github.theredbrain.rpginventory.mixin.client.azurelib.AzDefaultArmorBoneProviderMixin")
-		) {
-			return shouldApplyAzureLibMixins();
-		}
-		if (
-				s1.equals("com.github.theredbrain.rpginventory.mixin.client.azurelibarmor.AzArmorBoneContextMixin") ||
-						s1.equals("com.github.theredbrain.rpginventory.mixin.client.azurelibarmor.AzArmorBoneProviderMixin") ||
-						s1.equals("com.github.theredbrain.rpginventory.mixin.client.azurelibarmor.AzDefaultArmorBoneProviderMixin")
-		) {
-			return shouldApplyAzureLibArmorMixins();
 		}
 		return true;
 	}

@@ -6,12 +6,6 @@
   "client": [
     "MinecraftClientMixin",
     "MouseMixin",
-    "azurelib.AzArmorBoneContextMixin",
-    "azurelib.AzArmorBoneProviderMixin",
-    "azurelib.AzDefaultArmorBoneProviderMixin",
-    "azurelibarmor.AzArmorBoneContextMixin",
-    "azurelibarmor.AzArmorBoneProviderMixin",
-    "azurelibarmor.AzDefaultArmorBoneProviderMixin",
     "gui.DrawContextMixin",
     "gui.hud.InGameHudMixin",
     "gui.screen.ingame.CreativeInventoryScreenMixin",

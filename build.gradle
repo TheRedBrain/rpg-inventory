@@ -61,12 +61,6 @@ repositories {
 		url 'https://maven.wispforest.io'
 	}
 
-	// AzureLib (Armor)
-	maven {
-		name = "AzureDoom Mods"
-		url = "https://maven.azuredoom.com/mods"
-	}
-
 	flatDir {
 		dirs("libs")
 	}
@@ -167,10 +161,6 @@ dependencies {
 
 	// Owo Lib
 	modImplementation "io.wispforest:owo-lib:${project.owo_lib_version}"
-
-	modImplementation "mod.azure.azurelib:azurelib-fabric-${project.minecraft_version}:${project.azure_lib_version}"
-
-	modImplementation("mod.azure.azurelibarmor:azurelibarmor-fabric-${project.minecraft_version}:${project.azure_lib_armor_version}")
 
 }
 
