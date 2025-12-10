@@ -4,9 +4,12 @@ import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerInventoryMixin;
 import com.google.common.collect.Multimap;
 import net.bettercombat.utils.AttributeModifierHelper;
+import net.minecraft.entity.attribute.EntityAttribute;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.entry.RegistryEntry;
 
 public class SwapHandAttributesHelper {
 	public static void swapHandAttributes(PlayerEntity player, Runnable runnable) {
@@ -59,7 +62,7 @@ public class SwapHandAttributesHelper {
 			add = mainHandStack;
 		}
 
-		Multimap modifiersMap;
+		Multimap<RegistryEntry<EntityAttribute>, EntityAttributeModifier> modifiersMap;
 		if (remove != null) {
 			modifiersMap = AttributeModifierHelper.modifierMultimap(remove);
 			player.getAttributes().removeModifiers(modifiersMap);

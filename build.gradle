@@ -153,7 +153,7 @@ dependencies {
 	modImplementation("maven.modrinth:spell-power:${project.spell_power_version}")
 
 	// Tiny Config
-	implementation include("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}")
+	modImplementation("maven.modrinth:tiny-config:${project.tiny_config_version}")
 
 	// Numismatic Overhaul
 	modImplementation ("maven.modrinth:numismatic-overhaul:${project.numismatic_overhaul_version}") {
