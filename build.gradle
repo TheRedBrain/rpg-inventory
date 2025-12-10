@@ -13,6 +13,16 @@ base {
 }
 
 repositories {
+
+	// Stamina Attributes, Slot Customization API, Inventory Size Attributes, Backpack Attribute, Player Attribute Screen
+	maven {
+		name = "Modrinth"
+		url = "https://api.modrinth.com/maven"
+		content {
+			includeGroup "maven.modrinth"
+		}
+	}
+
 	// Fzzy Config
 	maven {
 		name = "FzzyMaven"
@@ -34,15 +44,6 @@ repositories {
 	maven {
 		name = "Ladysnake Libs"
 		url = 'https://maven.ladysnake.org/releases'
-	}
-
-	// Stamina Attributes, Slot Customization API, Inventory Size Attributes, Backpack Attribute, Player Attribute Screen
-	maven {
-		name = "Modrinth"
-		url = "https://api.modrinth.com/maven"
-		content {
-			includeGroup "maven.modrinth"
-		}
 	}
 
 	// Player Animator
