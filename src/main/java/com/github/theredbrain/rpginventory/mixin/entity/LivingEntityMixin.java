@@ -99,7 +99,8 @@ public abstract class LivingEntityMixin extends Entity {
 				&& !this.getEquippedStack(ExtendedEquipmentSlot.RING_1).isIn(ItemTags.FREEZE_IMMUNE_WEARABLES)
 				&& !this.getEquippedStack(ExtendedEquipmentSlot.RING_2).isIn(ItemTags.FREEZE_IMMUNE_WEARABLES)
 				&& !this.getEquippedStack(ExtendedEquipmentSlot.NECKLACE).isIn(ItemTags.FREEZE_IMMUNE_WEARABLES)
-				&& !this.getEquippedStack(ExtendedEquipmentSlot.RELIC).isIn(ItemTags.FREEZE_IMMUNE_WEARABLES);
+				&& !this.getEquippedStack(ExtendedEquipmentSlot.RELIC).isIn(ItemTags.FREEZE_IMMUNE_WEARABLES)
+				&& !this.getEquippedStack(ExtendedEquipmentSlot.CLASS_ITEM).isIn(ItemTags.FREEZE_IMMUNE_WEARABLES);
 		return original.call() && bl;
 	}
 

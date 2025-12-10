@@ -21,6 +21,7 @@ public class ExtendedAttributeModifierSlot {
 	public static AttributeModifierSlot RINGS = AttributeModifierSlot.valueOf("RINGS");
 	public static AttributeModifierSlot SPELLS = AttributeModifierSlot.valueOf("SPELLS");
 	public static AttributeModifierSlot RELIC = AttributeModifierSlot.valueOf("RELIC");
+	public static AttributeModifierSlot CLASS_ITEM = AttributeModifierSlot.valueOf("CLASS_ITEM");
 
 	public static boolean isRingsSlot(EquipmentSlot slot) {
 		return slot.name().equals("ring_1") || slot.name().equals("ring_2");

@@ -52,6 +52,7 @@ public class EquipmentSlotMixin {
 		values.add(init("SPELL_7", last.ordinal() + 13, ExtendedEquipmentSlotType.RPG_INVENTORY_SLOT_TYPE, 12, 1, -1, "spell_7"));
 		values.add(init("SPELL_8", last.ordinal() + 14, ExtendedEquipmentSlotType.RPG_INVENTORY_SLOT_TYPE, 13, 1, -1, "spell_8"));
 		values.add(init("RELIC", last.ordinal() + 15, ExtendedEquipmentSlotType.RPG_INVENTORY_SLOT_TYPE, 14, 1, -1, "relic"));
+		values.add(init("CLASS_ITEM", last.ordinal() + 16, ExtendedEquipmentSlotType.RPG_INVENTORY_SLOT_TYPE, 15, 1, -1, "class_item"));
 
 		field_6176 = values.toArray(new EquipmentSlot[0]);
 

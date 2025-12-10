@@ -45,6 +45,12 @@ public class LivingEntityHelper {
 		if (predicate.test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.BELT))) {
 			return true;
 		}
+		if (predicate.test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.RELIC))) {
+			return true;
+		}
+		if (predicate.test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.CLASS_ITEM))) {
+			return true;
+		}
 		if (predicate.test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.SPELL_1))) {
 			return true;
 		}
@@ -108,6 +114,12 @@ public class LivingEntityHelper {
 			i += 1;
 		}
 		if (predicate.test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.BELT))) {
+			i += 1;
+		}
+		if (predicate.test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.RELIC))) {
+			i += 1;
+		}
+		if (predicate.test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.CLASS_ITEM))) {
 			i += 1;
 		}
 		if (predicate.test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.SPELL_1))) {
