@@ -1,3 +1,24 @@
+# 2.8.0
+
+## Additions
+
+- added "PVP Death" system, refer to the readme for a detailed explanation
+- populated "relics" item tag
+- added "canEquip" and "canChangeInventory" flags to Mannequin Block
+- added server config options to enable/disable mannequin slots
+- added server config options to enable/disable equipment slot interactions
+- added new data components:
+  - "rpginventory:ignores_equipment_change_restrictions"
+  - "rpginventory:is_destroyed_on_death"
+  - "rpginventory:is_kept_on_death"
+- added "class_item" slot, can't be interacted with directly (designed to be used by class selection mods)
+
+## Fixes
+
+- fixed Better Combat Extension compat
+- fixed Spell Engine Extension integration
+- (probably) fixed a glitch where Empty Hand Weapons could enter the regular inventory
+
 # 2.7.0
 
 - added Numismatic Overhaul Integration

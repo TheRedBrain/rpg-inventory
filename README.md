@@ -26,6 +26,7 @@ The mod also adds additional slots which are not directly accessible. They are u
 - 1 sheathed offhand slot
 - 1 empty hand slot
 - 1 empty offhand slot
+- 1 class item slot
 
 ## New Keybindings and mechanics
 
@@ -73,11 +74,13 @@ Effects in the "rpginventory:food_effects" effect tag are displayed in a separat
 ## Unusable Items
 
 Items in the "unusable_when_low_durability" item tag have the same behaviour as elytra. Instead of getting destroyed when losing all durability, they become unusable until they are repaired. Unusable items have a different translation key (default one + "_broken").
+
 Inventory slots that contain unusable items have an overlay of a configurable colour. This can be disabled in the client config.
 
 ## Player Bound Items
 
 Items can be bound to a player. Player bound items can only be used by that player. Player bound items have an additional tooltip line that shows the player name. (Can be disabled in the client config)
+
 Inventory slots that contain items bound to another player have an overlay of a configurable colour. This can be disabled in the client config.
 
 ### How to bind an item to a player
@@ -94,6 +97,8 @@ This is purely cosmetic.
 ## Mannequins and Load Out Items
 
 Mannequins are blocks that have storage slots similar to the players equipment slots. Items placed in those slots form a 'load out', which can be equipped by players. Equipping a load out fills the players equipment slots with copies of the load out items. Only slots that are empty or contain a load out item are filled.
+
+Changing and/or equipping load out items can be disabled for non-creative players using block entity data.
 
 ### Load out items
 
@@ -136,6 +141,49 @@ Equipment slots can now have a tooltip. It is only shown when the slot and the c
 
 When the string is empty, no tooltip will be shown.
 
+## Inventory changes on death
+
+RPG Inventory adds several mechanics that influence what happens with the items in the player inventory when the player dies.
+
+> When the vanilla "keep_inventory" game rule is set to true, all items are kept.
+
+When "keep_inventory_status_effect_identifier" is a valid status effect identifier, that status effect is applied when an item in the "sacrificed_to_keep_inventory_on_death" item tag is equipped (in an equipment, trinket or the offhand slot).
+When the player dies while having that status effect, all equipped items in the "sacrificed_to_keep_inventory_on_death" item tag are destroyed. The rest of the inventory is kept, regardless of game rules and stuff like "Curse of Vanishing".
+
+> The vanilla enchantment "Curse of Vanishing" is applied only when no item was sacrificed to keep the inventory.
+
+Items are kept under these conditions:
+- they have the "rpginventory:is_kept_on_death" component
+- they are in the "rpginventory:empty_hand_weapons" item tag
+- they have the "rpginventory:load_out_item" component and the corresponding server config option is set to true
+
+Items that are not kept are dropped like normal or get destroyed under these conditions:
+- the server config setting "destroy_dropped_items_on_death" is set to true
+- they have the "rpginventory:is_destroyed_on_death" component
+- they have the "rpginventory:load_out_item" component and the corresponding server config option is set to false
+
+### PVP Deaths
+
+When the health of a players with a configurable status effect reaches zero, they are not killed, but trigger this feature instead.
+Effects include:
+- remove all status effects (except the pvp effect and all entries of the "rpginventory:kept_on_pvp_death" tag)
+- reset players resources (health, mana, stamina, etc.)
+- reduce the amplifier of the "pvp effect" by one
+- if the new amplifier is greater or equal to zero:
+  - teleport player to a specific location (spawn point/world spawn by default, changes to Script Blocks' "location access position" when installed)
+- if the new amplifier is smaller than zero:
+  - teleport player to their spawn point/world spawn
+
+### Restricted Equipment Changes
+
+The server config setting "allow_equipment_changes" controls, whether items can be put into or removed from equipment slots.
+
+When "civilisation_status_effect_identifier" is a valid status effect identifier and the player has that status effect items can be put into or removed from equipment slots, regardless of the config setting.
+
+When "wilderness_status_effect_identifier" is a valid status effect identifier and the player has that status effect items can not be put into or removed from equipment slots, regardless of the config setting.
+
+Item stacks with the "rpginventory:ignores_equipment_change_restrictions" ignore these restrictions.
+
 ## Additional settings and features
 
 The 2x2 crafting grid in the player inventory can be disabled.
@@ -150,18 +198,7 @@ When "building_mode_status_effect_identifier" is a valid status effect identifie
 - every item can be used to attack and to break blocks
 - both hands behave like they are sheathed, so the hand slot contains the item in the selected hotbar slot, like in vanilla.
 
-When the server config setting "destroy_dropped_items_on_death" is true and the vanilla game rule "keepInventory" is false, the items in the players inventory are not dropped when they die. They are destroyed instead.
-
-When "keep_inventory_status_effect_identifier" is a valid status effect identifier, that status effect is applied when an item in the "sacrificed_to_keep_inventory_on_death" item tag is equipped (in an equipment, trinket or the offhand slot).
-When the player dies while having that status effect, all equipped items in the "sacrificed_to_keep_inventory_on_death" item tag are destroyed. The rest of the inventory is kept, regardless of game rules and stuff like "Curse of Vanishing".
-
-### Restricted Equipment Changes
-
-The server config setting "allow_equipment_changes" controls, whether items can be put into or removed from equipment slots.
-
-When "civilisation_status_effect_identifier" is a valid status effect identifier and the player has that status effect items can be put into or removed from equipment slots, regardless of the config setting.
-
-When "wilderness_status_effect_identifier" is a valid status effect identifier and the player has that status effect items can not be put into or removed from equipment slots, regardless of the config setting.
+Class item slot, this inventory slot can't be directly interacted with. It is designed for class selection mods like RPG Class Selection.
 
 ### Various Status Effects Integration
 
