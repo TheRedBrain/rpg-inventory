@@ -179,14 +179,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 		}
 	}
 
-	@Inject(method = "dropInventory", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerInventory;dropAll()V", ordinal = 0))
-	private void rpginventory$pre_inventoryDropAll(CallbackInfo ci) {
-		if (RPGInventory.SERVER_CONFIG.destroy_dropped_items_on_death.get()) {
-			this.inventory.clear();
-		}
-
-	}
-
 	@WrapMethod(method = "getEquippedStack")
 	public ItemStack rpginventory$getEquippedStack(EquipmentSlot slot, Operation<ItemStack> original) {
 		if (slot == EquipmentSlot.OFFHAND) {

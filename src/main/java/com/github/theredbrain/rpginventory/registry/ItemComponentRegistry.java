@@ -46,6 +46,16 @@ public class ItemComponentRegistry {
 				RPGInventory.identifier("ignores_equipment_change_restrictions"),
 				ComponentType.<Unit>builder().codec(Unit.CODEC).packetCodec(PacketCodec.unit(Unit.INSTANCE)).build()
 		);
+		RPGInventory.IS_DESTROYED_ON_DEATH = Registry.register(
+				Registries.DATA_COMPONENT_TYPE,
+				RPGInventory.identifier("is_destroyed_on_death"),
+				ComponentType.<Unit>builder().codec(Unit.CODEC).packetCodec(PacketCodec.unit(Unit.INSTANCE)).build()
+		);
+		RPGInventory.IS_KEPT_ON_DEATH = Registry.register(
+				Registries.DATA_COMPONENT_TYPE,
+				RPGInventory.identifier("is_kept_on_death"),
+				ComponentType.<Unit>builder().codec(Unit.CODEC).packetCodec(PacketCodec.unit(Unit.INSTANCE)).build()
+		);
 	}
 
 	public static void init() {
