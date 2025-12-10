@@ -19,6 +19,7 @@ import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.s2c.play.EntityEquipmentUpdateS2CPacket;
 import net.minecraft.registry.Registries;
@@ -109,8 +110,8 @@ public abstract class LivingEntityMixin extends Entity {
 
 		LivingEntity thisLivingEntity = ((LivingEntity) (Object) this);
 		Optional<RegistryEntry.Reference<StatusEffect>> pvp_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.pvp_status_effect_identifier.get());
-		if (pvp_status_effect.isPresent() && thisLivingEntity instanceof ServerPlayerEntity serverPlayerEntity && this.hasStatusEffect(pvp_status_effect.get())) {
-			if (PlayerEntityHelper.rpginventory$onPVPDeath(source, serverPlayerEntity, pvp_status_effect.get())) {
+		if (pvp_status_effect.isPresent() && thisLivingEntity instanceof PlayerEntity playerEntity && this.hasStatusEffect(pvp_status_effect.get())) {
+			if (PlayerEntityHelper.rpginventory$onPVPDeath(source, playerEntity, pvp_status_effect.get())) {
 				return true;
 			}
 		}

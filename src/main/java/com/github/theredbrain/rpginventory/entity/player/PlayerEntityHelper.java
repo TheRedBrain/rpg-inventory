@@ -32,34 +32,34 @@ import java.util.function.Predicate;
 
 public class PlayerEntityHelper {
 
-	public static boolean rpginventory$onPVPDeath(DamageSource source, ServerPlayerEntity serverPlayerEntity, RegistryEntry.Reference<StatusEffect> pvpStatusEffect) {
+	public static boolean rpginventory$onPVPDeath(DamageSource source, PlayerEntity playerEntity, RegistryEntry.Reference<StatusEffect> pvpStatusEffect) {
 
-		StatusEffectInstance pvpEffectInstance = serverPlayerEntity.getStatusEffect(pvpStatusEffect);
+		StatusEffectInstance pvpEffectInstance = playerEntity.getStatusEffect(pvpStatusEffect);
 		if (pvpEffectInstance != null) {
-			Team team = serverPlayerEntity.getScoreboardTeam();
+			Team team = playerEntity.getScoreboardTeam();
 			List<RegistryEntry<StatusEffect>> effectsToBeRemoved = new ArrayList<>();
 
-			for (StatusEffectInstance instance : serverPlayerEntity.getStatusEffects()) {
+			for (StatusEffectInstance instance : playerEntity.getStatusEffects()) {
 				if (!(instance.getEffectType().isIn(Tags.KEPT_ON_PVP_DEATH) || instance.getEffectType() == pvpStatusEffect)) {
 					effectsToBeRemoved.add(instance.getEffectType());
 				}
 			}
 			for (RegistryEntry<StatusEffect> entry : effectsToBeRemoved) {
-				serverPlayerEntity.removeStatusEffect(entry);
+				playerEntity.removeStatusEffect(entry);
 			}
 			int newAmplifier = pvpEffectInstance.getAmplifier() - 1;
 			boolean playerRemovedFromBattle = source.isIn(Tags.REMOVES_PLAYER_FROM_PVP);
 			boolean endOfBattle = newAmplifier < 0;
 
-			resetPlayerStatus(serverPlayerEntity, endOfBattle || playerRemovedFromBattle);
+			resetPlayerStatus(playerEntity, endOfBattle || playerRemovedFromBattle);
 			if (endOfBattle || playerRemovedFromBattle) {
-				serverPlayerEntity.removeStatusEffect(pvpStatusEffect);
+				playerEntity.removeStatusEffect(pvpStatusEffect);
 			} else {
-				serverPlayerEntity.setStatusEffect(new StatusEffectInstance(pvpStatusEffect, pvpEffectInstance.getDuration(), newAmplifier, pvpEffectInstance.isAmbient(), pvpEffectInstance.shouldShowParticles(), pvpEffectInstance.shouldShowIcon()), null);
+				playerEntity.setStatusEffect(new StatusEffectInstance(pvpStatusEffect, pvpEffectInstance.getDuration(), newAmplifier, pvpEffectInstance.isAmbient(), pvpEffectInstance.shouldShowParticles(), pvpEffectInstance.shouldShowIcon()), null);
 			}
-			teleportToPVPRespawnPosition(team, serverPlayerEntity, endOfBattle || playerRemovedFromBattle);
+			teleportToPVPRespawnPosition(team, playerEntity, endOfBattle || playerRemovedFromBattle);
 			if (!source.isIn(Tags.PREVENTS_PVP_DEATH_MESSAGE)) {
-				sendPVPDeathMessage(serverPlayerEntity, endOfBattle, playerRemovedFromBattle);
+				sendPVPDeathMessage(playerEntity, endOfBattle, playerRemovedFromBattle);
 			}
 			// TODO pvp deaths/kills statistic, score boards for active match
 //			serverPlayerEntity.incrementStat(Stats.DEATHS.USED.getOrCreateStat(Items.TOTEM_OF_UNDYING));
@@ -68,9 +68,9 @@ public class PlayerEntityHelper {
 		return false;
 	}
 
-	public static void sendPVPDeathMessage(ServerPlayerEntity serverPlayerEntity, boolean endOfBattle, boolean playerRemovedFromBattle) {
-		boolean bl = serverPlayerEntity.getWorld().getGameRules().getBoolean(GameRules.SHOW_DEATH_MESSAGES);
-		if (bl && !playerRemovedFromBattle) {
+	public static void sendPVPDeathMessage(PlayerEntity playerEntity, boolean endOfBattle, boolean playerRemovedFromBattle) {
+		boolean bl = playerEntity.getWorld().getGameRules().getBoolean(GameRules.SHOW_DEATH_MESSAGES);
+		if (bl && !playerRemovedFromBattle && playerEntity instanceof ServerPlayerEntity serverPlayerEntity) {
 			Text pvpSuffix = endOfBattle ? Text.translatable("death.pvp.suffix") : Text.empty();
 			Text text = Text.translatable("death.pvp.prefix", serverPlayerEntity.getDamageTracker().getDeathMessage(), pvpSuffix);
 			AbstractTeam abstractTeam = serverPlayerEntity.getScoreboardTeam();
@@ -85,38 +85,40 @@ public class PlayerEntityHelper {
 
 	}
 
-	public static void resetPlayerStatus(ServerPlayerEntity serverPlayerEntity, boolean endOfBattle) {
-		RPGInventory.resetPlayerStatus(serverPlayerEntity, endOfBattle);
+	public static void resetPlayerStatus(PlayerEntity playerEntity, boolean endOfBattle) {
+		RPGInventory.resetPlayerStatus(playerEntity, endOfBattle);
 	}
 
-	public static void teleportToPVPRespawnPosition(Team team, ServerPlayerEntity serverPlayerEntity, boolean endOfBattle) {
+	public static void teleportToPVPRespawnPosition(Team team, PlayerEntity playerEntity, boolean endOfBattle) {
 
-		MinecraftServer server = serverPlayerEntity.getServer();
-		if (server != null) {
-			ServerWorld targetWorld = null;
-			BlockPos targetPos = null;
-			double targetYaw = 0.0;
-			double targetPitch = 0.0;
-			MutablePair<RegistryKey<World>, MutablePair<BlockPos, MutablePair<Double, Double>>> pvp_respawn_position = RPGInventory.getPVPRespawnPosition(team, serverPlayerEntity, endOfBattle);
+		if (playerEntity instanceof ServerPlayerEntity serverPlayerEntity) {
+			MinecraftServer server = serverPlayerEntity.getServer();
+			if (server != null) {
+				ServerWorld targetWorld = null;
+				BlockPos targetPos = null;
+				double targetYaw = 0.0;
+				double targetPitch = 0.0;
+				MutablePair<RegistryKey<World>, MutablePair<BlockPos, MutablePair<Double, Double>>> pvp_respawn_position = RPGInventory.getPVPRespawnPosition(team, serverPlayerEntity, endOfBattle);
 
-			if (pvp_respawn_position != null) {
-				targetWorld = server.getWorld(pvp_respawn_position.getLeft());
-				targetPos = pvp_respawn_position.getRight().getLeft();
-				targetYaw = pvp_respawn_position.getRight().getRight().getLeft();
-				targetPitch = pvp_respawn_position.getRight().getRight().getRight();
-			}
+				if (pvp_respawn_position != null) {
+					targetWorld = server.getWorld(pvp_respawn_position.getLeft());
+					targetPos = pvp_respawn_position.getRight().getLeft();
+					targetYaw = pvp_respawn_position.getRight().getRight().getLeft();
+					targetPitch = pvp_respawn_position.getRight().getRight().getRight();
+				}
 
-			if (targetWorld == null || targetPos == null) {
-				targetWorld = server.getOverworld();
-				targetPos = server.getOverworld().getSpawnPos();
-				targetYaw = server.getOverworld().getSpawnAngle();
-				targetPitch = 0.0;
-			}
+				if (targetWorld == null || targetPos == null) {
+					targetWorld = server.getOverworld();
+					targetPos = server.getOverworld().getSpawnPos();
+					targetYaw = server.getOverworld().getSpawnAngle();
+					targetPitch = 0.0;
+				}
 
-			if (targetWorld != null && targetPos != null) {
-				serverPlayerEntity.fallDistance = 0;
-				serverPlayerEntity.teleport(targetWorld, (targetPos.getX() + 0.5), (targetPos.getY() + 0.01), (targetPos.getZ() + 0.5), (float) targetYaw, (float) targetPitch);
-				serverPlayerEntity.closeHandledScreen();
+				if (targetWorld != null && targetPos != null) {
+					serverPlayerEntity.fallDistance = 0;
+					serverPlayerEntity.teleport(targetWorld, (targetPos.getX() + 0.5), (targetPos.getY() + 0.01), (targetPos.getZ() + 0.5), (float) targetYaw, (float) targetPitch);
+					serverPlayerEntity.closeHandledScreen();
+				}
 			}
 		}
 	}

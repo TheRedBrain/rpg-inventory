@@ -146,41 +146,43 @@ public class RPGInventory implements ModInitializer {
 		}
 	}
 
-	public static void resetPlayerStatus(ServerPlayerEntity serverPlayerEntity, boolean endOfBattle) {
+	public static void resetPlayerStatus(PlayerEntity playerEntity, boolean endOfBattle) {
 		if (RPGInventory.isManaAttributesLoaded) {
-			ManaAttributesCompat.resetMana(serverPlayerEntity);
+			ManaAttributesCompat.resetMana(playerEntity);
 		}
 		if (RPGInventory.isStaminaAttributesLoaded) {
-			StaminaAttributesCompat.resetStamina(serverPlayerEntity);
+			StaminaAttributesCompat.resetStamina(playerEntity);
 		}
 		if (RPGInventory.isHealthRegenerationOverhaulLoaded) {
-			HealthRegenerationOverhaulCompat.resetHealth(serverPlayerEntity);
+			HealthRegenerationOverhaulCompat.resetHealth(playerEntity);
 		} else {
-			serverPlayerEntity.setHealth(serverPlayerEntity.getMaxHealth());
+			playerEntity.setHealth(playerEntity.getMaxHealth());
 		}
 		if (RPGInventory.isSpellEngineLoaded) {
-			SpellEngineCompat.resetSpellCooldowns(serverPlayerEntity);
+			SpellEngineCompat.resetSpellCooldowns(playerEntity);
 		}
 		if (RPGInventory.isScriptBlocksLoaded && endOfBattle) {
-			ScriptBlocksCompat.setCurrentPVPControllerBlockPosition(serverPlayerEntity, Optional.empty());
+			ScriptBlocksCompat.setCurrentPVPControllerBlockPosition(playerEntity, Optional.empty());
 		}
 	}
 
-	public static MutablePair<RegistryKey<World>, MutablePair<BlockPos, MutablePair<Double, Double>>> getPVPRespawnPosition(Team team, ServerPlayerEntity serverPlayerEntity, boolean endOfBattle) {
-		if (RPGInventory.isScriptBlocksLoaded) {
-			return ScriptBlocksCompat.getPVPRespawnPosition(team, serverPlayerEntity, endOfBattle);
-		} else {
-			MinecraftServer server = serverPlayerEntity.getServer();
-			if (server != null) {
-				return new MutablePair<>(
-						serverPlayerEntity.getSpawnPointDimension(),
-						new MutablePair<>(
-								serverPlayerEntity.getSpawnPointPosition(),
-								new MutablePair<>(
-										(double) serverPlayerEntity.getSpawnAngle(),
-										0.0)
-						)
-				);
+	public static MutablePair<RegistryKey<World>, MutablePair<BlockPos, MutablePair<Double, Double>>> getPVPRespawnPosition(Team team, PlayerEntity playerEntity, boolean endOfBattle) {
+		if (playerEntity instanceof ServerPlayerEntity serverPlayerEntity) {
+			if (RPGInventory.isScriptBlocksLoaded) {
+				return ScriptBlocksCompat.getPVPRespawnPosition(team, serverPlayerEntity, endOfBattle);
+			} else {
+				MinecraftServer server = playerEntity.getServer();
+				if (server != null) {
+					return new MutablePair<>(
+							serverPlayerEntity.getSpawnPointDimension(),
+							new MutablePair<>(
+									serverPlayerEntity.getSpawnPointPosition(),
+									new MutablePair<>(
+											(double) serverPlayerEntity.getSpawnAngle(),
+											0.0)
+							)
+					);
+				}
 			}
 		}
 		return null;

@@ -1,6 +1,7 @@
 package com.github.theredbrain.rpginventory.compat;
 
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerInventoryMixin;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -38,14 +39,16 @@ public class SpellEngineCompat {
 		}
 	}
 
-	public static void resetSpellCooldowns(ServerPlayerEntity serverPlayerEntity) {
-		SpellCooldownManager spellCooldownManager = ((SpellCasterEntity) serverPlayerEntity).getCooldownManager();
-		for (RegistryEntry.Reference<Spell> spell : SpellRegistry.stream(serverPlayerEntity.getWorld()).toList()) {
-			spellCooldownManager.remove(spell.registryKey().getValue());
+	public static void resetSpellCooldowns(PlayerEntity playerEntity) {
+		if (playerEntity instanceof ServerPlayerEntity serverPlayerEntity) {
+			SpellCooldownManager spellCooldownManager = ((SpellCasterEntity) serverPlayerEntity).getCooldownManager();
+			for (RegistryEntry.Reference<Spell> spell : SpellRegistry.stream(serverPlayerEntity.getWorld()).toList()) {
+				spellCooldownManager.remove(spell.registryKey().getValue());
+			}
 		}
 	}
 
-	public static boolean doesCurrentPlayerStatusPreventHandSlotAction(ServerPlayerEntity serverPlayerEntity) {
-		return ((SpellCasterEntity) serverPlayerEntity).isCastingSpell();
+	public static boolean doesCurrentPlayerStatusPreventHandSlotAction(PlayerEntity playerEntity) {
+		return ((SpellCasterEntity) playerEntity).isCastingSpell();
 	}
 }
