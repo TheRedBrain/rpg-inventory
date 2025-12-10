@@ -47,7 +47,7 @@ import java.util.Optional;
 public abstract class LivingEntityMixin extends Entity {
 
 	@Unique
-	private final DefaultedList<ItemStack> syncedAdditionalEquipmentStacks = DefaultedList.ofSize(15, ItemStack.EMPTY);
+	private final DefaultedList<ItemStack> syncedAdditionalEquipmentStacks = DefaultedList.ofSize(16, ItemStack.EMPTY);
 
 	@Shadow
 	public abstract ItemStack getEquippedStack(EquipmentSlot slot);
