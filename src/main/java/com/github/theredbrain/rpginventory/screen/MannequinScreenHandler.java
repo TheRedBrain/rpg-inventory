@@ -75,8 +75,6 @@ public class MannequinScreenHandler extends ScreenHandler {
 		this.inventory = inventory;
 		this.playerInventory = playerInventory;
 		this.owner = playerInventory.player;
-		RPGInventory.info("canChangeInventory: " + canChangeInventory);
-		RPGInventory.info("canEquip: " + canEquip);
 		this.canEquip = canEquip;
 		inventory.onOpen(playerInventory.player);
 		ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
@@ -245,7 +243,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && serverConfig.inventorySlots.is_belt_slot_enabled.get();
+				return super.isEnabled() && serverConfig.activate_rpg_inventory_screen.get() && serverConfig.inventorySlots.is_belt_slot_enabled.get();
 			}
 
 			@Override
@@ -265,7 +263,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && serverConfig.inventorySlots.is_gloves_slot_enabled.get();
+				return super.isEnabled() && serverConfig.activate_rpg_inventory_screen.get() && serverConfig.inventorySlots.is_gloves_slot_enabled.get();
 			}
 
 			@Override
@@ -285,7 +283,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && serverConfig.inventorySlots.is_necklace_slot_enabled.get();
+				return super.isEnabled() && serverConfig.activate_rpg_inventory_screen.get() && serverConfig.inventorySlots.is_necklace_slot_enabled.get();
 			}
 
 			@Override
@@ -305,7 +303,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && serverConfig.inventorySlots.is_ring_1_slot_enabled.get();
+				return super.isEnabled() && serverConfig.activate_rpg_inventory_screen.get() && serverConfig.inventorySlots.is_ring_1_slot_enabled.get();
 			}
 
 			@Override
@@ -325,7 +323,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && serverConfig.inventorySlots.is_ring_2_slot_enabled.get();
+				return super.isEnabled() && serverConfig.activate_rpg_inventory_screen.get() && serverConfig.inventorySlots.is_ring_2_slot_enabled.get();
 			}
 
 			@Override
@@ -345,7 +343,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && serverConfig.inventorySlots.is_shoulders_slot_enabled.get();
+				return super.isEnabled() && serverConfig.activate_rpg_inventory_screen.get() && serverConfig.inventorySlots.is_shoulders_slot_enabled.get();
 			}
 
 			@Override
@@ -365,7 +363,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 1;
+				return super.isEnabled() && serverConfig.activate_rpg_inventory_screen.get() && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 1;
 			}
 
 		});
@@ -375,7 +373,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 2;
+				return super.isEnabled() && serverConfig.activate_rpg_inventory_screen.get() && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 2;
 			}
 
 		});
@@ -385,7 +383,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 3;
+				return super.isEnabled() && serverConfig.activate_rpg_inventory_screen.get() && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 3;
 			}
 
 		});
@@ -395,7 +393,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 4;
+				return super.isEnabled() && serverConfig.activate_rpg_inventory_screen.get() && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 4;
 			}
 
 		});
@@ -405,7 +403,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 5;
+				return super.isEnabled() && serverConfig.activate_rpg_inventory_screen.get() && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 5;
 			}
 
 		});
@@ -415,7 +413,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 6;
+				return super.isEnabled() && serverConfig.activate_rpg_inventory_screen.get() && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 6;
 			}
 
 		});
@@ -425,7 +423,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 7;
+				return super.isEnabled() && serverConfig.activate_rpg_inventory_screen.get() && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 7;
 			}
 
 		});
@@ -435,7 +433,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 8;
+				return super.isEnabled() && serverConfig.activate_rpg_inventory_screen.get() && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 8;
 			}
 
 		});
@@ -445,7 +443,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && serverConfig.inventorySlots.is_relic_slot_enabled.get();
+				return super.isEnabled() && serverConfig.activate_rpg_inventory_screen.get() && serverConfig.inventorySlots.is_relic_slot_enabled.get();
 			}
 
 			@Override
@@ -505,7 +503,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && serverConfig.inventorySlots.is_belt_slot_enabled.get() && serverConfig.inventorySlots.is_belt_mannequin_slot_enabled.get();
+				return super.isEnabled() && serverConfig.activate_rpg_inventory_screen.get() && serverConfig.inventorySlots.is_belt_slot_enabled.get() && serverConfig.inventorySlots.is_belt_mannequin_slot_enabled.get();
 			}
 
 			@Override
@@ -525,7 +523,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && serverConfig.inventorySlots.is_gloves_slot_enabled.get() && serverConfig.inventorySlots.is_gloves_mannequin_slot_enabled.get();
+				return super.isEnabled() && serverConfig.activate_rpg_inventory_screen.get() && serverConfig.inventorySlots.is_gloves_slot_enabled.get() && serverConfig.inventorySlots.is_gloves_mannequin_slot_enabled.get();
 			}
 
 			@Override
@@ -545,7 +543,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && serverConfig.inventorySlots.is_necklace_slot_enabled.get() && serverConfig.inventorySlots.is_necklace_mannequin_slot_enabled.get();
+				return super.isEnabled() && serverConfig.activate_rpg_inventory_screen.get() && serverConfig.inventorySlots.is_necklace_slot_enabled.get() && serverConfig.inventorySlots.is_necklace_mannequin_slot_enabled.get();
 			}
 
 			@Override
@@ -565,7 +563,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && serverConfig.inventorySlots.is_ring_1_slot_enabled.get() && serverConfig.inventorySlots.is_ring_1_mannequin_slot_enabled.get();
+				return super.isEnabled() && serverConfig.activate_rpg_inventory_screen.get() && serverConfig.inventorySlots.is_ring_1_slot_enabled.get() && serverConfig.inventorySlots.is_ring_1_mannequin_slot_enabled.get();
 			}
 
 			@Override
@@ -585,7 +583,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && serverConfig.inventorySlots.is_ring_2_slot_enabled.get() && serverConfig.inventorySlots.is_ring_2_mannequin_slot_enabled.get();
+				return super.isEnabled() && serverConfig.activate_rpg_inventory_screen.get() && serverConfig.inventorySlots.is_ring_2_slot_enabled.get() && serverConfig.inventorySlots.is_ring_2_mannequin_slot_enabled.get();
 			}
 
 			@Override
@@ -605,7 +603,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && serverConfig.inventorySlots.is_shoulders_slot_enabled.get() && serverConfig.inventorySlots.is_shoulders_mannequin_slot_enabled.get();
+				return super.isEnabled() && serverConfig.activate_rpg_inventory_screen.get() && serverConfig.inventorySlots.is_shoulders_slot_enabled.get() && serverConfig.inventorySlots.is_shoulders_mannequin_slot_enabled.get();
 			}
 
 			@Override
@@ -625,7 +623,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && serverConfig.inventorySlots.is_spell_1_mannequin_slot_enabled.get();
+				return super.isEnabled() && serverConfig.activate_rpg_inventory_screen.get() && serverConfig.inventorySlots.is_spell_1_mannequin_slot_enabled.get();
 			}
 
 		});
@@ -635,7 +633,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && serverConfig.inventorySlots.is_spell_2_mannequin_slot_enabled.get();
+				return super.isEnabled() && serverConfig.activate_rpg_inventory_screen.get() && serverConfig.inventorySlots.is_spell_2_mannequin_slot_enabled.get();
 			}
 
 		});
@@ -645,7 +643,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && serverConfig.inventorySlots.is_spell_3_mannequin_slot_enabled.get();
+				return super.isEnabled() && serverConfig.activate_rpg_inventory_screen.get() && serverConfig.inventorySlots.is_spell_3_mannequin_slot_enabled.get();
 			}
 
 		});
@@ -655,7 +653,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && serverConfig.inventorySlots.is_spell_4_mannequin_slot_enabled.get();
+				return super.isEnabled() && serverConfig.activate_rpg_inventory_screen.get() && serverConfig.inventorySlots.is_spell_4_mannequin_slot_enabled.get();
 			}
 
 		});
@@ -665,7 +663,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && serverConfig.inventorySlots.is_spell_5_mannequin_slot_enabled.get();
+				return super.isEnabled() && serverConfig.activate_rpg_inventory_screen.get() && serverConfig.inventorySlots.is_spell_5_mannequin_slot_enabled.get();
 			}
 
 		});
@@ -675,7 +673,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && serverConfig.inventorySlots.is_spell_6_mannequin_slot_enabled.get();
+				return super.isEnabled() && serverConfig.activate_rpg_inventory_screen.get() && serverConfig.inventorySlots.is_spell_6_mannequin_slot_enabled.get();
 			}
 
 		});
@@ -685,7 +683,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && serverConfig.inventorySlots.is_spell_7_mannequin_slot_enabled.get();
+				return super.isEnabled() && serverConfig.activate_rpg_inventory_screen.get() && serverConfig.inventorySlots.is_spell_7_mannequin_slot_enabled.get();
 			}
 
 		});
@@ -695,7 +693,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && serverConfig.inventorySlots.is_spell_8_mannequin_slot_enabled.get();
+				return super.isEnabled() && serverConfig.activate_rpg_inventory_screen.get() && serverConfig.inventorySlots.is_spell_8_mannequin_slot_enabled.get();
 			}
 
 		});
@@ -705,7 +703,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && serverConfig.inventorySlots.is_relic_slot_enabled.get() && serverConfig.inventorySlots.is_relic_mannequin_slot_enabled.get();
+				return super.isEnabled() && serverConfig.activate_rpg_inventory_screen.get() && serverConfig.inventorySlots.is_relic_slot_enabled.get() && serverConfig.inventorySlots.is_relic_mannequin_slot_enabled.get();
 			}
 
 			@Override
