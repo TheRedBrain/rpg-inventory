@@ -776,6 +776,11 @@ public class MannequinScreenHandler extends ScreenHandler {
 		if (!mannequinStack.isEmpty() && (equipmentStack.isEmpty() || equipmentStack.contains(RPGInventory.LOAD_OUT_ITEM))) {
 			ItemStack newStack = mannequinStack.copy();
 			newStack.set(RPGInventory.LOAD_OUT_ITEM, Unit.INSTANCE);
+			if (RPGInventory.SERVER_CONFIG.should_keep_loadout_items_on_death.get()) {
+				newStack.set(RPGInventory.IS_KEPT_ON_DEATH, Unit.INSTANCE);
+			} else {
+				newStack.set(RPGInventory.IS_DESTROYED_ON_DEATH, Unit.INSTANCE);
+			}
 			this.slots.get(player_index).setStack(newStack);
 		}
 	}

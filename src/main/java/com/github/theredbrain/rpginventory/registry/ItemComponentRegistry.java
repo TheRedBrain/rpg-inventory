@@ -56,6 +56,11 @@ public class ItemComponentRegistry {
 				RPGInventory.identifier("is_kept_on_death"),
 				ComponentType.<Unit>builder().codec(Unit.CODEC).packetCodec(PacketCodec.unit(Unit.INSTANCE)).build()
 		);
+		RPGInventory.UNUSABLE_WHEN_LOW_DURABILITY = Registry.register(
+				Registries.DATA_COMPONENT_TYPE,
+				RPGInventory.identifier("unusable_when_low_durability"),
+				ComponentType.<Unit>builder().codec(Unit.CODEC).packetCodec(PacketCodec.unit(Unit.INSTANCE)).build()
+		);
 	}
 
 	public static void init() {

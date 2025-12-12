@@ -1,7 +1,9 @@
 package com.github.theredbrain.rpginventory.mixin.item;
 
+import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import com.github.theredbrain.rpginventory.util.ItemUtils;
+import net.minecraft.component.ComponentHolder;
 import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttribute;
@@ -39,7 +41,7 @@ public abstract class ItemStackMixin {
 
 	@Inject(method = "damage(ILnet/minecraft/server/world/ServerWorld;Lnet/minecraft/server/network/ServerPlayerEntity;Ljava/util/function/Consumer;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;setDamage(I)V"), cancellable = true)
 	private void rpginventory$damage(int amount, ServerWorld world, @Nullable ServerPlayerEntity player, Consumer<Item> breakCallback, CallbackInfo ci) {
-		if (this.getDamage() + amount >= this.getMaxDamage() && this.isIn(Tags.UNUSABLE_WHEN_LOW_DURABILITY)) {
+		if (this.getDamage() + amount >= this.getMaxDamage() && (this.isIn(Tags.UNUSABLE_WHEN_LOW_DURABILITY) || ((ComponentHolder) this).contains(RPGInventory.UNUSABLE_WHEN_LOW_DURABILITY))) {
 			this.setDamage(this.getMaxDamage() - 1);
 			ci.cancel();
 		}

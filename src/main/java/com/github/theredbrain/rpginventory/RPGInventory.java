@@ -65,6 +65,7 @@ public class RPGInventory implements ModInitializer {
 	public static ComponentType<Unit> IGNORES_EQUIPMENT_CHANGE_RESTRICTIONS;
 	public static ComponentType<Unit> IS_KEPT_ON_DEATH;
 	public static ComponentType<Unit> IS_DESTROYED_ON_DEATH;
+	public static ComponentType<Unit> UNUSABLE_WHEN_LOW_DURABILITY;
 
 	public static final boolean isRPGCraftingLoaded = FabricLoader.getInstance().isModLoaded("rpgcrafting");
 	public static final boolean isBackpackAttributeLoaded = FabricLoader.getInstance().isModLoaded("backpackattribute");

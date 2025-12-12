@@ -276,11 +276,10 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 		for (List<ItemStack> list : this.combinedInventory) {
 			for (int i = 0; i < list.size(); i++) {
 				ItemStack itemStack = (ItemStack) list.get(i);
-				boolean isLoadOutItem = itemStack.contains(RPGInventory.LOAD_OUT_ITEM);
-				if ((isLoadOutItem && RPGInventory.SERVER_CONFIG.should_keep_loadout_items_on_death.get()) || itemStack.contains(RPGInventory.IS_KEPT_ON_DEATH) || itemStack.isIn(Tags.EMPTY_HAND_WEAPONS)) {
+				if (itemStack.contains(RPGInventory.IS_KEPT_ON_DEATH) || itemStack.isIn(Tags.EMPTY_HAND_WEAPONS)) {
 					continue;
 				}
-				if ((isLoadOutItem && !RPGInventory.SERVER_CONFIG.should_keep_loadout_items_on_death.get()) || itemStack.contains(RPGInventory.IS_DESTROYED_ON_DEATH) || RPGInventory.SERVER_CONFIG.destroy_dropped_items_on_death.get()) {
+				if (itemStack.contains(RPGInventory.IS_DESTROYED_ON_DEATH) || RPGInventory.SERVER_CONFIG.destroy_dropped_items_on_death.get()) {
 					list.set(i, ItemStack.EMPTY);
 					continue;
 				}
