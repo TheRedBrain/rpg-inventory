@@ -72,6 +72,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 	private static final TrackedData<Boolean> IS_HAND_SLOT_OVERHAUL_ACTIVE = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
 	@Unique
+	private static final TrackedData<Boolean> ARE_ALTERNATIVE_HAND_SLOTS_ACTIVE = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+
+	@Unique
 	private static final TrackedData<Integer> OLD_ACTIVE_SPELL_SLOT_AMOUNT = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
 
 	protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
@@ -83,6 +86,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 		builder.add(IS_HAND_STACK_SHEATHED, false);
 		builder.add(IS_OFFHAND_STACK_SHEATHED, false);
 		builder.add(IS_HAND_SLOT_OVERHAUL_ACTIVE, true);
+		builder.add(ARE_ALTERNATIVE_HAND_SLOTS_ACTIVE, true);
 		builder.add(OLD_ACTIVE_SPELL_SLOT_AMOUNT, -1);
 
 	}
@@ -259,6 +263,16 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 	@Override
 	public void rpginventory$setIsHandSlotOverhaulActive(boolean isHandSlotOverhaulActive) {
 		this.dataTracker.set(IS_HAND_SLOT_OVERHAUL_ACTIVE, isHandSlotOverhaulActive);
+	}
+
+	@Override
+	public boolean rpginventory$areAlternativeHandSlotsActive() {
+		return this.dataTracker.get(ARE_ALTERNATIVE_HAND_SLOTS_ACTIVE);
+	}
+
+	@Override
+	public void rpginventory$setAreAlternativeHandSlotsActive(boolean areAlternativeHandSlotsActive) {
+		this.dataTracker.set(ARE_ALTERNATIVE_HAND_SLOTS_ACTIVE, areAlternativeHandSlotsActive);
 	}
 
 	@Override

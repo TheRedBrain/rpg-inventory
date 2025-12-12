@@ -227,8 +227,35 @@ public class PlayerEntityHelper {
 				if (bl && playerEntity instanceof ServerPlayerEntity serverPlayerEntity) {
 					serverPlayerEntity.sendMessage(Text.translatable("hud.message.itemsRemovedFromInactiveHandSlots"), false);
 				}
+				((DuckPlayerEntityMixin) playerEntity).rpginventory$setAreAlternativeHandSlotsActive(false);
 			}
 			((DuckPlayerEntityMixin) playerEntity).rpginventory$setIsHandSlotOverhaulActive(isHandSlotOverhaulActive);
+		}
+		if (isHandSlotOverhaulActive) {
+			// TODO remove items from inactive alternative hand slots
+			boolean areAlternativeHandSlotsActive = RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_alternative_hand_slots.get();
+
+			if (((DuckPlayerEntityMixin) playerEntity).rpginventory$areAlternativeHandSlotsActive() != areAlternativeHandSlotsActive) {
+				if (!areAlternativeHandSlotsActive) {
+					PlayerInventory playerInventory = playerEntity.getInventory();
+					boolean bl = false;
+
+					if (!((DuckPlayerInventoryMixin) playerInventory).rpginventory$getAlternativeHand().isEmpty()) {
+						playerInventory.offerOrDrop(((DuckPlayerInventoryMixin) playerInventory).rpginventory$setAlternativeHand(ItemStack.EMPTY));
+						bl = true;
+					}
+
+					if (!((DuckPlayerInventoryMixin) playerInventory).rpginventory$getAlternativeOffhand().isEmpty()) {
+						playerInventory.offerOrDrop(((DuckPlayerInventoryMixin) playerInventory).rpginventory$setAlternativeOffhand(ItemStack.EMPTY));
+						bl = true;
+					}
+
+					if (bl && playerEntity instanceof ServerPlayerEntity serverPlayerEntity) {
+						serverPlayerEntity.sendMessage(Text.translatable("hud.message.itemsRemovedFromInactiveHandSlots"), false);
+					}
+				}
+				((DuckPlayerEntityMixin) playerEntity).rpginventory$setAreAlternativeHandSlotsActive(areAlternativeHandSlotsActive);
+			}
 		}
 	}
 
