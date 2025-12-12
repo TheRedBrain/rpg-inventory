@@ -21,6 +21,9 @@ public class ServerConfig extends Config {
 		super(RPGInventory.identifier("server"));
 	}
 
+	@RequiresAction(action = Action.RELOG)
+	public ValidatedBoolean activate_rpg_inventory_screen = new ValidatedBoolean(true);
+
 	public HandSlotOverhaul handSlotOverhaul = new HandSlotOverhaul();
 
 	public static class HandSlotOverhaul extends ConfigSection {
@@ -28,6 +31,7 @@ public class ServerConfig extends Config {
 		@RequiresAction(action = Action.RELOG)
 		public ValidatedBoolean enable_hand_slot_overhaul = new ValidatedBoolean(true);
 
+		@RequiresAction(action = Action.RELOG)
 		public ValidatedBoolean enable_alternative_hand_slots = new ValidatedBoolean(true);
 
 		public ValidatedBoolean always_allow_toggling_two_handed_stance = new ValidatedBoolean(false);

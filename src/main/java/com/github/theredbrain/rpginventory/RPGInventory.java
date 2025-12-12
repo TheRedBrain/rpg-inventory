@@ -85,7 +85,7 @@ public class RPGInventory implements ModInitializer {
 	public static final boolean isTrinketsLoaded = FabricLoader.getInstance().isModLoaded("trinkets");
 
 	public static void swapHandAttributes(PlayerEntity playerEntity, Runnable runnable) {
-		if (SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get()) {
+		if (SERVER_CONFIG.activate_rpg_inventory_screen.get() && SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get()) {
 			SwapHandAttributesHelper.swapHandAttributes(playerEntity, runnable);
 		}
 	}
@@ -116,7 +116,7 @@ public class RPGInventory implements ModInitializer {
 		} else if (isBetterCombatLoaded) {
 			bl = false;
 		}
-		return bl && SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get();
+		return bl && SERVER_CONFIG.activate_rpg_inventory_screen.get() && SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get();
 	}
 
 	public static float getCurrentStamina(LivingEntity livingEntity) {

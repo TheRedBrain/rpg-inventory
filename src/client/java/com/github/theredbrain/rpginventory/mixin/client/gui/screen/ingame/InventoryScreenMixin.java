@@ -1,5 +1,6 @@
 package com.github.theredbrain.rpginventory.mixin.client.gui.screen.ingame;
 
+import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.RPGInventoryClient;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -23,7 +24,7 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
 
 	@Inject(method = "handledScreenTick", at = @At("HEAD"), cancellable = true)
 	public void rpginventory$handledScreenTick(CallbackInfo ci) {
-		if (this.client != null && this.client.player != null) {
+		if (this.client != null && this.client.player != null && RPGInventory.SERVER_CONFIG.activate_rpg_inventory_screen.get()) {
 			RPGInventoryClient.openRPGInventoryScreen(this.client, this.client.player);
 			ci.cancel();
 		}
@@ -31,7 +32,7 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
 
 	@Inject(method = "init", at = @At("HEAD"), cancellable = true)
 	protected void rpginventory$init(CallbackInfo ci) {
-		if (this.client != null && this.client.player != null) {
+		if (this.client != null && this.client.player != null && RPGInventory.SERVER_CONFIG.activate_rpg_inventory_screen.get()) {
 			RPGInventoryClient.openRPGInventoryScreen(this.client, this.client.player);
 			ci.cancel();
 		}

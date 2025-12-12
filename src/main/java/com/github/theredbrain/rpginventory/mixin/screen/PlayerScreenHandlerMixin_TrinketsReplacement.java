@@ -1,5 +1,6 @@
 package com.github.theredbrain.rpginventory.mixin.screen;
 
+import com.github.theredbrain.rpginventory.RPGInventory;
 import com.google.common.collect.ImmutableList;
 import dev.emi.trinkets.Point;
 import dev.emi.trinkets.SurvivalTrinketSlot;
@@ -86,7 +87,7 @@ public abstract class PlayerScreenHandlerMixin_TrinketsReplacement extends Scree
 				trinketSlotEnd--;
 			}
 
-			int groupNum = 4; // Start at 4 to prevent Trinket slots in the main inventory screen
+			int groupNum = RPGInventory.SERVER_CONFIG.activate_rpg_inventory_screen.get() ? 4 : 1;
 
 			for (SlotGroup group : groups.values().stream().sorted(Comparator.comparing(SlotGroup::getOrder)).toList()) {
 				if (!hasSlots(trinkets, group)) {

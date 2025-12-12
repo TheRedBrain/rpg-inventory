@@ -6,7 +6,6 @@ import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import com.github.theredbrain.rpginventory.screen.DuckPlayerScreenHandlerMixin;
-import com.github.theredbrain.rpginventory.screen.DuckSlotMixin;
 import com.github.theredbrain.rpginventory.screen.slot.AlternativeHandSlot;
 import com.github.theredbrain.rpginventory.screen.slot.CustomArmorSlot;
 import com.github.theredbrain.rpginventory.util.ItemUtils;
@@ -87,59 +86,63 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 	public void PlayerScreenHandler(PlayerInventory inventory, boolean onServer, PlayerEntity owner, CallbackInfo ci) {
 
 		ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
+		boolean isRPGInventoryScreenActivated = serverConfig.activate_rpg_inventory_screen.get();
 
-		for (int i = 0; i < 3; ++i) {
-			for (int j = 0; j < 9; ++j) {
-				((SlotCustomization) this.slots.get(j + (i + 1) * 9)).slotcustomizationapi$setY(138 + i * 18);
+		if (isRPGInventoryScreenActivated) {
+
+			for (int i = 0; i < 3; ++i) {
+				for (int j = 0; j < 9; ++j) {
+					((SlotCustomization) this.slots.get(j + (i + 1) * 9)).slotcustomizationapi$setY(138 + i * 18);
+				}
 			}
-		}
-		for (int i = 0; i < 9; ++i) {
-			((SlotCustomization) this.slots.get(i + 36)).slotcustomizationapi$setY(196);
-		}
+			for (int i = 0; i < 9; ++i) {
+				((SlotCustomization) this.slots.get(i + 36)).slotcustomizationapi$setY(196);
+			}
 
-		if (serverConfig.inventorySlots.disable_inventory_crafting_slots.get()) {
-			((SlotCustomization) this.slots.get(0)).slotcustomizationapi$setDisabledOverride(true);
-			((SlotCustomization) this.slots.get(1)).slotcustomizationapi$setDisabledOverride(true);
-			((SlotCustomization) this.slots.get(2)).slotcustomizationapi$setDisabledOverride(true);
-			((SlotCustomization) this.slots.get(3)).slotcustomizationapi$setDisabledOverride(true);
-			((SlotCustomization) this.slots.get(4)).slotcustomizationapi$setDisabledOverride(true);
-		} else {
-			((SlotCustomization) this.slots.get(0)).slotcustomizationapi$setX(serverConfig.inventorySlots.inventory_crafting_slots_x_offset.get() + 56);
-			((SlotCustomization) this.slots.get(0)).slotcustomizationapi$setY(serverConfig.inventorySlots.inventory_crafting_slots_y_offset.get() + 10);
-			((SlotCustomization) this.slots.get(1)).slotcustomizationapi$setX(serverConfig.inventorySlots.inventory_crafting_slots_x_offset.get());
-			((SlotCustomization) this.slots.get(1)).slotcustomizationapi$setY(serverConfig.inventorySlots.inventory_crafting_slots_y_offset.get());
-			((SlotCustomization) this.slots.get(2)).slotcustomizationapi$setX(serverConfig.inventorySlots.inventory_crafting_slots_x_offset.get() + 18);
-			((SlotCustomization) this.slots.get(2)).slotcustomizationapi$setY(serverConfig.inventorySlots.inventory_crafting_slots_y_offset.get());
-			((SlotCustomization) this.slots.get(3)).slotcustomizationapi$setX(serverConfig.inventorySlots.inventory_crafting_slots_x_offset.get());
-			((SlotCustomization) this.slots.get(3)).slotcustomizationapi$setY(serverConfig.inventorySlots.inventory_crafting_slots_y_offset.get() + 18);
-			((SlotCustomization) this.slots.get(4)).slotcustomizationapi$setX(serverConfig.inventorySlots.inventory_crafting_slots_x_offset.get() + 18);
-			((SlotCustomization) this.slots.get(4)).slotcustomizationapi$setY(serverConfig.inventorySlots.inventory_crafting_slots_y_offset.get() + 18);
+			if (serverConfig.inventorySlots.disable_inventory_crafting_slots.get()) {
+				((SlotCustomization) this.slots.get(0)).slotcustomizationapi$setDisabledOverride(true);
+				((SlotCustomization) this.slots.get(1)).slotcustomizationapi$setDisabledOverride(true);
+				((SlotCustomization) this.slots.get(2)).slotcustomizationapi$setDisabledOverride(true);
+				((SlotCustomization) this.slots.get(3)).slotcustomizationapi$setDisabledOverride(true);
+				((SlotCustomization) this.slots.get(4)).slotcustomizationapi$setDisabledOverride(true);
+			} else {
+				((SlotCustomization) this.slots.get(0)).slotcustomizationapi$setX(serverConfig.inventorySlots.inventory_crafting_slots_x_offset.get() + 56);
+				((SlotCustomization) this.slots.get(0)).slotcustomizationapi$setY(serverConfig.inventorySlots.inventory_crafting_slots_y_offset.get() + 10);
+				((SlotCustomization) this.slots.get(1)).slotcustomizationapi$setX(serverConfig.inventorySlots.inventory_crafting_slots_x_offset.get());
+				((SlotCustomization) this.slots.get(1)).slotcustomizationapi$setY(serverConfig.inventorySlots.inventory_crafting_slots_y_offset.get());
+				((SlotCustomization) this.slots.get(2)).slotcustomizationapi$setX(serverConfig.inventorySlots.inventory_crafting_slots_x_offset.get() + 18);
+				((SlotCustomization) this.slots.get(2)).slotcustomizationapi$setY(serverConfig.inventorySlots.inventory_crafting_slots_y_offset.get());
+				((SlotCustomization) this.slots.get(3)).slotcustomizationapi$setX(serverConfig.inventorySlots.inventory_crafting_slots_x_offset.get());
+				((SlotCustomization) this.slots.get(3)).slotcustomizationapi$setY(serverConfig.inventorySlots.inventory_crafting_slots_y_offset.get() + 18);
+				((SlotCustomization) this.slots.get(4)).slotcustomizationapi$setX(serverConfig.inventorySlots.inventory_crafting_slots_x_offset.get() + 18);
+				((SlotCustomization) this.slots.get(4)).slotcustomizationapi$setY(serverConfig.inventorySlots.inventory_crafting_slots_y_offset.get() + 18);
+			}
+
+			// reposition vanilla armor slots
+			// head
+			((SlotCustomization) this.slots.get(5)).slotcustomizationapi$setX(serverConfig.inventorySlots.head_slot_x_offset.get());
+			((SlotCustomization) this.slots.get(5)).slotcustomizationapi$setY(serverConfig.inventorySlots.head_slot_y_offset.get());
+			// chest
+			((SlotCustomization) this.slots.get(6)).slotcustomizationapi$setX(serverConfig.inventorySlots.chest_slot_x_offset.get());
+			((SlotCustomization) this.slots.get(6)).slotcustomizationapi$setY(serverConfig.inventorySlots.chest_slot_y_offset.get());
+			// legs
+			((SlotCustomization) this.slots.get(7)).slotcustomizationapi$setX(serverConfig.inventorySlots.legs_slot_x_offset.get());
+			((SlotCustomization) this.slots.get(7)).slotcustomizationapi$setY(serverConfig.inventorySlots.legs_slot_y_offset.get());
+			// feet
+			((SlotCustomization) this.slots.get(8)).slotcustomizationapi$setX(serverConfig.inventorySlots.feet_slot_x_offset.get());
+			((SlotCustomization) this.slots.get(8)).slotcustomizationapi$setY(serverConfig.inventorySlots.feet_slot_y_offset.get());
+
+			// reposition vanilla offhand slot
+			((SlotCustomization) this.slots.get(45)).slotcustomizationapi$setX(serverConfig.inventorySlots.offhand_slot_x_offset.get());
+			((SlotCustomization) this.slots.get(45)).slotcustomizationapi$setY(serverConfig.inventorySlots.offhand_slot_y_offset.get());
 		}
-
-		// reposition vanilla armor slots
-		// head
-		((SlotCustomization) this.slots.get(5)).slotcustomizationapi$setX(serverConfig.inventorySlots.head_slot_x_offset.get());
-		((SlotCustomization) this.slots.get(5)).slotcustomizationapi$setY(serverConfig.inventorySlots.head_slot_y_offset.get());
-		// chest
-		((SlotCustomization) this.slots.get(6)).slotcustomizationapi$setX(serverConfig.inventorySlots.chest_slot_x_offset.get());
-		((SlotCustomization) this.slots.get(6)).slotcustomizationapi$setY(serverConfig.inventorySlots.chest_slot_y_offset.get());
-		// legs
-		((SlotCustomization) this.slots.get(7)).slotcustomizationapi$setX(serverConfig.inventorySlots.legs_slot_x_offset.get());
-		((SlotCustomization) this.slots.get(7)).slotcustomizationapi$setY(serverConfig.inventorySlots.legs_slot_y_offset.get());
-		// feet
-		((SlotCustomization) this.slots.get(8)).slotcustomizationapi$setX(serverConfig.inventorySlots.feet_slot_x_offset.get());
-		((SlotCustomization) this.slots.get(8)).slotcustomizationapi$setY(serverConfig.inventorySlots.feet_slot_y_offset.get());
-
-		// reposition vanilla offhand slot
-		((SlotCustomization) this.slots.get(45)).slotcustomizationapi$setX(serverConfig.inventorySlots.offhand_slot_x_offset.get());
-		((SlotCustomization) this.slots.get(45)).slotcustomizationapi$setY(serverConfig.inventorySlots.offhand_slot_y_offset.get());
 
 		// main hand slot 46
 		this.addSlot(new CustomArmorSlot(inventory, owner, EquipmentSlot.MAINHAND, 41, serverConfig.inventorySlots.hand_slot_x_offset.get(), serverConfig.inventorySlots.hand_slot_y_offset.get(), EMPTY_HAND_SLOT, List.of(Text.translatable("slot.tooltip.hand")), false) {
 
 			@Override
 			public boolean isEnabled() {
-				return !((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed() && RPGInventory.isHandSlotOverhaulActive();
+				return isRPGInventoryScreenActivated && !((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed() && RPGInventory.isHandSlotOverhaulActive();
 			}
 
 			@Override
@@ -162,7 +165,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 
 			@Override
 			public boolean isEnabled() {
-				return ((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed() && RPGInventory.isHandSlotOverhaulActive();
+				return isRPGInventoryScreenActivated && ((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed() && RPGInventory.isHandSlotOverhaulActive();
 			}
 
 			@Override
@@ -185,7 +188,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 
 			@Override
 			public boolean isEnabled() {
-				return ((DuckPlayerEntityMixin) owner).rpginventory$isOffhandStackSheathed() && RPGInventory.isHandSlotOverhaulActive();
+				return isRPGInventoryScreenActivated && ((DuckPlayerEntityMixin) owner).rpginventory$isOffhandStackSheathed() && RPGInventory.isHandSlotOverhaulActive();
 			}
 
 			@Override
@@ -221,7 +224,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 
 			@Override
 			public boolean isEnabled() {
-				return RPGInventory.isHandSlotOverhaulActive() && serverConfig.handSlotOverhaul.enable_alternative_hand_slots.get();
+				return isRPGInventoryScreenActivated && RPGInventory.isHandSlotOverhaulActive() && serverConfig.handSlotOverhaul.enable_alternative_hand_slots.get();
 			}
 
 		});
@@ -244,7 +247,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 
 			@Override
 			public boolean isEnabled() {
-				return RPGInventory.isHandSlotOverhaulActive() && serverConfig.handSlotOverhaul.enable_alternative_hand_slots.get();
+				return isRPGInventoryScreenActivated && RPGInventory.isHandSlotOverhaulActive() && serverConfig.handSlotOverhaul.enable_alternative_hand_slots.get();
 			}
 
 		});
@@ -254,7 +257,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && serverConfig.inventorySlots.is_belt_slot_enabled.get();
+				return super.isEnabled() && isRPGInventoryScreenActivated && serverConfig.inventorySlots.is_belt_slot_enabled.get();
 			}
 
 			@Override
@@ -274,7 +277,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && serverConfig.inventorySlots.is_gloves_slot_enabled.get();
+				return super.isEnabled() && isRPGInventoryScreenActivated && serverConfig.inventorySlots.is_gloves_slot_enabled.get();
 			}
 
 			@Override
@@ -294,7 +297,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && serverConfig.inventorySlots.is_necklace_slot_enabled.get();
+				return super.isEnabled() && isRPGInventoryScreenActivated && serverConfig.inventorySlots.is_necklace_slot_enabled.get();
 			}
 
 			@Override
@@ -314,7 +317,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && serverConfig.inventorySlots.is_ring_1_slot_enabled.get();
+				return super.isEnabled() && isRPGInventoryScreenActivated && serverConfig.inventorySlots.is_ring_1_slot_enabled.get();
 			}
 
 			@Override
@@ -334,7 +337,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && serverConfig.inventorySlots.is_ring_2_slot_enabled.get();
+				return super.isEnabled() && isRPGInventoryScreenActivated && serverConfig.inventorySlots.is_ring_2_slot_enabled.get();
 			}
 
 			@Override
@@ -354,7 +357,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && serverConfig.inventorySlots.is_shoulders_slot_enabled.get();
+				return super.isEnabled() && isRPGInventoryScreenActivated && serverConfig.inventorySlots.is_shoulders_slot_enabled.get();
 			}
 
 			@Override
@@ -374,7 +377,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 1;
+				return super.isEnabled() && isRPGInventoryScreenActivated && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 1;
 			}
 
 		});
@@ -384,7 +387,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 2;
+				return super.isEnabled() && isRPGInventoryScreenActivated && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 2;
 			}
 
 		});
@@ -394,7 +397,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 3;
+				return super.isEnabled() && isRPGInventoryScreenActivated && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 3;
 			}
 
 		});
@@ -404,7 +407,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 4;
+				return super.isEnabled() && isRPGInventoryScreenActivated && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 4;
 			}
 
 		});
@@ -414,7 +417,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 5;
+				return super.isEnabled() && isRPGInventoryScreenActivated && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 5;
 			}
 
 		});
@@ -424,7 +427,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 6;
+				return super.isEnabled() && isRPGInventoryScreenActivated && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 6;
 			}
 
 		});
@@ -434,7 +437,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 7;
+				return super.isEnabled() && isRPGInventoryScreenActivated && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 7;
 			}
 
 		});
@@ -444,7 +447,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 8;
+				return super.isEnabled() && isRPGInventoryScreenActivated && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 8;
 			}
 
 		});
@@ -454,7 +457,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 
 			@Override
 			public boolean isEnabled() {
-				return super.isEnabled() && serverConfig.inventorySlots.is_relic_slot_enabled.get();
+				return super.isEnabled() && isRPGInventoryScreenActivated && serverConfig.inventorySlots.is_relic_slot_enabled.get();
 			}
 
 			@Override
