@@ -2,8 +2,8 @@ package com.github.theredbrain.rpginventory.screen.slot;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
-import com.github.theredbrain.rpginventory.screen.DuckSlotMixin;
 import com.github.theredbrain.rpginventory.util.ItemUtils;
+import com.github.theredbrain.slotcustomizationapi.api.SlotCustomization;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.component.EnchantmentEffectComponentTypes;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -40,7 +40,7 @@ public class AlternativeHandSlot extends Slot {
 		this.equipmentSlot = equipmentSlot;
 		this.backgroundSprite = backgroundSprite;
 		this.allowsLoadoutItemRemoval = allowsLoadoutItemRemoval;
-		((DuckSlotMixin) this).rpginventory$setSlotTooltipText(tooltip);
+		((SlotCustomization) this).slotcustomizationapi$setSlotTooltipText(tooltip);
 	}
 
 	@Override

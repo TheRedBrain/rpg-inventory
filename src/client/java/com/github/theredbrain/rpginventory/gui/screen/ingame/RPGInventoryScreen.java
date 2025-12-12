@@ -8,7 +8,6 @@ import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.gui.widget.ToggleInventoryScreenWidget;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import com.github.theredbrain.rpginventory.screen.DuckPlayerScreenHandlerMixin;
-import com.github.theredbrain.rpginventory.screen.DuckSlotMixin;
 import com.google.common.collect.Ordering;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -214,19 +213,6 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> {
 		this.openHandCraftingButton = this.addDrawableChild(ButtonWidget.builder(OPEN_HAND_CRAFTING_BUTTON_LABEL_TEXT, button -> this.openHandCraftingScreen()).dimensions(this.x + clientConfig.rpgInventoryScreenSection.open_hand_crafting_button_offset_x.get(), this.y + clientConfig.rpgInventoryScreenSection.open_hand_crafting_button_offset_y.get(), 70, 20).build());
 		this.openHandCraftingButton.visible = RPGInventory.SERVER_CONFIG.inventorySlots.disable_inventory_crafting_slots.get() && clientConfig.rpgInventoryScreenSection.enable_open_hand_crafting_button.get() && RPGInventory.isRPGCraftingLoaded;
 		this.toggleShowAttributeScreenButton.visible = RPGInventory.isPlayerAttributeScreenLoaded;
-	}
-
-	@Override
-	protected void drawMouseoverTooltip(DrawContext context, int x, int y) {
-		super.drawMouseoverTooltip(context, x, y);
-		if (RPGInventoryClient.CLIENT_CONFIG.rpgInventoryScreenSection.show_slot_tooltips.get() && this.handler.getCursorStack().isEmpty() && this.focusedSlot != null && !this.focusedSlot.hasStack()) {
-			if (this.focusedSlot instanceof DuckSlotMixin slotWithTooltip) {
-				List<Text> list = slotWithTooltip.rpginventory$getSlotTooltipText();
-				if (!list.isEmpty()) {
-					context.drawTooltip(this.textRenderer, list, Optional.empty(), x, y);
-				}
-			}
-		}
 	}
 
 	@Override

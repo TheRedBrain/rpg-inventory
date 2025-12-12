@@ -4,7 +4,6 @@ import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.RPGInventoryClient;
 import com.github.theredbrain.rpginventory.config.ServerConfig;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
-import com.github.theredbrain.rpginventory.screen.DuckSlotMixin;
 import com.github.theredbrain.rpginventory.screen.MannequinScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -17,9 +16,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-
-import java.util.List;
-import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
 public class MannequinScreen extends HandledScreen<MannequinScreenHandler> {
@@ -57,19 +53,6 @@ public class MannequinScreen extends HandledScreen<MannequinScreenHandler> {
 		this.addDrawableChild(ButtonWidget.builder(UNEQUIP_BUTTON_LABEL, button -> this.buttonCallback(1)).dimensions(this.x + 97, this.y + 125, 72, 20).build());
 
 		equipButton.active = this.handler.canEquip();
-	}
-
-	@Override
-	protected void drawMouseoverTooltip(DrawContext context, int x, int y) {
-		super.drawMouseoverTooltip(context, x, y);
-		if (RPGInventoryClient.CLIENT_CONFIG.rpgInventoryScreenSection.show_slot_tooltips.get() && this.handler.getCursorStack().isEmpty() && this.focusedSlot != null && !this.focusedSlot.hasStack()) {
-			if (this.focusedSlot instanceof DuckSlotMixin slotWithTooltip) {
-				List<Text> list = slotWithTooltip.rpginventory$getSlotTooltipText();
-				if (!list.isEmpty()) {
-					context.drawTooltip(this.textRenderer, list, Optional.empty(), x, y);
-				}
-			}
-		}
 	}
 
 	@Override

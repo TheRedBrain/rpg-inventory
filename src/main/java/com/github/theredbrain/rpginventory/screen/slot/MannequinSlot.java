@@ -2,7 +2,7 @@ package com.github.theredbrain.rpginventory.screen.slot;
 
 import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
 import com.github.theredbrain.rpginventory.registry.Tags;
-import com.github.theredbrain.rpginventory.screen.DuckSlotMixin;
+import com.github.theredbrain.slotcustomizationapi.api.SlotCustomization;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -31,7 +31,7 @@ public class MannequinSlot extends Slot {
 		this.equipmentSlot = equipmentSlot;
 		this.backgroundSprite = backgroundSprite;
 		this.canChangeInventory = canChangeInventory;
-		((DuckSlotMixin) this).rpginventory$setSlotTooltipText(tooltip);
+		((SlotCustomization) this).slotcustomizationapi$setSlotTooltipText(tooltip);
 	}
 
 	@Override

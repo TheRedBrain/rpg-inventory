@@ -75,8 +75,6 @@ public class ClientConfig extends Config {
 		public ValidatedInt open_hand_crafting_button_offset_x = new ValidatedInt(99);
 		@ConfigGroup.Pop
 		public ValidatedInt open_hand_crafting_button_offset_y = new ValidatedInt(57);
-
-		public ValidatedBoolean show_slot_tooltips = new ValidatedBoolean(true);
 	}
 
 	public ConfigGroup unusable_item_overlay = new ConfigGroup("unusable_item_overlay");

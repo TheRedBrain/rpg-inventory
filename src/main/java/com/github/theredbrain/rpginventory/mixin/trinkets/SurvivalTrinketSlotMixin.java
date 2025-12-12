@@ -2,8 +2,8 @@ package com.github.theredbrain.rpginventory.mixin.trinkets;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.screen.DuckPlayerScreenHandlerMixin;
-import com.github.theredbrain.rpginventory.screen.DuckSlotMixin;
 import com.github.theredbrain.rpginventory.util.ItemUtils;
+import com.github.theredbrain.slotcustomizationapi.api.SlotCustomization;
 import dev.emi.trinkets.SurvivalTrinketSlot;
 import dev.emi.trinkets.api.SlotGroup;
 import dev.emi.trinkets.api.SlotType;
@@ -56,7 +56,7 @@ public abstract class SurvivalTrinketSlotMixin extends Slot {
 		Text text = Text.translatable("slot.tooltip." + groupName + "." + slotName);
 		if (!text.getString().isEmpty()) {
 			list.add(text);
-			((DuckSlotMixin) slot).rpginventory$setSlotTooltipText(list);
+			((SlotCustomization) slot).slotcustomizationapi$setSlotTooltipText(list);
 		}
 	}
 

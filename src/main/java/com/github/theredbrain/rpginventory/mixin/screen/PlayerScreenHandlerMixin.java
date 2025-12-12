@@ -475,43 +475,23 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 		// adding slot tooltips
 		List<Text> list5 = new ArrayList<>();
 		list5.add(Text.translatable("slot.tooltip.head"));
-		((DuckSlotMixin) this.slots.get(5)).rpginventory$setSlotTooltipText(list5);
+		((SlotCustomization) this.slots.get(5)).slotcustomizationapi$setSlotTooltipText(list5);
 
 		List<Text> list6 = new ArrayList<>();
 		list6.add(Text.translatable("slot.tooltip.chest"));
-		((DuckSlotMixin) this.slots.get(6)).rpginventory$setSlotTooltipText(list6);
+		((SlotCustomization) this.slots.get(6)).slotcustomizationapi$setSlotTooltipText(list6);
 
 		List<Text> list7 = new ArrayList<>();
 		list7.add(Text.translatable("slot.tooltip.legs"));
-		((DuckSlotMixin) this.slots.get(7)).rpginventory$setSlotTooltipText(list7);
+		((SlotCustomization) this.slots.get(7)).slotcustomizationapi$setSlotTooltipText(list7);
 
 		List<Text> list8 = new ArrayList<>();
 		list8.add(Text.translatable("slot.tooltip.feet"));
-		((DuckSlotMixin) this.slots.get(8)).rpginventory$setSlotTooltipText(list8);
+		((SlotCustomization) this.slots.get(8)).slotcustomizationapi$setSlotTooltipText(list8);
 
 		List<Text> list45 = new ArrayList<>();
 		list45.add(Text.translatable("slot.tooltip.offhand"));
-		((DuckSlotMixin) this.slots.get(45)).rpginventory$setSlotTooltipText(list45);
-
-		List<Text> list46 = new ArrayList<>();
-		list46.add(Text.translatable("slot.tooltip.hand"));
-		((DuckSlotMixin) this.slots.get(46)).rpginventory$setSlotTooltipText(list46);
-
-		List<Text> list47 = new ArrayList<>();
-		list47.add(Text.translatable("slot.tooltip.hand"));
-		((DuckSlotMixin) this.slots.get(47)).rpginventory$setSlotTooltipText(list47);
-
-		List<Text> list48 = new ArrayList<>();
-		list48.add(Text.translatable("slot.tooltip.offhand"));
-		((DuckSlotMixin) this.slots.get(48)).rpginventory$setSlotTooltipText(list48);
-
-		List<Text> list49 = new ArrayList<>();
-		list49.add(Text.translatable("slot.tooltip.alternative_hand"));
-		((DuckSlotMixin) this.slots.get(49)).rpginventory$setSlotTooltipText(list49);
-
-		List<Text> list50 = new ArrayList<>();
-		list50.add(Text.translatable("slot.tooltip.alternative_offhand"));
-		((DuckSlotMixin) this.slots.get(50)).rpginventory$setSlotTooltipText(list50);
+		((SlotCustomization) this.slots.get(45)).slotcustomizationapi$setSlotTooltipText(list45);
 
 	}
 

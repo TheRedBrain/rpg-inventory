@@ -18,7 +18,6 @@
     "screen.PlayerScreenHandlerMixin",
     "screen.PlayerScreenHandlerMixin_TrinketsReplacement",
     "screen.PlayerScreenHandlerOffHandSlotMixin",
-    "screen.SlotMixin",
     "server.network.EntityTrackerEntryMixin",
     "server.network.ServerPlayerEntityMixin",
     "server.network.ServerPlayNetworkHandlerMixin",

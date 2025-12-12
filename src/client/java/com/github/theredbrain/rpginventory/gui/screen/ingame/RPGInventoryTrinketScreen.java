@@ -1,7 +1,5 @@
 package com.github.theredbrain.rpginventory.gui.screen.ingame;
 
-import com.github.theredbrain.rpginventory.RPGInventoryClient;
-import com.github.theredbrain.rpginventory.screen.DuckSlotMixin;
 import dev.emi.trinkets.Point;
 import dev.emi.trinkets.TrinketPlayerScreenHandler;
 import dev.emi.trinkets.TrinketScreen;
@@ -13,10 +11,6 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.util.math.Rect2i;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.screen.slot.Slot;
-import net.minecraft.text.Text;
-
-import java.util.List;
-import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
 public class RPGInventoryTrinketScreen extends RPGInventoryScreen implements TrinketScreen {
@@ -35,19 +29,6 @@ public class RPGInventoryTrinketScreen extends RPGInventoryScreen implements Tri
 	protected void init() {
 		TrinketScreenManager.init(this);
 		super.init();
-	}
-
-	@Override
-	protected void drawMouseoverTooltip(DrawContext context, int x, int y) {
-		super.drawMouseoverTooltip(context, x, y);
-		if (RPGInventoryClient.CLIENT_CONFIG.rpgInventoryScreenSection.show_slot_tooltips.get() && this.handler.getCursorStack().isEmpty() && this.focusedSlot != null && !this.focusedSlot.hasStack()) {
-			if (this.focusedSlot instanceof DuckSlotMixin slotWithTooltip) {
-				List<Text> list = slotWithTooltip.rpginventory$getSlotTooltipText();
-				if (!list.isEmpty()) {
-					context.drawTooltip(this.textRenderer, list, Optional.empty(), x, y);
-				}
-			}
-		}
 	}
 
 	@Override
