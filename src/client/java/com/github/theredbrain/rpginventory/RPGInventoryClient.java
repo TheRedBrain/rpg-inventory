@@ -9,8 +9,9 @@ import com.github.theredbrain.rpginventory.compat.PlayerAttributeScreenClientCom
 import com.github.theredbrain.rpginventory.compat.RPGCraftingClientCompat;
 import com.github.theredbrain.rpginventory.compat.TrinketsClientCompat;
 import com.github.theredbrain.rpginventory.config.ClientConfig;
-import com.github.theredbrain.rpginventory.gui.screen.ingame.MannequinScreen;
 import com.github.theredbrain.rpginventory.gui.screen.ingame.RPGInventoryScreen;
+import com.github.theredbrain.rpginventory.gui.screen.ingame.RPGMannequinScreen;
+import com.github.theredbrain.rpginventory.gui.screen.ingame.VanillaMannequinScreen;
 import com.github.theredbrain.rpginventory.registry.ClientEventsRegistry;
 import com.github.theredbrain.rpginventory.registry.ClientPacketRegistry;
 import com.github.theredbrain.rpginventory.registry.KeyBindingsRegistry;
@@ -89,7 +90,8 @@ public class RPGInventoryClient implements ClientModInitializer {
 		// Registry
 		ClientEventsRegistry.initializeClientEvents();
 		KeyBindingsRegistry.registerKeyBindings();
-		HandledScreens.register(ScreenHandlerTypesRegistry.MANNEQUIN_SCREEN_HANDLER, MannequinScreen::new);
+		HandledScreens.register(ScreenHandlerTypesRegistry.RPG_MANNEQUIN_SCREEN_HANDLER, RPGMannequinScreen::new);
+		HandledScreens.register(ScreenHandlerTypesRegistry.VANILLA_MANNEQUIN_SCREEN_HANDLER, VanillaMannequinScreen::new);
 		if (RPGInventory.isNumismaticOverhaulLoaded && RPGInventory.isOwoLibLoaded) {
 			NumismaticOverhaulClientCompat.init();
 		}

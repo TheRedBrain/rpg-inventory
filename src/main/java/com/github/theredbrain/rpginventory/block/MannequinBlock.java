@@ -1,7 +1,10 @@
 package com.github.theredbrain.rpginventory.block;
 
+import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.block.entity.MannequinBlockEntity;
-import com.github.theredbrain.rpginventory.screen.MannequinScreenHandler;
+import com.github.theredbrain.rpginventory.screen.AbstractMannequinScreenHandler;
+import com.github.theredbrain.rpginventory.screen.RPGMannequinScreenHandler;
+import com.github.theredbrain.rpginventory.screen.VanillaMannequinScreenHandler;
 import com.mojang.serialization.MapCodec;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.Block;
@@ -111,8 +114,8 @@ public class MannequinBlock extends BlockWithEntity {
 	public static NamedScreenHandlerFactory createMannequinBlockScreenHandlerFactory(BlockPos pos, PlayerEntity player, MannequinBlockEntity mannequinBlockEntity) {
 		return new ExtendedScreenHandlerFactory<>() {
 			@Override
-			public MannequinScreenHandler.MannequinBlockData getScreenOpeningData(ServerPlayerEntity player) {
-				return new MannequinScreenHandler.MannequinBlockData(pos, mannequinBlockEntity.canChangeInventory() || player.isCreative(), mannequinBlockEntity.canEquip() || player.isCreative());
+			public AbstractMannequinScreenHandler.MannequinBlockData getScreenOpeningData(ServerPlayerEntity player) {
+				return new AbstractMannequinScreenHandler.MannequinBlockData(pos, mannequinBlockEntity.canChangeInventory() || player.isCreative(), mannequinBlockEntity.canEquip() || player.isCreative());
 			}
 
 			@Override
@@ -123,7 +126,11 @@ public class MannequinBlock extends BlockWithEntity {
 			@Nullable
 			@Override
 			public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
-				return new MannequinScreenHandler(syncId, playerInventory, mannequinBlockEntity, pos, mannequinBlockEntity.canChangeInventory() || player.isCreative(), mannequinBlockEntity.canEquip() || player.isCreative());
+				if (RPGInventory.SERVER_CONFIG.activate_rpg_inventory_screen.get()) {
+					return new RPGMannequinScreenHandler(syncId, playerInventory, mannequinBlockEntity, pos, mannequinBlockEntity.canChangeInventory() || player.isCreative(), mannequinBlockEntity.canEquip() || player.isCreative());
+				} else {
+					return new VanillaMannequinScreenHandler(syncId, playerInventory, mannequinBlockEntity, pos, mannequinBlockEntity.canChangeInventory() || player.isCreative(), mannequinBlockEntity.canEquip() || player.isCreative());
+				}
 			}
 		};
 	}

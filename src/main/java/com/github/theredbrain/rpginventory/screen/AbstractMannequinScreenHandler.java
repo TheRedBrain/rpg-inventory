@@ -5,7 +5,6 @@ import com.github.theredbrain.rpginventory.block.entity.MannequinBlockEntity;
 import com.github.theredbrain.rpginventory.config.ServerConfig;
 import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
-import com.github.theredbrain.rpginventory.registry.ScreenHandlerTypesRegistry;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import com.github.theredbrain.rpginventory.screen.slot.AlternativeHandSlot;
 import com.github.theredbrain.rpginventory.screen.slot.CustomArmorSlot;
@@ -16,7 +15,6 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
@@ -24,18 +22,20 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Unit;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class MannequinScreenHandler extends ScreenHandler {
+public abstract class AbstractMannequinScreenHandler extends ScreenHandler {
 	private static final Identifier EMPTY_HAND_SLOT = RPGInventory.identifier("item/empty_slot_hand");
 	private static final Identifier EMPTY_ALTERNATIVE_HAND_SLOT = RPGInventory.identifier("item/empty_slot_alternative_hand");
 	private static final Identifier EMPTY_ALTERNATIVE_OFFHAND_SLOT = RPGInventory.identifier("item/empty_slot_alternative_offhand");
@@ -59,18 +59,14 @@ public class MannequinScreenHandler extends ScreenHandler {
 	private static int MANNEQUIN_SLOTS_START;
 	private final Inventory inventory;
 	private final PlayerInventory playerInventory;
-	private static Map<EquipmentSlot, Identifier> EMPTY_ARMOR_SLOT_TEXTURES;
-	private static EquipmentSlot[] EQUIPMENT_SLOT_ORDER;
-	private static List<List<Text>> ARMOR_SLOT_TOOLTIPS;
+	private final static Map<EquipmentSlot, Identifier> EMPTY_ARMOR_SLOT_TEXTURES;
+	private final static EquipmentSlot[] EQUIPMENT_SLOT_ORDER;
+	private final static List<List<Text>> ARMOR_SLOT_TOOLTIPS;
 	private final PlayerEntity owner;
 	private final boolean canEquip;
 
-	public MannequinScreenHandler(int syncId, PlayerInventory playerInventory, MannequinBlockData data) {
-		this(syncId, playerInventory, new SimpleInventory(MannequinBlockEntity.INVENTORY_SIZE), data.blockPos, data.canChangeInventory, data.canEquip);
-	}
-
-	public MannequinScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, BlockPos blockPos, boolean canChangeInventory, boolean canEquip) {
-		super(ScreenHandlerTypesRegistry.MANNEQUIN_SCREEN_HANDLER, syncId);
+	public AbstractMannequinScreenHandler(@Nullable ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory, Inventory inventory, BlockPos blockPos, boolean canChangeInventory, boolean canEquip) {
+		super(type, syncId);
 		checkSize(inventory, MannequinBlockEntity.INVENTORY_SIZE);
 		this.inventory = inventory;
 		this.playerInventory = playerInventory;
@@ -95,15 +91,15 @@ public class MannequinScreenHandler extends ScreenHandler {
 		EQUIPMENT_SLOTS_START = 36;
 		for (int i = 0; i < 4; i++) {
 			EquipmentSlot equipmentSlot = EQUIPMENT_SLOT_ORDER[i];
-			this.addSlot(new CustomArmorSlot(playerInventory, MannequinScreenHandler.this.owner, equipmentSlot, 39 - i, 8, 17 + i * 18, EMPTY_ARMOR_SLOT_TEXTURES.get(equipmentSlot), ARMOR_SLOT_TOOLTIPS.get(i), true));
+			this.addSlot(new CustomArmorSlot(playerInventory, AbstractMannequinScreenHandler.this.owner, equipmentSlot, 39 - i, 8, 17 + i * 18, EMPTY_ARMOR_SLOT_TEXTURES.get(equipmentSlot), ARMOR_SLOT_TOOLTIPS.get(i), true));
 		}
 
 		// 40 offhand
-		this.addSlot(new CustomArmorSlot(playerInventory, MannequinScreenHandler.this.owner, EquipmentSlot.OFFHAND, 40, 44, 53, PlayerScreenHandler.EMPTY_OFFHAND_ARMOR_SLOT, List.of(Text.translatable("slot.tooltip.offhand")), true) {
+		this.addSlot(new CustomArmorSlot(playerInventory, AbstractMannequinScreenHandler.this.owner, EquipmentSlot.OFFHAND, 40, 44, 53, PlayerScreenHandler.EMPTY_OFFHAND_ARMOR_SLOT, List.of(Text.translatable("slot.tooltip.offhand")), true) {
 
 			@Override
 			public boolean isEnabled() {
-				return !((DuckPlayerEntityMixin) MannequinScreenHandler.this.owner).rpginventory$isOffhandStackSheathed() || !RPGInventory.isHandSlotOverhaulActive();
+				return !((DuckPlayerEntityMixin) AbstractMannequinScreenHandler.this.owner).rpginventory$isOffhandStackSheathed() || !RPGInventory.isHandSlotOverhaulActive();
 			}
 
 			@Override
@@ -111,22 +107,22 @@ public class MannequinScreenHandler extends ScreenHandler {
 				ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
 
 				Optional<RegistryEntry.Reference<StatusEffect>> civilisation_status_effect = Registries.STATUS_EFFECT.getEntry(serverConfig.statusEffects.civilisation_status_effect_identifier.get());
-				boolean hasCivilisationEffect = civilisation_status_effect.isPresent() && MannequinScreenHandler.this.owner.hasStatusEffect(civilisation_status_effect.get());
+				boolean hasCivilisationEffect = civilisation_status_effect.isPresent() && AbstractMannequinScreenHandler.this.owner.hasStatusEffect(civilisation_status_effect.get());
 
 				Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(serverConfig.statusEffects.wilderness_status_effect_identifier.get());
-				boolean hasWildernessEffect = wilderness_status_effect.isPresent() && MannequinScreenHandler.this.owner.hasStatusEffect(wilderness_status_effect.get());
+				boolean hasWildernessEffect = wilderness_status_effect.isPresent() && AbstractMannequinScreenHandler.this.owner.hasStatusEffect(wilderness_status_effect.get());
 
-				return (EquipmentSlot.OFFHAND == MannequinScreenHandler.this.owner.getPreferredEquipmentSlot(stack) || stack.isIn(Tags.OFFHAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || !RPGInventory.isHandSlotOverhaulActive()) && ItemUtils.isUsableByPlayer(stack, MannequinScreenHandler.this.owner) && (hasCivilisationEffect || MannequinScreenHandler.this.owner.isCreative() || (serverConfig.allow_equipment_changes.get() && !hasWildernessEffect)) && !((DuckPlayerEntityMixin) MannequinScreenHandler.this.owner).rpginventory$isOffhandStackSheathed();
+				return (EquipmentSlot.OFFHAND == AbstractMannequinScreenHandler.this.owner.getPreferredEquipmentSlot(stack) || stack.isIn(Tags.OFFHAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || !RPGInventory.isHandSlotOverhaulActive()) && ItemUtils.isUsableByPlayer(stack, AbstractMannequinScreenHandler.this.owner) && (hasCivilisationEffect || AbstractMannequinScreenHandler.this.owner.isCreative() || (serverConfig.allow_equipment_changes.get() && !hasWildernessEffect)) && !((DuckPlayerEntityMixin) AbstractMannequinScreenHandler.this.owner).rpginventory$isOffhandStackSheathed();
 			}
 
 		});
 
 		// 41 main hand
-		this.addSlot(new CustomArmorSlot(playerInventory, MannequinScreenHandler.this.owner, EquipmentSlot.MAINHAND, 41, 26, 53, EMPTY_HAND_SLOT, List.of(Text.translatable("slot.tooltip.hand")), true) {
+		this.addSlot(new CustomArmorSlot(playerInventory, AbstractMannequinScreenHandler.this.owner, EquipmentSlot.MAINHAND, 41, 26, 53, EMPTY_HAND_SLOT, List.of(Text.translatable("slot.tooltip.hand")), true) {
 
 			@Override
 			public boolean isEnabled() {
-				return !((DuckPlayerEntityMixin) MannequinScreenHandler.this.owner).rpginventory$isHandStackSheathed() && RPGInventory.isHandSlotOverhaulActive();
+				return !((DuckPlayerEntityMixin) AbstractMannequinScreenHandler.this.owner).rpginventory$isHandStackSheathed() && RPGInventory.isHandSlotOverhaulActive();
 			}
 
 			@Override
@@ -134,22 +130,22 @@ public class MannequinScreenHandler extends ScreenHandler {
 				ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
 
 				Optional<RegistryEntry.Reference<StatusEffect>> civilisation_status_effect = Registries.STATUS_EFFECT.getEntry(serverConfig.statusEffects.civilisation_status_effect_identifier.get());
-				boolean hasCivilisationEffect = civilisation_status_effect.isPresent() && MannequinScreenHandler.this.owner.hasStatusEffect(civilisation_status_effect.get());
+				boolean hasCivilisationEffect = civilisation_status_effect.isPresent() && AbstractMannequinScreenHandler.this.owner.hasStatusEffect(civilisation_status_effect.get());
 
 				Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(serverConfig.statusEffects.wilderness_status_effect_identifier.get());
-				boolean hasWildernessEffect = wilderness_status_effect.isPresent() && MannequinScreenHandler.this.owner.hasStatusEffect(wilderness_status_effect.get());
+				boolean hasWildernessEffect = wilderness_status_effect.isPresent() && AbstractMannequinScreenHandler.this.owner.hasStatusEffect(wilderness_status_effect.get());
 
-				return (EquipmentSlot.MAINHAND == MannequinScreenHandler.this.owner.getPreferredEquipmentSlot(stack) || stack.isIn(Tags.HAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isUsableByPlayer(stack, MannequinScreenHandler.this.owner) && (hasCivilisationEffect || MannequinScreenHandler.this.owner.isCreative() || (serverConfig.allow_equipment_changes.get() && !hasWildernessEffect)) && !((DuckPlayerEntityMixin) MannequinScreenHandler.this.owner).rpginventory$isHandStackSheathed();
+				return (EquipmentSlot.MAINHAND == AbstractMannequinScreenHandler.this.owner.getPreferredEquipmentSlot(stack) || stack.isIn(Tags.HAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isUsableByPlayer(stack, AbstractMannequinScreenHandler.this.owner) && (hasCivilisationEffect || AbstractMannequinScreenHandler.this.owner.isCreative() || (serverConfig.allow_equipment_changes.get() && !hasWildernessEffect)) && !((DuckPlayerEntityMixin) AbstractMannequinScreenHandler.this.owner).rpginventory$isHandStackSheathed();
 			}
 
 		});
 
 		// 42 sheathed main hand
-		this.addSlot(new CustomArmorSlot(playerInventory, MannequinScreenHandler.this.owner, EquipmentSlot.MAINHAND, 42, 26, 53, EMPTY_HAND_SLOT, List.of(Text.translatable("slot.tooltip.hand")), true) {
+		this.addSlot(new CustomArmorSlot(playerInventory, AbstractMannequinScreenHandler.this.owner, EquipmentSlot.MAINHAND, 42, 26, 53, EMPTY_HAND_SLOT, List.of(Text.translatable("slot.tooltip.hand")), true) {
 
 			@Override
 			public boolean isEnabled() {
-				return ((DuckPlayerEntityMixin) MannequinScreenHandler.this.owner).rpginventory$isHandStackSheathed() && RPGInventory.isHandSlotOverhaulActive();
+				return ((DuckPlayerEntityMixin) AbstractMannequinScreenHandler.this.owner).rpginventory$isHandStackSheathed() && RPGInventory.isHandSlotOverhaulActive();
 			}
 
 			@Override
@@ -157,22 +153,22 @@ public class MannequinScreenHandler extends ScreenHandler {
 				ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
 
 				Optional<RegistryEntry.Reference<StatusEffect>> civilisation_status_effect = Registries.STATUS_EFFECT.getEntry(serverConfig.statusEffects.civilisation_status_effect_identifier.get());
-				boolean hasCivilisationEffect = civilisation_status_effect.isPresent() && MannequinScreenHandler.this.owner.hasStatusEffect(civilisation_status_effect.get());
+				boolean hasCivilisationEffect = civilisation_status_effect.isPresent() && AbstractMannequinScreenHandler.this.owner.hasStatusEffect(civilisation_status_effect.get());
 
 				Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(serverConfig.statusEffects.wilderness_status_effect_identifier.get());
-				boolean hasWildernessEffect = wilderness_status_effect.isPresent() && MannequinScreenHandler.this.owner.hasStatusEffect(wilderness_status_effect.get());
+				boolean hasWildernessEffect = wilderness_status_effect.isPresent() && AbstractMannequinScreenHandler.this.owner.hasStatusEffect(wilderness_status_effect.get());
 
-				return (EquipmentSlot.MAINHAND == MannequinScreenHandler.this.owner.getPreferredEquipmentSlot(stack) || stack.isIn(Tags.HAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isUsableByPlayer(stack, MannequinScreenHandler.this.owner) && (hasCivilisationEffect || MannequinScreenHandler.this.owner.isCreative() || (serverConfig.allow_equipment_changes.get() && !hasWildernessEffect)) && ((DuckPlayerEntityMixin) MannequinScreenHandler.this.owner).rpginventory$isHandStackSheathed();
+				return (EquipmentSlot.MAINHAND == AbstractMannequinScreenHandler.this.owner.getPreferredEquipmentSlot(stack) || stack.isIn(Tags.HAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isUsableByPlayer(stack, AbstractMannequinScreenHandler.this.owner) && (hasCivilisationEffect || AbstractMannequinScreenHandler.this.owner.isCreative() || (serverConfig.allow_equipment_changes.get() && !hasWildernessEffect)) && ((DuckPlayerEntityMixin) AbstractMannequinScreenHandler.this.owner).rpginventory$isHandStackSheathed();
 			}
 
 		});
 
 		// 43 sheathed offhand
-		this.addSlot(new CustomArmorSlot(playerInventory, MannequinScreenHandler.this.owner, EquipmentSlot.OFFHAND, 43, 44, 53, PlayerScreenHandler.EMPTY_OFFHAND_ARMOR_SLOT, List.of(Text.translatable("slot.tooltip.offhand")), true) {
+		this.addSlot(new CustomArmorSlot(playerInventory, AbstractMannequinScreenHandler.this.owner, EquipmentSlot.OFFHAND, 43, 44, 53, PlayerScreenHandler.EMPTY_OFFHAND_ARMOR_SLOT, List.of(Text.translatable("slot.tooltip.offhand")), true) {
 
 			@Override
 			public boolean isEnabled() {
-				return ((DuckPlayerEntityMixin) MannequinScreenHandler.this.owner).rpginventory$isOffhandStackSheathed() && RPGInventory.isHandSlotOverhaulActive();
+				return ((DuckPlayerEntityMixin) AbstractMannequinScreenHandler.this.owner).rpginventory$isOffhandStackSheathed() && RPGInventory.isHandSlotOverhaulActive();
 			}
 
 			@Override
@@ -180,30 +176,30 @@ public class MannequinScreenHandler extends ScreenHandler {
 				ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
 
 				Optional<RegistryEntry.Reference<StatusEffect>> civilisation_status_effect = Registries.STATUS_EFFECT.getEntry(serverConfig.statusEffects.civilisation_status_effect_identifier.get());
-				boolean hasCivilisationEffect = civilisation_status_effect.isPresent() && MannequinScreenHandler.this.owner.hasStatusEffect(civilisation_status_effect.get());
+				boolean hasCivilisationEffect = civilisation_status_effect.isPresent() && AbstractMannequinScreenHandler.this.owner.hasStatusEffect(civilisation_status_effect.get());
 
 				Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(serverConfig.statusEffects.wilderness_status_effect_identifier.get());
-				boolean hasWildernessEffect = wilderness_status_effect.isPresent() && MannequinScreenHandler.this.owner.hasStatusEffect(wilderness_status_effect.get());
+				boolean hasWildernessEffect = wilderness_status_effect.isPresent() && AbstractMannequinScreenHandler.this.owner.hasStatusEffect(wilderness_status_effect.get());
 
-				return (EquipmentSlot.OFFHAND == MannequinScreenHandler.this.owner.getPreferredEquipmentSlot(stack) || stack.isIn(Tags.OFFHAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isUsableByPlayer(stack, MannequinScreenHandler.this.owner) && (hasCivilisationEffect || MannequinScreenHandler.this.owner.isCreative() || (serverConfig.allow_equipment_changes.get() && !hasWildernessEffect)) && ((DuckPlayerEntityMixin) MannequinScreenHandler.this.owner).rpginventory$isOffhandStackSheathed();
+				return (EquipmentSlot.OFFHAND == AbstractMannequinScreenHandler.this.owner.getPreferredEquipmentSlot(stack) || stack.isIn(Tags.OFFHAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isUsableByPlayer(stack, AbstractMannequinScreenHandler.this.owner) && (hasCivilisationEffect || AbstractMannequinScreenHandler.this.owner.isCreative() || (serverConfig.allow_equipment_changes.get() && !hasWildernessEffect)) && ((DuckPlayerEntityMixin) AbstractMannequinScreenHandler.this.owner).rpginventory$isOffhandStackSheathed();
 			}
 
 		});
 
 		// 44 alternative main hand slot
-		this.addSlot(new AlternativeHandSlot(playerInventory, MannequinScreenHandler.this.owner, EquipmentSlot.MAINHAND, 46, 26, 71, EMPTY_ALTERNATIVE_HAND_SLOT, List.of(Text.translatable("slot.tooltip.alternative_hand")), true) {
+		this.addSlot(new AlternativeHandSlot(playerInventory, AbstractMannequinScreenHandler.this.owner, EquipmentSlot.MAINHAND, 46, 26, 71, EMPTY_ALTERNATIVE_HAND_SLOT, List.of(Text.translatable("slot.tooltip.alternative_hand")), true) {
 
 			@Override
 			public boolean canInsert(ItemStack stack) {
 				ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
 
 				Optional<RegistryEntry.Reference<StatusEffect>> civilisation_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.civilisation_status_effect_identifier.get());
-				boolean hasCivilisationEffect = civilisation_status_effect.isPresent() && MannequinScreenHandler.this.owner.hasStatusEffect(civilisation_status_effect.get());
+				boolean hasCivilisationEffect = civilisation_status_effect.isPresent() && AbstractMannequinScreenHandler.this.owner.hasStatusEffect(civilisation_status_effect.get());
 
 				Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.wilderness_status_effect_identifier.get());
-				boolean hasWildernessEffect = wilderness_status_effect.isPresent() && MannequinScreenHandler.this.owner.hasStatusEffect(wilderness_status_effect.get());
+				boolean hasWildernessEffect = wilderness_status_effect.isPresent() && AbstractMannequinScreenHandler.this.owner.hasStatusEffect(wilderness_status_effect.get());
 
-				return (stack.isIn(Tags.HAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isUsableByPlayer(stack, MannequinScreenHandler.this.owner) && (hasCivilisationEffect || MannequinScreenHandler.this.owner.isCreative() || (serverConfig.allow_equipment_changes.get() && !hasWildernessEffect));
+				return (stack.isIn(Tags.HAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isUsableByPlayer(stack, AbstractMannequinScreenHandler.this.owner) && (hasCivilisationEffect || AbstractMannequinScreenHandler.this.owner.isCreative() || (serverConfig.allow_equipment_changes.get() && !hasWildernessEffect));
 			}
 
 			@Override
@@ -214,19 +210,19 @@ public class MannequinScreenHandler extends ScreenHandler {
 		});
 
 		// 45 alternative offhand slot
-		this.addSlot(new AlternativeHandSlot(playerInventory, MannequinScreenHandler.this.owner, EquipmentSlot.OFFHAND, 47, 44, 71, EMPTY_ALTERNATIVE_OFFHAND_SLOT, List.of(Text.translatable("slot.tooltip.alternative_offhand")), true) {
+		this.addSlot(new AlternativeHandSlot(playerInventory, AbstractMannequinScreenHandler.this.owner, EquipmentSlot.OFFHAND, 47, 44, 71, EMPTY_ALTERNATIVE_OFFHAND_SLOT, List.of(Text.translatable("slot.tooltip.alternative_offhand")), true) {
 
 			@Override
 			public boolean canInsert(ItemStack stack) {
 				ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
 
 				Optional<RegistryEntry.Reference<StatusEffect>> civilisation_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.civilisation_status_effect_identifier.get());
-				boolean hasCivilisationEffect = civilisation_status_effect.isPresent() && MannequinScreenHandler.this.owner.hasStatusEffect(civilisation_status_effect.get());
+				boolean hasCivilisationEffect = civilisation_status_effect.isPresent() && AbstractMannequinScreenHandler.this.owner.hasStatusEffect(civilisation_status_effect.get());
 
 				Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.wilderness_status_effect_identifier.get());
-				boolean hasWildernessEffect = wilderness_status_effect.isPresent() && MannequinScreenHandler.this.owner.hasStatusEffect(wilderness_status_effect.get());
+				boolean hasWildernessEffect = wilderness_status_effect.isPresent() && AbstractMannequinScreenHandler.this.owner.hasStatusEffect(wilderness_status_effect.get());
 
-				return (stack.isIn(Tags.OFFHAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isUsableByPlayer(stack, MannequinScreenHandler.this.owner) && (hasCivilisationEffect || MannequinScreenHandler.this.owner.isCreative() || (serverConfig.allow_equipment_changes.get() && !hasWildernessEffect));
+				return (stack.isIn(Tags.OFFHAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isUsableByPlayer(stack, AbstractMannequinScreenHandler.this.owner) && (hasCivilisationEffect || AbstractMannequinScreenHandler.this.owner.isCreative() || (serverConfig.allow_equipment_changes.get() && !hasWildernessEffect));
 			}
 
 			@Override
@@ -463,13 +459,13 @@ public class MannequinScreenHandler extends ScreenHandler {
 		// 61 - 64
 		for (int i = 0; i < 4; i++) {
 			EquipmentSlot equipmentSlot = EQUIPMENT_SLOT_ORDER[i];
-			this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, equipmentSlot, i, 90 + 8, 17 + i * 18, EMPTY_ARMOR_SLOT_TEXTURES.get(equipmentSlot), canChangeInventory, ARMOR_SLOT_TOOLTIPS.get(i)));
+			this.addSlot(new MannequinSlot(inventory, AbstractMannequinScreenHandler.this.owner, equipmentSlot, i, 90 + 8, 17 + i * 18, EMPTY_ARMOR_SLOT_TEXTURES.get(equipmentSlot), canChangeInventory, ARMOR_SLOT_TOOLTIPS.get(i)));
 		}
 		// 65 offhand
-		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, EquipmentSlot.OFFHAND, 4, 90 + 44, 53, PlayerScreenHandler.EMPTY_OFFHAND_ARMOR_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.offhand"))));
+		this.addSlot(new MannequinSlot(inventory, AbstractMannequinScreenHandler.this.owner, EquipmentSlot.OFFHAND, 4, 90 + 44, 53, PlayerScreenHandler.EMPTY_OFFHAND_ARMOR_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.offhand"))));
 
 		// 66 main hand
-		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, EquipmentSlot.MAINHAND, 5, 90 + 26, 53, EMPTY_HAND_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.hand"))) {
+		this.addSlot(new MannequinSlot(inventory, AbstractMannequinScreenHandler.this.owner, EquipmentSlot.MAINHAND, 5, 90 + 26, 53, EMPTY_HAND_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.hand"))) {
 
 			@Override
 			public boolean isEnabled() {
@@ -479,7 +475,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 		});
 
 		// 67 alternative main hand
-		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, EquipmentSlot.MAINHAND, 6, 90 + 26, 71, EMPTY_ALTERNATIVE_HAND_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.alternative_hand"))) {
+		this.addSlot(new MannequinSlot(inventory, AbstractMannequinScreenHandler.this.owner, EquipmentSlot.MAINHAND, 6, 90 + 26, 71, EMPTY_ALTERNATIVE_HAND_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.alternative_hand"))) {
 
 			@Override
 			public boolean isEnabled() {
@@ -489,7 +485,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 		});
 
 		// 68 alternative offhand
-		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, EquipmentSlot.OFFHAND, 7, 90 + 44, 71, EMPTY_ALTERNATIVE_OFFHAND_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.alternative_offhand"))) {
+		this.addSlot(new MannequinSlot(inventory, AbstractMannequinScreenHandler.this.owner, EquipmentSlot.OFFHAND, 7, 90 + 44, 71, EMPTY_ALTERNATIVE_OFFHAND_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.alternative_offhand"))) {
 
 			@Override
 			public boolean isEnabled() {
@@ -499,7 +495,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 		});
 
 		// 69 belt slot
-		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.BELT, 8, 90 + 62, 71, EMPTY_BELT_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.belt"))) {
+		this.addSlot(new MannequinSlot(inventory, AbstractMannequinScreenHandler.this.owner, ExtendedEquipmentSlot.BELT, 8, 90 + 62, 71, EMPTY_BELT_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.belt"))) {
 
 			@Override
 			public boolean isEnabled() {
@@ -519,7 +515,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 		});
 
 		// 70 gloves slot
-		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.GLOVES, 9, 90 + 62, 53, EMPTY_GLOVES_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.gloves"))) {
+		this.addSlot(new MannequinSlot(inventory, AbstractMannequinScreenHandler.this.owner, ExtendedEquipmentSlot.GLOVES, 9, 90 + 62, 53, EMPTY_GLOVES_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.gloves"))) {
 
 			@Override
 			public boolean isEnabled() {
@@ -539,7 +535,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 		});
 
 		// 71 necklace slot
-		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.NECKLACE, 10, 90 + 44, 17, EMPTY_NECKLACE_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.necklace"))) {
+		this.addSlot(new MannequinSlot(inventory, AbstractMannequinScreenHandler.this.owner, ExtendedEquipmentSlot.NECKLACE, 10, 90 + 44, 17, EMPTY_NECKLACE_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.necklace"))) {
 
 			@Override
 			public boolean isEnabled() {
@@ -559,7 +555,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 		});
 
 		// 72 ring 1 slot
-		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.RING_1, 11, 90 + 62, 35, EMPTY_RING_1_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.ring_1"))) {
+		this.addSlot(new MannequinSlot(inventory, AbstractMannequinScreenHandler.this.owner, ExtendedEquipmentSlot.RING_1, 11, 90 + 62, 35, EMPTY_RING_1_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.ring_1"))) {
 
 			@Override
 			public boolean isEnabled() {
@@ -579,7 +575,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 		});
 
 		// 73 ring 2 slot
-		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.RING_2, 12, 90 + 44, 35, EMPTY_RING_2_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.ring_2"))) {
+		this.addSlot(new MannequinSlot(inventory, AbstractMannequinScreenHandler.this.owner, ExtendedEquipmentSlot.RING_2, 12, 90 + 44, 35, EMPTY_RING_2_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.ring_2"))) {
 
 			@Override
 			public boolean isEnabled() {
@@ -599,7 +595,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 		});
 
 		// 74 shoulders slot
-		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.SHOULDERS, 13, 90 + 26, 17, EMPTY_SHOULDERS_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.shoulders"))) {
+		this.addSlot(new MannequinSlot(inventory, AbstractMannequinScreenHandler.this.owner, ExtendedEquipmentSlot.SHOULDERS, 13, 90 + 26, 17, EMPTY_SHOULDERS_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.shoulders"))) {
 
 			@Override
 			public boolean isEnabled() {
@@ -619,7 +615,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 		});
 
 		// 75 spell 1 slot
-		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.SPELL_1, 14, 90 + 8, 89, EMPTY_SPELL_1_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.spell_1"))) {
+		this.addSlot(new MannequinSlot(inventory, AbstractMannequinScreenHandler.this.owner, ExtendedEquipmentSlot.SPELL_1, 14, 90 + 8, 89, EMPTY_SPELL_1_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.spell_1"))) {
 
 			@Override
 			public boolean isEnabled() {
@@ -629,7 +625,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 		});
 
 		// 76 spell 2 slot
-		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.SPELL_2, 15, 90 + 26, 89, EMPTY_SPELL_2_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.spell_2"))) {
+		this.addSlot(new MannequinSlot(inventory, AbstractMannequinScreenHandler.this.owner, ExtendedEquipmentSlot.SPELL_2, 15, 90 + 26, 89, EMPTY_SPELL_2_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.spell_2"))) {
 
 			@Override
 			public boolean isEnabled() {
@@ -639,7 +635,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 		});
 
 		// 77 spell 3 slot
-		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.SPELL_3, 16, 90 + 44, 89, EMPTY_SPELL_3_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.spell_3"))) {
+		this.addSlot(new MannequinSlot(inventory, AbstractMannequinScreenHandler.this.owner, ExtendedEquipmentSlot.SPELL_3, 16, 90 + 44, 89, EMPTY_SPELL_3_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.spell_3"))) {
 
 			@Override
 			public boolean isEnabled() {
@@ -649,7 +645,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 		});
 
 		// 78 spell 4 slot
-		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.SPELL_4, 17, 90 + 62, 89, EMPTY_SPELL_4_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.spell_4"))) {
+		this.addSlot(new MannequinSlot(inventory, AbstractMannequinScreenHandler.this.owner, ExtendedEquipmentSlot.SPELL_4, 17, 90 + 62, 89, EMPTY_SPELL_4_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.spell_4"))) {
 
 			@Override
 			public boolean isEnabled() {
@@ -659,7 +655,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 		});
 
 		// 79 spell 5 slot
-		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.SPELL_5, 18, 90 + 8, 107, EMPTY_SPELL_5_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.spell_5"))) {
+		this.addSlot(new MannequinSlot(inventory, AbstractMannequinScreenHandler.this.owner, ExtendedEquipmentSlot.SPELL_5, 18, 90 + 8, 107, EMPTY_SPELL_5_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.spell_5"))) {
 
 			@Override
 			public boolean isEnabled() {
@@ -669,7 +665,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 		});
 
 		// 80 spell 6 slot
-		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.SPELL_6, 19, 90 + 26, 107, EMPTY_SPELL_6_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.spell_6"))) {
+		this.addSlot(new MannequinSlot(inventory, AbstractMannequinScreenHandler.this.owner, ExtendedEquipmentSlot.SPELL_6, 19, 90 + 26, 107, EMPTY_SPELL_6_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.spell_6"))) {
 
 			@Override
 			public boolean isEnabled() {
@@ -679,7 +675,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 		});
 
 		// 81 spell 7 slot
-		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.SPELL_7, 20, 90 + 44, 107, EMPTY_SPELL_7_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.spell_7"))) {
+		this.addSlot(new MannequinSlot(inventory, AbstractMannequinScreenHandler.this.owner, ExtendedEquipmentSlot.SPELL_7, 20, 90 + 44, 107, EMPTY_SPELL_7_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.spell_7"))) {
 
 			@Override
 			public boolean isEnabled() {
@@ -689,7 +685,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 		});
 
 		// 82 spell 8 slot
-		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.SPELL_8, 21, 90 + 62, 107, EMPTY_SPELL_8_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.spell_8"))) {
+		this.addSlot(new MannequinSlot(inventory, AbstractMannequinScreenHandler.this.owner, ExtendedEquipmentSlot.SPELL_8, 21, 90 + 62, 107, EMPTY_SPELL_8_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.spell_8"))) {
 
 			@Override
 			public boolean isEnabled() {
@@ -699,7 +695,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 		});
 
 		// 83 relic slot
-		this.addSlot(new MannequinSlot(inventory, MannequinScreenHandler.this.owner, ExtendedEquipmentSlot.RELIC, 22, 90 + 62, 17, EMPTY_RELIC_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.relic"))) {
+		this.addSlot(new MannequinSlot(inventory, AbstractMannequinScreenHandler.this.owner, ExtendedEquipmentSlot.RELIC, 22, 90 + 62, 17, EMPTY_RELIC_SLOT, canChangeInventory, List.of(Text.translatable("slot.tooltip.relic"))) {
 
 			@Override
 			public boolean isEnabled() {
@@ -730,14 +726,12 @@ public class MannequinScreenHandler extends ScreenHandler {
 
 	private void equip(PlayerEntity player) {
 
-//		RPGInventory.LOGGER.info("equip");
-
 		// regular armor
 		for (int i = 0; i < 4; i++) {
 			equipSingleSlot(MANNEQUIN_SLOTS_START + i, EQUIPMENT_SLOTS_START + i);
 		}
 
-		if (((DuckPlayerEntityMixin) MannequinScreenHandler.this.owner).rpginventory$isOffhandStackSheathed()) {
+		if (((DuckPlayerEntityMixin) AbstractMannequinScreenHandler.this.owner).rpginventory$isOffhandStackSheathed()) {
 			// sheathed offhand
 			equipSingleSlot(MANNEQUIN_SLOTS_START + 4, EQUIPMENT_SLOTS_START + 7);
 		} else {
@@ -745,7 +739,7 @@ public class MannequinScreenHandler extends ScreenHandler {
 			equipSingleSlot(MANNEQUIN_SLOTS_START + 4, EQUIPMENT_SLOTS_START + 4);
 		}
 
-		if (((DuckPlayerEntityMixin) MannequinScreenHandler.this.owner).rpginventory$isHandStackSheathed()) {
+		if (((DuckPlayerEntityMixin) AbstractMannequinScreenHandler.this.owner).rpginventory$isHandStackSheathed()) {
 			// sheathed main hand
 			equipSingleSlot(MANNEQUIN_SLOTS_START + 5, EQUIPMENT_SLOTS_START + 6);
 		} else {
@@ -784,8 +778,6 @@ public class MannequinScreenHandler extends ScreenHandler {
 	}
 
 	private void unequip(PlayerEntity player) {
-
-//		RPGInventory.LOGGER.info("unequip");
 
 		for (int i = 0; i < MannequinBlockEntity.INVENTORY_SIZE + 2; i++) {
 			unequipSingleSlot(EQUIPMENT_SLOTS_START + i);
