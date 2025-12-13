@@ -1,5 +1,6 @@
 package com.github.theredbrain.rpginventory.mixin.client.gui.screen.ingame;
 
+import com.github.theredbrain.rpginventory.RPGInventory;
 import dev.emi.trinkets.CreativeTrinketSlot;
 import dev.emi.trinkets.Point;
 import dev.emi.trinkets.SurvivalTrinketSlot;
@@ -145,37 +146,57 @@ public abstract class CreativeInventoryScreenMixin_TrinketsReplacement extends A
 	@Override
 	public Rect2i trinkets$getGroupRect(SlotGroup group) {
 		int groupNum = trinkets$getHandler().trinkets$getGroupNum(group);
-		if (groupNum < 0) {
-			// Look what else do you want me to do
-			return switch (groupNum) {
-				// head
-				case -5 -> new Rect2i(8, 5, 17, 17);
-				// chest
-				case -6 -> new Rect2i(44, 5, 17, 17);
-				// legs
-				case -7 -> new Rect2i(26, 32, 17, 17);
-				// feet
-				case -8 -> new Rect2i(44, 32, 17, 17);
-				// offhand
-				case -45 -> new Rect2i(116, 32, 17, 17);
-				// main hand
-				case -46 -> new Rect2i(98, 32, 17, 17);
-				// sheathed main hand
-				case -47 -> new Rect2i(98, 32, 17, 17);
-				// sheathed offhand
-				case -48 -> new Rect2i(116, 32, 17, 17);
-				// alternative main hand
-				case -49 -> new Rect2i(134, 32, 17, 17);
-				// alternative offhand
-				case -50 -> new Rect2i(152, 32, 17, 17);
-				default -> new Rect2i(0, 0, 0, 0);
-			};
+		if (RPGInventory.SERVER_CONFIG.activate_rpg_inventory_screen.get()) {
+
+			if (groupNum < 0) {
+				return switch (groupNum) {
+					// head
+					case -5 -> new Rect2i(8, 5, 17, 17);
+					// chest
+					case -6 -> new Rect2i(44, 5, 17, 17);
+					// legs
+					case -7 -> new Rect2i(26, 32, 17, 17);
+					// feet
+					case -8 -> new Rect2i(44, 32, 17, 17);
+					// offhand
+					case -45 -> new Rect2i(116, 32, 17, 17);
+					// main hand
+					case -46 -> new Rect2i(98, 32, 17, 17);
+					// sheathed main hand
+					case -47 -> new Rect2i(98, 32, 17, 17);
+					// sheathed offhand
+					case -48 -> new Rect2i(116, 32, 17, 17);
+					// alternative main hand
+					case -49 -> new Rect2i(134, 32, 17, 17);
+					// alternative offhand
+					case -50 -> new Rect2i(152, 32, 17, 17);
+					default -> new Rect2i(0, 0, 0, 0);
+				};
+			}
+			Point pos = trinkets$getHandler().trinkets$getGroupPos(group);
+			if (pos != null) {
+				return new Rect2i(pos.x() - 1, pos.y() - 1, 17, 17);
+			}
+			return new Rect2i(0, 0, 0, 0);
+		} else {
+			if (groupNum <= 3) {
+				// Look what else do you want me to do
+				return switch (groupNum) {
+					case -45 -> new Rect2i(34, 19, 17, 17);
+					case -8 -> new Rect2i(107, 32, 17, 17);
+					case -7 -> new Rect2i(107, 5, 17, 17);
+					case -6 -> new Rect2i(53, 32, 17, 17);
+					case -5 -> new Rect2i(53, 5, 17, 17);
+					case 1 -> new Rect2i(15, 19, 17, 17);
+					case 2 -> new Rect2i(126, 19, 17, 17);
+					case 3 -> new Rect2i(145, 19, 17, 17);
+					default -> new Rect2i(0, 0, 0, 0);
+				};
+			} else {
+				Point pos = this.trinkets$getHandler().trinkets$getGroupPos(group);
+				return pos != null ? new Rect2i(pos.x() - 1, pos.y() - 1, 17, 17) : new Rect2i(0, 0, 0, 0);
+			}
 		}
-		Point pos = trinkets$getHandler().trinkets$getGroupPos(group);
-		if (pos != null) {
-			return new Rect2i(pos.x() - 1, pos.y() - 1, 17, 17);
-		}
-		return new Rect2i(0, 0, 0, 0);
 	}
 
 	@Override
