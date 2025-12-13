@@ -86,6 +86,16 @@ public class SwapHandItemsPacketReceiver implements ServerPlayNetworking.PlayPay
 			if (staminaCost != 0.0F && !player.isCreative()) {
 				RPGInventory.addStamina(player, -staminaCost);
 			}
+			if (serverConfig.handSlotOverhaul.enable_item_cooldown_after_hand_swapping.get()) {
+				if (mainHand) {
+					player.getItemCooldownManager().set(handItemStack.getItem(), serverConfig.handSlotOverhaul.swapping_main_hand_cooldown.get());
+					player.getItemCooldownManager().set(alternativeHandItemStack.getItem(), serverConfig.handSlotOverhaul.swapping_main_hand_cooldown.get());
+				}
+				if (offHand) {
+					player.getItemCooldownManager().set(offhandItemStack.getItem(), serverConfig.handSlotOverhaul.swapping_offhand_cooldown.get());
+					player.getItemCooldownManager().set(alternativeOffhandItemStack.getItem(), serverConfig.handSlotOverhaul.swapping_offhand_cooldown.get());
+				}
+			}
 			player.getServerWorld().playSound(null, player.getBlockPos().getX(), player.getBlockPos().getY(), player.getBlockPos().getZ(), SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.PLAYERS, 1.0F, 1.0F);
 		} else {
 			if (serverConfig.handSlotOverhaul.enable_alternative_hand_slots.get()) {

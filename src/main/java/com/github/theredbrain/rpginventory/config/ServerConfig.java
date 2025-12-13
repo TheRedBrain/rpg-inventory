@@ -38,11 +38,17 @@ public class ServerConfig extends Config {
 
 		public ValidatedBoolean are_hand_items_restricted_to_item_tags = new ValidatedBoolean(true);
 
-//		public ValidatedBoolean enable_item_cooldown_after_hand_sheathing = new ValidatedBoolean(true);
-//
-//		public ValidatedBoolean enable_item_cooldown_after_hand_swapping = new ValidatedBoolean(true);
-//
-//		public ValidatedBoolean enable_item_cooldown_after_toggling_2_handed_stance = new ValidatedBoolean(true);
+		public ValidatedBoolean enable_item_cooldown_after_hand_sheathing = new ValidatedBoolean(true);
+		public ValidatedInt sheathing_main_hand_cooldown = new ValidatedInt(10, 100, 1);
+		public ValidatedInt sheathing_offhand_cooldown = new ValidatedInt(10, 100, 1);
+
+		public ValidatedBoolean enable_item_cooldown_after_hand_swapping = new ValidatedBoolean(true);
+		public ValidatedInt swapping_main_hand_cooldown = new ValidatedInt(10, 100, 1);
+		public ValidatedInt swapping_offhand_cooldown = new ValidatedInt(10, 100, 1);
+
+		public ValidatedBoolean enable_item_cooldown_after_toggling_2_handed_stance = new ValidatedBoolean(true);
+		public ValidatedInt toggling_2_handed_stance_main_hand_cooldown = new ValidatedInt(10, 100, 1);
+		public ValidatedInt toggling_2_handed_stance_offhand_cooldown = new ValidatedInt(10, 100, 1);
 
 		public StaminaAttributesCompat staminaAttributesCompat = new StaminaAttributesCompat();
 
