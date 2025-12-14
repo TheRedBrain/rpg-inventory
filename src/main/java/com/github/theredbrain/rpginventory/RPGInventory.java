@@ -10,6 +10,7 @@ import com.github.theredbrain.rpginventory.compat.SpellEngineExtensionCompat;
 import com.github.theredbrain.rpginventory.compat.StaminaAttributesCompat;
 import com.github.theredbrain.rpginventory.compat.TrinketsCompat;
 import com.github.theredbrain.rpginventory.component.type.AdvancementLockedComponent;
+import com.github.theredbrain.rpginventory.component.type.ExclusiveEquipmentComponent;
 import com.github.theredbrain.rpginventory.config.ServerConfig;
 import com.github.theredbrain.rpginventory.registry.BlockRegistry;
 import com.github.theredbrain.rpginventory.registry.EntityRegistry;
@@ -40,6 +41,8 @@ import org.apache.commons.lang3.tuple.MutablePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -66,6 +69,7 @@ public class RPGInventory implements ModInitializer {
 	public static ComponentType<Unit> IS_KEPT_ON_DEATH;
 	public static ComponentType<Unit> IS_DESTROYED_ON_DEATH;
 	public static ComponentType<Unit> UNUSABLE_WHEN_LOW_DURABILITY;
+	public static ComponentType<ExclusiveEquipmentComponent> EXCLUSIVE_EQUIPMENT;
 
 	public static final boolean isRPGCraftingLoaded = FabricLoader.getInstance().isModLoaded("rpgcrafting");
 	public static final boolean isBackpackAttributeLoaded = FabricLoader.getInstance().isModLoaded("backpackattribute");
@@ -88,6 +92,16 @@ public class RPGInventory implements ModInitializer {
 		if (SERVER_CONFIG.activate_rpg_inventory_screen.get() && SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get()) {
 			SwapHandAttributesHelper.swapHandAttributes(playerEntity, runnable);
 		}
+	}
+
+	public static List<String> getExclusiveEquipmentGroups(ItemStack stack) {
+		List<String> list = new ArrayList<>();
+		ExclusiveEquipmentComponent exclusiveEquipmentComponent = stack.get(EXCLUSIVE_EQUIPMENT);
+		if (exclusiveEquipmentComponent != null) {
+			list.addAll(exclusiveEquipmentComponent.exclusive_equipment_groups());
+		}
+		// TODO Merged Items Compat
+		return list;
 	}
 
 	public static boolean doesCurrentPlayerStatusPreventHandSlotAction(ServerPlayerEntity serverPlayerEntity) {

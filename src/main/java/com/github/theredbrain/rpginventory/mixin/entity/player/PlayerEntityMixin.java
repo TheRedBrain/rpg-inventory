@@ -77,6 +77,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 	@Unique
 	private static final TrackedData<Integer> OLD_ACTIVE_SPELL_SLOT_AMOUNT = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
 
+	@Unique
+	private static final TrackedData<Boolean> SHOULD_EJECT_EXCLUSIVE_EQUIPMENT = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+
 	protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
 		super(entityType, world);
 	}
@@ -88,6 +91,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 		builder.add(IS_HAND_SLOT_OVERHAUL_ACTIVE, true);
 		builder.add(ARE_ALTERNATIVE_HAND_SLOTS_ACTIVE, true);
 		builder.add(OLD_ACTIVE_SPELL_SLOT_AMOUNT, -1);
+		builder.add(SHOULD_EJECT_EXCLUSIVE_EQUIPMENT, false);
 
 	}
 
@@ -98,7 +102,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 		PlayerEntityHelper.rpginventory$updateEquipmentStatusEffects(playerEntity);
 		if (!this.getWorld().isClient) {
 			PlayerEntityHelper.rpginventory$ejectItemsFromInactiveSpellSlots(playerEntity);
-			PlayerEntityHelper.rpginventory$ejectSecondUniqueRing(playerEntity);
+			PlayerEntityHelper.rpginventory$ejectExclusiveEquipment(playerEntity);
 			PlayerEntityHelper.rpginventory$ejectItemsFromInactiveHandSlots(playerEntity);
 //            PlayerInventoryHelper.rpginventory$ejectNonHotbarItemsFromHotbar(playerEntity); TODO disabled for now, needs overhaul
 		}
@@ -214,6 +218,14 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 	}
 
 	@Override
+	public void onEquipStack(EquipmentSlot slot, ItemStack oldStack, ItemStack newStack) {
+		super.onEquipStack(slot, oldStack, newStack);
+		if (newStack.contains(RPGInventory.EXCLUSIVE_EQUIPMENT)) {
+			this.rpginventory$setShouldEjectExclusiveEquipment(true);
+		}
+	}
+
+	@Override
 	public Iterable<ItemStack> getEquippedItems() {
 		return Iterables.concat(this.getHandItems(), this.getAllArmorItems(), ((DuckPlayerInventoryMixin) this.inventory).rpginventory$getAdditionalNonArmorEquipmentItems());
 	}
@@ -283,6 +295,16 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 	@Override
 	public void rpginventory$setOldActiveSpellSlotAmount(int oldActiveSpellSlotAmount) {
 		this.dataTracker.set(OLD_ACTIVE_SPELL_SLOT_AMOUNT, oldActiveSpellSlotAmount);
+	}
+
+	@Override
+	public boolean rpginventory$shouldEjectExclusiveEquipment() {
+		return this.dataTracker.get(SHOULD_EJECT_EXCLUSIVE_EQUIPMENT);
+	}
+
+	@Override
+	public void rpginventory$setShouldEjectExclusiveEquipment(boolean shouldEjectExclusiveEquipment) {
+		this.dataTracker.set(SHOULD_EJECT_EXCLUSIVE_EQUIPMENT, shouldEjectExclusiveEquipment);
 	}
 
 	@Override

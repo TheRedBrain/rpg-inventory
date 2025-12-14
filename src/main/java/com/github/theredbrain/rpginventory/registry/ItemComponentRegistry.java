@@ -2,6 +2,7 @@ package com.github.theredbrain.rpginventory.registry;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.component.type.AdvancementLockedComponent;
+import com.github.theredbrain.rpginventory.component.type.ExclusiveEquipmentComponent;
 import net.minecraft.component.ComponentType;
 import net.minecraft.component.type.ProfileComponent;
 import net.minecraft.network.codec.PacketCodec;
@@ -60,6 +61,11 @@ public class ItemComponentRegistry {
 				Registries.DATA_COMPONENT_TYPE,
 				RPGInventory.identifier("unusable_when_low_durability"),
 				ComponentType.<Unit>builder().codec(Unit.CODEC).packetCodec(PacketCodec.unit(Unit.INSTANCE)).build()
+		);
+		RPGInventory.EXCLUSIVE_EQUIPMENT = Registry.register(
+				Registries.DATA_COMPONENT_TYPE,
+				RPGInventory.identifier("exclusive_equipment"),
+				ComponentType.<ExclusiveEquipmentComponent>builder().codec(ExclusiveEquipmentComponent.CODEC).packetCodec(ExclusiveEquipmentComponent.PACKET_CODEC).build()
 		);
 	}
 

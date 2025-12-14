@@ -23,6 +23,10 @@ public interface DuckPlayerEntityMixin {
 
 	void rpginventory$setOldActiveSpellSlotAmount(int oldActiveSpellSlotAmount);
 
+	boolean rpginventory$shouldEjectExclusiveEquipment();
+
+	void rpginventory$setShouldEjectExclusiveEquipment(boolean shouldEjectExclusiveEquipment);
+
 	boolean rpginventory$isAdventureHotbarCleanedUp();
 
 	void rpginventory$setIsAdventureHotbarCleanedUp(boolean isAdventureHotbarCleanedUp);

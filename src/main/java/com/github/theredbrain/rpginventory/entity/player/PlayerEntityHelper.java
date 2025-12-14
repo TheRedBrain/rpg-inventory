@@ -1,6 +1,7 @@
 package com.github.theredbrain.rpginventory.entity.player;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
+import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
 import com.github.theredbrain.rpginventory.entity.LivingEntityHelper;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import net.minecraft.entity.EquipmentSlot;
@@ -31,6 +32,8 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 public class PlayerEntityHelper {
+
+	private static final int EXCLUSIVE_EQUIPMENT_SLOT_AMOUNT = 20;
 
 	public static boolean rpginventory$onPVPDeath(DamageSource source, PlayerEntity playerEntity, RegistryEntry.Reference<StatusEffect> pvpStatusEffect) {
 
@@ -259,14 +262,87 @@ public class PlayerEntityHelper {
 		}
 	}
 
-	public static void rpginventory$ejectSecondUniqueRing(PlayerEntity playerEntity) {
-		PlayerInventory playerInventory = playerEntity.getInventory();
-		ItemStack firstRingStack = ((DuckPlayerInventoryMixin) playerInventory).rpginventory$getAdditionalEquipmentStack(3);
-		ItemStack secondRingStack = ((DuckPlayerInventoryMixin) playerInventory).rpginventory$getAdditionalEquipmentStack(4);
-		if (firstRingStack.isIn(Tags.UNIQUE_RINGS) && firstRingStack.getItem() == secondRingStack.getItem()) {
-			playerInventory.offerOrDrop(((DuckPlayerInventoryMixin) playerInventory).rpginventory$setAdditionalEquipmentStack(4, ItemStack.EMPTY));
-
+	public static void rpginventory$ejectExclusiveEquipment(PlayerEntity playerEntity) {
+		if (((DuckPlayerEntityMixin) playerEntity).rpginventory$shouldEjectExclusiveEquipment()) {
+			PlayerInventory playerInventory = playerEntity.getInventory();
+			List<String> existingExclusiveEquipmentGroups = new ArrayList<>();
+			for (int i = 0; i < EXCLUSIVE_EQUIPMENT_SLOT_AMOUNT; i++) {
+				ItemStack itemStack = getEquipmentStack(playerEntity, i).copy();
+				if (itemStack.isEmpty()) {
+					continue;
+				}
+				List<String> currentExclusiveEquipmentGroups = RPGInventory.getExclusiveEquipmentGroups(itemStack);
+				if (currentExclusiveEquipmentGroups.isEmpty()) {
+					continue;
+				}
+				boolean removedStack = false;
+				for (String string : currentExclusiveEquipmentGroups) {
+					if (existingExclusiveEquipmentGroups.contains(string)) {
+						playerInventory.offerOrDrop(itemStack);
+						setEquipmentStack(playerEntity, i, ItemStack.EMPTY);
+						removedStack = true;
+						break;
+					}
+				}
+				if (removedStack) {
+					continue;
+				}
+				existingExclusiveEquipmentGroups.addAll(currentExclusiveEquipmentGroups);
+			}
+			((DuckPlayerEntityMixin) playerEntity).rpginventory$setShouldEjectExclusiveEquipment(false);
 		}
+	}
+
+	private static ItemStack getEquipmentStack(PlayerEntity playerEntity, int index) {
+		return switch (index) {
+			case 0 -> playerEntity.getEquippedStack(ExtendedEquipmentSlot.CLASS_ITEM);
+			case 1 -> playerEntity.getEquippedStack(EquipmentSlot.HEAD);
+			case 2 -> playerEntity.getEquippedStack(EquipmentSlot.CHEST);
+			case 3 -> playerEntity.getEquippedStack(EquipmentSlot.LEGS);
+			case 4 -> playerEntity.getEquippedStack(EquipmentSlot.FEET);
+			case 5 -> playerEntity.getEquippedStack(ExtendedEquipmentSlot.SHOULDERS);
+			case 6 -> playerEntity.getEquippedStack(ExtendedEquipmentSlot.GLOVES);
+			case 7 -> playerEntity.getEquippedStack(ExtendedEquipmentSlot.BELT);
+			case 8 -> playerEntity.getEquippedStack(ExtendedEquipmentSlot.NECKLACE);
+			case 9 -> playerEntity.getEquippedStack(ExtendedEquipmentSlot.RING_1);
+			case 10 -> playerEntity.getEquippedStack(ExtendedEquipmentSlot.RING_2);
+			case 11 -> playerEntity.getEquippedStack(ExtendedEquipmentSlot.RELIC);
+			case 12 -> playerEntity.getEquippedStack(ExtendedEquipmentSlot.SPELL_1);
+			case 13 -> playerEntity.getEquippedStack(ExtendedEquipmentSlot.SPELL_2);
+			case 14 -> playerEntity.getEquippedStack(ExtendedEquipmentSlot.SPELL_3);
+			case 15 -> playerEntity.getEquippedStack(ExtendedEquipmentSlot.SPELL_4);
+			case 16 -> playerEntity.getEquippedStack(ExtendedEquipmentSlot.SPELL_5);
+			case 17 -> playerEntity.getEquippedStack(ExtendedEquipmentSlot.SPELL_6);
+			case 18 -> playerEntity.getEquippedStack(ExtendedEquipmentSlot.SPELL_7);
+			case 19 -> playerEntity.getEquippedStack(ExtendedEquipmentSlot.SPELL_8);
+			default -> ItemStack.EMPTY;
+		};
+	}
+
+	private static void setEquipmentStack(PlayerEntity playerEntity, int index, ItemStack stack) {
+		switch (index) {
+			case 0 -> playerEntity.equipStack(ExtendedEquipmentSlot.CLASS_ITEM, stack);
+			case 1 -> playerEntity.equipStack(EquipmentSlot.HEAD, stack);
+			case 2 -> playerEntity.equipStack(EquipmentSlot.CHEST, stack);
+			case 3 -> playerEntity.equipStack(EquipmentSlot.LEGS, stack);
+			case 4 -> playerEntity.equipStack(EquipmentSlot.FEET, stack);
+			case 5 -> playerEntity.equipStack(ExtendedEquipmentSlot.SHOULDERS, stack);
+			case 6 -> playerEntity.equipStack(ExtendedEquipmentSlot.GLOVES, stack);
+			case 7 -> playerEntity.equipStack(ExtendedEquipmentSlot.BELT, stack);
+			case 8 -> playerEntity.equipStack(ExtendedEquipmentSlot.NECKLACE, stack);
+			case 9 -> playerEntity.equipStack(ExtendedEquipmentSlot.RING_1, stack);
+			case 10 -> playerEntity.equipStack(ExtendedEquipmentSlot.RING_2, stack);
+			case 11 -> playerEntity.equipStack(ExtendedEquipmentSlot.RELIC, stack);
+			case 12 -> playerEntity.equipStack(ExtendedEquipmentSlot.SPELL_1, stack);
+			case 13 -> playerEntity.equipStack(ExtendedEquipmentSlot.SPELL_2, stack);
+			case 14 -> playerEntity.equipStack(ExtendedEquipmentSlot.SPELL_3, stack);
+			case 15 -> playerEntity.equipStack(ExtendedEquipmentSlot.SPELL_4, stack);
+			case 16 -> playerEntity.equipStack(ExtendedEquipmentSlot.SPELL_5, stack);
+			case 17 -> playerEntity.equipStack(ExtendedEquipmentSlot.SPELL_6, stack);
+			case 18 -> playerEntity.equipStack(ExtendedEquipmentSlot.SPELL_7, stack);
+			case 19 -> playerEntity.equipStack(ExtendedEquipmentSlot.SPELL_8, stack);
+		}
+
 	}
 
 	public static void rpginventory$ejectNonHotbarItemsFromHotbar(PlayerEntity playerEntity) { // FIXME is only called once?

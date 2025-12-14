@@ -133,19 +133,19 @@ public class ItemTooltipHelper {
 		if (stack.isIn(Tags.GLOVES)) {
 			newList.add(Text.translatable("item.additional_tooltip.equipment_slot.gloves"));
 		}
-		boolean is_unique_ring = stack.isIn(Tags.UNIQUE_RINGS);
+//		boolean is_unique_ring = stack.isIn(Tags.UNIQUE_RINGS);
 		if (stack.isIn(Tags.RINGS_1)) {
-			if (is_unique_ring) {
-				newList.add(Text.translatable("item.additional_tooltip.equipment_slot.ring_unique"));
-			} else {
+//			if (is_unique_ring) {
+//				newList.add(Text.translatable("item.additional_tooltip.equipment_slot.ring_unique"));
+//			} else {
 				newList.add(Text.translatable("item.additional_tooltip.equipment_slot.ring_1"));
-			}
+//			}
 		} else if (stack.isIn(Tags.RINGS_2)) {
-			if (is_unique_ring) {
-				newList.add(Text.translatable("item.additional_tooltip.equipment_slot.ring_unique"));
-			} else {
+//			if (is_unique_ring) {
+//				newList.add(Text.translatable("item.additional_tooltip.equipment_slot.ring_unique"));
+//			} else {
 				newList.add(Text.translatable("item.additional_tooltip.equipment_slot.ring_2"));
-			}
+//			}
 		}
 		if (stack.isIn(Tags.BELTS)) {
 			newList.add(Text.translatable("item.additional_tooltip.equipment_slot.belt"));
