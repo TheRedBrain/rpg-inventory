@@ -344,86 +344,103 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 		return original.call(entireStack);
 	}
 
+	@Override
 	public ItemStack rpginventory$getHand() {
 		return this.rpginventory$handSlot.get(0);
 	}
 
+	@Override
 	public ItemStack rpginventory$setHand(ItemStack itemStack) {
 		ItemStack oldStack = rpginventory$getHand();
 		this.rpginventory$handSlot.set(0, itemStack);
 		return oldStack;
 	}
 
+	@Override
 	public ItemStack rpginventory$getAlternativeHand() {
 		return this.rpginventory$alternativeHandSlots.get(0);
 	}
 
+	@Override
 	public ItemStack rpginventory$setAlternativeHand(ItemStack itemStack) {
 		ItemStack oldStack = rpginventory$getAlternativeHand();
 		this.rpginventory$alternativeHandSlots.set(0, itemStack);
 		return oldStack;
 	}
 
+	@Override
 	public ItemStack rpginventory$getAlternativeOffhand() {
 		return this.rpginventory$alternativeHandSlots.get(1);
 	}
 
+	@Override
 	public ItemStack rpginventory$setAlternativeOffhand(ItemStack itemStack) {
 		ItemStack oldStack = rpginventory$getAlternativeOffhand();
 		this.rpginventory$alternativeHandSlots.set(1, itemStack);
 		return oldStack;
 	}
 
+	@Override
 	public ItemStack rpginventory$getEmptyHand() {
 		return this.rpginventory$emptyHandSlots.get(0);
 	}
 
+	@Override
 	public ItemStack rpginventory$setEmptyHand(ItemStack itemStack) {
 		ItemStack oldStack = rpginventory$getEmptyHand();
 		this.rpginventory$emptyHandSlots.set(0, itemStack);
 		return oldStack;
 	}
 
+	@Override
 	public ItemStack rpginventory$getEmptyOffhand() {
 		return this.rpginventory$emptyHandSlots.get(1);
 	}
 
+	@Override
 	public ItemStack rpginventory$setEmptyOffhand(ItemStack itemStack) {
 		ItemStack oldStack = rpginventory$getEmptyOffhand();
 		this.rpginventory$emptyHandSlots.set(1, itemStack);
 		return oldStack;
 	}
 
+	@Override
 	public ItemStack rpginventory$getSheathedHand() {
 		return this.rpginventory$sheathedHandSlots.get(0);
 	}
 
+	@Override
 	public ItemStack rpginventory$setSheathedHand(ItemStack itemStack) {
 		ItemStack oldStack = rpginventory$getSheathedHand();
 		this.rpginventory$sheathedHandSlots.set(0, itemStack);
 		return oldStack;
 	}
 
+	@Override
 	public ItemStack rpginventory$getSheathedOffhand() {
 		return this.rpginventory$sheathedHandSlots.get(1);
 	}
 
+	@Override
 	public ItemStack rpginventory$setSheathedOffhand(ItemStack itemStack) {
 		ItemStack oldStack = rpginventory$getSheathedOffhand();
 		this.rpginventory$sheathedHandSlots.set(1, itemStack);
 		return oldStack;
 	}
 
+	@Override
 	public ItemStack rpginventory$getAdditionalEquipmentStack(int index) {
 		return this.rpginventory$additionalSlots.get(index);
 	}
 
+	@Override
 	public ItemStack rpginventory$setAdditionalEquipmentStack(int index, ItemStack itemStack) {
 		ItemStack oldStack = rpginventory$getAdditionalEquipmentStack(index);
 		this.rpginventory$additionalSlots.set(index, itemStack);
 		return oldStack;
 	}
 
+	@Override
 	public List<ItemStack> rpginventory$getAdditionalNonArmorEquipmentItems() {
 		List<ItemStack> list = new ArrayList<>(List.of(this.rpginventory$getAdditionalEquipmentStack(0), this.rpginventory$getAdditionalEquipmentStack(2), this.rpginventory$getAdditionalEquipmentStack(3), this.rpginventory$getAdditionalEquipmentStack(4)));
 		for (int i = 6; i < 16; i++) {
@@ -432,6 +449,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 		return list;
 	}
 
+	@Override
 	public List<ItemStack> rpginventory$getSpellProvidingEquipmentItems() {
 		List<ItemStack> list = new ArrayList<>();
 		for (int i = 0; i < 16; i++) {

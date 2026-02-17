@@ -1,6 +1,8 @@
 package com.github.theredbrain.rpginventory.mixin.client.gui.screen.ingame;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.emi.trinkets.CreativeTrinketSlot;
 import dev.emi.trinkets.Point;
 import dev.emi.trinkets.SurvivalTrinketSlot;
@@ -49,8 +51,8 @@ public abstract class CreativeInventoryScreenMixin_TrinketsReplacement extends A
 	 *
 	 * @author TheRedBrain
 	 */
-	@Redirect(at = @At(value = "INVOKE", target = "net/minecraft/util/collection/DefaultedList.size()I"), method = "setSelectedTab")
-	private int size(DefaultedList<ItemStack> list) {
+	@WrapOperation(at = @At(value = "INVOKE", target = "net/minecraft/util/collection/DefaultedList.size()I"), method = "setSelectedTab")
+	private int size(DefaultedList<Slot> instance, Operation<Integer> original) {
 		// account for custom equipment slots
 		return 66;
 	}

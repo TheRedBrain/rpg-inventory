@@ -3,6 +3,8 @@ package com.github.theredbrain.rpginventory.mixin.item;
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import com.github.theredbrain.rpginventory.util.ItemUtils;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import net.minecraft.component.ComponentHolder;
 import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.entity.EquipmentSlot;
@@ -47,17 +49,17 @@ public abstract class ItemStackMixin {
 		}
 	}
 
-	@Inject(method = "applyAttributeModifier(Lnet/minecraft/component/type/AttributeModifierSlot;Ljava/util/function/BiConsumer;)V", at = @At("HEAD"), cancellable = true)
-	public void rpginventory$getAttributeModifiers_fromAttributeModifierSlot(AttributeModifierSlot slot, BiConsumer<RegistryEntry<EntityAttribute>, EntityAttributeModifier> attributeModifierConsumer, CallbackInfo ci) {
-		if (!(ItemUtils.isUsable((ItemStack) (Object) this))) {
-			ci.cancel();
+	@WrapMethod(method = "applyAttributeModifier(Lnet/minecraft/component/type/AttributeModifierSlot;Ljava/util/function/BiConsumer;)V")
+	public void rpginventory$getAttributeModifiers_fromAttributeModifierSlot(AttributeModifierSlot slot, BiConsumer<RegistryEntry<EntityAttribute>, EntityAttributeModifier> attributeModifierConsumer, Operation<Void> original) {
+		if (ItemUtils.isUsable((ItemStack) (Object) this)) {
+			original.call(slot, attributeModifierConsumer);
 		}
 	}
 
-	@Inject(method = "applyAttributeModifiers(Lnet/minecraft/entity/EquipmentSlot;Ljava/util/function/BiConsumer;)V", at = @At("HEAD"), cancellable = true)
-	public void rpginventory$getAttributeModifiers_fromEquipmentSlot(EquipmentSlot slot, BiConsumer<RegistryEntry<EntityAttribute>, EntityAttributeModifier> attributeModifierConsumer, CallbackInfo ci) {
-		if (!(ItemUtils.isUsable((ItemStack) (Object) this))) {
-			ci.cancel();
+	@WrapMethod(method = "applyAttributeModifiers(Lnet/minecraft/entity/EquipmentSlot;Ljava/util/function/BiConsumer;)V")
+	public void rpginventory$getAttributeModifiers_fromEquipmentSlot(EquipmentSlot slot, BiConsumer<RegistryEntry<EntityAttribute>, EntityAttributeModifier> attributeModifierConsumer, Operation<Void> original) {
+		if (ItemUtils.isUsable((ItemStack) (Object) this)) {
+			original.call(slot, attributeModifierConsumer);
 		}
 	}
 }

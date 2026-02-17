@@ -25,7 +25,6 @@ import net.minecraft.network.packet.s2c.play.EntityEquipmentUpdateS2CPacket;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.ItemTags;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
@@ -118,9 +117,8 @@ public abstract class LivingEntityMixin extends Entity {
 		return original.call(source);
 	}
 
-	// TODO find better mixin
-	@Inject(method = "getEquipmentChanges", at = @At(value = "HEAD"), cancellable = true)
-	private void rpginventory$getEquipmentChanges(CallbackInfoReturnable<Map<EquipmentSlot, ItemStack>> cir) {
+	@WrapMethod(method = "getEquipmentChanges")
+	private Map<EquipmentSlot, ItemStack> rpginventory$wrap_getEquipmentChanges(Operation<Map<EquipmentSlot, ItemStack>> original) {
 		Map<EquipmentSlot, ItemStack> map = null;
 
 		for (EquipmentSlot equipmentSlot : EquipmentSlot.values()) {
@@ -178,11 +176,8 @@ public abstract class LivingEntityMixin extends Entity {
 			}
 		}
 
-		cir.setReturnValue(map);
-		cir.cancel();
+		return map;
 	}
-
-	// TODO find better mixin
 
 	/**
 	 * Sends equipment changes to nearby players.
@@ -190,9 +185,9 @@ public abstract class LivingEntityMixin extends Entity {
 	 * @author TheRedBrain
 	 * @reason WIP
 	 */
-	@Overwrite
-	private void sendEquipmentChanges(Map<EquipmentSlot, ItemStack> equipmentChanges) {
-		List<com.mojang.datafixers.util.Pair<EquipmentSlot, ItemStack>> list = Lists.<com.mojang.datafixers.util.Pair<EquipmentSlot, ItemStack>>newArrayListWithCapacity(equipmentChanges.size());
+	@WrapMethod(method = "sendEquipmentChanges(Ljava/util/Map;)V")
+	private void rpginventory$wrap_sendEquipmentChanges(Map<EquipmentSlot, ItemStack> equipmentChanges, Operation<Void> original) {
+		List<Pair<EquipmentSlot, ItemStack>> list = Lists.newArrayListWithCapacity(equipmentChanges.size());
 		equipmentChanges.forEach((slot, stack) -> {
 			ItemStack itemStack = stack.copy();
 			list.add(Pair.of(slot, itemStack));
