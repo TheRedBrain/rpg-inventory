@@ -204,42 +204,42 @@ ext.changelog_last_section = { ->
 if(project.hasProperty('release_type')) {
 	tasks.register("publishMod") {
 		dependsOn(build)
-		finalizedBy(tasks.curseforge)
+//		finalizedBy(tasks.curseforge)
 		finalizedBy(tasks.modrinth)
 		finalizedBy(tasks.githubRelease)
 	}
 
-	curseforge {
-		apiKey = System.getenv("CURSEFORGE_API_KEY")
-		project {
-			id = System.getenv("CURSEFORGE_PROJECT_ID")
-			changelog = changelog_last_section()
-			changelogType = 'markdown'
-			releaseType = release_type
-			addGameVersion "${project.minecraft_version}"
-			addGameVersion "Fabric"
-
-			relations {
-				requiredDependency 'fzzy-config'
-				requiredDependency 'fabric-api'
-				requiredDependency 'slot-customization-api'
-				optionalDependency 'trinkets'
-				optionalDependency 'stamina-attributes'
-				optionalDependency 'inventory-size-attributes'
-				optionalDependency 'backpack-attribute'
-				optionalDependency 'player-attribute-screen'
-				optionalDependency 'rpg-crafting'
-			}
-
-			mainArtifact(remapJar)
-			afterEvaluate {
-				uploadTask.dependsOn(remapJar)
-			}
-			options {
-				forgeGradleIntegration = false
-			}
-		}
-	}
+//	curseforge {
+//		apiKey = System.getenv("CURSEFORGE_API_KEY")
+//		project {
+//			id = System.getenv("CURSEFORGE_PROJECT_ID")
+//			changelog = changelog_last_section()
+//			changelogType = 'markdown'
+//			releaseType = release_type
+//			addGameVersion "${project.minecraft_version}"
+//			addGameVersion "Fabric"
+//
+//			relations {
+//				requiredDependency 'fzzy-config'
+//				requiredDependency 'fabric-api'
+//				requiredDependency 'slot-customization-api'
+//				optionalDependency 'trinkets'
+//				optionalDependency 'stamina-attributes'
+//				optionalDependency 'inventory-size-attributes'
+//				optionalDependency 'backpack-attribute'
+//				optionalDependency 'player-attribute-screen'
+//				optionalDependency 'rpg-crafting'
+//			}
+//
+//			mainArtifact(remapJar)
+//			afterEvaluate {
+//				uploadTask.dependsOn(remapJar)
+//			}
+//			options {
+//				forgeGradleIntegration = false
+//			}
+//		}
+//	}
 
 	modrinth {
 		token = System.getenv("MODRINTH_API_KEY")
