@@ -235,7 +235,6 @@ public class PlayerEntityHelper {
 			((DuckPlayerEntityMixin) playerEntity).rpginventory$setIsHandSlotOverhaulActive(isHandSlotOverhaulActive);
 		}
 		if (isHandSlotOverhaulActive) {
-			// TODO remove items from inactive alternative hand slots
 			boolean areAlternativeHandSlotsActive = RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_alternative_hand_slots.get();
 
 			if (((DuckPlayerEntityMixin) playerEntity).rpginventory$areAlternativeHandSlotsActive() != areAlternativeHandSlotsActive) {

@@ -28,6 +28,8 @@ The mod also adds additional slots which are not directly accessible. They are u
 - 1 empty offhand slot
 - 1 class item slot
 
+All custom equipment slots can be individually disabled in the server config and there is also a server config option to completely disable the custom inventory screen, including all custom equipment slots.
+
 ## New Keybindings and mechanics
 
 ### Swap hand
@@ -73,15 +75,15 @@ Effects in the "rpginventory:food_effects" effect tag are displayed in a separat
 
 ## Unusable Items
 
-Items in the "unusable_when_low_durability" item tag have the same behaviour as elytra. Instead of getting destroyed when losing all durability, they become unusable until they are repaired. Unusable items have a different translation key (default one + "_broken").
+Items in the "unusable_when_low_durability" item tag or with the "rpginventory:unusable_when_low_durability" data component have the same behavior as elytra. Instead of getting destroyed when losing all durability, they become unusable until they are repaired. Unusable items have a different translation key (default one + "_broken").
 
-Inventory slots that contain unusable items have an overlay of a configurable colour. This can be disabled in the client config.
+Inventory slots that contain unusable items have an overlay of a configurable color. This can be disabled in the client config.
 
 ## Player Bound Items
 
 Items can be bound to a player. Player bound items can only be used by that player. Player bound items have an additional tooltip line that shows the player name. (Can be disabled in the client config)
 
-Inventory slots that contain items bound to another player have an overlay of a configurable colour. This can be disabled in the client config.
+Inventory slots that contain items bound to another player have an overlay of a configurable color. This can be disabled in the client config.
 
 ### How to bind an item to a player
 
@@ -102,7 +104,7 @@ Changing and/or equipping load out items can be disabled for non-creative player
 
 ### Load out items
 
-Load out items are never dropped, they either vanish or are kept on death (this can be configured in the server config).
+Depending on a server config setting either the "rpginventory:is_destroyed_on_death" or the "rpginventory:is_kept_on_death" data component is applied to load out items.
 
 These items can also normally not be removed from a slot, only when interacting with a mannequin.
 
@@ -155,18 +157,16 @@ When the player dies while having that status effect, all equipped items in the 
 Items are kept under these conditions:
 - they have the "rpginventory:is_kept_on_death" component
 - they are in the "rpginventory:empty_hand_weapons" item tag
-- they have the "rpginventory:load_out_item" component and the corresponding server config option is set to true
 
 Items that are not kept are dropped like normal or get destroyed under these conditions:
 - the server config setting "destroy_dropped_items_on_death" is set to true
 - they have the "rpginventory:is_destroyed_on_death" component
-- they have the "rpginventory:load_out_item" component and the corresponding server config option is set to false
 
-### PVP Deaths
+## PVP Deaths
 
 When the health of a players with a configurable status effect reaches zero, they are not killed, but trigger this feature instead.
 Effects include:
-- remove all status effects (except the pvp effect and all entries of the "rpginventory:kept_on_pvp_death" tag)
+- remove all status effects (except the pvp effect and all entries of the "rpginventory:kept_on_pvp_death" status effect tag)
 - reset players resources (health, mana, stamina, etc.)
 - reduce the amplifier of the "pvp effect" by one
 - if the new amplifier is greater or equal to zero:
@@ -174,7 +174,7 @@ Effects include:
 - if the new amplifier is smaller than zero:
   - teleport player to their spawn point/world spawn
 
-### Restricted Equipment Changes
+## Restricted Equipment Changes
 
 The server config setting "allow_equipment_changes" controls, whether items can be put into or removed from equipment slots.
 
@@ -183,6 +183,10 @@ When "civilisation_status_effect_identifier" is a valid status effect identifier
 When "wilderness_status_effect_identifier" is a valid status effect identifier and the player has that status effect items can not be put into or removed from equipment slots, regardless of the config setting.
 
 Item stacks with the "rpginventory:ignores_equipment_change_restrictions" ignore these restrictions.
+
+## Exclusive Equipment
+
+Equipment items can be part of multiple "exclusive equipment groups", which are defined as strings saved in the "rpginventory:exclusive_equipment" data component. Each group may only be present on one equipped item at any time. If a group is detected on additional items, those items are either moved into the regular inventory or dropped on the ground.
 
 ## Additional settings and features
 

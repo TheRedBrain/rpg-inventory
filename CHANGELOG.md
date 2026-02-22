@@ -1,3 +1,27 @@
+# 2.9.0
+
+## Additions
+
+- added "rpginventory:unusable_when_low_durability" data component
+- added "rpginventory:exclusive_equipment" data component, which is the more general replacement of the "unique rings system"
+- added server config option to disable the RPG Inventory, this disables all custom inventory slots, including the custom hand slots (items equipped in those slots are moved into the inventory/dropped on the ground)
+  - this comes with an alternative screen for the mannequin, that only shows the vanilla equipment slots
+- added configurable item cooldowns to hand slot actions (swapping, sheathing, toggling two-handed stance)
+- added integration with Overhauled Damage (PVP deaths now reset effect build-ups)
+
+## Changes
+
+- simplified "rpginventory:load_out_item" data component (is no longer a special case variant of the "rpginventory:is_kept_on_death" data component)
+
+## Fixes
+
+- items equipped in alternative hand slots are now moved into the inventory/dropped on the ground when alternative hand slots are disabled
+
+## Technical
+
+- changed empty slot tooltips to use the implementation from Slot Customization API
+- improved several mixins to hopefully improve compatibility with Sinytra Connector
+
 # 2.8.0
 
 ## Additions
