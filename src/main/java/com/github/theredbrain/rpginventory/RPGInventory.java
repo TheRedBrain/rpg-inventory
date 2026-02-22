@@ -4,6 +4,7 @@ import com.github.theredbrain.rpginventory.compat.BetterCombatExtensionCompat;
 import com.github.theredbrain.rpginventory.compat.HealthRegenerationOverhaulCompat;
 import com.github.theredbrain.rpginventory.compat.InventorySizeAttributesCompat;
 import com.github.theredbrain.rpginventory.compat.ManaAttributesCompat;
+import com.github.theredbrain.rpginventory.compat.OverhauledDamageCompat;
 import com.github.theredbrain.rpginventory.compat.ScriptBlocksCompat;
 import com.github.theredbrain.rpginventory.compat.SpellEngineCompat;
 import com.github.theredbrain.rpginventory.compat.SpellEngineExtensionCompat;
@@ -87,6 +88,7 @@ public class RPGInventory implements ModInitializer {
 	public static final boolean isBetterCombatLoaded = FabricLoader.getInstance().isModLoaded("bettercombat");
 	public static final boolean isScriptBlocksLoaded = FabricLoader.getInstance().isModLoaded("scriptblocks");
 	public static final boolean isTrinketsLoaded = FabricLoader.getInstance().isModLoaded("trinkets");
+	public static final boolean isOverhauledDamageLoaded = FabricLoader.getInstance().isModLoaded("overhauleddamage");
 
 	public static void swapHandAttributes(PlayerEntity playerEntity, Runnable runnable) {
 		if (SERVER_CONFIG.activate_rpg_inventory_screen.get() && SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get()) {
@@ -167,6 +169,9 @@ public class RPGInventory implements ModInitializer {
 		}
 		if (RPGInventory.isStaminaAttributesLoaded) {
 			StaminaAttributesCompat.resetStamina(playerEntity);
+		}
+		if (RPGInventory.isOverhauledDamageLoaded) {
+			OverhauledDamageCompat.resetPlayerStatus(playerEntity);
 		}
 		if (RPGInventory.isHealthRegenerationOverhaulLoaded) {
 			HealthRegenerationOverhaulCompat.resetHealth(playerEntity);
