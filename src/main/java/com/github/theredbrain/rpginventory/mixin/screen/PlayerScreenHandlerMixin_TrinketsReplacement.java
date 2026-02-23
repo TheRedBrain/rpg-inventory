@@ -2,6 +2,8 @@ package com.github.theredbrain.rpginventory.mixin.screen;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.google.common.collect.ImmutableList;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import dev.emi.trinkets.Point;
 import dev.emi.trinkets.SurvivalTrinketSlot;
 import dev.emi.trinkets.TrinketPlayerScreenHandler;
@@ -29,7 +31,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -37,7 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Mixin(value = PlayerScreenHandler.class)
+@Mixin(value = PlayerScreenHandler.class, priority = 1050)
 public abstract class PlayerScreenHandlerMixin_TrinketsReplacement extends ScreenHandler implements TrinketPlayerScreenHandler {
 	@Shadow
 	@Final
@@ -220,7 +221,7 @@ public abstract class PlayerScreenHandlerMixin_TrinketsReplacement extends Scree
 	}
 
 	@Inject(at = @At("HEAD"), method = "onClosed")
-	private void onClosed(PlayerEntity player, CallbackInfo info) {
+	private void trinkets$onClosed(PlayerEntity player, CallbackInfo info) {
 		World world = player.getWorld();
 		if (world.isClient) {
 			TrinketsClient.activeGroup = null;
@@ -229,19 +230,19 @@ public abstract class PlayerScreenHandlerMixin_TrinketsReplacement extends Scree
 		}
 	}
 
-	@Inject(at = @At("HEAD"), method = "quickMove", cancellable = true)
-	private void quickMove(PlayerEntity player, int index, CallbackInfoReturnable<ItemStack> info) {
-		Slot slot = slots.get(index);
+	@WrapMethod(method = "quickMove")
+	private ItemStack trinkets$wrap_quickMove(PlayerEntity player, int slot, Operation<ItemStack> original) {
+		Slot slot2 = slots.get(slot);
 
-		if (slot.hasStack()) {
-			ItemStack stack = slot.getStack();
-			if (index >= trinketSlotStart && index < trinketSlotEnd) {
+		if (slot2.hasStack()) {
+			ItemStack stack = slot2.getStack();
+			if (slot >= trinketSlotStart && slot < trinketSlotEnd) {
 				if (!this.insertItem(stack, 9, 45, false)) {
-					info.setReturnValue(ItemStack.EMPTY);
+					return ItemStack.EMPTY;
 				} else {
-					info.setReturnValue(stack);
+					return stack;
 				}
-			} else if (index >= 9 && index < 45) {
+			} else if (slot >= 9 && slot < 45) {
 				TrinketsApi.getTrinketComponent(player).ifPresent(trinkets -> {
 							for (int i = trinketSlotStart; i < trinketSlotEnd; i++) {
 								Slot s = slots.get(i);
@@ -274,5 +275,6 @@ public abstract class PlayerScreenHandlerMixin_TrinketsReplacement extends Scree
 				);
 			}
 		}
+		return original.call(player, slot);
 	}
 }

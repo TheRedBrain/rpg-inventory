@@ -10,6 +10,8 @@ import com.github.theredbrain.rpginventory.screen.slot.AlternativeHandSlot;
 import com.github.theredbrain.rpginventory.screen.slot.CustomArmorSlot;
 import com.github.theredbrain.rpginventory.util.ItemUtils;
 import com.github.theredbrain.slotcustomizationapi.api.SlotCustomization;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.player.PlayerEntity;
@@ -27,13 +29,12 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Mixin(value = PlayerScreenHandler.class, priority = 1050)
+@Mixin(PlayerScreenHandler.class)
 public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements DuckPlayerScreenHandlerMixin {
 	@Unique
 	private static final Identifier EMPTY_HAND_SLOT = RPGInventory.identifier("item/empty_slot_hand");
@@ -500,13 +501,14 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 		// TODO trigger adventure hotbar items check
 	}
 
-	/**
-	 * Modified and expanded code by @Emi
-	 */
-	@Inject(at = @At("HEAD"), method = "quickMove", cancellable = true)
-	private void rpginventory$quickMove(PlayerEntity player, int slot, CallbackInfoReturnable<ItemStack> cir) {
-		Slot rpginventory$slot = slots.get(slot);
-		ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
+	@WrapMethod(method = "quickMove")
+	private ItemStack rpginventory$wrap_quickMove(PlayerEntity player, int slot, Operation<ItemStack> original) {
+
+		if (RPGInventory.SERVER_CONFIG.activate_rpg_inventory_screen.get()) {
+
+			Slot rpginventory$slot = this.slots.get(slot);
+			ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
+			ItemStack rpginventory$stack = ItemStack.EMPTY;
 
 //		// TODO adventure hotbar items
 //		StatusEffect civilisation_status_effect = Registries.STATUS_EFFECT.get(Identifier.tryParse(RPGInventory.serverConfig.statusEffects.civilisation_status_effect_identifier));
@@ -522,198 +524,233 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 //		}
 //		hasCivilisationEffect = hasCivilisationEffect || (canChangeEquipment && !hasWildernessEffect);
 
-		if (rpginventory$slot.hasStack()) {
-			ItemStack rpginventory$stack = rpginventory$slot.getStack();
-			EquipmentSlot rpginventory$equipmentSlot = player.getPreferredEquipmentSlot(rpginventory$stack);
-			if (slot >= 44 && slot < 66) {
-				if (!this.insertItem(rpginventory$stack, 9, 45, false)) {   // TODO adventure hotbar items
-					cir.setReturnValue(ItemStack.EMPTY);
-					cir.cancel();
+			if (rpginventory$slot.hasStack()) {
+				ItemStack rpginventory$stack2 = rpginventory$slot.getStack();
+				rpginventory$stack = rpginventory$stack2.copy();
+				EquipmentSlot rpginventory$equipmentSlot = player.getPreferredEquipmentSlot(rpginventory$stack2);
+				if (slot == 0) {
+					if (!this.insertItem(rpginventory$stack2, 9, 45, true)) {
+						return ItemStack.EMPTY;
+					}
+
+					rpginventory$slot.onQuickTransfer(rpginventory$stack2, rpginventory$stack);
+				} else if (slot >= 1 && slot < 5) {
+					if (!this.insertItem(rpginventory$stack2, 9, 45, false)) {
+						return ItemStack.EMPTY;
+					}
+				} else if (slot >= 5 && slot < 9) {
+					if (!this.insertItem(rpginventory$stack2, 9, 45, false)) {
+						return ItemStack.EMPTY;
+					}
+				} else if (slot >= 44 && slot < 66) {
+					if (!this.insertItem(rpginventory$stack2, 9, 45, false)) {   // TODO adventure hotbar items
+						return ItemStack.EMPTY;
+					} else {
+						return rpginventory$stack2;
+					}
+				} else if (slot >= 9 && slot < 45) {
+
+					// helmet slot 5
+					if ((rpginventory$equipmentSlot == EquipmentSlot.HEAD || rpginventory$stack2.isIn(Tags.HELMETS)) && !this.slots.get(5).hasStack()) {
+						if (!this.insertItem(rpginventory$stack2, 5, 6, false)) {
+							return ItemStack.EMPTY;
+						}
+					}
+
+					// chestplate slot 5
+					if ((rpginventory$equipmentSlot == EquipmentSlot.CHEST || rpginventory$stack2.isIn(Tags.CHEST_PLATES)) && !this.slots.get(6).hasStack()) {
+						if (!this.insertItem(rpginventory$stack2, 6, 7, false)) {
+							return ItemStack.EMPTY;
+						}
+					}
+
+					// leggings slot 5
+					if ((rpginventory$equipmentSlot == EquipmentSlot.LEGS || rpginventory$stack2.isIn(Tags.LEGGINGS)) && !this.slots.get(7).hasStack()) {
+						if (!this.insertItem(rpginventory$stack2, 7, 8, false)) {
+							return ItemStack.EMPTY;
+						}
+					}
+
+					// boots slot 5
+					if ((rpginventory$equipmentSlot == EquipmentSlot.FEET || rpginventory$stack2.isIn(Tags.BOOTS)) && !this.slots.get(8).hasStack()) {
+						if (!this.insertItem(rpginventory$stack2, 8, 9, false)) {
+							return ItemStack.EMPTY;
+						}
+					}
+
+					// belt slot 51
+					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.BELT || rpginventory$stack2.isIn(Tags.BELTS)) && !this.slots.get(51).hasStack()) {
+						if (!this.insertItem(rpginventory$stack2, 51, 52, false)) {
+							return ItemStack.EMPTY;
+						}
+					}
+
+					// gloves slot 52
+					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.GLOVES || rpginventory$stack2.isIn(Tags.GLOVES)) && !this.slots.get(52).hasStack()) {
+						if (!this.insertItem(rpginventory$stack2, 52, 53, false)) {
+							return ItemStack.EMPTY;
+						}
+					}
+
+					// necklace slot 53
+					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.NECKLACE || rpginventory$stack2.isIn(Tags.NECKLACES)) && !this.slots.get(53).hasStack()) {
+						if (!this.insertItem(rpginventory$stack2, 53, 54, false)) {
+							return ItemStack.EMPTY;
+						}
+					}
+
+					// ring 1 slot 54
+					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.RING_1 || rpginventory$stack2.isIn(Tags.RINGS_1)) && !this.slots.get(54).hasStack()) {
+						if (!this.insertItem(rpginventory$stack2, 54, 55, false)) {
+							return ItemStack.EMPTY;
+						}
+					}
+
+					// ring 2 slot 55
+					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.RING_2 || rpginventory$stack2.isIn(Tags.RINGS_2)) && !this.slots.get(55).hasStack()) {
+						if (!this.insertItem(rpginventory$stack2, 55, 56, false)) {
+							return ItemStack.EMPTY;
+						}
+					}
+
+					// shoulders slot 56
+					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.SHOULDERS || rpginventory$stack2.isIn(Tags.SHOULDERS)) && !this.slots.get(56).hasStack()) {
+						if (!this.insertItem(rpginventory$stack2, 56, 57, false)) {
+							return ItemStack.EMPTY;
+						}
+					}
+
+					// spell 1 slot 57
+					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.SPELL_1 || rpginventory$stack2.isIn(Tags.SPELLS_1)) && !this.slots.get(57).hasStack()) {
+						if (!this.insertItem(rpginventory$stack2, 57, 58, false)) {
+							return ItemStack.EMPTY;
+						}
+					}
+
+					// spell 2 slot 58
+					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.SPELL_2 || rpginventory$stack2.isIn(Tags.SPELLS_2)) && !this.slots.get(58).hasStack()) {
+						if (!this.insertItem(rpginventory$stack2, 58, 59, false)) {
+							return ItemStack.EMPTY;
+						}
+					}
+
+					// spell 3 slot 59
+					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.SPELL_3 || rpginventory$stack2.isIn(Tags.SPELLS_3)) && !this.slots.get(59).hasStack()) {
+						if (!this.insertItem(rpginventory$stack2, 59, 60, false)) {
+							return ItemStack.EMPTY;
+						}
+					}
+
+					// spell 4 slot 60
+					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.SPELL_4 || rpginventory$stack2.isIn(Tags.SPELLS_4)) && !this.slots.get(60).hasStack()) {
+						if (!this.insertItem(rpginventory$stack2, 60, 61, false)) {
+							return ItemStack.EMPTY;
+						}
+					}
+
+					// spell 5 slot 61
+					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.SPELL_5 || rpginventory$stack2.isIn(Tags.SPELLS_5)) && !this.slots.get(61).hasStack()) {
+						if (!this.insertItem(rpginventory$stack2, 61, 62, false)) {
+							return ItemStack.EMPTY;
+						}
+					}
+
+					// spell 6 slot 62
+					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.SPELL_6 || rpginventory$stack2.isIn(Tags.SPELLS_6)) && !this.slots.get(62).hasStack()) {
+						if (!this.insertItem(rpginventory$stack2, 62, 63, false)) {
+							return ItemStack.EMPTY;
+						}
+					}
+
+					// spell 7 slot 63
+					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.SPELL_7 || rpginventory$stack2.isIn(Tags.SPELLS_7)) && !this.slots.get(63).hasStack()) {
+						if (!this.insertItem(rpginventory$stack2, 63, 64, false)) {
+							return ItemStack.EMPTY;
+						}
+					}
+
+					// spell 8 slot 64
+					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.SPELL_8 || rpginventory$stack2.isIn(Tags.SPELLS_8)) && !this.slots.get(64).hasStack()) {
+						if (!this.insertItem(rpginventory$stack2, 64, 65, false)) {
+							return ItemStack.EMPTY;
+						}
+					}
+
+					// relic slot 65
+					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.RELIC || rpginventory$stack2.isIn(Tags.RELICS)) && !this.slots.get(65).hasStack()) {
+						if (!this.insertItem(rpginventory$stack2, 65, 66, false)) {
+							return ItemStack.EMPTY;
+						}
+					}
+
+					if (RPGInventory.isHandSlotOverhaulActive()) {
+
+						if (!serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || rpginventory$stack2.isIn(Tags.HAND_ITEMS)) {
+							if (((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed() && !this.slots.get(47).hasStack()) {
+								if (!this.insertItem(rpginventory$stack2, 47, 48, false)) {
+									return ItemStack.EMPTY;
+								}
+							} else if (!((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed() && !this.slots.get(46).hasStack()) {
+								if (!this.insertItem(rpginventory$stack2, 46, 47, false)) {
+									return ItemStack.EMPTY;
+								}
+							}
+						}
+
+						if (rpginventory$equipmentSlot == EquipmentSlot.OFFHAND || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || rpginventory$stack2.isIn(Tags.OFFHAND_ITEMS)) {
+							if (((DuckPlayerEntityMixin) player).rpginventory$isOffhandStackSheathed() && !this.slots.get(48).hasStack()) {
+								if (!this.insertItem(rpginventory$stack2, 48, 49, false)) {
+									return ItemStack.EMPTY;
+								}
+							} else if (!((DuckPlayerEntityMixin) player).rpginventory$isOffhandStackSheathed() && !this.slots.get(45).hasStack()) {
+								if (!this.insertItem(rpginventory$stack2, 45, 46, false)) {
+									return ItemStack.EMPTY;
+								}
+							}
+						}
+
+						if (serverConfig.handSlotOverhaul.enable_alternative_hand_slots.get()) {
+							if ((!serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || rpginventory$stack2.isIn(Tags.HAND_ITEMS)) && !this.slots.get(49).hasStack()) {
+								if (!this.insertItem(rpginventory$stack2, 49, 50, false)) {
+									return ItemStack.EMPTY;
+								}
+							}
+
+							if ((rpginventory$equipmentSlot == EquipmentSlot.OFFHAND || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || rpginventory$stack2.isIn(Tags.OFFHAND_ITEMS)) && !this.slots.get(50).hasStack()) {
+								if (!this.insertItem(rpginventory$stack2, 50, 51, false)) {
+									return ItemStack.EMPTY;
+								}
+							}
+						}
+					} else {
+						if ((rpginventory$equipmentSlot == EquipmentSlot.OFFHAND || rpginventory$stack2.isIn(Tags.OFFHAND_ITEMS)) && !this.slots.get(45).hasStack()) {
+							if (!this.insertItem(rpginventory$stack2, 45, 46, false)) {
+								return ItemStack.EMPTY;
+							}
+						}
+					}
+				} else if (!this.insertItem(rpginventory$stack2, 9, 45, false)) {
+					return ItemStack.EMPTY;
+				}
+
+				if (rpginventory$stack2.isEmpty()) {
+					rpginventory$slot.setStack(ItemStack.EMPTY, rpginventory$stack);
 				} else {
-					cir.setReturnValue(rpginventory$stack);
-					cir.cancel();
-				}
-			} else if (slot >= 9 && slot < 45) {
-
-				if (RPGInventory.isHandSlotOverhaulActive()) {
-
-					if (!rpginventory$stack.isEmpty() && (!serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || rpginventory$stack.isIn(Tags.HAND_ITEMS))) {
-						if (((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed() && !this.slots.get(47).hasStack()) {
-							if (!this.insertItem(rpginventory$stack, 47, 48, false)) {
-								cir.setReturnValue(ItemStack.EMPTY);
-								cir.cancel();
-							}
-						} else if (!((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed() && !this.slots.get(46).hasStack()) {
-							if (!this.insertItem(rpginventory$stack, 46, 47, false)) {
-								cir.setReturnValue(ItemStack.EMPTY);
-								cir.cancel();
-							}
-						}
-					}
-
-					if (!rpginventory$stack.isEmpty() && (rpginventory$equipmentSlot == EquipmentSlot.OFFHAND || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || rpginventory$stack.isIn(Tags.OFFHAND_ITEMS))) {
-						if (((DuckPlayerEntityMixin) player).rpginventory$isOffhandStackSheathed() && !this.slots.get(48).hasStack()) {
-							if (!this.insertItem(rpginventory$stack, 48, 49, false)) {
-								cir.setReturnValue(ItemStack.EMPTY);
-								cir.cancel();
-							}
-						} else if (!((DuckPlayerEntityMixin) player).rpginventory$isOffhandStackSheathed() && !this.slots.get(45).hasStack()) {
-							if (!this.insertItem(rpginventory$stack, 45, 46, false)) {
-								cir.setReturnValue(ItemStack.EMPTY);
-								cir.cancel();
-							}
-						}
-					}
-
-					if (serverConfig.handSlotOverhaul.enable_alternative_hand_slots.get()) {
-						if (!rpginventory$stack.isEmpty() && (!serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || rpginventory$stack.isIn(Tags.HAND_ITEMS))) {
-							if (!this.slots.get(49).hasStack()) {
-								if (!this.insertItem(rpginventory$stack, 49, 50, false)) {
-									cir.setReturnValue(ItemStack.EMPTY);
-									cir.cancel();
-								}
-							}
-						}
-
-						if (!rpginventory$stack.isEmpty() && (rpginventory$equipmentSlot == EquipmentSlot.OFFHAND || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || rpginventory$stack.isIn(Tags.OFFHAND_ITEMS))) {
-							if (!this.slots.get(50).hasStack()) {
-								if (!this.insertItem(rpginventory$stack, 50, 51, false)) {
-									cir.setReturnValue(ItemStack.EMPTY);
-									cir.cancel();
-								}
-							}
-						}
-					}
+					rpginventory$slot.markDirty();
 				}
 
-				// belt slot 51
-				if (!rpginventory$stack.isEmpty() && (rpginventory$equipmentSlot == ExtendedEquipmentSlot.BELT || rpginventory$stack.isIn(Tags.BELTS)) && !this.slots.get(51).hasStack()) {
-					if (!this.insertItem(rpginventory$stack, 51, 52, false)) {
-						cir.setReturnValue(ItemStack.EMPTY);
-						cir.cancel();
-					}
+				if (rpginventory$stack2.getCount() == rpginventory$stack.getCount()) {
+					return ItemStack.EMPTY;
 				}
 
-				// gloves slot 52
-				if (!rpginventory$stack.isEmpty() && (rpginventory$equipmentSlot == ExtendedEquipmentSlot.GLOVES || rpginventory$stack.isIn(Tags.GLOVES)) && !this.slots.get(52).hasStack()) {
-					if (!this.insertItem(rpginventory$stack, 52, 53, false)) {
-						cir.setReturnValue(ItemStack.EMPTY);
-						cir.cancel();
-					}
+				rpginventory$slot.onTakeItem(player, rpginventory$stack2);
+				if (slot == 0) {
+					player.dropItem(rpginventory$stack2, false);
 				}
-
-				// necklace slot 53
-				if (!rpginventory$stack.isEmpty() && (rpginventory$equipmentSlot == ExtendedEquipmentSlot.NECKLACE || rpginventory$stack.isIn(Tags.NECKLACES)) && !this.slots.get(53).hasStack()) {
-					if (!this.insertItem(rpginventory$stack, 53, 54, false)) {
-						cir.setReturnValue(ItemStack.EMPTY);
-						cir.cancel();
-					}
-				}
-
-				// ring 1 slot 54
-				if (!rpginventory$stack.isEmpty() && (rpginventory$equipmentSlot == ExtendedEquipmentSlot.RING_1 || rpginventory$stack.isIn(Tags.RINGS_1)) && !this.slots.get(54).hasStack()) {
-					if (!this.insertItem(rpginventory$stack, 54, 55, false)) {
-						cir.setReturnValue(ItemStack.EMPTY);
-						cir.cancel();
-					}
-				}
-
-				// ring 2 slot 55
-				if (!rpginventory$stack.isEmpty() && (rpginventory$equipmentSlot == ExtendedEquipmentSlot.RING_2 || rpginventory$stack.isIn(Tags.RINGS_2)) && !this.slots.get(55).hasStack()) {
-					if (!this.insertItem(rpginventory$stack, 55, 56, false)) {
-						cir.setReturnValue(ItemStack.EMPTY);
-						cir.cancel();
-					}
-				}
-
-				// shoulders slot 56
-				if (!rpginventory$stack.isEmpty() && (rpginventory$equipmentSlot == ExtendedEquipmentSlot.SHOULDERS || rpginventory$stack.isIn(Tags.SHOULDERS)) && !this.slots.get(56).hasStack()) {
-					if (!this.insertItem(rpginventory$stack, 56, 57, false)) {
-						cir.setReturnValue(ItemStack.EMPTY);
-						cir.cancel();
-					}
-				}
-
-				// spell 1 slot 57
-				if (!rpginventory$stack.isEmpty() && (rpginventory$equipmentSlot == ExtendedEquipmentSlot.SPELL_1 || rpginventory$stack.isIn(Tags.SPELLS_1)) && !this.slots.get(57).hasStack()) {
-					if (!this.insertItem(rpginventory$stack, 57, 58, false)) {
-						cir.setReturnValue(ItemStack.EMPTY);
-						cir.cancel();
-					}
-				}
-
-				// spell 2 slot 58
-				if (!rpginventory$stack.isEmpty() && (rpginventory$equipmentSlot == ExtendedEquipmentSlot.SPELL_2 || rpginventory$stack.isIn(Tags.SPELLS_2)) && !this.slots.get(58).hasStack()) {
-					if (!this.insertItem(rpginventory$stack, 58, 59, false)) {
-						cir.setReturnValue(ItemStack.EMPTY);
-						cir.cancel();
-					}
-				}
-
-				// spell 3 slot 59
-				if (!rpginventory$stack.isEmpty() && (rpginventory$equipmentSlot == ExtendedEquipmentSlot.SPELL_3 || rpginventory$stack.isIn(Tags.SPELLS_3)) && !this.slots.get(59).hasStack()) {
-					if (!this.insertItem(rpginventory$stack, 59, 60, false)) {
-						cir.setReturnValue(ItemStack.EMPTY);
-						cir.cancel();
-					}
-				}
-
-				// spell 4 slot 60
-				if (!rpginventory$stack.isEmpty() && (rpginventory$equipmentSlot == ExtendedEquipmentSlot.SPELL_4 || rpginventory$stack.isIn(Tags.SPELLS_4)) && !this.slots.get(60).hasStack()) {
-					if (!this.insertItem(rpginventory$stack, 60, 61, false)) {
-						cir.setReturnValue(ItemStack.EMPTY);
-						cir.cancel();
-					}
-				}
-
-				// spell 5 slot 61
-				if (!rpginventory$stack.isEmpty() && (rpginventory$equipmentSlot == ExtendedEquipmentSlot.SPELL_5 || rpginventory$stack.isIn(Tags.SPELLS_5)) && !this.slots.get(61).hasStack()) {
-					if (!this.insertItem(rpginventory$stack, 61, 62, false)) {
-						cir.setReturnValue(ItemStack.EMPTY);
-						cir.cancel();
-					}
-				}
-
-				// spell 6 slot 62
-				if (!rpginventory$stack.isEmpty() && (rpginventory$equipmentSlot == ExtendedEquipmentSlot.SPELL_6 || rpginventory$stack.isIn(Tags.SPELLS_6)) && !this.slots.get(62).hasStack()) {
-					if (!this.insertItem(rpginventory$stack, 62, 63, false)) {
-						cir.setReturnValue(ItemStack.EMPTY);
-						cir.cancel();
-					}
-				}
-
-				// spell 7 slot 63
-				if (!rpginventory$stack.isEmpty() && (rpginventory$equipmentSlot == ExtendedEquipmentSlot.SPELL_7 || rpginventory$stack.isIn(Tags.SPELLS_7)) && !this.slots.get(63).hasStack()) {
-					if (!this.insertItem(rpginventory$stack, 63, 64, false)) {
-						cir.setReturnValue(ItemStack.EMPTY);
-						cir.cancel();
-					}
-				}
-
-				// spell 8 slot 64
-				if (!rpginventory$stack.isEmpty() && (rpginventory$equipmentSlot == ExtendedEquipmentSlot.SPELL_8 || rpginventory$stack.isIn(Tags.SPELLS_8)) && !this.slots.get(64).hasStack()) {
-					if (!this.insertItem(rpginventory$stack, 64, 65, false)) {
-						cir.setReturnValue(ItemStack.EMPTY);
-						cir.cancel();
-					}
-				}
-
-				// relic slot 65
-				if (!rpginventory$stack.isEmpty() && (rpginventory$equipmentSlot == ExtendedEquipmentSlot.RELIC || rpginventory$stack.isIn(Tags.RELICS)) && !this.slots.get(65).hasStack()) {
-					if (!this.insertItem(rpginventory$stack, 65, 66, false)) {
-						cir.setReturnValue(ItemStack.EMPTY);
-						cir.cancel();
-					}
-				}
-//			} else if (slot >= 45 && slot < 51 && RPGInventory.isHandSlotOverhaulActive()) {
-//				if (!this.insertItem(rpginventory$stack, 9, 45, false)) {   // TODO adventure hotbar items
-//					cir.setReturnValue(ItemStack.EMPTY);
-//					cir.cancel();
-//				} else {
-//					cir.setReturnValue(rpginventory$stack);
-//					cir.cancel();
-//				}
 			}
+			return rpginventory$stack;
+		} else {
+			return original.call(player, slot);
 		}
 	}
 
