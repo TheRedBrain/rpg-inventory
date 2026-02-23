@@ -16,6 +16,7 @@
 ## Fixes
 
 - items equipped in alternative hand slots are now moved into the inventory/dropped on the ground when alternative hand slots are disabled
+- fixed quick moving (shift-clicking) items in the RPG Inventory Screen
 
 ## Technical
 
