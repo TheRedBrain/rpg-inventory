@@ -1,3 +1,13 @@
+# 2.10.0
+
+## Additions
+
+- added status effects that are used by various RPG Inventory features. These effects were previously implemented by the "Various Status Effects" mod, but the reasons for the separation no longer apply. This should make the mod more user friendly and easier to maintain.
+
+## Fixes
+
+- fixed class_item slot
+
 # 2.9.0
 
 ## Additions

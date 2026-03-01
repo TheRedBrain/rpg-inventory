@@ -13,11 +13,15 @@ public class RPGInventoryMixinConfigPlugin implements IMixinConfigPlugin {
 	private static boolean needsLoad = true;
 
 	private static boolean applyTrinketsMixins = false;
+	private static boolean applySpellEngineMixins = false;
 
 	private static void loadIfNeeded() {
 		if (needsLoad) {
 			if (FabricLoader.getInstance().isModLoaded("trinkets")) {
 				applyTrinketsMixins = true;
+			}
+			if (FabricLoader.getInstance().isModLoaded("spell_engine")) {
+				applySpellEngineMixins = true;
 			}
 			needsLoad = false;
 		}
@@ -26,6 +30,11 @@ public class RPGInventoryMixinConfigPlugin implements IMixinConfigPlugin {
 	static boolean shouldApplyTrinketsMixins() {
 		loadIfNeeded();
 		return applyTrinketsMixins;
+	}
+
+	static boolean shouldApplySpellEngineMixins() {
+		loadIfNeeded();
+		return applySpellEngineMixins;
 	}
 
 	@Override
@@ -47,6 +56,11 @@ public class RPGInventoryMixinConfigPlugin implements IMixinConfigPlugin {
 						s1.equals("com.github.theredbrain.rpginventory.mixin.client.gui.screen.ingame.CreativeInventoryScreenMixin_TrinketsReplacement")
 		) {
 			return shouldApplyTrinketsMixins();
+		}
+		if (
+				s1.equals("com.github.theredbrain.rpginventory.mixin.spell_engine.api.effect.EntityActionsAllowedSemanticTypeMixin")
+		) {
+			return shouldApplySpellEngineMixins();
 		}
 		return true;
 	}

@@ -21,6 +21,7 @@
     "server.network.EntityTrackerEntryMixin",
     "server.network.ServerPlayerEntityMixin",
     "server.network.ServerPlayNetworkHandlerMixin",
+    "spell_engine.api.effect.EntityActionsAllowedSemanticTypeMixin",
     "trinkets.SurvivalTrinketSlotMixin"
   ],
   "injectors": {

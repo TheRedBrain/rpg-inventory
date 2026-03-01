@@ -35,7 +35,7 @@ public class PlayerEntityHelper {
 
 	private static final int EXCLUSIVE_EQUIPMENT_SLOT_AMOUNT = 20;
 
-	public static boolean rpginventory$onPVPDeath(DamageSource source, PlayerEntity playerEntity, RegistryEntry.Reference<StatusEffect> pvpStatusEffect) {
+	public static boolean rpginventory$onPVPDeath(DamageSource source, PlayerEntity playerEntity, RegistryEntry<StatusEffect> pvpStatusEffect) {
 
 		StatusEffectInstance pvpEffectInstance = playerEntity.getStatusEffect(pvpStatusEffect);
 		if (pvpEffectInstance != null) {
@@ -134,15 +134,12 @@ public class PlayerEntityHelper {
 
 		keep_inventory_on_death_item_equipped = keep_inventory_on_death_item_equipped || LivingEntityHelper.rpginventory$hasEquipped(playerEntity, keep_inventory_on_death_item_equipped_predicate);
 
-		Optional<RegistryEntry.Reference<StatusEffect>> keep_inventory_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.keep_inventory_status_effect_identifier.get());
-		if (keep_inventory_status_effect.isPresent()) {
-			if (keep_inventory_on_death_item_equipped) {
-				if (!playerEntity.hasStatusEffect(keep_inventory_status_effect.get())) {
-					playerEntity.addStatusEffect(new StatusEffectInstance(keep_inventory_status_effect.get(), -1, 0, false, false, false));
-				}
-			} else {
-				playerEntity.removeStatusEffect(keep_inventory_status_effect.get());
+		if (keep_inventory_on_death_item_equipped) {
+			if (!playerEntity.hasStatusEffect(RPGInventory.KEEP_INVENTORY)) {
+				playerEntity.addStatusEffect(new StatusEffectInstance(RPGInventory.KEEP_INVENTORY, -1, 0, false, false, false));
 			}
+		} else {
+			playerEntity.removeStatusEffect(RPGInventory.KEEP_INVENTORY);
 		}
 
 		ItemStack itemStackMainHand = playerEntity.getEquippedStack(EquipmentSlot.MAINHAND);
@@ -150,26 +147,20 @@ public class PlayerEntityHelper {
 		Optional<RegistryEntry.Reference<StatusEffect>> adventure_building_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.building_mode_status_effect_identifier.get());
 		boolean hasAdventureBuildingEffect = adventure_building_status_effect.isPresent() && playerEntity.hasStatusEffect(adventure_building_status_effect.get());
 
-		Optional<RegistryEntry.Reference<StatusEffect>> no_attack_item_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.no_attack_item_status_effect_identifier.get());
-		if (no_attack_item_status_effect.isPresent()) {
-			if (!itemStackMainHand.isIn(Tags.ATTACK_ITEMS) && !playerEntity.isCreative() && !hasAdventureBuildingEffect && !RPGInventory.SERVER_CONFIG.allow_attacking_with_non_attack_items.get()) {
-				if (!playerEntity.hasStatusEffect(no_attack_item_status_effect.get())) {
-					playerEntity.addStatusEffect(new StatusEffectInstance(no_attack_item_status_effect.get(), -1, 0, false, false, false));
-				}
-			} else {
-				playerEntity.removeStatusEffect(no_attack_item_status_effect.get());
+		if (!itemStackMainHand.isIn(Tags.ATTACK_ITEMS) && !playerEntity.isCreative() && !hasAdventureBuildingEffect && !RPGInventory.SERVER_CONFIG.allow_attacking_with_non_attack_items.get()) {
+			if (!playerEntity.hasStatusEffect(RPGInventory.NO_ATTACK_ITEM)) {
+				playerEntity.addStatusEffect(new StatusEffectInstance(RPGInventory.NO_ATTACK_ITEM, -1, 0, false, false, false));
 			}
+		} else {
+			playerEntity.removeStatusEffect(RPGInventory.NO_ATTACK_ITEM);
 		}
 
-		Optional<RegistryEntry.Reference<StatusEffect>> needs_two_handing_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.needs_two_handing_status_effect_identifier.get());
-		if (needs_two_handing_status_effect.isPresent()) {
-			if (itemStackMainHand.isIn(Tags.TWO_HANDED_ITEMS) && !itemStackOffHand.isEmpty() && !playerEntity.isCreative() && !hasAdventureBuildingEffect) {
-				if (!playerEntity.hasStatusEffect(needs_two_handing_status_effect.get())) {
-					playerEntity.addStatusEffect(new StatusEffectInstance(needs_two_handing_status_effect.get(), -1, 0, false, false, false));
-				}
-			} else {
-				playerEntity.removeStatusEffect(needs_two_handing_status_effect.get());
+		if (itemStackMainHand.isIn(Tags.TWO_HANDED_ITEMS) && !itemStackOffHand.isEmpty() && !playerEntity.isCreative() && !hasAdventureBuildingEffect) {
+			if (!playerEntity.hasStatusEffect(RPGInventory.NEEDS_TWO_HANDING)) {
+				playerEntity.addStatusEffect(new StatusEffectInstance(RPGInventory.NEEDS_TWO_HANDING, -1, 0, false, false, false));
 			}
+		} else {
+			playerEntity.removeStatusEffect(RPGInventory.NEEDS_TWO_HANDING);
 		}
 	}
 
@@ -348,13 +339,7 @@ public class PlayerEntityHelper {
 		Optional<RegistryEntry.Reference<StatusEffect>> adventure_building_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.building_mode_status_effect_identifier.get());
 		boolean hasAdventureBuildingEffect = adventure_building_status_effect.isPresent() && playerEntity.hasStatusEffect(adventure_building_status_effect.get());
 
-		Optional<RegistryEntry.Reference<StatusEffect>> civilisation_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.civilisation_status_effect_identifier.get());
-		boolean hasCivilisationEffect = civilisation_status_effect.isPresent() && playerEntity.hasStatusEffect(civilisation_status_effect.get());
-
-		Optional<RegistryEntry.Reference<StatusEffect>> wilderness_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.wilderness_status_effect_identifier.get());
-		boolean hasWildernessEffect = wilderness_status_effect.isPresent() && playerEntity.hasStatusEffect(wilderness_status_effect.get());
-
-		if (!playerEntity.isCreative() && !hasAdventureBuildingEffect && !((RPGInventory.SERVER_CONFIG.allow_equipment_changes.get() && !hasWildernessEffect) || hasCivilisationEffect)) {
+		if (!playerEntity.isCreative() && !hasAdventureBuildingEffect && !((RPGInventory.SERVER_CONFIG.allow_equipment_changes.get() && !playerEntity.hasStatusEffect(RPGInventory.WILDERNESS)) || playerEntity.hasStatusEffect(RPGInventory.CIVILISATION))) {
 			if (!((DuckPlayerEntityMixin) playerEntity).rpginventory$isAdventureHotbarCleanedUp()) {
 				for (int i = 0; i < 9; i++) {
 					PlayerInventory playerInventory = playerEntity.getInventory();

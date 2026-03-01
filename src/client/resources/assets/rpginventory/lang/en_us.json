@@ -12,6 +12,19 @@
 	"death.pvp.prefix": "[PVP] %s%s",
 	"death.pvp.suffix": " This was their last life.",
 
+	"effect.rpginventory.civilisation": "Civilisation",
+	"effect.rpginventory.civilisation.description": "You feel safe here.",
+	"effect.rpginventory.keep_inventory": "Keep Inventory",
+	"effect.rpginventory.keep_inventory.description": "You keep your inventory if you die",
+	"effect.rpginventory.needs_two_handing": "Needs two handing",
+	"effect.rpginventory.needs_two_handing.description": "This item needs to be two-handed",
+	"effect.rpginventory.no_attack_item": "No attack item",
+	"effect.rpginventory.no_attack_item.description": "You can't attack with this item",
+	"effect.rpginventory.pvp": "PVP",
+	"effect.rpginventory.pvp.description": "PVP battle in progress.",
+	"effect.rpginventory.wilderness": "Wilderness",
+	"effect.rpginventory.wilderness.description": "You don't feel safe here",
+
 	"gui.mannequin.equip_button_label": "Equip",
 	"gui.mannequin.unequip_button_label": "Unequip",
 

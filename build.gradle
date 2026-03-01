@@ -260,7 +260,6 @@ if(project.hasProperty('release_type')) {
 			required.project 'slot-customization-api'
 			optional.project 'trinkets'
 			optional.project 'stamina-attributes'
-			optional.project 'various-status-effects'
 			optional.project 'inventory-size-attributes'
 			optional.project 'backpack-attribute'
 			optional.project 'player-attribute-screen'

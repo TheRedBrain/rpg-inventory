@@ -180,8 +180,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
 	@Inject(method = "dropInventory", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;vanishCursedItems()V", ordinal = 0), cancellable = true)
 	private void rpginventory$pre_vanishCursedItems(CallbackInfo ci) {
-		Optional<RegistryEntry.Reference<StatusEffect>> keep_inventory_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.keep_inventory_status_effect_identifier.get());
-		if (keep_inventory_status_effect.isPresent() && this.hasStatusEffect(keep_inventory_status_effect.get())) {
+		if (this.hasStatusEffect(RPGInventory.KEEP_INVENTORY)) {
 			PlayerEntityHelper.rpginventory$breakKeepInventoryItems((PlayerEntity) (Object) this);
 			ci.cancel();
 		}

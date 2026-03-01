@@ -9,6 +9,7 @@ import me.fzzyhmstrs.fzzy_config.config.ConfigGroup;
 import me.fzzyhmstrs.fzzy_config.config.ConfigSection;
 import me.fzzyhmstrs.fzzy_config.validation.minecraft.ValidatedIdentifier;
 import me.fzzyhmstrs.fzzy_config.validation.misc.ValidatedBoolean;
+import me.fzzyhmstrs.fzzy_config.validation.number.ValidatedDouble;
 import me.fzzyhmstrs.fzzy_config.validation.number.ValidatedFloat;
 import me.fzzyhmstrs.fzzy_config.validation.number.ValidatedInt;
 import net.minecraft.registry.Registries;
@@ -90,19 +91,17 @@ public class ServerConfig extends Config {
 	public StatusEffects statusEffects = new StatusEffects();
 
 	public static class StatusEffects extends ConfigSection {
-		public ValidatedIdentifier keep_inventory_status_effect_identifier = ValidatedIdentifier.ofRegistry(Identifier.of("variousstatuseffects:keep_inventory"), Registries.STATUS_EFFECT);
-
-		public ValidatedIdentifier civilisation_status_effect_identifier = ValidatedIdentifier.ofRegistry(Identifier.of("variousstatuseffects:civilisation"), Registries.STATUS_EFFECT);
-
-		public ValidatedIdentifier wilderness_status_effect_identifier = ValidatedIdentifier.ofRegistry(Identifier.of("variousstatuseffects:wilderness"), Registries.STATUS_EFFECT);
 
 		public ValidatedIdentifier building_mode_status_effect_identifier = ValidatedIdentifier.ofRegistry(Identifier.of("scriptblocks:building_mode"), Registries.STATUS_EFFECT);
 
-		public ValidatedIdentifier needs_two_handing_status_effect_identifier = ValidatedIdentifier.ofRegistry(Identifier.of("variousstatuseffects:needs_two_handing"), Registries.STATUS_EFFECT);
+		public CivilisationSection civilisationSection = new CivilisationSection();
 
-		public ValidatedIdentifier no_attack_item_status_effect_identifier = ValidatedIdentifier.ofRegistry(Identifier.of("variousstatuseffects:no_attack_item"), Registries.STATUS_EFFECT);
+		public static class CivilisationSection extends ConfigSection {
+			public ValidatedDouble additional_health_regeneration = new ValidatedDouble(10.0);
+			public ValidatedDouble additional_mana_regeneration = new ValidatedDouble(10.0);
+			public ValidatedDouble additional_stamina_regeneration = new ValidatedDouble(10.0);
+		}
 
-		public ValidatedIdentifier pvp_status_effect_identifier = ValidatedIdentifier.ofRegistry(Identifier.of("variousstatuseffects:pvp"), Registries.STATUS_EFFECT);
 	}
 
 	public InventorySlots inventorySlots = new InventorySlots();

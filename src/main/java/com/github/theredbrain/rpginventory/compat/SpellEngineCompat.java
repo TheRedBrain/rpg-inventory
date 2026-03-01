@@ -1,10 +1,14 @@
 package com.github.theredbrain.rpginventory.compat;
 
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerInventoryMixin;
+import com.github.theredbrain.rpginventory.registry.StatusEffectsRegistry;
+import com.github.theredbrain.rpginventory.spell_engine.ExtendedEntityActionsAllowedSemanticType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.spell_engine.api.effect.ActionImpairing;
+import net.spell_engine.api.effect.EntityActionsAllowed;
 import net.spell_engine.api.spell.Spell;
 import net.spell_engine.api.spell.container.SpellContainer;
 import net.spell_engine.api.spell.container.SpellContainerHelper;
@@ -50,5 +54,10 @@ public class SpellEngineCompat {
 
 	public static boolean doesCurrentPlayerStatusPreventHandSlotAction(PlayerEntity playerEntity) {
 		return ((SpellCasterEntity) playerEntity).isCastingSpell();
+	}
+
+	public static void configureEffects() {
+		ActionImpairing.configure(StatusEffectsRegistry.NEEDS_TWO_HANDING, new EntityActionsAllowed(true, true, new EntityActionsAllowed.PlayersAllowed(false, false, false), new EntityActionsAllowed.MobsAllowed(true), ExtendedEntityActionsAllowedSemanticType.NEEDS_TWO_HANDING));
+		ActionImpairing.configure(StatusEffectsRegistry.NO_ATTACK_ITEM, new EntityActionsAllowed(true, true, new EntityActionsAllowed.PlayersAllowed(false, true, true), new EntityActionsAllowed.MobsAllowed(true), ExtendedEntityActionsAllowedSemanticType.NO_ATTACK_ITEM));
 	}
 }

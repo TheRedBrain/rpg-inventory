@@ -19,6 +19,7 @@ import com.github.theredbrain.rpginventory.registry.ItemComponentRegistry;
 import com.github.theredbrain.rpginventory.registry.ItemRegistry;
 import com.github.theredbrain.rpginventory.registry.ScreenHandlerTypesRegistry;
 import com.github.theredbrain.rpginventory.registry.ServerPacketRegistry;
+import com.github.theredbrain.rpginventory.registry.StatusEffectsRegistry;
 import com.github.theredbrain.rpginventory.util.SwapHandAttributesHelper;
 import me.fzzyhmstrs.fzzy_config.api.ConfigApiJava;
 import net.fabricmc.api.ModInitializer;
@@ -27,6 +28,7 @@ import net.minecraft.component.ComponentType;
 import net.minecraft.component.type.ProfileComponent;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
+import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.RegistryKey;
@@ -53,6 +55,13 @@ public class RPGInventory implements ModInitializer {
 	public static ServerConfig SERVER_CONFIG;
 
 	public static RegistryEntry<EntityAttribute> ACTIVE_SPELL_SLOT_AMOUNT;
+
+	public static RegistryEntry<StatusEffect> CIVILISATION;
+	public static RegistryEntry<StatusEffect> KEEP_INVENTORY;
+	public static RegistryEntry<StatusEffect> NEEDS_TWO_HANDING;
+	public static RegistryEntry<StatusEffect> NO_ATTACK_ITEM;
+	public static RegistryEntry<StatusEffect> WILDERNESS;
+	public static RegistryEntry<StatusEffect> PVP;
 
 	public static ComponentType<Unit> BOUNDS_TO_PLAYER;
 	public static ComponentType<ProfileComponent> PLAYER_BOUND;
@@ -186,6 +195,24 @@ public class RPGInventory implements ModInitializer {
 		}
 	}
 
+	public static void addModdedAttributesToEffects() {
+		if (isHealthRegenerationOverhaulLoaded) {
+			HealthRegenerationOverhaulCompat.addAttributesToStatusEffects();
+		}
+		if (isManaAttributesLoaded) {
+			ManaAttributesCompat.addAttributesToStatusEffects();
+		}
+		if (isStaminaAttributesLoaded) {
+			StaminaAttributesCompat.addAttributesToStatusEffects();
+		}
+	}
+
+	public static void configureEffects() {
+		if (isSpellEngineLoaded) {
+			SpellEngineCompat.configureEffects();
+		}
+	}
+
 	public static MutablePair<RegistryKey<World>, MutablePair<BlockPos, MutablePair<Double, Double>>> getPVPRespawnPosition(Team team, PlayerEntity playerEntity, boolean endOfBattle) {
 		if (playerEntity instanceof ServerPlayerEntity serverPlayerEntity) {
 			if (RPGInventory.isScriptBlocksLoaded) {
@@ -222,6 +249,7 @@ public class RPGInventory implements ModInitializer {
 		ItemComponentRegistry.init();
 		ItemRegistry.init();
 		ScreenHandlerTypesRegistry.registerAll();
+		StatusEffectsRegistry.init();
 
 		// Compatibility
 		if (isSpellEngineLoaded) {

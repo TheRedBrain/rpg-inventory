@@ -19,6 +19,7 @@ import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.s2c.play.EntityEquipmentUpdateS2CPacket;
@@ -30,12 +31,12 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
@@ -91,6 +92,13 @@ public abstract class LivingEntityMixin extends Entity {
 		;
 	}
 
+	@Inject(method = "onStatusEffectRemoved", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;updateAttributes()V"))
+	protected void rpginventory$onStatusEffectRemoved(StatusEffectInstance effect, CallbackInfo ci) {
+		if (effect.getEffectType() == RPGInventory.PVP) {
+			this.getWorld().getScoreboard().clearTeam(this.getNameForScoreboard());
+		}
+	}
+
 	@WrapMethod(method = "canFreeze")
 	private boolean rpginventory$canFreeze(Operation<Boolean> original) {
 		boolean bl = !this.getEquippedStack(ExtendedEquipmentSlot.SHOULDERS).isIn(ItemTags.FREEZE_IMMUNE_WEARABLES)
@@ -108,9 +116,8 @@ public abstract class LivingEntityMixin extends Entity {
 	private boolean rpginventory$wrap_tryUseTotem(DamageSource source, Operation<Boolean> original) {
 
 		LivingEntity thisLivingEntity = ((LivingEntity) (Object) this);
-		Optional<RegistryEntry.Reference<StatusEffect>> pvp_status_effect = Registries.STATUS_EFFECT.getEntry(RPGInventory.SERVER_CONFIG.statusEffects.pvp_status_effect_identifier.get());
-		if (pvp_status_effect.isPresent() && thisLivingEntity instanceof PlayerEntity playerEntity && this.hasStatusEffect(pvp_status_effect.get())) {
-			if (PlayerEntityHelper.rpginventory$onPVPDeath(source, playerEntity, pvp_status_effect.get())) {
+		if (thisLivingEntity instanceof PlayerEntity playerEntity && this.hasStatusEffect(RPGInventory.PVP)) {
+			if (PlayerEntityHelper.rpginventory$onPVPDeath(source, playerEntity, RPGInventory.PVP)) {
 				return true;
 			}
 		}

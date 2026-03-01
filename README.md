@@ -56,7 +56,10 @@ Puts the items in the offhand slot into the sheathed offhand slot. When pressed 
 When the hand item is sheathed, the hand slot contains the item in the selected hotbar slot, like in vanilla.
 When the offhand item is sheathed, the offhand slot contains an empty item stack. On its own this is not very useful, it's designed to be used in combination with other mods like [Better Combat Extension](https://modrinth.com/mod/bettercombat-extension).
 
-When a hand item is not sheathed, but the corresponding slot contains no item, the players hand is not empty. The item in the corresponding empty hand slot is held instead.
+### Empty hand items
+
+When a hand is not sheathed, but the corresponding slot contains no item, the players hand is not empty. The item in the corresponding empty hand slot is held instead.
+
 The empty hand slots always contain a item called "Empty Hand Weapon". This is technically a weapon. When Better Combat is installed, this allows for unarmed combat.
 
 ### Stamina Attributes Compatibility
@@ -149,7 +152,8 @@ RPG Inventory adds several mechanics that influence what happens with the items 
 
 > When the vanilla "keep_inventory" game rule is set to true, all items are kept.
 
-When "keep_inventory_status_effect_identifier" is a valid status effect identifier, that status effect is applied when an item in the "sacrificed_to_keep_inventory_on_death" item tag is equipped (in an equipment, trinket or the offhand slot).
+The "rpginventory:keep_inventory" status effect is applied when an item in the "sacrificed_to_keep_inventory_on_death" item tag is equipped (in an equipment, trinket or the offhand slot).
+
 When the player dies while having that status effect, all equipped items in the "sacrificed_to_keep_inventory_on_death" item tag are destroyed. The rest of the inventory is kept, regardless of game rules and stuff like "Curse of Vanishing".
 
 > The vanilla enchantment "Curse of Vanishing" is applied only when no item was sacrificed to keep the inventory.
@@ -164,7 +168,8 @@ Items that are not kept are dropped like normal or get destroyed under these con
 
 ## PVP Deaths
 
-When the health of a players with a configurable status effect reaches zero, they are not killed, but trigger this feature instead.
+When the health of a players with the "rpginventory:pvp" status effect reaches zero, they are not killed, but trigger this feature instead.
+
 Effects include:
 - remove all status effects (except the pvp effect and all entries of the "rpginventory:kept_on_pvp_death" status effect tag)
 - reset players resources (health, mana, stamina, etc.)
@@ -178,9 +183,9 @@ Effects include:
 
 The server config setting "allow_equipment_changes" controls, whether items can be put into or removed from equipment slots.
 
-When "civilisation_status_effect_identifier" is a valid status effect identifier and the player has that status effect items can be put into or removed from equipment slots, regardless of the config setting.
+When a player has the "rpginventory:civilisation" status effect items can be put into or removed from equipment slots, regardless of the config setting.
 
-When "wilderness_status_effect_identifier" is a valid status effect identifier and the player has that status effect items can not be put into or removed from equipment slots, regardless of the config setting.
+When a player has the "rpginventory:wilderness" status effect items can not be put into or removed from equipment slots, regardless of the config setting.
 
 Item stacks with the "rpginventory:ignores_equipment_change_restrictions" ignore these restrictions.
 
@@ -192,21 +197,15 @@ Equipment items can be part of multiple "exclusive equipment groups", which are 
 
 The 2x2 crafting grid in the player inventory can be disabled.
 
-Items in the "two_handed_items" item tag can only be used when the offhand is sheathed.
+The "rpginventory:needs_two_handing" status effect is applied when the item in the hand is in the "rpginventory:two_handed_items" item tag and the offhand is not sheathed. When "Spell Engine" is installed, the effect prevents attacking, using the item and casting spells.
 
-When "needs_two_handing_status_effect_identifier" is a valid status effect identifier, that status effect is applied when the item in the hand is in the "two_handed_items" item tag and the offhand is not sheathed.
-
-When "no_attack_item_status_effect_identifier" is a valid status effect identifier, that status effect is applied when the item in the hand is not in the 'attack_items' item tag and the 'allow_attacking_with_non_attack_items' option is set to false.
+The "rpginventory:no_attack_item" status effect is applied when the item in the hand is not in the "rpginventory:attack_items" item tag and the 'allow_attacking_with_non_attack_items' option is set to false. When "Spell Engine" is installed, the effect prevents attacking.
 
 When "building_mode_status_effect_identifier" is a valid status effect identifier and the player has that status effect, several mechanics are ignored.
 - every item can be used to attack and to break blocks
 - both hands behave like they are sheathed, so the hand slot contains the item in the selected hotbar slot, like in vanilla.
 
 Class item slot, this inventory slot can't be directly interacted with. It is designed for class selection mods like RPG Class Selection.
-
-### Various Status Effects Integration
-
-All status effect identifier options default to status effects implemented by [Various Status Effects](https://modrinth.com/mod/various-status-effects).
 
 ### Player Attribute Screen Integration
 
