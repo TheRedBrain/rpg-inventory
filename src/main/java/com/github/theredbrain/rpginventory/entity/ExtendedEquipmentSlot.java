@@ -65,8 +65,6 @@ public class ExtendedEquipmentSlot {
 			return itemStack.isIn(Tags.SPELLS_8);
 		} else if (slot == ExtendedEquipmentSlot.RELIC) {
 			return itemStack.isIn(Tags.RELICS);
-		} else if (slot == ExtendedEquipmentSlot.CLASS_ITEM) {
-			return itemStack.isIn(Tags.CLASS_ITEMS);
 		} else {
 			return false;
 		}

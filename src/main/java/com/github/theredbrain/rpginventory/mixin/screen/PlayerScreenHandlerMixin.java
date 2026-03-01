@@ -443,6 +443,26 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 
 		});
 
+		// class item slot 66
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.CLASS_ITEM, 63, 0, 0, EMPTY_RELIC_SLOT, List.of(Text.empty())) {
+
+			@Override
+			public boolean isEnabled() {
+				return false;
+			}
+
+			@Override
+			public boolean canInsert(ItemStack stack) {
+				return true;
+			}
+
+			@Override
+			public boolean canTakeItems(PlayerEntity playerEntity) {
+				return true;
+			}
+
+		});
+
 		// adding slot tooltips
 		List<Text> list5 = new ArrayList<>();
 		list5.add(Text.translatable("slot.tooltip.head"));
