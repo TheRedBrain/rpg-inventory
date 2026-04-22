@@ -9,9 +9,12 @@ RPG Inventory's feature set has grown significantly and the mod is also used as 
 ## Changes
 
 - changed several default config values
-  - RPG Inventory screen is no longer enabled by default
-  - always_allow_toggling_two_handed_stance is now true by default
-  - are_hand_items_restricted_to_item_tags is now false by default
+  - server config
+    - "activate_rpg_inventory_screen" is now false by default
+    - "always_allow_toggling_two_handed_stance" is now true by default
+    - "are_hand_items_restricted_to_item_tags" is now false by default
+  - client config
+    - "show_item_tooltip_equipment_slots" is now false by default
 
 ## Fixes
 

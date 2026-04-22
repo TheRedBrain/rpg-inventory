@@ -124,7 +124,7 @@ public class ClientConfig extends Config {
 
 		public ValidatedBoolean show_item_tooltip_two_handed_items = new ValidatedBoolean(true);
 		public ValidatedInt item_tooltip_two_handed_items_index = new ValidatedInt(-1);
-		public ValidatedBoolean show_item_tooltip_equipment_slots = new ValidatedBoolean(true);
+		public ValidatedBoolean show_item_tooltip_equipment_slots = new ValidatedBoolean(false);
 		public ValidatedInt item_tooltip_equipment_slots_index = new ValidatedInt(-1);
 	}
 
