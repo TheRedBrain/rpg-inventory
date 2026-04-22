@@ -76,8 +76,8 @@ public class ToggleTwoHandedStancePacketReceiver implements ServerPlayNetworking
 				RPGInventory.addStamina(player, -staminaCost);
 			}
 			if (serverConfig.handSlotOverhaul.enable_item_cooldown_after_toggling_2_handed_stance.get()) {
-				player.getItemCooldownManager().set(player.getMainHandStack().getItem(), serverConfig.handSlotOverhaul.swapping_main_hand_cooldown.get());
-				player.getItemCooldownManager().set(player.getOffHandStack().getItem(), serverConfig.handSlotOverhaul.swapping_offhand_cooldown.get());
+				player.getItemCooldownManager().set(player.getMainHandStack().getItem(), serverConfig.handSlotOverhaul.toggling_2_handed_stance_main_hand_cooldown.get());
+				player.getItemCooldownManager().set(player.getOffHandStack().getItem(), serverConfig.handSlotOverhaul.toggling_2_handed_stance_offhand_cooldown.get());
 			}
 			player.getServerWorld().playSound(null, player.getBlockPos().getX(), player.getBlockPos().getY(), player.getBlockPos().getZ(), SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.PLAYERS, 1.0F, 1.0F);
 		} else {

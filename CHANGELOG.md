@@ -1,3 +1,9 @@
+# 2.11.0
+
+## Fixes
+
+- fixed item cooldowns for swapping/sheathing hand items or toggling 2-handed stance
+
 # 2.10.0
 
 ## Additions
