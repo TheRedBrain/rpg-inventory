@@ -82,6 +82,8 @@ public class ServerConfig extends Config {
 
 	public ValidatedBoolean allow_attacking_with_non_attack_items = new ValidatedBoolean(true);
 
+	public ValidatedBoolean enable_two_handed_items_restriction = new ValidatedBoolean(false);
+
 	public ValidatedBoolean should_keep_loadout_items_on_death = new ValidatedBoolean(true);
 
 	public ValidatedBoolean allow_equipment_changes = new ValidatedBoolean(true);

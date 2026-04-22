@@ -155,7 +155,7 @@ public class PlayerEntityHelper {
 			playerEntity.removeStatusEffect(RPGInventory.NO_ATTACK_ITEM);
 		}
 
-		if (itemStackMainHand.isIn(Tags.TWO_HANDED_ITEMS) && !itemStackOffHand.isEmpty() && !playerEntity.isCreative() && !hasAdventureBuildingEffect) {
+		if (itemStackMainHand.isIn(Tags.TWO_HANDED_ITEMS) && !itemStackOffHand.isEmpty() && !playerEntity.isCreative() && !hasAdventureBuildingEffect && RPGInventory.SERVER_CONFIG.enable_two_handed_items_restriction.get()) {
 			if (!playerEntity.hasStatusEffect(RPGInventory.NEEDS_TWO_HANDING)) {
 				playerEntity.addStatusEffect(new StatusEffectInstance(RPGInventory.NEEDS_TWO_HANDING, -1, 0, false, false, false));
 			}

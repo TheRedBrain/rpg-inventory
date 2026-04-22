@@ -29,7 +29,7 @@ public class ClientEventsRegistry {
 				ItemTooltipHelper.addAdvancementLockedItemTooltipLines(lines, stack);
 			}
 
-			if (stack.isIn(Tags.TWO_HANDED_ITEMS) && clientConfig.itemTooltipSection.show_item_tooltip_two_handed_items.get()) {
+			if (stack.isIn(Tags.TWO_HANDED_ITEMS) && clientConfig.itemTooltipSection.show_item_tooltip_two_handed_items.get() && RPGInventory.SERVER_CONFIG.enable_two_handed_items_restriction.get()) {
 				ItemTooltipHelper.addTwoHandedItemTooltipLines(lines);
 			}
 
