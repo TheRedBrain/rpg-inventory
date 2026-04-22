@@ -1,5 +1,14 @@
 # 2.11.0
 
+## Changes
+
+RPG Inventory's feature set has grown significantly and the mod is also used as a dependency for other projects. I made the decision to change the default state of the mod to be as close to vanilla as possible. Existing installations should not be affected.
+
+- changed several default config values
+  - RPG Inventory screen is no longer enabled by default
+  - always_allow_toggling_two_handed_stance is now true by default
+  - are_hand_items_restricted_to_item_tags is now false by default
+
 ## Fixes
 
 - fixed item cooldowns for swapping/sheathing hand items or toggling 2-handed stance

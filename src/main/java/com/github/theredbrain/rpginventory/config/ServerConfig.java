@@ -23,7 +23,7 @@ public class ServerConfig extends Config {
 	}
 
 	@RequiresAction(action = Action.RELOG)
-	public ValidatedBoolean activate_rpg_inventory_screen = new ValidatedBoolean(true);
+	public ValidatedBoolean activate_rpg_inventory_screen = new ValidatedBoolean(false);
 
 	public HandSlotOverhaul handSlotOverhaul = new HandSlotOverhaul();
 
@@ -35,9 +35,9 @@ public class ServerConfig extends Config {
 		@RequiresAction(action = Action.RELOG)
 		public ValidatedBoolean enable_alternative_hand_slots = new ValidatedBoolean(true);
 
-		public ValidatedBoolean always_allow_toggling_two_handed_stance = new ValidatedBoolean(false);
+		public ValidatedBoolean always_allow_toggling_two_handed_stance = new ValidatedBoolean(true);
 
-		public ValidatedBoolean are_hand_items_restricted_to_item_tags = new ValidatedBoolean(true);
+		public ValidatedBoolean are_hand_items_restricted_to_item_tags = new ValidatedBoolean(false);
 
 		public ValidatedBoolean enable_item_cooldown_after_hand_sheathing = new ValidatedBoolean(true);
 		public ValidatedInt sheathing_main_hand_cooldown = new ValidatedInt(10, 100, 1);
