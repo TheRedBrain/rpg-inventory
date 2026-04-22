@@ -55,7 +55,7 @@ public class ItemTooltipHelper {
 	}
 
 	public static void addPlayerCraftedItemTooltipLines(List<Text> lines, ItemStack stack) {
-		int index = RPGInventoryClient.CLIENT_CONFIG.itemTooltipSection.item_tooltip_bound_to_player_index.get();
+		int index = RPGInventoryClient.CLIENT_CONFIG.itemTooltipSection.item_tooltip_crafted_by_player_index.get();
 		List<Text> newList = new ArrayList<>();
 
 		ProfileComponent playerCraftedComponent = stack.get(RPGInventory.PLAYER_CRAFTED);
@@ -78,7 +78,7 @@ public class ItemTooltipHelper {
 	}
 
 	public static void addAdvancementLockedItemTooltipLines(List<Text> lines, ItemStack stack) {
-		int index = RPGInventoryClient.CLIENT_CONFIG.itemTooltipSection.item_tooltip_bound_to_player_index.get();
+		int index = RPGInventoryClient.CLIENT_CONFIG.itemTooltipSection.item_tooltip_advancement_locked_index.get();
 		List<Text> newList = new ArrayList<>();
 
 		AdvancementLockedComponent advancementLockedComponent = stack.get(RPGInventory.ADVANCEMENT_LOCKED);
