@@ -42,10 +42,11 @@
 		"backpackattribute": "*",
 		"foodoverhaul": "*",
 		"inventorysizeattributes": "*",
-		"modmenu": "*",
 		"scriptblocks": "*",
 		"staminaattributes": "*",
 		"playerattributescreen": "*",
-		"rpgcrafting": "*"
+		"rpgcrafting": "*",
+		"spell_engine": "*",
+		"spellengineextension": "*"
 	}
 }
