@@ -48,7 +48,7 @@ public class ClientConfig extends Config {
 		public ValidatedBoolean alternative_offhand_item_is_right = new ValidatedBoolean(true);
 	}
 
-	public ValidatedBoolean show_armor_bar = new ValidatedBoolean(false);
+	public ValidatedBoolean show_armor_bar = new ValidatedBoolean(true);
 
 	public RPGInventoryScreenSection rpgInventoryScreenSection = new RPGInventoryScreenSection();
 

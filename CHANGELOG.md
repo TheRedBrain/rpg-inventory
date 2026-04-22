@@ -15,6 +15,7 @@ RPG Inventory's feature set has grown significantly and the mod is also used as 
     - "are_hand_items_restricted_to_item_tags" is now false by default
   - client config
     - "show_item_tooltip_equipment_slots" is now false by default
+    - "show_armor_bar" is now true by default
 
 ## Fixes
 
