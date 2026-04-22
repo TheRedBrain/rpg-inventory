@@ -18,12 +18,12 @@ public class ItemTooltipHelper {
 	public static void addLoadOutItemsTooltipLines(List<Text> lines) {
 		int index = RPGInventoryClient.CLIENT_CONFIG.itemTooltipSection.item_tooltip_load_out_item_index.get();
 		List<Text> newList = new ArrayList<>();
-		
+
 		newList.add(Text.translatable("item.additional_tooltip.load_out_item.line_1"));
 		if (RPGInventoryClient.CLIENT_CONFIG.itemTooltipSection.show_load_out_item_description_tooltip.get()) {
 			newList.add(Text.translatable("item.additional_tooltip.load_out_item.line_2"));
 		}
-		
+
 		if (index < 0) {
 			lines.addAll(newList);
 		} else {
@@ -46,7 +46,7 @@ public class ItemTooltipHelper {
 			}
 			newList.add(Text.translatable("item.additional_tooltip.player_relation.bound_to", formatting_string + playerBoundComponent.gameProfile().getName()));
 		}
-		
+
 		if (index < 0) {
 			lines.addAll(newList);
 		} else {
@@ -69,7 +69,7 @@ public class ItemTooltipHelper {
 			}
 			newList.add(Text.translatable("item.additional_tooltip.player_relation.crafted_by", formatting_string + playerCraftedComponent.gameProfile().getName()));
 		}
-		
+
 		if (index < 0) {
 			lines.addAll(newList);
 		} else {
@@ -96,7 +96,7 @@ public class ItemTooltipHelper {
 				newList.add(text);
 			}
 		}
-		
+
 		if (index < 0) {
 			lines.addAll(newList);
 		} else {
@@ -138,13 +138,13 @@ public class ItemTooltipHelper {
 //			if (is_unique_ring) {
 //				newList.add(Text.translatable("item.additional_tooltip.equipment_slot.ring_unique"));
 //			} else {
-				newList.add(Text.translatable("item.additional_tooltip.equipment_slot.ring_1"));
+			newList.add(Text.translatable("item.additional_tooltip.equipment_slot.ring_1"));
 //			}
 		} else if (stack.isIn(Tags.RINGS_2)) {
 //			if (is_unique_ring) {
 //				newList.add(Text.translatable("item.additional_tooltip.equipment_slot.ring_unique"));
 //			} else {
-				newList.add(Text.translatable("item.additional_tooltip.equipment_slot.ring_2"));
+			newList.add(Text.translatable("item.additional_tooltip.equipment_slot.ring_2"));
 //			}
 		}
 		if (stack.isIn(Tags.BELTS)) {
@@ -182,7 +182,7 @@ public class ItemTooltipHelper {
 		if (stack.isIn(Tags.BOOTS) || (equipment != null && equipment.getSlotType() == EquipmentSlot.FEET)) {
 			newList.add(Text.translatable("item.additional_tooltip.equipment_slot.boots"));
 		}
-		
+
 		if (index < 0) {
 			lines.addAll(newList);
 		} else {

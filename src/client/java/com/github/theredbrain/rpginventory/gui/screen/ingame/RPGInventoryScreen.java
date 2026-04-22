@@ -103,7 +103,7 @@ public class RPGInventoryScreen extends HandledScreen<PlayerScreenHandler> {
 	}
 
 	private void updateEffectsLists(PlayerEntity player) {
-		List<StatusEffectInstance> effectsList = Ordering.natural().sortedCopy(player.getStatusEffects());
+		List<StatusEffectInstance> effectsList = Ordering.natural().immutableSortedCopy(player.getStatusEffects());
 		List<StatusEffectInstance> visibleEffectsList = new ArrayList<>(Collections.emptyList());
 		for (StatusEffectInstance statusEffectInstance : effectsList) {
 			if (statusEffectInstance.shouldShowIcon()) {

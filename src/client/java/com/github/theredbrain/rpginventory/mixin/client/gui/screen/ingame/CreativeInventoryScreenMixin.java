@@ -30,7 +30,8 @@ public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScre
 	@Shadow
 	private static ItemGroup selectedTab;
 
-	@Shadow public abstract List<Text> getTooltipFromItem(ItemStack stack);
+	@Shadow
+	public abstract List<Text> getTooltipFromItem(ItemStack stack);
 
 	@Unique
 	private static final Identifier TAB_ADVENTURE_INVENTORY_TEXTURE = RPGInventory.identifier("textures/gui/container/adventure_creative_inventory/tab_adventure_inventory.png");

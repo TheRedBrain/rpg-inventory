@@ -2,8 +2,6 @@ package com.github.theredbrain.rpginventory.gui.screen.ingame;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.RPGInventoryClient;
-import com.github.theredbrain.rpginventory.config.ServerConfig;
-import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.screen.VanillaMannequinScreenHandler;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
