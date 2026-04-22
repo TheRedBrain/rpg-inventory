@@ -39,25 +39,11 @@ public class InGameHudHelper {
 			ItemStack itemStack = playerEntity.getOffHandStack();
 			Arm arm = playerEntity.getMainArm().getOpposite();
 			int i = context.getScaledWindowWidth() / 2;
-			int j = 182;
-			int k = 91;
 			RenderSystem.enableBlend();
 			context.getMatrices().push();
 			context.getMatrices().translate(0.0F, 0.0F, -90.0F);
 
-			int hotbar_start_x = i - 91;
-			int hotbar_width = 182;
-
-			int activeHotbarSize = RPGInventory.getActiveHotbarSize(playerEntity);
-			if (clientConfig.hotBarOverhaul.always_show_all_hotbar_slots.get() || activeHotbarSize == 9) {
-				context.drawGuiTexture(HOTBAR_TEXTURE, hotbar_start_x, context.getScaledWindowHeight() - 22, hotbar_width, 22);
-
-			} else if (activeHotbarSize > 0) {
-				if (clientConfig.hotBarOverhaul.is_hotbar_centered.get()) {
-					hotbar_start_x = hotbar_start_x + ((9 - activeHotbarSize) * 20) / 2;
-				}
-				context.drawGuiTexture(RPGInventory.identifier("hud/hotbar_" + activeHotbarSize), hotbar_start_x, context.getScaledWindowHeight() - 22, 182 - (9 - activeHotbarSize) * 20, 22);
-			}
+			int hotbar_start_x = RPGInventoryClient.drawAlternativeHotbar(context, playerEntity, HOTBAR_TEXTURE);
 
 			boolean isHandSlotOverhaulActive = RPGInventory.isHandSlotOverhaulActive();
 			if (((DuckPlayerEntityMixin) playerEntity).rpginventory$isHandStackSheathed() || clientConfig.hotBarOverhaul.always_show_selected_hotbar_slot.get() || !isHandSlotOverhaulActive) {
@@ -120,6 +106,7 @@ public class InGameHudHelper {
 			RenderSystem.disableBlend();
 			int l = 1;
 
+			int activeHotbarSize = RPGInventory.getActiveHotbarSize(playerEntity);
 			for (int m = 0; m < activeHotbarSize; m++) {
 				int n = hotbar_start_x + 1 + m * 20 + 2;
 				int o = context.getScaledWindowHeight() - 16 - 3;
@@ -172,11 +159,6 @@ public class InGameHudHelper {
 				RenderSystem.disableBlend();
 			}
 		}
-		// TODO if alternative hotbar is enabled
-//				do all the stuff
-//				else render the vanilla hotbar
-//				use existing config options to customize the alternative hotbar
-//				add support for Raised
 	}
 
 }

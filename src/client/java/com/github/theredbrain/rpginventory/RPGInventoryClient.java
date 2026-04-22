@@ -20,9 +20,11 @@ import me.fzzyhmstrs.fzzy_config.api.ConfigApiJava;
 import me.fzzyhmstrs.fzzy_config.api.RegisterType;
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import org.apache.commons.lang3.tuple.MutablePair;
 
 import java.util.ArrayList;
@@ -42,6 +44,19 @@ public class RPGInventoryClient implements ClientModInitializer {
 		}
 
 		return bl;
+	}
+
+	/**
+	 * @return Returns the X value of the start position of the hotbar HUD element
+	 */
+	public static int drawAlternativeHotbar(DrawContext context, PlayerEntity player, Identifier hotbarTexture) {
+		int activeHotbarSize = RPGInventory.getActiveHotbarSize(player);
+		if (activeHotbarSize < 9 && RPGInventory.isInventorySizeAttributesLoaded) {
+			return InventorySizeAttributesClientCompat.drawAlternativeHotbar(context, player, hotbarTexture);
+		} else {
+			context.drawGuiTexture(hotbarTexture, context.getScaledWindowWidth() / 2 - 91, context.getScaledWindowHeight() - 22, 182, 22);
+			return context.getScaledWindowWidth() / 2 - 91;
+		}
 	}
 
 	public static boolean showInactiveInventorySlots() {

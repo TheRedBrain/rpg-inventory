@@ -16,6 +16,7 @@ RPG Inventory's feature set has grown significantly and the mod is also used as 
   - client config
     - "show_item_tooltip_equipment_slots" is now false by default
     - "show_armor_bar" is now true by default
+- removed the "always_show_all_hotbar_slots" and "is_hotbar_centered" client config options. Use the corresponding config options of the "Inventory Size Attributes" mod instead.
 
 ## Fixes
 
