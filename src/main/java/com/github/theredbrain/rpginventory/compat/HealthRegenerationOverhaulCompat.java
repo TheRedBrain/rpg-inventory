@@ -5,8 +5,8 @@ import com.github.theredbrain.healthregenerationoverhaul.entity.HealthRegenerati
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.config.ServerConfig;
 import com.github.theredbrain.rpginventory.registry.StatusEffectsRegistry;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 
 public class HealthRegenerationOverhaulCompat {
 	public static void resetHealth(LivingEntity livingEntity) {
@@ -16,7 +16,7 @@ public class HealthRegenerationOverhaulCompat {
 	public static void addAttributesToStatusEffects() {
 		ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
 		StatusEffectsRegistry.CIVILISATION
-				.addAttributeModifier(HealthRegenerationOverhaul.HEALTH_REGENERATION, RPGInventory.identifier("effect.civilisation_effect"), serverConfig.statusEffects.civilisationSection.additional_health_regeneration.get(), EntityAttributeModifier.Operation.ADD_VALUE)
+				.addAttributeModifier(HealthRegenerationOverhaul.HEALTH_REGENERATION, RPGInventory.identifier("effect.civilisation_effect"), serverConfig.statusEffects.civilisationSection.additional_health_regeneration.get(), AttributeModifier.Operation.ADD_VALUE)
 		;
 	}
 }

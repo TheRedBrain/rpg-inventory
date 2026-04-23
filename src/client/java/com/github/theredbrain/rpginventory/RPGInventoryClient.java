@@ -19,12 +19,13 @@ import com.github.theredbrain.rpginventory.registry.ScreenHandlerTypesRegistry;
 import me.fzzyhmstrs.fzzy_config.api.ConfigApiJava;
 import me.fzzyhmstrs.fzzy_config.api.RegisterType;
 import net.fabricmc.api.ClientModInitializer;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.player.Player;
 import org.apache.commons.lang3.tuple.MutablePair;
 
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ import java.util.List;
 public class RPGInventoryClient implements ClientModInitializer {
 	public static ClientConfig CLIENT_CONFIG;
 
-	public static boolean doesCurrentPlayerStatusPreventHandSlotAction(MinecraftClient minecraftClient) {
+	public static boolean doesCurrentPlayerStatusPreventHandSlotAction(Minecraft minecraftClient) {
 		boolean bl = false;
 		if (RPGInventory.isBetterCombatLoaded) {
 			bl = BetterCombatClientCompat.doesCurrentPlayerStatusPreventHandSlotAction(minecraftClient);
@@ -49,13 +50,13 @@ public class RPGInventoryClient implements ClientModInitializer {
 	/**
 	 * @return Returns the X value of the start position of the hotbar HUD element
 	 */
-	public static int drawAlternativeHotbar(DrawContext context, PlayerEntity player, Identifier hotbarTexture) {
+	public static int drawAlternativeHotbar(GuiGraphicsExtractor context, Player player, Identifier hotbarTexture) {
 		int activeHotbarSize = RPGInventory.getActiveHotbarSize(player);
 		if (activeHotbarSize < 9 && RPGInventory.isInventorySizeAttributesLoaded) {
 			return InventorySizeAttributesClientCompat.drawAlternativeHotbar(context, player, hotbarTexture);
 		} else {
-			context.drawGuiTexture(hotbarTexture, context.getScaledWindowWidth() / 2 - 91, context.getScaledWindowHeight() - 22, 182, 22);
-			return context.getScaledWindowWidth() / 2 - 91;
+			context.blitSprite(RenderPipelines.GUI_TEXTURED, hotbarTexture, context.guiWidth() / 2 - 91, context.guiHeight() - 22, 182, 22);
+			return context.guiWidth() / 2 - 91;
 		}
 	}
 
@@ -63,31 +64,31 @@ public class RPGInventoryClient implements ClientModInitializer {
 		return !RPGInventory.isInventorySizeAttributesLoaded || InventorySizeAttributesClientCompat.showInactiveInventorySlots();
 	}
 
-	public static List<MutablePair<Text, List<Text>>> getPlayerAttributeScreenData(MinecraftClient client) {
-		List<MutablePair<Text, List<Text>>> newData = new ArrayList<>(List.of());
+	public static List<MutablePair<Component, List<Component>>> getPlayerAttributeScreenData(Minecraft client) {
+		List<MutablePair<Component, List<Component>>> newData = new ArrayList<>(List.of());
 		if (RPGInventory.isPlayerAttributeScreenLoaded) {
 			newData.addAll(PlayerAttributeScreenClientCompat.getPlayerAttributeScreenData(client));
 		}
 		return newData;
 	}
 
-	public static void openBackPackScreen(MinecraftClient client) {
+	public static void openBackPackScreen(Minecraft client) {
 		if (RPGInventory.isBackpackAttributeLoaded) {
 			BackpackAttributeClientCompat.openBackpackScreen(client);
 		} else if (client.player != null) {
-			client.player.sendMessage(Text.translatable("hud.message.backpackAttributesNotInstalled"));
+			client.player.sendSystemMessage(Component.translatable("hud.message.backpackAttributesNotInstalled"));
 		}
 	}
 
-	public static void openHandCraftingScreen(MinecraftClient client) {
+	public static void openHandCraftingScreen(Minecraft client) {
 		if (RPGInventory.isRPGCraftingLoaded) {
 			RPGCraftingClientCompat.openHandCraftingScreen(client);
 		} else if (client.player != null) {
-			client.player.sendMessage(Text.translatable("hud.message.rpgCraftingNotInstalled"));
+			client.player.sendSystemMessage(Component.translatable("hud.message.rpgCraftingNotInstalled"));
 		}
 	}
 
-	public static void openRPGInventoryScreen(MinecraftClient client, PlayerEntity player) {
+	public static void openRPGInventoryScreen(Minecraft client, Player player) {
 		if (RPGInventory.isTrinketsLoaded) {
 			TrinketsClientCompat.openRPGInventoryTrinketsScreen(client, player);
 		} else {

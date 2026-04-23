@@ -1,16 +1,16 @@
 package com.github.theredbrain.rpginventory.compat;
 
-import com.github.theredbrain.overhauleddamage.entity.DuckLivingEntityMixin;
-import net.minecraft.entity.player.PlayerEntity;
+import com.github.theredbrain.overhauleddamage.entity.DataAttachmentHelper;
+import net.minecraft.world.entity.player.Player;
 
 public class OverhauledDamageCompat {
 
-	public static void resetPlayerStatus(PlayerEntity playerEntity) {
-		((DuckLivingEntityMixin) playerEntity).overhauleddamage$setBleedingBuildUp(0.0F);
-		((DuckLivingEntityMixin) playerEntity).overhauleddamage$setBurnBuildUp(0.0F);
-		((DuckLivingEntityMixin) playerEntity).overhauleddamage$setFreezeBuildUp(0.0F);
-		((DuckLivingEntityMixin) playerEntity).overhauleddamage$setPoisonBuildUp(0.0F);
-		((DuckLivingEntityMixin) playerEntity).overhauleddamage$setShockBuildUp(0.0F);
-		((DuckLivingEntityMixin) playerEntity).overhauleddamage$setStaggerBuildUp(0.0F);
+	public static void resetPlayerStatus(Player playerEntity) {
+		DataAttachmentHelper.setBleedingBuildUp(playerEntity, 0.0F);
+		DataAttachmentHelper.setBurnBuildUp(playerEntity, 0.0F);
+		DataAttachmentHelper.setFreezeBuildUp(playerEntity, 0.0F);
+		DataAttachmentHelper.setPoisonBuildUp(playerEntity, 0.0F);
+		DataAttachmentHelper.setShockBuildUp(playerEntity, 0.0F);
+		DataAttachmentHelper.setStaggerBuildUp(playerEntity, 0.0F);
 	}
 }

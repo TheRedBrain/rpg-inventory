@@ -99,7 +99,7 @@ public class RPGInventory implements ModInitializer {
 	public static final boolean isTrinketsLoaded = FabricLoader.getInstance().isModLoaded("trinkets");
 	public static final boolean isOverhauledDamageLoaded = FabricLoader.getInstance().isModLoaded("overhauleddamage");
 
-	public static void swapHandAttributes(PlayerEntity playerEntity, Runnable runnable) {
+	public static void swapHandAttributes(Player playerEntity, Runnable runnable) {
 		if (SERVER_CONFIG.activate_rpg_inventory_screen.get() && SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get()) {
 			SwapHandAttributesHelper.swapHandAttributes(playerEntity, runnable);
 		}
@@ -115,7 +115,7 @@ public class RPGInventory implements ModInitializer {
 		return list;
 	}
 
-	public static boolean doesCurrentPlayerStatusPreventHandSlotAction(ServerPlayerEntity serverPlayerEntity) {
+	public static boolean doesCurrentPlayerStatusPreventHandSlotAction(ServerPlayer serverPlayerEntity) {
 		boolean bl = false;
 		if (isSpellEngineLoaded) {
 			bl = SpellEngineCompat.doesCurrentPlayerStatusPreventHandSlotAction(serverPlayerEntity);
@@ -126,11 +126,11 @@ public class RPGInventory implements ModInitializer {
 		return bl;
 	}
 
-	public static int getActiveInventorySize(PlayerEntity player) {
+	public static int getActiveInventorySize(Player player) {
 		return isInventorySizeAttributesLoaded ? InventorySizeAttributesCompat.getActiveInventorySize(player) : 27;
 	}
 
-	public static int getActiveHotbarSize(PlayerEntity player) {
+	public static int getActiveHotbarSize(Player player) {
 		return isInventorySizeAttributesLoaded ? InventorySizeAttributesCompat.getActiveHotbarSize(player) : 9;
 	}
 
@@ -172,7 +172,7 @@ public class RPGInventory implements ModInitializer {
 		}
 	}
 
-	public static void resetPlayerStatus(PlayerEntity playerEntity, boolean endOfBattle) {
+	public static void resetPlayerStatus(Player playerEntity, boolean endOfBattle) {
 		if (RPGInventory.isManaAttributesLoaded) {
 			ManaAttributesCompat.resetMana(playerEntity);
 		}
@@ -213,22 +213,14 @@ public class RPGInventory implements ModInitializer {
 		}
 	}
 
-	public static MutablePair<RegistryKey<World>, MutablePair<BlockPos, MutablePair<Double, Double>>> getPVPRespawnPosition(Team team, PlayerEntity playerEntity, boolean endOfBattle) {
-		if (playerEntity instanceof ServerPlayerEntity serverPlayerEntity) {
+	public static LevelData.RespawnData getPVPRespawnPosition(PlayerTeam team, Player playerEntity, boolean endOfBattle) {
+		if (playerEntity instanceof ServerPlayer serverPlayerEntity) {
 			if (RPGInventory.isScriptBlocksLoaded) {
 				return ScriptBlocksCompat.getPVPRespawnPosition(team, serverPlayerEntity, endOfBattle);
 			} else {
-				MinecraftServer server = playerEntity.getServer();
-				if (server != null) {
-					return new MutablePair<>(
-							serverPlayerEntity.getSpawnPointDimension(),
-							new MutablePair<>(
-									serverPlayerEntity.getSpawnPointPosition(),
-									new MutablePair<>(
-											(double) serverPlayerEntity.getSpawnAngle(),
-											0.0)
-							)
-					);
+				ServerPlayer.RespawnConfig respawnConfig = serverPlayerEntity.getRespawnConfig();
+				if (respawnConfig != null) {
+					return respawnConfig.respawnData();
 				}
 			}
 		}
