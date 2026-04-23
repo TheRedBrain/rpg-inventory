@@ -4,19 +4,19 @@ import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import com.github.theredbrain.slotcustomizationapi.api.SlotCustomization;
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.PlayerScreenHandler;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.Container;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import org.jspecify.annotations.Nullable;
 
 public class MannequinSlot extends Slot {
 	private final LivingEntity entity;
@@ -25,7 +25,7 @@ public class MannequinSlot extends Slot {
 	private final Identifier backgroundSprite;
 	private final boolean canChangeInventory;
 
-	public MannequinSlot(Inventory inventory, LivingEntity entity, EquipmentSlot equipmentSlot, int index, int x, int y, @Nullable Identifier backgroundSprite, boolean canChangeInventory, List<Text> tooltip) {
+	public MannequinSlot(Container inventory, LivingEntity entity, EquipmentSlot equipmentSlot, int index, int x, int y, @Nullable Identifier backgroundSprite, boolean canChangeInventory, List<Component> tooltip) {
 		super(inventory, index, x, y);
 		this.entity = entity;
 		this.equipmentSlot = equipmentSlot;
@@ -35,36 +35,37 @@ public class MannequinSlot extends Slot {
 	}
 
 	@Override
-	public int getMaxItemCount() {
+	public int getMaxStackSize() {
 		return 1;
 	}
 
 	@Override
-	public boolean canInsert(ItemStack stack) {
+	public boolean mayPlace(ItemStack stack) {
 		boolean hasPreventMannequinSlotInteractionEffect = false;
-		for (StatusEffectInstance instance : this.entity.getStatusEffects()) {
-			if (instance.getEffectType().isIn(Tags.PREVENTS_MANNEQUIN_SLOT_INTERACTION)) {
+		for (MobEffectInstance instance : this.entity.getActiveEffects()) {
+			if (instance.getEffect().is(Tags.PREVENTS_MANNEQUIN_SLOT_INTERACTION)) {
 				hasPreventMannequinSlotInteractionEffect = true;
 				break;
 			}
 		}
-		return (equipmentSlot == this.entity.getPreferredEquipmentSlot(stack) || ExtendedEquipmentSlot.rpginventory$isOfEquipmentTag(stack, equipmentSlot)) && !hasPreventMannequinSlotInteractionEffect && this.canChangeInventory;
+		return (equipmentSlot == this.entity.getEquipmentSlotForItem(stack) || ExtendedEquipmentSlot.rpginventory$isOfEquipmentTag(stack, equipmentSlot)) && !hasPreventMannequinSlotInteractionEffect && this.canChangeInventory;
 	}
 
 	@Override
-	public boolean canTakeItems(PlayerEntity playerEntity) {
+	public boolean mayPickup(Player playerEntity) {
 		boolean hasPreventMannequinSlotInteractionEffect = false;
-		for (StatusEffectInstance instance : this.entity.getStatusEffects()) {
-			if (instance.getEffectType().isIn(Tags.PREVENTS_MANNEQUIN_SLOT_INTERACTION)) {
+		for (MobEffectInstance instance : this.entity.getActiveEffects()) {
+			if (instance.getEffect().is(Tags.PREVENTS_MANNEQUIN_SLOT_INTERACTION)) {
 				hasPreventMannequinSlotInteractionEffect = true;
 				break;
 			}
 		}
-		return super.canTakeItems(playerEntity) && !hasPreventMannequinSlotInteractionEffect && this.canChangeInventory;
+		return super.mayPickup(playerEntity) && !hasPreventMannequinSlotInteractionEffect && this.canChangeInventory;
 	}
 
 	@Override
-	public Pair<Identifier, Identifier> getBackgroundSprite() {
-		return this.backgroundSprite != null ? Pair.of(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, this.backgroundSprite) : super.getBackgroundSprite();
+	@Nullable
+	public Identifier getNoItemIcon() {
+		return this.backgroundSprite;
 	}
 }

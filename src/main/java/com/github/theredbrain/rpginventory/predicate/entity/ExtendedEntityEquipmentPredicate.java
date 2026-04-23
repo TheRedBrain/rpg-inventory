@@ -3,12 +3,12 @@ package com.github.theredbrain.rpginventory.predicate.entity;
 import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.predicate.item.ItemPredicate;
+import net.minecraft.advancements.criterion.ItemPredicate;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 
 public record ExtendedEntityEquipmentPredicate(
 		Optional<ItemPredicate> necklace,
@@ -52,37 +52,37 @@ public record ExtendedEntityEquipmentPredicate(
 
 	public boolean test(@Nullable Entity entity) {
 		if (entity instanceof LivingEntity livingEntity) {
-			if (this.necklace.isPresent() && !this.necklace.get().test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.NECKLACE))) {
+			if (this.necklace.isPresent() && !this.necklace.get().test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.NECKLACE))) {
 				return false;
-			} else if (this.shoulders.isPresent() && !this.shoulders.get().test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.SHOULDERS))) {
+			} else if (this.shoulders.isPresent() && !this.shoulders.get().test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.SHOULDERS))) {
 				return false;
-			} else if (this.gloves.isPresent() && !this.gloves.get().test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.GLOVES))) {
+			} else if (this.gloves.isPresent() && !this.gloves.get().test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.GLOVES))) {
 				return false;
-			} else if (this.belt.isPresent() && !this.belt.get().test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.BELT))) {
+			} else if (this.belt.isPresent() && !this.belt.get().test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.BELT))) {
 				return false;
-			} else if (this.relic.isPresent() && !this.relic.get().test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.RELIC))) {
+			} else if (this.relic.isPresent() && !this.relic.get().test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.RELIC))) {
 				return false;
-			} else if (this.class_item.isPresent() && !this.class_item.get().test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.CLASS_ITEM))) {
+			} else if (this.class_item.isPresent() && !this.class_item.get().test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.CLASS_ITEM))) {
 				return false;
-			} else if (this.spell_1.isPresent() && !this.spell_1.get().test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.SPELL_1))) {
+			} else if (this.spell_1.isPresent() && !this.spell_1.get().test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.SPELL_1))) {
 				return false;
-			} else if (this.spell_2.isPresent() && !this.spell_2.get().test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.SPELL_2))) {
+			} else if (this.spell_2.isPresent() && !this.spell_2.get().test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.SPELL_2))) {
 				return false;
-			} else if (this.spell_3.isPresent() && !this.spell_3.get().test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.SPELL_3))) {
+			} else if (this.spell_3.isPresent() && !this.spell_3.get().test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.SPELL_3))) {
 				return false;
-			} else if (this.spell_4.isPresent() && !this.spell_4.get().test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.SPELL_4))) {
+			} else if (this.spell_4.isPresent() && !this.spell_4.get().test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.SPELL_4))) {
 				return false;
-			} else if (this.spell_5.isPresent() && !this.spell_5.get().test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.SPELL_5))) {
+			} else if (this.spell_5.isPresent() && !this.spell_5.get().test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.SPELL_5))) {
 				return false;
-			} else if (this.spell_6.isPresent() && !this.spell_6.get().test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.SPELL_6))) {
+			} else if (this.spell_6.isPresent() && !this.spell_6.get().test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.SPELL_6))) {
 				return false;
-			} else if (this.spell_7.isPresent() && !this.spell_7.get().test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.SPELL_7))) {
+			} else if (this.spell_7.isPresent() && !this.spell_7.get().test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.SPELL_7))) {
 				return false;
-			} else if (this.spell_8.isPresent() && !this.spell_8.get().test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.SPELL_8))) {
+			} else if (this.spell_8.isPresent() && !this.spell_8.get().test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.SPELL_8))) {
 				return false;
-			} else if (this.ring_1.isPresent() && !this.ring_1.get().test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.RING_1))) {
+			} else if (this.ring_1.isPresent() && !this.ring_1.get().test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.RING_1))) {
 				return false;
-			} else if (this.ring_2.isPresent() && !this.ring_2.get().test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.RING_2))) {
+			} else if (this.ring_2.isPresent() && !this.ring_2.get().test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.RING_2))) {
 				return false;
 			} else {
 				return true;
@@ -110,86 +110,86 @@ public record ExtendedEntityEquipmentPredicate(
 		private Optional<ItemPredicate> ring_1 = Optional.empty();
 		private Optional<ItemPredicate> ring_2 = Optional.empty();
 
-		public static ExtendedEntityEquipmentPredicate.Builder create() {
-			return new ExtendedEntityEquipmentPredicate.Builder();
+		public static Builder create() {
+			return new Builder();
 		}
 
-		public ExtendedEntityEquipmentPredicate.Builder necklace(ItemPredicate.Builder item) {
+		public Builder necklace(ItemPredicate.Builder item) {
 			this.necklace = Optional.of(item.build());
 			return this;
 		}
 
-		public ExtendedEntityEquipmentPredicate.Builder shoulders(ItemPredicate.Builder item) {
+		public Builder shoulders(ItemPredicate.Builder item) {
 			this.shoulders = Optional.of(item.build());
 			return this;
 		}
 
-		public ExtendedEntityEquipmentPredicate.Builder gloves(ItemPredicate.Builder item) {
+		public Builder gloves(ItemPredicate.Builder item) {
 			this.gloves = Optional.of(item.build());
 			return this;
 		}
 
-		public ExtendedEntityEquipmentPredicate.Builder belt(ItemPredicate.Builder item) {
+		public Builder belt(ItemPredicate.Builder item) {
 			this.belt = Optional.of(item.build());
 			return this;
 		}
 
-		public ExtendedEntityEquipmentPredicate.Builder relic(ItemPredicate.Builder item) {
+		public Builder relic(ItemPredicate.Builder item) {
 			this.relic = Optional.of(item.build());
 			return this;
 		}
 
-		public ExtendedEntityEquipmentPredicate.Builder class_item(ItemPredicate.Builder item) {
+		public Builder class_item(ItemPredicate.Builder item) {
 			this.class_item = Optional.of(item.build());
 			return this;
 		}
 
-		public ExtendedEntityEquipmentPredicate.Builder spell_1(ItemPredicate.Builder item) {
+		public Builder spell_1(ItemPredicate.Builder item) {
 			this.spell_1 = Optional.of(item.build());
 			return this;
 		}
 
-		public ExtendedEntityEquipmentPredicate.Builder spell_2(ItemPredicate.Builder item) {
+		public Builder spell_2(ItemPredicate.Builder item) {
 			this.spell_2 = Optional.of(item.build());
 			return this;
 		}
 
-		public ExtendedEntityEquipmentPredicate.Builder spell_3(ItemPredicate.Builder item) {
+		public Builder spell_3(ItemPredicate.Builder item) {
 			this.spell_3 = Optional.of(item.build());
 			return this;
 		}
 
-		public ExtendedEntityEquipmentPredicate.Builder spell_4(ItemPredicate.Builder item) {
+		public Builder spell_4(ItemPredicate.Builder item) {
 			this.spell_4 = Optional.of(item.build());
 			return this;
 		}
 
-		public ExtendedEntityEquipmentPredicate.Builder spell_5(ItemPredicate.Builder item) {
+		public Builder spell_5(ItemPredicate.Builder item) {
 			this.spell_5 = Optional.of(item.build());
 			return this;
 		}
 
-		public ExtendedEntityEquipmentPredicate.Builder spell_6(ItemPredicate.Builder item) {
+		public Builder spell_6(ItemPredicate.Builder item) {
 			this.spell_6 = Optional.of(item.build());
 			return this;
 		}
 
-		public ExtendedEntityEquipmentPredicate.Builder spell_7(ItemPredicate.Builder item) {
+		public Builder spell_7(ItemPredicate.Builder item) {
 			this.spell_7 = Optional.of(item.build());
 			return this;
 		}
 
-		public ExtendedEntityEquipmentPredicate.Builder spell_8(ItemPredicate.Builder item) {
+		public Builder spell_8(ItemPredicate.Builder item) {
 			this.spell_8 = Optional.of(item.build());
 			return this;
 		}
 
-		public ExtendedEntityEquipmentPredicate.Builder ring_1(ItemPredicate.Builder item) {
+		public Builder ring_1(ItemPredicate.Builder item) {
 			this.ring_1 = Optional.of(item.build());
 			return this;
 		}
 
-		public ExtendedEntityEquipmentPredicate.Builder ring_2(ItemPredicate.Builder item) {
+		public Builder ring_2(ItemPredicate.Builder item) {
 			this.ring_2 = Optional.of(item.build());
 			return this;
 		}

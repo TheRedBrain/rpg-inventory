@@ -12,15 +12,6 @@ import com.github.theredbrain.rpginventory.util.ItemUtils;
 import com.github.theredbrain.slotcustomizationapi.api.SlotCustomization;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.PlayerScreenHandler;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -29,9 +20,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 
-@Mixin(PlayerScreenHandler.class)
-public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements DuckPlayerScreenHandlerMixin {
+@Mixin(InventoryMenu.class)
+public abstract class PlayerScreenHandlerMixin extends AbstractContainerMenu implements DuckPlayerScreenHandlerMixin {
 	@Unique
 	private static final Identifier EMPTY_HAND_SLOT = RPGInventory.identifier("item/empty_slot_hand");
 	@Unique
@@ -80,7 +80,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 	 * @author TheRedBrain
 	 */
 	@Inject(method = "<init>", at = @At("TAIL"))
-	public void PlayerScreenHandler(PlayerInventory inventory, boolean onServer, PlayerEntity owner, CallbackInfo ci) {
+	public void PlayerScreenHandler(Inventory inventory, boolean onServer, Player owner, CallbackInfo ci) {
 
 		ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
 		boolean isRPGInventoryScreenActivated = serverConfig.activate_rpg_inventory_screen.get();
@@ -135,360 +135,360 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 		}
 
 		// main hand slot 46
-		this.addSlot(new CustomArmorSlot(inventory, owner, EquipmentSlot.MAINHAND, 41, serverConfig.inventorySlots.hand_slot_x_offset.get(), serverConfig.inventorySlots.hand_slot_y_offset.get(), EMPTY_HAND_SLOT, List.of(Text.translatable("slot.tooltip.hand")), false) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, EquipmentSlot.MAINHAND, 41, serverConfig.inventorySlots.hand_slot_x_offset.get(), serverConfig.inventorySlots.hand_slot_y_offset.get(), EMPTY_HAND_SLOT, List.of(Component.translatable("slot.tooltip.hand")), false) {
 
 			@Override
-			public boolean isEnabled() {
+			public boolean isActive() {
 				return isRPGInventoryScreenActivated && !((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed() && RPGInventory.isHandSlotOverhaulActive();
 			}
 
 			@Override
-			public boolean canInsert(ItemStack stack) {
+			public boolean mayPlace(ItemStack stack) {
 				ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
 
-				return (stack.isIn(Tags.HAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isUsableByPlayer(stack, owner) && (stack.contains(RPGInventory.IGNORES_EQUIPMENT_CHANGE_RESTRICTIONS) || owner.hasStatusEffect(RPGInventory.CIVILISATION) || owner.isCreative() || (serverConfig.allow_equipment_changes.get() && !owner.hasStatusEffect(RPGInventory.WILDERNESS))) && !((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed();
+				return (stack.is(Tags.HAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isUsableByPlayer(stack, owner) && (stack.has(RPGInventory.IGNORES_EQUIPMENT_CHANGE_RESTRICTIONS) || owner.hasEffect(RPGInventory.CIVILISATION) || owner.isCreative() || (serverConfig.allow_equipment_changes.get() && !owner.hasEffect(RPGInventory.WILDERNESS))) && !((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed();
 			}
 
 		});
 
 		// sheathed main hand slot 47
-		this.addSlot(new CustomArmorSlot(inventory, owner, EquipmentSlot.MAINHAND, 42, serverConfig.inventorySlots.hand_slot_x_offset.get(), serverConfig.inventorySlots.hand_slot_y_offset.get(), EMPTY_HAND_SLOT, List.of(Text.translatable("slot.tooltip.hand")), false) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, EquipmentSlot.MAINHAND, 42, serverConfig.inventorySlots.hand_slot_x_offset.get(), serverConfig.inventorySlots.hand_slot_y_offset.get(), EMPTY_HAND_SLOT, List.of(Component.translatable("slot.tooltip.hand")), false) {
 
 			@Override
-			public boolean isEnabled() {
+			public boolean isActive() {
 				return isRPGInventoryScreenActivated && ((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed() && RPGInventory.isHandSlotOverhaulActive();
 			}
 
 			@Override
-			public boolean canInsert(ItemStack stack) {
+			public boolean mayPlace(ItemStack stack) {
 				ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
 
-				return (stack.isIn(Tags.HAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isUsableByPlayer(stack, owner) && (stack.contains(RPGInventory.IGNORES_EQUIPMENT_CHANGE_RESTRICTIONS) || owner.hasStatusEffect(RPGInventory.CIVILISATION) || owner.isCreative() || (serverConfig.allow_equipment_changes.get() && !owner.hasStatusEffect(RPGInventory.WILDERNESS))) && ((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed();
+				return (stack.is(Tags.HAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isUsableByPlayer(stack, owner) && (stack.has(RPGInventory.IGNORES_EQUIPMENT_CHANGE_RESTRICTIONS) || owner.hasEffect(RPGInventory.CIVILISATION) || owner.isCreative() || (serverConfig.allow_equipment_changes.get() && !owner.hasEffect(RPGInventory.WILDERNESS))) && ((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed();
 			}
 
 		});
 
 		// sheathed offhand slot 48
-		this.addSlot(new CustomArmorSlot(inventory, owner, EquipmentSlot.OFFHAND, 43, serverConfig.inventorySlots.offhand_slot_x_offset.get(), serverConfig.inventorySlots.offhand_slot_y_offset.get(), PlayerScreenHandler.EMPTY_OFFHAND_ARMOR_SLOT, List.of(Text.translatable("slot.tooltip.offhand")), false) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, EquipmentSlot.OFFHAND, 43, serverConfig.inventorySlots.offhand_slot_x_offset.get(), serverConfig.inventorySlots.offhand_slot_y_offset.get(), InventoryMenu.EMPTY_ARMOR_SLOT_SHIELD, List.of(Component.translatable("slot.tooltip.offhand")), false) {
 
 			@Override
-			public boolean isEnabled() {
+			public boolean isActive() {
 				return isRPGInventoryScreenActivated && ((DuckPlayerEntityMixin) owner).rpginventory$isOffhandStackSheathed() && RPGInventory.isHandSlotOverhaulActive();
 			}
 
 			@Override
-			public boolean canInsert(ItemStack stack) {
+			public boolean mayPlace(ItemStack stack) {
 				ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
 
-				return (EquipmentSlot.OFFHAND == owner.getPreferredEquipmentSlot(stack) || stack.isIn(Tags.OFFHAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isUsableByPlayer(stack, owner) && (stack.contains(RPGInventory.IGNORES_EQUIPMENT_CHANGE_RESTRICTIONS) || owner.hasStatusEffect(RPGInventory.CIVILISATION) || owner.isCreative() || (serverConfig.allow_equipment_changes.get() && !owner.hasStatusEffect(RPGInventory.WILDERNESS))) && ((DuckPlayerEntityMixin) owner).rpginventory$isOffhandStackSheathed();
+				return (EquipmentSlot.OFFHAND == owner.getEquipmentSlotForItem(stack) || stack.is(Tags.OFFHAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isUsableByPlayer(stack, owner) && (stack.has(RPGInventory.IGNORES_EQUIPMENT_CHANGE_RESTRICTIONS) || owner.hasEffect(RPGInventory.CIVILISATION) || owner.isCreative() || (serverConfig.allow_equipment_changes.get() && !owner.hasEffect(RPGInventory.WILDERNESS))) && ((DuckPlayerEntityMixin) owner).rpginventory$isOffhandStackSheathed();
 			}
 
 		});
 
 		// alternative main hand slot 49
-		this.addSlot(new AlternativeHandSlot(inventory, owner, EquipmentSlot.MAINHAND, 46, serverConfig.inventorySlots.alternative_hand_slot_x_offset.get(), serverConfig.inventorySlots.alternative_hand_slot_y_offset.get(), EMPTY_ALTERNATIVE_HAND_SLOT, List.of(Text.translatable("slot.tooltip.alternative_hand")), false) {
+		this.addSlot(new AlternativeHandSlot(inventory, owner, EquipmentSlot.MAINHAND, 46, serverConfig.inventorySlots.alternative_hand_slot_x_offset.get(), serverConfig.inventorySlots.alternative_hand_slot_y_offset.get(), EMPTY_ALTERNATIVE_HAND_SLOT, List.of(Component.translatable("slot.tooltip.alternative_hand")), false) {
 
 			@Override
-			public boolean canInsert(ItemStack stack) {
+			public boolean mayPlace(ItemStack stack) {
 				ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
 
-				return (stack.isIn(Tags.HAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isUsableByPlayer(stack, owner) && (stack.contains(RPGInventory.IGNORES_EQUIPMENT_CHANGE_RESTRICTIONS) || owner.hasStatusEffect(RPGInventory.CIVILISATION) || owner.isCreative() || (serverConfig.allow_equipment_changes.get() && !owner.hasStatusEffect(RPGInventory.WILDERNESS)));
+				return (stack.is(Tags.HAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isUsableByPlayer(stack, owner) && (stack.has(RPGInventory.IGNORES_EQUIPMENT_CHANGE_RESTRICTIONS) || owner.hasEffect(RPGInventory.CIVILISATION) || owner.isCreative() || (serverConfig.allow_equipment_changes.get() && !owner.hasEffect(RPGInventory.WILDERNESS)));
 			}
 
 			@Override
-			public boolean isEnabled() {
+			public boolean isActive() {
 				return isRPGInventoryScreenActivated && RPGInventory.isHandSlotOverhaulActive() && serverConfig.handSlotOverhaul.enable_alternative_hand_slots.get();
 			}
 
 		});
 
 		// alternative offhand slot 50
-		this.addSlot(new AlternativeHandSlot(inventory, owner, EquipmentSlot.OFFHAND, 47, serverConfig.inventorySlots.alternative_offhand_slot_x_offset.get(), serverConfig.inventorySlots.alternative_offhand_slot_y_offset.get(), EMPTY_ALTERNATIVE_OFFHAND_SLOT, List.of(Text.translatable("slot.tooltip.alternative_offhand")), false) {
+		this.addSlot(new AlternativeHandSlot(inventory, owner, EquipmentSlot.OFFHAND, 47, serverConfig.inventorySlots.alternative_offhand_slot_x_offset.get(), serverConfig.inventorySlots.alternative_offhand_slot_y_offset.get(), EMPTY_ALTERNATIVE_OFFHAND_SLOT, List.of(Component.translatable("slot.tooltip.alternative_offhand")), false) {
 
 			@Override
-			public boolean canInsert(ItemStack stack) {
+			public boolean mayPlace(ItemStack stack) {
 				ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
 
-				return (stack.isIn(Tags.OFFHAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isUsableByPlayer(stack, owner) && (stack.contains(RPGInventory.IGNORES_EQUIPMENT_CHANGE_RESTRICTIONS) || owner.hasStatusEffect(RPGInventory.CIVILISATION) || owner.isCreative() || (serverConfig.allow_equipment_changes.get() && !owner.hasStatusEffect(RPGInventory.WILDERNESS)));
+				return (stack.is(Tags.OFFHAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isUsableByPlayer(stack, owner) && (stack.has(RPGInventory.IGNORES_EQUIPMENT_CHANGE_RESTRICTIONS) || owner.hasEffect(RPGInventory.CIVILISATION) || owner.isCreative() || (serverConfig.allow_equipment_changes.get() && !owner.hasEffect(RPGInventory.WILDERNESS)));
 			}
 
 			@Override
-			public boolean isEnabled() {
+			public boolean isActive() {
 				return isRPGInventoryScreenActivated && RPGInventory.isHandSlotOverhaulActive() && serverConfig.handSlotOverhaul.enable_alternative_hand_slots.get();
 			}
 
 		});
 
 		// belt slot 51
-		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.BELT, 48, serverConfig.inventorySlots.belt_slot_x_offset.get(), serverConfig.inventorySlots.belt_slot_y_offset.get(), EMPTY_BELT_SLOT, List.of(Text.translatable("slot.tooltip.belt"))) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.BELT, 48, serverConfig.inventorySlots.belt_slot_x_offset.get(), serverConfig.inventorySlots.belt_slot_y_offset.get(), EMPTY_BELT_SLOT, List.of(Component.translatable("slot.tooltip.belt"))) {
 
 			@Override
-			public boolean isEnabled() {
-				return super.isEnabled() && isRPGInventoryScreenActivated && serverConfig.inventorySlots.is_belt_slot_enabled.get();
+			public boolean isActive() {
+				return super.isActive() && isRPGInventoryScreenActivated && serverConfig.inventorySlots.is_belt_slot_enabled.get();
 			}
 
 			@Override
-			public boolean canInsert(ItemStack stack) {
-				return super.canInsert(stack) && serverConfig.inventorySlots.allow_belt_item_insertion.get();
+			public boolean mayPlace(ItemStack stack) {
+				return super.mayPlace(stack) && serverConfig.inventorySlots.allow_belt_item_insertion.get();
 			}
 
 			@Override
-			public boolean canTakeItems(PlayerEntity playerEntity) {
-				return super.canTakeItems(playerEntity) && serverConfig.inventorySlots.allow_belt_item_taking.get();
+			public boolean mayPickup(Player playerEntity) {
+				return super.mayPickup(playerEntity) && serverConfig.inventorySlots.allow_belt_item_taking.get();
 			}
 
 		});
 
 		// gloves slot 52
-		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.GLOVES, 49, serverConfig.inventorySlots.gloves_slot_x_offset.get(), serverConfig.inventorySlots.gloves_slot_y_offset.get(), EMPTY_GLOVES_SLOT, List.of(Text.translatable("slot.tooltip.gloves"))) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.GLOVES, 49, serverConfig.inventorySlots.gloves_slot_x_offset.get(), serverConfig.inventorySlots.gloves_slot_y_offset.get(), EMPTY_GLOVES_SLOT, List.of(Component.translatable("slot.tooltip.gloves"))) {
 
 			@Override
-			public boolean isEnabled() {
-				return super.isEnabled() && isRPGInventoryScreenActivated && serverConfig.inventorySlots.is_gloves_slot_enabled.get();
+			public boolean isActive() {
+				return super.isActive() && isRPGInventoryScreenActivated && serverConfig.inventorySlots.is_gloves_slot_enabled.get();
 			}
 
 			@Override
-			public boolean canInsert(ItemStack stack) {
-				return super.canInsert(stack) && serverConfig.inventorySlots.allow_gloves_item_insertion.get();
+			public boolean mayPlace(ItemStack stack) {
+				return super.mayPlace(stack) && serverConfig.inventorySlots.allow_gloves_item_insertion.get();
 			}
 
 			@Override
-			public boolean canTakeItems(PlayerEntity playerEntity) {
-				return super.canTakeItems(playerEntity) && serverConfig.inventorySlots.allow_gloves_item_taking.get();
+			public boolean mayPickup(Player playerEntity) {
+				return super.mayPickup(playerEntity) && serverConfig.inventorySlots.allow_gloves_item_taking.get();
 			}
 
 		});
 
 		// necklace slot 53
-		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.NECKLACE, 50, serverConfig.inventorySlots.necklace_slot_x_offset.get(), serverConfig.inventorySlots.necklace_slot_y_offset.get(), EMPTY_NECKLACE_SLOT, List.of(Text.translatable("slot.tooltip.necklace"))) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.NECKLACE, 50, serverConfig.inventorySlots.necklace_slot_x_offset.get(), serverConfig.inventorySlots.necklace_slot_y_offset.get(), EMPTY_NECKLACE_SLOT, List.of(Component.translatable("slot.tooltip.necklace"))) {
 
 			@Override
-			public boolean isEnabled() {
-				return super.isEnabled() && isRPGInventoryScreenActivated && serverConfig.inventorySlots.is_necklace_slot_enabled.get();
+			public boolean isActive() {
+				return super.isActive() && isRPGInventoryScreenActivated && serverConfig.inventorySlots.is_necklace_slot_enabled.get();
 			}
 
 			@Override
-			public boolean canInsert(ItemStack stack) {
-				return super.canInsert(stack) && serverConfig.inventorySlots.allow_necklace_item_insertion.get();
+			public boolean mayPlace(ItemStack stack) {
+				return super.mayPlace(stack) && serverConfig.inventorySlots.allow_necklace_item_insertion.get();
 			}
 
 			@Override
-			public boolean canTakeItems(PlayerEntity playerEntity) {
-				return super.canTakeItems(playerEntity) && serverConfig.inventorySlots.allow_necklace_item_taking.get();
+			public boolean mayPickup(Player playerEntity) {
+				return super.mayPickup(playerEntity) && serverConfig.inventorySlots.allow_necklace_item_taking.get();
 			}
 
 		});
 
 		// ring 1 slot 54
-		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.RING_1, 51, serverConfig.inventorySlots.ring_1_slot_x_offset.get(), serverConfig.inventorySlots.ring_1_slot_y_offset.get(), EMPTY_RING_1_SLOT, List.of(Text.translatable("slot.tooltip.ring_1"))) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.RING_1, 51, serverConfig.inventorySlots.ring_1_slot_x_offset.get(), serverConfig.inventorySlots.ring_1_slot_y_offset.get(), EMPTY_RING_1_SLOT, List.of(Component.translatable("slot.tooltip.ring_1"))) {
 
 			@Override
-			public boolean isEnabled() {
-				return super.isEnabled() && isRPGInventoryScreenActivated && serverConfig.inventorySlots.is_ring_1_slot_enabled.get();
+			public boolean isActive() {
+				return super.isActive() && isRPGInventoryScreenActivated && serverConfig.inventorySlots.is_ring_1_slot_enabled.get();
 			}
 
 			@Override
-			public boolean canInsert(ItemStack stack) {
-				return super.canInsert(stack) && serverConfig.inventorySlots.allow_ring_1_item_insertion.get();
+			public boolean mayPlace(ItemStack stack) {
+				return super.mayPlace(stack) && serverConfig.inventorySlots.allow_ring_1_item_insertion.get();
 			}
 
 			@Override
-			public boolean canTakeItems(PlayerEntity playerEntity) {
-				return super.canTakeItems(playerEntity) && serverConfig.inventorySlots.allow_ring_1_item_taking.get();
+			public boolean mayPickup(Player playerEntity) {
+				return super.mayPickup(playerEntity) && serverConfig.inventorySlots.allow_ring_1_item_taking.get();
 			}
 
 		});
 
 		// ring 2 slot 55
-		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.RING_2, 52, serverConfig.inventorySlots.ring_2_slot_x_offset.get(), serverConfig.inventorySlots.ring_2_slot_y_offset.get(), EMPTY_RING_2_SLOT, List.of(Text.translatable("slot.tooltip.ring_2"))) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.RING_2, 52, serverConfig.inventorySlots.ring_2_slot_x_offset.get(), serverConfig.inventorySlots.ring_2_slot_y_offset.get(), EMPTY_RING_2_SLOT, List.of(Component.translatable("slot.tooltip.ring_2"))) {
 
 			@Override
-			public boolean isEnabled() {
-				return super.isEnabled() && isRPGInventoryScreenActivated && serverConfig.inventorySlots.is_ring_2_slot_enabled.get();
+			public boolean isActive() {
+				return super.isActive() && isRPGInventoryScreenActivated && serverConfig.inventorySlots.is_ring_2_slot_enabled.get();
 			}
 
 			@Override
-			public boolean canInsert(ItemStack stack) {
-				return super.canInsert(stack) && serverConfig.inventorySlots.allow_ring_2_item_insertion.get();
+			public boolean mayPlace(ItemStack stack) {
+				return super.mayPlace(stack) && serverConfig.inventorySlots.allow_ring_2_item_insertion.get();
 			}
 
 			@Override
-			public boolean canTakeItems(PlayerEntity playerEntity) {
-				return super.canTakeItems(playerEntity) && serverConfig.inventorySlots.allow_ring_2_item_taking.get();
+			public boolean mayPickup(Player playerEntity) {
+				return super.mayPickup(playerEntity) && serverConfig.inventorySlots.allow_ring_2_item_taking.get();
 			}
 
 		});
 
 		// shoulders slot 56
-		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SHOULDERS, 53, serverConfig.inventorySlots.shoulders_slot_x_offset.get(), serverConfig.inventorySlots.shoulders_slot_y_offset.get(), EMPTY_SHOULDERS_SLOT, List.of(Text.translatable("slot.tooltip.shoulders"))) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SHOULDERS, 53, serverConfig.inventorySlots.shoulders_slot_x_offset.get(), serverConfig.inventorySlots.shoulders_slot_y_offset.get(), EMPTY_SHOULDERS_SLOT, List.of(Component.translatable("slot.tooltip.shoulders"))) {
 
 			@Override
-			public boolean isEnabled() {
-				return super.isEnabled() && isRPGInventoryScreenActivated && serverConfig.inventorySlots.is_shoulders_slot_enabled.get();
+			public boolean isActive() {
+				return super.isActive() && isRPGInventoryScreenActivated && serverConfig.inventorySlots.is_shoulders_slot_enabled.get();
 			}
 
 			@Override
-			public boolean canInsert(ItemStack stack) {
-				return super.canInsert(stack) && serverConfig.inventorySlots.allow_shoulders_item_insertion.get();
+			public boolean mayPlace(ItemStack stack) {
+				return super.mayPlace(stack) && serverConfig.inventorySlots.allow_shoulders_item_insertion.get();
 			}
 
 			@Override
-			public boolean canTakeItems(PlayerEntity playerEntity) {
-				return super.canTakeItems(playerEntity) && serverConfig.inventorySlots.allow_shoulders_item_taking.get();
+			public boolean mayPickup(Player playerEntity) {
+				return super.mayPickup(playerEntity) && serverConfig.inventorySlots.allow_shoulders_item_taking.get();
 			}
 
 		});
 
 		// spell 1 slot 57
-		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SPELL_1, 54, serverConfig.inventorySlots.spell_1_slot_x_offset.get(), serverConfig.inventorySlots.spell_1_slot_y_offset.get(), EMPTY_SPELL_1_SLOT, List.of(Text.translatable("slot.tooltip.spell_1"))) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SPELL_1, 54, serverConfig.inventorySlots.spell_1_slot_x_offset.get(), serverConfig.inventorySlots.spell_1_slot_y_offset.get(), EMPTY_SPELL_1_SLOT, List.of(Component.translatable("slot.tooltip.spell_1"))) {
 
 			@Override
-			public boolean isEnabled() {
-				return super.isEnabled() && isRPGInventoryScreenActivated && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 1;
+			public boolean isActive() {
+				return super.isActive() && isRPGInventoryScreenActivated && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 1;
 			}
 
 		});
 
 		// spell 2 slot 58
-		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SPELL_2, 55, serverConfig.inventorySlots.spell_2_slot_x_offset.get(), serverConfig.inventorySlots.spell_2_slot_y_offset.get(), EMPTY_SPELL_2_SLOT, List.of(Text.translatable("slot.tooltip.spell_2"))) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SPELL_2, 55, serverConfig.inventorySlots.spell_2_slot_x_offset.get(), serverConfig.inventorySlots.spell_2_slot_y_offset.get(), EMPTY_SPELL_2_SLOT, List.of(Component.translatable("slot.tooltip.spell_2"))) {
 
 			@Override
-			public boolean isEnabled() {
-				return super.isEnabled() && isRPGInventoryScreenActivated && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 2;
+			public boolean isActive() {
+				return super.isActive() && isRPGInventoryScreenActivated && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 2;
 			}
 
 		});
 
 		// spell 3 slot 59
-		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SPELL_3, 56, serverConfig.inventorySlots.spell_3_slot_x_offset.get(), serverConfig.inventorySlots.spell_3_slot_y_offset.get(), EMPTY_SPELL_3_SLOT, List.of(Text.translatable("slot.tooltip.spell_3"))) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SPELL_3, 56, serverConfig.inventorySlots.spell_3_slot_x_offset.get(), serverConfig.inventorySlots.spell_3_slot_y_offset.get(), EMPTY_SPELL_3_SLOT, List.of(Component.translatable("slot.tooltip.spell_3"))) {
 
 			@Override
-			public boolean isEnabled() {
-				return super.isEnabled() && isRPGInventoryScreenActivated && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 3;
+			public boolean isActive() {
+				return super.isActive() && isRPGInventoryScreenActivated && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 3;
 			}
 
 		});
 
 		// spell 4 slot 60
-		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SPELL_4, 57, serverConfig.inventorySlots.spell_4_slot_x_offset.get(), serverConfig.inventorySlots.spell_4_slot_y_offset.get(), EMPTY_SPELL_4_SLOT, List.of(Text.translatable("slot.tooltip.spell_4"))) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SPELL_4, 57, serverConfig.inventorySlots.spell_4_slot_x_offset.get(), serverConfig.inventorySlots.spell_4_slot_y_offset.get(), EMPTY_SPELL_4_SLOT, List.of(Component.translatable("slot.tooltip.spell_4"))) {
 
 			@Override
-			public boolean isEnabled() {
-				return super.isEnabled() && isRPGInventoryScreenActivated && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 4;
+			public boolean isActive() {
+				return super.isActive() && isRPGInventoryScreenActivated && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 4;
 			}
 
 		});
 
 		// spell 5 slot 61
-		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SPELL_5, 58, serverConfig.inventorySlots.spell_5_slot_x_offset.get(), serverConfig.inventorySlots.spell_5_slot_y_offset.get(), EMPTY_SPELL_5_SLOT, List.of(Text.translatable("slot.tooltip.spell_5"))) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SPELL_5, 58, serverConfig.inventorySlots.spell_5_slot_x_offset.get(), serverConfig.inventorySlots.spell_5_slot_y_offset.get(), EMPTY_SPELL_5_SLOT, List.of(Component.translatable("slot.tooltip.spell_5"))) {
 
 			@Override
-			public boolean isEnabled() {
-				return super.isEnabled() && isRPGInventoryScreenActivated && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 5;
+			public boolean isActive() {
+				return super.isActive() && isRPGInventoryScreenActivated && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 5;
 			}
 
 		});
 
 		// spell 6 slot 62
-		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SPELL_6, 59, serverConfig.inventorySlots.spell_6_slot_x_offset.get(), serverConfig.inventorySlots.spell_6_slot_y_offset.get(), EMPTY_SPELL_6_SLOT, List.of(Text.translatable("slot.tooltip.spell_6"))) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SPELL_6, 59, serverConfig.inventorySlots.spell_6_slot_x_offset.get(), serverConfig.inventorySlots.spell_6_slot_y_offset.get(), EMPTY_SPELL_6_SLOT, List.of(Component.translatable("slot.tooltip.spell_6"))) {
 
 			@Override
-			public boolean isEnabled() {
-				return super.isEnabled() && isRPGInventoryScreenActivated && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 6;
+			public boolean isActive() {
+				return super.isActive() && isRPGInventoryScreenActivated && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 6;
 			}
 
 		});
 
 		// spell 7 slot 63
-		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SPELL_7, 60, serverConfig.inventorySlots.spell_7_slot_x_offset.get(), serverConfig.inventorySlots.spell_7_slot_y_offset.get(), EMPTY_SPELL_7_SLOT, List.of(Text.translatable("slot.tooltip.spell_7"))) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SPELL_7, 60, serverConfig.inventorySlots.spell_7_slot_x_offset.get(), serverConfig.inventorySlots.spell_7_slot_y_offset.get(), EMPTY_SPELL_7_SLOT, List.of(Component.translatable("slot.tooltip.spell_7"))) {
 
 			@Override
-			public boolean isEnabled() {
-				return super.isEnabled() && isRPGInventoryScreenActivated && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 7;
+			public boolean isActive() {
+				return super.isActive() && isRPGInventoryScreenActivated && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 7;
 			}
 
 		});
 
 		// spell 8 slot 64
-		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SPELL_8, 61, serverConfig.inventorySlots.spell_8_slot_x_offset.get(), serverConfig.inventorySlots.spell_8_slot_y_offset.get(), EMPTY_SPELL_8_SLOT, List.of(Text.translatable("slot.tooltip.spell_8"))) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SPELL_8, 61, serverConfig.inventorySlots.spell_8_slot_x_offset.get(), serverConfig.inventorySlots.spell_8_slot_y_offset.get(), EMPTY_SPELL_8_SLOT, List.of(Component.translatable("slot.tooltip.spell_8"))) {
 
 			@Override
-			public boolean isEnabled() {
-				return super.isEnabled() && isRPGInventoryScreenActivated && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 8;
+			public boolean isActive() {
+				return super.isActive() && isRPGInventoryScreenActivated && (int) ((DuckPlayerEntityMixin) owner).rpginventory$getActiveSpellSlotAmount() >= 8;
 			}
 
 		});
 
 		// relic slot 65
-		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.RELIC, 62, serverConfig.inventorySlots.relic_slot_x_offset.get(), serverConfig.inventorySlots.relic_slot_y_offset.get(), EMPTY_RELIC_SLOT, List.of(Text.translatable("slot.tooltip.relic"))) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.RELIC, 62, serverConfig.inventorySlots.relic_slot_x_offset.get(), serverConfig.inventorySlots.relic_slot_y_offset.get(), EMPTY_RELIC_SLOT, List.of(Component.translatable("slot.tooltip.relic"))) {
 
 			@Override
-			public boolean isEnabled() {
-				return super.isEnabled() && isRPGInventoryScreenActivated && serverConfig.inventorySlots.is_relic_slot_enabled.get();
+			public boolean isActive() {
+				return super.isActive() && isRPGInventoryScreenActivated && serverConfig.inventorySlots.is_relic_slot_enabled.get();
 			}
 
 			@Override
-			public boolean canInsert(ItemStack stack) {
-				return super.canInsert(stack) && serverConfig.inventorySlots.allow_relic_item_insertion.get();
+			public boolean mayPlace(ItemStack stack) {
+				return super.mayPlace(stack) && serverConfig.inventorySlots.allow_relic_item_insertion.get();
 			}
 
 			@Override
-			public boolean canTakeItems(PlayerEntity playerEntity) {
-				return super.canTakeItems(playerEntity) && serverConfig.inventorySlots.allow_relic_item_taking.get();
+			public boolean mayPickup(Player playerEntity) {
+				return super.mayPickup(playerEntity) && serverConfig.inventorySlots.allow_relic_item_taking.get();
 			}
 
 		});
 
 		// class item slot 66
-		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.CLASS_ITEM, 63, 0, 0, EMPTY_RELIC_SLOT, List.of(Text.empty())) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.CLASS_ITEM, 63, 0, 0, EMPTY_RELIC_SLOT, List.of(Component.empty())) {
 
 			@Override
-			public boolean isEnabled() {
+			public boolean isActive() {
 				return false;
 			}
 
 			@Override
-			public boolean canInsert(ItemStack stack) {
+			public boolean mayPlace(ItemStack stack) {
 				return true;
 			}
 
 			@Override
-			public boolean canTakeItems(PlayerEntity playerEntity) {
+			public boolean mayPickup(Player playerEntity) {
 				return true;
 			}
 
 		});
 
 		// adding slot tooltips
-		List<Text> list5 = new ArrayList<>();
-		list5.add(Text.translatable("slot.tooltip.head"));
+		List<Component> list5 = new ArrayList<>();
+		list5.add(Component.translatable("slot.tooltip.head"));
 		((SlotCustomization) this.slots.get(5)).slotcustomizationapi$setSlotTooltipText(list5);
 
-		List<Text> list6 = new ArrayList<>();
-		list6.add(Text.translatable("slot.tooltip.chest"));
+		List<Component> list6 = new ArrayList<>();
+		list6.add(Component.translatable("slot.tooltip.chest"));
 		((SlotCustomization) this.slots.get(6)).slotcustomizationapi$setSlotTooltipText(list6);
 
-		List<Text> list7 = new ArrayList<>();
-		list7.add(Text.translatable("slot.tooltip.legs"));
+		List<Component> list7 = new ArrayList<>();
+		list7.add(Component.translatable("slot.tooltip.legs"));
 		((SlotCustomization) this.slots.get(7)).slotcustomizationapi$setSlotTooltipText(list7);
 
-		List<Text> list8 = new ArrayList<>();
-		list8.add(Text.translatable("slot.tooltip.feet"));
+		List<Component> list8 = new ArrayList<>();
+		list8.add(Component.translatable("slot.tooltip.feet"));
 		((SlotCustomization) this.slots.get(8)).slotcustomizationapi$setSlotTooltipText(list8);
 
-		List<Text> list45 = new ArrayList<>();
-		list45.add(Text.translatable("slot.tooltip.offhand"));
+		List<Component> list45 = new ArrayList<>();
+		list45.add(Component.translatable("slot.tooltip.offhand"));
 		((SlotCustomization) this.slots.get(45)).slotcustomizationapi$setSlotTooltipText(list45);
 
 	}
 
 	@Inject(at = @At("HEAD"), method = "onClosed")
-	private void rpginventory$onClosed(PlayerEntity player, CallbackInfo info) {
+	private void rpginventory$onClosed(Player player, CallbackInfo info) {
 		// TODO trigger adventure hotbar items check
 	}
 
 	@WrapMethod(method = "quickMove")
-	private ItemStack rpginventory$wrap_quickMove(PlayerEntity player, int slot, Operation<ItemStack> original) {
+	private ItemStack rpginventory$wrap_quickMove(Player player, int slot, Operation<ItemStack> original) {
 
 		if (RPGInventory.SERVER_CONFIG.activate_rpg_inventory_screen.get()) {
 
@@ -510,26 +510,26 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 //		}
 //		owner.hasStatusEffect(RPGInventory.CIVILISATION) = owner.hasStatusEffect(RPGInventory.CIVILISATION) || (canChangeEquipment && !owner.hasStatusEffect(RPGInventory.WILDERNESS));
 
-			if (rpginventory$slot.hasStack()) {
-				ItemStack rpginventory$stack2 = rpginventory$slot.getStack();
+			if (rpginventory$slot.hasItem()) {
+				ItemStack rpginventory$stack2 = rpginventory$slot.getItem();
 				rpginventory$stack = rpginventory$stack2.copy();
-				EquipmentSlot rpginventory$equipmentSlot = player.getPreferredEquipmentSlot(rpginventory$stack2);
+				EquipmentSlot rpginventory$equipmentSlot = player.getEquipmentSlotForItem(rpginventory$stack2);
 				if (slot == 0) {
-					if (!this.insertItem(rpginventory$stack2, 9, 45, true)) {
+					if (!this.moveItemStackTo(rpginventory$stack2, 9, 45, true)) {
 						return ItemStack.EMPTY;
 					}
 
-					rpginventory$slot.onQuickTransfer(rpginventory$stack2, rpginventory$stack);
+					rpginventory$slot.onQuickCraft(rpginventory$stack2, rpginventory$stack);
 				} else if (slot >= 1 && slot < 5) {
-					if (!this.insertItem(rpginventory$stack2, 9, 45, false)) {
+					if (!this.moveItemStackTo(rpginventory$stack2, 9, 45, false)) {
 						return ItemStack.EMPTY;
 					}
 				} else if (slot >= 5 && slot < 9) {
-					if (!this.insertItem(rpginventory$stack2, 9, 45, false)) {
+					if (!this.moveItemStackTo(rpginventory$stack2, 9, 45, false)) {
 						return ItemStack.EMPTY;
 					}
 				} else if (slot >= 44 && slot < 66) {
-					if (!this.insertItem(rpginventory$stack2, 9, 45, false)) {   // TODO adventure hotbar items
+					if (!this.moveItemStackTo(rpginventory$stack2, 9, 45, false)) {   // TODO adventure hotbar items
 						return ItemStack.EMPTY;
 					} else {
 						return rpginventory$stack2;
@@ -537,201 +537,201 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
 				} else if (slot >= 9 && slot < 45) {
 
 					// helmet slot 5
-					if ((rpginventory$equipmentSlot == EquipmentSlot.HEAD || rpginventory$stack2.isIn(Tags.HELMETS)) && !this.slots.get(5).hasStack()) {
-						if (!this.insertItem(rpginventory$stack2, 5, 6, false)) {
+					if ((rpginventory$equipmentSlot == EquipmentSlot.HEAD || rpginventory$stack2.is(Tags.HELMETS)) && !this.slots.get(5).hasItem()) {
+						if (!this.moveItemStackTo(rpginventory$stack2, 5, 6, false)) {
 							return ItemStack.EMPTY;
 						}
 					}
 
 					// chestplate slot 5
-					if ((rpginventory$equipmentSlot == EquipmentSlot.CHEST || rpginventory$stack2.isIn(Tags.CHEST_PLATES)) && !this.slots.get(6).hasStack()) {
-						if (!this.insertItem(rpginventory$stack2, 6, 7, false)) {
+					if ((rpginventory$equipmentSlot == EquipmentSlot.CHEST || rpginventory$stack2.is(Tags.CHEST_PLATES)) && !this.slots.get(6).hasItem()) {
+						if (!this.moveItemStackTo(rpginventory$stack2, 6, 7, false)) {
 							return ItemStack.EMPTY;
 						}
 					}
 
 					// leggings slot 5
-					if ((rpginventory$equipmentSlot == EquipmentSlot.LEGS || rpginventory$stack2.isIn(Tags.LEGGINGS)) && !this.slots.get(7).hasStack()) {
-						if (!this.insertItem(rpginventory$stack2, 7, 8, false)) {
+					if ((rpginventory$equipmentSlot == EquipmentSlot.LEGS || rpginventory$stack2.is(Tags.LEGGINGS)) && !this.slots.get(7).hasItem()) {
+						if (!this.moveItemStackTo(rpginventory$stack2, 7, 8, false)) {
 							return ItemStack.EMPTY;
 						}
 					}
 
 					// boots slot 5
-					if ((rpginventory$equipmentSlot == EquipmentSlot.FEET || rpginventory$stack2.isIn(Tags.BOOTS)) && !this.slots.get(8).hasStack()) {
-						if (!this.insertItem(rpginventory$stack2, 8, 9, false)) {
+					if ((rpginventory$equipmentSlot == EquipmentSlot.FEET || rpginventory$stack2.is(Tags.BOOTS)) && !this.slots.get(8).hasItem()) {
+						if (!this.moveItemStackTo(rpginventory$stack2, 8, 9, false)) {
 							return ItemStack.EMPTY;
 						}
 					}
 
 					// belt slot 51
-					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.BELT || rpginventory$stack2.isIn(Tags.BELTS)) && !this.slots.get(51).hasStack()) {
-						if (!this.insertItem(rpginventory$stack2, 51, 52, false)) {
+					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.BELT || rpginventory$stack2.is(Tags.BELTS)) && !this.slots.get(51).hasItem()) {
+						if (!this.moveItemStackTo(rpginventory$stack2, 51, 52, false)) {
 							return ItemStack.EMPTY;
 						}
 					}
 
 					// gloves slot 52
-					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.GLOVES || rpginventory$stack2.isIn(Tags.GLOVES)) && !this.slots.get(52).hasStack()) {
-						if (!this.insertItem(rpginventory$stack2, 52, 53, false)) {
+					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.GLOVES || rpginventory$stack2.is(Tags.GLOVES)) && !this.slots.get(52).hasItem()) {
+						if (!this.moveItemStackTo(rpginventory$stack2, 52, 53, false)) {
 							return ItemStack.EMPTY;
 						}
 					}
 
 					// necklace slot 53
-					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.NECKLACE || rpginventory$stack2.isIn(Tags.NECKLACES)) && !this.slots.get(53).hasStack()) {
-						if (!this.insertItem(rpginventory$stack2, 53, 54, false)) {
+					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.NECKLACE || rpginventory$stack2.is(Tags.NECKLACES)) && !this.slots.get(53).hasItem()) {
+						if (!this.moveItemStackTo(rpginventory$stack2, 53, 54, false)) {
 							return ItemStack.EMPTY;
 						}
 					}
 
 					// ring 1 slot 54
-					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.RING_1 || rpginventory$stack2.isIn(Tags.RINGS_1)) && !this.slots.get(54).hasStack()) {
-						if (!this.insertItem(rpginventory$stack2, 54, 55, false)) {
+					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.RING_1 || rpginventory$stack2.is(Tags.RINGS_1)) && !this.slots.get(54).hasItem()) {
+						if (!this.moveItemStackTo(rpginventory$stack2, 54, 55, false)) {
 							return ItemStack.EMPTY;
 						}
 					}
 
 					// ring 2 slot 55
-					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.RING_2 || rpginventory$stack2.isIn(Tags.RINGS_2)) && !this.slots.get(55).hasStack()) {
-						if (!this.insertItem(rpginventory$stack2, 55, 56, false)) {
+					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.RING_2 || rpginventory$stack2.is(Tags.RINGS_2)) && !this.slots.get(55).hasItem()) {
+						if (!this.moveItemStackTo(rpginventory$stack2, 55, 56, false)) {
 							return ItemStack.EMPTY;
 						}
 					}
 
 					// shoulders slot 56
-					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.SHOULDERS || rpginventory$stack2.isIn(Tags.SHOULDERS)) && !this.slots.get(56).hasStack()) {
-						if (!this.insertItem(rpginventory$stack2, 56, 57, false)) {
+					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.SHOULDERS || rpginventory$stack2.is(Tags.SHOULDERS)) && !this.slots.get(56).hasItem()) {
+						if (!this.moveItemStackTo(rpginventory$stack2, 56, 57, false)) {
 							return ItemStack.EMPTY;
 						}
 					}
 
 					// spell 1 slot 57
-					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.SPELL_1 || rpginventory$stack2.isIn(Tags.SPELLS_1)) && !this.slots.get(57).hasStack()) {
-						if (!this.insertItem(rpginventory$stack2, 57, 58, false)) {
+					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.SPELL_1 || rpginventory$stack2.is(Tags.SPELLS_1)) && !this.slots.get(57).hasItem()) {
+						if (!this.moveItemStackTo(rpginventory$stack2, 57, 58, false)) {
 							return ItemStack.EMPTY;
 						}
 					}
 
 					// spell 2 slot 58
-					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.SPELL_2 || rpginventory$stack2.isIn(Tags.SPELLS_2)) && !this.slots.get(58).hasStack()) {
-						if (!this.insertItem(rpginventory$stack2, 58, 59, false)) {
+					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.SPELL_2 || rpginventory$stack2.is(Tags.SPELLS_2)) && !this.slots.get(58).hasItem()) {
+						if (!this.moveItemStackTo(rpginventory$stack2, 58, 59, false)) {
 							return ItemStack.EMPTY;
 						}
 					}
 
 					// spell 3 slot 59
-					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.SPELL_3 || rpginventory$stack2.isIn(Tags.SPELLS_3)) && !this.slots.get(59).hasStack()) {
-						if (!this.insertItem(rpginventory$stack2, 59, 60, false)) {
+					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.SPELL_3 || rpginventory$stack2.is(Tags.SPELLS_3)) && !this.slots.get(59).hasItem()) {
+						if (!this.moveItemStackTo(rpginventory$stack2, 59, 60, false)) {
 							return ItemStack.EMPTY;
 						}
 					}
 
 					// spell 4 slot 60
-					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.SPELL_4 || rpginventory$stack2.isIn(Tags.SPELLS_4)) && !this.slots.get(60).hasStack()) {
-						if (!this.insertItem(rpginventory$stack2, 60, 61, false)) {
+					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.SPELL_4 || rpginventory$stack2.is(Tags.SPELLS_4)) && !this.slots.get(60).hasItem()) {
+						if (!this.moveItemStackTo(rpginventory$stack2, 60, 61, false)) {
 							return ItemStack.EMPTY;
 						}
 					}
 
 					// spell 5 slot 61
-					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.SPELL_5 || rpginventory$stack2.isIn(Tags.SPELLS_5)) && !this.slots.get(61).hasStack()) {
-						if (!this.insertItem(rpginventory$stack2, 61, 62, false)) {
+					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.SPELL_5 || rpginventory$stack2.is(Tags.SPELLS_5)) && !this.slots.get(61).hasItem()) {
+						if (!this.moveItemStackTo(rpginventory$stack2, 61, 62, false)) {
 							return ItemStack.EMPTY;
 						}
 					}
 
 					// spell 6 slot 62
-					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.SPELL_6 || rpginventory$stack2.isIn(Tags.SPELLS_6)) && !this.slots.get(62).hasStack()) {
-						if (!this.insertItem(rpginventory$stack2, 62, 63, false)) {
+					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.SPELL_6 || rpginventory$stack2.is(Tags.SPELLS_6)) && !this.slots.get(62).hasItem()) {
+						if (!this.moveItemStackTo(rpginventory$stack2, 62, 63, false)) {
 							return ItemStack.EMPTY;
 						}
 					}
 
 					// spell 7 slot 63
-					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.SPELL_7 || rpginventory$stack2.isIn(Tags.SPELLS_7)) && !this.slots.get(63).hasStack()) {
-						if (!this.insertItem(rpginventory$stack2, 63, 64, false)) {
+					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.SPELL_7 || rpginventory$stack2.is(Tags.SPELLS_7)) && !this.slots.get(63).hasItem()) {
+						if (!this.moveItemStackTo(rpginventory$stack2, 63, 64, false)) {
 							return ItemStack.EMPTY;
 						}
 					}
 
 					// spell 8 slot 64
-					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.SPELL_8 || rpginventory$stack2.isIn(Tags.SPELLS_8)) && !this.slots.get(64).hasStack()) {
-						if (!this.insertItem(rpginventory$stack2, 64, 65, false)) {
+					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.SPELL_8 || rpginventory$stack2.is(Tags.SPELLS_8)) && !this.slots.get(64).hasItem()) {
+						if (!this.moveItemStackTo(rpginventory$stack2, 64, 65, false)) {
 							return ItemStack.EMPTY;
 						}
 					}
 
 					// relic slot 65
-					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.RELIC || rpginventory$stack2.isIn(Tags.RELICS)) && !this.slots.get(65).hasStack()) {
-						if (!this.insertItem(rpginventory$stack2, 65, 66, false)) {
+					if ((rpginventory$equipmentSlot == ExtendedEquipmentSlot.RELIC || rpginventory$stack2.is(Tags.RELICS)) && !this.slots.get(65).hasItem()) {
+						if (!this.moveItemStackTo(rpginventory$stack2, 65, 66, false)) {
 							return ItemStack.EMPTY;
 						}
 					}
 
 					if (RPGInventory.isHandSlotOverhaulActive()) {
 
-						if (!serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || rpginventory$stack2.isIn(Tags.HAND_ITEMS)) {
-							if (((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed() && !this.slots.get(47).hasStack()) {
-								if (!this.insertItem(rpginventory$stack2, 47, 48, false)) {
+						if (!serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || rpginventory$stack2.is(Tags.HAND_ITEMS)) {
+							if (((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed() && !this.slots.get(47).hasItem()) {
+								if (!this.moveItemStackTo(rpginventory$stack2, 47, 48, false)) {
 									return ItemStack.EMPTY;
 								}
-							} else if (!((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed() && !this.slots.get(46).hasStack()) {
-								if (!this.insertItem(rpginventory$stack2, 46, 47, false)) {
+							} else if (!((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed() && !this.slots.get(46).hasItem()) {
+								if (!this.moveItemStackTo(rpginventory$stack2, 46, 47, false)) {
 									return ItemStack.EMPTY;
 								}
 							}
 						}
 
-						if (rpginventory$equipmentSlot == EquipmentSlot.OFFHAND || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || rpginventory$stack2.isIn(Tags.OFFHAND_ITEMS)) {
-							if (((DuckPlayerEntityMixin) player).rpginventory$isOffhandStackSheathed() && !this.slots.get(48).hasStack()) {
-								if (!this.insertItem(rpginventory$stack2, 48, 49, false)) {
+						if (rpginventory$equipmentSlot == EquipmentSlot.OFFHAND || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || rpginventory$stack2.is(Tags.OFFHAND_ITEMS)) {
+							if (((DuckPlayerEntityMixin) player).rpginventory$isOffhandStackSheathed() && !this.slots.get(48).hasItem()) {
+								if (!this.moveItemStackTo(rpginventory$stack2, 48, 49, false)) {
 									return ItemStack.EMPTY;
 								}
-							} else if (!((DuckPlayerEntityMixin) player).rpginventory$isOffhandStackSheathed() && !this.slots.get(45).hasStack()) {
-								if (!this.insertItem(rpginventory$stack2, 45, 46, false)) {
+							} else if (!((DuckPlayerEntityMixin) player).rpginventory$isOffhandStackSheathed() && !this.slots.get(45).hasItem()) {
+								if (!this.moveItemStackTo(rpginventory$stack2, 45, 46, false)) {
 									return ItemStack.EMPTY;
 								}
 							}
 						}
 
 						if (serverConfig.handSlotOverhaul.enable_alternative_hand_slots.get()) {
-							if ((!serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || rpginventory$stack2.isIn(Tags.HAND_ITEMS)) && !this.slots.get(49).hasStack()) {
-								if (!this.insertItem(rpginventory$stack2, 49, 50, false)) {
+							if ((!serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || rpginventory$stack2.is(Tags.HAND_ITEMS)) && !this.slots.get(49).hasItem()) {
+								if (!this.moveItemStackTo(rpginventory$stack2, 49, 50, false)) {
 									return ItemStack.EMPTY;
 								}
 							}
 
-							if ((rpginventory$equipmentSlot == EquipmentSlot.OFFHAND || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || rpginventory$stack2.isIn(Tags.OFFHAND_ITEMS)) && !this.slots.get(50).hasStack()) {
-								if (!this.insertItem(rpginventory$stack2, 50, 51, false)) {
+							if ((rpginventory$equipmentSlot == EquipmentSlot.OFFHAND || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || rpginventory$stack2.is(Tags.OFFHAND_ITEMS)) && !this.slots.get(50).hasItem()) {
+								if (!this.moveItemStackTo(rpginventory$stack2, 50, 51, false)) {
 									return ItemStack.EMPTY;
 								}
 							}
 						}
 					} else {
-						if ((rpginventory$equipmentSlot == EquipmentSlot.OFFHAND || rpginventory$stack2.isIn(Tags.OFFHAND_ITEMS)) && !this.slots.get(45).hasStack()) {
-							if (!this.insertItem(rpginventory$stack2, 45, 46, false)) {
+						if ((rpginventory$equipmentSlot == EquipmentSlot.OFFHAND || rpginventory$stack2.is(Tags.OFFHAND_ITEMS)) && !this.slots.get(45).hasItem()) {
+							if (!this.moveItemStackTo(rpginventory$stack2, 45, 46, false)) {
 								return ItemStack.EMPTY;
 							}
 						}
 					}
-				} else if (!this.insertItem(rpginventory$stack2, 9, 45, false)) {
+				} else if (!this.moveItemStackTo(rpginventory$stack2, 9, 45, false)) {
 					return ItemStack.EMPTY;
 				}
 
 				if (rpginventory$stack2.isEmpty()) {
-					rpginventory$slot.setStack(ItemStack.EMPTY, rpginventory$stack);
+					rpginventory$slot.setByPlayer(ItemStack.EMPTY, rpginventory$stack);
 				} else {
-					rpginventory$slot.markDirty();
+					rpginventory$slot.setChanged();
 				}
 
 				if (rpginventory$stack2.getCount() == rpginventory$stack.getCount()) {
 					return ItemStack.EMPTY;
 				}
 
-				rpginventory$slot.onTakeItem(player, rpginventory$stack2);
+				rpginventory$slot.onTake(player, rpginventory$stack2);
 				if (slot == 0) {
-					player.dropItem(rpginventory$stack2, false);
+					player.drop(rpginventory$stack2, false);
 				}
 			}
 			return rpginventory$stack;

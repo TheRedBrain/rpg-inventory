@@ -2,225 +2,91 @@ package com.github.theredbrain.rpginventory.mixin.entity;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
-import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlotType;
 import com.github.theredbrain.rpginventory.entity.player.PlayerEntityHelper;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.mojang.datafixers.util.Pair;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.AttributeContainer;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributeInstance;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.packet.s2c.play.EntityEquipmentUpdateS2CPacket;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.tag.ItemTags;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.world.World;
-import org.spongepowered.asm.mixin.Final;
+import com.llamalad7.mixinextras.sugar.Local;
+import net.minecraft.core.Holder;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeMap;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.List;
-import java.util.Map;
+import java.util.Collection;
 
 @Mixin(value = LivingEntity.class, priority = 1050)
-@SuppressWarnings("UnreachableCode")
 public abstract class LivingEntityMixin extends Entity {
 
-	@Unique
-	private final DefaultedList<ItemStack> syncedAdditionalEquipmentStacks = DefaultedList.ofSize(16, ItemStack.EMPTY);
+	@Shadow
+	public abstract AttributeMap getAttributes();
 
 	@Shadow
-	public abstract ItemStack getEquippedStack(EquipmentSlot slot);
+	public abstract boolean hasEffect(Holder<MobEffect> effect);
 
 	@Shadow
-	public abstract AttributeContainer getAttributes();
+	public abstract ItemStack getItemBySlot(EquipmentSlot slot);
 
-	@Shadow
-	public abstract boolean areItemsDifferent(ItemStack stack, ItemStack stack2);
-
-	@Shadow
-	@Final
-	private AttributeContainer attributes;
-
-	@Shadow
-	protected abstract ItemStack getSyncedHandStack(EquipmentSlot slot);
-
-	@Shadow
-	protected abstract ItemStack getSyncedArmorStack(EquipmentSlot slot);
-
-	@Shadow
-	private ItemStack syncedBodyArmorStack;
-
-	@Shadow
-	protected abstract void setSyncedHandStack(EquipmentSlot slot, ItemStack stack);
-
-	@Shadow
-	protected abstract void setSyncedArmorStack(EquipmentSlot slot, ItemStack armor);
-
-	@Shadow
-	public abstract boolean hasStatusEffect(RegistryEntry<StatusEffect> effect);
-
-	public LivingEntityMixin(EntityType<?> type, World world) {
+	public LivingEntityMixin(EntityType<?> type, Level world) {
 		super(type, world);
 	}
 
 	@Inject(method = "createLivingAttributes", at = @At("RETURN"))
-	private static void rpginventory$createLivingAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
+	private static void rpginventory$createLivingAttributes(CallbackInfoReturnable<AttributeSupplier.Builder> cir) {
 		cir.getReturnValue()
 				.add(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT, 0.0F)
 		;
 	}
 
-	@Inject(method = "onStatusEffectRemoved", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;updateAttributes()V"))
-	protected void rpginventory$onStatusEffectRemoved(StatusEffectInstance effect, CallbackInfo ci) {
-		if (effect.getEffectType() == RPGInventory.PVP) {
-			this.getWorld().getScoreboard().clearTeam(this.getNameForScoreboard());
+	@Inject(method = "onEffectsRemoved", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/effect/MobEffect;removeAttributeModifiers(Lnet/minecraft/world/entity/ai/attributes/AttributeMap;)V"))
+	protected void rpginventory$onEffectsRemoved(Collection<MobEffectInstance> effects, CallbackInfo ci, @Local(name = "effect") MobEffectInstance effect) {
+		if (effect.getEffect() == RPGInventory.PVP) {
+			this.level().getScoreboard().removePlayerFromTeam(this.getScoreboardName());
 		}
 	}
 
 	@WrapMethod(method = "canFreeze")
 	private boolean rpginventory$canFreeze(Operation<Boolean> original) {
-		boolean bl = !this.getEquippedStack(ExtendedEquipmentSlot.SHOULDERS).isIn(ItemTags.FREEZE_IMMUNE_WEARABLES)
-				&& !this.getEquippedStack(ExtendedEquipmentSlot.GLOVES).isIn(ItemTags.FREEZE_IMMUNE_WEARABLES)
-				&& !this.getEquippedStack(ExtendedEquipmentSlot.BELT).isIn(ItemTags.FREEZE_IMMUNE_WEARABLES)
-				&& !this.getEquippedStack(ExtendedEquipmentSlot.RING_1).isIn(ItemTags.FREEZE_IMMUNE_WEARABLES)
-				&& !this.getEquippedStack(ExtendedEquipmentSlot.RING_2).isIn(ItemTags.FREEZE_IMMUNE_WEARABLES)
-				&& !this.getEquippedStack(ExtendedEquipmentSlot.NECKLACE).isIn(ItemTags.FREEZE_IMMUNE_WEARABLES)
-				&& !this.getEquippedStack(ExtendedEquipmentSlot.RELIC).isIn(ItemTags.FREEZE_IMMUNE_WEARABLES)
-				&& !this.getEquippedStack(ExtendedEquipmentSlot.CLASS_ITEM).isIn(ItemTags.FREEZE_IMMUNE_WEARABLES);
+		boolean bl = !this.getItemBySlot(ExtendedEquipmentSlot.SHOULDERS).is(ItemTags.FREEZE_IMMUNE_WEARABLES)
+				&& !this.getItemBySlot(ExtendedEquipmentSlot.GLOVES).is(ItemTags.FREEZE_IMMUNE_WEARABLES)
+				&& !this.getItemBySlot(ExtendedEquipmentSlot.BELT).is(ItemTags.FREEZE_IMMUNE_WEARABLES)
+				&& !this.getItemBySlot(ExtendedEquipmentSlot.RING_1).is(ItemTags.FREEZE_IMMUNE_WEARABLES)
+				&& !this.getItemBySlot(ExtendedEquipmentSlot.RING_2).is(ItemTags.FREEZE_IMMUNE_WEARABLES)
+				&& !this.getItemBySlot(ExtendedEquipmentSlot.NECKLACE).is(ItemTags.FREEZE_IMMUNE_WEARABLES)
+				&& !this.getItemBySlot(ExtendedEquipmentSlot.RELIC).is(ItemTags.FREEZE_IMMUNE_WEARABLES)
+				&& !this.getItemBySlot(ExtendedEquipmentSlot.CLASS_ITEM).is(ItemTags.FREEZE_IMMUNE_WEARABLES);
 		return original.call() && bl;
 	}
 
-	@WrapMethod(method = "tryUseTotem")
-	private boolean rpginventory$wrap_tryUseTotem(DamageSource source, Operation<Boolean> original) {
+	@WrapMethod(method = "checkTotemDeathProtection")
+	private boolean rpginventory$wrap_checkTotemDeathProtection(DamageSource killingDamage, Operation<Boolean> original) {
 
 		LivingEntity thisLivingEntity = ((LivingEntity) (Object) this);
-		if (thisLivingEntity instanceof PlayerEntity playerEntity && this.hasStatusEffect(RPGInventory.PVP)) {
-			if (PlayerEntityHelper.rpginventory$onPVPDeath(source, playerEntity, RPGInventory.PVP)) {
+		if (thisLivingEntity instanceof Player playerEntity && this.hasEffect(RPGInventory.PVP)) {
+			if (PlayerEntityHelper.rpginventory$onPVPDeath(killingDamage, playerEntity, RPGInventory.PVP)) {
 				return true;
 			}
 		}
-		return original.call(source);
+		return original.call(killingDamage);
 	}
 
-	@WrapMethod(method = "getEquipmentChanges")
-	private Map<EquipmentSlot, ItemStack> rpginventory$wrap_getEquipmentChanges(Operation<Map<EquipmentSlot, ItemStack>> original) {
-		Map<EquipmentSlot, ItemStack> map = null;
-
-		for (EquipmentSlot equipmentSlot : EquipmentSlot.values()) {
-
-			ItemStack itemStack;
-			if (equipmentSlot.getType() == EquipmentSlot.Type.HAND) {
-				itemStack = this.getSyncedHandStack(equipmentSlot);
-			} else if (equipmentSlot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR) {
-				itemStack = this.getSyncedArmorStack(equipmentSlot);
-			} else if (equipmentSlot.getType() == EquipmentSlot.Type.ANIMAL_ARMOR) {
-				itemStack = this.syncedBodyArmorStack;
-			} else if (equipmentSlot.getType() == ExtendedEquipmentSlotType.RPG_INVENTORY_SLOT_TYPE) {
-				itemStack = this.getSyncedAdditionalEquipmentStack(equipmentSlot);
-			} else {
-				itemStack = ItemStack.EMPTY;
-			}
-			ItemStack itemStack2 = this.getEquippedStack(equipmentSlot);
-			if (this.areItemsDifferent(itemStack, itemStack2)) {
-				if (map == null) {
-					map = Maps.newEnumMap(EquipmentSlot.class);
-				}
-
-				map.put(equipmentSlot, itemStack2);
-				AttributeContainer attributeContainer = this.getAttributes();
-				if (!itemStack.isEmpty()) {
-					itemStack.applyAttributeModifiers(equipmentSlot, (attribute, modifier) -> {
-						EntityAttributeInstance entityAttributeInstance = attributeContainer.getCustomInstance(attribute);
-						if (entityAttributeInstance != null) {
-							entityAttributeInstance.removeModifier(modifier);
-						}
-
-						EnchantmentHelper.removeLocationBasedEffects(itemStack, ((LivingEntity) (Object) this), equipmentSlot);
-					});
-				}
-			}
-		}
-
-		if (map != null) {
-			for (Map.Entry<EquipmentSlot, ItemStack> entry : map.entrySet()) {
-				EquipmentSlot equipmentSlot2 = (EquipmentSlot) entry.getKey();
-				ItemStack itemStack3 = (ItemStack) entry.getValue();
-				if (!itemStack3.isEmpty()) {
-					itemStack3.applyAttributeModifiers(equipmentSlot2, (registryEntry, entityAttributeModifier) -> {
-						EntityAttributeInstance entityAttributeInstance = this.attributes.getCustomInstance(registryEntry);
-						if (entityAttributeInstance != null) {
-							entityAttributeInstance.removeModifier(entityAttributeModifier.id());
-							entityAttributeInstance.addTemporaryModifier(entityAttributeModifier);
-						}
-
-						if (this.getWorld() instanceof ServerWorld serverWorld) {
-							EnchantmentHelper.applyLocationBasedEffects(serverWorld, itemStack3, ((LivingEntity) (Object) this), equipmentSlot2);
-						}
-					});
-				}
-			}
-		}
-
-		return map;
-	}
-
-	/**
-	 * Sends equipment changes to nearby players.
-	 *
-	 * @author TheRedBrain
-	 * @reason WIP
-	 */
-	@WrapMethod(method = "sendEquipmentChanges(Ljava/util/Map;)V")
-	private void rpginventory$wrap_sendEquipmentChanges(Map<EquipmentSlot, ItemStack> equipmentChanges, Operation<Void> original) {
-		List<Pair<EquipmentSlot, ItemStack>> list = Lists.newArrayListWithCapacity(equipmentChanges.size());
-		equipmentChanges.forEach((slot, stack) -> {
-			ItemStack itemStack = stack.copy();
-			list.add(Pair.of(slot, itemStack));
-			if (slot.getType() == EquipmentSlot.Type.HAND) {
-				this.setSyncedHandStack(slot, itemStack);
-			} else if (slot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR) {
-				this.setSyncedArmorStack(slot, itemStack);
-			} else if (slot.getType() == EquipmentSlot.Type.ANIMAL_ARMOR) {
-				this.syncedBodyArmorStack = itemStack;
-			} else if (slot.getType() == ExtendedEquipmentSlotType.RPG_INVENTORY_SLOT_TYPE) {
-				this.setSyncedAdditionalEquipmentStack(slot, itemStack);
-			}
-		});
-		((ServerWorld) this.getWorld()).getChunkManager().sendToOtherNearbyPlayers(this, new EntityEquipmentUpdateS2CPacket(this.getId(), list));
-	}
-
-	@Unique
-	private ItemStack getSyncedAdditionalEquipmentStack(EquipmentSlot slot) {
-		return this.syncedAdditionalEquipmentStacks.get(slot.getEntitySlotId());
-	}
-
-	@Unique
-	private void setSyncedAdditionalEquipmentStack(EquipmentSlot slot, ItemStack equipment) {
-		this.syncedAdditionalEquipmentStacks.set(slot.getEntitySlotId(), equipment);
-	}
-
-	@ModifyVariable(method = "damageEquipment(Lnet/minecraft/entity/damage/DamageSource;F[Lnet/minecraft/entity/EquipmentSlot;)V", at = @At(value = "INVOKE_ASSIGN", target = "Ljava/lang/Math;max(FF)F"), argsOnly = true)
-	private float rpginventory$damageEquipment_divideAmount(float oldValue, DamageSource source, float amount) {
-		return Math.max(1.0F, amount / 6.0F);
+	@ModifyVariable(method = "doHurtEquipment(Lnet/minecraft/world/damagesource/DamageSource;F[Lnet/minecraft/world/entity/EquipmentSlot;)V", at = @At(value = "INVOKE_ASSIGN", target = "Ljava/lang/Math;max(FF)F"), argsOnly = true, name = "damage")
+	private float rpginventory$damageEquipment_divideAmount(float damage) {
+		return Math.max(1.0F, damage / 6.0F);
 	}
 }

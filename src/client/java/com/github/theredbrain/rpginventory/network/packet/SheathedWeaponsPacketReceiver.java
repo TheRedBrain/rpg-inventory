@@ -4,10 +4,10 @@ import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerInventoryMixin;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 public class SheathedWeaponsPacketReceiver implements ClientPlayNetworking.PlayPayloadHandler<SheathedWeaponsPacket> {
 	@Override
@@ -18,10 +18,10 @@ public class SheathedWeaponsPacketReceiver implements ClientPlayNetworking.PlayP
 			int entityId = payload.id();
 			boolean mainHand = payload.mainHand();
 			boolean isWeaponSheathed = payload.isSheathed();
-			ClientPlayerEntity clientPlayer = context.player();
+			LocalPlayer clientPlayer = context.player();
 
-			if (clientPlayer != null && clientPlayer.getWorld().getEntityById(entityId) != null) {
-				PlayerEntity player = (PlayerEntity) clientPlayer.getWorld().getEntityById(entityId);
+			if (clientPlayer != null && clientPlayer.level().getEntity(entityId) != null) {
+				Player player = (Player) clientPlayer.level().getEntity(entityId);
 				ItemStack itemStack;
 				if (player != null && player != clientPlayer) {
 					if (mainHand) {
@@ -39,15 +39,15 @@ public class SheathedWeaponsPacketReceiver implements ClientPlayNetworking.PlayP
 						}
 					} else {
 						((DuckPlayerEntityMixin) player).rpginventory$setIsOffhandStackSheathed(isWeaponSheathed);
-						itemStack = player.getEquippedStack(EquipmentSlot.OFFHAND).copy();
+						itemStack = player.getItemBySlot(EquipmentSlot.OFFHAND).copy();
 						if (itemStack.isEmpty()) {
 							itemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSheathedOffhand().copy();
 						}
 						if (isWeaponSheathed) {
-							player.equipStack(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
+							player.setItemSlot(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
 							((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedOffhand(itemStack);
 						} else {
-							player.equipStack(EquipmentSlot.OFFHAND, itemStack);
+							player.setItemSlot(EquipmentSlot.OFFHAND, itemStack);
 							((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedOffhand(ItemStack.EMPTY);
 						}
 					}

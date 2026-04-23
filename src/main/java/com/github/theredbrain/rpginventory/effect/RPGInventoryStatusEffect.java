@@ -1,15 +1,15 @@
 package com.github.theredbrain.rpginventory.effect;
 
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectCategory;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
 
-public class RPGInventoryStatusEffect extends StatusEffect {
+public class RPGInventoryStatusEffect extends MobEffect {
 
-	public RPGInventoryStatusEffect(StatusEffectCategory statusEffectCategory, int color) {
+	public RPGInventoryStatusEffect(MobEffectCategory statusEffectCategory, int color) {
 		super(statusEffectCategory, color);
 	}
 
-	public RPGInventoryStatusEffect(StatusEffectCategory statusEffectCategory) {
+	public RPGInventoryStatusEffect(MobEffectCategory statusEffectCategory) {
 		this(statusEffectCategory, 3381504);
 	}
 }

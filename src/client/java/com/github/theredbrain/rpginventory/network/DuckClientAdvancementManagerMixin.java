@@ -1,7 +1,7 @@
 package com.github.theredbrain.rpginventory.network;
 
-import net.minecraft.advancement.AdvancementEntry;
+import net.minecraft.advancements.AdvancementHolder;
 
 public interface DuckClientAdvancementManagerMixin {
-	boolean rpginventory$getAdvancementProgressDone(AdvancementEntry advancementEntry);
+	boolean rpginventory$getAdvancementProgressDone(AdvancementHolder advancementEntry);
 }

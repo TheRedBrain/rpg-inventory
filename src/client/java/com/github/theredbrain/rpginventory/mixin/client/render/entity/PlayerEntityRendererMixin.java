@@ -6,14 +6,14 @@ import com.github.theredbrain.rpginventory.render.renderer.SheathedOffHandItemFe
 import com.github.theredbrain.rpginventory.util.ItemUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.LivingEntityRenderer;
-import net.minecraft.client.render.entity.PlayerEntityRenderer;
-import net.minecraft.client.render.entity.model.BipedEntityModel;
-import net.minecraft.client.render.entity.model.PlayerEntityModel;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -21,28 +21,28 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Environment(EnvType.CLIENT)
-@Mixin(PlayerEntityRenderer.class)
-public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<AbstractClientPlayerEntity, PlayerEntityModel<AbstractClientPlayerEntity>> {
+@Mixin(PlayerRenderer.class)
+public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
 
 
-	public PlayerEntityRendererMixin(EntityRendererFactory.Context ctx, PlayerEntityModel<AbstractClientPlayerEntity> model, float shadowRadius) {
+	public PlayerEntityRendererMixin(EntityRendererProvider.Context ctx, PlayerModel<AbstractClientPlayer> model, float shadowRadius) {
 		super(ctx, model, shadowRadius);
 	}
 
 	@Inject(method = "<init>", at = @At("TAIL"))
-	private void rpginventory$init(EntityRendererFactory.Context ctx, boolean slim, CallbackInfo info) {
-		this.addFeature(new SheathedHandItemFeatureRenderer<>(this, ctx.getHeldItemRenderer()));
-		this.addFeature(new SheathedOffHandItemFeatureRenderer<>(this, ctx.getHeldItemRenderer()));
+	private void rpginventory$init(EntityRendererProvider.Context ctx, boolean slim, CallbackInfo info) {
+		this.addLayer(new SheathedHandItemFeatureRenderer<>(this, ctx.getItemInHandRenderer()));
+		this.addLayer(new SheathedOffHandItemFeatureRenderer<>(this, ctx.getItemInHandRenderer()));
 	}
 
 	/**
 	 * @author TheRedBrain
 	 */
 	@Inject(method = "getArmPose", at = @At("HEAD"), cancellable = true)
-	private static void rpginventory$pre_getArmPose(AbstractClientPlayerEntity player, Hand hand, CallbackInfoReturnable<BipedEntityModel.ArmPose> cir) {
-		ItemStack itemStack = player.getStackInHand(hand);
-		if (itemStack.isEmpty() || itemStack.isIn(Tags.EMPTY_HAND_WEAPONS) || !ItemUtils.isUsable(itemStack) || !ItemUtils.isUsableByPlayer(itemStack, player)) {
-			cir.setReturnValue(BipedEntityModel.ArmPose.EMPTY);
+	private static void rpginventory$pre_getArmPose(AbstractClientPlayer player, InteractionHand hand, CallbackInfoReturnable<HumanoidModel.ArmPose> cir) {
+		ItemStack itemStack = player.getItemInHand(hand);
+		if (itemStack.isEmpty() || itemStack.is(Tags.EMPTY_HAND_WEAPONS) || !ItemUtils.isUsable(itemStack) || !ItemUtils.isUsableByPlayer(itemStack, player)) {
+			cir.setReturnValue(HumanoidModel.ArmPose.EMPTY);
 			cir.cancel();
 		}
 	}

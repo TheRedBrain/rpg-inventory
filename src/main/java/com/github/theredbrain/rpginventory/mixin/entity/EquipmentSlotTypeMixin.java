@@ -1,6 +1,5 @@
 package com.github.theredbrain.rpginventory.mixin.entity;
 
-import net.minecraft.entity.EquipmentSlot;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -9,6 +8,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import net.minecraft.world.entity.EquipmentSlot;
 
 @Mixin(EquipmentSlot.Type.class)
 public class EquipmentSlotTypeMixin {

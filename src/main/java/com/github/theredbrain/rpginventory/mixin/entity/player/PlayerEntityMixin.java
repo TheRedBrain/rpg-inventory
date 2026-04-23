@@ -13,22 +13,6 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Iterables;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -39,19 +23,32 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.core.Holder;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
-@Mixin(PlayerEntity.class)
+@Mixin(Player.class)
 public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlayerEntityMixin, RendersSheathedWeapons {
 
 	@Shadow
 	@Final
-	PlayerInventory inventory;
+	Inventory inventory;
 
 	@Shadow
-	public abstract PlayerInventory getInventory();
-
-	@Shadow
-	public abstract ItemStack getEquippedStack(EquipmentSlot slot);
+	public abstract Inventory getInventory();
 
 	@Shadow
 	public abstract boolean isCreative();
@@ -60,44 +57,44 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 	private boolean isAdventureHotbarCleanedUp = false;
 
 	@Unique
-	private static final TrackedData<Boolean> IS_HAND_STACK_SHEATHED = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> IS_HAND_STACK_SHEATHED = SynchedEntityData.defineId(Player.class, EntityDataSerializers.BOOLEAN);
 
 	@Unique
-	private static final TrackedData<Boolean> IS_OFFHAND_STACK_SHEATHED = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> IS_OFFHAND_STACK_SHEATHED = SynchedEntityData.defineId(Player.class, EntityDataSerializers.BOOLEAN);
 
 	@Unique
-	private static final TrackedData<Boolean> IS_HAND_SLOT_OVERHAUL_ACTIVE = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> IS_HAND_SLOT_OVERHAUL_ACTIVE = SynchedEntityData.defineId(Player.class, EntityDataSerializers.BOOLEAN);
 
 	@Unique
-	private static final TrackedData<Boolean> ARE_ALTERNATIVE_HAND_SLOTS_ACTIVE = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> ARE_ALTERNATIVE_HAND_SLOTS_ACTIVE = SynchedEntityData.defineId(Player.class, EntityDataSerializers.BOOLEAN);
 
 	@Unique
-	private static final TrackedData<Integer> OLD_ACTIVE_SPELL_SLOT_AMOUNT = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
+	private static final EntityDataAccessor<Integer> OLD_ACTIVE_SPELL_SLOT_AMOUNT = SynchedEntityData.defineId(Player.class, EntityDataSerializers.INT);
 
 	@Unique
-	private static final TrackedData<Boolean> SHOULD_EJECT_EXCLUSIVE_EQUIPMENT = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> SHOULD_EJECT_EXCLUSIVE_EQUIPMENT = SynchedEntityData.defineId(Player.class, EntityDataSerializers.BOOLEAN);
 
-	protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
+	protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, Level world) {
 		super(entityType, world);
 	}
 
 	@Inject(method = "initDataTracker", at = @At("RETURN"))
-	protected void rpginventory$initDataTracker(DataTracker.Builder builder, CallbackInfo ci) {
-		builder.add(IS_HAND_STACK_SHEATHED, false);
-		builder.add(IS_OFFHAND_STACK_SHEATHED, false);
-		builder.add(IS_HAND_SLOT_OVERHAUL_ACTIVE, true);
-		builder.add(ARE_ALTERNATIVE_HAND_SLOTS_ACTIVE, true);
-		builder.add(OLD_ACTIVE_SPELL_SLOT_AMOUNT, -1);
-		builder.add(SHOULD_EJECT_EXCLUSIVE_EQUIPMENT, false);
+	protected void rpginventory$initDataTracker(SynchedEntityData.Builder builder, CallbackInfo ci) {
+		builder.define(IS_HAND_STACK_SHEATHED, false);
+		builder.define(IS_OFFHAND_STACK_SHEATHED, false);
+		builder.define(IS_HAND_SLOT_OVERHAUL_ACTIVE, true);
+		builder.define(ARE_ALTERNATIVE_HAND_SLOTS_ACTIVE, true);
+		builder.define(OLD_ACTIVE_SPELL_SLOT_AMOUNT, -1);
+		builder.define(SHOULD_EJECT_EXCLUSIVE_EQUIPMENT, false);
 
 	}
 
 	@Inject(method = "tick", at = @At("TAIL"))
 	public void rpginventory$tick(CallbackInfo ci) {
-		PlayerEntity playerEntity = (PlayerEntity) (Object) this;
-		this.getAttributes().addTemporaryModifiers(getNaturalAttributeModifiers(this.getWorld()));
+		Player playerEntity = (Player) (Object) this;
+		this.getAttributes().addTransientAttributeModifiers(getNaturalAttributeModifiers(this.level()));
 		PlayerEntityHelper.rpginventory$updateEquipmentStatusEffects(playerEntity);
-		if (!this.getWorld().isClient) {
+		if (!this.level().isClientSide) {
 			PlayerEntityHelper.rpginventory$ejectItemsFromInactiveSpellSlots(playerEntity);
 			PlayerEntityHelper.rpginventory$ejectExclusiveEquipment(playerEntity);
 			PlayerEntityHelper.rpginventory$ejectItemsFromInactiveHandSlots(playerEntity);
@@ -106,15 +103,15 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 	}
 
 	@Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
-	public void rpginventory$readCustomDataFromNbt(NbtCompound nbt, CallbackInfo ci) {
+	public void rpginventory$readCustomDataFromNbt(CompoundTag nbt, CallbackInfo ci) {
 
-		this.rpginventory$setIsHandStackSheathed(nbt.contains("is_hand_stack_sheathed", NbtElement.BYTE_TYPE));
+		this.rpginventory$setIsHandStackSheathed(nbt.contains("is_hand_stack_sheathed", Tag.TAG_BYTE));
 
-		this.rpginventory$setIsOffhandStackSheathed(nbt.contains("is_offhand_stack_sheathed", NbtElement.BYTE_TYPE));
+		this.rpginventory$setIsOffhandStackSheathed(nbt.contains("is_offhand_stack_sheathed", Tag.TAG_BYTE));
 
-		this.rpginventory$setIsHandSlotOverhaulActive(nbt.contains("is_hand_slot_overhaul_active", NbtElement.BYTE_TYPE));
+		this.rpginventory$setIsHandSlotOverhaulActive(nbt.contains("is_hand_slot_overhaul_active", Tag.TAG_BYTE));
 
-		if (nbt.contains("old_active_spell_slot_amount", NbtElement.INT_TYPE)) {
+		if (nbt.contains("old_active_spell_slot_amount", Tag.TAG_INT)) {
 			this.rpginventory$setOldActiveSpellSlotAmount(nbt.getInt("old_active_spell_slot_amount"));
 		} else {
 			this.rpginventory$setOldActiveSpellSlotAmount(-1);
@@ -122,7 +119,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 	}
 
 	@Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
-	public void rpginventory$writeCustomDataToNbt(NbtCompound nbt, CallbackInfo ci) {
+	public void rpginventory$writeCustomDataToNbt(CompoundTag nbt, CallbackInfo ci) {
 
 		if (this.rpginventory$isHandStackSheathed()) {
 			nbt.putBoolean("is_hand_stack_sheathed", true);
@@ -153,23 +150,23 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 	@WrapMethod(method = "equipStack")
 	public void equipStack(EquipmentSlot slot, ItemStack stack, Operation<Void> original) {
 		boolean isHandSlotOverhaulActive = RPGInventory.isHandSlotOverhaulActive();
-		this.processEquippedStack(stack);
+		this.verifyEquippedItem(stack);
 		if (slot == EquipmentSlot.MAINHAND) {
-			if (stack.isIn(Tags.EMPTY_HAND_WEAPONS)) {
-				this.onEquipStack(slot, ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setEmptyHand(stack), stack);
+			if (stack.is(Tags.EMPTY_HAND_WEAPONS)) {
+				this.onEquipItem(slot, ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setEmptyHand(stack), stack);
 			} else {
-				this.onEquipStack(slot, ((DuckPlayerEntityMixin) this).rpginventory$isHandStackSheathed() || !isHandSlotOverhaulActive ? this.inventory.main.set(this.inventory.selectedSlot, stack) : ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setHand(stack), stack);
+				this.onEquipItem(slot, ((DuckPlayerEntityMixin) this).rpginventory$isHandStackSheathed() || !isHandSlotOverhaulActive ? this.inventory.items.set(this.inventory.selected, stack) : ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setHand(stack), stack);
 			}
 		} else if (slot == EquipmentSlot.OFFHAND) {
-			if (stack.isIn(Tags.EMPTY_HAND_WEAPONS)) {
-				this.onEquipStack(slot, ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setEmptyOffhand(stack), stack);
+			if (stack.is(Tags.EMPTY_HAND_WEAPONS)) {
+				this.onEquipItem(slot, ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setEmptyOffhand(stack), stack);
 			} else {
-				this.onEquipStack(slot, ((DuckPlayerEntityMixin) this).rpginventory$isOffhandStackSheathed() && isHandSlotOverhaulActive ? ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setSheathedOffhand(stack) : this.inventory.offHand.set(0, stack), stack);
+				this.onEquipItem(slot, ((DuckPlayerEntityMixin) this).rpginventory$isOffhandStackSheathed() && isHandSlotOverhaulActive ? ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setSheathedOffhand(stack) : this.inventory.offhand.set(0, stack), stack);
 			}
 		} else if (slot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR) {
-			this.onEquipStack(slot, this.inventory.armor.set(slot.getEntitySlotId(), stack), stack);
+			this.onEquipItem(slot, this.inventory.armor.set(slot.getIndex(), stack), stack);
 		} else if (slot.getType() == ExtendedEquipmentSlotType.RPG_INVENTORY_SLOT_TYPE) {
-			this.onEquipStack(slot, ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setAdditionalEquipmentStack(slot.getEntitySlotId(), stack), stack);
+			this.onEquipItem(slot, ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setAdditionalEquipmentStack(slot.getIndex(), stack), stack);
 		} else {
 			original.call(slot, stack);
 		}
@@ -177,8 +174,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
 	@Inject(method = "dropInventory", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;vanishCursedItems()V", ordinal = 0), cancellable = true)
 	private void rpginventory$pre_vanishCursedItems(CallbackInfo ci) {
-		if (this.hasStatusEffect(RPGInventory.KEEP_INVENTORY)) {
-			PlayerEntityHelper.rpginventory$breakKeepInventoryItems((PlayerEntity) (Object) this);
+		if (this.hasEffect(RPGInventory.KEEP_INVENTORY)) {
+			PlayerEntityHelper.rpginventory$breakKeepInventoryItems((Player) (Object) this);
 			ci.cancel();
 		}
 	}
@@ -188,7 +185,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 		if (slot == EquipmentSlot.OFFHAND) {
 			return ((DuckPlayerInventoryMixin) this.inventory).rpginventory$getOffHandStack();
 		} else if (slot.getType() == ExtendedEquipmentSlotType.RPG_INVENTORY_SLOT_TYPE) {
-			return ((DuckPlayerInventoryMixin) this.inventory).rpginventory$getAdditionalEquipmentStack(slot.getEntitySlotId());
+			return ((DuckPlayerInventoryMixin) this.inventory).rpginventory$getAdditionalEquipmentStack(slot.getIndex());
 		} else {
 			return original.call(slot);
 		}
@@ -201,7 +198,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
 	@WrapMethod(method = "damageArmor")
 	public void rpginventory$damageArmor(DamageSource source, float amount, Operation<Void> original) {
-		this.damageEquipment(source, amount, new EquipmentSlot[]{EquipmentSlot.FEET, EquipmentSlot.LEGS, EquipmentSlot.CHEST, EquipmentSlot.HEAD, ExtendedEquipmentSlot.GLOVES, ExtendedEquipmentSlot.SHOULDERS});
+		this.doHurtEquipment(source, amount, new EquipmentSlot[]{EquipmentSlot.FEET, EquipmentSlot.LEGS, EquipmentSlot.CHEST, EquipmentSlot.HEAD, ExtendedEquipmentSlot.GLOVES, ExtendedEquipmentSlot.SHOULDERS});
 	}
 
 	@WrapMethod(method = "getArmorItems")
@@ -214,16 +211,16 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 	}
 
 	@Override
-	public void onEquipStack(EquipmentSlot slot, ItemStack oldStack, ItemStack newStack) {
-		super.onEquipStack(slot, oldStack, newStack);
-		if (newStack.contains(RPGInventory.EXCLUSIVE_EQUIPMENT)) {
+	public void onEquipItem(EquipmentSlot slot, ItemStack oldStack, ItemStack newStack) {
+		super.onEquipItem(slot, oldStack, newStack);
+		if (newStack.has(RPGInventory.EXCLUSIVE_EQUIPMENT)) {
 			this.rpginventory$setShouldEjectExclusiveEquipment(true);
 		}
 	}
 
 	@Override
-	public Iterable<ItemStack> getEquippedItems() {
-		return Iterables.concat(this.getHandItems(), this.getAllArmorItems(), ((DuckPlayerInventoryMixin) this.inventory).rpginventory$getAdditionalNonArmorEquipmentItems());
+	public Iterable<ItemStack> getAllSlots() {
+		return Iterables.concat(this.getHandSlots(), this.getArmorAndBodyArmorSlots(), ((DuckPlayerInventoryMixin) this.inventory).rpginventory$getAdditionalNonArmorEquipmentItems());
 	}
 
 	@Override
@@ -234,73 +231,73 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 	@Override
 	public ItemStack rpginventory$getSheathedHandItemStack() {
 		ItemStack itemStack = ((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$getSheathedHand();
-		return rpginventory$isHandStackSheathed() && !itemStack.isIn(Tags.EMPTY_HAND_WEAPONS) && ItemUtils.isUsable(itemStack) && ItemUtils.isUsableByPlayer(itemStack, ((PlayerEntity) (Object) this)) ? itemStack : ItemStack.EMPTY;
+		return rpginventory$isHandStackSheathed() && !itemStack.is(Tags.EMPTY_HAND_WEAPONS) && ItemUtils.isUsable(itemStack) && ItemUtils.isUsableByPlayer(itemStack, ((Player) (Object) this)) ? itemStack : ItemStack.EMPTY;
 	}
 
 	@Override
 	public ItemStack rpginventory$getSheathedOffHandItemStack() {
 		ItemStack itemStack = ((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$getSheathedOffhand();
-		return rpginventory$isOffhandStackSheathed() && !itemStack.isIn(Tags.EMPTY_HAND_WEAPONS) && ItemUtils.isUsable(itemStack) && ItemUtils.isUsableByPlayer(itemStack, ((PlayerEntity) (Object) this)) ? itemStack : ItemStack.EMPTY;
+		return rpginventory$isOffhandStackSheathed() && !itemStack.is(Tags.EMPTY_HAND_WEAPONS) && ItemUtils.isUsable(itemStack) && ItemUtils.isUsableByPlayer(itemStack, ((Player) (Object) this)) ? itemStack : ItemStack.EMPTY;
 	}
 
 	@Override
 	public boolean rpginventory$isHandStackSheathed() {
-		return this.dataTracker.get(IS_HAND_STACK_SHEATHED);
+		return this.entityData.get(IS_HAND_STACK_SHEATHED);
 	}
 
 	@Override
 	public void rpginventory$setIsHandStackSheathed(boolean isHandStackSheathed) {
-		this.dataTracker.set(IS_HAND_STACK_SHEATHED, isHandStackSheathed);
+		this.entityData.set(IS_HAND_STACK_SHEATHED, isHandStackSheathed);
 	}
 
 	@Override
 	public boolean rpginventory$isOffhandStackSheathed() {
-		return this.dataTracker.get(IS_OFFHAND_STACK_SHEATHED);
+		return this.entityData.get(IS_OFFHAND_STACK_SHEATHED);
 	}
 
 	@Override
 	public void rpginventory$setIsOffhandStackSheathed(boolean isOffhandStackSheathed) {
-		this.dataTracker.set(IS_OFFHAND_STACK_SHEATHED, isOffhandStackSheathed);
+		this.entityData.set(IS_OFFHAND_STACK_SHEATHED, isOffhandStackSheathed);
 	}
 
 	@Override
 	public boolean rpginventory$isHandSlotOverhaulActive() {
-		return this.dataTracker.get(IS_HAND_SLOT_OVERHAUL_ACTIVE);
+		return this.entityData.get(IS_HAND_SLOT_OVERHAUL_ACTIVE);
 	}
 
 	@Override
 	public void rpginventory$setIsHandSlotOverhaulActive(boolean isHandSlotOverhaulActive) {
-		this.dataTracker.set(IS_HAND_SLOT_OVERHAUL_ACTIVE, isHandSlotOverhaulActive);
+		this.entityData.set(IS_HAND_SLOT_OVERHAUL_ACTIVE, isHandSlotOverhaulActive);
 	}
 
 	@Override
 	public boolean rpginventory$areAlternativeHandSlotsActive() {
-		return this.dataTracker.get(ARE_ALTERNATIVE_HAND_SLOTS_ACTIVE);
+		return this.entityData.get(ARE_ALTERNATIVE_HAND_SLOTS_ACTIVE);
 	}
 
 	@Override
 	public void rpginventory$setAreAlternativeHandSlotsActive(boolean areAlternativeHandSlotsActive) {
-		this.dataTracker.set(ARE_ALTERNATIVE_HAND_SLOTS_ACTIVE, areAlternativeHandSlotsActive);
+		this.entityData.set(ARE_ALTERNATIVE_HAND_SLOTS_ACTIVE, areAlternativeHandSlotsActive);
 	}
 
 	@Override
 	public int rpginventory$oldActiveSpellSlotAmount() {
-		return this.dataTracker.get(OLD_ACTIVE_SPELL_SLOT_AMOUNT);
+		return this.entityData.get(OLD_ACTIVE_SPELL_SLOT_AMOUNT);
 	}
 
 	@Override
 	public void rpginventory$setOldActiveSpellSlotAmount(int oldActiveSpellSlotAmount) {
-		this.dataTracker.set(OLD_ACTIVE_SPELL_SLOT_AMOUNT, oldActiveSpellSlotAmount);
+		this.entityData.set(OLD_ACTIVE_SPELL_SLOT_AMOUNT, oldActiveSpellSlotAmount);
 	}
 
 	@Override
 	public boolean rpginventory$shouldEjectExclusiveEquipment() {
-		return this.dataTracker.get(SHOULD_EJECT_EXCLUSIVE_EQUIPMENT);
+		return this.entityData.get(SHOULD_EJECT_EXCLUSIVE_EQUIPMENT);
 	}
 
 	@Override
 	public void rpginventory$setShouldEjectExclusiveEquipment(boolean shouldEjectExclusiveEquipment) {
-		this.dataTracker.set(SHOULD_EJECT_EXCLUSIVE_EQUIPMENT, shouldEjectExclusiveEquipment);
+		this.entityData.set(SHOULD_EJECT_EXCLUSIVE_EQUIPMENT, shouldEjectExclusiveEquipment);
 	}
 
 	@Override
@@ -314,9 +311,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 	}
 
 	@Unique
-	private HashMultimap<RegistryEntry<EntityAttribute>, EntityAttributeModifier> getNaturalAttributeModifiers(World world) {
-		HashMultimap<RegistryEntry<EntityAttribute>, EntityAttributeModifier> hashMultimap = HashMultimap.create();
-		hashMultimap.put(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT, new EntityAttributeModifier(RPGInventory.identifier("natural_spell_slot_amount_modifier"), RPGInventory.SERVER_CONFIG.inventorySlots.default_spell_slot_amount.get(), EntityAttributeModifier.Operation.ADD_VALUE));
+	private HashMultimap<Holder<Attribute>, AttributeModifier> getNaturalAttributeModifiers(Level world) {
+		HashMultimap<Holder<Attribute>, AttributeModifier> hashMultimap = HashMultimap.create();
+		hashMultimap.put(RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT, new AttributeModifier(RPGInventory.identifier("natural_spell_slot_amount_modifier"), RPGInventory.SERVER_CONFIG.inventorySlots.default_spell_slot_amount.get(), AttributeModifier.Operation.ADD_VALUE));
 		return hashMultimap;
 	}
 

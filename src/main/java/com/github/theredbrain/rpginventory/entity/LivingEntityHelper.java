@@ -1,78 +1,77 @@
 package com.github.theredbrain.rpginventory.entity;
 
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-
 import java.util.function.Predicate;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 
 public class LivingEntityHelper {
 
 	public static boolean rpginventory$hasEquipped(LivingEntity livingEntity, Predicate<ItemStack> predicate) {
-		if (predicate.test(livingEntity.getEquippedStack(EquipmentSlot.MAINHAND))) {
+		if (predicate.test(livingEntity.getItemBySlot(EquipmentSlot.MAINHAND))) {
 			return true;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(EquipmentSlot.OFFHAND))) {
+		if (predicate.test(livingEntity.getItemBySlot(EquipmentSlot.OFFHAND))) {
 			return true;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(EquipmentSlot.FEET))) {
+		if (predicate.test(livingEntity.getItemBySlot(EquipmentSlot.FEET))) {
 			return true;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(EquipmentSlot.LEGS))) {
+		if (predicate.test(livingEntity.getItemBySlot(EquipmentSlot.LEGS))) {
 			return true;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(EquipmentSlot.CHEST))) {
+		if (predicate.test(livingEntity.getItemBySlot(EquipmentSlot.CHEST))) {
 			return true;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(EquipmentSlot.HEAD))) {
+		if (predicate.test(livingEntity.getItemBySlot(EquipmentSlot.HEAD))) {
 			return true;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.SHOULDERS))) {
+		if (predicate.test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.SHOULDERS))) {
 			return true;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.GLOVES))) {
+		if (predicate.test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.GLOVES))) {
 			return true;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.RING_1))) {
+		if (predicate.test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.RING_1))) {
 			return true;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.RING_2))) {
+		if (predicate.test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.RING_2))) {
 			return true;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.NECKLACE))) {
+		if (predicate.test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.NECKLACE))) {
 			return true;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.BELT))) {
+		if (predicate.test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.BELT))) {
 			return true;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.RELIC))) {
+		if (predicate.test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.RELIC))) {
 			return true;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.CLASS_ITEM))) {
+		if (predicate.test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.CLASS_ITEM))) {
 			return true;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.SPELL_1))) {
+		if (predicate.test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.SPELL_1))) {
 			return true;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.SPELL_2))) {
+		if (predicate.test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.SPELL_2))) {
 			return true;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.SPELL_3))) {
+		if (predicate.test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.SPELL_3))) {
 			return true;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.SPELL_4))) {
+		if (predicate.test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.SPELL_4))) {
 			return true;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.SPELL_5))) {
+		if (predicate.test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.SPELL_5))) {
 			return true;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.SPELL_6))) {
+		if (predicate.test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.SPELL_6))) {
 			return true;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.SPELL_7))) {
+		if (predicate.test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.SPELL_7))) {
 			return true;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.SPELL_8))) {
+		if (predicate.test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.SPELL_8))) {
 			return true;
 		}
 		return false;
@@ -80,70 +79,70 @@ public class LivingEntityHelper {
 
 	public static int rpginventory$getAmountEquipped(LivingEntity livingEntity, Predicate<ItemStack> predicate) {
 		int i = 0;
-		if (predicate.test(livingEntity.getEquippedStack(EquipmentSlot.MAINHAND))) {
+		if (predicate.test(livingEntity.getItemBySlot(EquipmentSlot.MAINHAND))) {
 			i += 1;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(EquipmentSlot.OFFHAND))) {
+		if (predicate.test(livingEntity.getItemBySlot(EquipmentSlot.OFFHAND))) {
 			i += 1;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(EquipmentSlot.FEET))) {
+		if (predicate.test(livingEntity.getItemBySlot(EquipmentSlot.FEET))) {
 			i += 1;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(EquipmentSlot.LEGS))) {
+		if (predicate.test(livingEntity.getItemBySlot(EquipmentSlot.LEGS))) {
 			i += 1;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(EquipmentSlot.CHEST))) {
+		if (predicate.test(livingEntity.getItemBySlot(EquipmentSlot.CHEST))) {
 			i += 1;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(EquipmentSlot.HEAD))) {
+		if (predicate.test(livingEntity.getItemBySlot(EquipmentSlot.HEAD))) {
 			i += 1;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.SHOULDERS))) {
+		if (predicate.test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.SHOULDERS))) {
 			i += 1;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.GLOVES))) {
+		if (predicate.test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.GLOVES))) {
 			i += 1;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.RING_1))) {
+		if (predicate.test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.RING_1))) {
 			i += 1;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.RING_2))) {
+		if (predicate.test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.RING_2))) {
 			i += 1;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.NECKLACE))) {
+		if (predicate.test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.NECKLACE))) {
 			i += 1;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.BELT))) {
+		if (predicate.test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.BELT))) {
 			i += 1;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.RELIC))) {
+		if (predicate.test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.RELIC))) {
 			i += 1;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.CLASS_ITEM))) {
+		if (predicate.test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.CLASS_ITEM))) {
 			i += 1;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.SPELL_1))) {
+		if (predicate.test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.SPELL_1))) {
 			i += 1;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.SPELL_2))) {
+		if (predicate.test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.SPELL_2))) {
 			i += 1;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.SPELL_3))) {
+		if (predicate.test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.SPELL_3))) {
 			i += 1;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.SPELL_4))) {
+		if (predicate.test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.SPELL_4))) {
 			i += 1;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.SPELL_5))) {
+		if (predicate.test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.SPELL_5))) {
 			i += 1;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.SPELL_6))) {
+		if (predicate.test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.SPELL_6))) {
 			i += 1;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.SPELL_7))) {
+		if (predicate.test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.SPELL_7))) {
 			i += 1;
 		}
-		if (predicate.test(livingEntity.getEquippedStack(ExtendedEquipmentSlot.SPELL_8))) {
+		if (predicate.test(livingEntity.getItemBySlot(ExtendedEquipmentSlot.SPELL_8))) {
 			i += 1;
 		}
 		return i;

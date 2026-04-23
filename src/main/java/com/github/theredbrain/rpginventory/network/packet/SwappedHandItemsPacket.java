@@ -1,25 +1,25 @@
 package com.github.theredbrain.rpginventory.network.packet;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
-public record SwappedHandItemsPacket(int id, boolean mainHand) implements CustomPayload {
-	public static final CustomPayload.Id<SwappedHandItemsPacket> PACKET_ID = new CustomPayload.Id<>(RPGInventory.identifier("swapped_hand_items"));
-	public static final PacketCodec<RegistryByteBuf, SwappedHandItemsPacket> PACKET_CODEC = PacketCodec.of(SwappedHandItemsPacket::write, SwappedHandItemsPacket::new);
+public record SwappedHandItemsPacket(int id, boolean mainHand) implements CustomPacketPayload {
+	public static final CustomPacketPayload.Type<SwappedHandItemsPacket> PACKET_ID = new CustomPacketPayload.Type<>(RPGInventory.identifier("swapped_hand_items"));
+	public static final StreamCodec<RegistryFriendlyByteBuf, SwappedHandItemsPacket> PACKET_CODEC = StreamCodec.ofMember(SwappedHandItemsPacket::write, SwappedHandItemsPacket::new);
 
-	public SwappedHandItemsPacket(RegistryByteBuf registryByteBuf) {
+	public SwappedHandItemsPacket(RegistryFriendlyByteBuf registryByteBuf) {
 		this(registryByteBuf.readInt(), registryByteBuf.readBoolean());
 	}
 
-	private void write(RegistryByteBuf registryByteBuf) {
+	private void write(RegistryFriendlyByteBuf registryByteBuf) {
 		registryByteBuf.writeInt(id);
 		registryByteBuf.writeBoolean(mainHand);
 	}
 
 	@Override
-	public CustomPayload.Id<? extends CustomPayload> getId() {
+	public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
 		return PACKET_ID;
 	}
 }

@@ -4,22 +4,22 @@ import com.github.theredbrain.rpginventory.RPGInventoryClient;
 import com.github.theredbrain.rpginventory.network.packet.SheatheWeaponsPacket;
 import com.github.theredbrain.rpginventory.network.packet.SwapHandItemsPacket;
 import com.github.theredbrain.rpginventory.network.packet.ToggleTwoHandedStancePacket;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.text.Text;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 public class KeyBindingsRegistry {
 
-	public static KeyBinding sheatheWeapons;
-	public static KeyBinding toggleTwoHandedStance;
-	public static KeyBinding swapHand;
-	public static KeyBinding swapOffHand;
-	public static KeyBinding swapBothHands;
+	public static KeyMapping sheatheWeapons;
+	public static KeyMapping toggleTwoHandedStance;
+	public static KeyMapping swapHand;
+	public static KeyMapping swapOffHand;
+	public static KeyMapping swapBothHands;
 	public static boolean sheatheWeaponsBoolean;
 	public static boolean toggleTwoHandedStanceBoolean;
 	public static boolean swapHandBoolean;
@@ -27,33 +27,33 @@ public class KeyBindingsRegistry {
 	public static boolean swapBothHandsBoolean;
 
 	public static void registerKeyBindings() {
-		KeyBindingsRegistry.sheatheWeapons = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+		KeyBindingsRegistry.sheatheWeapons = KeyBindingHelper.registerKeyBinding(new KeyMapping(
 				"key.rpginventory.sheatheWeapons",
-				InputUtil.Type.KEYSYM,
+				InputConstants.Type.KEYSYM,
 				GLFW.GLFW_KEY_G,
 				"category.rpginventory.category"
 		));
-		KeyBindingsRegistry.toggleTwoHandedStance = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+		KeyBindingsRegistry.toggleTwoHandedStance = KeyBindingHelper.registerKeyBinding(new KeyMapping(
 				"key.rpginventory.toggleTwoHandedStance",
-				InputUtil.Type.KEYSYM,
+				InputConstants.Type.KEYSYM,
 				GLFW.GLFW_KEY_H,
 				"category.rpginventory.category"
 		));
-		KeyBindingsRegistry.swapHand = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+		KeyBindingsRegistry.swapHand = KeyBindingHelper.registerKeyBinding(new KeyMapping(
 				"key.rpginventory.swapHand",
-				InputUtil.Type.KEYSYM,
+				InputConstants.Type.KEYSYM,
 				GLFW.GLFW_KEY_X,
 				"category.rpginventory.category"
 		));
-		KeyBindingsRegistry.swapOffHand = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+		KeyBindingsRegistry.swapOffHand = KeyBindingHelper.registerKeyBinding(new KeyMapping(
 				"key.rpginventory.swapOffHand",
-				InputUtil.Type.KEYSYM,
+				InputConstants.Type.KEYSYM,
 				GLFW.GLFW_KEY_Y,
 				"category.rpginventory.category"
 		));
-		KeyBindingsRegistry.swapBothHands = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+		KeyBindingsRegistry.swapBothHands = KeyBindingHelper.registerKeyBinding(new KeyMapping(
 				"key.rpginventory.swapBothHands",
-				InputUtil.Type.KEYSYM,
+				InputConstants.Type.KEYSYM,
 				GLFW.GLFW_KEY_C,
 				"category.rpginventory.category"
 		));
@@ -102,9 +102,9 @@ public class KeyBindingsRegistry {
 	}
 
 	public static void sheatheWeapons() {
-		if (RPGInventoryClient.doesCurrentPlayerStatusPreventHandSlotAction(MinecraftClient.getInstance())) {
-			if (MinecraftClient.getInstance().player != null) {
-				MinecraftClient.getInstance().player.sendMessage(Text.translatable("hud.message.handSlotActionWasPrevented"), true);
+		if (RPGInventoryClient.doesCurrentPlayerStatusPreventHandSlotAction(Minecraft.getInstance())) {
+			if (Minecraft.getInstance().player != null) {
+				Minecraft.getInstance().player.displayClientMessage(Component.translatable("hud.message.handSlotActionWasPrevented"), true);
 				return;
 			}
 		}
@@ -112,9 +112,9 @@ public class KeyBindingsRegistry {
 	}
 
 	public static void toggleTwoHandedStance() {
-		if (RPGInventoryClient.doesCurrentPlayerStatusPreventHandSlotAction(MinecraftClient.getInstance())) {
-			if (MinecraftClient.getInstance().player != null) {
-				MinecraftClient.getInstance().player.sendMessage(Text.translatable("hud.message.handSlotActionWasPrevented"), true);
+		if (RPGInventoryClient.doesCurrentPlayerStatusPreventHandSlotAction(Minecraft.getInstance())) {
+			if (Minecraft.getInstance().player != null) {
+				Minecraft.getInstance().player.displayClientMessage(Component.translatable("hud.message.handSlotActionWasPrevented"), true);
 				return;
 			}
 		}
@@ -122,9 +122,9 @@ public class KeyBindingsRegistry {
 	}
 
 	public static void syncSlotSwapHand(boolean mainHand, boolean offHand) {
-		if (RPGInventoryClient.doesCurrentPlayerStatusPreventHandSlotAction(MinecraftClient.getInstance())) {
-			if (MinecraftClient.getInstance().player != null) {
-				MinecraftClient.getInstance().player.sendMessage(Text.translatable("hud.message.handSlotActionWasPrevented"), true);
+		if (RPGInventoryClient.doesCurrentPlayerStatusPreventHandSlotAction(Minecraft.getInstance())) {
+			if (Minecraft.getInstance().player != null) {
+				Minecraft.getInstance().player.displayClientMessage(Component.translatable("hud.message.handSlotActionWasPrevented"), true);
 				return;
 			}
 		}

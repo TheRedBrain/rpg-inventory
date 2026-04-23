@@ -3,10 +3,10 @@ package com.github.theredbrain.rpginventory.network.packet;
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerInventoryMixin;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 public class SwappedHandItemsPacketReceiver implements ClientPlayNetworking.PlayPayloadHandler<SwappedHandItemsPacket> {
 	@Override
@@ -16,10 +16,10 @@ public class SwappedHandItemsPacketReceiver implements ClientPlayNetworking.Play
 
 			int entityId = payload.id();
 			boolean mainHand = payload.mainHand();
-			ClientPlayerEntity clientPlayer = context.player();
+			LocalPlayer clientPlayer = context.player();
 
-			if (clientPlayer != null && clientPlayer.getWorld().getEntityById(entityId) != null) {
-				PlayerEntity player = (PlayerEntity) clientPlayer.getWorld().getEntityById(entityId);
+			if (clientPlayer != null && clientPlayer.level().getEntity(entityId) != null) {
+				Player player = (Player) clientPlayer.level().getEntity(entityId);
 				ItemStack alternativeItemStack;
 				ItemStack itemStack;
 				if (player != null && player != clientPlayer) {
@@ -30,9 +30,9 @@ public class SwappedHandItemsPacketReceiver implements ClientPlayNetworking.Play
 						((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setHand(alternativeItemStack);
 					} else {
 						alternativeItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getAlternativeOffhand().copy();
-						itemStack = player.getEquippedStack(EquipmentSlot.OFFHAND).copy();
+						itemStack = player.getItemBySlot(EquipmentSlot.OFFHAND).copy();
 						((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setAlternativeOffhand(itemStack);
-						player.equipStack(EquipmentSlot.OFFHAND, alternativeItemStack);
+						player.setItemSlot(EquipmentSlot.OFFHAND, alternativeItemStack);
 					}
 				}
 			}

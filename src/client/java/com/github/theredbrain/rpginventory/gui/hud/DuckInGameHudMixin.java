@@ -1,17 +1,18 @@
 package com.github.theredbrain.rpginventory.gui.hud;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.RenderTickCounter;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 public interface DuckInGameHudMixin {
 	@Nullable
-	PlayerEntity rpginventory$cameraPlayerAccessor();
+	Player rpginventory$cameraPlayerAccessor();
 
-	MinecraftClient rpginventory$clientAccessor();
+	Minecraft rpginventory$clientAccessor();
 
-	void rpginventory$renderHotbarItem_Invoker(DrawContext context, int x, int y, RenderTickCounter tickCounter, PlayerEntity player, ItemStack stack, int seed);
+	void rpginventory$extractSlot_Invoker(final GuiGraphicsExtractor graphics, final int x, final int y, final DeltaTracker deltaTracker, final Player player, final ItemStack itemStack, final int seed);
 }

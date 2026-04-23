@@ -3,18 +3,18 @@ package com.github.theredbrain.rpginventory.screen;
 import com.github.theredbrain.rpginventory.block.entity.MannequinBlockEntity;
 import com.github.theredbrain.rpginventory.registry.ScreenHandlerTypesRegistry;
 import com.github.theredbrain.slotcustomizationapi.api.SlotCustomization;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Inventory;
 
 public class VanillaMannequinScreenHandler extends AbstractMannequinScreenHandler {
 
-	public VanillaMannequinScreenHandler(int syncId, PlayerInventory playerInventory, MannequinBlockData data) {
-		this(syncId, playerInventory, new SimpleInventory(MannequinBlockEntity.INVENTORY_SIZE), data.blockPos(), data.canChangeInventory(), data.canEquip());
+	public VanillaMannequinScreenHandler(int syncId, Inventory playerInventory, MannequinBlockData data) {
+		this(syncId, playerInventory, new SimpleContainer(MannequinBlockEntity.INVENTORY_SIZE), data.blockPos(), data.canChangeInventory(), data.canEquip());
 	}
 
-	public VanillaMannequinScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, BlockPos blockPos, boolean canChangeInventory, boolean canEquip) {
+	public VanillaMannequinScreenHandler(int syncId, Inventory playerInventory, Container inventory, BlockPos blockPos, boolean canChangeInventory, boolean canEquip) {
 		super(ScreenHandlerTypesRegistry.VANILLA_MANNEQUIN_SCREEN_HANDLER, syncId, playerInventory, inventory, blockPos, canChangeInventory, canEquip);
 
 		// 0 - 26

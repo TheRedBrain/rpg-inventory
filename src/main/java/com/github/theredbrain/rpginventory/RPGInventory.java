@@ -24,22 +24,23 @@ import com.github.theredbrain.rpginventory.util.SwapHandAttributesHelper;
 import me.fzzyhmstrs.fzzy_config.api.ConfigApiJava;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.component.ComponentType;
-import net.minecraft.component.type.ProfileComponent;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.scoreboard.Team;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Unit;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ResolvableProfile;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.LevelData;
+import net.minecraft.world.scores.PlayerTeam;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,32 +55,32 @@ public class RPGInventory implements ModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	public static ServerConfig SERVER_CONFIG;
 
-	public static RegistryEntry<EntityAttribute> ACTIVE_SPELL_SLOT_AMOUNT;
+	public static Holder<Attribute> ACTIVE_SPELL_SLOT_AMOUNT;
 
-	public static RegistryEntry<StatusEffect> CIVILISATION;
-	public static RegistryEntry<StatusEffect> KEEP_INVENTORY;
-	public static RegistryEntry<StatusEffect> NEEDS_TWO_HANDING;
-	public static RegistryEntry<StatusEffect> NO_ATTACK_ITEM;
-	public static RegistryEntry<StatusEffect> WILDERNESS;
-	public static RegistryEntry<StatusEffect> PVP;
+	public static Holder<MobEffect> CIVILISATION;
+	public static Holder<MobEffect> KEEP_INVENTORY;
+	public static Holder<MobEffect> NEEDS_TWO_HANDING;
+	public static Holder<MobEffect> NO_ATTACK_ITEM;
+	public static Holder<MobEffect> WILDERNESS;
+	public static Holder<MobEffect> PVP;
 
-	public static ComponentType<Unit> BOUNDS_TO_PLAYER;
-	public static ComponentType<ProfileComponent> PLAYER_BOUND;
-	public static ComponentType<Unit> SAVES_CRAFTING_PLAYER;
-	public static ComponentType<ProfileComponent> PLAYER_CRAFTED;
-	public static ComponentType<AdvancementLockedComponent> ADVANCEMENT_LOCKED;
+	public static DataComponentType<Unit> BOUNDS_TO_PLAYER;
+	public static DataComponentType<ResolvableProfile> PLAYER_BOUND;
+	public static DataComponentType<Unit> SAVES_CRAFTING_PLAYER;
+	public static DataComponentType<ResolvableProfile> PLAYER_CRAFTED;
+	public static DataComponentType<AdvancementLockedComponent> ADVANCEMENT_LOCKED;
 	/*
 	 * Equipped items with this component can't be unequipped manually and don't drop on death. They are kept or vanish instead.
 	 * Interacting with a 'mannequin' equips items with this component. Slots have to be either empty or contain a stack with this component for that to happen.
 	 *
 	 * Mannequins have a second interaction that removes all equipped items with this component.
 	 */
-	public static ComponentType<Unit> LOAD_OUT_ITEM;
-	public static ComponentType<Unit> IGNORES_EQUIPMENT_CHANGE_RESTRICTIONS;
-	public static ComponentType<Unit> IS_KEPT_ON_DEATH;
-	public static ComponentType<Unit> IS_DESTROYED_ON_DEATH;
-	public static ComponentType<Unit> UNUSABLE_WHEN_LOW_DURABILITY;
-	public static ComponentType<ExclusiveEquipmentComponent> EXCLUSIVE_EQUIPMENT;
+	public static DataComponentType<Unit> LOAD_OUT_ITEM;
+	public static DataComponentType<Unit> IGNORES_EQUIPMENT_CHANGE_RESTRICTIONS;
+	public static DataComponentType<Unit> IS_KEPT_ON_DEATH;
+	public static DataComponentType<Unit> IS_DESTROYED_ON_DEATH;
+	public static DataComponentType<Unit> UNUSABLE_WHEN_LOW_DURABILITY;
+	public static DataComponentType<ExclusiveEquipmentComponent> EXCLUSIVE_EQUIPMENT;
 
 	public static final boolean isRPGCraftingLoaded = FabricLoader.getInstance().isModLoaded("rpgcrafting");
 	public static final boolean isBackpackAttributeLoaded = FabricLoader.getInstance().isModLoaded("backpackattribute");
@@ -253,7 +254,7 @@ public class RPGInventory implements ModInitializer {
 	}
 
 	public static Identifier identifier(String path) {
-		return Identifier.of(MOD_ID, path);
+		return Identifier.fromNamespaceAndPath(MOD_ID, path);
 	}
 
 	public static void info(String message) {

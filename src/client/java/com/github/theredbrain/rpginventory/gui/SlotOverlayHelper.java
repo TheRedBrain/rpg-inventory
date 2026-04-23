@@ -7,36 +7,37 @@ import com.github.theredbrain.rpginventory.config.ClientConfig;
 import com.github.theredbrain.rpginventory.network.DuckClientAdvancementManagerMixin;
 import com.github.theredbrain.rpginventory.util.ItemUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.advancement.AdvancementEntry;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.network.ClientAdvancementManager;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
+import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.multiplayer.ClientAdvancements;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.ItemStack;
 
 public class SlotOverlayHelper {
 
-	public static void drawCustomSlotOverlays(DrawContext context, int x, int y, ItemStack itemStack, ClientPlayerEntity clientPlayerEntity) {
+	public static void drawCustomSlotOverlays(GuiGraphicsExtractor guiGraphicsExtractor, int x, int y, ItemStack itemStack, LocalPlayer clientPlayerEntity) {
 
 		ClientConfig clientConfig = RPGInventoryClient.CLIENT_CONFIG;
 		if (!ItemUtils.isUsable(itemStack) && RPGInventoryClient.CLIENT_CONFIG.slots_with_unusable_items_have_overlay.get()) {
-			drawSlotHighlight(context, x, y, 0, clientConfig.first_overlay_colour_for_slots_with_unusable_items.toInt(), clientConfig.second_overlay_colour_for_slots_with_unusable_items.toInt());
-		} else if (itemStack.contains(RPGInventory.LOAD_OUT_ITEM) && RPGInventoryClient.CLIENT_CONFIG.slots_with_loadout_items_have_overlay.get()) {
-			drawSlotHighlight(context, x, y, 0, clientConfig.first_overlay_colour_for_slots_with_loadout_items.toInt(), clientConfig.second_overlay_colour_for_slots_with_loadout_items.toInt());
+			drawSlotHighlight(guiGraphicsExtractor, x, y, 0, clientConfig.first_overlay_colour_for_slots_with_unusable_items.toInt(), clientConfig.second_overlay_colour_for_slots_with_unusable_items.toInt());
+		} else if (itemStack.has(RPGInventory.LOAD_OUT_ITEM) && RPGInventoryClient.CLIENT_CONFIG.slots_with_loadout_items_have_overlay.get()) {
+			drawSlotHighlight(guiGraphicsExtractor, x, y, 0, clientConfig.first_overlay_colour_for_slots_with_loadout_items.toInt(), clientConfig.second_overlay_colour_for_slots_with_loadout_items.toInt());
 		} else if (!ItemUtils.isOwnedByPlayer(itemStack, clientPlayerEntity.getGameProfile()) && RPGInventoryClient.CLIENT_CONFIG.slots_with_not_owned_items_have_overlay.get()) {
-			drawSlotHighlight(context, x, y, 0, clientConfig.first_overlay_colour_for_slots_with_not_owned_items.toInt(), clientConfig.second_overlay_colour_for_slots_with_not_owned_items.toInt());
+			drawSlotHighlight(guiGraphicsExtractor, x, y, 0, clientConfig.first_overlay_colour_for_slots_with_not_owned_items.toInt(), clientConfig.second_overlay_colour_for_slots_with_not_owned_items.toInt());
 		} else if (RPGInventoryClient.CLIENT_CONFIG.slots_with_advancement_locked_items_have_overlay.get()) {
 			int status = getClientSideAdvancementLockedStatus(itemStack, clientPlayerEntity);
 			if (status == 0) {
-				drawSlotHighlight(context, x, y, 0, clientConfig.first_overlay_colour_for_slots_with_advancement_not_unlocked_items.toInt(), clientConfig.second_overlay_colour_for_slots_with_advancement_not_unlocked_items.toInt());
+				drawSlotHighlight(guiGraphicsExtractor, x, y, 0, clientConfig.first_overlay_colour_for_slots_with_advancement_not_unlocked_items.toInt(), clientConfig.second_overlay_colour_for_slots_with_advancement_not_unlocked_items.toInt());
 			} else if (status == 2) {
-				drawSlotHighlight(context, x, y, 0, clientConfig.first_overlay_colour_for_slots_with_advancement_locked_items.toInt(), clientConfig.second_overlay_colour_for_slots_with_advancement_locked_items.toInt());
+				drawSlotHighlight(guiGraphicsExtractor, x, y, 0, clientConfig.first_overlay_colour_for_slots_with_advancement_locked_items.toInt(), clientConfig.second_overlay_colour_for_slots_with_advancement_locked_items.toInt());
 			}
 		}
 	}
 
-	public static int getClientSideAdvancementLockedStatus(ItemStack itemStack, ClientPlayerEntity clientPlayerEntity) {
+	public static int getClientSideAdvancementLockedStatus(ItemStack itemStack, LocalPlayer clientPlayerEntity) {
 		// status 0: not unlocked, 1: unlocked, 2: locked
 		int status = 1;
 
@@ -47,16 +48,16 @@ public class SlotOverlayHelper {
 				status = 0;
 			}
 
-			ClientAdvancementManager clientAdvancementManager = clientPlayerEntity.networkHandler.getAdvancementHandler();
+			ClientAdvancements clientAdvancementManager = clientPlayerEntity.connection.getAdvancements();
 
-			AdvancementEntry unlockAdvancementEntry = null;
-			AdvancementEntry lockAdvancementEntry = null;
+			AdvancementHolder unlockAdvancementEntry = null;
+			AdvancementHolder lockAdvancementEntry = null;
 			if (clientAdvancementManager != null) {
 				if (!advancementLockedComponent.unlock_advancement().isEmpty()) {
-					unlockAdvancementEntry = clientAdvancementManager.get(Identifier.of(advancementLockedComponent.unlock_advancement()));
+					unlockAdvancementEntry = clientAdvancementManager.get(Identifier.parse(advancementLockedComponent.unlock_advancement()));
 				}
 				if (!advancementLockedComponent.lock_advancement().isEmpty()) {
-					lockAdvancementEntry = clientAdvancementManager.get(Identifier.of(advancementLockedComponent.lock_advancement()));
+					lockAdvancementEntry = clientAdvancementManager.get(Identifier.parse(advancementLockedComponent.lock_advancement()));
 				}
 			}
 
@@ -79,10 +80,10 @@ public class SlotOverlayHelper {
 		return status;
 	}
 
-	private static void drawSlotHighlight(DrawContext context, int x, int y, int z, int colorStart, int colorEnd) {
+	private static void drawSlotHighlight(GuiGraphicsExtractor context, int x, int y, int z, int colorStart, int colorEnd) {
 		RenderSystem.disableDepthTest();
 		RenderSystem.colorMask(true, true, true, false);
-		context.fillGradient(RenderLayer.getGuiOverlay(), x, y, x + 16, y + 16, colorStart, colorEnd, z);
+		context.fillGradient(RenderType.guiOverlay(), x, y, x + 16, y + 16, colorStart, colorEnd, z);
 		RenderSystem.colorMask(true, true, true, true);
 		RenderSystem.enableDepthTest();
 	}

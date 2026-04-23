@@ -17,9 +17,9 @@
     "screen.ArmorSlotMixin",
     "screen.PlayerScreenHandlerMixin",
     "screen.PlayerScreenHandlerOffHandSlotMixin",
-    "server.network.EntityTrackerEntryMixin",
+    "server.network.ServerEntityMixin",
     "server.network.ServerPlayerEntityMixin",
-    "server.network.ServerPlayNetworkHandlerMixin",
+    "server.network.ServerGamePacketListenerImplMixin"
   ],
   "injectors": {
     "defaultRequire": 1

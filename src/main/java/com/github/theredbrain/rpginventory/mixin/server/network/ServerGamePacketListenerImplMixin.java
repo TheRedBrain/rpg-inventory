@@ -3,14 +3,14 @@ package com.github.theredbrain.rpginventory.mixin.server.network;
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(ServerPlayNetworkHandler.class)
-public class ServerPlayNetworkHandlerMixin {
+@Mixin(ServerGamePacketListenerImpl.class)
+public class ServerGamePacketListenerImplMixin {
 
 	/**
 	 * effectively disables the vanilla swap item mechanic, when the hand slot overhaul is enabled
@@ -18,16 +18,16 @@ public class ServerPlayNetworkHandlerMixin {
 	 * @reason prevent item duplication
 	 */
 	@WrapOperation(
-			method = "onPlayerAction",
+			method = "handlePlayerAction(Lnet/minecraft/network/protocol/game/ServerboundPlayerActionPacket;)V",
 			at = @At(
 					value = "INVOKE",
-					target = "Lnet/minecraft/server/network/ServerPlayerEntity;isSpectator()Z",
-					ordinal = 0
+					target = "Lnet/minecraft/server/level/ServerPlayer;isSpectator()Z",
+					ordinal = 1
 			)
 	)
-	public boolean rpginventory$wrap_isSpectator(ServerPlayerEntity instance, Operation<Boolean> original) {
+	public boolean rpginventory$wrap_isSpectator(ServerPlayer instance, Operation<Boolean> original) {
 		if (RPGInventory.isHandSlotOverhaulActive()) {
-			instance.sendMessage(Text.translatable("hud.message.disabledVanillaItemSwapMechanic"));
+			instance.sendSystemMessage(Component.translatable("hud.message.disabledVanillaItemSwapMechanic"));
 			return true;
 		} else {
 			return original.call(instance);

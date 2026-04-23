@@ -5,17 +5,17 @@ import com.github.theredbrain.rpginventory.config.ServerConfig;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerInventoryMixin;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.item.ItemStack;
 
 public class SwapHandItemsPacketReceiver implements ServerPlayNetworking.PlayPayloadHandler<SwapHandItemsPacket> {
 	@Override
 	public void receive(SwapHandItemsPacket payload, ServerPlayNetworking.Context context) {
 
-		ServerPlayerEntity player = context.player();
+		ServerPlayer player = context.player();
 
 		ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
 
@@ -38,17 +38,17 @@ public class SwapHandItemsPacketReceiver implements ServerPlayNetworking.PlayPay
 			if (mainHand) {
 				handItemStack = handIsSheathed ? ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSheathedHand().copy() : ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getHand().copy();
 				alternativeHandItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getAlternativeHand().copy();
-				actionIsNotPossible = actionIsNotPossible || player.getItemCooldownManager().isCoolingDown(handItemStack.getItem()) || player.getItemCooldownManager().isCoolingDown(alternativeHandItemStack.getItem());
+				actionIsNotPossible = actionIsNotPossible || player.getCooldowns().isOnCooldown(handItemStack) || player.getCooldowns().isOnCooldown(alternativeHandItemStack);
 				staminaCost += RPGInventory.isStaminaAttributesLoaded ? serverConfig.handSlotOverhaul.staminaAttributesCompat.swapping_main_hand_items_stamina_cost.get() : 0.0F;
 			}
 			if (offHand) {
-				offhandItemStack = offHandIsSheathed ? ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSheathedOffhand().copy() : player.getInventory().offHand.get(0).copy();
+				offhandItemStack = offHandIsSheathed ? ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSheathedOffhand().copy() : player.getInventory().offhand.get(0).copy();
 				alternativeOffhandItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getAlternativeOffhand().copy();
-				actionIsNotPossible = actionIsNotPossible || player.getItemCooldownManager().isCoolingDown(offhandItemStack.getItem()) || player.getItemCooldownManager().isCoolingDown(alternativeOffhandItemStack.getItem());
+				actionIsNotPossible = actionIsNotPossible || player.getCooldowns().isOnCooldown(offhandItemStack) || player.getCooldowns().isOnCooldown(alternativeOffhandItemStack);
 				staminaCost += RPGInventory.isStaminaAttributesLoaded ? serverConfig.handSlotOverhaul.staminaAttributesCompat.swapping_off_hand_items_stamina_cost.get() : 0.0F;
 			}
 			if (actionIsNotPossible) {
-				player.sendMessageToClient(Text.translatable("hud.message.handSlotActionWasPrevented"), true);
+				player.sendSystemMessage(Component.translatable("hud.message.handSlotActionWasPrevented"), true);
 				return;
 			}
 			if (mainHand && offHand) {
@@ -63,7 +63,7 @@ public class SwapHandItemsPacketReceiver implements ServerPlayNetworking.PlayPay
 				return;
 			}
 			if (staminaCost > 0.0F && !player.isCreative() && serverConfig.handSlotOverhaul.staminaAttributesCompat.swapping_hand_items_requires_stamina.get() && RPGInventory.getCurrentStamina(player) <= 0 && (!serverConfig.handSlotOverhaul.staminaAttributesCompat.swapping_hand_items_requires_stamina_cost.get() || RPGInventory.getCurrentStamina(player) < staminaCost)) {
-				player.sendMessageToClient(Text.translatable("hud.message.staminaTooLow"), true);
+				player.sendSystemMessage(Component.translatable("hud.message.staminaTooLow"), true);
 				return;
 			}
 
@@ -79,7 +79,7 @@ public class SwapHandItemsPacketReceiver implements ServerPlayNetworking.PlayPay
 				if (offHandIsSheathed) {
 					((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedOffhand(alternativeOffhandItemStack);
 				} else {
-					player.getInventory().offHand.set(0, alternativeOffhandItemStack);
+					player.getInventory().offhand.set(0, alternativeOffhandItemStack);
 				}
 				((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setAlternativeOffhand(offhandItemStack);
 			}
@@ -88,20 +88,20 @@ public class SwapHandItemsPacketReceiver implements ServerPlayNetworking.PlayPay
 			}
 			if (serverConfig.handSlotOverhaul.enable_item_cooldown_after_hand_swapping.get()) {
 				if (mainHand) {
-					player.getItemCooldownManager().set(handItemStack.getItem(), serverConfig.handSlotOverhaul.swapping_main_hand_cooldown.get());
-					player.getItemCooldownManager().set(alternativeHandItemStack.getItem(), serverConfig.handSlotOverhaul.swapping_main_hand_cooldown.get());
+					player.getCooldowns().addCooldown(handItemStack, serverConfig.handSlotOverhaul.swapping_main_hand_cooldown.get());
+					player.getCooldowns().addCooldown(alternativeHandItemStack, serverConfig.handSlotOverhaul.swapping_main_hand_cooldown.get());
 				}
 				if (offHand) {
-					player.getItemCooldownManager().set(offhandItemStack.getItem(), serverConfig.handSlotOverhaul.swapping_offhand_cooldown.get());
-					player.getItemCooldownManager().set(alternativeOffhandItemStack.getItem(), serverConfig.handSlotOverhaul.swapping_offhand_cooldown.get());
+					player.getCooldowns().addCooldown(offhandItemStack, serverConfig.handSlotOverhaul.swapping_offhand_cooldown.get());
+					player.getCooldowns().addCooldown(alternativeOffhandItemStack, serverConfig.handSlotOverhaul.swapping_offhand_cooldown.get());
 				}
 			}
-			player.getServerWorld().playSound(null, player.getBlockPos().getX(), player.getBlockPos().getY(), player.getBlockPos().getZ(), SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.PLAYERS, 1.0F, 1.0F);
+			player.level().playSound(null, player.blockPosition().getX(), player.blockPosition().getY(), player.blockPosition().getZ(), SoundEvents.ARMOR_EQUIP_GENERIC, SoundSource.PLAYERS, 1.0F, 1.0F);
 		} else {
 			if (serverConfig.handSlotOverhaul.enable_alternative_hand_slots.get()) {
-				player.sendMessageToClient(Text.translatable("hud.message.alternativeHandSlotsDisabledByServer"), true);
+				player.sendSystemMessage(Component.translatable("hud.message.alternativeHandSlotsDisabledByServer"), true);
 			} else {
-				player.sendMessageToClient(Text.translatable("hud.message.handSlotOverhaulIsDisabledByServer"), true);
+				player.sendSystemMessage(Component.translatable("hud.message.handSlotOverhaulIsDisabledByServer"), true);
 			}
 		}
 	}

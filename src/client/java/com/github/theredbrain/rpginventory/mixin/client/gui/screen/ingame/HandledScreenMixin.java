@@ -5,32 +5,32 @@ import com.github.theredbrain.rpginventory.network.packet.UpdateAdvancementLocke
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.text.Text;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(HandledScreen.class)
-public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen {
+@Mixin(AbstractContainerScreen.class)
+public abstract class HandledScreenMixin<T extends AbstractContainerMenu> extends Screen {
 
 	@Unique
 	private int cachedInvChangeCount = 0;
 
-	protected HandledScreenMixin(Text title) {
+	protected HandledScreenMixin(Component title) {
 		super(title);
 	}
 
 	@Inject(method = "handledScreenTick", at = @At("TAIL"))
 	protected void rpginventory$handledScreenTick(CallbackInfo ci) {
-		if (this.client != null && this.client.player != null && this.cachedInvChangeCount != this.client.player.getInventory().getChangeCount()) {
+		if (this.minecraft != null && this.minecraft.player != null && this.cachedInvChangeCount != this.minecraft.player.getInventory().getTimesChanged()) {
 			ClientPlayNetworking.send(new UpdateAdvancementLockedItemsPacket());
-			this.cachedInvChangeCount = this.client.player.getInventory().getChangeCount();
+			this.cachedInvChangeCount = this.minecraft.player.getInventory().getTimesChanged();
 		}
 	}
 
@@ -53,7 +53,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
 					ordinal = 0
 			)
 	)
-	public boolean rpginventory$wrap_matchesMouse(KeyBinding instance, int code, Operation<Boolean> original) {
+	public boolean rpginventory$wrap_matchesMouse(KeyMapping instance, int code, Operation<Boolean> original) {
 		if (RPGInventory.isHandSlotOverhaulActive()) {
 			return false;
 		} else {
@@ -74,7 +74,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
 					ordinal = 0
 			)
 	)
-	public boolean rpginventory$wrap_matchesKey(KeyBinding instance, int keyCode, int scanCode, Operation<Boolean> original) {
+	public boolean rpginventory$wrap_matchesKey(KeyMapping instance, int keyCode, int scanCode, Operation<Boolean> original) {
 		if (RPGInventory.isHandSlotOverhaulActive()) {
 			return false;
 		} else {

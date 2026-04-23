@@ -1,8 +1,7 @@
 package com.github.theredbrain.rpginventory.entity.player;
 
-import net.minecraft.item.ItemStack;
-
 import java.util.List;
+import net.minecraft.world.item.ItemStack;
 
 public interface DuckPlayerInventoryMixin {
 

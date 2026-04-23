@@ -1,26 +1,26 @@
 package com.github.theredbrain.rpginventory.network.packet;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
-public record SheathedWeaponsPacket(int id, boolean mainHand, boolean isSheathed) implements CustomPayload {
-	public static final CustomPayload.Id<SheathedWeaponsPacket> PACKET_ID = new CustomPayload.Id<>(RPGInventory.identifier("sheathed_weapons"));
-	public static final PacketCodec<RegistryByteBuf, SheathedWeaponsPacket> PACKET_CODEC = PacketCodec.of(SheathedWeaponsPacket::write, SheathedWeaponsPacket::new);
+public record SheathedWeaponsPacket(int id, boolean mainHand, boolean isSheathed) implements CustomPacketPayload {
+	public static final CustomPacketPayload.Type<SheathedWeaponsPacket> PACKET_ID = new CustomPacketPayload.Type<>(RPGInventory.identifier("sheathed_weapons"));
+	public static final StreamCodec<RegistryFriendlyByteBuf, SheathedWeaponsPacket> PACKET_CODEC = StreamCodec.ofMember(SheathedWeaponsPacket::write, SheathedWeaponsPacket::new);
 
-	public SheathedWeaponsPacket(RegistryByteBuf registryByteBuf) {
+	public SheathedWeaponsPacket(RegistryFriendlyByteBuf registryByteBuf) {
 		this(registryByteBuf.readInt(), registryByteBuf.readBoolean(), registryByteBuf.readBoolean());
 	}
 
-	private void write(RegistryByteBuf registryByteBuf) {
+	private void write(RegistryFriendlyByteBuf registryByteBuf) {
 		registryByteBuf.writeInt(id);
 		registryByteBuf.writeBoolean(mainHand);
 		registryByteBuf.writeBoolean(isSheathed);
 	}
 
 	@Override
-	public CustomPayload.Id<? extends CustomPayload> getId() {
+	public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
 		return PACKET_ID;
 	}
 }

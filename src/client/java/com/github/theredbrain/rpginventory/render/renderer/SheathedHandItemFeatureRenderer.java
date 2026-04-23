@@ -4,43 +4,43 @@ import com.github.theredbrain.rpginventory.RPGInventoryClient;
 import com.github.theredbrain.rpginventory.config.ClientConfig;
 import com.github.theredbrain.rpginventory.entity.RendersSheathedWeapons;
 import com.github.theredbrain.rpginventory.registry.Tags;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.feature.FeatureRendererContext;
-import net.minecraft.client.render.entity.feature.HeldItemFeatureRenderer;
-import net.minecraft.client.render.entity.model.PlayerEntityModel;
-import net.minecraft.client.render.item.HeldItemRenderer;
-import net.minecraft.client.render.model.json.ModelTransformationMode;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.math.RotationAxis;
+import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.ItemInHandRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
 
 @Environment(EnvType.CLIENT)
-public class SheathedHandItemFeatureRenderer<T extends LivingEntity> extends HeldItemFeatureRenderer<T, PlayerEntityModel<T>> {
+public class SheathedHandItemFeatureRenderer<T extends LivingEntity> extends ItemInHandLayer<T, PlayerModel<T>> {
 
-	private final HeldItemRenderer heldItemRenderer;
+	private final ItemInHandRenderer heldItemRenderer;
 
-	public SheathedHandItemFeatureRenderer(FeatureRendererContext<T, PlayerEntityModel<T>> context, HeldItemRenderer heldItemRenderer) {
+	public SheathedHandItemFeatureRenderer(RenderLayerParent<T, PlayerModel<T>> context, ItemInHandRenderer heldItemRenderer) {
 		super(context, heldItemRenderer);
 		this.heldItemRenderer = heldItemRenderer;
 	}
 
 	@Override
-	public void render(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, T livingEntity, float f, float g, float h, float j, float k, float l) {
+	public void render(PoseStack matrixStack, MultiBufferSource vertexConsumerProvider, int i, T livingEntity, float f, float g, float h, float j, float k, float l) {
 
 		if (livingEntity instanceof RendersSheathedWeapons renderEquippedTrinkets) {
 
 			ItemStack handStack = renderEquippedTrinkets.rpginventory$getSheathedHandItemStack();
 
-			if (!handStack.isEmpty() && !handStack.isIn(Tags.NOT_SHOWN_WHEN_IN_SHEATHED_HAND)) {
+			if (!handStack.isEmpty() && !handStack.is(Tags.NOT_SHOWN_WHEN_IN_SHEATHED_HAND)) {
 				Item handStackItem = handStack.getItem();
-				boolean hasStackedEquippedInChestSlot = livingEntity.hasStackEquipped(EquipmentSlot.CHEST);
+				boolean hasStackedEquippedInChestSlot = livingEntity.hasItemInSlot(EquipmentSlot.CHEST);
 				double initial_translation_x = -0.3;
 				double initial_translation_y = 0.05;
 				double initial_translation_z = 0.16;
@@ -50,7 +50,7 @@ public class SheathedHandItemFeatureRenderer<T extends LivingEntity> extends Hel
 				float rotation_positive_z = 0.0F;
 				float rotation_positive_y = 90.0F;
 				float rotation_positive_x = 35.0F;
-				String itemId = Registries.ITEM.getId(handStackItem).toString();
+				String itemId = BuiltInRegistries.ITEM.getKey(handStackItem).toString();
 				ClientConfig.ItemConfiguration itemConfiguration = RPGInventoryClient.CLIENT_CONFIG.sheathed_hand_item_positions.get(itemId);
 				if (itemConfiguration != null) {
 					initial_translation_x = itemConfiguration.initial_translation_x;
@@ -63,10 +63,10 @@ public class SheathedHandItemFeatureRenderer<T extends LivingEntity> extends Hel
 					rotation_positive_y = itemConfiguration.rotation_positive_y;
 					rotation_positive_x = itemConfiguration.rotation_positive_x;
 				}
-				matrixStack.push();
-				ModelPart modelPart = this.getContextModel().body;
-				modelPart.rotate(matrixStack);
-				if (this.getContextModel().child) {
+				matrixStack.pushPose();
+				ModelPart modelPart = this.getParentModel().body;
+				modelPart.translateAndRotate(matrixStack);
+				if (this.getParentModel().young) {
 					matrixStack.translate(0.0F, 0.75F, 0.0F);
 					matrixStack.scale(0.5F, 0.5F, 0.5F);
 				}
@@ -74,11 +74,11 @@ public class SheathedHandItemFeatureRenderer<T extends LivingEntity> extends Hel
 				if (hasStackedEquippedInChestSlot) {
 					matrixStack.translate(equipped_chest_offset_x, equipped_chest_offset_y, equipped_chest_offset_z);
 				}
-				matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(rotation_positive_z));
-				matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rotation_positive_y));
-				matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(rotation_positive_x));
-				heldItemRenderer.renderItem(livingEntity, handStack, ModelTransformationMode.THIRD_PERSON_RIGHT_HAND, false, matrixStack, vertexConsumerProvider, i);
-				matrixStack.pop();
+				matrixStack.mulPose(Axis.ZP.rotationDegrees(rotation_positive_z));
+				matrixStack.mulPose(Axis.YP.rotationDegrees(rotation_positive_y));
+				matrixStack.mulPose(Axis.XP.rotationDegrees(rotation_positive_x));
+				heldItemRenderer.renderItem(livingEntity, handStack, ItemDisplayContext.THIRD_PERSON_RIGHT_HAND, false, matrixStack, vertexConsumerProvider, i);
+				matrixStack.popPose();
 			}
 		}
 	}

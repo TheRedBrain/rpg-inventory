@@ -19,9 +19,9 @@ import com.github.theredbrain.rpginventory.registry.ScreenHandlerTypesRegistry;
 import me.fzzyhmstrs.fzzy_config.api.ConfigApiJava;
 import me.fzzyhmstrs.fzzy_config.api.RegisterType;
 import net.fabricmc.api.ClientModInitializer;
-import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -106,8 +106,8 @@ public class RPGInventoryClient implements ClientModInitializer {
 		// Registry
 		ClientEventsRegistry.initializeClientEvents();
 		KeyBindingsRegistry.registerKeyBindings();
-		HandledScreens.register(ScreenHandlerTypesRegistry.RPG_MANNEQUIN_SCREEN_HANDLER, RPGMannequinScreen::new);
-		HandledScreens.register(ScreenHandlerTypesRegistry.VANILLA_MANNEQUIN_SCREEN_HANDLER, VanillaMannequinScreen::new);
+		MenuScreens.register(ScreenHandlerTypesRegistry.RPG_MANNEQUIN_SCREEN_HANDLER, RPGMannequinScreen::new);
+		MenuScreens.register(ScreenHandlerTypesRegistry.VANILLA_MANNEQUIN_SCREEN_HANDLER, VanillaMannequinScreen::new);
 		if (RPGInventory.isNumismaticOverhaulLoaded && RPGInventory.isOwoLibLoaded) {
 			NumismaticOverhaulClientCompat.init();
 		}

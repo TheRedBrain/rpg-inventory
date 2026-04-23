@@ -1,12 +1,12 @@
 package com.github.theredbrain.rpginventory.item;
 
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.UnbreakableComponent;
-import net.minecraft.item.Item;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.util.Unit;
+import net.minecraft.world.item.Item;
 
 public class EmptyHandWeapon extends Item {
 
-	public EmptyHandWeapon(Settings settings) {
-		super(settings.component(DataComponentTypes.UNBREAKABLE, new UnbreakableComponent(false)));
+	public EmptyHandWeapon(Properties settings) {
+		super(settings.component(DataComponents.UNBREAKABLE, Unit.INSTANCE));
 	}
 }

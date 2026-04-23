@@ -5,9 +5,6 @@ import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.mojang.serialization.Codec;
-import net.minecraft.component.type.AttributeModifierSlot;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.util.StringIdentifiable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -17,16 +14,19 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.function.Predicate;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 
-@Mixin(AttributeModifierSlot.class)
+@Mixin(EquipmentSlotGroup.class)
 public class AttributeModifierSlotMixin {
 	@Invoker("<init>")
-	private static AttributeModifierSlot init(String enumName, int index, int id, String name, EquipmentSlot slot) {
+	private static EquipmentSlotGroup init(String enumName, int index, int id, String name, EquipmentSlot slot) {
 		throw new AssertionError(); // unreachable statement
 	}
 
 	@Invoker("<init>")
-	private static AttributeModifierSlot init(String enumName, int index, int id, String name, Predicate<EquipmentSlot> slotPredicate) {
+	private static EquipmentSlotGroup init(String enumName, int index, int id, String name, Predicate<EquipmentSlot> slotPredicate) {
 		throw new AssertionError(); // unreachable statement
 	}
 
@@ -38,7 +38,7 @@ public class AttributeModifierSlotMixin {
 	@Shadow
 	@Final
 	@Mutable
-	public static final Codec<AttributeModifierSlot> CODEC;
+	public static final Codec<EquipmentSlotGroup> CODEC;
 
 //	public static final PacketCodec<ByteBuf, AttributeModifierSlot> PACKET_CODEC = PacketCodecs.indexed(ID_TO_VALUE, id -> id.id);
 
@@ -51,24 +51,24 @@ public class AttributeModifierSlotMixin {
 	@Shadow
 	@Final
 	@Mutable
-	private static AttributeModifierSlot[] field_49231;
+	private static EquipmentSlotGroup[] field_49231;
 
 	@WrapMethod(method = "forEquipmentSlot")
-	private static AttributeModifierSlot forEquipmentSlot(EquipmentSlot slot, Operation<AttributeModifierSlot> original) {
+	private static EquipmentSlotGroup forEquipmentSlot(EquipmentSlot slot, Operation<EquipmentSlotGroup> original) {
 		if (slot == EquipmentSlot.MAINHAND) {
-			return AttributeModifierSlot.MAINHAND;
+			return EquipmentSlotGroup.MAINHAND;
 		} else if (slot == EquipmentSlot.OFFHAND) {
-			return AttributeModifierSlot.OFFHAND;
+			return EquipmentSlotGroup.OFFHAND;
 		} else if (slot == EquipmentSlot.FEET) {
-			return AttributeModifierSlot.FEET;
+			return EquipmentSlotGroup.FEET;
 		} else if (slot == EquipmentSlot.LEGS) {
-			return AttributeModifierSlot.LEGS;
+			return EquipmentSlotGroup.LEGS;
 		} else if (slot == EquipmentSlot.CHEST) {
-			return AttributeModifierSlot.CHEST;
+			return EquipmentSlotGroup.CHEST;
 		} else if (slot == EquipmentSlot.HEAD) {
-			return AttributeModifierSlot.HEAD;
+			return EquipmentSlotGroup.HEAD;
 		} else if (slot == EquipmentSlot.BODY) {
-			return AttributeModifierSlot.BODY;
+			return EquipmentSlotGroup.BODY;
 		} else if (slot == ExtendedEquipmentSlot.BELT) {
 			return ExtendedAttributeModifierSlot.BELT;
 		} else if (slot == ExtendedEquipmentSlot.GLOVES) {
@@ -109,8 +109,8 @@ public class AttributeModifierSlotMixin {
 	// add new property from the static constructor
 	// static blocks are merged into the target class (at the end)
 	static {
-		ArrayList<AttributeModifierSlot> values = new ArrayList<>(Arrays.asList(field_49231));
-		AttributeModifierSlot last = values.get(values.size() - 1);
+		ArrayList<EquipmentSlotGroup> values = new ArrayList<>(Arrays.asList(field_49231));
+		EquipmentSlotGroup last = values.get(values.size() - 1);
 
 		// add new value
 		values.add(init("BELT", last.ordinal() + 1, last.ordinal() + 1, "belt", ExtendedEquipmentSlot.BELT));
@@ -132,12 +132,12 @@ public class AttributeModifierSlotMixin {
 		values.add(init("RELIC", last.ordinal() + 17, last.ordinal() + 17, "relic", ExtendedEquipmentSlot.RELIC));
 		values.add(init("CLASS_ITEM", last.ordinal() + 18, last.ordinal() + 18, "class_item", ExtendedEquipmentSlot.CLASS_ITEM));
 
-		field_49231 = values.toArray(new AttributeModifierSlot[0]);
+		field_49231 = values.toArray(new EquipmentSlotGroup[0]);
 
 //		ID_TO_VALUE = ValueLists.createIdToValueFunction(
 //				id -> id.id, values(), ValueLists.OutOfBoundsHandling.ZERO
 //		);
 
-		CODEC = StringIdentifiable.createCodec(AttributeModifierSlot::values);
+		CODEC = StringRepresentable.fromEnum(EquipmentSlotGroup::values);
 	}
 }

@@ -17,20 +17,20 @@ public class ServerPacketRegistry {
 
 	public static void init() {
 
-		PayloadTypeRegistry.playS2C().register(SheathedWeaponsPacket.PACKET_ID, SheathedWeaponsPacket.PACKET_CODEC);
+		PayloadTypeRegistry.clientboundPlay().register(SheathedWeaponsPacket.PACKET_ID, SheathedWeaponsPacket.PACKET_CODEC);
 
-		PayloadTypeRegistry.playS2C().register(SwappedHandItemsPacket.PACKET_ID, SwappedHandItemsPacket.PACKET_CODEC);
+		PayloadTypeRegistry.clientboundPlay().register(SwappedHandItemsPacket.PACKET_ID, SwappedHandItemsPacket.PACKET_CODEC);
 
-		PayloadTypeRegistry.playC2S().register(SwapHandItemsPacket.PACKET_ID, SwapHandItemsPacket.PACKET_CODEC);
+		PayloadTypeRegistry.serverboundPlay().register(SwapHandItemsPacket.PACKET_ID, SwapHandItemsPacket.PACKET_CODEC);
 		ServerPlayNetworking.registerGlobalReceiver(SwapHandItemsPacket.PACKET_ID, new SwapHandItemsPacketReceiver());
 
-		PayloadTypeRegistry.playC2S().register(SheatheWeaponsPacket.PACKET_ID, SheatheWeaponsPacket.PACKET_CODEC);
+		PayloadTypeRegistry.serverboundPlay().register(SheatheWeaponsPacket.PACKET_ID, SheatheWeaponsPacket.PACKET_CODEC);
 		ServerPlayNetworking.registerGlobalReceiver(SheatheWeaponsPacket.PACKET_ID, new SheatheWeaponsPacketReceiver());
 
-		PayloadTypeRegistry.playC2S().register(ToggleTwoHandedStancePacket.PACKET_ID, ToggleTwoHandedStancePacket.PACKET_CODEC);
+		PayloadTypeRegistry.serverboundPlay().register(ToggleTwoHandedStancePacket.PACKET_ID, ToggleTwoHandedStancePacket.PACKET_CODEC);
 		ServerPlayNetworking.registerGlobalReceiver(ToggleTwoHandedStancePacket.PACKET_ID, new ToggleTwoHandedStancePacketReceiver());
 
-		PayloadTypeRegistry.playC2S().register(UpdateAdvancementLockedItemsPacket.PACKET_ID, UpdateAdvancementLockedItemsPacket.PACKET_CODEC);
+		PayloadTypeRegistry.serverboundPlay().register(UpdateAdvancementLockedItemsPacket.PACKET_ID, UpdateAdvancementLockedItemsPacket.PACKET_CODEC);
 		ServerPlayNetworking.registerGlobalReceiver(UpdateAdvancementLockedItemsPacket.PACKET_ID, new UpdateAdvancementLockedItemsPacketReceiver());
 	}
 }

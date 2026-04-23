@@ -3,49 +3,46 @@ package com.github.theredbrain.rpginventory.gui.screen.ingame;
 import com.github.theredbrain.rpginventory.screen.AbstractMannequinScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.sound.PositionedSoundInstance;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.player.Inventory;
 
 @Environment(EnvType.CLIENT)
-public abstract class AbstractMannequinScreen<T extends AbstractMannequinScreenHandler> extends HandledScreen<T> {
-	public static final Identifier SLOT_TEXTURE = Identifier.ofVanilla("textures/gui/sprites/container/slot.png");
-	public static final Text EQUIP_BUTTON_LABEL = Text.translatable("gui.mannequin.equip_button_label");
-	public static final Text UNEQUIP_BUTTON_LABEL = Text.translatable("gui.mannequin.unequip_button_label");
+public abstract class AbstractMannequinScreen<T extends AbstractMannequinScreenHandler> extends AbstractContainerScreen<T> {
+	public static final Identifier SLOT_TEXTURE = Identifier.withDefaultNamespace("textures/gui/sprites/container/slot.png");
+	public static final Component EQUIP_BUTTON_LABEL = Component.translatable("gui.mannequin.equip_button_label");
+	public static final Component UNEQUIP_BUTTON_LABEL = Component.translatable("gui.mannequin.unequip_button_label");
 
-	public AbstractMannequinScreen(T handler, PlayerInventory inventory, Text title) {
-		super(handler, inventory, title);
+	public AbstractMannequinScreen(final T menu, final Inventory inventory, final Component title, final int imageWidth, final int imageHeight) {
+		super(menu, inventory, title, imageWidth, imageHeight);
+	}
+
+	public AbstractMannequinScreen(final T menu, final Inventory inventory, final Component title) {
+		super(menu, inventory, title);
 	}
 
 	@Override
 	protected void init() {
 
-		this.titleX = 98;
-		this.titleY = 6;
-		this.playerInventoryTitleX = 8;
-		this.playerInventoryTitleY = 6;
+		this.titleLabelX = 98;
+		this.titleLabelY = 6;
+		this.inventoryLabelX = 8;
+		this.inventoryLabelY = 6;
 
 		super.init();
 	}
 
 	protected void buttonCallback(int index) {
-		if (this.client != null && this.client.interactionManager != null && this.handler.onButtonClick(this.client.player, index)) {
+		if (this.minecraft.gameMode != null && this.minecraft.player != null && this.menu.clickMenuButton(this.minecraft.player, index)) {
 
-			MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_STONECUTTER_SELECT_RECIPE, 1.0F));
+			Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_STONECUTTER_SELECT_RECIPE, 1.0F));
 
-			this.client.interactionManager.clickButton(this.handler.syncId, index);
+			this.minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId, index);
 		}
-	}
-
-	@Override
-	public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-		super.render(context, mouseX, mouseY, delta);
-		this.drawMouseoverTooltip(context, mouseX, mouseY);
 	}
 
 }

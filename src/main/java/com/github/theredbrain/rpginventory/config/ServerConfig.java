@@ -12,8 +12,8 @@ import me.fzzyhmstrs.fzzy_config.validation.misc.ValidatedBoolean;
 import me.fzzyhmstrs.fzzy_config.validation.number.ValidatedDouble;
 import me.fzzyhmstrs.fzzy_config.validation.number.ValidatedFloat;
 import me.fzzyhmstrs.fzzy_config.validation.number.ValidatedInt;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
 
 @ConvertFrom(fileName = "server.json5", folder = "rpginventory")
 public class ServerConfig extends Config {
@@ -94,7 +94,7 @@ public class ServerConfig extends Config {
 
 	public static class StatusEffects extends ConfigSection {
 
-		public ValidatedIdentifier building_mode_status_effect_identifier = ValidatedIdentifier.ofRegistry(Identifier.of("scriptblocks:building_mode"), Registries.STATUS_EFFECT);
+		public ValidatedIdentifier building_mode_status_effect_identifier = ValidatedIdentifier.ofRegistry(Identifier.parse("scriptblocks:building_mode"), BuiltInRegistries.MOB_EFFECT);
 
 		public CivilisationSection civilisationSection = new CivilisationSection();
 

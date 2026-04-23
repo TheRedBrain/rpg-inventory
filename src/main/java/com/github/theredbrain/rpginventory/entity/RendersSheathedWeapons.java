@@ -1,6 +1,6 @@
 package com.github.theredbrain.rpginventory.entity;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public interface RendersSheathedWeapons {
 

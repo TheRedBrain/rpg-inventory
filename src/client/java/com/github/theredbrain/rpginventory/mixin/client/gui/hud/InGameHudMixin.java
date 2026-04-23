@@ -7,12 +7,12 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.hud.InGameHud;
-import net.minecraft.client.render.RenderTickCounter;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,53 +20,55 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Environment(EnvType.CLIENT)
-@Mixin(InGameHud.class)
+@Mixin(Gui.class)
 public abstract class InGameHudMixin implements DuckInGameHudMixin {
 
 	@Shadow
-	protected abstract PlayerEntity getCameraPlayer();
-
-	@Shadow
-	protected abstract void renderHotbarItem(DrawContext context, int x, int y, RenderTickCounter tickCounter, PlayerEntity player, ItemStack stack, int seed);
+	protected abstract void extractSlot(final GuiGraphicsExtractor graphics, final int x, final int y, final DeltaTracker deltaTracker, final Player player, final ItemStack itemStack, final int seed);
 
 	@Shadow
 	@Final
-	private MinecraftClient client;
+	private Minecraft minecraft;
+
+	@Shadow
+	@org.jspecify.annotations.Nullable
+	protected abstract Player getCameraPlayer();
 
 	@WrapOperation(
-			method = "renderMainHud",
-			at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;renderHotbar(Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/client/render/RenderTickCounter;)V")
+			method = "extractHotbarAndDecorations",
+			at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;extractItemHotbar(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V")
 	)
-	private void rpginventory$wrap_renderMainHud(InGameHud instance, DrawContext context, RenderTickCounter tickCounter, Operation<Void> original) {
+	private void rpginventory$wrap_renderMainHud(Gui instance, GuiGraphicsExtractor graphics, DeltaTracker deltaTracker, Operation<Void> original) {
 		if (RPGInventoryClient.CLIENT_CONFIG.hotBarOverhaul.enable_hotbar_overhaul.get()) {
-			InGameHudHelper.rpginventory$renderOverhauledHotbar(instance, context, tickCounter);
+			InGameHudHelper.rpginventory$renderOverhauledHotbar(instance, graphics, deltaTracker);
 		} else {
-			original.call(instance, context, tickCounter);
+			original.call(instance, graphics, deltaTracker);
 		}
 	}
 
 	@Nullable
 	@Override
-	public PlayerEntity rpginventory$cameraPlayerAccessor() {
+	public Player rpginventory$cameraPlayerAccessor() {
 		return this.getCameraPlayer();
 	}
 
 	@Override
-	public MinecraftClient rpginventory$clientAccessor() {
-		return this.client;
+	public Minecraft rpginventory$clientAccessor() {
+		return this.minecraft;
 	}
 
 	@Override
-	public void rpginventory$renderHotbarItem_Invoker(DrawContext context, int x, int y, RenderTickCounter tickCounter, PlayerEntity player, ItemStack stack, int seed) {
-		this.renderHotbarItem(context, x, y, tickCounter, player, stack, seed);
+	public void rpginventory$extractSlot_Invoker(final GuiGraphicsExtractor graphics, final int x, final int y, final DeltaTracker deltaTracker, final Player player, final ItemStack itemStack, final int seed) {
+		this.extractSlot(graphics, x, y, deltaTracker, player, itemStack, seed);
 	}
 
+	// TODO should this be removed?
 	// disables rendering of the armor bar when disabled in the client config
 	@WrapOperation(
-			method = "renderArmor",
-			at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;getArmor()I")
+			method = "extractArmor",
+			at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;getArmorValue()I")
 	)
-	private static int rpginventory$wrap_getArmor(PlayerEntity instance, Operation<Integer> original) {
+	private static int rpginventory$wrap_getArmorValue(Player instance, Operation<Integer> original) {
 		return RPGInventoryClient.CLIENT_CONFIG.show_armor_bar.get() ? original.call(instance) : 0;
 	}
 }

@@ -11,15 +11,7 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.block.BlockState;
-import net.minecraft.component.type.ProfileComponent;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.world.entity.EntityEquipment;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -33,59 +25,68 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ResolvableProfile;
+import net.minecraft.world.level.block.state.BlockState;
 
-@Mixin(PlayerInventory.class)
+@Mixin(Inventory.class)
 public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 
 	@Shadow
 	@Final
-	public DefaultedList<ItemStack> main;
+	public NonNullList<ItemStack> main;
 
 	@Shadow
 	@Final
 	@Mutable
-	public DefaultedList<ItemStack> armor;
+	public NonNullList<ItemStack> armor;
 	@Shadow
 	@Final
-	public PlayerEntity player;
+	public Player player;
 
 	@Shadow
 	@Final
-	public DefaultedList<ItemStack> offHand;
+	public NonNullList<ItemStack> offHand;
 
 	@Mutable
 	@Shadow
 	@Final
-	private List<DefaultedList<ItemStack>> combinedInventory;
+	private List<NonNullList<ItemStack>> combinedInventory;
 
 	@Shadow
 	public abstract ItemStack getMainHandStack();
 
 	@Unique
-	private DefaultedList<ItemStack> rpginventory$handSlot;
+	private NonNullList<ItemStack> rpginventory$handSlot;
 
 	@Unique
-	private DefaultedList<ItemStack> rpginventory$sheathedHandSlots;
+	private NonNullList<ItemStack> rpginventory$sheathedHandSlots;
 
 	@Unique
-	private DefaultedList<ItemStack> rpginventory$emptyHandSlots;
+	private NonNullList<ItemStack> rpginventory$emptyHandSlots;
 
 	@Unique
-	private DefaultedList<ItemStack> rpginventory$alternativeHandSlots;
+	private NonNullList<ItemStack> rpginventory$alternativeHandSlots;
 
 	@Unique
-	private DefaultedList<ItemStack> rpginventory$additionalSlots;
+	private NonNullList<ItemStack> rpginventory$additionalSlots;
 
 	/**
 	 * @author TheRedBrain
 	 */
 	@Inject(method = "<init>", at = @At("TAIL"))
-	public void PlayerInventory(PlayerEntity player, CallbackInfo ci) {
-		this.rpginventory$handSlot = DefaultedList.ofSize(1, ItemStack.EMPTY);
-		this.rpginventory$sheathedHandSlots = DefaultedList.ofSize(2, ItemStack.EMPTY);
-		this.rpginventory$emptyHandSlots = DefaultedList.ofSize(2, ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON.getDefaultStack());
-		this.rpginventory$alternativeHandSlots = DefaultedList.ofSize(2, ItemStack.EMPTY);
-		this.rpginventory$additionalSlots = DefaultedList.ofSize(16, ItemStack.EMPTY);
+	public void Inventory(Player player, EntityEquipment equipment, CallbackInfo ci) {
+		this.rpginventory$handSlot = NonNullList.withSize(1, ItemStack.EMPTY);
+		this.rpginventory$sheathedHandSlots = NonNullList.withSize(2, ItemStack.EMPTY);
+		this.rpginventory$emptyHandSlots = NonNullList.withSize(2, ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON.getDefaultInstance());
+		this.rpginventory$alternativeHandSlots = NonNullList.withSize(2, ItemStack.EMPTY);
+		this.rpginventory$additionalSlots = NonNullList.withSize(16, ItemStack.EMPTY);
 		this.combinedInventory = ImmutableList.of(this.main, this.armor, this.offHand, this.rpginventory$handSlot, this.rpginventory$sheathedHandSlots, this.rpginventory$emptyHandSlots, this.rpginventory$alternativeHandSlots, this.rpginventory$additionalSlots);
 	}
 
@@ -108,70 +109,70 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 	 * @reason save additional hand slots
 	 */
 	@Overwrite
-	public NbtList writeNbt(NbtList nbtList) {
-		NbtCompound nbtCompound;
+	public ListTag writeNbt(ListTag nbtList) {
+		CompoundTag nbtCompound;
 		int i;
 		for (i = 0; i < this.main.size(); i++) {
 			if (!this.main.get(i).isEmpty()) {
-				nbtCompound = new NbtCompound();
+				nbtCompound = new CompoundTag();
 				nbtCompound.putByte("Slot", (byte) i);
-				nbtList.add(this.main.get(i).encode(this.player.getRegistryManager(), nbtCompound));
+				nbtList.add(this.main.get(i).save(this.player.registryAccess(), nbtCompound));
 			}
 		}
 
 		for (i = 0; i < this.armor.size(); i++) {
 			if (!this.armor.get(i).isEmpty()) {
-				nbtCompound = new NbtCompound();
+				nbtCompound = new CompoundTag();
 				nbtCompound.putByte("Slot", (byte) (i + 100));
-				nbtList.add(this.armor.get(i).encode(this.player.getRegistryManager(), nbtCompound));
+				nbtList.add(this.armor.get(i).save(this.player.registryAccess(), nbtCompound));
 			}
 		}
 
 		for (int ixx = 0; ixx < this.offHand.size(); ixx++) {
 			if (!this.offHand.get(ixx).isEmpty()) {
-				nbtCompound = new NbtCompound();
+				nbtCompound = new CompoundTag();
 				nbtCompound.putByte("Slot", (byte) (ixx + 150));
-				nbtList.add(this.offHand.get(ixx).encode(this.player.getRegistryManager(), nbtCompound));
+				nbtList.add(this.offHand.get(ixx).save(this.player.registryAccess(), nbtCompound));
 			}
 		}
 
 		for (i = 0; i < this.rpginventory$handSlot.size(); i++) {
 			if (!this.rpginventory$handSlot.get(i).isEmpty()) {
-				nbtCompound = new NbtCompound();
+				nbtCompound = new CompoundTag();
 				nbtCompound.putByte("Slot", (byte) (i + 160));
-				nbtList.add(this.rpginventory$handSlot.get(i).encode(this.player.getRegistryManager(), nbtCompound));
+				nbtList.add(this.rpginventory$handSlot.get(i).save(this.player.registryAccess(), nbtCompound));
 			}
 		}
 
 		for (i = 0; i < this.rpginventory$sheathedHandSlots.size(); i++) {
 			if (!this.rpginventory$sheathedHandSlots.get(i).isEmpty()) {
-				nbtCompound = new NbtCompound();
+				nbtCompound = new CompoundTag();
 				nbtCompound.putByte("Slot", (byte) (i + 170));
-				nbtList.add(this.rpginventory$sheathedHandSlots.get(i).encode(this.player.getRegistryManager(), nbtCompound));
+				nbtList.add(this.rpginventory$sheathedHandSlots.get(i).save(this.player.registryAccess(), nbtCompound));
 			}
 		}
 
 		for (i = 0; i < this.rpginventory$emptyHandSlots.size(); i++) {
 			if (!this.rpginventory$emptyHandSlots.get(i).isEmpty()) {
-				nbtCompound = new NbtCompound();
+				nbtCompound = new CompoundTag();
 				nbtCompound.putByte("Slot", (byte) (i + 180));
-				nbtList.add(this.rpginventory$emptyHandSlots.get(i).encode(this.player.getRegistryManager(), nbtCompound));
+				nbtList.add(this.rpginventory$emptyHandSlots.get(i).save(this.player.registryAccess(), nbtCompound));
 			}
 		}
 
 		for (i = 0; i < this.rpginventory$alternativeHandSlots.size(); i++) {
 			if (!this.rpginventory$alternativeHandSlots.get(i).isEmpty()) {
-				nbtCompound = new NbtCompound();
+				nbtCompound = new CompoundTag();
 				nbtCompound.putByte("Slot", (byte) (i + 190));
-				nbtList.add(this.rpginventory$alternativeHandSlots.get(i).encode(this.player.getRegistryManager(), nbtCompound));
+				nbtList.add(this.rpginventory$alternativeHandSlots.get(i).save(this.player.registryAccess(), nbtCompound));
 			}
 		}
 
 		for (i = 0; i < this.rpginventory$additionalSlots.size(); i++) {
 			if (!this.rpginventory$additionalSlots.get(i).isEmpty()) {
-				nbtCompound = new NbtCompound();
+				nbtCompound = new CompoundTag();
 				nbtCompound.putByte("Slot", (byte) (i + 200));
-				nbtList.add(this.rpginventory$additionalSlots.get(i).encode(this.player.getRegistryManager(), nbtCompound));
+				nbtList.add(this.rpginventory$additionalSlots.get(i).save(this.player.registryAccess(), nbtCompound));
 			}
 		}
 
@@ -185,7 +186,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 	 * @reason save additional slots
 	 */
 	@Overwrite
-	public void readNbt(NbtList nbtList) {
+	public void readNbt(ListTag nbtList) {
 		this.main.clear();
 		this.armor.clear();
 		this.offHand.clear();
@@ -196,9 +197,9 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 		this.rpginventory$additionalSlots.clear();
 
 		for (int i = 0; i < nbtList.size(); i++) {
-			NbtCompound nbtCompound = nbtList.getCompound(i);
+			CompoundTag nbtCompound = nbtList.getCompound(i);
 			int j = nbtCompound.getByte("Slot") & 255;
-			ItemStack itemStack = (ItemStack) ItemStack.fromNbt(this.player.getRegistryManager(), nbtCompound).orElse(ItemStack.EMPTY);
+			ItemStack itemStack = (ItemStack) ItemStack.parse(this.player.registryAccess(), nbtCompound).orElse(ItemStack.EMPTY);
 			if (j >= 0 && j < this.main.size()) {
 				this.main.set(j, itemStack);
 			} else if (j >= 100 && j < this.armor.size() + 100) {
@@ -259,14 +260,14 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 
 	@Inject(method = "setStack", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/collection/DefaultedList;set(ILjava/lang/Object;)Ljava/lang/Object;"))
 	public void rpginventory$setStack(int slot, ItemStack stack, CallbackInfo ci) {
-		if (stack.contains(RPGInventory.BOUNDS_TO_PLAYER) && (!this.player.isCreative() || RPGInventory.SERVER_CONFIG.enable_item_bounding_in_creative.get())) {
+		if (stack.has(RPGInventory.BOUNDS_TO_PLAYER) && (!this.player.isCreative() || RPGInventory.SERVER_CONFIG.enable_item_bounding_in_creative.get())) {
 			stack.remove(RPGInventory.BOUNDS_TO_PLAYER);
-			if (!stack.contains(RPGInventory.PLAYER_BOUND)) {
-				stack.set(RPGInventory.PLAYER_BOUND, new ProfileComponent(this.player.getGameProfile()));
+			if (!stack.has(RPGInventory.PLAYER_BOUND)) {
+				stack.set(RPGInventory.PLAYER_BOUND, ResolvableProfile.createResolved(this.player.getGameProfile()));
 			}
 		}
 		// fallback safety to avoid empty hand items in the regular inventory
-		if (!(slot == 44 || slot == 45) && stack.isIn(Tags.EMPTY_HAND_WEAPONS)) {
+		if (!(slot == 44 || slot == 45) && stack.is(Tags.EMPTY_HAND_WEAPONS)) {
 			stack = ItemStack.EMPTY;
 		}
 	}
@@ -276,15 +277,15 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 		for (List<ItemStack> list : this.combinedInventory) {
 			for (int i = 0; i < list.size(); i++) {
 				ItemStack itemStack = (ItemStack) list.get(i);
-				if (itemStack.contains(RPGInventory.IS_KEPT_ON_DEATH) || itemStack.isIn(Tags.EMPTY_HAND_WEAPONS)) {
+				if (itemStack.has(RPGInventory.IS_KEPT_ON_DEATH) || itemStack.is(Tags.EMPTY_HAND_WEAPONS)) {
 					continue;
 				}
-				if (itemStack.contains(RPGInventory.IS_DESTROYED_ON_DEATH) || RPGInventory.SERVER_CONFIG.destroy_dropped_items_on_death.get()) {
+				if (itemStack.has(RPGInventory.IS_DESTROYED_ON_DEATH) || RPGInventory.SERVER_CONFIG.destroy_dropped_items_on_death.get()) {
 					list.set(i, ItemStack.EMPTY);
 					continue;
 				}
 				if (!itemStack.isEmpty()) {
-					this.player.dropItem(itemStack, true, false);
+					this.player.drop(itemStack, true, false);
 					list.set(i, ItemStack.EMPTY);
 				}
 			}
@@ -313,7 +314,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 					ordinal = 1
 			)
 	)
-	public boolean rpginventory$wrap_canStackAddMore(PlayerInventory instance, ItemStack existingStack, ItemStack stack, Operation<Boolean> original) {
+	public boolean rpginventory$wrap_canStackAddMore(Inventory instance, ItemStack existingStack, ItemStack stack, Operation<Boolean> original) {
 		if (RPGInventory.isHandSlotOverhaulActive()) {
 			return false;
 		} else {
@@ -326,7 +327,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 	)
 	public float rpginventory$wrap_getBlockBreakingSpeed(BlockState block, Operation<Float> original) {
 		if (RPGInventory.isHandSlotOverhaulActive()) {
-			return this.getMainHandStack().getMiningSpeedMultiplier(block);
+			return this.getMainHandStack().getDestroySpeed(block);
 		} else {
 			return original.call(block);
 		}
@@ -338,7 +339,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 	public ItemStack rpginventory$wrap_dropSelectedItem(boolean entireStack, Operation<ItemStack> original) {
 		if (RPGInventory.isHandSlotOverhaulActive()) {
 			if (!((DuckPlayerEntityMixin) this.player).rpginventory$isHandStackSheathed() && !this.rpginventory$getHand().isEmpty()) {
-				return Inventories.splitStack(this.rpginventory$handSlot, 0, entireStack ? this.rpginventory$getHand().getCount() : 1);
+				return ContainerHelper.removeItem(this.rpginventory$handSlot, 0, entireStack ? this.rpginventory$getHand().getCount() : 1);
 			}
 		}
 		return original.call(entireStack);

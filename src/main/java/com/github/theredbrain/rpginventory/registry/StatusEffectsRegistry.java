@@ -2,20 +2,20 @@ package com.github.theredbrain.rpginventory.registry;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.effect.RPGInventoryStatusEffect;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectCategory;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
 
 public class StatusEffectsRegistry {
 
-	public static final StatusEffect CIVILISATION = new RPGInventoryStatusEffect(StatusEffectCategory.BENEFICIAL);
-	public static final StatusEffect KEEP_INVENTORY = new RPGInventoryStatusEffect(StatusEffectCategory.BENEFICIAL);
-	public static final StatusEffect NEEDS_TWO_HANDING = new RPGInventoryStatusEffect(StatusEffectCategory.NEUTRAL);
-	public static final StatusEffect NO_ATTACK_ITEM = new RPGInventoryStatusEffect(StatusEffectCategory.NEUTRAL);
-	public static final StatusEffect WILDERNESS = new RPGInventoryStatusEffect(StatusEffectCategory.HARMFUL);
-	public static final StatusEffect PVP = new RPGInventoryStatusEffect(StatusEffectCategory.NEUTRAL);
+	public static final MobEffect CIVILISATION = new RPGInventoryStatusEffect(MobEffectCategory.BENEFICIAL);
+	public static final MobEffect KEEP_INVENTORY = new RPGInventoryStatusEffect(MobEffectCategory.BENEFICIAL);
+	public static final MobEffect NEEDS_TWO_HANDING = new RPGInventoryStatusEffect(MobEffectCategory.NEUTRAL);
+	public static final MobEffect NO_ATTACK_ITEM = new RPGInventoryStatusEffect(MobEffectCategory.NEUTRAL);
+	public static final MobEffect WILDERNESS = new RPGInventoryStatusEffect(MobEffectCategory.HARMFUL);
+	public static final MobEffect PVP = new RPGInventoryStatusEffect(MobEffectCategory.NEUTRAL);
 
 	public static void init() {
 		// --- Attribute Modifiers ---
@@ -33,7 +33,7 @@ public class StatusEffectsRegistry {
 		RPGInventory.PVP = register("pvp", PVP);
 	}
 
-	private static RegistryEntry<StatusEffect> register(String identifierString, StatusEffect statusEffect) {
-		return Registry.registerReference(Registries.STATUS_EFFECT, RPGInventory.identifier(identifierString), statusEffect);
+	private static Holder<MobEffect> register(String identifierString, MobEffect statusEffect) {
+		return Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT, RPGInventory.identifier(identifierString), statusEffect);
 	}
 }

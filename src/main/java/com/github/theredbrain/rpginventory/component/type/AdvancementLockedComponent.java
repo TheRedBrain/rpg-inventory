@@ -2,9 +2,9 @@ package com.github.theredbrain.rpginventory.component.type;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 
 public record AdvancementLockedComponent(
 		String unlock_advancement,
@@ -25,18 +25,18 @@ public record AdvancementLockedComponent(
 					)
 					.apply(instance, AdvancementLockedComponent::new)
 	);
-	public static final PacketCodec<RegistryByteBuf, AdvancementLockedComponent> PACKET_CODEC = PacketCodec.tuple(
-			PacketCodecs.STRING,
+	public static final StreamCodec<RegistryFriendlyByteBuf, AdvancementLockedComponent> PACKET_CODEC = StreamCodec.composite(
+			ByteBufCodecs.STRING_UTF8,
 			AdvancementLockedComponent::unlock_advancement,
-			PacketCodecs.STRING,
+			ByteBufCodecs.STRING_UTF8,
 			AdvancementLockedComponent::lock_advancement,
-			PacketCodecs.STRING,
+			ByteBufCodecs.STRING_UTF8,
 			AdvancementLockedComponent::not_unlocked_tooltip_text,
-			PacketCodecs.STRING,
+			ByteBufCodecs.STRING_UTF8,
 			AdvancementLockedComponent::tooltip_text,
-			PacketCodecs.STRING,
+			ByteBufCodecs.STRING_UTF8,
 			AdvancementLockedComponent::locked_tooltip_text,
-			PacketCodecs.INTEGER,
+			ByteBufCodecs.INT,
 			AdvancementLockedComponent::status,
 			AdvancementLockedComponent::new
 	);

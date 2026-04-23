@@ -5,12 +5,12 @@ import com.github.theredbrain.rpginventory.registry.Tags;
 import com.github.theredbrain.rpginventory.util.ItemUtils;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.slot.Slot;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -27,7 +27,7 @@ public abstract class ArmorSlotMixin extends Slot {
 	@Final
 	private EquipmentSlot equipmentSlot;
 
-	public ArmorSlotMixin(Inventory inventory, int index, int x, int y) {
+	public ArmorSlotMixin(Container inventory, int index, int x, int y) {
 		super(inventory, index, x, y);
 	}
 
@@ -36,26 +36,26 @@ public abstract class ArmorSlotMixin extends Slot {
 
 		boolean isOwned = true;
 		boolean isCreative = false;
-		if (entity instanceof PlayerEntity playerEntity) {
+		if (entity instanceof Player playerEntity) {
 			isOwned = ItemUtils.isUsableByPlayer(stack, playerEntity);
 			isCreative = playerEntity.isCreative();
 		}
 
-		return (original.call(stack) || rpginventory$isOfEquipmentTag(stack, this.equipmentSlot)) && isOwned && (stack.contains(RPGInventory.IGNORES_EQUIPMENT_CHANGE_RESTRICTIONS) || entity.hasStatusEffect(RPGInventory.CIVILISATION) || isCreative || (RPGInventory.SERVER_CONFIG.allow_equipment_changes.get() && !entity.hasStatusEffect(RPGInventory.WILDERNESS)));
+		return (original.call(stack) || rpginventory$isOfEquipmentTag(stack, this.equipmentSlot)) && isOwned && (stack.has(RPGInventory.IGNORES_EQUIPMENT_CHANGE_RESTRICTIONS) || entity.hasEffect(RPGInventory.CIVILISATION) || isCreative || (RPGInventory.SERVER_CONFIG.allow_equipment_changes.get() && !entity.hasEffect(RPGInventory.WILDERNESS)));
 	}
 
 	@WrapMethod(method = "canTakeItems")
-	public boolean rpginventory$canTakeItems(PlayerEntity playerEntity, Operation<Boolean> original) {
-		return original.call(playerEntity) && !this.getStack().contains(RPGInventory.LOAD_OUT_ITEM) && (this.getStack().contains(RPGInventory.IGNORES_EQUIPMENT_CHANGE_RESTRICTIONS) || entity.hasStatusEffect(RPGInventory.CIVILISATION) || playerEntity.isCreative() || (RPGInventory.SERVER_CONFIG.allow_equipment_changes.get() && !entity.hasStatusEffect(RPGInventory.WILDERNESS)));
+	public boolean rpginventory$canTakeItems(Player playerEntity, Operation<Boolean> original) {
+		return original.call(playerEntity) && !this.getItem().has(RPGInventory.LOAD_OUT_ITEM) && (this.getItem().has(RPGInventory.IGNORES_EQUIPMENT_CHANGE_RESTRICTIONS) || entity.hasEffect(RPGInventory.CIVILISATION) || playerEntity.isCreative() || (RPGInventory.SERVER_CONFIG.allow_equipment_changes.get() && !entity.hasEffect(RPGInventory.WILDERNESS)));
 	}
 
 	@Unique
 	private boolean rpginventory$isOfEquipmentTag(ItemStack itemStack, EquipmentSlot slot) {
 		return switch (slot) {
-			case FEET -> itemStack.isIn(Tags.BOOTS);
-			case LEGS -> itemStack.isIn(Tags.LEGGINGS);
-			case CHEST -> itemStack.isIn(Tags.CHEST_PLATES);
-			case HEAD -> itemStack.isIn(Tags.HELMETS);
+			case FEET -> itemStack.is(Tags.BOOTS);
+			case LEGS -> itemStack.is(Tags.LEGGINGS);
+			case CHEST -> itemStack.is(Tags.CHEST_PLATES);
+			case HEAD -> itemStack.is(Tags.HELMETS);
 			default -> false;
 		};
 	}
