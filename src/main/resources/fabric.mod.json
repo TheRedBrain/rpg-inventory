@@ -31,8 +31,13 @@
 			"environment": "client"
 		}
 	],
+	"custom": {
+		"fzzy_config": [
+			"rpginventory"
+		]
+	},
 	"depends": {
-		"minecraft": "${minecraft_version}",
+		"minecraft": "~${minecraft_version}",
 		"fabricloader": ">=${loader_version}",
 		"fabric-api": "*",
 		"fzzy_config": ">=${fzzy_config_version}",

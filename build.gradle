@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '1.11-SNAPSHOT'
+	id 'net.fabricmc.fabric-loom' version "${loom_version}"
 	id "com.matthewprenger.cursegradle" version "1.4.0"
 	id "com.github.breadmoirai.github-release" version "2.4.1"
 	id "com.modrinth.minotaur" version "2.+"
@@ -82,89 +82,91 @@ loom {
 dependencies {
 	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	// Fabric API
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
 	// Fzzy Config
-	modImplementation"me.fzzyhmstrs:fzzy_config:${project.fzzy_config_version}"
+	implementation ("me.fzzyhmstrs:fzzy_config:${project.fzzy_config_version}") {
+		exclude(group: "me.lucko")
+		exclude(group: "com.terraformersmc")
+	}
 
-	// Trinkets
-	modImplementation "dev.emi:trinkets:${project.trinkets_version}"
+//	// Trinkets
+//	implementation "dev.emi:trinkets:${project.trinkets_version}"
 
 	// Mixin Squared
 	include(implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:0.1.2-beta.4")))
 
 	// Stamina Attributes
-	modImplementation "maven.modrinth:stamina-attributes:${project.stamina_attributes_version}"
+	implementation "maven.modrinth:stamina-attributes:${project.stamina_attributes_version}"
 
 	// Slot Customization API
-	modImplementation "maven.modrinth:slot-customization-api:${project.slot_customization_api_version}"
+	implementation "maven.modrinth:slot-customization-api:${project.slot_customization_api_version}"
 
 	// Mana Attributes
-	modImplementation "maven.modrinth:mana-attributes:${project.mana_attributes_version}"
+	implementation "maven.modrinth:mana-attributes:${project.mana_attributes_version}"
 
 	// Health Regeneration Overhaul
-	modImplementation "maven.modrinth:health-regeneration-overhaul:${project.health_regeneration_overhaul_version}"
+	implementation "maven.modrinth:health-regeneration-overhaul:${project.health_regeneration_overhaul_version}"
 
 	// Inventory Size Attributes
-	modImplementation "maven.modrinth:inventory-size-attributes:${project.inventory_size_attributes_version}"
+	implementation "maven.modrinth:inventory-size-attributes:${project.inventory_size_attributes_version}"
 
 	// Backpack Attribute
-	modImplementation "maven.modrinth:backpack-attribute:${project.backpack_attribute_version}"
+	implementation "maven.modrinth:backpack-attribute:${project.backpack_attribute_version}"
 
-	// Player Attributes Screen
-	modImplementation "maven.modrinth:player-attribute-screen:${project.player_attribute_screen_version}"
-
-	// RPG Crafting
-	modImplementation "maven.modrinth:rpg-crafting:${project.rpg_crafting_version}"
-
-	// Script Blocks
-	modImplementation "maven.modrinth:script-blocks:${project.script_blocks_version}"
-//	modImplementation(files("libs/script-blocks-${project.script_blocks_version}.jar"))
+//	// Player Attributes Screen
+//	implementation "maven.modrinth:player-attribute-screen:${project.player_attribute_screen_version}"
+//
+//	// RPG Crafting
+//	implementation "maven.modrinth:rpg-crafting:${project.rpg_crafting_version}"
+//
+//	// Script Blocks
+//	implementation "maven.modrinth:script-blocks:${project.script_blocks_version}"
+//	implementation(files("libs/script-blocks-${project.script_blocks_version}.jar"))
 
 	// Resource Bar API
-	modImplementation "maven.modrinth:resource-bar-api:${project.resource_bar_api_version}"
+	implementation "maven.modrinth:resource-bar-api:${project.resource_bar_api_version}"
 
 	// Overhauled Damage
-	modImplementation "maven.modrinth:overhauled-damage:${project.overhauled_damage_version}"
+	implementation "maven.modrinth:overhauled-damage:${project.overhauled_damage_version}"
 
-	// Better Combat Extension
-	modImplementation "maven.modrinth:bettercombat-extension:${project.better_combat_extension_version}"
-
-	// Spell Engine Extension
-	modImplementation "maven.modrinth:spell-engine-extension:${project.spell_engine_extension_version}"
-
-	// Cloth Config
-	modImplementation ("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}")
-
-	// Player Animation Lib
-	modImplementation("dev.kosmx.player-anim:player-animation-lib-fabric:${project.player_animator_version}")
-
-	// Better Combat
-	modImplementation("maven.modrinth:better-combat:${project.better_combat_version}")
-
-	// Combat Roll
-	modImplementation "maven.modrinth:combat-roll:${project.combat_roll_version}-fabric"
-
-	// Spell Engine
-	modImplementation("maven.modrinth:spell-engine:${project.spell_engine_version}")
-
-	// Spell Power
-	modImplementation("maven.modrinth:spell-power:${project.spell_power_version}")
-
-	// Tiny Config
-	modImplementation("maven.modrinth:tiny-config:${project.tiny_config_version}")
-
-	// Numismatic Overhaul
-	modImplementation ("maven.modrinth:numismatic-overhaul:${project.numismatic_overhaul_version}") {
-		exclude(group: "net.fabricmc.fabric-api")
-	}
-
-	// Owo Lib
-	modImplementation "io.wispforest:owo-lib:${project.owo_lib_version}"
+//	// Better Combat Extension
+//	implementation "maven.modrinth:bettercombat-extension:${project.better_combat_extension_version}"
+//
+//	// Spell Engine Extension
+//	implementation "maven.modrinth:spell-engine-extension:${project.spell_engine_extension_version}"
+//
+//	// Cloth Config
+//	implementation ("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}")
+//
+//	// Player Animation Lib
+//	implementation("dev.kosmx.player-anim:player-animation-lib-fabric:${project.player_animator_version}")
+//
+//	// Better Combat
+//	implementation("maven.modrinth:better-combat:${project.better_combat_version}")
+//
+//	// Combat Roll
+//	implementation "maven.modrinth:combat-roll:${project.combat_roll_version}-fabric"
+//
+//	// Spell Engine
+//	implementation("maven.modrinth:spell-engine:${project.spell_engine_version}")
+//
+//	// Spell Power
+//	implementation("maven.modrinth:spell-power:${project.spell_power_version}")
+//
+//	// Tiny Config
+//	implementation("maven.modrinth:tiny-config:${project.tiny_config_version}")
+//
+//	// Numismatic Overhaul
+//	implementation ("maven.modrinth:numismatic-overhaul:${project.numismatic_overhaul_version}") {
+//		exclude(group: "net.fabricmc.fabric-api")
+//	}
+//
+//	// Owo Lib
+//	implementation "io.wispforest:owo-lib:${project.owo_lib_version}"
 
 }
 
@@ -178,7 +180,7 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-	it.options.release = 21
+	it.options.release = 25
 }
 
 java {
@@ -187,8 +189,8 @@ java {
 	// If you remove this line, sources will not be generated.
 	withSourcesJar()
 
-	sourceCompatibility = JavaVersion.VERSION_21
-	targetCompatibility = JavaVersion.VERSION_21
+	sourceCompatibility = JavaVersion.VERSION_25
+	targetCompatibility = JavaVersion.VERSION_25
 }
 
 jar {
@@ -231,9 +233,9 @@ if(project.hasProperty('release_type')) {
 //				optionalDependency 'rpg-crafting'
 //			}
 //
-//			mainArtifact(remapJar)
+//			mainArtifact(jar)
 //			afterEvaluate {
-//				uploadTask.dependsOn(remapJar)
+//				uploadTask.dependsOn(jar)
 //			}
 //			options {
 //				forgeGradleIntegration = false
@@ -247,8 +249,8 @@ if(project.hasProperty('release_type')) {
 		versionName = "${version}" // You don't need to set this manually. Will fail if Modrinth has this version already
 		versionNumber = "${version}" // You don't need to set this manually. Will fail if Modrinth has this version already
 		versionType = release_type // This is the default -- can also be `beta` or `alpha`
-		uploadFile = remapJar // With Loom, this MUST be set to `remapJar` instead of `jar`!
-		gameVersions = ["${project.minecraft_version}"] // Must be an array, even with only one version
+		uploadFile = jar // With Loom, this MUST be set to `remapJar` instead of `jar`!
+		gameVersions = ["${project.minecraft_version}", "${project.minecraft_version}.1", "${project.minecraft_version}.2"] // Must be an array, even with only one version
 		loaders = ["fabric"] // Must also be an array - no need to specify this if you're using Loom or ForgeGradle
 		changelog = changelog_last_section()
 		dependencies { // A special DSL for creating dependencies
