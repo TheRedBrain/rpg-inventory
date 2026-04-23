@@ -1,13 +1,12 @@
 package com.github.theredbrain.rpginventory.compat;
 
-import com.github.theredbrain.rpginventory.gui.screen.ingame.RPGInventoryTrinketScreen;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.client.Minecraft;
+import net.minecraft.world.entity.player.Player;
 
 public class TrinketsClientCompat {
 
-	public static void openRPGInventoryTrinketsScreen(MinecraftClient client, PlayerEntity player) {
-		client.setScreen(new RPGInventoryTrinketScreen(player));
+	public static void openRPGInventoryTrinketsScreen(Minecraft client, Player player) {
+//		client.setScreen(new RPGInventoryTrinketScreen(player));
 	}
 
 }

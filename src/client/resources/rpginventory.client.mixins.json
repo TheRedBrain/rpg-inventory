@@ -9,7 +9,6 @@
     "gui.DrawContextMixin",
     "gui.hud.InGameHudMixin",
     "gui.screen.ingame.CreativeInventoryScreenMixin",
-    "gui.screen.ingame.CreativeInventoryScreenMixin_TrinketsReplacement",
     "gui.screen.ingame.HandledScreenMixin",
     "gui.screen.ingame.InventoryScreenMixin",
     "network.ClientAdvancementManagerMixin",

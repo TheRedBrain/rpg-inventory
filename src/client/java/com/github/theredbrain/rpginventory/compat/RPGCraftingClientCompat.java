@@ -1,12 +1,11 @@
 package com.github.theredbrain.rpginventory.compat;
 
-import com.github.theredbrain.rpgcrafting.RPGCraftingClient;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 
 public class RPGCraftingClientCompat {
 
-	public static void openHandCraftingScreen(MinecraftClient client) {
-		RPGCraftingClient.openHandCraftingScreen(client);
+	public static void openHandCraftingScreen(Minecraft client) {
+//		RPGCraftingClient.openHandCraftingScreen(client);
 	}
 
 }

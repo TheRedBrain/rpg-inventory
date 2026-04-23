@@ -1,63 +1,45 @@
 package com.github.theredbrain.rpginventory.compat;
 
-import com.github.theredbrain.rpginventory.entity.player.DuckPlayerInventoryMixin;
-import com.github.theredbrain.rpginventory.registry.StatusEffectsRegistry;
-import com.github.theredbrain.rpginventory.spell_engine.ExtendedEntityActionsAllowedSemanticType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.spell_engine.api.effect.ActionImpairing;
-import net.spell_engine.api.effect.EntityActionsAllowed;
-import net.spell_engine.api.spell.Spell;
-import net.spell_engine.api.spell.container.SpellContainer;
-import net.spell_engine.api.spell.container.SpellContainerHelper;
-import net.spell_engine.api.spell.registry.SpellRegistry;
-import net.spell_engine.compat.container.ContainerCompat;
-import net.spell_engine.internals.SpellCooldownManager;
-import net.spell_engine.internals.casting.SpellCasterEntity;
-import net.spell_engine.internals.container.SpellContainerSource;
-
-import java.util.ArrayList;
-import java.util.List;
+import net.minecraft.world.entity.player.Player;
 
 public class SpellEngineCompat {
 
-	public static final SpellContainerSource.Entry RPG_EQUIPMENT = new SpellContainerSource.Entry("rpg_equipment", (player, sourceName) -> {
-		List<SpellContainerSource.SourcedContainer> sources = new ArrayList<SpellContainerSource.SourcedContainer>();
-		for (ItemStack stack : ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSpellProvidingEquipmentItems()) {
-			addSourceIfValid(stack, sources, sourceName);
-		}
-		return sources;
-	}, player -> ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSpellProvidingEquipmentItems());
+//	public static final SpellContainerSource.Entry RPG_EQUIPMENT = new SpellContainerSource.Entry("rpg_equipment", (player, sourceName) -> {
+//		List<SpellContainerSource.SourcedContainer> sources = new ArrayList<SpellContainerSource.SourcedContainer>();
+//		for (ItemStack stack : ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSpellProvidingEquipmentItems()) {
+//			addSourceIfValid(stack, sources, sourceName);
+//		}
+//		return sources;
+//	}, player -> ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSpellProvidingEquipmentItems());
 
 	public static void init() {
-		ContainerCompat.addProvider((playerEntity) -> ((DuckPlayerInventoryMixin) playerEntity.getInventory()).rpginventory$getSpellProvidingEquipmentItems());
-		SpellContainerSource.addSource(RPG_EQUIPMENT);
+//		ContainerCompat.addProvider((playerEntity) -> ((DuckPlayerInventoryMixin) playerEntity.getInventory()).rpginventory$getSpellProvidingEquipmentItems());
+//		SpellContainerSource.addSource(RPG_EQUIPMENT);
 	}
 
-	private static void addSourceIfValid(ItemStack fromItemStack, List<SpellContainerSource.SourcedContainer> sources, String name) {
-		SpellContainer container = SpellContainerHelper.containerFromItemStack(fromItemStack);
-		if (container != null && container.isValid()) {
-			sources.add(new SpellContainerSource.SourcedContainer(name, fromItemStack, container));
-		}
+//	private static void addSourceIfValid(ItemStack fromItemStack, List<SpellContainerSource.SourcedContainer> sources, String name) {
+//		SpellContainer container = SpellContainerHelper.containerFromItemStack(fromItemStack);
+//		if (container != null && container.isValid()) {
+//			sources.add(new SpellContainerSource.SourcedContainer(name, fromItemStack, container));
+//		}
+//	}
+
+	public static void resetSpellCooldowns(Player playerEntity) {
+//		if (playerEntity instanceof ServerPlayer serverPlayerEntity) {
+//			SpellCooldownManager spellCooldownManager = ((SpellCasterEntity) serverPlayerEntity).getCooldownManager();
+//			for (Holder.Reference<Spell> spell : SpellRegistry.stream(serverPlayerEntity.level()).toList()) {
+//				spellCooldownManager.remove(spell.key().location());
+//			}
+//		}
 	}
 
-	public static void resetSpellCooldowns(PlayerEntity playerEntity) {
-		if (playerEntity instanceof ServerPlayerEntity serverPlayerEntity) {
-			SpellCooldownManager spellCooldownManager = ((SpellCasterEntity) serverPlayerEntity).getCooldownManager();
-			for (RegistryEntry.Reference<Spell> spell : SpellRegistry.stream(serverPlayerEntity.getWorld()).toList()) {
-				spellCooldownManager.remove(spell.registryKey().getValue());
-			}
-		}
-	}
-
-	public static boolean doesCurrentPlayerStatusPreventHandSlotAction(PlayerEntity playerEntity) {
-		return ((SpellCasterEntity) playerEntity).isCastingSpell();
+	public static boolean doesCurrentPlayerStatusPreventHandSlotAction(Player playerEntity) {
+//		return ((SpellCasterEntity) playerEntity).isCastingSpell();
+		return false;
 	}
 
 	public static void configureEffects() {
-		ActionImpairing.configure(StatusEffectsRegistry.NEEDS_TWO_HANDING, new EntityActionsAllowed(true, true, new EntityActionsAllowed.PlayersAllowed(false, false, false), new EntityActionsAllowed.MobsAllowed(true), ExtendedEntityActionsAllowedSemanticType.NEEDS_TWO_HANDING));
-		ActionImpairing.configure(StatusEffectsRegistry.NO_ATTACK_ITEM, new EntityActionsAllowed(true, true, new EntityActionsAllowed.PlayersAllowed(false, true, true), new EntityActionsAllowed.MobsAllowed(true), ExtendedEntityActionsAllowedSemanticType.NO_ATTACK_ITEM));
+//		ActionImpairing.configure(StatusEffectsRegistry.NEEDS_TWO_HANDING, new EntityActionsAllowed(true, true, new EntityActionsAllowed.PlayersAllowed(false, false, false), new EntityActionsAllowed.MobsAllowed(true), ExtendedEntityActionsAllowedSemanticType.NEEDS_TWO_HANDING));
+//		ActionImpairing.configure(StatusEffectsRegistry.NO_ATTACK_ITEM, new EntityActionsAllowed(true, true, new EntityActionsAllowed.PlayersAllowed(false, true, true), new EntityActionsAllowed.MobsAllowed(true), ExtendedEntityActionsAllowedSemanticType.NO_ATTACK_ITEM));
 	}
 }
