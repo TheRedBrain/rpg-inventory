@@ -5,9 +5,10 @@ import com.github.theredbrain.rpginventory.RPGInventoryClient;
 import com.github.theredbrain.slotcustomizationapi.api.SlotCustomization;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
-import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.CreativeModeTab;
@@ -25,7 +26,7 @@ import java.util.List;
 
 @Environment(value = EnvType.CLIENT)
 @Mixin(CreativeModeInventoryScreen.class)
-public abstract class CreativeInventoryScreenMixin extends EffectRenderingInventoryScreen<CreativeModeInventoryScreen.ItemPickerMenu> {
+public abstract class CreativeModeInventoryScreenMixin extends AbstractContainerScreen<CreativeModeInventoryScreen.ItemPickerMenu> {
 
 	@Shadow
 	private static CreativeModeTab selectedTab;
@@ -40,12 +41,12 @@ public abstract class CreativeInventoryScreenMixin extends EffectRenderingInvent
 	@Unique
 	private static final Identifier SLOT_TEXTURE = Identifier.withDefaultNamespace("textures/gui/sprites/container/slot.png");
 
-	private CreativeInventoryScreenMixin() {
+	private CreativeModeInventoryScreenMixin() {
 		super(null, null, null);
 	}
 
-	@Inject(method = "setSelectedTab", at = @At("TAIL"))
-	private void rpginventory$post_setSelectedTab(CreativeModeTab group, CallbackInfo ci) {
+	@Inject(method = "selectTab", at = @At("TAIL"))
+	private void rpginventory$post_selectTab(CreativeModeTab group, CallbackInfo ci) {
 
 		if (selectedTab.getType() == CreativeModeTab.Type.INVENTORY) {
 
@@ -116,16 +117,16 @@ public abstract class CreativeInventoryScreenMixin extends EffectRenderingInvent
 		}
 	}
 
-	@Inject(at = @At("RETURN"), method = "drawBackground")
-	private void rpginventory$drawBackground(GuiGraphics context, float delta, int mouseX, int mouseY, CallbackInfo info) {
+	@Inject(at = @At("RETURN"), method = "extractBackground")
+	private void rpginventory$extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a, CallbackInfo ci) {
 		if (selectedTab.getType() == CreativeModeTab.Type.INVENTORY && RPGInventory.SERVER_CONFIG.activate_rpg_inventory_screen.get()) {
 			int x = this.leftPos + this.imageWidth;
 			int y = this.topPos;
-			context.blit(SPELL_SLOTS_BACKGROUND, x - 4, y, 0, 0, 44, 86, 44, 86);
+			graphics.blit(SPELL_SLOTS_BACKGROUND, x - 4, y, 0, 0, 44, 86, 44, 86);
 
 			int inventorySize = 0;
 			int hotbarSize = 0;
-			if (this.minecraft != null && this.minecraft.player != null) {
+			if (this.minecraft.player != null) {
 				hotbarSize = RPGInventory.getActiveHotbarSize(this.minecraft.player);
 				inventorySize = RPGInventory.getActiveInventorySize(this.minecraft.player);
 			}
@@ -137,23 +138,23 @@ public abstract class CreativeInventoryScreenMixin extends EffectRenderingInvent
 			boolean showInactiveSlots = RPGInventoryClient.showInactiveInventorySlots();
 			for (k = 0; k < (showInactiveSlots ? 27 : Math.min(inventorySize, 27)); ++k) {
 				m = (k / 9);
-				context.blit(SLOT_TEXTURE, i + 8 + (k - (m * 9)) * 18, j + 53 + (m * 18), 0, 0, 18, 18, 18, 18);
+				graphics.blit(SLOT_TEXTURE, i + 8 + (k - (m * 9)) * 18, j + 53 + (m * 18), 0, 0, 18, 18, 18, 18);
 			}
 			for (k = 0; k < (showInactiveSlots ? 9 : Math.min(hotbarSize, 9)); ++k) {
-				context.blit(SLOT_TEXTURE, i + 8 + k * 18, j + 111, 0, 0, 18, 18, 18, 18);
+				graphics.blit(SLOT_TEXTURE, i + 8 + k * 18, j + 111, 0, 0, 18, 18, 18, 18);
 			}
 		}
 	}
 
-	@Inject(method = "drawBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/TextFieldWidget;render(Lnet/minecraft/client/gui/DrawContext;IIF)V"))
-	private void rpginventory$drawAdventureInventoryBackground(GuiGraphics context, float delta, int mouseX, int mouseY, CallbackInfo ci) {
+	@Inject(method = "extractBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/EditBox;extractRenderState(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IIF)V"))
+	private void rpginventory$drawAdventureInventoryBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a, CallbackInfo ci) {
 		if (selectedTab.getType() == CreativeModeTab.Type.INVENTORY && RPGInventory.SERVER_CONFIG.activate_rpg_inventory_screen.get()) {
-			context.blit(TAB_ADVENTURE_INVENTORY_TEXTURE, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
+			graphics.blit(RenderPipelines.GUI_TEXTURED, TAB_ADVENTURE_INVENTORY_TEXTURE, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
 		}
 	}
 
-	@ModifyArgs(method = "drawBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/InventoryScreen;drawEntity(Lnet/minecraft/client/gui/DrawContext;IIIIIFFFLnet/minecraft/entity/LivingEntity;)V"))
-	private void rpginventory$moveDrawnPlayerEntity(Args args, GuiGraphics context, float delta, int mouseX, int mouseY) {
+	@ModifyArgs(method = "extractBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/InventoryScreen;extractEntityInInventoryFollowsMouse(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IIIIIFFFLnet/minecraft/world/entity/LivingEntity;)V"))
+	private void rpginventory$moveDrawnPlayerEntity(Args args) {
 		if (RPGInventory.SERVER_CONFIG.activate_rpg_inventory_screen.get()) {
 			args.set(1, this.leftPos + 64);
 			args.set(3, this.leftPos + 96);

@@ -14,6 +14,7 @@ import com.github.theredbrain.rpginventory.component.type.AdvancementLockedCompo
 import com.github.theredbrain.rpginventory.component.type.ExclusiveEquipmentComponent;
 import com.github.theredbrain.rpginventory.config.ServerConfig;
 import com.github.theredbrain.rpginventory.registry.BlockRegistry;
+import com.github.theredbrain.rpginventory.registry.DataAttachmentRegistry;
 import com.github.theredbrain.rpginventory.registry.EntityRegistry;
 import com.github.theredbrain.rpginventory.registry.ItemComponentRegistry;
 import com.github.theredbrain.rpginventory.registry.ItemRegistry;
@@ -238,6 +239,7 @@ public class RPGInventory implements ModInitializer {
 
 		// Registry
 		BlockRegistry.init();
+		DataAttachmentRegistry.init();
 		EntityRegistry.init();
 		ItemComponentRegistry.init();
 		ItemRegistry.init();

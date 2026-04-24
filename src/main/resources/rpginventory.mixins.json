@@ -15,7 +15,7 @@
     "item.ItemMixin",
     "item.ItemStackMixin",
     "screen.ArmorSlotMixin",
-    "screen.PlayerScreenHandlerMixin",
+    "screen.InventoryMenuMixin",
     "screen.PlayerScreenHandlerOffHandSlotMixin",
     "server.network.ServerEntityMixin",
     "server.network.ServerGamePacketListenerImplMixin",

@@ -4,18 +4,21 @@
   "package": "com.github.theredbrain.rpginventory.mixin.client",
   "compatibilityLevel": "JAVA_25",
   "client": [
-    "MinecraftClientMixin",
-    "MouseMixin",
+    "MinecraftMixin",
+    "MouseHandlerMixin",
     "gui.DrawContextMixin",
     "gui.hud.InGameHudMixin",
-    "gui.screen.ingame.CreativeInventoryScreenMixin",
-    "gui.screen.ingame.HandledScreenMixin",
+    "gui.screen.ingame.CreativeModeInventoryScreenMixin",
+    "gui.screen.ingame.AbstractContainerScreenMixin",
     "gui.screen.ingame.InventoryScreenMixin",
     "network.ClientAdvancementManagerMixin",
-    "render.entity.PlayerEntityRendererMixin"
+    "render.entity.AvatarRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
   },
-  "plugin": "com.github.theredbrain.rpginventory.RPGInventoryMixinConfigPlugin"
+  "plugin": "com.github.theredbrain.rpginventory.RPGInventoryMixinConfigPlugin",
+  "mixins": [
+    "renderer.entity.state.ArmedEntityRenderStateMixin"
+  ]
 }

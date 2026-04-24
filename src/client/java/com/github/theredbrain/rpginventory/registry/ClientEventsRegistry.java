@@ -11,7 +11,7 @@ public class ClientEventsRegistry {
 	public static void initializeClientEvents() {
 		ItemTooltipCallback.EVENT.register((stack, context, type, lines) -> {
 			ClientConfig clientConfig = RPGInventoryClient.CLIENT_CONFIG;
-			boolean isLoadOutItem = stack.contains(RPGInventory.LOAD_OUT_ITEM);
+			boolean isLoadOutItem = stack.has(RPGInventory.LOAD_OUT_ITEM);
 
 			if (isLoadOutItem && clientConfig.itemTooltipSection.show_load_out_item_tooltip.get()) {
 				ItemTooltipHelper.addLoadOutItemsTooltipLines(lines);
@@ -29,7 +29,7 @@ public class ClientEventsRegistry {
 				ItemTooltipHelper.addAdvancementLockedItemTooltipLines(lines, stack);
 			}
 
-			if (stack.isIn(Tags.TWO_HANDED_ITEMS) && clientConfig.itemTooltipSection.show_item_tooltip_two_handed_items.get() && RPGInventory.SERVER_CONFIG.enable_two_handed_items_restriction.get()) {
+			if (stack.is(Tags.TWO_HANDED_ITEMS) && clientConfig.itemTooltipSection.show_item_tooltip_two_handed_items.get() && RPGInventory.SERVER_CONFIG.enable_two_handed_items_restriction.get()) {
 				ItemTooltipHelper.addTwoHandedItemTooltipLines(lines);
 			}
 

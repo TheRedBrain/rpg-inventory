@@ -3,6 +3,7 @@ package com.github.theredbrain.rpginventory.screen;
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.block.entity.MannequinBlockEntity;
 import com.github.theredbrain.rpginventory.config.ServerConfig;
+import com.github.theredbrain.rpginventory.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.registry.Tags;
@@ -94,12 +95,12 @@ public abstract class AbstractMannequinScreenHandler extends AbstractContainerMe
 
 			@Override
 			public boolean isActive() {
-				return !((DuckPlayerEntityMixin) AbstractMannequinScreenHandler.this.owner).rpginventory$isOffhandStackSheathed() || !RPGInventory.isHandSlotOverhaulActive();
+				return !((DuckLivingEntityMixin) AbstractMannequinScreenHandler.this.owner).rpginventory$isOffhandStackSheathed() || !RPGInventory.isHandSlotOverhaulActive();
 			}
 
 			@Override
 			public boolean mayPlace(ItemStack stack) {
-				return super.mayPlace(stack) && !((DuckPlayerEntityMixin) AbstractMannequinScreenHandler.this.owner).rpginventory$isOffhandStackSheathed();
+				return super.mayPlace(stack) && !((DuckLivingEntityMixin) AbstractMannequinScreenHandler.this.owner).rpginventory$isOffhandStackSheathed();
 			}
 
 		});
@@ -109,12 +110,12 @@ public abstract class AbstractMannequinScreenHandler extends AbstractContainerMe
 
 			@Override
 			public boolean isActive() {
-				return !((DuckPlayerEntityMixin) AbstractMannequinScreenHandler.this.owner).rpginventory$isHandStackSheathed() && RPGInventory.isHandSlotOverhaulActive();
+				return !((DuckLivingEntityMixin) AbstractMannequinScreenHandler.this.owner).rpginventory$isHandStackSheathed() && RPGInventory.isHandSlotOverhaulActive();
 			}
 
 			@Override
 			public boolean mayPlace(ItemStack stack) {
-				return super.mayPlace(stack) && !((DuckPlayerEntityMixin) AbstractMannequinScreenHandler.this.owner).rpginventory$isHandStackSheathed();
+				return super.mayPlace(stack) && !((DuckLivingEntityMixin) AbstractMannequinScreenHandler.this.owner).rpginventory$isHandStackSheathed();
 			}
 
 		});
@@ -124,12 +125,12 @@ public abstract class AbstractMannequinScreenHandler extends AbstractContainerMe
 
 			@Override
 			public boolean isActive() {
-				return ((DuckPlayerEntityMixin) AbstractMannequinScreenHandler.this.owner).rpginventory$isHandStackSheathed() && RPGInventory.isHandSlotOverhaulActive();
+				return ((DuckLivingEntityMixin) AbstractMannequinScreenHandler.this.owner).rpginventory$isHandStackSheathed() && RPGInventory.isHandSlotOverhaulActive();
 			}
 
 			@Override
 			public boolean mayPlace(ItemStack stack) {
-				return super.mayPlace(stack) && ((DuckPlayerEntityMixin) AbstractMannequinScreenHandler.this.owner).rpginventory$isHandStackSheathed();
+				return super.mayPlace(stack) && ((DuckLivingEntityMixin) AbstractMannequinScreenHandler.this.owner).rpginventory$isHandStackSheathed();
 			}
 
 		});
@@ -139,12 +140,12 @@ public abstract class AbstractMannequinScreenHandler extends AbstractContainerMe
 
 			@Override
 			public boolean isActive() {
-				return ((DuckPlayerEntityMixin) AbstractMannequinScreenHandler.this.owner).rpginventory$isOffhandStackSheathed() && RPGInventory.isHandSlotOverhaulActive();
+				return ((DuckLivingEntityMixin) AbstractMannequinScreenHandler.this.owner).rpginventory$isOffhandStackSheathed() && RPGInventory.isHandSlotOverhaulActive();
 			}
 
 			@Override
 			public boolean mayPlace(ItemStack stack) {
-				return super.mayPlace(stack) && ((DuckPlayerEntityMixin) AbstractMannequinScreenHandler.this.owner).rpginventory$isOffhandStackSheathed();
+				return super.mayPlace(stack) && ((DuckLivingEntityMixin) AbstractMannequinScreenHandler.this.owner).rpginventory$isOffhandStackSheathed();
 			}
 
 		});
@@ -668,7 +669,7 @@ public abstract class AbstractMannequinScreenHandler extends AbstractContainerMe
 			equipSingleSlot(MANNEQUIN_SLOTS_START + i, EQUIPMENT_SLOTS_START + i);
 		}
 
-		if (((DuckPlayerEntityMixin) AbstractMannequinScreenHandler.this.owner).rpginventory$isOffhandStackSheathed()) {
+		if (((DuckLivingEntityMixin) AbstractMannequinScreenHandler.this.owner).rpginventory$isOffhandStackSheathed()) {
 			// sheathed offhand
 			equipSingleSlot(MANNEQUIN_SLOTS_START + 4, EQUIPMENT_SLOTS_START + 7);
 		} else {
@@ -676,7 +677,7 @@ public abstract class AbstractMannequinScreenHandler extends AbstractContainerMe
 			equipSingleSlot(MANNEQUIN_SLOTS_START + 4, EQUIPMENT_SLOTS_START + 4);
 		}
 
-		if (((DuckPlayerEntityMixin) AbstractMannequinScreenHandler.this.owner).rpginventory$isHandStackSheathed()) {
+		if (((DuckLivingEntityMixin) AbstractMannequinScreenHandler.this.owner).rpginventory$isHandStackSheathed()) {
 			// sheathed main hand
 			equipSingleSlot(MANNEQUIN_SLOTS_START + 5, EQUIPMENT_SLOTS_START + 6);
 		} else {

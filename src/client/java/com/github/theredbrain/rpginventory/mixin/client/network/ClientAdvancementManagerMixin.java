@@ -18,18 +18,19 @@ import java.util.Map;
 
 @Mixin(ClientAdvancements.class)
 public class ClientAdvancementManagerMixin implements DuckClientAdvancementManagerMixin {
+
 	@Shadow
 	@Final
-	private Map<AdvancementHolder, AdvancementProgress> advancementProgresses;
+	private Map<AdvancementHolder, AdvancementProgress> progress;
 
 	@Override
 	public boolean rpginventory$getAdvancementProgressDone(AdvancementHolder advancementEntry) {
-		AdvancementProgress advancementProgress = this.advancementProgresses.get(advancementEntry);
+		AdvancementProgress advancementProgress = this.progress.get(advancementEntry);
 		return advancementProgress == null || advancementProgress.isDone();
 	}
 
-	@Inject(method = "onAdvancements", at = @At("TAIL"))
-	public void rpginventory$onAdvancements(ClientboundUpdateAdvancementsPacket packet, CallbackInfo ci) {
+	@Inject(method = "update", at = @At("TAIL"))
+	public void rpginventory$update(ClientboundUpdateAdvancementsPacket packet, CallbackInfo ci) {
 		ClientPlayNetworking.send(new UpdateAdvancementLockedItemsPacket());
 	}
 }

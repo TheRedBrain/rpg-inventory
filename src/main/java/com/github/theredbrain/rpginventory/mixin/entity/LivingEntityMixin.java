@@ -1,21 +1,28 @@
 package com.github.theredbrain.rpginventory.mixin.entity;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
+import com.github.theredbrain.rpginventory.entity.DataAttachmentHelper;
+import com.github.theredbrain.rpginventory.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
+import com.github.theredbrain.rpginventory.entity.RendersSheathedWeapons;
 import com.github.theredbrain.rpginventory.entity.player.PlayerEntityHelper;
+import com.github.theredbrain.rpginventory.registry.Tags;
+import com.github.theredbrain.rpginventory.util.ItemUtils;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.core.Holder;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.player.Player;
@@ -32,7 +39,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Collection;
 
 @Mixin(value = LivingEntity.class, priority = 1050)
-public abstract class LivingEntityMixin extends Entity {
+public abstract class LivingEntityMixin extends Entity implements DuckLivingEntityMixin, RendersSheathedWeapons {
 
 	@Shadow
 	public abstract AttributeMap getAttributes();
@@ -42,6 +49,12 @@ public abstract class LivingEntityMixin extends Entity {
 
 	@Shadow
 	public abstract ItemStack getItemBySlot(EquipmentSlot slot);
+
+	@Shadow
+	public abstract HumanoidArm getMainArm();
+
+	@Shadow
+	public abstract double getAttributeValue(Holder<Attribute> attribute);
 
 	public LivingEntityMixin(EntityType<?> type, Level world) {
 		super(type, world);
@@ -144,4 +157,69 @@ public abstract class LivingEntityMixin extends Entity {
 			return Math.max(1.0F, damage / 4.0F);
 		}
 	}
+
+//	@Override
+//	public ItemStack rpginventory$getSheathedHandItemStack() {
+//		ItemStack itemStack = this.getItemBySlot(ExtendedEquipmentSlot.SHEATHED_HAND);
+//		return rpginventory$isHandStackSheathed() && !itemStack.is(Tags.EMPTY_HAND_WEAPONS) && ItemUtils.isUsable(itemStack) && ItemUtils.isUsableByPlayer(itemStack, ((Player) (Object) this)) ? itemStack : ItemStack.EMPTY;
+//	}
+//
+//	@Override
+//	public ItemStack rpginventory$getSheathedOffHandItemStack() {
+//		ItemStack itemStack = this.getItemBySlot(ExtendedEquipmentSlot.SHEATHED_OFF_HAND);
+//		return rpginventory$isOffhandStackSheathed() && !itemStack.is(Tags.EMPTY_HAND_WEAPONS) && ItemUtils.isUsable(itemStack) && ItemUtils.isUsableByPlayer(itemStack, ((Player) (Object) this)) ? itemStack : ItemStack.EMPTY;
+//	}
+
+//	@Override
+//	public float staminaattributes$getStamina() {
+//		return DataAttachmentHelper.getStamina((LivingEntity) (Object) this);
+//	}
+//
+//	@Override
+//	public void staminaattributes$setStamina(float stamina) {
+//		DataAttachmentHelper.setStamina((LivingEntity) (Object) this, (float) Mth.clamp(stamina, -100.0, this.staminaattributes$getUnreservedStamina()));
+//	}
+
+	@Override
+	public ItemStack rpginventory$getSheathedItemStackByArm(HumanoidArm arm) {
+
+		boolean mainArmIsLeft = this.getMainArm() == HumanoidArm.LEFT;
+		ItemStack itemStack;
+
+		if (arm == HumanoidArm.LEFT) {
+			if (mainArmIsLeft) {
+				itemStack = rpginventory$isHandStackSheathed() ? this.getItemBySlot(ExtendedEquipmentSlot.SHEATHED_HAND) : ItemStack.EMPTY;
+			} else {
+				itemStack = rpginventory$isOffhandStackSheathed() ? this.getItemBySlot(ExtendedEquipmentSlot.SHEATHED_OFF_HAND) : ItemStack.EMPTY;
+			}
+		} else {
+			if (mainArmIsLeft) {
+				itemStack = rpginventory$isOffhandStackSheathed() ? this.getItemBySlot(ExtendedEquipmentSlot.SHEATHED_OFF_HAND) : ItemStack.EMPTY;
+			} else {
+				itemStack = rpginventory$isHandStackSheathed() ? this.getItemBySlot(ExtendedEquipmentSlot.SHEATHED_HAND) : ItemStack.EMPTY;
+			}
+		}
+		return !itemStack.is(Tags.EMPTY_HAND_WEAPONS) && ItemUtils.isUsable(itemStack) && ItemUtils.isUsableByPlayer(itemStack, ((Player) (Object) this)) ? itemStack : ItemStack.EMPTY;
+	}
+
+	@Override
+	public boolean rpginventory$isHandStackSheathed() {
+		return DataAttachmentHelper.isHandStackSheathed((LivingEntity) (Object) this);
+	}
+
+	@Override
+	public void rpginventory$setIsHandStackSheathed(boolean isHandStackSheathed) {
+		DataAttachmentHelper.setIsHandStackSheathed((LivingEntity) (Object) this, isHandStackSheathed);
+	}
+
+	@Override
+	public boolean rpginventory$isOffhandStackSheathed() {
+		return DataAttachmentHelper.isOffhandStackSheathed((LivingEntity) (Object) this);
+	}
+
+	@Override
+	public void rpginventory$setIsOffhandStackSheathed(boolean isOffhandStackSheathed) {
+		DataAttachmentHelper.setIsOffhandStackSheathed((LivingEntity) (Object) this, isOffhandStackSheathed);
+	}
+
 }

@@ -1,6 +1,7 @@
 package com.github.theredbrain.rpginventory.entity.player;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
+import com.github.theredbrain.rpginventory.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
 import com.github.theredbrain.rpginventory.entity.LivingEntityHelper;
 import com.github.theredbrain.rpginventory.registry.Tags;
@@ -168,32 +169,13 @@ public class PlayerEntityHelper {
 		}
 	}
 
-	public static void rpginventory$ejectItemsFromInactiveSpellSlots(Player playerEntity) {
-		int activeSpellSlotAmount = (int) ((DuckPlayerEntityMixin) playerEntity).rpginventory$getActiveSpellSlotAmount();
-
-		if (((DuckPlayerEntityMixin) playerEntity).rpginventory$oldActiveSpellSlotAmount() != activeSpellSlotAmount) {
-			Inventory playerInventory = playerEntity.getInventory();
-			for (int j = activeSpellSlotAmount; j < 8; j++) {
-
-				if (!((DuckPlayerInventoryMixin) playerInventory).rpginventory$getAdditionalEquipmentStack(6 + j).isEmpty()) {
-					playerInventory.placeItemBackInInventory(((DuckPlayerInventoryMixin) playerInventory).rpginventory$setAdditionalEquipmentStack(6 + j, ItemStack.EMPTY));
-					if (playerEntity instanceof ServerPlayer serverPlayerEntity) {
-						serverPlayerEntity.sendSystemMessage(Component.translatable("hud.message.spellsRemovedFromInactiveSpellSlots"), false);
-					}
-				}
-			}
-
-			((DuckPlayerEntityMixin) playerEntity).rpginventory$setOldActiveSpellSlotAmount(activeSpellSlotAmount);
-		}
-	}
-
 	public static void rpginventory$ejectItemsFromInactiveHandSlots(Player playerEntity) {
 		boolean isHandSlotOverhaulActive = RPGInventory.isHandSlotOverhaulActive();
 
 		if (((DuckPlayerEntityMixin) playerEntity).rpginventory$isHandSlotOverhaulActive() != isHandSlotOverhaulActive) {
 			if (!isHandSlotOverhaulActive) {
-				((DuckPlayerEntityMixin) playerEntity).rpginventory$setIsHandStackSheathed(true);
-				((DuckPlayerEntityMixin) playerEntity).rpginventory$setIsOffhandStackSheathed(true);
+				((DuckLivingEntityMixin) playerEntity).rpginventory$setIsHandStackSheathed(true);
+				((DuckLivingEntityMixin) playerEntity).rpginventory$setIsOffhandStackSheathed(true);
 				Inventory playerInventory = playerEntity.getInventory();
 				boolean bl = false;
 
@@ -268,6 +250,25 @@ public class PlayerEntityHelper {
 				((DuckPlayerEntityMixin) playerEntity).rpginventory$setAreAlternativeHandSlotsActive(areAlternativeHandSlotsActive);
 			}
 		}
+	}
+
+	public static void rpginventory$ejectItemsFromInactiveSpellSlots(Player playerEntity) {
+//		int activeSpellSlotAmount = (int) ((DuckPlayerEntityMixin) playerEntity).rpginventory$getActiveSpellSlotAmount();
+//
+//		if (((DuckPlayerEntityMixin) playerEntity).rpginventory$oldActiveSpellSlotAmount() != activeSpellSlotAmount) {
+//			Inventory playerInventory = playerEntity.getInventory();
+//			for (int j = activeSpellSlotAmount; j < 8; j++) {
+//
+//				if (!((DuckPlayerInventoryMixin) playerInventory).rpginventory$getAdditionalEquipmentStack(6 + j).isEmpty()) {
+//					playerInventory.placeItemBackInInventory(((DuckPlayerInventoryMixin) playerInventory).rpginventory$setAdditionalEquipmentStack(6 + j, ItemStack.EMPTY));
+//					if (playerEntity instanceof ServerPlayer serverPlayerEntity) {
+//						serverPlayerEntity.sendSystemMessage(Component.translatable("hud.message.spellsRemovedFromInactiveSpellSlots"), false);
+//					}
+//				}
+//			}
+//
+//			((DuckPlayerEntityMixin) playerEntity).rpginventory$setOldActiveSpellSlotAmount(activeSpellSlotAmount);
+//		}
 	}
 
 	public static void rpginventory$ejectExclusiveEquipment(Player playerEntity) {

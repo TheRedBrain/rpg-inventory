@@ -1,8 +1,8 @@
 package com.github.theredbrain.rpginventory.mixin.server.network;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
+import com.github.theredbrain.rpginventory.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
-import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.network.packet.SheathedWeaponsPacket;
 import com.github.theredbrain.rpginventory.network.packet.SwappedHandItemsPacket;
 import com.github.theredbrain.rpginventory.registry.ItemRegistry;
@@ -28,7 +28,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Collection;
 
 @Mixin(value = ServerPlayer.class/*, priority = 950*/) // TODO test if priority is needed
-public abstract class ServerPlayerEntityMixin extends Player implements DuckPlayerEntityMixin {
+public abstract class ServerPlayerEntityMixin extends Player implements DuckLivingEntityMixin {
 
 	@Shadow
 	public abstract void onEnterCombat();

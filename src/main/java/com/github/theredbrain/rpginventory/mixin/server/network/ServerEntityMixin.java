@@ -1,8 +1,8 @@
 package com.github.theredbrain.rpginventory.mixin.server.network;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
+import com.github.theredbrain.rpginventory.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
-import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.network.packet.SheathedWeaponsPacket;
 import com.github.theredbrain.rpginventory.network.packet.SwappedHandItemsPacket;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -23,6 +23,7 @@ public class ServerEntityMixin {
 	@Shadow
 	@Final
 	private Entity entity;
+
 	// TODO test if the hand sheathed check needs to be for thisServerPlayer
 	@Inject(method = "addPairing", at = @At(value = "TAIL"))
 	public void rpginventory$addPairing(ServerPlayer player, CallbackInfo info) {
@@ -34,10 +35,10 @@ public class ServerEntityMixin {
 				ServerPlayNetworking.send(thisServerPlayer, new SwappedHandItemsPacket(player.getId(), false));
 			}
 			if (!player.getItemBySlot(EquipmentSlot.MAINHAND).isEmpty() || !player.getItemBySlot(ExtendedEquipmentSlot.SHEATHED_HAND).isEmpty()) {
-				ServerPlayNetworking.send(thisServerPlayer, new SheathedWeaponsPacket(player.getId(), true, ((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed()));
+				ServerPlayNetworking.send(thisServerPlayer, new SheathedWeaponsPacket(player.getId(), true, ((DuckLivingEntityMixin) player).rpginventory$isHandStackSheathed()));
 			}
 			if (!player.getItemBySlot(EquipmentSlot.OFFHAND).isEmpty() || !player.getItemBySlot(ExtendedEquipmentSlot.SHEATHED_OFF_HAND).isEmpty()) {
-				ServerPlayNetworking.send(thisServerPlayer, new SheathedWeaponsPacket(player.getId(), false, ((DuckPlayerEntityMixin) player).rpginventory$isOffhandStackSheathed()));
+				ServerPlayNetworking.send(thisServerPlayer, new SheathedWeaponsPacket(player.getId(), false, ((DuckLivingEntityMixin) player).rpginventory$isOffhandStackSheathed()));
 			}
 		}
 	}

@@ -2,6 +2,7 @@ package com.github.theredbrain.rpginventory.network.packet;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.config.ServerConfig;
+import com.github.theredbrain.rpginventory.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -46,16 +47,16 @@ public class SheatheWeaponsPacketReceiver implements ServerPlayNetworking.PlayPa
 				player.sendSystemMessage(Component.translatable("hud.message.staminaTooLow"), true);
 				return;
 			}
-			if (((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed() && ((DuckPlayerEntityMixin) player).rpginventory$isOffhandStackSheathed()) {
-				((DuckPlayerEntityMixin) player).rpginventory$setIsHandStackSheathed(false);
-				((DuckPlayerEntityMixin) player).rpginventory$setIsOffhandStackSheathed(false);
+			if (((DuckLivingEntityMixin) player).rpginventory$isHandStackSheathed() && ((DuckLivingEntityMixin) player).rpginventory$isOffhandStackSheathed()) {
+				((DuckLivingEntityMixin) player).rpginventory$setIsHandStackSheathed(false);
+				((DuckLivingEntityMixin) player).rpginventory$setIsOffhandStackSheathed(false);
 				player.setItemSlot(EquipmentSlot.MAINHAND, handItemStack);
 				player.setItemSlot(ExtendedEquipmentSlot.SHEATHED_HAND, ItemStack.EMPTY);
 				player.setItemSlot(EquipmentSlot.OFFHAND, offHandItemStack);
 				player.setItemSlot(ExtendedEquipmentSlot.SHEATHED_OFF_HAND, ItemStack.EMPTY);
 			} else {
-				((DuckPlayerEntityMixin) player).rpginventory$setIsHandStackSheathed(true);
-				((DuckPlayerEntityMixin) player).rpginventory$setIsOffhandStackSheathed(true);
+				((DuckLivingEntityMixin) player).rpginventory$setIsHandStackSheathed(true);
+				((DuckLivingEntityMixin) player).rpginventory$setIsOffhandStackSheathed(true);
 				player.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
 				player.setItemSlot(ExtendedEquipmentSlot.SHEATHED_HAND, handItemStack);
 				player.setItemSlot(EquipmentSlot.OFFHAND, ItemStack.EMPTY);

@@ -2,6 +2,7 @@ package com.github.theredbrain.rpginventory.network.packet;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.config.ServerConfig;
+import com.github.theredbrain.rpginventory.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -30,8 +31,8 @@ public class SwapHandItemsPacketReceiver implements ServerPlayNetworking.PlayPay
 			ItemStack offhandItemStack = ItemStack.EMPTY;
 			ItemStack alternativeOffhandItemStack = ItemStack.EMPTY;
 
-			boolean handIsSheathed = ((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed();
-			boolean offHandIsSheathed = ((DuckPlayerEntityMixin) player).rpginventory$isOffhandStackSheathed();
+			boolean handIsSheathed = ((DuckLivingEntityMixin) player).rpginventory$isHandStackSheathed();
+			boolean offHandIsSheathed = ((DuckLivingEntityMixin) player).rpginventory$isOffhandStackSheathed();
 
 			float staminaCost = 0.0F;
 			boolean actionIsNotPossible = RPGInventory.doesCurrentPlayerStatusPreventHandSlotAction(player);

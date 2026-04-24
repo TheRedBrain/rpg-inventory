@@ -6,13 +6,10 @@ import com.github.theredbrain.rpginventory.component.type.AdvancementLockedCompo
 import com.github.theredbrain.rpginventory.config.ClientConfig;
 import com.github.theredbrain.rpginventory.network.DuckClientAdvancementManagerMixin;
 import com.github.theredbrain.rpginventory.util.ItemUtils;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.advancements.AdvancementHolder;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.multiplayer.ClientAdvancements;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
@@ -52,13 +49,11 @@ public class SlotOverlayHelper {
 
 			AdvancementHolder unlockAdvancementEntry = null;
 			AdvancementHolder lockAdvancementEntry = null;
-			if (clientAdvancementManager != null) {
-				if (!advancementLockedComponent.unlock_advancement().isEmpty()) {
-					unlockAdvancementEntry = clientAdvancementManager.get(Identifier.parse(advancementLockedComponent.unlock_advancement()));
-				}
-				if (!advancementLockedComponent.lock_advancement().isEmpty()) {
-					lockAdvancementEntry = clientAdvancementManager.get(Identifier.parse(advancementLockedComponent.lock_advancement()));
-				}
+			if (!advancementLockedComponent.unlock_advancement().isEmpty()) {
+				unlockAdvancementEntry = clientAdvancementManager.get(Identifier.parse(advancementLockedComponent.unlock_advancement()));
+			}
+			if (!advancementLockedComponent.lock_advancement().isEmpty()) {
+				lockAdvancementEntry = clientAdvancementManager.get(Identifier.parse(advancementLockedComponent.lock_advancement()));
 			}
 
 			boolean is_unlocked = false;
@@ -80,11 +75,9 @@ public class SlotOverlayHelper {
 		return status;
 	}
 
-	private static void drawSlotHighlight(GuiGraphicsExtractor context, int x, int y, int z, int colorStart, int colorEnd) {
-		RenderSystem.disableDepthTest();
-		RenderSystem.colorMask(true, true, true, false);
-		context.fillGradient(RenderType.guiOverlay(), x, y, x + 16, y + 16, colorStart, colorEnd, z);
-		RenderSystem.colorMask(true, true, true, true);
-		RenderSystem.enableDepthTest();
+	private static void drawSlotHighlight(GuiGraphicsExtractor graphics, int x, int y, int z, int colorStart, int colorEnd) {
+		graphics.pose().pushMatrix();
+		graphics.fillGradient(x, y, x + 16, y + 16, colorStart, colorEnd);
+		graphics.pose().popMatrix();
 	}
 }

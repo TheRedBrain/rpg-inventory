@@ -1,12 +1,13 @@
 package com.github.theredbrain.rpginventory.registry;
 
+import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.RPGInventoryClient;
 import com.github.theredbrain.rpginventory.network.packet.SheatheWeaponsPacket;
 import com.github.theredbrain.rpginventory.network.packet.SwapHandItemsPacket;
 import com.github.theredbrain.rpginventory.network.packet.ToggleTwoHandedStancePacket;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -25,74 +26,75 @@ public class KeyBindingsRegistry {
 	public static boolean swapHandBoolean;
 	public static boolean swapOffHandBoolean;
 	public static boolean swapBothHandsBoolean;
+	public static KeyMapping.Category RPG_INVENTORY;
 
 	public static void registerKeyBindings() {
-		KeyBindingsRegistry.sheatheWeapons = KeyBindingHelper.registerKeyBinding(new KeyMapping(
+		KeyBindingsRegistry.sheatheWeapons = KeyMappingHelper.registerKeyMapping(new KeyMapping(
 				"key.rpginventory.sheatheWeapons",
 				InputConstants.Type.KEYSYM,
 				GLFW.GLFW_KEY_G,
-				"category.rpginventory.category"
+				RPG_INVENTORY
 		));
-		KeyBindingsRegistry.toggleTwoHandedStance = KeyBindingHelper.registerKeyBinding(new KeyMapping(
+		KeyBindingsRegistry.toggleTwoHandedStance = KeyMappingHelper.registerKeyMapping(new KeyMapping(
 				"key.rpginventory.toggleTwoHandedStance",
 				InputConstants.Type.KEYSYM,
 				GLFW.GLFW_KEY_H,
-				"category.rpginventory.category"
+				RPG_INVENTORY
 		));
-		KeyBindingsRegistry.swapHand = KeyBindingHelper.registerKeyBinding(new KeyMapping(
+		KeyBindingsRegistry.swapHand = KeyMappingHelper.registerKeyMapping(new KeyMapping(
 				"key.rpginventory.swapHand",
 				InputConstants.Type.KEYSYM,
 				GLFW.GLFW_KEY_X,
-				"category.rpginventory.category"
+				RPG_INVENTORY
 		));
-		KeyBindingsRegistry.swapOffHand = KeyBindingHelper.registerKeyBinding(new KeyMapping(
+		KeyBindingsRegistry.swapOffHand = KeyMappingHelper.registerKeyMapping(new KeyMapping(
 				"key.rpginventory.swapOffHand",
 				InputConstants.Type.KEYSYM,
 				GLFW.GLFW_KEY_Y,
-				"category.rpginventory.category"
+				RPG_INVENTORY
 		));
-		KeyBindingsRegistry.swapBothHands = KeyBindingHelper.registerKeyBinding(new KeyMapping(
+		KeyBindingsRegistry.swapBothHands = KeyMappingHelper.registerKeyMapping(new KeyMapping(
 				"key.rpginventory.swapBothHands",
 				InputConstants.Type.KEYSYM,
 				GLFW.GLFW_KEY_C,
-				"category.rpginventory.category"
+				RPG_INVENTORY
 		));
-		ClientTickEvents.END_CLIENT_TICK.register(client -> {
-			if (KeyBindingsRegistry.swapHand.wasPressed()) {
+		ClientTickEvents.END_CLIENT_TICK.register(minecraft -> {
+			if (KeyBindingsRegistry.swapHand.isDown()) {
 				if (!swapHandBoolean) {
-					syncSlotSwapHand(true, false);
+					syncSlotSwapHand(minecraft, true, false);
 				}
 				swapHandBoolean = true;
 			} else if (swapHandBoolean) {
 				swapHandBoolean = false;
 			}
-			if (KeyBindingsRegistry.swapOffHand.wasPressed()) {
+			if (KeyBindingsRegistry.swapOffHand.isDown()) {
 				if (!swapOffHandBoolean) {
-					syncSlotSwapHand(false, true);
+					syncSlotSwapHand(minecraft, false, true);
 				}
 				swapOffHandBoolean = true;
 			} else if (swapOffHandBoolean) {
 				swapOffHandBoolean = false;
 			}
-			if (KeyBindingsRegistry.swapBothHands.wasPressed()) {
+			if (KeyBindingsRegistry.swapBothHands.isDown()) {
 				if (!swapBothHandsBoolean) {
-					syncSlotSwapHand(true, true);
+					syncSlotSwapHand(minecraft, true, true);
 				}
 				swapBothHandsBoolean = true;
 			} else if (swapBothHandsBoolean) {
 				swapBothHandsBoolean = false;
 			}
-			if (KeyBindingsRegistry.sheatheWeapons.wasPressed()) {
+			if (KeyBindingsRegistry.sheatheWeapons.isDown()) {
 				if (!sheatheWeaponsBoolean) {
-					sheatheWeapons();
+					sheatheWeapons(minecraft);
 				}
 				sheatheWeaponsBoolean = true;
 			} else if (sheatheWeaponsBoolean) {
 				sheatheWeaponsBoolean = false;
 			}
-			if (KeyBindingsRegistry.toggleTwoHandedStance.wasPressed()) {
+			if (KeyBindingsRegistry.toggleTwoHandedStance.isDown()) {
 				if (!toggleTwoHandedStanceBoolean) {
-					toggleTwoHandedStance();
+					toggleTwoHandedStance(minecraft);
 				}
 				toggleTwoHandedStanceBoolean = true;
 			} else if (toggleTwoHandedStanceBoolean) {
@@ -101,33 +103,38 @@ public class KeyBindingsRegistry {
 		});
 	}
 
-	public static void sheatheWeapons() {
-		if (RPGInventoryClient.doesCurrentPlayerStatusPreventHandSlotAction(Minecraft.getInstance())) {
-			if (Minecraft.getInstance().player != null) {
-				Minecraft.getInstance().player.displayClientMessage(Component.translatable("hud.message.handSlotActionWasPrevented"), true);
+	public static void sheatheWeapons(Minecraft minecraft) {
+		if (RPGInventoryClient.doesCurrentPlayerStatusPreventHandSlotAction(minecraft)) {
+			if (minecraft.player != null) {
+				minecraft.player.sendOverlayMessage(Component.translatable("hud.message.handSlotActionWasPrevented"));
 				return;
 			}
 		}
 		ClientPlayNetworking.send(new SheatheWeaponsPacket());
 	}
 
-	public static void toggleTwoHandedStance() {
+	public static void toggleTwoHandedStance(Minecraft minecraft) {
 		if (RPGInventoryClient.doesCurrentPlayerStatusPreventHandSlotAction(Minecraft.getInstance())) {
-			if (Minecraft.getInstance().player != null) {
-				Minecraft.getInstance().player.displayClientMessage(Component.translatable("hud.message.handSlotActionWasPrevented"), true);
+			if (minecraft.player != null) {
+				minecraft.player.sendOverlayMessage(Component.translatable("hud.message.handSlotActionWasPrevented"));
 				return;
 			}
 		}
 		ClientPlayNetworking.send(new ToggleTwoHandedStancePacket());
 	}
 
-	public static void syncSlotSwapHand(boolean mainHand, boolean offHand) {
+	public static void syncSlotSwapHand(Minecraft minecraft, boolean mainHand, boolean offHand) {
 		if (RPGInventoryClient.doesCurrentPlayerStatusPreventHandSlotAction(Minecraft.getInstance())) {
-			if (Minecraft.getInstance().player != null) {
-				Minecraft.getInstance().player.displayClientMessage(Component.translatable("hud.message.handSlotActionWasPrevented"), true);
+			if (minecraft.player != null) {
+				minecraft.player.sendOverlayMessage(Component.translatable("hud.message.handSlotActionWasPrevented"));
 				return;
 			}
 		}
 		ClientPlayNetworking.send(new SwapHandItemsPacket(mainHand, offHand));
 	}
+
+	static {
+		RPG_INVENTORY = KeyMapping.Category.register(RPGInventory.identifier("key_binding_category"));
+	}
+
 }

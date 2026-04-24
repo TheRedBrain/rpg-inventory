@@ -2,8 +2,9 @@ package com.github.theredbrain.rpginventory.gui.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.CommonComponents;
@@ -34,18 +35,19 @@ public class ToggleInventoryScreenWidget extends Button {
 	}
 
 	@Override
-	public void renderWidget(GuiGraphics context, int mouseX, int mouseY, float delta) {
+	public void playDownSound(SoundManager soundManager) {
+		soundManager.play(SimpleSoundInstance.forUI(SoundEvents.BOOK_PAGE_TURN, 1.0F));
+	}
+
+	@Override
+	protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+
 		Identifier identifier;
 		if (this.opensToRight) {
 			identifier = this.isPressed ? PAGE_BACKWARD_HIGHLIGHTED_TEXTURE : PAGE_FORWARD_TEXTURE;
 		} else {
 			identifier = this.isPressed ? PAGE_FORWARD_HIGHLIGHTED_TEXTURE : PAGE_BACKWARD_TEXTURE;
 		}
-		context.blitSprite(identifier, this.getX(), this.getY(), 23, 13);
-	}
-
-	@Override
-	public void playDownSound(SoundManager soundManager) {
-		soundManager.play(SimpleSoundInstance.forUI(SoundEvents.BOOK_PAGE_TURN, 1.0F));
+		graphics.blitSprite(RenderPipelines.GUI_TEXTURED, identifier, this.getX(), this.getY(), 23, 13);
 	}
 }

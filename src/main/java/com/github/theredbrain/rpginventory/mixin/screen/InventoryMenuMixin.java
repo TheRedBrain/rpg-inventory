@@ -2,6 +2,7 @@ package com.github.theredbrain.rpginventory.mixin.screen;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.config.ServerConfig;
+import com.github.theredbrain.rpginventory.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.registry.Tags;
@@ -31,7 +32,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 @Mixin(InventoryMenu.class)
-public abstract class PlayerScreenHandlerMixin extends AbstractContainerMenu implements DuckPlayerScreenHandlerMixin {
+public abstract class InventoryMenuMixin extends AbstractContainerMenu implements DuckPlayerScreenHandlerMixin {
 	@Unique
 	private static final Identifier EMPTY_HAND_SLOT = RPGInventory.identifier("item/empty_slot_hand");
 	@Unique
@@ -72,7 +73,7 @@ public abstract class PlayerScreenHandlerMixin extends AbstractContainerMenu imp
 	@Unique
 	private boolean isAttributeScreenVisible = false;
 
-	public PlayerScreenHandlerMixin() {
+	public InventoryMenuMixin() {
 		super(null, 0);
 	}
 
@@ -139,14 +140,14 @@ public abstract class PlayerScreenHandlerMixin extends AbstractContainerMenu imp
 
 			@Override
 			public boolean isActive() {
-				return isRPGInventoryScreenActivated && !((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed() && RPGInventory.isHandSlotOverhaulActive();
+				return isRPGInventoryScreenActivated && !((DuckLivingEntityMixin) owner).rpginventory$isHandStackSheathed() && RPGInventory.isHandSlotOverhaulActive();
 			}
 
 			@Override
 			public boolean mayPlace(ItemStack stack) {
 				ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
 
-				return (stack.is(Tags.HAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isUsableByPlayer(stack, owner) && (stack.has(RPGInventory.IGNORES_EQUIPMENT_CHANGE_RESTRICTIONS) || owner.hasEffect(RPGInventory.CIVILISATION) || owner.isCreative() || (serverConfig.allow_equipment_changes.get() && !owner.hasEffect(RPGInventory.WILDERNESS))) && !((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed();
+				return (stack.is(Tags.HAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isUsableByPlayer(stack, owner) && (stack.has(RPGInventory.IGNORES_EQUIPMENT_CHANGE_RESTRICTIONS) || owner.hasEffect(RPGInventory.CIVILISATION) || owner.isCreative() || (serverConfig.allow_equipment_changes.get() && !owner.hasEffect(RPGInventory.WILDERNESS))) && !((DuckLivingEntityMixin) owner).rpginventory$isHandStackSheathed();
 			}
 
 		});
@@ -156,14 +157,14 @@ public abstract class PlayerScreenHandlerMixin extends AbstractContainerMenu imp
 
 			@Override
 			public boolean isActive() {
-				return isRPGInventoryScreenActivated && ((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed() && RPGInventory.isHandSlotOverhaulActive();
+				return isRPGInventoryScreenActivated && ((DuckLivingEntityMixin) owner).rpginventory$isHandStackSheathed() && RPGInventory.isHandSlotOverhaulActive();
 			}
 
 			@Override
 			public boolean mayPlace(ItemStack stack) {
 				ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
 
-				return (stack.is(Tags.HAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isUsableByPlayer(stack, owner) && (stack.has(RPGInventory.IGNORES_EQUIPMENT_CHANGE_RESTRICTIONS) || owner.hasEffect(RPGInventory.CIVILISATION) || owner.isCreative() || (serverConfig.allow_equipment_changes.get() && !owner.hasEffect(RPGInventory.WILDERNESS))) && ((DuckPlayerEntityMixin) owner).rpginventory$isHandStackSheathed();
+				return (stack.is(Tags.HAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isUsableByPlayer(stack, owner) && (stack.has(RPGInventory.IGNORES_EQUIPMENT_CHANGE_RESTRICTIONS) || owner.hasEffect(RPGInventory.CIVILISATION) || owner.isCreative() || (serverConfig.allow_equipment_changes.get() && !owner.hasEffect(RPGInventory.WILDERNESS))) && ((DuckLivingEntityMixin) owner).rpginventory$isHandStackSheathed();
 			}
 
 		});
@@ -173,14 +174,14 @@ public abstract class PlayerScreenHandlerMixin extends AbstractContainerMenu imp
 
 			@Override
 			public boolean isActive() {
-				return isRPGInventoryScreenActivated && ((DuckPlayerEntityMixin) owner).rpginventory$isOffhandStackSheathed() && RPGInventory.isHandSlotOverhaulActive();
+				return isRPGInventoryScreenActivated && ((DuckLivingEntityMixin) owner).rpginventory$isOffhandStackSheathed() && RPGInventory.isHandSlotOverhaulActive();
 			}
 
 			@Override
 			public boolean mayPlace(ItemStack stack) {
 				ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
 
-				return (EquipmentSlot.OFFHAND == owner.getEquipmentSlotForItem(stack) || stack.is(Tags.OFFHAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isUsableByPlayer(stack, owner) && (stack.has(RPGInventory.IGNORES_EQUIPMENT_CHANGE_RESTRICTIONS) || owner.hasEffect(RPGInventory.CIVILISATION) || owner.isCreative() || (serverConfig.allow_equipment_changes.get() && !owner.hasEffect(RPGInventory.WILDERNESS))) && ((DuckPlayerEntityMixin) owner).rpginventory$isOffhandStackSheathed();
+				return (EquipmentSlot.OFFHAND == owner.getEquipmentSlotForItem(stack) || stack.is(Tags.OFFHAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isUsableByPlayer(stack, owner) && (stack.has(RPGInventory.IGNORES_EQUIPMENT_CHANGE_RESTRICTIONS) || owner.hasEffect(RPGInventory.CIVILISATION) || owner.isCreative() || (serverConfig.allow_equipment_changes.get() && !owner.hasEffect(RPGInventory.WILDERNESS))) && ((DuckLivingEntityMixin) owner).rpginventory$isOffhandStackSheathed();
 			}
 
 		});
@@ -672,11 +673,11 @@ public abstract class PlayerScreenHandlerMixin extends AbstractContainerMenu imp
 					if (RPGInventory.isHandSlotOverhaulActive()) {
 
 						if (!serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || rpginventory$stack2.is(Tags.HAND_ITEMS)) {
-							if (((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed() && !this.slots.get(47).hasItem()) {
+							if (((DuckLivingEntityMixin) player).rpginventory$isHandStackSheathed() && !this.slots.get(47).hasItem()) {
 								if (!this.moveItemStackTo(rpginventory$stack2, 47, 48, false)) {
 									return ItemStack.EMPTY;
 								}
-							} else if (!((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed() && !this.slots.get(46).hasItem()) {
+							} else if (!((DuckLivingEntityMixin) player).rpginventory$isHandStackSheathed() && !this.slots.get(46).hasItem()) {
 								if (!this.moveItemStackTo(rpginventory$stack2, 46, 47, false)) {
 									return ItemStack.EMPTY;
 								}
@@ -684,11 +685,11 @@ public abstract class PlayerScreenHandlerMixin extends AbstractContainerMenu imp
 						}
 
 						if (rpginventory$equipmentSlot == EquipmentSlot.OFFHAND || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || rpginventory$stack2.is(Tags.OFFHAND_ITEMS)) {
-							if (((DuckPlayerEntityMixin) player).rpginventory$isOffhandStackSheathed() && !this.slots.get(48).hasItem()) {
+							if (((DuckLivingEntityMixin) player).rpginventory$isOffhandStackSheathed() && !this.slots.get(48).hasItem()) {
 								if (!this.moveItemStackTo(rpginventory$stack2, 48, 49, false)) {
 									return ItemStack.EMPTY;
 								}
-							} else if (!((DuckPlayerEntityMixin) player).rpginventory$isOffhandStackSheathed() && !this.slots.get(45).hasItem()) {
+							} else if (!((DuckLivingEntityMixin) player).rpginventory$isOffhandStackSheathed() && !this.slots.get(45).hasItem()) {
 								if (!this.moveItemStackTo(rpginventory$stack2, 45, 46, false)) {
 									return ItemStack.EMPTY;
 								}

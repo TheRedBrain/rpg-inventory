@@ -1,5 +1,6 @@
 package com.github.theredbrain.rpginventory.util;
 
+import com.github.theredbrain.rpginventory.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.google.common.collect.Multimap;
@@ -14,7 +15,7 @@ public class SwapHandAttributesHelper {
 	public static void swapHandAttributes(Player player, Runnable runnable) {
 
 		synchronized (player) {
-			if (!((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed() && !((DuckPlayerEntityMixin) player).rpginventory$isOffhandStackSheathed()) {
+			if (!((DuckLivingEntityMixin) player).rpginventory$isHandStackSheathed() && !((DuckLivingEntityMixin) player).rpginventory$isOffhandStackSheathed()) {
 				boolean isMainHandEmpty = player.getItemBySlot(EquipmentSlot.MAINHAND).isEmpty();
 				boolean isOffhandEmpty = player.getItemBySlot(EquipmentSlot.OFFHAND).isEmpty();
 				ItemStack mainHandStack = isMainHandEmpty ? player.getItemBySlot(ExtendedEquipmentSlot.EMPTY_HAND) : player.getItemBySlot(EquipmentSlot.MAINHAND);

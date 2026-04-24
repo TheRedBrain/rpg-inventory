@@ -3,6 +3,8 @@ package com.github.theredbrain.rpginventory.gui.hud;
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.RPGInventoryClient;
 import com.github.theredbrain.rpginventory.config.ClientConfig;
+import com.github.theredbrain.rpginventory.entity.DuckLivingEntityMixin;
+import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.rpginventory.registry.Tags;
@@ -14,6 +16,8 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -43,23 +47,23 @@ public class InGameHudHelper {
 			int hotbar_start_x = RPGInventoryClient.drawAlternativeHotbar(graphics, playerEntity, HOTBAR_TEXTURE);
 
 			boolean isHandSlotOverhaulActive = RPGInventory.isHandSlotOverhaulActive();
-			if (((DuckPlayerEntityMixin) playerEntity).rpginventory$isHandStackSheathed() || clientConfig.hotBarOverhaul.always_show_selected_hotbar_slot.get() || !isHandSlotOverhaulActive) {
+			if (((DuckLivingEntityMixin) playerEntity).rpginventory$isHandStackSheathed() || clientConfig.hotBarOverhaul.always_show_selected_hotbar_slot.get() || !isHandSlotOverhaulActive) {
 				graphics.blitSprite(
 						RenderPipelines.GUI_TEXTURED, HOTBAR_SELECTION_FIXED_TEXTURE, hotbar_start_x - 1 + playerEntity.getInventory().getSelectedSlot() * 20, graphics.guiHeight() - 22 - 1, 24, 24
 				);
 			}
 
-			ItemStack itemStackHand = ((DuckPlayerInventoryMixin) playerEntity.getInventory()).rpginventory$getHand();
-			ItemStack itemStackOffHand = playerEntity.getOffhandItem();
-			ItemStack itemStackAlternativeHand = ((DuckPlayerInventoryMixin) playerEntity.getInventory()).rpginventory$getAlternativeHand();
-			ItemStack itemStackAlternativeOffHand = ((DuckPlayerInventoryMixin) playerEntity.getInventory()).rpginventory$getAlternativeOffhand();
-			boolean isHandSheathed = ((DuckPlayerEntityMixin) playerEntity).rpginventory$isHandStackSheathed();
-			boolean isOffhandSheathed = ((DuckPlayerEntityMixin) playerEntity).rpginventory$isOffhandStackSheathed();
+			ItemStack itemStackHand = playerEntity.getItemBySlot(EquipmentSlot.MAINHAND);
+			ItemStack itemStackOffHand = playerEntity.getItemBySlot(EquipmentSlot.OFFHAND);
+			ItemStack itemStackAlternativeHand = playerEntity.getItemBySlot(ExtendedEquipmentSlot.ALTERNATIVE_HAND);
+			ItemStack itemStackAlternativeOffHand = playerEntity.getItemBySlot(ExtendedEquipmentSlot.ALTERNATIVE_OFF_HAND);
+			boolean isHandSheathed = ((DuckLivingEntityMixin) playerEntity).rpginventory$isHandStackSheathed();
+			boolean isOffhandSheathed = ((DuckLivingEntityMixin) playerEntity).rpginventory$isOffhandStackSheathed();
 			if (isHandSheathed) {
-				itemStackHand = ((DuckPlayerInventoryMixin) playerEntity.getInventory()).rpginventory$getSheathedHand();
+				itemStackHand = playerEntity.getItemBySlot(ExtendedEquipmentSlot.SHEATHED_HAND);
 			}
 			if (isOffhandSheathed) {
-				itemStackOffHand = ((DuckPlayerInventoryMixin) playerEntity.getInventory()).rpginventory$getSheathedOffhand();
+				itemStackOffHand = playerEntity.getItemBySlot(ExtendedEquipmentSlot.SHEATHED_OFF_HAND);
 			}
 
 			int x;

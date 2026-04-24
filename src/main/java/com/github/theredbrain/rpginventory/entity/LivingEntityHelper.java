@@ -1,8 +1,18 @@
 package com.github.theredbrain.rpginventory.entity;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Predicate;
+
+import com.github.theredbrain.rpginventory.RPGInventory;
+import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
+import com.github.theredbrain.rpginventory.entity.player.DuckPlayerInventoryMixin;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 public class LivingEntityHelper {
@@ -147,4 +157,5 @@ public class LivingEntityHelper {
 		}
 		return i;
 	}
+
 }

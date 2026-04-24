@@ -2,8 +2,8 @@ package com.github.theredbrain.rpginventory.network.packet;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.config.ServerConfig;
+import com.github.theredbrain.rpginventory.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
-import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.chat.Component;
@@ -47,7 +47,7 @@ public class ToggleTwoHandedStancePacketReceiver implements ServerPlayNetworking
 			if (staminaCost > 0.0F && !player.isCreative() && serverConfig.handSlotOverhaul.staminaAttributesCompat.toggling_two_handed_stance_requires_stamina.get() && RPGInventory.getCurrentStamina(player) <= 0 && (!serverConfig.handSlotOverhaul.staminaAttributesCompat.toggling_two_handed_stance_requires_stamina_cost.get() || RPGInventory.getCurrentStamina(player) < staminaCost)) {
 				player.sendSystemMessage(Component.translatable("hud.message.staminaTooLow"), true);
 				return;
-			} else if (((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed() && ((DuckPlayerEntityMixin) player).rpginventory$isOffhandStackSheathed()) {
+			} else if (((DuckLivingEntityMixin) player).rpginventory$isHandStackSheathed() && ((DuckLivingEntityMixin) player).rpginventory$isOffhandStackSheathed()) {
 				if (!serverConfig.handSlotOverhaul.always_allow_toggling_two_handed_stance.get()) {
 					player.sendSystemMessage(Component.translatable("hud.message.weaponsAreSheathed"), true);
 					return;
@@ -56,12 +56,12 @@ public class ToggleTwoHandedStancePacketReceiver implements ServerPlayNetworking
 						player.sendSystemMessage(Component.translatable("hud.message.nonTwoHandedWeaponEquipped"), true);
 						return;
 					}
-					((DuckPlayerEntityMixin) player).rpginventory$setIsHandStackSheathed(false);
+					((DuckLivingEntityMixin) player).rpginventory$setIsHandStackSheathed(false);
 					player.setItemSlot(EquipmentSlot.MAINHAND, handItemStack);
 					player.setItemSlot(ExtendedEquipmentSlot.SHEATHED_HAND, ItemStack.EMPTY);
 				}
-			} else if (((DuckPlayerEntityMixin) player).rpginventory$isOffhandStackSheathed()) {
-				((DuckPlayerEntityMixin) player).rpginventory$setIsOffhandStackSheathed(false);
+			} else if (((DuckLivingEntityMixin) player).rpginventory$isOffhandStackSheathed()) {
+				((DuckLivingEntityMixin) player).rpginventory$setIsOffhandStackSheathed(false);
 				player.setItemSlot(EquipmentSlot.OFFHAND, offHandItemStack);
 				player.setItemSlot(ExtendedEquipmentSlot.SHEATHED_OFF_HAND, ItemStack.EMPTY);
 			} else {
@@ -69,7 +69,7 @@ public class ToggleTwoHandedStancePacketReceiver implements ServerPlayNetworking
 					player.sendSystemMessage(Component.translatable("hud.message.nonTwoHandedWeaponEquipped"), true);
 					return;
 				}
-				((DuckPlayerEntityMixin) player).rpginventory$setIsOffhandStackSheathed(true);
+				((DuckLivingEntityMixin) player).rpginventory$setIsOffhandStackSheathed(true);
 				player.setItemSlot(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
 				player.setItemSlot(ExtendedEquipmentSlot.SHEATHED_OFF_HAND, offHandItemStack);
 			}
