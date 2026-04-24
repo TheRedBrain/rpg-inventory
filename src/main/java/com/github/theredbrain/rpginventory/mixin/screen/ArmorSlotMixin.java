@@ -16,37 +16,37 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
-@Mixin(targets = {"net/minecraft/screen/slot/ArmorSlot"})
+@Mixin(targets = {"net/minecraft/world/inventory/ArmorSlot"})
 public abstract class ArmorSlotMixin extends Slot {
 
 	@Shadow
 	@Final
-	private LivingEntity entity;
+	private LivingEntity owner;
 
 	@Shadow
 	@Final
-	private EquipmentSlot equipmentSlot;
+	private EquipmentSlot slot;
 
 	public ArmorSlotMixin(Container inventory, int index, int x, int y) {
 		super(inventory, index, x, y);
 	}
 
-	@WrapMethod(method = "canInsert")
-	public boolean rpginventory$canInsert(ItemStack stack, Operation<Boolean> original) {
+	@WrapMethod(method = "mayPlace")
+	public boolean rpginventory$mayPlace(ItemStack itemStack, Operation<Boolean> original) {
 
 		boolean isOwned = true;
 		boolean isCreative = false;
-		if (entity instanceof Player playerEntity) {
-			isOwned = ItemUtils.isUsableByPlayer(stack, playerEntity);
+		if (this.owner instanceof Player playerEntity) {
+			isOwned = ItemUtils.isUsableByPlayer(itemStack, playerEntity);
 			isCreative = playerEntity.isCreative();
 		}
 
-		return (original.call(stack) || rpginventory$isOfEquipmentTag(stack, this.equipmentSlot)) && isOwned && (stack.has(RPGInventory.IGNORES_EQUIPMENT_CHANGE_RESTRICTIONS) || entity.hasEffect(RPGInventory.CIVILISATION) || isCreative || (RPGInventory.SERVER_CONFIG.allow_equipment_changes.get() && !entity.hasEffect(RPGInventory.WILDERNESS)));
+		return (original.call(itemStack) || rpginventory$isOfEquipmentTag(itemStack, this.slot)) && isOwned && (itemStack.has(RPGInventory.IGNORES_EQUIPMENT_CHANGE_RESTRICTIONS) || owner.hasEffect(RPGInventory.CIVILISATION) || isCreative || (RPGInventory.SERVER_CONFIG.allow_equipment_changes.get() && !owner.hasEffect(RPGInventory.WILDERNESS)));
 	}
 
-	@WrapMethod(method = "canTakeItems")
-	public boolean rpginventory$canTakeItems(Player playerEntity, Operation<Boolean> original) {
-		return original.call(playerEntity) && !this.getItem().has(RPGInventory.LOAD_OUT_ITEM) && (this.getItem().has(RPGInventory.IGNORES_EQUIPMENT_CHANGE_RESTRICTIONS) || entity.hasEffect(RPGInventory.CIVILISATION) || playerEntity.isCreative() || (RPGInventory.SERVER_CONFIG.allow_equipment_changes.get() && !entity.hasEffect(RPGInventory.WILDERNESS)));
+	@WrapMethod(method = "mayPickup")
+	public boolean rpginventory$mayPickup(Player player, Operation<Boolean> original) {
+		return original.call(player) && !this.getItem().has(RPGInventory.LOAD_OUT_ITEM) && (this.getItem().has(RPGInventory.IGNORES_EQUIPMENT_CHANGE_RESTRICTIONS) || owner.hasEffect(RPGInventory.CIVILISATION) || player.isCreative() || (RPGInventory.SERVER_CONFIG.allow_equipment_changes.get() && !owner.hasEffect(RPGInventory.WILDERNESS)));
 	}
 
 	@Unique

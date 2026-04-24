@@ -1,8 +1,8 @@
 package com.github.theredbrain.rpginventory.mixin.server.network;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
+import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
-import com.github.theredbrain.rpginventory.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.rpginventory.network.packet.SheathedWeaponsPacket;
 import com.github.theredbrain.rpginventory.network.packet.SwappedHandItemsPacket;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -10,7 +10,6 @@ import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -24,22 +23,21 @@ public class ServerEntityMixin {
 	@Shadow
 	@Final
 	private Entity entity;
-
+	// TODO test if the hand sheathed check needs to be for thisServerPlayer
 	@Inject(method = "addPairing", at = @At(value = "TAIL"))
-	public void rpginventory$addPairing(ServerPlayer serverPlayer, CallbackInfo info) {
-		if (this.entity instanceof Player && RPGInventory.isHandSlotOverhaulActive()) {
-			Player player = (Player) entity;
-			if (!((DuckPlayerInventoryMixin) serverPlayer.getInventory()).rpginventory$getHand().isEmpty() || !((DuckPlayerInventoryMixin) serverPlayer.getInventory()).rpginventory$getAlternativeHand().isEmpty()) {
-				ServerPlayNetworking.send((ServerPlayer) player, new SwappedHandItemsPacket(serverPlayer.getId(), true));
+	public void rpginventory$addPairing(ServerPlayer player, CallbackInfo info) {
+		if (this.entity instanceof ServerPlayer thisServerPlayer && RPGInventory.isHandSlotOverhaulActive()) {
+			if (!player.getItemBySlot(EquipmentSlot.MAINHAND).isEmpty() || !player.getItemBySlot(ExtendedEquipmentSlot.ALTERNATIVE_HAND).isEmpty()) {
+				ServerPlayNetworking.send(thisServerPlayer, new SwappedHandItemsPacket(player.getId(), true));
 			}
-			if (!serverPlayer.getItemBySlot(EquipmentSlot.OFFHAND).isEmpty() || !((DuckPlayerInventoryMixin) serverPlayer.getInventory()).rpginventory$getAlternativeOffhand().isEmpty()) {
-				ServerPlayNetworking.send((ServerPlayer) player, new SwappedHandItemsPacket(serverPlayer.getId(), false));
+			if (!player.getItemBySlot(EquipmentSlot.OFFHAND).isEmpty() || !player.getItemBySlot(ExtendedEquipmentSlot.ALTERNATIVE_OFF_HAND).isEmpty()) {
+				ServerPlayNetworking.send(thisServerPlayer, new SwappedHandItemsPacket(player.getId(), false));
 			}
-			if (!((DuckPlayerInventoryMixin) serverPlayer.getInventory()).rpginventory$getHand().isEmpty() || !((DuckPlayerInventoryMixin) serverPlayer.getInventory()).rpginventory$getSheathedHand().isEmpty()) {
-				ServerPlayNetworking.send((ServerPlayer) player, new SheathedWeaponsPacket(serverPlayer.getId(), true, ((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed()));
+			if (!player.getItemBySlot(EquipmentSlot.MAINHAND).isEmpty() || !player.getItemBySlot(ExtendedEquipmentSlot.SHEATHED_HAND).isEmpty()) {
+				ServerPlayNetworking.send(thisServerPlayer, new SheathedWeaponsPacket(player.getId(), true, ((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed()));
 			}
-			if (!serverPlayer.getItemBySlot(EquipmentSlot.OFFHAND).isEmpty() || !((DuckPlayerInventoryMixin) serverPlayer.getInventory()).rpginventory$getSheathedOffhand().isEmpty()) {
-				ServerPlayNetworking.send((ServerPlayer) player, new SheathedWeaponsPacket(serverPlayer.getId(), false, ((DuckPlayerEntityMixin) player).rpginventory$isOffhandStackSheathed()));
+			if (!player.getItemBySlot(EquipmentSlot.OFFHAND).isEmpty() || !player.getItemBySlot(ExtendedEquipmentSlot.SHEATHED_OFF_HAND).isEmpty()) {
+				ServerPlayNetworking.send(thisServerPlayer, new SheathedWeaponsPacket(player.getId(), false, ((DuckPlayerEntityMixin) player).rpginventory$isOffhandStackSheathed()));
 			}
 		}
 	}

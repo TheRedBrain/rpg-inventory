@@ -1,8 +1,8 @@
 package com.github.theredbrain.rpginventory.mixin.server.network;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
+import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
-import com.github.theredbrain.rpginventory.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.rpginventory.network.packet.SheathedWeaponsPacket;
 import com.github.theredbrain.rpginventory.network.packet.SwappedHandItemsPacket;
 import com.github.theredbrain.rpginventory.registry.ItemRegistry;
@@ -11,14 +11,13 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.mojang.authlib.GameProfile;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.core.BlockPos;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -30,9 +29,6 @@ import java.util.Collection;
 
 @Mixin(value = ServerPlayer.class/*, priority = 950*/) // TODO test if priority is needed
 public abstract class ServerPlayerEntityMixin extends Player implements DuckPlayerEntityMixin {
-
-	@Shadow
-	public abstract boolean isCreative();
 
 	@Shadow
 	public abstract void onEnterCombat();
@@ -55,28 +51,28 @@ public abstract class ServerPlayerEntityMixin extends Player implements DuckPlay
 	@Unique
 	boolean isOffHandWeaponSheathed = false;
 
-	public ServerPlayerEntityMixin(Level world, BlockPos pos, float yaw, GameProfile gameProfile) {
-		super(world, pos, yaw, gameProfile);
+	public ServerPlayerEntityMixin(final MinecraftServer server, final ServerLevel level, final GameProfile gameProfile, final ClientInformation clientInformation) {
+		super(level, gameProfile);
 	}
 
 	@Inject(method = "tick", at = @At("TAIL"))
 	public void rpginventory$tick(CallbackInfo ci) {
 		if (!this.level().isClientSide()) {
-			if (!((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$getEmptyHand().is(ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON)) {
-				((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$setEmptyHand(ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON.getDefaultInstance());
+			if (!this.getItemBySlot(ExtendedEquipmentSlot.EMPTY_HAND).is(ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON)) {
+				this.setItemSlot(ExtendedEquipmentSlot.EMPTY_HAND, ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON.getDefaultInstance());
 			}
-			if (!((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$getEmptyOffhand().is(ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON)) {
-				((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$setEmptyOffhand(ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON.getDefaultInstance());
+			if (!this.getItemBySlot(ExtendedEquipmentSlot.EMPTY_OFF_HAND).is(ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON)) {
+				this.setItemSlot(ExtendedEquipmentSlot.EMPTY_OFF_HAND, ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON.getDefaultInstance());
 			}
-			ItemStack newHandStack = ((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$getHand();
-			ItemStack newAlternativeHandStack = ((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$getAlternativeHand();
+			ItemStack newHandStack = this.getItemBySlot(EquipmentSlot.MAINHAND);
+			ItemStack newAlternativeHandStack = this.getItemBySlot(ExtendedEquipmentSlot.ALTERNATIVE_HAND);
 			if (!ItemStack.isSameItem(handSlotStack, newHandStack) || !ItemStack.isSameItem(alternateHandSlotStack, newAlternativeHandStack)) {
 				rpginventory$sendChangedHandSlotsPacket(true);
 			}
 			handSlotStack = newHandStack;
 			alternateHandSlotStack = newAlternativeHandStack;
 			ItemStack newOffHandStack = this.getItemBySlot(EquipmentSlot.OFFHAND);
-			ItemStack newAlternativeOffHandStack = ((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$getAlternativeOffhand();
+			ItemStack newAlternativeOffHandStack = this.getItemBySlot(ExtendedEquipmentSlot.ALTERNATIVE_OFF_HAND);
 			if (!ItemStack.isSameItem(offHandSlotStack, newOffHandStack) || !ItemStack.isSameItem(alternateOffHandSlotStack, newAlternativeOffHandStack)) {
 				rpginventory$sendChangedHandSlotsPacket(false);
 			}
@@ -95,19 +91,15 @@ public abstract class ServerPlayerEntityMixin extends Player implements DuckPlay
 		}
 	}
 
-	@WrapMethod(
-			method = "dropSelectedItem"
-	)
-	public boolean dropSelectedItem(boolean entireStack, Operation<Boolean> original) {
-		if (RPGInventory.isHandSlotOverhaulActive()) {
-			if (!this.rpginventory$isHandStackSheathed()) {
-				Inventory playerInventory = this.getInventory();
-				ItemStack itemStack = playerInventory.removeFromSelected(entireStack);
-				this.containerMenu.setRemoteSlot(46, ((DuckPlayerInventoryMixin) playerInventory).rpginventory$getHand());
-				return this.drop(itemStack, false, true) != null;
-			}
+	@WrapMethod(method = "drop(Z)V")
+	public void rpginventory$wrap_drop(boolean all, Operation<Boolean> original) {
+		if (RPGInventory.isHandSlotOverhaulActive() && !this.rpginventory$isHandStackSheathed()) {
+			ItemStack itemStack = this.getItemBySlot(EquipmentSlot.MAINHAND).copy();
+			this.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
+			this.containerMenu.setRemoteSlot(46, itemStack);
+			this.drop(itemStack, false, true);
 		}
-		return original.call(entireStack);
+		original.call(all);
 	}
 
 	@Unique

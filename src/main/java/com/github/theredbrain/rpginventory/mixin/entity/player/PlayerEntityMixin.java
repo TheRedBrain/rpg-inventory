@@ -13,6 +13,10 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Iterables;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -78,23 +82,23 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 		super(entityType, world);
 	}
 
-	@Inject(method = "initDataTracker", at = @At("RETURN"))
-	protected void rpginventory$initDataTracker(SynchedEntityData.Builder builder, CallbackInfo ci) {
-		builder.define(IS_HAND_STACK_SHEATHED, false);
-		builder.define(IS_OFFHAND_STACK_SHEATHED, false);
-		builder.define(IS_HAND_SLOT_OVERHAUL_ACTIVE, true);
-		builder.define(ARE_ALTERNATIVE_HAND_SLOTS_ACTIVE, true);
-		builder.define(OLD_ACTIVE_SPELL_SLOT_AMOUNT, -1);
-		builder.define(SHOULD_EJECT_EXCLUSIVE_EQUIPMENT, false);
-
-	}
+//	@Inject(method = "initDataTracker", at = @At("RETURN"))
+//	protected void rpginventory$initDataTracker(SynchedEntityData.Builder builder, CallbackInfo ci) {
+//		builder.define(IS_HAND_STACK_SHEATHED, false);
+//		builder.define(IS_OFFHAND_STACK_SHEATHED, false);
+//		builder.define(IS_HAND_SLOT_OVERHAUL_ACTIVE, true);
+//		builder.define(ARE_ALTERNATIVE_HAND_SLOTS_ACTIVE, true);
+//		builder.define(OLD_ACTIVE_SPELL_SLOT_AMOUNT, -1);
+//		builder.define(SHOULD_EJECT_EXCLUSIVE_EQUIPMENT, false);
+//
+//	}
 
 	@Inject(method = "tick", at = @At("TAIL"))
 	public void rpginventory$tick(CallbackInfo ci) {
 		Player playerEntity = (Player) (Object) this;
 		this.getAttributes().addTransientAttributeModifiers(getNaturalAttributeModifiers(this.level()));
 		PlayerEntityHelper.rpginventory$updateEquipmentStatusEffects(playerEntity);
-		if (!this.level().isClientSide) {
+		if (!this.level().isClientSide()) {
 			PlayerEntityHelper.rpginventory$ejectItemsFromInactiveSpellSlots(playerEntity);
 			PlayerEntityHelper.rpginventory$ejectExclusiveEquipment(playerEntity);
 			PlayerEntityHelper.rpginventory$ejectItemsFromInactiveHandSlots(playerEntity);
@@ -102,113 +106,207 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 		}
 	}
 
-	@Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
-	public void rpginventory$readCustomDataFromNbt(CompoundTag nbt, CallbackInfo ci) {
+//	@Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
+//	public void rpginventory$readCustomDataFromNbt(CompoundTag nbt, CallbackInfo ci) {
+//
+//		this.rpginventory$setIsHandStackSheathed(nbt.contains("is_hand_stack_sheathed", Tag.TAG_BYTE));
+//
+//		this.rpginventory$setIsOffhandStackSheathed(nbt.contains("is_offhand_stack_sheathed", Tag.TAG_BYTE));
+//
+//		this.rpginventory$setIsHandSlotOverhaulActive(nbt.contains("is_hand_slot_overhaul_active", Tag.TAG_BYTE));
+//
+//		if (nbt.contains("old_active_spell_slot_amount", Tag.TAG_INT)) {
+//			this.rpginventory$setOldActiveSpellSlotAmount(nbt.getInt("old_active_spell_slot_amount"));
+//		} else {
+//			this.rpginventory$setOldActiveSpellSlotAmount(-1);
+//		}
+//	}
 
-		this.rpginventory$setIsHandStackSheathed(nbt.contains("is_hand_stack_sheathed", Tag.TAG_BYTE));
+//	@Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
+//	public void rpginventory$writeCustomDataToNbt(CompoundTag nbt, CallbackInfo ci) {
+//
+//		if (this.rpginventory$isHandStackSheathed()) {
+//			nbt.putBoolean("is_hand_stack_sheathed", true);
+//		} else {
+//			nbt.remove("is_hand_stack_sheathed");
+//		}
+//
+//		if (this.rpginventory$isOffhandStackSheathed()) {
+//			nbt.putBoolean("is_offhand_stack_sheathed", true);
+//		} else {
+//			nbt.remove("is_offhand_stack_sheathed");
+//		}
+//
+//		if (this.rpginventory$isHandSlotOverhaulActive()) {
+//			nbt.putBoolean("is_hand_slot_overhaul_active", true);
+//		} else {
+//			nbt.remove("is_hand_slot_overhaul_active");
+//		}
+//
+//		int old_active_spell_slot_amount = this.rpginventory$oldActiveSpellSlotAmount();
+//		if (old_active_spell_slot_amount != -1) {
+//			nbt.putInt("old_active_spell_slot_amount", old_active_spell_slot_amount);
+//		} else {
+//			nbt.remove("old_active_spell_slot_amount");
+//		}
+//	}
 
-		this.rpginventory$setIsOffhandStackSheathed(nbt.contains("is_offhand_stack_sheathed", Tag.TAG_BYTE));
+	public ItemStack getItemInHand(final InteractionHand hand) {
+		if (hand == InteractionHand.MAIN_HAND) {
 
-		this.rpginventory$setIsHandSlotOverhaulActive(nbt.contains("is_hand_slot_overhaul_active", Tag.TAG_BYTE));
-
-		if (nbt.contains("old_active_spell_slot_amount", Tag.TAG_INT)) {
-			this.rpginventory$setOldActiveSpellSlotAmount(nbt.getInt("old_active_spell_slot_amount"));
-		} else {
-			this.rpginventory$setOldActiveSpellSlotAmount(-1);
-		}
-	}
-
-	@Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
-	public void rpginventory$writeCustomDataToNbt(CompoundTag nbt, CallbackInfo ci) {
-
-		if (this.rpginventory$isHandStackSheathed()) {
-			nbt.putBoolean("is_hand_stack_sheathed", true);
-		} else {
-			nbt.remove("is_hand_stack_sheathed");
-		}
-
-		if (this.rpginventory$isOffhandStackSheathed()) {
-			nbt.putBoolean("is_offhand_stack_sheathed", true);
-		} else {
-			nbt.remove("is_offhand_stack_sheathed");
-		}
-
-		if (this.rpginventory$isHandSlotOverhaulActive()) {
-			nbt.putBoolean("is_hand_slot_overhaul_active", true);
-		} else {
-			nbt.remove("is_hand_slot_overhaul_active");
-		}
-
-		int old_active_spell_slot_amount = this.rpginventory$oldActiveSpellSlotAmount();
-		if (old_active_spell_slot_amount != -1) {
-			nbt.putInt("old_active_spell_slot_amount", old_active_spell_slot_amount);
-		} else {
-			nbt.remove("old_active_spell_slot_amount");
-		}
-	}
-
-	@WrapMethod(method = "equipStack")
-	public void equipStack(EquipmentSlot slot, ItemStack stack, Operation<Void> original) {
-		boolean isHandSlotOverhaulActive = RPGInventory.isHandSlotOverhaulActive();
-		this.verifyEquippedItem(stack);
-		if (slot == EquipmentSlot.MAINHAND) {
-			if (stack.is(Tags.EMPTY_HAND_WEAPONS)) {
-				this.onEquipItem(slot, ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setEmptyHand(stack), stack);
-			} else {
-				this.onEquipItem(slot, ((DuckPlayerEntityMixin) this).rpginventory$isHandStackSheathed() || !isHandSlotOverhaulActive ? this.inventory.items.set(this.inventory.selected, stack) : ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setHand(stack), stack);
+			ItemStack handStack;
+			if (!RPGInventory.isHandSlotOverhaulActive()) {
+				handStack = this.inventory.getSelectedItem();
+				return ItemUtils.isUsable(handStack) && ItemUtils.isUsableByPlayer(handStack, ((Player) (Object)this)) ? handStack : ItemStack.EMPTY;
 			}
-		} else if (slot == EquipmentSlot.OFFHAND) {
-			if (stack.is(Tags.EMPTY_HAND_WEAPONS)) {
-				this.onEquipItem(slot, ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setEmptyOffhand(stack), stack);
-			} else {
-				this.onEquipItem(slot, ((DuckPlayerEntityMixin) this).rpginventory$isOffhandStackSheathed() && isHandSlotOverhaulActive ? ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setSheathedOffhand(stack) : this.inventory.offhand.set(0, stack), stack);
+			ItemStack emptyHandStack = this.getItemBySlot(ExtendedEquipmentSlot.EMPTY_HAND);
+			handStack = this.getItemBySlot(EquipmentSlot.MAINHAND);
+			if (!((DuckPlayerEntityMixin) this).rpginventory$isHandStackSheathed()) {
+				return ItemUtils.isUsable(handStack) && ItemUtils.isUsableByPlayer(handStack, ((Player) (Object)this)) && !handStack.isEmpty() ? handStack : emptyHandStack;
 			}
-		} else if (slot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR) {
-			this.onEquipItem(slot, this.inventory.armor.set(slot.getIndex(), stack), stack);
-		} else if (slot.getType() == ExtendedEquipmentSlotType.RPG_INVENTORY_SLOT_TYPE) {
-			this.onEquipItem(slot, ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setAdditionalEquipmentStack(slot.getIndex(), stack), stack);
+		} else if (hand == InteractionHand.OFF_HAND) {
+
+			ItemStack offHandStack = this.getItemBySlot(EquipmentSlot.OFFHAND);
+			if (!RPGInventory.isHandSlotOverhaulActive()) {
+				return ItemUtils.isUsable(offHandStack) && ItemUtils.isUsableByPlayer(offHandStack, ((Player) (Object)this)) ? offHandStack : ItemStack.EMPTY;
+			}
+			ItemStack emptyOffHandStack = this.getItemBySlot(ExtendedEquipmentSlot.EMPTY_OFF_HAND);
+			if (!((DuckPlayerEntityMixin) this).rpginventory$isOffhandStackSheathed()) {
+				return ItemUtils.isUsable(offHandStack) && ItemUtils.isUsableByPlayer(offHandStack, ((Player) (Object)this)) && !offHandStack.isEmpty() ? offHandStack : emptyOffHandStack;
+			}
+			return ItemStack.EMPTY;
+
 		} else {
-			original.call(slot, stack);
+			throw new IllegalArgumentException("Invalid hand " + hand);
+		}
+		return ItemStack.EMPTY;
+	}
+
+	public void setItemInHand(final InteractionHand hand, final ItemStack itemStack) {
+		if (hand == InteractionHand.MAIN_HAND) {
+			this.setItemSlot(EquipmentSlot.MAINHAND, itemStack);
+		} else {
+			if (hand != InteractionHand.OFF_HAND) {
+				throw new IllegalArgumentException("Invalid hand " + hand);
+			}
+
+			this.setItemSlot(EquipmentSlot.OFFHAND, itemStack);
 		}
 	}
 
-	@Inject(method = "dropInventory", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;vanishCursedItems()V", ordinal = 0), cancellable = true)
-	private void rpginventory$pre_vanishCursedItems(CallbackInfo ci) {
+	@Override
+	public ItemStack getItemBySlot(final EquipmentSlot slot) {
+		return this.equipment.get(slot);
+	}
+
+	@Override
+	public void setItemSlot(final EquipmentSlot slot, final ItemStack itemStack) {
+		this.onEquipItem(slot, this.equipment.set(slot, itemStack), itemStack);
+	}
+
+//	@Override
+//	public ItemStack rpginventory$getCurrentMainHandItem() {
+//		if (RPGInventory.isHandSlotOverhaulActive()) {
+//			ItemStack emptyHandStack = rpginventory$getEmptyHand();
+//			ItemStack handStack = rpginventory$getHand();
+//			if (!((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed()) {
+//				return ItemUtils.isUsable(handStack) && ItemUtils.isUsableByPlayer(handStack, this.player) && !handStack.isEmpty() ? handStack : emptyHandStack;
+//			}
+//		}
+//		ItemStack itemStack = this.getItemInHand()
+//		return ItemUtils.isUsable(original) && ItemUtils.isUsableByPlayer(original, this.player) ? original : ItemStack.EMPTY;
+//	}
+//
+//	@Override
+//	public ItemStack rpginventory$getOffHandStack() {
+//		ItemStack emptyOffHandStack = rpginventory$getEmptyOffhand();
+//		ItemStack offHandStack = this.offHand.get(0);
+//		if (!RPGInventory.isHandSlotOverhaulActive()) {
+//			return ItemUtils.isUsable(offHandStack) && ItemUtils.isUsableByPlayer(offHandStack, this.player) ? offHandStack : ItemStack.EMPTY;
+//		}
+//		if (!((DuckPlayerEntityMixin) player).rpginventory$isOffhandStackSheathed()) {
+//			return ItemUtils.isUsable(offHandStack) && ItemUtils.isUsableByPlayer(offHandStack, this.player) && !offHandStack.isEmpty() ? offHandStack : emptyOffHandStack;
+//		}
+//		return ItemStack.EMPTY;
+//	}
+
+//	@WrapMethod(method = "equipStack")
+//	public void equipStack(EquipmentSlot slot, ItemStack stack, Operation<Void> original) {
+//		boolean isHandSlotOverhaulActive = RPGInventory.isHandSlotOverhaulActive();
+//		this.verifyEquippedItem(stack);
+//		if (slot == EquipmentSlot.MAINHAND) {
+//			if (stack.is(Tags.EMPTY_HAND_WEAPONS)) {
+//				this.onEquipItem(slot, ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setEmptyHand(stack), stack);
+//			} else {
+//				this.onEquipItem(slot, ((DuckPlayerEntityMixin) this).rpginventory$isHandStackSheathed() || !isHandSlotOverhaulActive ? this.inventory.items.set(this.inventory.selected, stack) : ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setHand(stack), stack);
+//			}
+//		} else if (slot == EquipmentSlot.OFFHAND) {
+//			if (stack.is(Tags.EMPTY_HAND_WEAPONS)) {
+//				this.onEquipItem(slot, ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setEmptyOffhand(stack), stack);
+//			} else {
+//				this.onEquipItem(slot, ((DuckPlayerEntityMixin) this).rpginventory$isOffhandStackSheathed() && isHandSlotOverhaulActive ? ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setSheathedOffhand(stack) : this.inventory.offhand.set(0, stack), stack);
+//			}
+//		} else if (slot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR) {
+//			this.onEquipItem(slot, this.inventory.armor.set(slot.getIndex(), stack), stack);
+//		} else if (slot.getType() == ExtendedEquipmentSlotType.RPG_INVENTORY_SLOT_TYPE) {
+//			this.onEquipItem(slot, ((DuckPlayerInventoryMixin) this.inventory).rpginventory$setAdditionalEquipmentStack(slot.getIndex(), stack), stack);
+//		} else {
+//			original.call(slot, stack);
+//		}
+//	}
+
+	@WrapOperation(method = "getDestroySpeed", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getDestroySpeed(Lnet/minecraft/world/level/block/state/BlockState;)F")
+	)
+	public float rpginventory$wrap_getBlockBreakingSpeed(ItemStack instance, BlockState state, Operation<Float> original) {
+		if (RPGInventory.isHandSlotOverhaulActive()) {
+			return this.getItemInHand(InteractionHand.MAIN_HAND).getDestroySpeed(state);
+		} else {
+			return original.call(instance, state);
+		}
+	}
+
+	@WrapMethod(method = "dropEquipment")
+	protected void dropEquipment(ServerLevel level, Operation<Void> original) {
 		if (this.hasEffect(RPGInventory.KEEP_INVENTORY)) {
 			PlayerEntityHelper.rpginventory$breakKeepInventoryItems((Player) (Object) this);
-			ci.cancel();
-		}
-	}
-
-	@WrapMethod(method = "getEquippedStack")
-	public ItemStack rpginventory$getEquippedStack(EquipmentSlot slot, Operation<ItemStack> original) {
-		if (slot == EquipmentSlot.OFFHAND) {
-			return ((DuckPlayerInventoryMixin) this.inventory).rpginventory$getOffHandStack();
-		} else if (slot.getType() == ExtendedEquipmentSlotType.RPG_INVENTORY_SLOT_TYPE) {
-			return ((DuckPlayerInventoryMixin) this.inventory).rpginventory$getAdditionalEquipmentStack(slot.getIndex());
 		} else {
-			return original.call(slot);
+			original.call(level);
 		}
 	}
 
-	@WrapMethod(method = "isArmorSlot")
-	protected boolean rpginventory$isArmorSlot(EquipmentSlot slot, Operation<Boolean> original) {
-		return original.call(slot) || slot.getType() == ExtendedEquipmentSlotType.RPG_INVENTORY_SLOT_TYPE;
-	}
+//	@WrapMethod(method = "getEquippedStack")
+//	public ItemStack rpginventory$getEquippedStack(EquipmentSlot slot, Operation<ItemStack> original) {
+//		if (slot == EquipmentSlot.OFFHAND) {
+//			return ((DuckPlayerInventoryMixin) this.inventory).rpginventory$getOffHandStack();
+//		} else if (slot.getType() == ExtendedEquipmentSlotType.RPG_INVENTORY_SLOT_TYPE) {
+//			return ((DuckPlayerInventoryMixin) this.inventory).rpginventory$getAdditionalEquipmentStack(slot.getIndex());
+//		} else {
+//			return original.call(slot);
+//		}
+//	}
 
-	@WrapMethod(method = "damageArmor")
-	public void rpginventory$damageArmor(DamageSource source, float amount, Operation<Void> original) {
-		this.doHurtEquipment(source, amount, new EquipmentSlot[]{EquipmentSlot.FEET, EquipmentSlot.LEGS, EquipmentSlot.CHEST, EquipmentSlot.HEAD, ExtendedEquipmentSlot.GLOVES, ExtendedEquipmentSlot.SHOULDERS});
-	}
+//	@WrapMethod(method = "isArmorSlot")
+//	protected boolean rpginventory$isArmorSlot(EquipmentSlot slot, Operation<Boolean> original) {
+//		return original.call(slot) || slot.getType() == ExtendedEquipmentSlotType.RPG_INVENTORY_SLOT_TYPE;
+//	}
 
-	@WrapMethod(method = "getArmorItems")
-	public Iterable<ItemStack> rpginventory$getArmorItems(Operation<Iterable<ItemStack>> original) {
-		List<ItemStack> list = new ArrayList<>(List.of(((DuckPlayerInventoryMixin) this.inventory).rpginventory$getAdditionalEquipmentStack(1), ((DuckPlayerInventoryMixin) this.inventory).rpginventory$getAdditionalEquipmentStack(5)));
-		for (ItemStack stack : original.call()) {
-			list.add(stack);
+	@WrapMethod(method = "hurtArmor")
+	public void rpginventory$hurtArmor(DamageSource damageSource, float damage, Operation<Void> original) {
+		if (RPGInventory.SERVER_CONFIG.activate_rpg_inventory_screen.get()) {
+			this.doHurtEquipment(damageSource, damage, new EquipmentSlot[]{EquipmentSlot.FEET, EquipmentSlot.LEGS, EquipmentSlot.CHEST, EquipmentSlot.HEAD, ExtendedEquipmentSlot.GLOVES, ExtendedEquipmentSlot.SHOULDERS});
+		} else {
+			original.call(damageSource, damage);
 		}
-		return list;
 	}
+
+//	@WrapMethod(method = "getArmorItems")
+//	public Iterable<ItemStack> rpginventory$getArmorItems(Operation<Iterable<ItemStack>> original) {
+//		List<ItemStack> list = new ArrayList<>(List.of(((DuckPlayerInventoryMixin) this.inventory).rpginventory$getAdditionalEquipmentStack(1), ((DuckPlayerInventoryMixin) this.inventory).rpginventory$getAdditionalEquipmentStack(5)));
+//		for (ItemStack stack : original.call()) {
+//			list.add(stack);
+//		}
+//		return list;
+//	}
 
 	@Override
 	public void onEquipItem(EquipmentSlot slot, ItemStack oldStack, ItemStack newStack) {
@@ -218,10 +316,10 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 		}
 	}
 
-	@Override
-	public Iterable<ItemStack> getAllSlots() {
-		return Iterables.concat(this.getHandSlots(), this.getArmorAndBodyArmorSlots(), ((DuckPlayerInventoryMixin) this.inventory).rpginventory$getAdditionalNonArmorEquipmentItems());
-	}
+//	@Override
+//	public Iterable<ItemStack> getAllSlots() {
+//		return Iterables.concat(this.getHandSlots(), this.getArmorAndBodyArmorSlots(), ((DuckPlayerInventoryMixin) this.inventory).rpginventory$getAdditionalNonArmorEquipmentItems());
+//	}
 
 	@Override
 	public float rpginventory$getActiveSpellSlotAmount() {
@@ -230,13 +328,13 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
 	@Override
 	public ItemStack rpginventory$getSheathedHandItemStack() {
-		ItemStack itemStack = ((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$getSheathedHand();
+		ItemStack itemStack = this.getItemBySlot(ExtendedEquipmentSlot.SHEATHED_HAND);
 		return rpginventory$isHandStackSheathed() && !itemStack.is(Tags.EMPTY_HAND_WEAPONS) && ItemUtils.isUsable(itemStack) && ItemUtils.isUsableByPlayer(itemStack, ((Player) (Object) this)) ? itemStack : ItemStack.EMPTY;
 	}
 
 	@Override
 	public ItemStack rpginventory$getSheathedOffHandItemStack() {
-		ItemStack itemStack = ((DuckPlayerInventoryMixin) this.getInventory()).rpginventory$getSheathedOffhand();
+		ItemStack itemStack = this.getItemBySlot(ExtendedEquipmentSlot.SHEATHED_OFF_HAND);
 		return rpginventory$isOffhandStackSheathed() && !itemStack.is(Tags.EMPTY_HAND_WEAPONS) && ItemUtils.isUsable(itemStack) && ItemUtils.isUsableByPlayer(itemStack, ((Player) (Object) this)) ? itemStack : ItemStack.EMPTY;
 	}
 

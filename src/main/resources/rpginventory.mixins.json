@@ -4,13 +4,13 @@
   "package": "com.github.theredbrain.rpginventory.mixin",
   "compatibilityLevel": "JAVA_25",
   "mixins": [
-    "component.type.AttributeModifierSlotMixin",
+    "component.type.EquipmentSlotGroupMixin",
     "entity.EquipmentSlotMixin",
     "entity.EquipmentSlotTypeMixin",
     "entity.LivingEntityMixin",
     "entity.attribute.EntityAttributesMixin",
-    "entity.mob.MobEntityMixin",
     "entity.player.PlayerEntityMixin",
+    "entity.player.PlayerEquipmentMixin",
     "entity.player.PlayerInventoryMixin",
     "item.ItemMixin",
     "item.ItemStackMixin",
@@ -18,8 +18,10 @@
     "screen.PlayerScreenHandlerMixin",
     "screen.PlayerScreenHandlerOffHandSlotMixin",
     "server.network.ServerEntityMixin",
+    "server.network.ServerGamePacketListenerImplMixin",
     "server.network.ServerPlayerEntityMixin",
-    "server.network.ServerGamePacketListenerImplMixin"
+    "world.entity.EntityEquipmentMixin",
+    "world.inventory.SlotRangesMixin"
   ],
   "injectors": {
     "defaultRequire": 1

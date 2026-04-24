@@ -2,13 +2,14 @@ package com.github.theredbrain.rpginventory.network.packet;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.config.ServerConfig;
+import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
-import com.github.theredbrain.rpginventory.entity.player.DuckPlayerInventoryMixin;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 
 public class SwapHandItemsPacketReceiver implements ServerPlayNetworking.PlayPayloadHandler<SwapHandItemsPacket> {
@@ -36,14 +37,14 @@ public class SwapHandItemsPacketReceiver implements ServerPlayNetworking.PlayPay
 			boolean actionIsNotPossible = RPGInventory.doesCurrentPlayerStatusPreventHandSlotAction(player);
 
 			if (mainHand) {
-				handItemStack = handIsSheathed ? ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSheathedHand().copy() : ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getHand().copy();
-				alternativeHandItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getAlternativeHand().copy();
+				handItemStack = handIsSheathed ? player.getItemBySlot(ExtendedEquipmentSlot.SHEATHED_HAND).copy() : player.getItemBySlot(EquipmentSlot.MAINHAND).copy();
+				alternativeHandItemStack = player.getItemBySlot(ExtendedEquipmentSlot.ALTERNATIVE_HAND).copy();
 				actionIsNotPossible = actionIsNotPossible || player.getCooldowns().isOnCooldown(handItemStack) || player.getCooldowns().isOnCooldown(alternativeHandItemStack);
 				staminaCost += RPGInventory.isStaminaAttributesLoaded ? serverConfig.handSlotOverhaul.staminaAttributesCompat.swapping_main_hand_items_stamina_cost.get() : 0.0F;
 			}
 			if (offHand) {
-				offhandItemStack = offHandIsSheathed ? ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSheathedOffhand().copy() : player.getInventory().offhand.get(0).copy();
-				alternativeOffhandItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getAlternativeOffhand().copy();
+				offhandItemStack = offHandIsSheathed ? player.getItemBySlot(ExtendedEquipmentSlot.SHEATHED_OFF_HAND).copy() : player.getItemBySlot(EquipmentSlot.OFFHAND).copy();
+				alternativeOffhandItemStack = player.getItemBySlot(ExtendedEquipmentSlot.ALTERNATIVE_OFF_HAND).copy();
 				actionIsNotPossible = actionIsNotPossible || player.getCooldowns().isOnCooldown(offhandItemStack) || player.getCooldowns().isOnCooldown(alternativeOffhandItemStack);
 				staminaCost += RPGInventory.isStaminaAttributesLoaded ? serverConfig.handSlotOverhaul.staminaAttributesCompat.swapping_off_hand_items_stamina_cost.get() : 0.0F;
 			}
@@ -69,19 +70,19 @@ public class SwapHandItemsPacketReceiver implements ServerPlayNetworking.PlayPay
 
 			if (mainHand) {
 				if (handIsSheathed) {
-					((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedHand(alternativeHandItemStack);
+					player.setItemSlot(ExtendedEquipmentSlot.SHEATHED_HAND, alternativeHandItemStack);
 				} else {
-					((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setHand(alternativeHandItemStack);
+					player.setItemSlot(EquipmentSlot.MAINHAND, alternativeHandItemStack);
 				}
-				((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setAlternativeHand(handItemStack);
+				player.setItemSlot(ExtendedEquipmentSlot.ALTERNATIVE_HAND, handItemStack);
 			}
 			if (offHand) {
 				if (offHandIsSheathed) {
-					((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedOffhand(alternativeOffhandItemStack);
+					player.setItemSlot(ExtendedEquipmentSlot.SHEATHED_OFF_HAND, alternativeOffhandItemStack);
 				} else {
-					player.getInventory().offhand.set(0, alternativeOffhandItemStack);
+					player.setItemSlot(EquipmentSlot.OFFHAND, alternativeOffhandItemStack);
 				}
-				((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setAlternativeOffhand(offhandItemStack);
+				player.setItemSlot(ExtendedEquipmentSlot.ALTERNATIVE_OFF_HAND, offhandItemStack);
 			}
 			if (staminaCost != 0.0F && !player.isCreative()) {
 				RPGInventory.addStamina(player, -staminaCost);

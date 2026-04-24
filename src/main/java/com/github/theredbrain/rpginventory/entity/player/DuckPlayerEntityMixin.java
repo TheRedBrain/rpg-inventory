@@ -1,6 +1,7 @@
 package com.github.theredbrain.rpginventory.entity.player;
 
 public interface DuckPlayerEntityMixin {
+
 	float rpginventory$getActiveSpellSlotAmount();
 
 	boolean rpginventory$isHandStackSheathed();

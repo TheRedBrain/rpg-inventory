@@ -101,7 +101,7 @@ public class RPGInventory implements ModInitializer {
 	public static final boolean isOverhauledDamageLoaded = FabricLoader.getInstance().isModLoaded("overhauleddamage");
 
 	public static void swapHandAttributes(Player playerEntity, Runnable runnable) {
-		if (SERVER_CONFIG.activate_rpg_inventory_screen.get() && SERVER_CONFIG.handSlotOverhaul.enable_hand_slot_overhaul.get()) {
+		if (isHandSlotOverhaulActive()) {
 			SwapHandAttributesHelper.swapHandAttributes(playerEntity, runnable);
 		}
 	}

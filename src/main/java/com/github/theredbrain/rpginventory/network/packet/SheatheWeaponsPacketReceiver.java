@@ -2,13 +2,14 @@ package com.github.theredbrain.rpginventory.network.packet;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.config.ServerConfig;
+import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
-import com.github.theredbrain.rpginventory.entity.player.DuckPlayerInventoryMixin;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 
 public class SheatheWeaponsPacketReceiver implements ServerPlayNetworking.PlayPayloadHandler<SheatheWeaponsPacket> {
@@ -22,13 +23,13 @@ public class SheatheWeaponsPacketReceiver implements ServerPlayNetworking.PlayPa
 
 			ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
 
-			ItemStack handItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getHand().copy();
+			ItemStack handItemStack = player.getItemBySlot(EquipmentSlot.MAINHAND).copy();
 			if (handItemStack.isEmpty()) {
-				handItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSheathedHand().copy();
+				handItemStack = player.getItemBySlot(ExtendedEquipmentSlot.SHEATHED_HAND).copy();
 			}
-			ItemStack offHandItemStack = player.getInventory().offhand.get(0).copy();
+			ItemStack offHandItemStack = player.getItemBySlot(EquipmentSlot.OFFHAND).copy();
 			if (offHandItemStack.isEmpty()) {
-				offHandItemStack = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getSheathedOffhand().copy();
+				offHandItemStack = player.getItemBySlot(ExtendedEquipmentSlot.SHEATHED_OFF_HAND).copy();
 			}
 
 			if (RPGInventory.doesCurrentPlayerStatusPreventHandSlotAction(player) ||
@@ -48,17 +49,17 @@ public class SheatheWeaponsPacketReceiver implements ServerPlayNetworking.PlayPa
 			if (((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed() && ((DuckPlayerEntityMixin) player).rpginventory$isOffhandStackSheathed()) {
 				((DuckPlayerEntityMixin) player).rpginventory$setIsHandStackSheathed(false);
 				((DuckPlayerEntityMixin) player).rpginventory$setIsOffhandStackSheathed(false);
-				((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setHand(handItemStack);
-				((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedHand(ItemStack.EMPTY);
-				player.getInventory().offhand.set(0, offHandItemStack);
-				((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedOffhand(ItemStack.EMPTY);
+				player.setItemSlot(EquipmentSlot.MAINHAND, handItemStack);
+				player.setItemSlot(ExtendedEquipmentSlot.SHEATHED_HAND, ItemStack.EMPTY);
+				player.setItemSlot(EquipmentSlot.OFFHAND, offHandItemStack);
+				player.setItemSlot(ExtendedEquipmentSlot.SHEATHED_OFF_HAND, ItemStack.EMPTY);
 			} else {
 				((DuckPlayerEntityMixin) player).rpginventory$setIsHandStackSheathed(true);
 				((DuckPlayerEntityMixin) player).rpginventory$setIsOffhandStackSheathed(true);
-				((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setHand(ItemStack.EMPTY);
-				((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedHand(handItemStack);
-				player.getInventory().offhand.set(0, ItemStack.EMPTY);
-				((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setSheathedOffhand(offHandItemStack);
+				player.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
+				player.setItemSlot(ExtendedEquipmentSlot.SHEATHED_HAND, handItemStack);
+				player.setItemSlot(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
+				player.setItemSlot(ExtendedEquipmentSlot.SHEATHED_OFF_HAND, offHandItemStack);
 			}
 			if (staminaCost != 0.0F && !player.isCreative()) {
 				RPGInventory.addStamina(player, -staminaCost);

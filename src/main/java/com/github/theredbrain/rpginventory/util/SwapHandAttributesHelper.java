@@ -1,12 +1,12 @@
 package com.github.theredbrain.rpginventory.util;
 
+import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
-import com.github.theredbrain.rpginventory.entity.player.DuckPlayerInventoryMixin;
 import com.google.common.collect.Multimap;
 import net.minecraft.core.Holder;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
@@ -15,35 +15,34 @@ public class SwapHandAttributesHelper {
 
 		synchronized (player) {
 			if (!((DuckPlayerEntityMixin) player).rpginventory$isHandStackSheathed() && !((DuckPlayerEntityMixin) player).rpginventory$isOffhandStackSheathed()) {
-				boolean isMainHandEmpty = ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getHand().isEmpty();
-				boolean isOffhandEmpty = player.getInventory().offhand.get(0).isEmpty();
-				Inventory inventory = player.getInventory();
-				ItemStack mainHandStack = isMainHandEmpty ? ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getEmptyHand() : ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getHand();
-				ItemStack offHandStack = isOffhandEmpty ? ((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$getEmptyOffhand() : inventory.offhand.get(0);
+				boolean isMainHandEmpty = player.getItemBySlot(EquipmentSlot.MAINHAND).isEmpty();
+				boolean isOffhandEmpty = player.getItemBySlot(EquipmentSlot.OFFHAND).isEmpty();
+				ItemStack mainHandStack = isMainHandEmpty ? player.getItemBySlot(ExtendedEquipmentSlot.EMPTY_HAND) : player.getItemBySlot(EquipmentSlot.MAINHAND);
+				ItemStack offHandStack = isOffhandEmpty ? player.getItemBySlot(ExtendedEquipmentSlot.EMPTY_OFF_HAND) : player.getItemBySlot(EquipmentSlot.OFFHAND);
 
 				setAttributesForOffHandAttack(player, true, mainHandStack, offHandStack);
 				if (isMainHandEmpty) {
-					((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setEmptyHand(offHandStack);
+					player.setItemSlot(ExtendedEquipmentSlot.EMPTY_HAND, offHandStack);
 				} else {
-					((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setHand(offHandStack);
+					player.setItemSlot(EquipmentSlot.MAINHAND, offHandStack);
 				}
 				if (isOffhandEmpty) {
-					((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setEmptyOffhand(offHandStack);
+					player.setItemSlot(ExtendedEquipmentSlot.EMPTY_OFF_HAND, offHandStack); // TODO should this be the main hand stack?
 				} else {
-					inventory.offhand.set(0, offHandStack);
+					player.setItemSlot(EquipmentSlot.OFFHAND, offHandStack); // TODO should this be the main hand stack?
 				}
 
 				runnable.run();
 
 				if (isMainHandEmpty) {
-					((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setEmptyHand(mainHandStack);
+					player.setItemSlot(ExtendedEquipmentSlot.EMPTY_HAND, mainHandStack);
 				} else {
-					((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setHand(mainHandStack);
+					player.setItemSlot(EquipmentSlot.MAINHAND, mainHandStack);
 				}
 				if (isOffhandEmpty) {
-					((DuckPlayerInventoryMixin) player.getInventory()).rpginventory$setEmptyOffhand(offHandStack);
+					player.setItemSlot(ExtendedEquipmentSlot.EMPTY_OFF_HAND, offHandStack);
 				} else {
-					inventory.offhand.set(0, offHandStack);
+					player.setItemSlot(EquipmentSlot.OFFHAND, offHandStack);
 				}
 				setAttributesForOffHandAttack(player, false, mainHandStack, offHandStack);
 			}
@@ -51,26 +50,26 @@ public class SwapHandAttributesHelper {
 	}
 
 	private static void setAttributesForOffHandAttack(Player player, boolean useOffHand, ItemStack mainHandStack, ItemStack offHandStack) {
-		ItemStack add;
-		ItemStack remove;
-		if (useOffHand) {
-			remove = mainHandStack;
-			add = offHandStack;
-		} else {
-			remove = offHandStack;
-			add = mainHandStack;
-		}
-
-		Multimap<Holder<Attribute>, AttributeModifier> modifiersMap;
-		if (remove != null) {
-			modifiersMap = AttributeModifierHelper.modifierMultimap(remove);
-			player.getAttributes().removeAttributeModifiers(modifiersMap);
-		}
-
-		if (add != null) {
-			modifiersMap = AttributeModifierHelper.modifierMultimap(add);
-			player.getAttributes().addTransientAttributeModifiers(modifiersMap);
-		}
+//		ItemStack add;
+//		ItemStack remove;
+//		if (useOffHand) {
+//			remove = mainHandStack;
+//			add = offHandStack;
+//		} else {
+//			remove = offHandStack;
+//			add = mainHandStack;
+//		}
+//
+//		Multimap<Holder<Attribute>, AttributeModifier> modifiersMap;
+//		if (remove != null) {
+//			modifiersMap = AttributeModifierHelper.modifierMultimap(remove);
+//			player.getAttributes().removeAttributeModifiers(modifiersMap);
+//		}
+//
+//		if (add != null) {
+//			modifiersMap = AttributeModifierHelper.modifierMultimap(add);
+//			player.getAttributes().addTransientAttributeModifiers(modifiersMap);
+//		}
 
 	}
 

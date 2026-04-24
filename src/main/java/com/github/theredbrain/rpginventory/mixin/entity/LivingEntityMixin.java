@@ -7,6 +7,7 @@ import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.core.Holder;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
@@ -60,6 +61,56 @@ public abstract class LivingEntityMixin extends Entity {
 		}
 	}
 
+	@Inject(method = "onEquipItem", at = @At("TAIL"))
+	public void rpginventory$onEquipItem(EquipmentSlot slot, ItemStack oldStack, ItemStack stack, CallbackInfo ci) {
+
+		if (!this.level().isClientSide()) {
+			if (stack.has(RPGInventory.EXCLUSIVE_EQUIPMENT)) {
+				// TODO
+//				this.rpginventory$setShouldEjectExclusiveEquipment(true);
+			}
+		}
+	}
+
+	@WrapMethod(method = "getEquipmentSlot")
+	private static EquipmentSlot rpginventory$wrap_getEquipmentSlot(int slot, Operation<EquipmentSlot> original) {
+		if (slot == 1000 + ExtendedEquipmentSlot.BELT.getIndex()) {
+			return ExtendedEquipmentSlot.BELT;
+		} else if (slot == 1000 + ExtendedEquipmentSlot.GLOVES.getIndex()) {
+			return ExtendedEquipmentSlot.GLOVES;
+		} else if (slot == 1000 + ExtendedEquipmentSlot.NECKLACE.getIndex()) {
+			return ExtendedEquipmentSlot.NECKLACE;
+		} else if (slot == 1000 + ExtendedEquipmentSlot.RING_1.getIndex()) {
+			return ExtendedEquipmentSlot.RING_1;
+		} else if (slot == 1000 + ExtendedEquipmentSlot.RING_2.getIndex()) {
+			return ExtendedEquipmentSlot.RING_2;
+		} else if (slot == 1000 + ExtendedEquipmentSlot.SHOULDERS.getIndex()) {
+			return ExtendedEquipmentSlot.SHOULDERS;
+		} else if (slot == 1000 + ExtendedEquipmentSlot.SPELL_1.getIndex()) {
+			return ExtendedEquipmentSlot.SPELL_1;
+		} else if (slot == 1000 + ExtendedEquipmentSlot.SPELL_2.getIndex()) {
+			return ExtendedEquipmentSlot.SPELL_2;
+		} else if (slot == 1000 + ExtendedEquipmentSlot.SPELL_3.getIndex()) {
+			return ExtendedEquipmentSlot.SPELL_3;
+		} else if (slot == 1000 + ExtendedEquipmentSlot.SPELL_4.getIndex()) {
+			return ExtendedEquipmentSlot.SPELL_4;
+		} else if (slot == 1000 + ExtendedEquipmentSlot.SPELL_5.getIndex()) {
+			return ExtendedEquipmentSlot.SPELL_5;
+		} else if (slot == 1000 + ExtendedEquipmentSlot.SPELL_6.getIndex()) {
+			return ExtendedEquipmentSlot.SPELL_6;
+		} else if (slot == 1000 + ExtendedEquipmentSlot.SPELL_7.getIndex()) {
+			return ExtendedEquipmentSlot.SPELL_7;
+		} else if (slot == 1000 + ExtendedEquipmentSlot.SPELL_8.getIndex()) {
+			return ExtendedEquipmentSlot.SPELL_8;
+		} else if (slot == 1000 + ExtendedEquipmentSlot.RELIC.getIndex()) {
+			return ExtendedEquipmentSlot.RELIC;
+		} else if (slot == 1000 + ExtendedEquipmentSlot.CLASS_ITEM.getIndex()) {
+			return ExtendedEquipmentSlot.CLASS_ITEM;
+		} else {
+			return original.call(slot);
+		}
+	}
+
 	@WrapMethod(method = "canFreeze")
 	private boolean rpginventory$canFreeze(Operation<Boolean> original) {
 		boolean bl = !this.getItemBySlot(ExtendedEquipmentSlot.SHOULDERS).is(ItemTags.FREEZE_IMMUNE_WEARABLES)
@@ -87,6 +138,10 @@ public abstract class LivingEntityMixin extends Entity {
 
 	@ModifyVariable(method = "doHurtEquipment(Lnet/minecraft/world/damagesource/DamageSource;F[Lnet/minecraft/world/entity/EquipmentSlot;)V", at = @At(value = "INVOKE_ASSIGN", target = "Ljava/lang/Math;max(FF)F"), argsOnly = true, name = "damage")
 	private float rpginventory$damageEquipment_divideAmount(float damage) {
-		return Math.max(1.0F, damage / 6.0F);
+		if (((LivingEntity) (Object) this) instanceof Player && RPGInventory.SERVER_CONFIG.activate_rpg_inventory_screen.get()) {
+			return Math.max(1.0F, damage / 6.0F);
+		} else {
+			return Math.max(1.0F, damage / 4.0F);
+		}
 	}
 }

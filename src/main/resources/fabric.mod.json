@@ -12,6 +12,7 @@
 	},
 	"license": "MIT",
 	"environment": "*",
+	"accessWidener": "rpginventory.classtweaker",
 	"icon": "assets/rpginventory/icon.png",
 	"entrypoints": {
 		"main": [

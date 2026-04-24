@@ -482,17 +482,17 @@ public abstract class PlayerScreenHandlerMixin extends AbstractContainerMenu imp
 
 	}
 
-	@Inject(at = @At("HEAD"), method = "onClosed")
-	private void rpginventory$onClosed(Player player, CallbackInfo info) {
-		// TODO trigger adventure hotbar items check
-	}
+//	@Inject(at = @At("HEAD"), method = "removed")
+//	private void rpginventory$removed(Player player, CallbackInfo info) {
+//		// TODO trigger adventure hotbar items check
+//	}
 
-	@WrapMethod(method = "quickMove")
-	private ItemStack rpginventory$wrap_quickMove(Player player, int slot, Operation<ItemStack> original) {
+	@WrapMethod(method = "quickMoveStack")
+	private ItemStack rpginventory$wrap_quickMoveStack(Player player, int slotIndex, Operation<ItemStack> original) {
 
 		if (RPGInventory.SERVER_CONFIG.activate_rpg_inventory_screen.get()) {
 
-			Slot rpginventory$slot = this.slots.get(slot);
+			Slot rpginventory$slot = this.slots.get(slotIndex);
 			ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
 			ItemStack rpginventory$stack = ItemStack.EMPTY;
 
@@ -514,27 +514,27 @@ public abstract class PlayerScreenHandlerMixin extends AbstractContainerMenu imp
 				ItemStack rpginventory$stack2 = rpginventory$slot.getItem();
 				rpginventory$stack = rpginventory$stack2.copy();
 				EquipmentSlot rpginventory$equipmentSlot = player.getEquipmentSlotForItem(rpginventory$stack2);
-				if (slot == 0) {
+				if (slotIndex == 0) {
 					if (!this.moveItemStackTo(rpginventory$stack2, 9, 45, true)) {
 						return ItemStack.EMPTY;
 					}
 
 					rpginventory$slot.onQuickCraft(rpginventory$stack2, rpginventory$stack);
-				} else if (slot >= 1 && slot < 5) {
+				} else if (slotIndex >= 1 && slotIndex < 5) {
 					if (!this.moveItemStackTo(rpginventory$stack2, 9, 45, false)) {
 						return ItemStack.EMPTY;
 					}
-				} else if (slot >= 5 && slot < 9) {
+				} else if (slotIndex >= 5 && slotIndex < 9) {
 					if (!this.moveItemStackTo(rpginventory$stack2, 9, 45, false)) {
 						return ItemStack.EMPTY;
 					}
-				} else if (slot >= 44 && slot < 66) {
+				} else if (slotIndex >= 44 && slotIndex < 66) {
 					if (!this.moveItemStackTo(rpginventory$stack2, 9, 45, false)) {   // TODO adventure hotbar items
 						return ItemStack.EMPTY;
 					} else {
 						return rpginventory$stack2;
 					}
-				} else if (slot >= 9 && slot < 45) {
+				} else if (slotIndex >= 9 && slotIndex < 45) {
 
 					// helmet slot 5
 					if ((rpginventory$equipmentSlot == EquipmentSlot.HEAD || rpginventory$stack2.is(Tags.HELMETS)) && !this.slots.get(5).hasItem()) {
@@ -730,13 +730,13 @@ public abstract class PlayerScreenHandlerMixin extends AbstractContainerMenu imp
 				}
 
 				rpginventory$slot.onTake(player, rpginventory$stack2);
-				if (slot == 0) {
+				if (slotIndex == 0) {
 					player.drop(rpginventory$stack2, false);
 				}
 			}
 			return rpginventory$stack;
 		} else {
-			return original.call(player, slot);
+			return original.call(player, slotIndex);
 		}
 	}
 

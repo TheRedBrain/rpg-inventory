@@ -20,6 +20,8 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.storage.LevelData;
@@ -195,28 +197,38 @@ public class PlayerEntityHelper {
 				Inventory playerInventory = playerEntity.getInventory();
 				boolean bl = false;
 
-				if (!((DuckPlayerInventoryMixin) playerInventory).rpginventory$getHand().isEmpty()) {
-					playerInventory.placeItemBackInInventory(((DuckPlayerInventoryMixin) playerInventory).rpginventory$setHand(ItemStack.EMPTY));
+				ItemStack itemStack = playerEntity.getItemBySlot(EquipmentSlot.MAINHAND);
+				if (!itemStack.isEmpty()) {
+					playerInventory.placeItemBackInInventory(itemStack.copy());
+					playerEntity.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
 					bl = true;
 				}
 
-				if (!((DuckPlayerInventoryMixin) playerInventory).rpginventory$getSheathedHand().isEmpty()) {
-					playerInventory.placeItemBackInInventory(((DuckPlayerInventoryMixin) playerInventory).rpginventory$setSheathedHand(ItemStack.EMPTY));
+				itemStack = playerEntity.getItemBySlot(ExtendedEquipmentSlot.SHEATHED_HAND);
+				if (!itemStack.isEmpty()) {
+					playerInventory.placeItemBackInInventory(itemStack.copy());
+					playerEntity.setItemSlot(ExtendedEquipmentSlot.SHEATHED_HAND, ItemStack.EMPTY);
 					bl = true;
 				}
 
-				if (!((DuckPlayerInventoryMixin) playerInventory).rpginventory$getSheathedOffhand().isEmpty()) {
-					playerInventory.placeItemBackInInventory(((DuckPlayerInventoryMixin) playerInventory).rpginventory$setSheathedOffhand(ItemStack.EMPTY));
+				itemStack = playerEntity.getItemBySlot(ExtendedEquipmentSlot.SHEATHED_OFF_HAND);
+				if (!itemStack.isEmpty()) {
+					playerInventory.placeItemBackInInventory(itemStack.copy());
+					playerEntity.setItemSlot(ExtendedEquipmentSlot.SHEATHED_OFF_HAND, ItemStack.EMPTY);
 					bl = true;
 				}
 
-				if (!((DuckPlayerInventoryMixin) playerInventory).rpginventory$getAlternativeHand().isEmpty()) {
-					playerInventory.placeItemBackInInventory(((DuckPlayerInventoryMixin) playerInventory).rpginventory$setAlternativeHand(ItemStack.EMPTY));
+				itemStack = playerEntity.getItemBySlot(ExtendedEquipmentSlot.ALTERNATIVE_HAND);
+				if (!itemStack.isEmpty()) {
+					playerInventory.placeItemBackInInventory(itemStack.copy());
+					playerEntity.setItemSlot(ExtendedEquipmentSlot.ALTERNATIVE_HAND, ItemStack.EMPTY);
 					bl = true;
 				}
 
-				if (!((DuckPlayerInventoryMixin) playerInventory).rpginventory$getAlternativeOffhand().isEmpty()) {
-					playerInventory.placeItemBackInInventory(((DuckPlayerInventoryMixin) playerInventory).rpginventory$setAlternativeOffhand(ItemStack.EMPTY));
+				itemStack = playerEntity.getItemBySlot(ExtendedEquipmentSlot.ALTERNATIVE_OFF_HAND);
+				if (!itemStack.isEmpty()) {
+					playerInventory.placeItemBackInInventory(itemStack.copy());
+					playerEntity.setItemSlot(ExtendedEquipmentSlot.ALTERNATIVE_OFF_HAND, ItemStack.EMPTY);
 					bl = true;
 				}
 
@@ -235,13 +247,17 @@ public class PlayerEntityHelper {
 					Inventory playerInventory = playerEntity.getInventory();
 					boolean bl = false;
 
-					if (!((DuckPlayerInventoryMixin) playerInventory).rpginventory$getAlternativeHand().isEmpty()) {
-						playerInventory.placeItemBackInInventory(((DuckPlayerInventoryMixin) playerInventory).rpginventory$setAlternativeHand(ItemStack.EMPTY));
+					ItemStack itemStack = playerEntity.getItemBySlot(ExtendedEquipmentSlot.ALTERNATIVE_HAND);
+					if (!itemStack.isEmpty()) {
+						playerInventory.placeItemBackInInventory(itemStack.copy());
+						playerEntity.setItemSlot(ExtendedEquipmentSlot.ALTERNATIVE_HAND, ItemStack.EMPTY);
 						bl = true;
 					}
 
-					if (!((DuckPlayerInventoryMixin) playerInventory).rpginventory$getAlternativeOffhand().isEmpty()) {
-						playerInventory.placeItemBackInInventory(((DuckPlayerInventoryMixin) playerInventory).rpginventory$setAlternativeOffhand(ItemStack.EMPTY));
+					itemStack = playerEntity.getItemBySlot(ExtendedEquipmentSlot.ALTERNATIVE_OFF_HAND);
+					if (!itemStack.isEmpty()) {
+						playerInventory.placeItemBackInInventory(itemStack.copy());
+						playerEntity.setItemSlot(ExtendedEquipmentSlot.ALTERNATIVE_OFF_HAND, ItemStack.EMPTY);
 						bl = true;
 					}
 
@@ -360,42 +376,18 @@ public class PlayerEntityHelper {
 		}
 	}
 
-	// TODO port to 26.1
 	public static void rpginventory$breakKeepInventoryItems(Player playerEntity) {
 
-//		RPGInventory.breakKeepInventoryTrinkets(playerEntity);
-//
-//		Inventory playerInventory = playerEntity.getInventory();
-//		for (int i = 0; i < playerInventory.armor.size(); i++) {
-//			if (playerInventory.armor.get(i).is(Tags.SACRIFICED_TO_KEEP_INVENTORY_ON_DEATH)) {
-//				playerInventory.armor.set(i, ItemStack.EMPTY);
-//			}
-//		}
-//		if (playerInventory.offhand.get(0).is(Tags.SACRIFICED_TO_KEEP_INVENTORY_ON_DEATH)) {
-//			playerInventory.offhand.set(0, ItemStack.EMPTY);
-//		}
-//		if (playerInventory instanceof DuckPlayerInventoryMixin rpg_inventory) {
-//
-//			if (rpg_inventory.rpginventory$getHand().is(Tags.SACRIFICED_TO_KEEP_INVENTORY_ON_DEATH)) {
-//				rpg_inventory.rpginventory$setHand(ItemStack.EMPTY);
-//			}
-//			if (rpg_inventory.rpginventory$getAlternativeHand().is(Tags.SACRIFICED_TO_KEEP_INVENTORY_ON_DEATH)) {
-//				rpg_inventory.rpginventory$setAlternativeHand(ItemStack.EMPTY);
-//			}
-//			if (rpg_inventory.rpginventory$getAlternativeOffhand().is(Tags.SACRIFICED_TO_KEEP_INVENTORY_ON_DEATH)) {
-//				rpg_inventory.rpginventory$setAlternativeOffhand(ItemStack.EMPTY);
-//			}
-//			if (rpg_inventory.rpginventory$getSheathedHand().is(Tags.SACRIFICED_TO_KEEP_INVENTORY_ON_DEATH)) {
-//				rpg_inventory.rpginventory$setSheathedHand(ItemStack.EMPTY);
-//			}
-//			if (rpg_inventory.rpginventory$getSheathedOffhand().is(Tags.SACRIFICED_TO_KEEP_INVENTORY_ON_DEATH)) {
-//				rpg_inventory.rpginventory$setSheathedOffhand(ItemStack.EMPTY);
-//			}
-//			for (int i = 0; i < 14; i++) {
-//				if (rpg_inventory.rpginventory$getAdditionalEquipmentStack(i).is(Tags.SACRIFICED_TO_KEEP_INVENTORY_ON_DEATH)) {
-//					rpg_inventory.rpginventory$setAdditionalEquipmentStack(i, ItemStack.EMPTY);
-//				}
-//			}
-//		}
+		RPGInventory.breakKeepInventoryTrinkets(playerEntity);
+
+		Inventory playerInventory = playerEntity.getInventory();
+		((DuckPlayerInventoryMixin) playerInventory).rpginventory$breakKeepInventoryItems();
+
+		for (int i = playerInventory.getNonEquipmentItems().size(); i < playerInventory.getContainerSize(); i++) {
+			ItemStack itemStack = playerInventory.getItem(i);
+			if (itemStack.is(Tags.SACRIFICED_TO_KEEP_INVENTORY_ON_DEATH)) {
+				playerInventory.removeItemNoUpdate(i);
+			}
+		}
 	}
 }
