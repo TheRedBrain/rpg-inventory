@@ -1,31 +1,28 @@
 package com.github.theredbrain.rpginventory.screen.slot;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
-import com.github.theredbrain.rpginventory.config.ServerConfig;
 import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
 import com.github.theredbrain.rpginventory.util.ItemUtils;
 import com.github.theredbrain.slotcustomizationapi.api.SlotCustomization;
-import com.mojang.datafixers.util.Pair;
-
-import java.util.List;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import org.jspecify.annotations.Nullable;
 
+import java.util.List;
+
 public class CustomArmorSlot extends Slot {
-	private final Player owner;
-	private final EquipmentSlot equipmentSlot;
+	protected final Player owner;
+	protected final EquipmentSlot equipmentSlot;
 	@Nullable
-	private final Identifier backgroundSprite;
-	private final boolean allowsLoadoutItemRemoval;
+	protected final Identifier backgroundSprite;
+	protected final boolean allowsLoadoutItemRemoval;
 
 	public CustomArmorSlot(Container inventory, Player playerEntity, EquipmentSlot equipmentSlot, int index, int x, int y, @Nullable Identifier backgroundSprite, List<Component> tooltip) {
 		this(inventory, playerEntity, equipmentSlot, index, x, y, backgroundSprite, tooltip, false);
@@ -61,9 +58,7 @@ public class CustomArmorSlot extends Slot {
 
 	@Override
 	public boolean mayPlace(ItemStack stack) {
-		ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
-
-		return (equipmentSlot == this.owner.getEquipmentSlotForItem(stack) || ExtendedEquipmentSlot.rpginventory$isOfEquipmentTag(stack, equipmentSlot) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get()) && ItemUtils.isUsableByPlayer(stack, this.owner) && (stack.has(RPGInventory.IGNORES_EQUIPMENT_CHANGE_RESTRICTIONS) || this.owner.hasEffect(RPGInventory.CIVILISATION) || this.owner.isCreative() || (serverConfig.allow_equipment_changes.get() && !this.owner.hasEffect(RPGInventory.WILDERNESS)));
+		return (equipmentSlot == this.owner.getEquipmentSlotForItem(stack) || ExtendedEquipmentSlot.rpginventory$isOfEquipmentTag(stack, equipmentSlot)) && ItemUtils.isUsableByPlayer(stack, this.owner) && (stack.has(RPGInventory.IGNORES_EQUIPMENT_CHANGE_RESTRICTIONS) || this.owner.hasEffect(RPGInventory.CIVILISATION) || this.owner.isCreative() || (RPGInventory.SERVER_CONFIG.allow_equipment_changes.get() && !this.owner.hasEffect(RPGInventory.WILDERNESS)));
 	}
 
 	@Override

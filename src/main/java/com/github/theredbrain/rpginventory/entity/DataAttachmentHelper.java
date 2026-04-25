@@ -7,7 +7,7 @@ import net.minecraft.world.entity.player.Player;
 public class DataAttachmentHelper {
 
 	public static boolean isHandStackSheathed(LivingEntity livingEntity) {
-		return livingEntity.getAttachedOrElse(DataAttachmentRegistry.IS_HAND_STACK_SHEATHED, false);
+		return livingEntity.getAttachedOrElse(DataAttachmentRegistry.IS_HAND_STACK_SHEATHED, true);
 	}
 
 	public static void setIsHandStackSheathed(LivingEntity livingEntity, boolean isHandStackSheathed) {
@@ -15,7 +15,7 @@ public class DataAttachmentHelper {
 	}
 
 	public static boolean isOffhandStackSheathed(LivingEntity livingEntity) {
-		return livingEntity.getAttachedOrElse(DataAttachmentRegistry.IS_OFFHAND_STACK_SHEATHED, false);
+		return livingEntity.getAttachedOrElse(DataAttachmentRegistry.IS_OFFHAND_STACK_SHEATHED, true);
 	}
 
 	public static void setIsOffhandStackSheathed(LivingEntity livingEntity, boolean isOffhandStackSheathed) {

@@ -1,6 +1,5 @@
 package com.github.theredbrain.rpginventory.mixin.entity.player;
 
-import com.github.theredbrain.rpginventory.RPGInventory;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import net.minecraft.world.entity.EntityEquipment;
@@ -14,19 +13,11 @@ public class PlayerEquipmentMixin extends EntityEquipment {
 
 	@WrapMethod(method = "set")
 	public ItemStack set(EquipmentSlot slot, ItemStack itemStack, Operation<ItemStack> original) {
-//		if (RPGInventory.isHandSlotOverhaulActive()) {
-			return super.set(slot, itemStack);
-//		} else {
-//			return original.call(slot, itemStack);
-//		}
+		return super.set(slot, itemStack);
 	}
 
 	@WrapMethod(method = "get")
 	public ItemStack get(EquipmentSlot slot, Operation<ItemStack> original) {
-//		if (RPGInventory.isHandSlotOverhaulActive()) {
-			return super.get(slot);
-//		} else {
-//			return original.call(slot);
-//		}
+		return super.get(slot);
 	}
 }

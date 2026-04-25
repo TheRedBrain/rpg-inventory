@@ -40,7 +40,7 @@ public class ToggleTwoHandedStancePacketReceiver implements ServerPlayNetworking
 				return;
 			}
 
-			boolean mainHandCanNotBeTwoHanded = player.getMainHandItem().is(Tags.NON_TWO_HANDED_ITEMS);
+			boolean mainHandCanNotBeTwoHanded = handItemStack.is(Tags.NON_TWO_HANDED_ITEMS);
 
 			float staminaCost = RPGInventory.isStaminaAttributesLoaded ? serverConfig.handSlotOverhaul.staminaAttributesCompat.toggling_two_handed_stance_stamina_cost.get() : 0.0F;
 

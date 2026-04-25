@@ -9,6 +9,7 @@ import com.github.theredbrain.rpginventory.registry.Tags;
 import com.github.theredbrain.rpginventory.screen.DuckPlayerScreenHandlerMixin;
 import com.github.theredbrain.rpginventory.screen.slot.AlternativeHandSlot;
 import com.github.theredbrain.rpginventory.screen.slot.CustomArmorSlot;
+import com.github.theredbrain.rpginventory.screen.slot.CustomHandSlot;
 import com.github.theredbrain.rpginventory.util.ItemUtils;
 import com.github.theredbrain.slotcustomizationapi.api.SlotCustomization;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
@@ -69,6 +70,8 @@ public abstract class InventoryMenuMixin extends AbstractContainerMenu implement
 	private static final Identifier EMPTY_SPELL_8_SLOT = RPGInventory.identifier("item/empty_slot_spell_8");
 	@Unique
 	private static final Identifier EMPTY_RELIC_SLOT = RPGInventory.identifier("item/empty_slot_relic");
+	@Unique
+	private static final int EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET = 44;
 
 	@Unique
 	private boolean isAttributeScreenVisible = false;
@@ -136,7 +139,7 @@ public abstract class InventoryMenuMixin extends AbstractContainerMenu implement
 		}
 
 		// main hand slot 46
-		this.addSlot(new CustomArmorSlot(inventory, owner, EquipmentSlot.MAINHAND, 41, serverConfig.inventorySlots.hand_slot_x_offset.get(), serverConfig.inventorySlots.hand_slot_y_offset.get(), EMPTY_HAND_SLOT, List.of(Component.translatable("slot.tooltip.hand")), false) {
+		this.addSlot(new CustomHandSlot(inventory, owner, EquipmentSlot.MAINHAND, 43, serverConfig.inventorySlots.hand_slot_x_offset.get(), serverConfig.inventorySlots.hand_slot_y_offset.get(), EMPTY_HAND_SLOT, List.of(Component.translatable("slot.tooltip.hand")), false) {
 
 			@Override
 			public boolean isActive() {
@@ -153,7 +156,7 @@ public abstract class InventoryMenuMixin extends AbstractContainerMenu implement
 		});
 
 		// sheathed main hand slot 47
-		this.addSlot(new CustomArmorSlot(inventory, owner, EquipmentSlot.MAINHAND, 42, serverConfig.inventorySlots.hand_slot_x_offset.get(), serverConfig.inventorySlots.hand_slot_y_offset.get(), EMPTY_HAND_SLOT, List.of(Component.translatable("slot.tooltip.hand")), false) {
+		this.addSlot(new CustomHandSlot(inventory, owner, ExtendedEquipmentSlot.SHEATHED_HAND, ExtendedEquipmentSlot.SHEATHED_HAND.getIndex(EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), serverConfig.inventorySlots.hand_slot_x_offset.get(), serverConfig.inventorySlots.hand_slot_y_offset.get(), EMPTY_HAND_SLOT, List.of(Component.translatable("slot.tooltip.hand")), false) {
 
 			@Override
 			public boolean isActive() {
@@ -170,7 +173,7 @@ public abstract class InventoryMenuMixin extends AbstractContainerMenu implement
 		});
 
 		// sheathed offhand slot 48
-		this.addSlot(new CustomArmorSlot(inventory, owner, EquipmentSlot.OFFHAND, 43, serverConfig.inventorySlots.offhand_slot_x_offset.get(), serverConfig.inventorySlots.offhand_slot_y_offset.get(), InventoryMenu.EMPTY_ARMOR_SLOT_SHIELD, List.of(Component.translatable("slot.tooltip.offhand")), false) {
+		this.addSlot(new CustomHandSlot(inventory, owner, ExtendedEquipmentSlot.SHEATHED_OFF_HAND, ExtendedEquipmentSlot.SHEATHED_OFF_HAND.getIndex(EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), serverConfig.inventorySlots.offhand_slot_x_offset.get(), serverConfig.inventorySlots.offhand_slot_y_offset.get(), InventoryMenu.EMPTY_ARMOR_SLOT_SHIELD, List.of(Component.translatable("slot.tooltip.offhand")), false) {
 
 			@Override
 			public boolean isActive() {
@@ -187,7 +190,7 @@ public abstract class InventoryMenuMixin extends AbstractContainerMenu implement
 		});
 
 		// alternative main hand slot 49
-		this.addSlot(new AlternativeHandSlot(inventory, owner, EquipmentSlot.MAINHAND, 46, serverConfig.inventorySlots.alternative_hand_slot_x_offset.get(), serverConfig.inventorySlots.alternative_hand_slot_y_offset.get(), EMPTY_ALTERNATIVE_HAND_SLOT, List.of(Component.translatable("slot.tooltip.alternative_hand")), false) {
+		this.addSlot(new AlternativeHandSlot(inventory, owner, ExtendedEquipmentSlot.ALTERNATIVE_HAND, ExtendedEquipmentSlot.ALTERNATIVE_HAND.getIndex(EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), serverConfig.inventorySlots.alternative_hand_slot_x_offset.get(), serverConfig.inventorySlots.alternative_hand_slot_y_offset.get(), EMPTY_ALTERNATIVE_HAND_SLOT, List.of(Component.translatable("slot.tooltip.alternative_hand")), false) {
 
 			@Override
 			public boolean mayPlace(ItemStack stack) {
@@ -204,7 +207,7 @@ public abstract class InventoryMenuMixin extends AbstractContainerMenu implement
 		});
 
 		// alternative offhand slot 50
-		this.addSlot(new AlternativeHandSlot(inventory, owner, EquipmentSlot.OFFHAND, 47, serverConfig.inventorySlots.alternative_offhand_slot_x_offset.get(), serverConfig.inventorySlots.alternative_offhand_slot_y_offset.get(), EMPTY_ALTERNATIVE_OFFHAND_SLOT, List.of(Component.translatable("slot.tooltip.alternative_offhand")), false) {
+		this.addSlot(new AlternativeHandSlot(inventory, owner, ExtendedEquipmentSlot.ALTERNATIVE_OFF_HAND, ExtendedEquipmentSlot.ALTERNATIVE_OFF_HAND.getIndex(EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), serverConfig.inventorySlots.alternative_offhand_slot_x_offset.get(), serverConfig.inventorySlots.alternative_offhand_slot_y_offset.get(), EMPTY_ALTERNATIVE_OFFHAND_SLOT, List.of(Component.translatable("slot.tooltip.alternative_offhand")), false) {
 
 			@Override
 			public boolean mayPlace(ItemStack stack) {
@@ -221,7 +224,7 @@ public abstract class InventoryMenuMixin extends AbstractContainerMenu implement
 		});
 
 		// belt slot 51
-		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.BELT, 48, serverConfig.inventorySlots.belt_slot_x_offset.get(), serverConfig.inventorySlots.belt_slot_y_offset.get(), EMPTY_BELT_SLOT, List.of(Component.translatable("slot.tooltip.belt"))) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.BELT, ExtendedEquipmentSlot.BELT.getIndex(EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), serverConfig.inventorySlots.belt_slot_x_offset.get(), serverConfig.inventorySlots.belt_slot_y_offset.get(), EMPTY_BELT_SLOT, List.of(Component.translatable("slot.tooltip.belt"))) {
 
 			@Override
 			public boolean isActive() {
@@ -241,7 +244,7 @@ public abstract class InventoryMenuMixin extends AbstractContainerMenu implement
 		});
 
 		// gloves slot 52
-		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.GLOVES, 49, serverConfig.inventorySlots.gloves_slot_x_offset.get(), serverConfig.inventorySlots.gloves_slot_y_offset.get(), EMPTY_GLOVES_SLOT, List.of(Component.translatable("slot.tooltip.gloves"))) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.GLOVES, ExtendedEquipmentSlot.GLOVES.getIndex(EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), serverConfig.inventorySlots.gloves_slot_x_offset.get(), serverConfig.inventorySlots.gloves_slot_y_offset.get(), EMPTY_GLOVES_SLOT, List.of(Component.translatable("slot.tooltip.gloves"))) {
 
 			@Override
 			public boolean isActive() {
@@ -261,7 +264,7 @@ public abstract class InventoryMenuMixin extends AbstractContainerMenu implement
 		});
 
 		// necklace slot 53
-		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.NECKLACE, 50, serverConfig.inventorySlots.necklace_slot_x_offset.get(), serverConfig.inventorySlots.necklace_slot_y_offset.get(), EMPTY_NECKLACE_SLOT, List.of(Component.translatable("slot.tooltip.necklace"))) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.NECKLACE, ExtendedEquipmentSlot.NECKLACE.getIndex(EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), serverConfig.inventorySlots.necklace_slot_x_offset.get(), serverConfig.inventorySlots.necklace_slot_y_offset.get(), EMPTY_NECKLACE_SLOT, List.of(Component.translatable("slot.tooltip.necklace"))) {
 
 			@Override
 			public boolean isActive() {
@@ -281,7 +284,7 @@ public abstract class InventoryMenuMixin extends AbstractContainerMenu implement
 		});
 
 		// ring 1 slot 54
-		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.RING_1, 51, serverConfig.inventorySlots.ring_1_slot_x_offset.get(), serverConfig.inventorySlots.ring_1_slot_y_offset.get(), EMPTY_RING_1_SLOT, List.of(Component.translatable("slot.tooltip.ring_1"))) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.RING_1, ExtendedEquipmentSlot.RING_1.getIndex(EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), serverConfig.inventorySlots.ring_1_slot_x_offset.get(), serverConfig.inventorySlots.ring_1_slot_y_offset.get(), EMPTY_RING_1_SLOT, List.of(Component.translatable("slot.tooltip.ring_1"))) {
 
 			@Override
 			public boolean isActive() {
@@ -301,7 +304,7 @@ public abstract class InventoryMenuMixin extends AbstractContainerMenu implement
 		});
 
 		// ring 2 slot 55
-		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.RING_2, 52, serverConfig.inventorySlots.ring_2_slot_x_offset.get(), serverConfig.inventorySlots.ring_2_slot_y_offset.get(), EMPTY_RING_2_SLOT, List.of(Component.translatable("slot.tooltip.ring_2"))) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.RING_2, ExtendedEquipmentSlot.RING_2.getIndex(EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), serverConfig.inventorySlots.ring_2_slot_x_offset.get(), serverConfig.inventorySlots.ring_2_slot_y_offset.get(), EMPTY_RING_2_SLOT, List.of(Component.translatable("slot.tooltip.ring_2"))) {
 
 			@Override
 			public boolean isActive() {
@@ -321,7 +324,7 @@ public abstract class InventoryMenuMixin extends AbstractContainerMenu implement
 		});
 
 		// shoulders slot 56
-		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SHOULDERS, 53, serverConfig.inventorySlots.shoulders_slot_x_offset.get(), serverConfig.inventorySlots.shoulders_slot_y_offset.get(), EMPTY_SHOULDERS_SLOT, List.of(Component.translatable("slot.tooltip.shoulders"))) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SHOULDERS, ExtendedEquipmentSlot.SHOULDERS.getIndex(EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), serverConfig.inventorySlots.shoulders_slot_x_offset.get(), serverConfig.inventorySlots.shoulders_slot_y_offset.get(), EMPTY_SHOULDERS_SLOT, List.of(Component.translatable("slot.tooltip.shoulders"))) {
 
 			@Override
 			public boolean isActive() {
@@ -341,7 +344,7 @@ public abstract class InventoryMenuMixin extends AbstractContainerMenu implement
 		});
 
 		// spell 1 slot 57
-		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SPELL_1, 54, serverConfig.inventorySlots.spell_1_slot_x_offset.get(), serverConfig.inventorySlots.spell_1_slot_y_offset.get(), EMPTY_SPELL_1_SLOT, List.of(Component.translatable("slot.tooltip.spell_1"))) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SPELL_1, ExtendedEquipmentSlot.SPELL_1.getIndex(EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), serverConfig.inventorySlots.spell_1_slot_x_offset.get(), serverConfig.inventorySlots.spell_1_slot_y_offset.get(), EMPTY_SPELL_1_SLOT, List.of(Component.translatable("slot.tooltip.spell_1"))) {
 
 			@Override
 			public boolean isActive() {
@@ -351,7 +354,7 @@ public abstract class InventoryMenuMixin extends AbstractContainerMenu implement
 		});
 
 		// spell 2 slot 58
-		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SPELL_2, 55, serverConfig.inventorySlots.spell_2_slot_x_offset.get(), serverConfig.inventorySlots.spell_2_slot_y_offset.get(), EMPTY_SPELL_2_SLOT, List.of(Component.translatable("slot.tooltip.spell_2"))) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SPELL_2, ExtendedEquipmentSlot.SPELL_2.getIndex(EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), serverConfig.inventorySlots.spell_2_slot_x_offset.get(), serverConfig.inventorySlots.spell_2_slot_y_offset.get(), EMPTY_SPELL_2_SLOT, List.of(Component.translatable("slot.tooltip.spell_2"))) {
 
 			@Override
 			public boolean isActive() {
@@ -361,7 +364,7 @@ public abstract class InventoryMenuMixin extends AbstractContainerMenu implement
 		});
 
 		// spell 3 slot 59
-		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SPELL_3, 56, serverConfig.inventorySlots.spell_3_slot_x_offset.get(), serverConfig.inventorySlots.spell_3_slot_y_offset.get(), EMPTY_SPELL_3_SLOT, List.of(Component.translatable("slot.tooltip.spell_3"))) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SPELL_3, ExtendedEquipmentSlot.SPELL_3.getIndex(EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), serverConfig.inventorySlots.spell_3_slot_x_offset.get(), serverConfig.inventorySlots.spell_3_slot_y_offset.get(), EMPTY_SPELL_3_SLOT, List.of(Component.translatable("slot.tooltip.spell_3"))) {
 
 			@Override
 			public boolean isActive() {
@@ -371,7 +374,7 @@ public abstract class InventoryMenuMixin extends AbstractContainerMenu implement
 		});
 
 		// spell 4 slot 60
-		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SPELL_4, 57, serverConfig.inventorySlots.spell_4_slot_x_offset.get(), serverConfig.inventorySlots.spell_4_slot_y_offset.get(), EMPTY_SPELL_4_SLOT, List.of(Component.translatable("slot.tooltip.spell_4"))) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SPELL_4, ExtendedEquipmentSlot.SPELL_4.getIndex(EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), serverConfig.inventorySlots.spell_4_slot_x_offset.get(), serverConfig.inventorySlots.spell_4_slot_y_offset.get(), EMPTY_SPELL_4_SLOT, List.of(Component.translatable("slot.tooltip.spell_4"))) {
 
 			@Override
 			public boolean isActive() {
@@ -381,7 +384,7 @@ public abstract class InventoryMenuMixin extends AbstractContainerMenu implement
 		});
 
 		// spell 5 slot 61
-		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SPELL_5, 58, serverConfig.inventorySlots.spell_5_slot_x_offset.get(), serverConfig.inventorySlots.spell_5_slot_y_offset.get(), EMPTY_SPELL_5_SLOT, List.of(Component.translatable("slot.tooltip.spell_5"))) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SPELL_5, ExtendedEquipmentSlot.SPELL_5.getIndex(EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), serverConfig.inventorySlots.spell_5_slot_x_offset.get(), serverConfig.inventorySlots.spell_5_slot_y_offset.get(), EMPTY_SPELL_5_SLOT, List.of(Component.translatable("slot.tooltip.spell_5"))) {
 
 			@Override
 			public boolean isActive() {
@@ -391,7 +394,7 @@ public abstract class InventoryMenuMixin extends AbstractContainerMenu implement
 		});
 
 		// spell 6 slot 62
-		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SPELL_6, 59, serverConfig.inventorySlots.spell_6_slot_x_offset.get(), serverConfig.inventorySlots.spell_6_slot_y_offset.get(), EMPTY_SPELL_6_SLOT, List.of(Component.translatable("slot.tooltip.spell_6"))) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SPELL_6, ExtendedEquipmentSlot.SHEATHED_OFF_HAND.getIndex(EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), serverConfig.inventorySlots.spell_6_slot_x_offset.get(), serverConfig.inventorySlots.spell_6_slot_y_offset.get(), EMPTY_SPELL_6_SLOT, List.of(Component.translatable("slot.tooltip.spell_6"))) {
 
 			@Override
 			public boolean isActive() {
@@ -401,7 +404,7 @@ public abstract class InventoryMenuMixin extends AbstractContainerMenu implement
 		});
 
 		// spell 7 slot 63
-		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SPELL_7, 60, serverConfig.inventorySlots.spell_7_slot_x_offset.get(), serverConfig.inventorySlots.spell_7_slot_y_offset.get(), EMPTY_SPELL_7_SLOT, List.of(Component.translatable("slot.tooltip.spell_7"))) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SPELL_7, ExtendedEquipmentSlot.SPELL_7.getIndex(EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), serverConfig.inventorySlots.spell_7_slot_x_offset.get(), serverConfig.inventorySlots.spell_7_slot_y_offset.get(), EMPTY_SPELL_7_SLOT, List.of(Component.translatable("slot.tooltip.spell_7"))) {
 
 			@Override
 			public boolean isActive() {
@@ -411,7 +414,7 @@ public abstract class InventoryMenuMixin extends AbstractContainerMenu implement
 		});
 
 		// spell 8 slot 64
-		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SPELL_8, 61, serverConfig.inventorySlots.spell_8_slot_x_offset.get(), serverConfig.inventorySlots.spell_8_slot_y_offset.get(), EMPTY_SPELL_8_SLOT, List.of(Component.translatable("slot.tooltip.spell_8"))) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.SPELL_8, ExtendedEquipmentSlot.SPELL_8.getIndex(EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), serverConfig.inventorySlots.spell_8_slot_x_offset.get(), serverConfig.inventorySlots.spell_8_slot_y_offset.get(), EMPTY_SPELL_8_SLOT, List.of(Component.translatable("slot.tooltip.spell_8"))) {
 
 			@Override
 			public boolean isActive() {
@@ -421,7 +424,7 @@ public abstract class InventoryMenuMixin extends AbstractContainerMenu implement
 		});
 
 		// relic slot 65
-		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.RELIC, 62, serverConfig.inventorySlots.relic_slot_x_offset.get(), serverConfig.inventorySlots.relic_slot_y_offset.get(), EMPTY_RELIC_SLOT, List.of(Component.translatable("slot.tooltip.relic"))) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.RELIC, ExtendedEquipmentSlot.RELIC.getIndex(EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), serverConfig.inventorySlots.relic_slot_x_offset.get(), serverConfig.inventorySlots.relic_slot_y_offset.get(), EMPTY_RELIC_SLOT, List.of(Component.translatable("slot.tooltip.relic"))) {
 
 			@Override
 			public boolean isActive() {
@@ -441,7 +444,7 @@ public abstract class InventoryMenuMixin extends AbstractContainerMenu implement
 		});
 
 		// class item slot 66
-		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.CLASS_ITEM, 63, 0, 0, EMPTY_RELIC_SLOT, List.of(Component.empty())) {
+		this.addSlot(new CustomArmorSlot(inventory, owner, ExtendedEquipmentSlot.CLASS_ITEM, ExtendedEquipmentSlot.CLASS_ITEM.getIndex(EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), 0, 0, EMPTY_RELIC_SLOT, List.of(Component.empty())) {
 
 			@Override
 			public boolean isActive() {

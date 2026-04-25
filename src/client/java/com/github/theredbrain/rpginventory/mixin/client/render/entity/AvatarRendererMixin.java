@@ -39,7 +39,7 @@ public abstract class AvatarRendererMixin<AvatarlikeEntity extends Avatar & Clie
 
 	@WrapMethod(method = "getArmPose(Lnet/minecraft/world/entity/Avatar;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/client/model/HumanoidModel$ArmPose;")
 	private static HumanoidModel.ArmPose rpginventory$wrap_getArmPose(Avatar avatar, ItemStack itemInHand, InteractionHand hand, Operation<HumanoidModel.ArmPose> original) {
-		if (!itemInHand.isEmpty() && (itemInHand.is(Tags.EMPTY_HAND_WEAPONS) || !ItemUtils.isUsable(itemInHand) || !(avatar instanceof Player player && ItemUtils.isUsableByPlayer(itemInHand, player)))) {
+		if (!itemInHand.isEmpty() && (itemInHand.is(Tags.EMPTY_HAND_WEAPONS) || !ItemUtils.isUsable(itemInHand) || (avatar instanceof Player player && !ItemUtils.isUsableByPlayer(itemInHand, player)))) {
 			return HumanoidModel.ArmPose.EMPTY;
 		}
 		return original.call(avatar, itemInHand, hand);

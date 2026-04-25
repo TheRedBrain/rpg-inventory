@@ -5,10 +5,12 @@ import com.github.theredbrain.rpginventory.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
 import com.github.theredbrain.rpginventory.entity.LivingEntityHelper;
 import com.github.theredbrain.rpginventory.registry.Tags;
+import com.google.common.collect.HashMultimap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -17,6 +19,8 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
@@ -29,6 +33,7 @@ import net.minecraft.world.level.storage.LevelData;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Team;
 import org.apache.commons.lang3.tuple.MutablePair;
+import org.spongepowered.asm.mixin.Unique;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -174,42 +179,50 @@ public class PlayerEntityHelper {
 
 		if (((DuckPlayerEntityMixin) playerEntity).rpginventory$isHandSlotOverhaulActive() != isHandSlotOverhaulActive) {
 			if (!isHandSlotOverhaulActive) {
-				((DuckLivingEntityMixin) playerEntity).rpginventory$setIsHandStackSheathed(true);
-				((DuckLivingEntityMixin) playerEntity).rpginventory$setIsOffhandStackSheathed(true);
 				Inventory playerInventory = playerEntity.getInventory();
 				boolean bl = false;
 
 				ItemStack itemStack = playerEntity.getItemBySlot(EquipmentSlot.MAINHAND);
 				if (!itemStack.isEmpty()) {
-					playerInventory.placeItemBackInInventory(itemStack.copy());
+					if (!playerEntity.level().isClientSide()) {
+						playerInventory.placeItemBackInInventory(itemStack.copy());
+					}
 					playerEntity.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
 					bl = true;
 				}
 
 				itemStack = playerEntity.getItemBySlot(ExtendedEquipmentSlot.SHEATHED_HAND);
 				if (!itemStack.isEmpty()) {
-					playerInventory.placeItemBackInInventory(itemStack.copy());
+					if (!playerEntity.level().isClientSide()) {
+						playerInventory.placeItemBackInInventory(itemStack.copy());
+					}
 					playerEntity.setItemSlot(ExtendedEquipmentSlot.SHEATHED_HAND, ItemStack.EMPTY);
 					bl = true;
 				}
 
 				itemStack = playerEntity.getItemBySlot(ExtendedEquipmentSlot.SHEATHED_OFF_HAND);
 				if (!itemStack.isEmpty()) {
-					playerInventory.placeItemBackInInventory(itemStack.copy());
+					if (!playerEntity.level().isClientSide()) {
+						playerInventory.placeItemBackInInventory(itemStack.copy());
+					}
 					playerEntity.setItemSlot(ExtendedEquipmentSlot.SHEATHED_OFF_HAND, ItemStack.EMPTY);
 					bl = true;
 				}
 
 				itemStack = playerEntity.getItemBySlot(ExtendedEquipmentSlot.ALTERNATIVE_HAND);
 				if (!itemStack.isEmpty()) {
-					playerInventory.placeItemBackInInventory(itemStack.copy());
+					if (!playerEntity.level().isClientSide()) {
+						playerInventory.placeItemBackInInventory(itemStack.copy());
+					}
 					playerEntity.setItemSlot(ExtendedEquipmentSlot.ALTERNATIVE_HAND, ItemStack.EMPTY);
 					bl = true;
 				}
 
 				itemStack = playerEntity.getItemBySlot(ExtendedEquipmentSlot.ALTERNATIVE_OFF_HAND);
 				if (!itemStack.isEmpty()) {
-					playerInventory.placeItemBackInInventory(itemStack.copy());
+					if (!playerEntity.level().isClientSide()) {
+						playerInventory.placeItemBackInInventory(itemStack.copy());
+					}
 					playerEntity.setItemSlot(ExtendedEquipmentSlot.ALTERNATIVE_OFF_HAND, ItemStack.EMPTY);
 					bl = true;
 				}
@@ -217,6 +230,8 @@ public class PlayerEntityHelper {
 				if (bl && playerEntity instanceof ServerPlayer serverPlayerEntity) {
 					serverPlayerEntity.sendSystemMessage(Component.translatable("hud.message.itemsRemovedFromInactiveHandSlots"), false);
 				}
+				((DuckLivingEntityMixin) playerEntity).rpginventory$setIsHandStackSheathed(true);
+				((DuckLivingEntityMixin) playerEntity).rpginventory$setIsOffhandStackSheathed(true);
 				((DuckPlayerEntityMixin) playerEntity).rpginventory$setAreAlternativeHandSlotsActive(false);
 			}
 			((DuckPlayerEntityMixin) playerEntity).rpginventory$setIsHandSlotOverhaulActive(isHandSlotOverhaulActive);
@@ -287,7 +302,9 @@ public class PlayerEntityHelper {
 				boolean removedStack = false;
 				for (String string : currentExclusiveEquipmentGroups) {
 					if (existingExclusiveEquipmentGroups.contains(string)) {
-						playerInventory.placeItemBackInInventory(itemStack);
+						if (!playerEntity.level().isClientSide()) {
+							playerInventory.placeItemBackInInventory(itemStack.copy());
+						}
 						setEquipmentStack(playerEntity, i, ItemStack.EMPTY);
 						removedStack = true;
 						break;
@@ -391,4 +408,32 @@ public class PlayerEntityHelper {
 			}
 		}
 	}
+
+	public static void updateNaturalAttributeModifiers(Player player) {
+		HashMultimap<Holder<Attribute>, AttributeModifier> toBeAdded = HashMultimap.create();
+		HashMultimap<Holder<Attribute>, AttributeModifier> toBeRemoved = HashMultimap.create();
+		addAttributeModifier(toBeAdded, toBeRemoved, RPGInventory.ACTIVE_SPELL_SLOT_AMOUNT, RPGInventory.identifier("natural_spell_slot_amount_modifier"), RPGInventory.SERVER_CONFIG.inventorySlots.default_spell_slot_amount.get());
+		if (!toBeRemoved.isEmpty()) {
+			player.getAttributes().removeAttributeModifiers(toBeRemoved);
+		}
+		if (!toBeAdded.isEmpty()) {
+			player.getAttributes().addTransientAttributeModifiers(toBeAdded);
+		}
+	}
+
+	private static void addAttributeModifier(
+			HashMultimap<Holder<Attribute>, AttributeModifier> toBeAdded,
+			HashMultimap<Holder<Attribute>, AttributeModifier> toBeRemoved,
+			Holder<Attribute> attributeHolder,
+			Identifier identifier,
+			double amount
+	) {
+		AttributeModifier attributeModifier = new AttributeModifier(identifier, amount, AttributeModifier.Operation.ADD_VALUE);
+		if (amount == 0) {
+			toBeRemoved.put(attributeHolder, attributeModifier);
+		} else {
+			toBeAdded.put(attributeHolder, attributeModifier);
+		}
+	}
+
 }

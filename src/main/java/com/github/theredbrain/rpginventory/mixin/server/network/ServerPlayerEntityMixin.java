@@ -5,7 +5,6 @@ import com.github.theredbrain.rpginventory.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
 import com.github.theredbrain.rpginventory.network.packet.SheathedWeaponsPacket;
 import com.github.theredbrain.rpginventory.network.packet.SwappedHandItemsPacket;
-import com.github.theredbrain.rpginventory.registry.ItemRegistry;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.mojang.authlib.GameProfile;
@@ -58,12 +57,6 @@ public abstract class ServerPlayerEntityMixin extends Player implements DuckLivi
 	@Inject(method = "tick", at = @At("TAIL"))
 	public void rpginventory$tick(CallbackInfo ci) {
 		if (!this.level().isClientSide()) {
-			if (!this.getItemBySlot(ExtendedEquipmentSlot.EMPTY_HAND).is(ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON)) {
-				this.setItemSlot(ExtendedEquipmentSlot.EMPTY_HAND, ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON.getDefaultInstance());
-			}
-			if (!this.getItemBySlot(ExtendedEquipmentSlot.EMPTY_OFF_HAND).is(ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON)) {
-				this.setItemSlot(ExtendedEquipmentSlot.EMPTY_OFF_HAND, ItemRegistry.DEFAULT_EMPTY_HAND_WEAPON.getDefaultInstance());
-			}
 			ItemStack newHandStack = this.getItemBySlot(EquipmentSlot.MAINHAND);
 			ItemStack newAlternativeHandStack = this.getItemBySlot(ExtendedEquipmentSlot.ALTERNATIVE_HAND);
 			if (!ItemStack.isSameItem(handSlotStack, newHandStack) || !ItemStack.isSameItem(alternateHandSlotStack, newAlternativeHandStack)) {
