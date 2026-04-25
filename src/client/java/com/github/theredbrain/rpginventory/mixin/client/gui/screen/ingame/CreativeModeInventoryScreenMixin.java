@@ -3,6 +3,9 @@ package com.github.theredbrain.rpginventory.mixin.client.gui.screen.ingame;
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.RPGInventoryClient;
 import com.github.theredbrain.slotcustomizationapi.api.SlotCustomization;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.mojang.blaze3d.pipeline.RenderPipeline;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -39,7 +42,7 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
 	@Unique
 	private static final Identifier SPELL_SLOTS_BACKGROUND = RPGInventory.identifier("textures/gui/container/adventure_creative_inventory/spell_slots_background.png");
 	@Unique
-	private static final Identifier SLOT_TEXTURE = Identifier.withDefaultNamespace("textures/gui/sprites/container/slot.png");
+	private static final Identifier SLOT_TEXTURE = Identifier.withDefaultNamespace("container/slot");
 
 	private CreativeModeInventoryScreenMixin() {
 		super(null, null, null);
@@ -122,7 +125,7 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
 		if (selectedTab.getType() == CreativeModeTab.Type.INVENTORY && RPGInventory.SERVER_CONFIG.activate_rpg_inventory_screen.get()) {
 			int x = this.leftPos + this.imageWidth;
 			int y = this.topPos;
-			graphics.blit(SPELL_SLOTS_BACKGROUND, x - 4, y, 0, 0, 44, 86, 44, 86);
+			graphics.blit(RenderPipelines.GUI_TEXTURED, SPELL_SLOTS_BACKGROUND, x - 4, y, 0, 0, 44, 86, 44, 86);
 
 			int inventorySize = 0;
 			int hotbarSize = 0;
@@ -138,18 +141,20 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
 			boolean showInactiveSlots = RPGInventoryClient.showInactiveInventorySlots();
 			for (k = 0; k < (showInactiveSlots ? 27 : Math.min(inventorySize, 27)); ++k) {
 				m = (k / 9);
-				graphics.blit(SLOT_TEXTURE, i + 8 + (k - (m * 9)) * 18, j + 53 + (m * 18), 0, 0, 18, 18, 18, 18);
+				graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_TEXTURE, i + 8 + (k - (m * 9)) * 18, j + 53 + (m * 18), 18, 18);
 			}
 			for (k = 0; k < (showInactiveSlots ? 9 : Math.min(hotbarSize, 9)); ++k) {
-				graphics.blit(SLOT_TEXTURE, i + 8 + k * 18, j + 111, 0, 0, 18, 18, 18, 18);
+				graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_TEXTURE, i + 8 + k * 18, j + 111, 18, 18);
 			}
 		}
 	}
 
-	@Inject(method = "extractBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/EditBox;extractRenderState(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IIF)V"))
-	private void rpginventory$drawAdventureInventoryBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a, CallbackInfo ci) {
+	@WrapOperation(method = "extractBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blit(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIFFIIII)V"))
+	private void rpginventory$drawAdventureInventoryBackground(GuiGraphicsExtractor instance, RenderPipeline renderPipeline, Identifier texture, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight, Operation<Void> original) {
 		if (selectedTab.getType() == CreativeModeTab.Type.INVENTORY && RPGInventory.SERVER_CONFIG.activate_rpg_inventory_screen.get()) {
-			graphics.blit(RenderPipelines.GUI_TEXTURED, TAB_ADVENTURE_INVENTORY_TEXTURE, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
+			instance.blit(renderPipeline, TAB_ADVENTURE_INVENTORY_TEXTURE, x, y, u, v, width, height, textureWidth, textureHeight);
+		} else {
+			original.call(instance, renderPipeline, texture, x, y, u, v, width, height, textureWidth, textureHeight);
 		}
 	}
 

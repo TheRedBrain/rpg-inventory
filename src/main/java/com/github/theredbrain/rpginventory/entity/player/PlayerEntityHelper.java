@@ -233,6 +233,9 @@ public class PlayerEntityHelper {
 				((DuckLivingEntityMixin) playerEntity).rpginventory$setIsHandStackSheathed(true);
 				((DuckLivingEntityMixin) playerEntity).rpginventory$setIsOffhandStackSheathed(true);
 				((DuckPlayerEntityMixin) playerEntity).rpginventory$setAreAlternativeHandSlotsActive(false);
+			} else {
+				((DuckLivingEntityMixin) playerEntity).rpginventory$setIsHandStackSheathed(false);
+				((DuckLivingEntityMixin) playerEntity).rpginventory$setIsOffhandStackSheathed(false);
 			}
 			((DuckPlayerEntityMixin) playerEntity).rpginventory$setIsHandSlotOverhaulActive(isHandSlotOverhaulActive);
 		}

@@ -41,13 +41,13 @@ import java.util.Optional;
 public class RPGInventoryScreen extends AbstractContainerScreen<InventoryMenu> {
 	public static final Identifier ADVENTURE_INVENTORY_MAIN_BACKGROUND_TEXTURE = RPGInventory.identifier("textures/gui/container/adventure_inventory/adventure_inventory_main_background.png");
 	public static final Identifier ADVENTURE_INVENTORY_SIDES_BACKGROUND_TEXTURE = RPGInventory.identifier("textures/gui/container/adventure_inventory/adventure_inventory_sides_background.png");
-	public static final Identifier SLOT_TEXTURE = Identifier.withDefaultNamespace("textures/gui/sprites/container/slot.png");
-	private static final Identifier EFFECT_BACKGROUND_SMALL_TEXTURE = Identifier.withDefaultNamespace("container/inventory/effect_background_small");
+	public static final Identifier SLOT_TEXTURE = Identifier.withDefaultNamespace("container/slot");
+	private static final Identifier EFFECT_BACKGROUND_SMALL_TEXTURE = Identifier.withDefaultNamespace("container/inventory/effect_background");
 	private static final Identifier CRAFTING_SLOTS_BACKGROUND_TEXTURE = RPGInventory.identifier("textures/gui/container/adventure_inventory/adventure_inventory_crafting_background.png");
-	private static final Identifier SCROLL_BAR_BACKGROUND_8_206_TEXTURE = RPGInventory.identifier("textures/gui/sprites/scroll_bar/scroll_bar_background_8_206.png");
-	private static final Identifier SCROLL_BAR_BACKGROUND_8_32_TEXTURE = RPGInventory.identifier("textures/gui/sprites/scroll_bar/scroll_bar_background_8_32.png");
-	private static final Identifier SCROLLER_VERTICAL_6_7_TEXTURE = RPGInventory.identifier("textures/gui/sprites/scroll_bar/scroller_vertical_6_7.png");
-	private static final Identifier SCROLLER_VERTICAL_6_15_TEXTURE = RPGInventory.identifier("textures/gui/sprites/scroll_bar/scroller_vertical_6_15.png");
+	private static final Identifier SCROLL_BAR_BACKGROUND_8_206_TEXTURE = RPGInventory.identifier("scroll_bar/scroll_bar_background_8_206");
+	private static final Identifier SCROLL_BAR_BACKGROUND_8_32_TEXTURE = RPGInventory.identifier("scroll_bar/scroll_bar_background_8_32");
+	private static final Identifier SCROLLER_VERTICAL_6_7_TEXTURE = RPGInventory.identifier("scroll_bar/scroller_vertical_6_7");
+	private static final Identifier SCROLLER_VERTICAL_6_15_TEXTURE = RPGInventory.identifier("scroll_bar/scroller_vertical_6_15");
 	private static final Component CRAFTING_LABEL_TEXT = Component.translatable("gui.adventure_inventory_screen.crafting_label");
 	private static final Component SPELLS_LABEL_TEXT = Component.translatable("gui.adventure_inventory_screen.spells_label");
 	private static final Component TOGGLE_SHOW_ATTRIBUTES_BUTTON_TOOLTIP_TEXT_OFF = Component.translatable("gui.adventureInventory.toggleShowAttributeScreenButton.off.tooltip");
@@ -237,89 +237,89 @@ public class RPGInventoryScreen extends AbstractContainerScreen<InventoryMenu> {
 			inventorySize = RPGInventory.getActiveInventorySize(this.minecraft.player);
 			updateEffectsLists(this.minecraft.player);
 		}
-		graphics.blit(ADVENTURE_INVENTORY_MAIN_BACKGROUND_TEXTURE, i, j, 0, 0, this.imageWidth, this.imageHeight, this.imageWidth, this.imageHeight);
+		graphics.blit(RenderPipelines.GUI_TEXTURED, ADVENTURE_INVENTORY_MAIN_BACKGROUND_TEXTURE, i, j, 0, 0, this.imageWidth, this.imageHeight, this.imageWidth, this.imageHeight);
 		if (!serverConfig.inventorySlots.disable_inventory_crafting_slots.get()) {
 			graphics.text(this.font, CRAFTING_LABEL_TEXT, i + serverConfig.inventorySlots.inventory_crafting_slots_x_offset.get(), j + serverConfig.inventorySlots.inventory_crafting_slots_y_offset.get() - 11, 4210752, false);
-			graphics.blit(CRAFTING_SLOTS_BACKGROUND_TEXTURE, i + serverConfig.inventorySlots.inventory_crafting_slots_x_offset.get() - 1, j + serverConfig.inventorySlots.inventory_crafting_slots_y_offset.get() - 1, 0, 0, 74, 36, 74, 36);
+			graphics.blit(RenderPipelines.GUI_TEXTURED, CRAFTING_SLOTS_BACKGROUND_TEXTURE, i + serverConfig.inventorySlots.inventory_crafting_slots_x_offset.get() - 1, j + serverConfig.inventorySlots.inventory_crafting_slots_y_offset.get() - 1, 0, 0, 74, 36, 74, 36);
 		}
 
 		if (activeSpellSlotAmount > 0) {
 			graphics.text(this.font, SPELLS_LABEL_TEXT, i + clientConfig.rpgInventoryScreenSection.spell_slots_label_x_offset.get(), j + clientConfig.rpgInventoryScreenSection.spell_slots_label_y_offset.get(), 4210752, false);
 		}
 
-		graphics.blit(SLOT_TEXTURE, i + serverConfig.inventorySlots.head_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.head_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
-		graphics.blit(SLOT_TEXTURE, i + serverConfig.inventorySlots.chest_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.chest_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
-		graphics.blit(SLOT_TEXTURE, i + serverConfig.inventorySlots.legs_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.legs_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
-		graphics.blit(SLOT_TEXTURE, i + serverConfig.inventorySlots.feet_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.feet_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
-		graphics.blit(SLOT_TEXTURE, i + serverConfig.inventorySlots.offhand_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.offhand_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+		graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_TEXTURE, i + serverConfig.inventorySlots.head_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.head_slot_y_offset.get() - 1, 18, 18);
+		graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_TEXTURE, i + serverConfig.inventorySlots.chest_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.chest_slot_y_offset.get() - 1, 18, 18);
+		graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_TEXTURE, i + serverConfig.inventorySlots.legs_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.legs_slot_y_offset.get() - 1, 18, 18);
+		graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_TEXTURE, i + serverConfig.inventorySlots.feet_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.feet_slot_y_offset.get() - 1, 18, 18);
+		graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_TEXTURE, i + serverConfig.inventorySlots.offhand_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.offhand_slot_y_offset.get() - 1, 18, 18);
 		if (serverConfig.inventorySlots.is_belt_slot_enabled.get()) {
-			graphics.blit(SLOT_TEXTURE, i + serverConfig.inventorySlots.belt_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.belt_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+			graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_TEXTURE, i + serverConfig.inventorySlots.belt_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.belt_slot_y_offset.get() - 1, 18, 18);
 		}
 		if (serverConfig.inventorySlots.is_gloves_slot_enabled.get()) {
-			graphics.blit(SLOT_TEXTURE, i + serverConfig.inventorySlots.gloves_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.gloves_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+			graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_TEXTURE, i + serverConfig.inventorySlots.gloves_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.gloves_slot_y_offset.get() - 1, 18, 18);
 		}
 		if (serverConfig.inventorySlots.is_necklace_slot_enabled.get()) {
-			graphics.blit(SLOT_TEXTURE, i + serverConfig.inventorySlots.necklace_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.necklace_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+			graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_TEXTURE, i + serverConfig.inventorySlots.necklace_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.necklace_slot_y_offset.get() - 1, 18, 18);
 		}
 		if (serverConfig.inventorySlots.is_ring_1_slot_enabled.get()) {
-			graphics.blit(SLOT_TEXTURE, i + serverConfig.inventorySlots.ring_1_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.ring_1_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+			graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_TEXTURE, i + serverConfig.inventorySlots.ring_1_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.ring_1_slot_y_offset.get() - 1, 18, 18);
 		}
 		if (serverConfig.inventorySlots.is_ring_2_slot_enabled.get()) {
-			graphics.blit(SLOT_TEXTURE, i + serverConfig.inventorySlots.ring_2_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.ring_2_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+			graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_TEXTURE, i + serverConfig.inventorySlots.ring_2_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.ring_2_slot_y_offset.get() - 1, 18, 18);
 		}
 		if (serverConfig.inventorySlots.is_shoulders_slot_enabled.get()) {
-			graphics.blit(SLOT_TEXTURE, i + serverConfig.inventorySlots.shoulders_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.shoulders_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+			graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_TEXTURE, i + serverConfig.inventorySlots.shoulders_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.shoulders_slot_y_offset.get() - 1, 18, 18);
 		}
 		if (serverConfig.inventorySlots.is_relic_slot_enabled.get()) {
-			graphics.blit(SLOT_TEXTURE, i + serverConfig.inventorySlots.relic_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.relic_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+			graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_TEXTURE, i + serverConfig.inventorySlots.relic_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.relic_slot_y_offset.get() - 1, 18, 18);
 		}
 		if (activeSpellSlotAmount > 0) {
-			graphics.blit(SLOT_TEXTURE, i + serverConfig.inventorySlots.spell_1_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.spell_1_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+			graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_TEXTURE, i + serverConfig.inventorySlots.spell_1_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.spell_1_slot_y_offset.get() - 1, 18, 18);
 		}
 		if (activeSpellSlotAmount > 1) {
-			graphics.blit(SLOT_TEXTURE, i + serverConfig.inventorySlots.spell_2_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.spell_2_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+			graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_TEXTURE, i + serverConfig.inventorySlots.spell_2_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.spell_2_slot_y_offset.get() - 1, 18, 18);
 		}
 		if (activeSpellSlotAmount > 2) {
-			graphics.blit(SLOT_TEXTURE, i + serverConfig.inventorySlots.spell_3_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.spell_3_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+			graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_TEXTURE, i + serverConfig.inventorySlots.spell_3_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.spell_3_slot_y_offset.get() - 1, 18, 18);
 		}
 		if (activeSpellSlotAmount > 3) {
-			graphics.blit(SLOT_TEXTURE, i + serverConfig.inventorySlots.spell_4_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.spell_4_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+			graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_TEXTURE, i + serverConfig.inventorySlots.spell_4_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.spell_4_slot_y_offset.get() - 1, 18, 18);
 		}
 		if (activeSpellSlotAmount > 4) {
-			graphics.blit(SLOT_TEXTURE, i + serverConfig.inventorySlots.spell_5_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.spell_5_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+			graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_TEXTURE, i + serverConfig.inventorySlots.spell_5_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.spell_5_slot_y_offset.get() - 1, 18, 18);
 		}
 		if (activeSpellSlotAmount > 5) {
-			graphics.blit(SLOT_TEXTURE, i + serverConfig.inventorySlots.spell_6_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.spell_6_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+			graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_TEXTURE, i + serverConfig.inventorySlots.spell_6_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.spell_6_slot_y_offset.get() - 1, 18, 18);
 		}
 		if (activeSpellSlotAmount > 6) {
-			graphics.blit(SLOT_TEXTURE, i + serverConfig.inventorySlots.spell_7_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.spell_7_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+			graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_TEXTURE, i + serverConfig.inventorySlots.spell_7_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.spell_7_slot_y_offset.get() - 1, 18, 18);
 		}
 		if (activeSpellSlotAmount > 7) {
-			graphics.blit(SLOT_TEXTURE, i + serverConfig.inventorySlots.spell_8_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.spell_8_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+			graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_TEXTURE, i + serverConfig.inventorySlots.spell_8_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.spell_8_slot_y_offset.get() - 1, 18, 18);
 		}
 
 		if (RPGInventory.isHandSlotOverhaulActive()) {
-			graphics.blit(SLOT_TEXTURE, i + serverConfig.inventorySlots.hand_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.hand_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+			graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_TEXTURE, i + serverConfig.inventorySlots.hand_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.hand_slot_y_offset.get() - 1, 18, 18);
 			if (serverConfig.handSlotOverhaul.enable_alternative_hand_slots.get()) {
-				graphics.blit(SLOT_TEXTURE, i + serverConfig.inventorySlots.alternative_hand_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.alternative_hand_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
-				graphics.blit(SLOT_TEXTURE, i + serverConfig.inventorySlots.alternative_offhand_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.alternative_offhand_slot_y_offset.get() - 1, 0, 0, 18, 18, 18, 18);
+				graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_TEXTURE, i + serverConfig.inventorySlots.alternative_hand_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.alternative_hand_slot_y_offset.get() - 1, 18, 18);
+				graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_TEXTURE, i + serverConfig.inventorySlots.alternative_offhand_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.alternative_offhand_slot_y_offset.get() - 1, 18, 18);
 			}
 		}
 
 		boolean showInactiveSlots = RPGInventoryClient.showInactiveInventorySlots();
 		for (k = 0; k < (showInactiveSlots ? 27 : Math.min(inventorySize, 27)); ++k) {
 			m = (k / 9);
-			graphics.blit(SLOT_TEXTURE, i + 7 + (k - (m * 9)) * 18, j + 137 + (m * 18), 0, 0, 18, 18, 18, 18);
+			graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_TEXTURE, i + 7 + (k - (m * 9)) * 18, j + 137 + (m * 18), 18, 18);
 		}
 		for (k = 0; k < (showInactiveSlots ? 9 : Math.min(hotbarSize, 9)); ++k) {
-			graphics.blit(SLOT_TEXTURE, i + 7 + k * 18, j + 195, 0, 0, 18, 18, 18, 18);
+			graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_TEXTURE, i + 7 + k * 18, j + 195, 18, 18);
 		}
 
 		if (this.showAttributeScreen) {
-			graphics.blit(ADVENTURE_INVENTORY_SIDES_BACKGROUND_TEXTURE, i - this.sidesBackgroundWidth, j, 0, 0, this.sidesBackgroundWidth, this.imageHeight, this.sidesBackgroundWidth, this.imageHeight);
+			graphics.blit(RenderPipelines.GUI_TEXTURED, ADVENTURE_INVENTORY_SIDES_BACKGROUND_TEXTURE, i - this.sidesBackgroundWidth, j, 0, 0, this.sidesBackgroundWidth, this.imageHeight, this.sidesBackgroundWidth, this.imageHeight);
 		}
 		if (this.oldEffectsListSize > 0 && (this.showEffectScreen || !clientConfig.rpgInventoryScreenSection.can_hide_status_effect_screen.get())) {
-			graphics.blit(ADVENTURE_INVENTORY_SIDES_BACKGROUND_TEXTURE, i + this.imageWidth, j, 0, 0, this.sidesBackgroundWidth, this.imageHeight, this.sidesBackgroundWidth, this.imageHeight);
+			graphics.blit(RenderPipelines.GUI_TEXTURED, ADVENTURE_INVENTORY_SIDES_BACKGROUND_TEXTURE, i + this.imageWidth, j, 0, 0, this.sidesBackgroundWidth, this.imageHeight, this.sidesBackgroundWidth, this.imageHeight);
 		}
 		this.toggleShowEffectScreenButton.visible = clientConfig.rpgInventoryScreenSection.can_hide_status_effect_screen.get() && this.oldEffectsListSize > 0;
 		if (this.minecraft.player != null) {
@@ -347,9 +347,9 @@ public class RPGInventoryScreen extends AbstractContainerScreen<InventoryMenu> {
 			}
 		}
 		if (list.size() > MAX_ATTRIBUTE_SCREEN_LINES) {
-			graphics.blit(SCROLL_BAR_BACKGROUND_8_206_TEXTURE, x + 108, y, 0, 0, 8, 206, 8, 206);
+			graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SCROLL_BAR_BACKGROUND_8_206_TEXTURE, x + 108, y, 8, 206);
 			int k = (int) (189.0f * this.attributeScrollAmount);
-			graphics.blit(SCROLLER_VERTICAL_6_15_TEXTURE, x + 109, y + 1 + k, 0, 0, 6, 15, 6, 15);
+			graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SCROLLER_VERTICAL_6_15_TEXTURE, x + 109, y + 1 + k, 6, 15);
 		}
 	}
 
@@ -369,9 +369,9 @@ public class RPGInventoryScreen extends AbstractContainerScreen<InventoryMenu> {
 					drawStatusEffectTexturesAndToolTips(graphics, i, j, k, mouseX, mouseY, this.foodEffectsList.get(k));
 				}
 				if (this.foodEffectsRowAmount > 1) {
-					graphics.blit(SCROLL_BAR_BACKGROUND_8_32_TEXTURE, i + 109, j, 0, 0, 8, 32, 8, 32);
+					graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SCROLL_BAR_BACKGROUND_8_32_TEXTURE, i + 109, j, 8, 32);
 					int k = (int) (23.0f * this.foodScrollAmount);
-					graphics.blit(SCROLLER_VERTICAL_6_7_TEXTURE, i + 110, j + 1 + k, 0, 0, 6, 7, 6, 7);
+					graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SCROLLER_VERTICAL_6_7_TEXTURE, i + 110, j + 1 + k, 6, 7);
 				}
 				j += 37;
 			}
@@ -383,9 +383,9 @@ public class RPGInventoryScreen extends AbstractContainerScreen<InventoryMenu> {
 					drawStatusEffectTexturesAndToolTips(graphics, i, j, k, mouseX, mouseY, this.negativeEffectsList.get(k));
 				}
 				if (this.negativeEffectsRowAmount > 1) {
-					graphics.blit(SCROLL_BAR_BACKGROUND_8_32_TEXTURE, i + 109, j, 0, 0, 8, 32, 8, 32);
+					graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SCROLL_BAR_BACKGROUND_8_32_TEXTURE, i + 109, j, 8, 32);
 					int k = (int) (23.0f * this.negativeScrollAmount);
-					graphics.blit(SCROLLER_VERTICAL_6_7_TEXTURE, i + 110, j + 1 + k, 0, 0, 6, 7, 6, 7);
+					graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SCROLLER_VERTICAL_6_7_TEXTURE, i + 110, j + 1 + k, 6, 7);
 				}
 				j += 37;
 			}
@@ -397,9 +397,9 @@ public class RPGInventoryScreen extends AbstractContainerScreen<InventoryMenu> {
 					drawStatusEffectTexturesAndToolTips(graphics, i, j, k, mouseX, mouseY, this.positiveEffectsList.get(k));
 				}
 				if (this.positiveEffectsRowAmount > 1) {
-					graphics.blit(SCROLL_BAR_BACKGROUND_8_32_TEXTURE, i + 109, j, 0, 0, 8, 32, 8, 32);
+					graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SCROLL_BAR_BACKGROUND_8_32_TEXTURE, i + 109, j, 8, 32);
 					int k = (int) (23.0f * this.positiveScrollAmount);
-					graphics.blit(SCROLLER_VERTICAL_6_7_TEXTURE, i + 110, j + 1 + k, 0, 0, 6, 7, 6, 7);
+					graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SCROLLER_VERTICAL_6_7_TEXTURE, i + 110, j + 1 + k, 6, 7);
 				}
 				j += 37;
 			}
@@ -411,9 +411,9 @@ public class RPGInventoryScreen extends AbstractContainerScreen<InventoryMenu> {
 					drawStatusEffectTexturesAndToolTips(graphics, i, j, k, mouseX, mouseY, this.neutralEffectsList.get(k));
 				}
 				if (this.neutralEffectsRowAmount > 1) {
-					graphics.blit(SCROLL_BAR_BACKGROUND_8_32_TEXTURE, i + 109, j, 0, 0, 8, 32, 8, 32);
+					graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SCROLL_BAR_BACKGROUND_8_32_TEXTURE, i + 109, j, 8, 32);
 					int k = (int) (23.0f * this.neutralScrollAmount);
-					graphics.blit(SCROLLER_VERTICAL_6_7_TEXTURE, i + 110, j + 1 + k, 0, 0, 6, 7, 6, 7);
+					graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SCROLLER_VERTICAL_6_7_TEXTURE, i + 110, j + 1 + k, 6, 7);
 				}
 			}
 		}

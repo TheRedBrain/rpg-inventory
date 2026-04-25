@@ -35,41 +35,41 @@ import net.minecraft.world.item.ItemStack;
 @Mixin(InventoryMenu.class)
 public abstract class InventoryMenuMixin extends AbstractContainerMenu implements DuckPlayerScreenHandlerMixin {
 	@Unique
-	private static final Identifier EMPTY_HAND_SLOT = RPGInventory.identifier("item/empty_slot_hand");
+	private static final Identifier EMPTY_HAND_SLOT = RPGInventory.identifier("container/slot/empty_slot_hand");
 	@Unique
-	private static final Identifier EMPTY_ALTERNATIVE_HAND_SLOT = RPGInventory.identifier("item/empty_slot_alternative_hand");
+	private static final Identifier EMPTY_ALTERNATIVE_HAND_SLOT = RPGInventory.identifier("container/slot/empty_slot_alternative_hand");
 	@Unique
-	private static final Identifier EMPTY_ALTERNATIVE_OFFHAND_SLOT = RPGInventory.identifier("item/empty_slot_alternative_offhand");
+	private static final Identifier EMPTY_ALTERNATIVE_OFFHAND_SLOT = RPGInventory.identifier("container/slot/empty_slot_alternative_offhand");
 	@Unique
-	private static final Identifier EMPTY_BELT_SLOT = RPGInventory.identifier("item/empty_slot_belt");
+	private static final Identifier EMPTY_BELT_SLOT = RPGInventory.identifier("container/slot/empty_slot_belt");
 	@Unique
-	private static final Identifier EMPTY_GLOVES_SLOT = RPGInventory.identifier("item/empty_slot_gloves");
+	private static final Identifier EMPTY_GLOVES_SLOT = RPGInventory.identifier("container/slot/empty_slot_gloves");
 	@Unique
-	private static final Identifier EMPTY_NECKLACE_SLOT = RPGInventory.identifier("item/empty_slot_necklace");
+	private static final Identifier EMPTY_NECKLACE_SLOT = RPGInventory.identifier("container/slot/empty_slot_necklace");
 	@Unique
-	private static final Identifier EMPTY_RING_1_SLOT = RPGInventory.identifier("item/empty_slot_ring_1");
+	private static final Identifier EMPTY_RING_1_SLOT = RPGInventory.identifier("container/slot/empty_slot_ring_1");
 	@Unique
-	private static final Identifier EMPTY_RING_2_SLOT = RPGInventory.identifier("item/empty_slot_ring_2");
+	private static final Identifier EMPTY_RING_2_SLOT = RPGInventory.identifier("container/slot/empty_slot_ring_2");
 	@Unique
-	private static final Identifier EMPTY_SHOULDERS_SLOT = RPGInventory.identifier("item/empty_slot_shoulders");
+	private static final Identifier EMPTY_SHOULDERS_SLOT = RPGInventory.identifier("container/slot/empty_slot_shoulders");
 	@Unique
-	private static final Identifier EMPTY_SPELL_1_SLOT = RPGInventory.identifier("item/empty_slot_spell_1");
+	private static final Identifier EMPTY_SPELL_1_SLOT = RPGInventory.identifier("container/slot/empty_slot_spell_1");
 	@Unique
-	private static final Identifier EMPTY_SPELL_2_SLOT = RPGInventory.identifier("item/empty_slot_spell_2");
+	private static final Identifier EMPTY_SPELL_2_SLOT = RPGInventory.identifier("container/slot/empty_slot_spell_2");
 	@Unique
-	private static final Identifier EMPTY_SPELL_3_SLOT = RPGInventory.identifier("item/empty_slot_spell_3");
+	private static final Identifier EMPTY_SPELL_3_SLOT = RPGInventory.identifier("container/slot/empty_slot_spell_3");
 	@Unique
-	private static final Identifier EMPTY_SPELL_4_SLOT = RPGInventory.identifier("item/empty_slot_spell_4");
+	private static final Identifier EMPTY_SPELL_4_SLOT = RPGInventory.identifier("container/slot/empty_slot_spell_4");
 	@Unique
-	private static final Identifier EMPTY_SPELL_5_SLOT = RPGInventory.identifier("item/empty_slot_spell_5");
+	private static final Identifier EMPTY_SPELL_5_SLOT = RPGInventory.identifier("container/slot/empty_slot_spell_5");
 	@Unique
-	private static final Identifier EMPTY_SPELL_6_SLOT = RPGInventory.identifier("item/empty_slot_spell_6");
+	private static final Identifier EMPTY_SPELL_6_SLOT = RPGInventory.identifier("container/slot/empty_slot_spell_6");
 	@Unique
-	private static final Identifier EMPTY_SPELL_7_SLOT = RPGInventory.identifier("item/empty_slot_spell_7");
+	private static final Identifier EMPTY_SPELL_7_SLOT = RPGInventory.identifier("container/slot/empty_slot_spell_7");
 	@Unique
-	private static final Identifier EMPTY_SPELL_8_SLOT = RPGInventory.identifier("item/empty_slot_spell_8");
+	private static final Identifier EMPTY_SPELL_8_SLOT = RPGInventory.identifier("container/slot/empty_slot_spell_8");
 	@Unique
-	private static final Identifier EMPTY_RELIC_SLOT = RPGInventory.identifier("item/empty_slot_relic");
+	private static final Identifier EMPTY_RELIC_SLOT = RPGInventory.identifier("container/slot/empty_slot_relic");
 	@Unique
 	private static final int EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET = 44;
 
@@ -143,7 +143,7 @@ public abstract class InventoryMenuMixin extends AbstractContainerMenu implement
 
 			@Override
 			public boolean isActive() {
-				return isRPGInventoryScreenActivated && !((DuckLivingEntityMixin) owner).rpginventory$isHandStackSheathed() && RPGInventory.isHandSlotOverhaulActive();
+				return isRPGInventoryScreenActivated && !((DuckLivingEntityMixin) owner).rpginventory$isHandStackSheathed() && ((DuckPlayerEntityMixin) owner).rpginventory$isHandSlotOverhaulActive();
 			}
 
 			@Override
@@ -160,7 +160,7 @@ public abstract class InventoryMenuMixin extends AbstractContainerMenu implement
 
 			@Override
 			public boolean isActive() {
-				return isRPGInventoryScreenActivated && ((DuckLivingEntityMixin) owner).rpginventory$isHandStackSheathed() && RPGInventory.isHandSlotOverhaulActive();
+				return isRPGInventoryScreenActivated && ((DuckLivingEntityMixin) owner).rpginventory$isHandStackSheathed() && ((DuckPlayerEntityMixin) owner).rpginventory$isHandSlotOverhaulActive();
 			}
 
 			@Override
@@ -177,7 +177,7 @@ public abstract class InventoryMenuMixin extends AbstractContainerMenu implement
 
 			@Override
 			public boolean isActive() {
-				return isRPGInventoryScreenActivated && ((DuckLivingEntityMixin) owner).rpginventory$isOffhandStackSheathed() && RPGInventory.isHandSlotOverhaulActive();
+				return isRPGInventoryScreenActivated && ((DuckLivingEntityMixin) owner).rpginventory$isOffhandStackSheathed() && ((DuckPlayerEntityMixin) owner).rpginventory$isHandSlotOverhaulActive();
 			}
 
 			@Override
@@ -201,7 +201,7 @@ public abstract class InventoryMenuMixin extends AbstractContainerMenu implement
 
 			@Override
 			public boolean isActive() {
-				return isRPGInventoryScreenActivated && RPGInventory.isHandSlotOverhaulActive() && serverConfig.handSlotOverhaul.enable_alternative_hand_slots.get();
+				return isRPGInventoryScreenActivated && ((DuckPlayerEntityMixin) owner).rpginventory$isHandSlotOverhaulActive() && serverConfig.handSlotOverhaul.enable_alternative_hand_slots.get();
 			}
 
 		});
@@ -218,7 +218,7 @@ public abstract class InventoryMenuMixin extends AbstractContainerMenu implement
 
 			@Override
 			public boolean isActive() {
-				return isRPGInventoryScreenActivated && RPGInventory.isHandSlotOverhaulActive() && serverConfig.handSlotOverhaul.enable_alternative_hand_slots.get();
+				return isRPGInventoryScreenActivated && ((DuckPlayerEntityMixin) owner).rpginventory$isHandSlotOverhaulActive() && serverConfig.handSlotOverhaul.enable_alternative_hand_slots.get();
 			}
 
 		});
@@ -673,7 +673,7 @@ public abstract class InventoryMenuMixin extends AbstractContainerMenu implement
 						}
 					}
 
-					if (RPGInventory.isHandSlotOverhaulActive()) {
+					if (((DuckPlayerEntityMixin) player).rpginventory$isHandSlotOverhaulActive()) {
 
 						if (!serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || rpginventory$stack2.is(Tags.HAND_ITEMS)) {
 							if (((DuckLivingEntityMixin) player).rpginventory$isHandStackSheathed() && !this.slots.get(47).hasItem()) {

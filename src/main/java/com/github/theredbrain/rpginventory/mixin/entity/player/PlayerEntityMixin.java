@@ -77,7 +77,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 		if (hand == InteractionHand.MAIN_HAND) {
 
 			ItemStack handStack = this.getInventory().getSelectedItem();
-			ItemStack emptyHandStack = RPGInventory.isHandSlotOverhaulActive() ? this.getItemBySlot(ExtendedEquipmentSlot.EMPTY_HAND) : ItemStack.EMPTY;
+			ItemStack emptyHandStack = this.rpginventory$isHandSlotOverhaulActive() ? this.getItemBySlot(ExtendedEquipmentSlot.EMPTY_HAND) : ItemStack.EMPTY;
 			if (((DuckLivingEntityMixin) this).rpginventory$isHandStackSheathed()) {
 				return ItemUtils.isUsable(handStack) && ItemUtils.isUsableByPlayer(handStack, player) ? handStack : emptyHandStack;
 			}
@@ -87,10 +87,10 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 		} else if (hand == InteractionHand.OFF_HAND) {
 
 			ItemStack offHandStack = this.getItemBySlot(EquipmentSlot.OFFHAND);
-			if (!RPGInventory.isHandSlotOverhaulActive()) {
+			if (!this.rpginventory$isHandSlotOverhaulActive()) {
 				return offHandStack;
 			}
-			ItemStack emptyOffHandStack = RPGInventory.isHandSlotOverhaulActive() ? this.getItemBySlot(ExtendedEquipmentSlot.EMPTY_OFF_HAND) : ItemStack.EMPTY;
+			ItemStack emptyOffHandStack = this.rpginventory$isHandSlotOverhaulActive() ? this.getItemBySlot(ExtendedEquipmentSlot.EMPTY_OFF_HAND) : ItemStack.EMPTY;
 			if (((DuckLivingEntityMixin) this).rpginventory$isOffhandStackSheathed()) {
 				return emptyOffHandStack;
 			}
@@ -103,7 +103,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 	@Override
 	public void setItemInHand(final InteractionHand hand, final ItemStack itemStack) {
 		if (hand == InteractionHand.MAIN_HAND) {
-			if (RPGInventory.isHandSlotOverhaulActive() && !((DuckLivingEntityMixin) this).rpginventory$isHandStackSheathed()) {
+			if (this.rpginventory$isHandSlotOverhaulActive() && !((DuckLivingEntityMixin) this).rpginventory$isHandStackSheathed()) {
 				this.setItemSlot(EquipmentSlot.MAINHAND, itemStack);
 				return;
 			}
@@ -113,7 +113,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 				throw new IllegalArgumentException("Invalid hand " + hand);
 			}
 
-			if (RPGInventory.isHandSlotOverhaulActive() && ((DuckLivingEntityMixin) this).rpginventory$isOffhandStackSheathed()) {
+			if (this.rpginventory$isHandSlotOverhaulActive() && ((DuckLivingEntityMixin) this).rpginventory$isOffhandStackSheathed()) {
 
 				this.setItemSlot(ExtendedEquipmentSlot.SHEATHED_OFF_HAND, itemStack);
 				return;
@@ -125,7 +125,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 	@WrapOperation(method = "getDestroySpeed", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getDestroySpeed(Lnet/minecraft/world/level/block/state/BlockState;)F")
 	)
 	public float rpginventory$wrap_getBlockBreakingSpeed(ItemStack instance, BlockState state, Operation<Float> original) {
-		if (RPGInventory.isHandSlotOverhaulActive()) {
+		if (this.rpginventory$isHandSlotOverhaulActive()) {
 			return this.getItemInHand(InteractionHand.MAIN_HAND).getDestroySpeed(state);
 		} else {
 			return original.call(instance, state);
