@@ -9,6 +9,7 @@ import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import com.github.theredbrain.rpginventory.screen.slot.AlternativeHandSlot;
 import com.github.theredbrain.rpginventory.screen.slot.CustomArmorSlot;
+import com.github.theredbrain.rpginventory.screen.slot.CustomHandSlot;
 import com.github.theredbrain.rpginventory.screen.slot.MannequinSlot;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -32,27 +33,28 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class AbstractMannequinScreenHandler extends AbstractContainerMenu {
-	private static final Identifier EMPTY_HAND_SLOT = RPGInventory.identifier("item/empty_slot_hand");
-	private static final Identifier EMPTY_ALTERNATIVE_HAND_SLOT = RPGInventory.identifier("item/empty_slot_alternative_hand");
-	private static final Identifier EMPTY_ALTERNATIVE_OFFHAND_SLOT = RPGInventory.identifier("item/empty_slot_alternative_offhand");
-	private static final Identifier EMPTY_BELT_SLOT = RPGInventory.identifier("item/empty_slot_belt");
-	private static final Identifier EMPTY_GLOVES_SLOT = RPGInventory.identifier("item/empty_slot_gloves");
-	private static final Identifier EMPTY_NECKLACE_SLOT = RPGInventory.identifier("item/empty_slot_necklace");
-	private static final Identifier EMPTY_RING_1_SLOT = RPGInventory.identifier("item/empty_slot_ring_1");
-	private static final Identifier EMPTY_RING_2_SLOT = RPGInventory.identifier("item/empty_slot_ring_2");
-	private static final Identifier EMPTY_SHOULDERS_SLOT = RPGInventory.identifier("item/empty_slot_shoulders");
-	private static final Identifier EMPTY_SPELL_1_SLOT = RPGInventory.identifier("item/empty_slot_spell_1");
-	private static final Identifier EMPTY_SPELL_2_SLOT = RPGInventory.identifier("item/empty_slot_spell_2");
-	private static final Identifier EMPTY_SPELL_3_SLOT = RPGInventory.identifier("item/empty_slot_spell_3");
-	private static final Identifier EMPTY_SPELL_4_SLOT = RPGInventory.identifier("item/empty_slot_spell_4");
-	private static final Identifier EMPTY_SPELL_5_SLOT = RPGInventory.identifier("item/empty_slot_spell_5");
-	private static final Identifier EMPTY_SPELL_6_SLOT = RPGInventory.identifier("item/empty_slot_spell_6");
-	private static final Identifier EMPTY_SPELL_7_SLOT = RPGInventory.identifier("item/empty_slot_spell_7");
-	private static final Identifier EMPTY_SPELL_8_SLOT = RPGInventory.identifier("item/empty_slot_spell_8");
-	private static final Identifier EMPTY_RELIC_SLOT = RPGInventory.identifier("item/empty_slot_relic");
+	private static final Identifier EMPTY_HAND_SLOT = RPGInventory.identifier("container/slot/empty_slot_hand");
+	private static final Identifier EMPTY_ALTERNATIVE_HAND_SLOT = RPGInventory.identifier("container/slot/empty_slot_alternative_hand");
+	private static final Identifier EMPTY_ALTERNATIVE_OFFHAND_SLOT = RPGInventory.identifier("container/slot/empty_slot_alternative_offhand");
+	private static final Identifier EMPTY_BELT_SLOT = RPGInventory.identifier("container/slot/empty_slot_belt");
+	private static final Identifier EMPTY_GLOVES_SLOT = RPGInventory.identifier("container/slot/empty_slot_gloves");
+	private static final Identifier EMPTY_NECKLACE_SLOT = RPGInventory.identifier("container/slot/empty_slot_necklace");
+	private static final Identifier EMPTY_RING_1_SLOT = RPGInventory.identifier("container/slot/empty_slot_ring_1");
+	private static final Identifier EMPTY_RING_2_SLOT = RPGInventory.identifier("container/slot/empty_slot_ring_2");
+	private static final Identifier EMPTY_SHOULDERS_SLOT = RPGInventory.identifier("container/slot/empty_slot_shoulders");
+	private static final Identifier EMPTY_SPELL_1_SLOT = RPGInventory.identifier("container/slot/empty_slot_spell_1");
+	private static final Identifier EMPTY_SPELL_2_SLOT = RPGInventory.identifier("container/slot/empty_slot_spell_2");
+	private static final Identifier EMPTY_SPELL_3_SLOT = RPGInventory.identifier("container/slot/empty_slot_spell_3");
+	private static final Identifier EMPTY_SPELL_4_SLOT = RPGInventory.identifier("container/slot/empty_slot_spell_4");
+	private static final Identifier EMPTY_SPELL_5_SLOT = RPGInventory.identifier("container/slot/empty_slot_spell_5");
+	private static final Identifier EMPTY_SPELL_6_SLOT = RPGInventory.identifier("container/slot/empty_slot_spell_6");
+	private static final Identifier EMPTY_SPELL_7_SLOT = RPGInventory.identifier("container/slot/empty_slot_spell_7");
+	private static final Identifier EMPTY_SPELL_8_SLOT = RPGInventory.identifier("container/slot/empty_slot_spell_8");
+	private static final Identifier EMPTY_RELIC_SLOT = RPGInventory.identifier("container/slot/empty_slot_relic");
 
 	private static int EQUIPMENT_SLOTS_START;
 	private static int MANNEQUIN_SLOTS_START;
+	private static final int EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET = 44;
 	private final Container inventory;
 	private final Inventory playerInventory;
 	private final static Map<EquipmentSlot, Identifier> EMPTY_ARMOR_SLOT_TEXTURES;
@@ -91,11 +93,11 @@ public abstract class AbstractMannequinScreenHandler extends AbstractContainerMe
 		}
 
 		// 40 offhand
-		this.addSlot(new CustomArmorSlot(playerInventory, AbstractMannequinScreenHandler.this.owner, EquipmentSlot.OFFHAND, 40, 44, 53, InventoryMenu.EMPTY_ARMOR_SLOT_SHIELD, List.of(Component.translatable("slot.tooltip.offhand")), true) {
+		this.addSlot(new CustomHandSlot(playerInventory, AbstractMannequinScreenHandler.this.owner, EquipmentSlot.OFFHAND, 40, 44, 53, InventoryMenu.EMPTY_ARMOR_SLOT_SHIELD, List.of(Component.translatable("slot.tooltip.offhand")), true) {
 
 			@Override
 			public boolean isActive() {
-				return !((DuckLivingEntityMixin) AbstractMannequinScreenHandler.this.owner).rpginventory$isOffhandStackSheathed() || !RPGInventory.isHandSlotOverhaulActive();
+				return !((DuckLivingEntityMixin) AbstractMannequinScreenHandler.this.owner).rpginventory$isOffhandStackSheathed() || !((DuckPlayerEntityMixin) owner).rpginventory$isHandSlotOverhaulActive();
 			}
 
 			@Override
@@ -106,11 +108,11 @@ public abstract class AbstractMannequinScreenHandler extends AbstractContainerMe
 		});
 
 		// 41 main hand
-		this.addSlot(new CustomArmorSlot(playerInventory, AbstractMannequinScreenHandler.this.owner, EquipmentSlot.MAINHAND, 41, 26, 53, EMPTY_HAND_SLOT, List.of(Component.translatable("slot.tooltip.hand")), true) {
+		this.addSlot(new CustomHandSlot(playerInventory, AbstractMannequinScreenHandler.this.owner, EquipmentSlot.MAINHAND, 43, 26, 53, EMPTY_HAND_SLOT, List.of(Component.translatable("slot.tooltip.hand")), true) {
 
 			@Override
 			public boolean isActive() {
-				return !((DuckLivingEntityMixin) AbstractMannequinScreenHandler.this.owner).rpginventory$isHandStackSheathed() && RPGInventory.isHandSlotOverhaulActive();
+				return !((DuckLivingEntityMixin) AbstractMannequinScreenHandler.this.owner).rpginventory$isHandStackSheathed() && ((DuckPlayerEntityMixin) owner).rpginventory$isHandSlotOverhaulActive();
 			}
 
 			@Override
@@ -121,11 +123,11 @@ public abstract class AbstractMannequinScreenHandler extends AbstractContainerMe
 		});
 
 		// 42 sheathed main hand
-		this.addSlot(new CustomArmorSlot(playerInventory, AbstractMannequinScreenHandler.this.owner, EquipmentSlot.MAINHAND, 42, 26, 53, EMPTY_HAND_SLOT, List.of(Component.translatable("slot.tooltip.hand")), true) {
+		this.addSlot(new CustomHandSlot(playerInventory, AbstractMannequinScreenHandler.this.owner, ExtendedEquipmentSlot.SHEATHED_HAND, ExtendedEquipmentSlot.SHEATHED_HAND.getIndex(EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), 26, 53, EMPTY_HAND_SLOT, List.of(Component.translatable("slot.tooltip.hand")), true) {
 
 			@Override
 			public boolean isActive() {
-				return ((DuckLivingEntityMixin) AbstractMannequinScreenHandler.this.owner).rpginventory$isHandStackSheathed() && RPGInventory.isHandSlotOverhaulActive();
+				return ((DuckLivingEntityMixin) AbstractMannequinScreenHandler.this.owner).rpginventory$isHandStackSheathed() && ((DuckPlayerEntityMixin) owner).rpginventory$isHandSlotOverhaulActive();
 			}
 
 			@Override
@@ -136,11 +138,11 @@ public abstract class AbstractMannequinScreenHandler extends AbstractContainerMe
 		});
 
 		// 43 sheathed offhand
-		this.addSlot(new CustomArmorSlot(playerInventory, AbstractMannequinScreenHandler.this.owner, EquipmentSlot.OFFHAND, 43, 44, 53, InventoryMenu.EMPTY_ARMOR_SLOT_SHIELD, List.of(Component.translatable("slot.tooltip.offhand")), true) {
+		this.addSlot(new CustomHandSlot(playerInventory, AbstractMannequinScreenHandler.this.owner, ExtendedEquipmentSlot.SHEATHED_OFF_HAND, ExtendedEquipmentSlot.SHEATHED_OFF_HAND.getIndex(EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), 44, 53, InventoryMenu.EMPTY_ARMOR_SLOT_SHIELD, List.of(Component.translatable("slot.tooltip.offhand")), true) {
 
 			@Override
 			public boolean isActive() {
-				return ((DuckLivingEntityMixin) AbstractMannequinScreenHandler.this.owner).rpginventory$isOffhandStackSheathed() && RPGInventory.isHandSlotOverhaulActive();
+				return ((DuckLivingEntityMixin) AbstractMannequinScreenHandler.this.owner).rpginventory$isOffhandStackSheathed() && ((DuckPlayerEntityMixin) owner).rpginventory$isHandSlotOverhaulActive();
 			}
 
 			@Override
@@ -151,21 +153,21 @@ public abstract class AbstractMannequinScreenHandler extends AbstractContainerMe
 		});
 
 		// 44 alternative main hand slot
-		this.addSlot(new AlternativeHandSlot(playerInventory, AbstractMannequinScreenHandler.this.owner, EquipmentSlot.MAINHAND, 46, 26, 71, EMPTY_ALTERNATIVE_HAND_SLOT, List.of(Component.translatable("slot.tooltip.alternative_hand")), true) {
+		this.addSlot(new AlternativeHandSlot(playerInventory, AbstractMannequinScreenHandler.this.owner, ExtendedEquipmentSlot.ALTERNATIVE_HAND, ExtendedEquipmentSlot.ALTERNATIVE_HAND.getIndex(EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), 26, 71, EMPTY_ALTERNATIVE_HAND_SLOT, List.of(Component.translatable("slot.tooltip.alternative_hand")), true) {
 
 			@Override
 			public boolean isActive() {
-				return RPGInventory.isHandSlotOverhaulActive();
+				return ((DuckPlayerEntityMixin) owner).rpginventory$isHandSlotOverhaulActive();
 			}
 
 		});
 
 		// 45 alternative offhand slot
-		this.addSlot(new AlternativeHandSlot(playerInventory, AbstractMannequinScreenHandler.this.owner, EquipmentSlot.OFFHAND, 47, 44, 71, EMPTY_ALTERNATIVE_OFFHAND_SLOT, List.of(Component.translatable("slot.tooltip.alternative_offhand")), true) {
+		this.addSlot(new AlternativeHandSlot(playerInventory, AbstractMannequinScreenHandler.this.owner, ExtendedEquipmentSlot.ALTERNATIVE_OFF_HAND, ExtendedEquipmentSlot.ALTERNATIVE_OFF_HAND.getIndex(EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), 44, 71, EMPTY_ALTERNATIVE_OFFHAND_SLOT, List.of(Component.translatable("slot.tooltip.alternative_offhand")), true) {
 
 			@Override
 			public boolean isActive() {
-				return RPGInventory.isHandSlotOverhaulActive();
+				return ((DuckPlayerEntityMixin) owner).rpginventory$isHandSlotOverhaulActive();
 			}
 
 		});
@@ -173,7 +175,7 @@ public abstract class AbstractMannequinScreenHandler extends AbstractContainerMe
 		// index 44 & 45 are the empty hand slots
 
 		// 46 belt slot
-		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.BELT, 48, 62, 71, EMPTY_BELT_SLOT, List.of(Component.translatable("slot.tooltip.belt")), true) {
+		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.BELT, ExtendedEquipmentSlot.BELT.getIndex(EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), 62, 71, EMPTY_BELT_SLOT, List.of(Component.translatable("slot.tooltip.belt")), true) {
 
 			@Override
 			public boolean isActive() {
@@ -193,7 +195,7 @@ public abstract class AbstractMannequinScreenHandler extends AbstractContainerMe
 		});
 
 		// 47 gloves slot
-		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.GLOVES, 49, 62, 53, EMPTY_GLOVES_SLOT, List.of(Component.translatable("slot.tooltip.gloves")), true) {
+		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.GLOVES, ExtendedEquipmentSlot.GLOVES.getIndex(EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), 62, 53, EMPTY_GLOVES_SLOT, List.of(Component.translatable("slot.tooltip.gloves")), true) {
 
 			@Override
 			public boolean isActive() {
@@ -213,7 +215,7 @@ public abstract class AbstractMannequinScreenHandler extends AbstractContainerMe
 		});
 
 		// 48 necklace slot
-		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.NECKLACE, 50, 44, 17, EMPTY_NECKLACE_SLOT, List.of(Component.translatable("slot.tooltip.necklace")), true) {
+		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.NECKLACE, ExtendedEquipmentSlot.NECKLACE.getIndex(EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), 44, 17, EMPTY_NECKLACE_SLOT, List.of(Component.translatable("slot.tooltip.necklace")), true) {
 
 			@Override
 			public boolean isActive() {
@@ -233,7 +235,7 @@ public abstract class AbstractMannequinScreenHandler extends AbstractContainerMe
 		});
 
 		// 49 ring 1 slot
-		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.RING_1, 51, 62, 35, EMPTY_RING_1_SLOT, List.of(Component.translatable("slot.tooltip.ring_1")), true) {
+		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.RING_1, ExtendedEquipmentSlot.RING_1.getIndex(EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), 62, 35, EMPTY_RING_1_SLOT, List.of(Component.translatable("slot.tooltip.ring_1")), true) {
 
 			@Override
 			public boolean isActive() {
@@ -253,7 +255,7 @@ public abstract class AbstractMannequinScreenHandler extends AbstractContainerMe
 		});
 
 		// 50 ring 2 slot
-		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.RING_2, 52, 44, 35, EMPTY_RING_2_SLOT, List.of(Component.translatable("slot.tooltip.ring_2")), true) {
+		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.RING_2, ExtendedEquipmentSlot.RING_2.getIndex(EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), 44, 35, EMPTY_RING_2_SLOT, List.of(Component.translatable("slot.tooltip.ring_2")), true) {
 
 			@Override
 			public boolean isActive() {
@@ -273,7 +275,7 @@ public abstract class AbstractMannequinScreenHandler extends AbstractContainerMe
 		});
 
 		// 51 shoulders slot
-		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.SHOULDERS, 53, 26, 17, EMPTY_SHOULDERS_SLOT, List.of(Component.translatable("slot.tooltip.shoulders")), true) {
+		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.SHOULDERS, ExtendedEquipmentSlot.SHOULDERS.getIndex(EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), 26, 17, EMPTY_SHOULDERS_SLOT, List.of(Component.translatable("slot.tooltip.shoulders")), true) {
 
 			@Override
 			public boolean isActive() {
@@ -293,7 +295,7 @@ public abstract class AbstractMannequinScreenHandler extends AbstractContainerMe
 		});
 
 		// 52 spell 1 slot
-		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.SPELL_1, 54, 8, 89, EMPTY_SPELL_1_SLOT, List.of(Component.translatable("slot.tooltip.spell_1")), true) {
+		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.SPELL_1, ExtendedEquipmentSlot.SPELL_1.getIndex(EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), 8, 89, EMPTY_SPELL_1_SLOT, List.of(Component.translatable("slot.tooltip.spell_1")), true) {
 
 			@Override
 			public boolean isActive() {
@@ -303,7 +305,7 @@ public abstract class AbstractMannequinScreenHandler extends AbstractContainerMe
 		});
 
 		// 53 spell 2 slot
-		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.SPELL_2, 55, 26, 89, EMPTY_SPELL_2_SLOT, List.of(Component.translatable("slot.tooltip.spell_2")), true) {
+		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.SPELL_2, ExtendedEquipmentSlot.SPELL_2.getIndex(EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), 26, 89, EMPTY_SPELL_2_SLOT, List.of(Component.translatable("slot.tooltip.spell_2")), true) {
 
 			@Override
 			public boolean isActive() {
@@ -313,7 +315,7 @@ public abstract class AbstractMannequinScreenHandler extends AbstractContainerMe
 		});
 
 		// 54 spell 3 slot
-		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.SPELL_3, 56, 44, 89, EMPTY_SPELL_3_SLOT, List.of(Component.translatable("slot.tooltip.spell_3")), true) {
+		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.SPELL_3, ExtendedEquipmentSlot.SPELL_3.getIndex(EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), 44, 89, EMPTY_SPELL_3_SLOT, List.of(Component.translatable("slot.tooltip.spell_3")), true) {
 
 			@Override
 			public boolean isActive() {
@@ -323,7 +325,7 @@ public abstract class AbstractMannequinScreenHandler extends AbstractContainerMe
 		});
 
 		// 55 spell 4 slot
-		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.SPELL_4, 57, 62, 89, EMPTY_SPELL_4_SLOT, List.of(Component.translatable("slot.tooltip.spell_4")), true) {
+		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.SPELL_4, ExtendedEquipmentSlot.SPELL_4.getIndex(EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), 62, 89, EMPTY_SPELL_4_SLOT, List.of(Component.translatable("slot.tooltip.spell_4")), true) {
 
 			@Override
 			public boolean isActive() {
@@ -333,7 +335,7 @@ public abstract class AbstractMannequinScreenHandler extends AbstractContainerMe
 		});
 
 		// 56 spell 5 slot
-		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.SPELL_5, 58, 8, 107, EMPTY_SPELL_5_SLOT, List.of(Component.translatable("slot.tooltip.spell_5")), true) {
+		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.SPELL_5, ExtendedEquipmentSlot.SPELL_5.getIndex(EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), 8, 107, EMPTY_SPELL_5_SLOT, List.of(Component.translatable("slot.tooltip.spell_5")), true) {
 
 			@Override
 			public boolean isActive() {
@@ -343,7 +345,7 @@ public abstract class AbstractMannequinScreenHandler extends AbstractContainerMe
 		});
 
 		// 57 spell 6 slot
-		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.SPELL_6, 59, 26, 107, EMPTY_SPELL_6_SLOT, List.of(Component.translatable("slot.tooltip.spell_6")), true) {
+		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.SPELL_6, ExtendedEquipmentSlot.SPELL_6.getIndex(EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), 26, 107, EMPTY_SPELL_6_SLOT, List.of(Component.translatable("slot.tooltip.spell_6")), true) {
 
 			@Override
 			public boolean isActive() {
@@ -353,7 +355,7 @@ public abstract class AbstractMannequinScreenHandler extends AbstractContainerMe
 		});
 
 		// 58 spell 7 slot
-		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.SPELL_7, 60, 44, 107, EMPTY_SPELL_7_SLOT, List.of(Component.translatable("slot.tooltip.spell_7")), true) {
+		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.SPELL_7, ExtendedEquipmentSlot.SPELL_7.getIndex(EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), 44, 107, EMPTY_SPELL_7_SLOT, List.of(Component.translatable("slot.tooltip.spell_7")), true) {
 
 			@Override
 			public boolean isActive() {
@@ -363,7 +365,7 @@ public abstract class AbstractMannequinScreenHandler extends AbstractContainerMe
 		});
 
 		// 59 spell 8 slot
-		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.SPELL_8, 61, 62, 107, EMPTY_SPELL_8_SLOT, List.of(Component.translatable("slot.tooltip.spell_8")), true) {
+		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.SPELL_8, ExtendedEquipmentSlot.SPELL_8.getIndex(EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), 62, 107, EMPTY_SPELL_8_SLOT, List.of(Component.translatable("slot.tooltip.spell_8")), true) {
 
 			@Override
 			public boolean isActive() {
@@ -373,7 +375,7 @@ public abstract class AbstractMannequinScreenHandler extends AbstractContainerMe
 		});
 
 		// 60 relic slot
-		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.RELIC, 62, 62, 17, EMPTY_RELIC_SLOT, List.of(Component.translatable("slot.tooltip.relic")), true) {
+		this.addSlot(new CustomArmorSlot(playerInventory, owner, ExtendedEquipmentSlot.RELIC, ExtendedEquipmentSlot.RELIC.getIndex(EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), 62, 17, EMPTY_RELIC_SLOT, List.of(Component.translatable("slot.tooltip.relic")), true) {
 
 			@Override
 			public boolean isActive() {
@@ -407,7 +409,7 @@ public abstract class AbstractMannequinScreenHandler extends AbstractContainerMe
 
 			@Override
 			public boolean isActive() {
-				return super.isActive() && RPGInventory.isHandSlotOverhaulActive();
+				return super.isActive() && ((DuckPlayerEntityMixin) owner).rpginventory$isHandSlotOverhaulActive();
 			}
 
 		});
@@ -417,7 +419,7 @@ public abstract class AbstractMannequinScreenHandler extends AbstractContainerMe
 
 			@Override
 			public boolean isActive() {
-				return super.isActive() && RPGInventory.isHandSlotOverhaulActive() && serverConfig.handSlotOverhaul.enable_alternative_hand_slots.get();
+				return super.isActive() && ((DuckPlayerEntityMixin) owner).rpginventory$isHandSlotOverhaulActive() && serverConfig.handSlotOverhaul.enable_alternative_hand_slots.get();
 			}
 
 		});
@@ -427,7 +429,7 @@ public abstract class AbstractMannequinScreenHandler extends AbstractContainerMe
 
 			@Override
 			public boolean isActive() {
-				return super.isActive() && RPGInventory.isHandSlotOverhaulActive() && serverConfig.handSlotOverhaul.enable_alternative_hand_slots.get();
+				return super.isActive() && ((DuckPlayerEntityMixin) owner).rpginventory$isHandSlotOverhaulActive() && serverConfig.handSlotOverhaul.enable_alternative_hand_slots.get();
 			}
 
 		});
@@ -778,7 +780,7 @@ public abstract class AbstractMannequinScreenHandler extends AbstractContainerMe
 					}
 				}
 
-				if (RPGInventory.isHandSlotOverhaulActive()) {
+				if (((DuckPlayerEntityMixin) owner).rpginventory$isHandSlotOverhaulActive()) {
 
 					if (!itemStack1.isEmpty() && (!serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || itemStack1.is(Tags.HAND_ITEMS)) && !this.slots.get(65).hasItem()) {
 						if (!this.moveItemStackTo(itemStack1, 65, 66, false)) {
@@ -912,7 +914,7 @@ public abstract class AbstractMannequinScreenHandler extends AbstractContainerMe
 						return ItemStack.EMPTY;
 					}
 				}
-//			} else if (slot >= 45 && slot < 51 && RPGInventory.isHandSlotOverhaulActive()) {
+//			} else if (slot >= 45 && slot < 51 && ((DuckPlayerEntityMixin) owner).rpginventory$isHandSlotOverhaulActive()) {
 //				if (!this.insertItem(itemStack1, 9, 45, false)) {   // TODO adventure hotbar items
 //					cir.setReturnValue(ItemStack.EMPTY);
 //					cir.cancel();

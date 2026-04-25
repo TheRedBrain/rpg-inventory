@@ -13,7 +13,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 @Environment(EnvType.CLIENT)
 public abstract class AbstractMannequinScreen<T extends AbstractMannequinScreenHandler> extends AbstractContainerScreen<T> {
-	public static final Identifier SLOT_TEXTURE = Identifier.withDefaultNamespace("textures/gui/sprites/container/slot.png");
+	public static final Identifier SLOT_TEXTURE = Identifier.withDefaultNamespace("container/slot");
 	public static final Component EQUIP_BUTTON_LABEL = Component.translatable("gui.mannequin.equip_button_label");
 	public static final Component UNEQUIP_BUTTON_LABEL = Component.translatable("gui.mannequin.unequip_button_label");
 

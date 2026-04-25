@@ -5,6 +5,7 @@ import com.github.theredbrain.rpginventory.RPGInventoryClient;
 import com.github.theredbrain.rpginventory.screen.VanillaMannequinScreenHandler;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
@@ -41,15 +42,15 @@ public class VanillaMannequinScreen extends AbstractMannequinScreen<VanillaManne
 			inventorySize = RPGInventory.getActiveInventorySize(this.minecraft.player);
 		}
 
-		graphics.blit(MANNEQUIN_BACKGROUND_TEXTURE, i, j, 0, 0, this.imageWidth, this.imageHeight, this.imageWidth, this.imageHeight);
+		graphics.blit(RenderPipelines.GUI_TEXTURED, MANNEQUIN_BACKGROUND_TEXTURE, i, j, 0, 0, this.imageWidth, this.imageHeight, this.imageWidth, this.imageHeight);
 
 		boolean showInactiveSlots = RPGInventoryClient.showInactiveInventorySlots();
 		for (k = 0; k < (showInactiveSlots ? 27 : Math.min(inventorySize, 27)); ++k) {
 			m = (k / 9);
-			graphics.blit(SLOT_TEXTURE, i + 7 + (k - (m * 9)) * 18, j + 83 + (m * 18), 0, 0, 18, 18, 18, 18);
+			graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_TEXTURE, i + 7 + (k - (m * 9)) * 18, j + 83 + (m * 18), 18, 18);
 		}
 		for (k = 0; k < (showInactiveSlots ? 9 : Math.min(hotbarSize, 9)); ++k) {
-			graphics.blit(SLOT_TEXTURE, i + 7 + k * 18, j + 141, 0, 0, 18, 18, 18, 18);
+			graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_TEXTURE, i + 7 + k * 18, j + 141, 18, 18);
 		}
 	}
 }
