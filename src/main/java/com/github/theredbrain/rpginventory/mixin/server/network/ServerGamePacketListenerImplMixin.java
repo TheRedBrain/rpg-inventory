@@ -1,6 +1,7 @@
 package com.github.theredbrain.rpginventory.mixin.server.network;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
+import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.network.chat.Component;
@@ -26,7 +27,7 @@ public class ServerGamePacketListenerImplMixin {
 			)
 	)
 	public boolean rpginventory$wrap_isSpectator(ServerPlayer instance, Operation<Boolean> original) {
-		if (RPGInventory.isHandSlotOverhaulActive()) {
+		if (((DuckPlayerEntityMixin) instance).rpginventory$isHandSlotOverhaulActive()) {
 			instance.sendSystemMessage(Component.translatable("hud.message.disabledVanillaItemSwapMechanic"));
 			return true;
 		} else {

@@ -3,6 +3,7 @@ package com.github.theredbrain.rpginventory.mixin.entity.player;
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
 import com.github.theredbrain.rpginventory.entity.player.DuckEntityEquipmentMixin;
+import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerInventoryMixin;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
@@ -106,7 +107,7 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 			)
 	)
 	public boolean rpginventory$wrap_hasRemainingSpaceForItem(Inventory instance, ItemStack slotItemStack, ItemStack newItemStack, Operation<Boolean> original) {
-		if (RPGInventory.isHandSlotOverhaulActive()) {
+		if (((DuckPlayerEntityMixin) this.player).rpginventory$isHandSlotOverhaulActive()) {
 			return false;
 		} else {
 			return original.call(instance, slotItemStack, newItemStack);

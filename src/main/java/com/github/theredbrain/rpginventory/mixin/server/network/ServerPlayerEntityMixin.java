@@ -3,6 +3,7 @@ package com.github.theredbrain.rpginventory.mixin.server.network;
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
+import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.network.packet.SheathedWeaponsPacket;
 import com.github.theredbrain.rpginventory.network.packet.SwappedHandItemsPacket;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
@@ -27,7 +28,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Collection;
 
 @Mixin(value = ServerPlayer.class/*, priority = 950*/) // TODO test if priority is needed
-public abstract class ServerPlayerEntityMixin extends Player implements DuckLivingEntityMixin {
+public abstract class ServerPlayerEntityMixin extends Player implements DuckLivingEntityMixin, DuckPlayerEntityMixin {
 
 	@Shadow
 	public abstract void onEnterCombat();
@@ -86,7 +87,7 @@ public abstract class ServerPlayerEntityMixin extends Player implements DuckLivi
 
 	@WrapMethod(method = "drop(Z)V")
 	public void rpginventory$wrap_drop(boolean all, Operation<Boolean> original) {
-		if (RPGInventory.isHandSlotOverhaulActive() && !this.rpginventory$isHandStackSheathed()) {
+		if (this.rpginventory$isHandSlotOverhaulActive() && !this.rpginventory$isHandStackSheathed()) {
 			ItemStack itemStack = this.getItemBySlot(EquipmentSlot.MAINHAND).copy();
 			this.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
 			this.containerMenu.setRemoteSlot(46, itemStack);

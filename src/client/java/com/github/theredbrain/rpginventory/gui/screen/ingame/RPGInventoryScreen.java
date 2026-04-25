@@ -228,6 +228,7 @@ public class RPGInventoryScreen extends AbstractContainerScreen<InventoryMenu> {
 		int activeSpellSlotAmount = 0;
 		int inventorySize = 0;
 		int hotbarSize = 0;
+		boolean isHandSlotOverhaulActive = false;
 		ClientConfig clientConfig = RPGInventoryClient.CLIENT_CONFIG;
 		ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
 		if (this.minecraft.player != null) {
@@ -235,6 +236,7 @@ public class RPGInventoryScreen extends AbstractContainerScreen<InventoryMenu> {
 
 			hotbarSize = RPGInventory.getActiveHotbarSize(this.minecraft.player);
 			inventorySize = RPGInventory.getActiveInventorySize(this.minecraft.player);
+			isHandSlotOverhaulActive = ((DuckPlayerEntityMixin) this.minecraft.player).rpginventory$isHandSlotOverhaulActive();
 			updateEffectsLists(this.minecraft.player);
 		}
 		graphics.blit(RenderPipelines.GUI_TEXTURED, ADVENTURE_INVENTORY_MAIN_BACKGROUND_TEXTURE, i, j, 0, 0, this.imageWidth, this.imageHeight, this.imageWidth, this.imageHeight);
@@ -298,7 +300,7 @@ public class RPGInventoryScreen extends AbstractContainerScreen<InventoryMenu> {
 			graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_TEXTURE, i + serverConfig.inventorySlots.spell_8_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.spell_8_slot_y_offset.get() - 1, 18, 18);
 		}
 
-		if (RPGInventory.isHandSlotOverhaulActive()) {
+		if (isHandSlotOverhaulActive) {
 			graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_TEXTURE, i + serverConfig.inventorySlots.hand_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.hand_slot_y_offset.get() - 1, 18, 18);
 			if (serverConfig.handSlotOverhaul.enable_alternative_hand_slots.get()) {
 				graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_TEXTURE, i + serverConfig.inventorySlots.alternative_hand_slot_x_offset.get() - 1, j + serverConfig.inventorySlots.alternative_hand_slot_y_offset.get() - 1, 18, 18);

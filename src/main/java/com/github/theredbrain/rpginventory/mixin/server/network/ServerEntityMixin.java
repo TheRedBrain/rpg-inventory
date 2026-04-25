@@ -25,6 +25,7 @@ public class ServerEntityMixin {
 	private Entity entity;
 
 	// TODO test if the hand sheathed check needs to be for thisServerPlayer
+	// TODO test if this is necessary at all
 	@Inject(method = "addPairing", at = @At(value = "TAIL"))
 	public void rpginventory$addPairing(ServerPlayer player, CallbackInfo info) {
 		if (this.entity instanceof ServerPlayer thisServerPlayer && RPGInventory.isHandSlotOverhaulActive()) {

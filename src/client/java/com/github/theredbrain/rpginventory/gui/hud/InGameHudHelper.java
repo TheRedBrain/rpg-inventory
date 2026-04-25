@@ -46,7 +46,7 @@ public class InGameHudHelper {
 
 			int hotbar_start_x = RPGInventoryClient.drawAlternativeHotbar(graphics, playerEntity, HOTBAR_TEXTURE);
 
-			boolean isHandSlotOverhaulActive = RPGInventory.isHandSlotOverhaulActive();
+			boolean isHandSlotOverhaulActive = ((DuckPlayerEntityMixin) playerEntity).rpginventory$isHandSlotOverhaulActive();
 			if (((DuckLivingEntityMixin) playerEntity).rpginventory$isHandStackSheathed() || clientConfig.hotBarOverhaul.always_show_selected_hotbar_slot.get() || !isHandSlotOverhaulActive) {
 				graphics.blitSprite(
 						RenderPipelines.GUI_TEXTURED, HOTBAR_SELECTION_FIXED_TEXTURE, hotbar_start_x - 1 + playerEntity.getInventory().getSelectedSlot() * 20, graphics.guiHeight() - 22 - 1, 24, 24

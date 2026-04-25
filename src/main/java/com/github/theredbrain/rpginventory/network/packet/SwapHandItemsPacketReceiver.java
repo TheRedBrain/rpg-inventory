@@ -21,7 +21,7 @@ public class SwapHandItemsPacketReceiver implements ServerPlayNetworking.PlayPay
 
 		ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
 
-		if (RPGInventory.isHandSlotOverhaulActive() && serverConfig.handSlotOverhaul.enable_alternative_hand_slots.get()) {
+		if (((DuckPlayerEntityMixin) player).rpginventory$isHandSlotOverhaulActive() && ((DuckPlayerEntityMixin) player).rpginventory$areAlternativeHandSlotsActive()) {
 
 			boolean mainHand = payload.mainHand();
 			boolean offHand = payload.offHand();

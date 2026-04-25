@@ -4,6 +4,7 @@ import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.config.ServerConfig;
 import com.github.theredbrain.rpginventory.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
+import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.chat.Component;
@@ -19,7 +20,7 @@ public class ToggleTwoHandedStancePacketReceiver implements ServerPlayNetworking
 
 		ServerPlayer player = context.player();
 
-		if (RPGInventory.isHandSlotOverhaulActive()) {
+		if (((DuckPlayerEntityMixin) player).rpginventory$isHandSlotOverhaulActive()) {
 
 			ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
 

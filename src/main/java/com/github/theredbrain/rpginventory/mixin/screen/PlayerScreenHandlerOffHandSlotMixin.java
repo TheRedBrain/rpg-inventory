@@ -3,6 +3,7 @@ package com.github.theredbrain.rpginventory.mixin.screen;
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.config.ServerConfig;
 import com.github.theredbrain.rpginventory.entity.DuckLivingEntityMixin;
+import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import com.github.theredbrain.rpginventory.util.ItemUtils;
 import net.minecraft.world.Container;
@@ -27,14 +28,14 @@ public abstract class PlayerScreenHandlerOffHandSlotMixin extends Slot {
 
 	@Override
 	public boolean isActive() {
-		return !RPGInventory.isHandSlotOverhaulActive() || !((DuckLivingEntityMixin) this.val$owner).rpginventory$isOffhandStackSheathed();
+		return !((DuckPlayerEntityMixin) this.val$owner).rpginventory$isHandSlotOverhaulActive() || !((DuckLivingEntityMixin) this.val$owner).rpginventory$isOffhandStackSheathed();
 	}
 
 	@Override
 	public boolean mayPlace(ItemStack stack) {
 		ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
 
-		boolean handSlotOverhaulIsInactive = !RPGInventory.isHandSlotOverhaulActive();
+		boolean handSlotOverhaulIsInactive = !((DuckPlayerEntityMixin) this.val$owner).rpginventory$isHandSlotOverhaulActive();
 
 		return (EquipmentSlot.OFFHAND == this.val$owner.getEquipmentSlotForItem(stack) || stack.is(Tags.OFFHAND_ITEMS) || !serverConfig.handSlotOverhaul.are_hand_items_restricted_to_item_tags.get() || handSlotOverhaulIsInactive) && (handSlotOverhaulIsInactive || !((DuckLivingEntityMixin) this.val$owner).rpginventory$isOffhandStackSheathed()) && ItemUtils.isUsableByPlayer(stack, this.val$owner) && (stack.has(RPGInventory.IGNORES_EQUIPMENT_CHANGE_RESTRICTIONS) || this.val$owner.hasEffect(RPGInventory.CIVILISATION) || this.val$owner.isCreative() || (serverConfig.allow_equipment_changes.get() && !this.val$owner.hasEffect(RPGInventory.WILDERNESS)));
 	}

@@ -1,6 +1,7 @@
 package com.github.theredbrain.rpginventory.mixin.client.gui.screen.ingame;
 
 import com.github.theredbrain.rpginventory.RPGInventory;
+import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.network.packet.UpdateAdvancementLockedItemsPacket;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -77,7 +78,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
 			)
 	)
 	public boolean rpginventory$wrap_matchesKey(KeyMapping instance, KeyEvent event, Operation<Boolean> original) {
-		if (RPGInventory.isHandSlotOverhaulActive()) {
+		if (this.minecraft.player != null && ((DuckPlayerEntityMixin) this.minecraft.player).rpginventory$isHandSlotOverhaulActive()) {
 			return false;
 		} else {
 			return original.call(instance, event);

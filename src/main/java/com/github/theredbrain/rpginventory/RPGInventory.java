@@ -13,6 +13,7 @@ import com.github.theredbrain.rpginventory.compat.TrinketsCompat;
 import com.github.theredbrain.rpginventory.component.type.AdvancementLockedComponent;
 import com.github.theredbrain.rpginventory.component.type.ExclusiveEquipmentComponent;
 import com.github.theredbrain.rpginventory.config.ServerConfig;
+import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.registry.BlockRegistry;
 import com.github.theredbrain.rpginventory.registry.DataAttachmentRegistry;
 import com.github.theredbrain.rpginventory.registry.EntityRegistry;
@@ -102,7 +103,7 @@ public class RPGInventory implements ModInitializer {
 	public static final boolean isOverhauledDamageLoaded = FabricLoader.getInstance().isModLoaded("overhauleddamage");
 
 	public static void swapHandAttributes(Player playerEntity, Runnable runnable) {
-		if (isHandSlotOverhaulActive()) {
+		if (((DuckPlayerEntityMixin) playerEntity).rpginventory$isHandSlotOverhaulActive()) {
 			SwapHandAttributesHelper.swapHandAttributes(playerEntity, runnable);
 		}
 	}

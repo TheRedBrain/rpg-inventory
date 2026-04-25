@@ -3,6 +3,7 @@ package com.github.theredbrain.rpginventory.network.packet;
 import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
+import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -13,12 +14,13 @@ public class SheathedWeaponsPacketReceiver implements ClientPlayNetworking.PlayP
 	@Override
 	public void receive(SheathedWeaponsPacket payload, ClientPlayNetworking.Context context) {
 
-		if (RPGInventory.isHandSlotOverhaulActive()) {
+		LocalPlayer clientPlayer = context.player();
+
+		if (((DuckPlayerEntityMixin) clientPlayer).rpginventory$isHandSlotOverhaulActive()) {
 
 			int entityId = payload.id();
 			boolean mainHand = payload.mainHand();
 			boolean isWeaponSheathed = payload.isSheathed();
-			LocalPlayer clientPlayer = context.player();
 
 			if (clientPlayer.level().getEntity(entityId) != null) {
 				Player player = (Player) clientPlayer.level().getEntity(entityId);

@@ -20,7 +20,7 @@ public class SheatheWeaponsPacketReceiver implements ServerPlayNetworking.PlayPa
 
 		ServerPlayer player = context.player();
 
-		if (RPGInventory.isHandSlotOverhaulActive()) {
+		if (((DuckPlayerEntityMixin) player).rpginventory$isHandSlotOverhaulActive()) {
 
 			ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
 
