@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "rpginventory:item/default_empty_hand_weapon"
+  }
+}
