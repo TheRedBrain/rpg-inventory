@@ -94,21 +94,21 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
 				((SlotCustomization) this.menu.slots.get(55)).slotcustomizationapi$setY(19);
 				((SlotCustomization) this.menu.slots.get(56)).slotcustomizationapi$setX(27);
 				((SlotCustomization) this.menu.slots.get(56)).slotcustomizationapi$setY(6);
-				((SlotCustomization) this.menu.slots.get(57)).slotcustomizationapi$setX(193);
+				((SlotCustomization) this.menu.slots.get(57)).slotcustomizationapi$setX(-14);
 				((SlotCustomization) this.menu.slots.get(57)).slotcustomizationapi$setY(8);
-				((SlotCustomization) this.menu.slots.get(58)).slotcustomizationapi$setX(193);
+				((SlotCustomization) this.menu.slots.get(58)).slotcustomizationapi$setX(-14);
 				((SlotCustomization) this.menu.slots.get(58)).slotcustomizationapi$setY(26);
-				((SlotCustomization) this.menu.slots.get(59)).slotcustomizationapi$setX(193);
+				((SlotCustomization) this.menu.slots.get(59)).slotcustomizationapi$setX(-14);
 				((SlotCustomization) this.menu.slots.get(59)).slotcustomizationapi$setY(44);
-				((SlotCustomization) this.menu.slots.get(60)).slotcustomizationapi$setX(193);
+				((SlotCustomization) this.menu.slots.get(60)).slotcustomizationapi$setX(-14);
 				((SlotCustomization) this.menu.slots.get(60)).slotcustomizationapi$setY(62);
-				((SlotCustomization) this.menu.slots.get(61)).slotcustomizationapi$setX(211);
+				((SlotCustomization) this.menu.slots.get(61)).slotcustomizationapi$setX(-32);
 				((SlotCustomization) this.menu.slots.get(61)).slotcustomizationapi$setY(8);
-				((SlotCustomization) this.menu.slots.get(62)).slotcustomizationapi$setX(211);
+				((SlotCustomization) this.menu.slots.get(62)).slotcustomizationapi$setX(-32);
 				((SlotCustomization) this.menu.slots.get(62)).slotcustomizationapi$setY(26);
-				((SlotCustomization) this.menu.slots.get(63)).slotcustomizationapi$setX(211);
+				((SlotCustomization) this.menu.slots.get(63)).slotcustomizationapi$setX(-32);
 				((SlotCustomization) this.menu.slots.get(63)).slotcustomizationapi$setY(44);
-				((SlotCustomization) this.menu.slots.get(64)).slotcustomizationapi$setX(211);
+				((SlotCustomization) this.menu.slots.get(64)).slotcustomizationapi$setX(-32);
 				((SlotCustomization) this.menu.slots.get(64)).slotcustomizationapi$setY(62);
 				((SlotCustomization) this.menu.slots.get(65)).slotcustomizationapi$setX(135);
 				((SlotCustomization) this.menu.slots.get(65)).slotcustomizationapi$setY(6);
@@ -123,9 +123,9 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
 	@Inject(at = @At("RETURN"), method = "extractBackground")
 	private void rpginventory$extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a, CallbackInfo ci) {
 		if (selectedTab.getType() == CreativeModeTab.Type.INVENTORY && RPGInventory.SERVER_CONFIG.activate_rpg_inventory_screen.get()) {
-			int x = this.leftPos + this.imageWidth;
+			int x = this.leftPos;
 			int y = this.topPos;
-			graphics.blit(RenderPipelines.GUI_TEXTURED, SPELL_SLOTS_BACKGROUND, x - 4, y, 0, 0, 44, 86, 44, 86);
+			graphics.blit(RenderPipelines.GUI_TEXTURED, SPELL_SLOTS_BACKGROUND, x - 40, y, 0, 0, 44, 86, 44, 86);
 
 			int inventorySize = 0;
 			int hotbarSize = 0;
