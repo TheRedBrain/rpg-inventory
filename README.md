@@ -12,7 +12,7 @@ The new slots accessible in the inventory are:
 - 1 shoulders slot
 - 1 relic slot
 - 8 spell slots
-  - The new entity attribute "generic.active_spell_slot_amount" controls how many spell slots are active. This is 0 by default, but with entity attribute modifiers (EAMs) it can be changed.\
+  - The new entity attribute "rpginventory:active_spell_slot_amount" controls how many spell slots are active. This is 0 by default, but with entity attribute modifiers (EAMs) it can be changed.\
   The "default_spell_slot_amount" server config option controls the amount of spell slots each player has active by default.
 These spell slots are intended to be used with spell books powered by Spell Engine, but they can work with other items as well.
 
