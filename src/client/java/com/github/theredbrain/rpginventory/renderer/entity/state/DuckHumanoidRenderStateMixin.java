@@ -3,7 +3,7 @@ package com.github.theredbrain.rpginventory.renderer.entity.state;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.world.item.ItemStack;
 
-public interface DuckArmedEntityRenderStateMixin {
+public interface DuckHumanoidRenderStateMixin {
 
 	ItemStack rpginventory$getLeftSheathedItemStack();
 

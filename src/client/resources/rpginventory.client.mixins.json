@@ -8,17 +8,16 @@
     "MouseHandlerMixin",
     "gui.DrawContextMixin",
     "gui.hud.InGameHudMixin",
-    "gui.screen.ingame.CreativeModeInventoryScreenMixin",
     "gui.screen.ingame.AbstractContainerScreenMixin",
+    "gui.screen.ingame.CreativeModeInventoryScreenMixin",
     "gui.screen.ingame.InventoryScreenMixin",
     "network.ClientAdvancementManagerMixin",
-    "render.entity.AvatarRendererMixin"
+    "render.entity.AvatarRendererMixin",
+    "renderer.entity.HumanoidMobRendererMixin",
+    "renderer.entity.state.HumanoidRenderStateMixin"
   ],
   "injectors": {
     "defaultRequire": 1
   },
-  "plugin": "com.github.theredbrain.rpginventory.RPGInventoryMixinConfigPlugin",
-  "mixins": [
-    "renderer.entity.state.ArmedEntityRenderStateMixin"
-  ]
+  "plugin": "com.github.theredbrain.rpginventory.RPGInventoryMixinConfigPlugin"
 }

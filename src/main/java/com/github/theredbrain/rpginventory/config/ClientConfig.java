@@ -152,56 +152,150 @@ public class ClientConfig extends Config {
 //				""")
 	public ConfigGroup sheathed_item_positions = new ConfigGroup("sheathed_item_positions");
 	public ValidatedMap<String, ItemConfiguration> sheathed_hand_item_positions = new ValidatedMap<>(new HashMap<>() {{
-		put("minecraft:crossbow", new ItemConfiguration(-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F));
-		put("archers:rapid_crossbow", new ItemConfiguration(-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F));
-		put("archers:netherite_rapid_crossbow", new ItemConfiguration(-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F));
-		put("archers:ruby_rapid_crossbow", new ItemConfiguration(-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F));
-		put("archers:aether_rapid_crossbow", new ItemConfiguration(-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F));
-		put("archers:heavy_crossbow", new ItemConfiguration(-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F));
-		put("archers:netherite_heavy_crossbow", new ItemConfiguration(-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F));
-		put("archers:ruby_heavy_crossbow", new ItemConfiguration(-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F));
-		put("archers:aether_heavy_crossbow", new ItemConfiguration(-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F));
-		put("arsenal:unique_heavy_crossbow_1", new ItemConfiguration(-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F));
-		put("arsenal:unique_heavy_crossbow_2", new ItemConfiguration(-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F));
-		put("arsenal:unique_heavy_crossbow_sw", new ItemConfiguration(-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F));
-		put("minecraft:bow", new ItemConfiguration(0.1F, 0.3F, 0.24F, 0.0F, 0.0F, 0.06F, 45.0F, -100.0F, -100.0F));
-		put("bwt:composite_bow", new ItemConfiguration(0.1F, 0.3F, 0.24F, 0.0F, 0.0F, 0.06F, 45.0F, -100.0F, -100.0F));
-		put("archers:mechanic_shortbow", new ItemConfiguration(0.1F, 0.3F, 0.24F, 0.0F, 0.0F, 0.06F, 45.0F, -100.0F, -100.0F));
-		put("archers:netherite_shortbow", new ItemConfiguration(0.1F, 0.3F, 0.24F, 0.0F, 0.0F, 0.06F, 45.0F, -100.0F, -100.0F));
-		put("archers:crystal_shortbow", new ItemConfiguration(0.1F, 0.3F, 0.24F, 0.0F, 0.0F, 0.06F, 45.0F, -100.0F, -100.0F));
-		put("archers:composite_longbow", new ItemConfiguration(0.1F, 0.3F, 0.24F, 0.0F, 0.0F, 0.06F, 45.0F, -100.0F, -100.0F));
-		put("archers:royal_longbow", new ItemConfiguration(0.1F, 0.3F, 0.24F, 0.0F, 0.0F, 0.06F, 45.0F, -100.0F, -100.0F));
-		put("archers:netherite_longbow", new ItemConfiguration(0.1F, 0.3F, 0.24F, 0.0F, 0.0F, 0.06F, 45.0F, -100.0F, -100.0F));
-		put("archers:crystal_longbow", new ItemConfiguration(0.1F, 0.3F, 0.24F, 0.0F, 0.0F, 0.06F, 45.0F, -100.0F, -100.0F));
-		put("archers:aether_longbow", new ItemConfiguration(0.1F, 0.3F, 0.24F, 0.0F, 0.0F, 0.06F, 45.0F, -100.0F, -100.0F));
-		put("arsenal:unique_longbow_1", new ItemConfiguration(0.1F, 0.3F, 0.24F, 0.0F, 0.0F, 0.06F, 45.0F, -100.0F, -100.0F));
-		put("arsenal:unique_longbow_2", new ItemConfiguration(0.1F, 0.3F, 0.24F, 0.0F, 0.0F, 0.06F, 45.0F, -100.0F, -100.0F));
-		put("arsenal:unique_longbow_sw", new ItemConfiguration(0.1F, 0.3F, 0.24F, 0.0F, 0.0F, 0.06F, 45.0F, -100.0F, -100.0F));
-		put("minecrawl:spell_casting_crossbow_1", new ItemConfiguration(-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F));
-		put("minecrawl:spell_casting_crossbow_2", new ItemConfiguration(-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F));
-		put("minecrawl:spell_casting_crossbow_4", new ItemConfiguration(-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F));
-		put("minecrawl:spell_casting_crossbow_3", new ItemConfiguration(-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F));
-		put("minecrawl:spell_casting_crossbow_5", new ItemConfiguration(-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F));
-		put("minecrawl:spell_casting_crossbow_6", new ItemConfiguration(-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F));
-		put("minecrawl:spell_casting_crossbow_7", new ItemConfiguration(-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F));
-		put("minecrawl:spell_casting_crossbow_8", new ItemConfiguration(-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F));
-		put("minecrawl:spell_casting_crossbow_9", new ItemConfiguration(-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F));
-		put("minecrawl:spell_casting_crossbow_10", new ItemConfiguration(-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F));
-		put("minecrawl:spell_casting_crossbow_11", new ItemConfiguration(-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F));
-		put("minecrawl:spell_casting_crossbow_12", new ItemConfiguration(-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F));
+		put("minecraft:crossbow", new ItemConfiguration(
+				-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F
+		));
+		put("archers:rapid_crossbow", new ItemConfiguration(
+				-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F
+		));
+		put("archers:netherite_rapid_crossbow", new ItemConfiguration(
+				-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F
+		));
+		put("archers:ruby_rapid_crossbow", new ItemConfiguration(
+				-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F
+		));
+		put("archers:aether_rapid_crossbow", new ItemConfiguration(
+				-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F
+		));
+		put("archers:heavy_crossbow", new ItemConfiguration(
+				-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F
+		));
+		put("archers:netherite_heavy_crossbow", new ItemConfiguration(
+				-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F
+		));
+		put("archers:ruby_heavy_crossbow", new ItemConfiguration(
+				-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F
+		));
+		put("archers:aether_heavy_crossbow", new ItemConfiguration(
+				-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F
+		));
+		put("arsenal:unique_heavy_crossbow_1", new ItemConfiguration(
+				-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F
+		));
+		put("arsenal:unique_heavy_crossbow_2", new ItemConfiguration(
+				-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F
+		));
+		put("arsenal:unique_heavy_crossbow_sw", new ItemConfiguration(
+				-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F
+		));
+		put("minecraft:bow", new ItemConfiguration(
+				0.1F, 0.3F, 0.24F, 0.0F, 0.0F, 0.06F, 45.0F, -100.0F, -100.0F
+		));
+		put("bwt:composite_bow", new ItemConfiguration(
+				0.1F, 0.3F, 0.24F, 0.0F, 0.0F, 0.06F, 45.0F, -100.0F, -100.0F
+		));
+		put("archers:mechanic_shortbow", new ItemConfiguration(
+				0.1F, 0.3F, 0.24F, 0.0F, 0.0F, 0.06F, 45.0F, -100.0F, -100.0F
+		));
+		put("archers:netherite_shortbow", new ItemConfiguration(
+				0.1F, 0.3F, 0.24F, 0.0F, 0.0F, 0.06F, 45.0F, -100.0F, -100.0F
+		));
+		put("archers:crystal_shortbow", new ItemConfiguration(
+				0.1F, 0.3F, 0.24F, 0.0F, 0.0F, 0.06F, 45.0F, -100.0F, -100.0F
+		));
+		put("archers:composite_longbow", new ItemConfiguration(
+				0.1F, 0.3F, 0.24F, 0.0F, 0.0F, 0.06F, 45.0F, -100.0F, -100.0F
+		));
+		put("archers:royal_longbow", new ItemConfiguration(
+				0.1F, 0.3F, 0.24F, 0.0F, 0.0F, 0.06F, 45.0F, -100.0F, -100.0F
+		));
+		put("archers:netherite_longbow", new ItemConfiguration(
+				0.1F, 0.3F, 0.24F, 0.0F, 0.0F, 0.06F, 45.0F, -100.0F, -100.0F
+		));
+		put("archers:crystal_longbow", new ItemConfiguration(
+				0.1F, 0.3F, 0.24F, 0.0F, 0.0F, 0.06F, 45.0F, -100.0F, -100.0F
+		));
+		put("archers:aether_longbow", new ItemConfiguration(
+				0.1F, 0.3F, 0.24F, 0.0F, 0.0F, 0.06F, 45.0F, -100.0F, -100.0F
+		));
+		put("arsenal:unique_longbow_1", new ItemConfiguration(
+				0.1F, 0.3F, 0.24F, 0.0F, 0.0F, 0.06F, 45.0F, -100.0F, -100.0F
+		));
+		put("arsenal:unique_longbow_2", new ItemConfiguration(
+				0.1F, 0.3F, 0.24F, 0.0F, 0.0F, 0.06F, 45.0F, -100.0F, -100.0F
+		));
+		put("arsenal:unique_longbow_sw", new ItemConfiguration(
+				0.1F, 0.3F, 0.24F, 0.0F, 0.0F, 0.06F, 45.0F, -100.0F, -100.0F
+		));
+		put("minecrawl:spell_casting_crossbow_1", new ItemConfiguration(
+				-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F
+		));
+		put("minecrawl:spell_casting_crossbow_2", new ItemConfiguration(
+				-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F
+		));
+		put("minecrawl:spell_casting_crossbow_4", new ItemConfiguration(
+				-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F
+		));
+		put("minecrawl:spell_casting_crossbow_3", new ItemConfiguration(
+				-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F
+		));
+		put("minecrawl:spell_casting_crossbow_5", new ItemConfiguration(
+				-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F
+		));
+		put("minecrawl:spell_casting_crossbow_6", new ItemConfiguration(
+				-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F
+		));
+		put("minecrawl:spell_casting_crossbow_7", new ItemConfiguration(
+				-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F
+		));
+		put("minecrawl:spell_casting_crossbow_8", new ItemConfiguration(
+				-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F
+		));
+		put("minecrawl:spell_casting_crossbow_9", new ItemConfiguration(
+				-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F
+		));
+		put("minecrawl:spell_casting_crossbow_10", new ItemConfiguration(
+				-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F
+		));
+		put("minecrawl:spell_casting_crossbow_11", new ItemConfiguration(
+				-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F
+		));
+		put("minecrawl:spell_casting_crossbow_12", new ItemConfiguration(
+				-0.3F, 0.2F, 0.16F, 0.0F, 0.0F, 0.06F, 165.0F, 180.0F, -90.0F
+		));
 	}}, new ValidatedString(), new ValidatedAny<>(new ItemConfiguration()));
 	@ConfigGroup.Pop
 	public ValidatedMap<String, ItemConfiguration> sheathed_offhand_item_positions = new ValidatedMap<>(new HashMap<>() {{
-		put("minecraft:shield", new ItemConfiguration(0.2F, 0.4F, 0.075F, 0.0F, 0.0F, 0.06F, 0.0F, -90.0F, 15.0F));
-		put("paladins:iron_kite_shield", new ItemConfiguration(0.2F, 0.4F, 0.075F, 0.0F, 0.0F, 0.06F, 0.0F, -90.0F, 15.0F));
-		put("paladins:golden_kite_shield", new ItemConfiguration(0.2F, 0.4F, 0.075F, 0.0F, 0.0F, 0.06F, 0.0F, -90.0F, 15.0F));
-		put("paladins:diamond_kite_shield", new ItemConfiguration(0.2F, 0.4F, 0.075F, 0.0F, 0.0F, 0.06F, 0.0F, -90.0F, 15.0F));
-		put("paladins:netherite_kite_shield", new ItemConfiguration(0.2F, 0.4F, 0.075F, 0.0F, 0.0F, 0.06F, 0.0F, -90.0F, 15.0F));
-		put("paladins:ruby_kite_shield", new ItemConfiguration(0.2F, 0.4F, 0.075F, 0.0F, 0.0F, 0.06F, 0.0F, -90.0F, 15.0F));
-		put("paladins:aeternium_kite_shield", new ItemConfiguration(0.2F, 0.4F, 0.075F, 0.0F, 0.0F, 0.06F, 0.0F, -90.0F, 15.0F));
-		put("paladins:aether_kite_shield", new ItemConfiguration(0.2F, 0.4F, 0.075F, 0.0F, 0.0F, 0.06F, 0.0F, -90.0F, 15.0F));
-		put("arsenal:unique_shield_1", new ItemConfiguration(0.2F, 0.4F, 0.075F, 0.0F, 0.0F, 0.06F, 0.0F, -90.0F, 15.0F));
-		put("arsenal:unique_shield_sw", new ItemConfiguration(0.2F, 0.4F, 0.075F, 0.0F, 0.0F, 0.06F, 0.0F, -90.0F, 15.0F));
+		put("minecraft:shield", new ItemConfiguration(
+				-0.2F, 0.4F, 0.075F, 0.0F, 0.0F, 0.06F, 0.0F, 90.0F, -15.0F
+		));
+		put("paladins:iron_kite_shield", new ItemConfiguration(
+				-0.2F, 0.4F, 0.075F, 0.0F, 0.0F, 0.06F, 0.0F, 90.0F, -15.0F
+		));
+		put("paladins:golden_kite_shield", new ItemConfiguration(
+				-0.2F, 0.4F, 0.075F, 0.0F, 0.0F, 0.06F, 0.0F, 90.0F, -15.0F
+		));
+		put("paladins:diamond_kite_shield", new ItemConfiguration(
+				-0.2F, 0.4F, 0.075F, 0.0F, 0.0F, 0.06F, 0.0F, 90.0F, -15.0F
+		));
+		put("paladins:netherite_kite_shield", new ItemConfiguration(
+				-0.2F, 0.4F, 0.075F, 0.0F, 0.0F, 0.06F, 0.0F, 90.0F, -15.0F
+		));
+		put("paladins:ruby_kite_shield", new ItemConfiguration(
+				-0.2F, 0.4F, 0.075F, 0.0F, 0.0F, 0.06F, 0.0F, 90.0F, -15.0F
+		));
+		put("paladins:aeternium_kite_shield", new ItemConfiguration(
+				-0.2F, 0.4F, 0.075F, 0.0F, 0.0F, 0.06F, 0.0F, 90.0F, -15.0F
+		));
+		put("paladins:aether_kite_shield", new ItemConfiguration(
+				-0.2F, 0.4F, 0.075F, 0.0F, 0.0F, 0.06F, 0.0F, 90.0F, -15.0F
+		));
+		put("arsenal:unique_shield_1", new ItemConfiguration(
+				-0.2F, 0.4F, 0.075F, 0.0F, 0.0F, 0.06F, 0.0F, 90.0F, -15.0F
+		));
+		put("arsenal:unique_shield_sw", new ItemConfiguration(
+				-0.2F, 0.4F, 0.075F, 0.0F, 0.0F, 0.06F, 0.0F, 90.0F, -15.0F
+		));
 	}}, new ValidatedString(), new ValidatedAny<>(new ItemConfiguration()));
 
 	public static class ItemConfiguration implements Walkable {

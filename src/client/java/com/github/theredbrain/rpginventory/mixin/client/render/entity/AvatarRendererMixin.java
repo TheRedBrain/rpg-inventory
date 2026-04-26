@@ -1,6 +1,7 @@
 package com.github.theredbrain.rpginventory.mixin.client.render.entity;
 
 import com.github.theredbrain.rpginventory.registry.Tags;
+import com.github.theredbrain.rpginventory.renderer.entity.layers.SheathedItemLayer;
 import com.github.theredbrain.rpginventory.util.ItemUtils;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -33,8 +34,7 @@ public abstract class AvatarRendererMixin<AvatarlikeEntity extends Avatar & Clie
 
 	@Inject(method = "<init>", at = @At("TAIL"))
 	private void rpginventory$init(EntityRendererProvider.Context context, boolean slimSteve, CallbackInfo info) {
-//		this.addLayer(new SheathedHandItemFeatureRenderer<>(this, ctx.getItemInHandRenderer()));
-//		this.addLayer(new SheathedOffHandItemFeatureRenderer<>(this, ctx.getEntityRenderDispatcher().getItemInHandRenderer())));
+		this.addLayer(new SheathedItemLayer<>(this));
 	}
 
 	@WrapMethod(method = "getArmPose(Lnet/minecraft/world/entity/Avatar;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/client/model/HumanoidModel$ArmPose;")
