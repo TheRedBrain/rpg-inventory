@@ -57,8 +57,6 @@ public class RPGInventoryScreen extends AbstractContainerScreen<InventoryMenu> {
 	private static final Component OPEN_BACKPACK_BUTTON_LABEL_TEXT = Component.translatable("gui.adventureInventory.openBackpackButton");
 	private static final Component OPEN_HAND_CRAFTING_BUTTON_LABEL_TEXT = Component.translatable("gui.adventureInventory.openHandCraftingButton");
 	private static final int MAX_ATTRIBUTE_SCREEN_LINES = 15;
-	private float mouseX;
-	private float mouseY;
 	private Button openBackpackButton;
 	private Button openHandCraftingButton;
 	private final int sidesBackgroundWidth = 130;
@@ -66,6 +64,7 @@ public class RPGInventoryScreen extends AbstractContainerScreen<InventoryMenu> {
 	protected boolean showAttributeScreen;
 	private Button toggleShowEffectScreenButton;
 	private boolean showEffectScreen;
+	private List<MutablePair<Component, List<Component>>> attributeList = new ArrayList<>(Collections.emptyList());
 	private int attributeListSize = 0;
 	private int oldEffectsListSize = 0;
 	private List<MobEffectInstance> foodEffectsList = new ArrayList<>(Collections.emptyList());
@@ -210,13 +209,21 @@ public class RPGInventoryScreen extends AbstractContainerScreen<InventoryMenu> {
 	}
 
 	@Override
+	public void containerTick() {
+		super.containerTick();
+		if (this.minecraft.player != null) {
+			updateEffectsLists(this.minecraft.player);
+			this.attributeList = RPGInventoryClient.getPlayerAttributeScreenData(this.minecraft);
+			this.attributeListSize = this.attributeList.size();
+		}
+	}
+
+	@Override
 	public void extractRenderState(final GuiGraphicsExtractor graphics, final int mouseX, final int mouseY, final float a) {
 		super.extractRenderState(graphics, mouseX, mouseY, a);
 		this.drawStatusEffects(graphics, mouseX, mouseY);
 		this.drawAttributeScreen(graphics, mouseX, mouseY);
 		this.extractTooltip(graphics, mouseX, mouseY);
-		this.mouseX = mouseX;
-		this.mouseY = mouseY;
 	}
 
 	@Override
@@ -237,7 +244,6 @@ public class RPGInventoryScreen extends AbstractContainerScreen<InventoryMenu> {
 			hotbarSize = RPGInventory.getActiveHotbarSize(this.minecraft.player);
 			inventorySize = RPGInventory.getActiveInventorySize(this.minecraft.player);
 			isHandSlotOverhaulActive = ((DuckPlayerEntityMixin) this.minecraft.player).rpginventory$isHandSlotOverhaulActive();
-			updateEffectsLists(this.minecraft.player);
 		}
 		graphics.blit(RenderPipelines.GUI_TEXTURED, ADVENTURE_INVENTORY_MAIN_BACKGROUND_TEXTURE, i, j, 0, 0, this.imageWidth, this.imageHeight, this.imageWidth, this.imageHeight);
 		if (!serverConfig.inventorySlots.disable_inventory_crafting_slots.get()) {
@@ -325,7 +331,7 @@ public class RPGInventoryScreen extends AbstractContainerScreen<InventoryMenu> {
 		}
 		this.toggleShowEffectScreenButton.visible = clientConfig.rpgInventoryScreenSection.can_hide_status_effect_screen.get() && this.oldEffectsListSize > 0;
 		if (this.minecraft.player != null) {
-			InventoryScreen.extractEntityInInventoryFollowsMouse(graphics, i + 26, j + 36, i + 75, j + 106, 30, 0.0625f, this.mouseX, this.mouseY, this.minecraft.player);
+			InventoryScreen.extractEntityInInventoryFollowsMouse(graphics, i + 26, j + 36, i + 75, j + 106, 30, 0.0625f, mouseX, mouseY, this.minecraft.player);
 		}
 	}
 
@@ -336,19 +342,17 @@ public class RPGInventoryScreen extends AbstractContainerScreen<InventoryMenu> {
 		int x = this.leftPos - this.sidesBackgroundWidth + 7;
 		int y = this.topPos + 7;
 		int currentY;
-		List<MutablePair<Component, List<Component>>> list = RPGInventoryClient.getPlayerAttributeScreenData(this.minecraft);
-		this.attributeListSize = list.size();
 		for (int i = this.attributeScrollPosition; i < Math.min(this.attributeListSize, this.attributeScrollPosition + 15); i++) {
 			currentY = y + ((i - this.attributeScrollPosition) * 13);
-			graphics.text(this.font, list.get(i).left, x, currentY, 0x404040, false);
+			graphics.text(this.font, this.attributeList.get(i).left, x, currentY, 0x404040, false);
 			if (mouseX >= x && mouseX <= x + this.sidesBackgroundWidth - 7 && mouseY >= currentY && mouseY <= currentY + 13) {
-				List<Component> tooltipList = list.get(i).right;
+				List<Component> tooltipList = this.attributeList.get(i).right;
 				if (!tooltipList.isEmpty()) {
 					graphics.setTooltipForNextFrame(this.font, tooltipList, Optional.empty(), mouseX, mouseY);
 				}
 			}
 		}
-		if (list.size() > MAX_ATTRIBUTE_SCREEN_LINES) {
+		if (this.attributeListSize > MAX_ATTRIBUTE_SCREEN_LINES) {
 			graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SCROLL_BAR_BACKGROUND_8_206_TEXTURE, x + 108, y, 8, 206);
 			int k = (int) (189.0f * this.attributeScrollAmount);
 			graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SCROLLER_VERTICAL_6_15_TEXTURE, x + 109, y + 1 + k, 6, 15);
@@ -360,12 +364,13 @@ public class RPGInventoryScreen extends AbstractContainerScreen<InventoryMenu> {
 		int j = this.topPos + 7;
 		if (this.showEffectScreen) {
 			if (this.oldEffectsListSize > 0) {
-				graphics.text(this.font, Component.translatable("gui.adventureInventory.status_effects"), i + 1, j, 0x404040, false);
+				graphics.text(this.font, Component.translatable("gui.adventureInventory.status_effects"), i + 1, j, -12566464/*0x404040*/, false);
+//				graphics.text(this.font, this.title, this.titleLabelX, this.titleLabelY, -12566464, false);
 			}
 			j += 13;
 			if (!this.foodEffectsList.isEmpty()) {
 
-				graphics.text(this.font, Component.translatable("gui.adventureInventory.status_effects.food_effects"), i + 1, j, 0x404040, false);
+				graphics.text(this.font, Component.translatable("gui.adventureInventory.status_effects.food_effects"), i + 1, j, -12566464/*0x404040*/, false);
 				j += 13;
 				for (int k = 3 * this.foodScrollPosition; k < Math.min(this.foodEffectsList.size(), (3 * (1 + this.foodScrollPosition))); k++) {
 					drawStatusEffectTexturesAndToolTips(graphics, i, j, k, mouseX, mouseY, this.foodEffectsList.get(k));
@@ -379,7 +384,7 @@ public class RPGInventoryScreen extends AbstractContainerScreen<InventoryMenu> {
 			}
 			if (!this.negativeEffectsList.isEmpty()) {
 
-				graphics.text(this.font, Component.translatable("gui.adventureInventory.status_effects.negative_effects"), i + 1, j, 0x404040, false);
+				graphics.text(this.font, Component.translatable("gui.adventureInventory.status_effects.negative_effects"), i + 1, j, -12566464/*0x404040*/, false);
 				j += 13;
 				for (int k = 3 * this.negativeScrollPosition; k < Math.min(this.negativeEffectsList.size(), (3 * (1 + this.negativeScrollPosition))); k++) {
 					drawStatusEffectTexturesAndToolTips(graphics, i, j, k, mouseX, mouseY, this.negativeEffectsList.get(k));
@@ -393,7 +398,7 @@ public class RPGInventoryScreen extends AbstractContainerScreen<InventoryMenu> {
 			}
 			if (!this.positiveEffectsList.isEmpty()) {
 
-				graphics.text(this.font, Component.translatable("gui.adventureInventory.status_effects.positive_effects"), i + 1, j, 0x404040, false);
+				graphics.text(this.font, Component.translatable("gui.adventureInventory.status_effects.positive_effects"), i + 1, j, -12566464/*0x404040*/, false);
 				j += 13;
 				for (int k = 3 * this.positiveScrollPosition; k < Math.min(this.positiveEffectsList.size(), (3 * (1 + this.positiveScrollPosition))); k++) {
 					drawStatusEffectTexturesAndToolTips(graphics, i, j, k, mouseX, mouseY, this.positiveEffectsList.get(k));
@@ -407,7 +412,7 @@ public class RPGInventoryScreen extends AbstractContainerScreen<InventoryMenu> {
 			}
 			if (!this.neutralEffectsList.isEmpty()) {
 
-				graphics.text(this.font, Component.translatable("gui.adventureInventory.status_effects.neutral_effects"), i + 1, j, 0x404040, false);
+				graphics.text(this.font, Component.translatable("gui.adventureInventory.status_effects.neutral_effects"), i + 1, j, -12566464/*0x404040*/, false);
 				j += 13;
 				for (int k = 3 * this.neutralScrollPosition; k < Math.min(this.neutralEffectsList.size(), (3 * (1 + this.neutralScrollPosition))); k++) {
 					drawStatusEffectTexturesAndToolTips(graphics, i, j, k, mouseX, mouseY, this.neutralEffectsList.get(k));
@@ -425,7 +430,7 @@ public class RPGInventoryScreen extends AbstractContainerScreen<InventoryMenu> {
 		int i = x + 3 + ((z % 3) * 35);
 		graphics.blitSprite(RenderPipelines.GUI_TEXTURED, EFFECT_BACKGROUND_SMALL_TEXTURE, i, y, 32, 32);
 		Identifier sprite = Gui.getMobEffectSprite(statusEffectInstance.getEffect());
-		graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, i + 7, y + 7, 0, 18, 18);
+		graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, i + 7, y + 7, 18, 18);
 		if (mouseX >= i && mouseX <= i + 32 && mouseY >= y && mouseY <= y + 32) {
 			List<Component> list = getStatusEffectTooltip(statusEffectInstance);
 			graphics.setTooltipForNextFrame(this.font, list, Optional.empty(), mouseX, mouseY);
@@ -434,7 +439,7 @@ public class RPGInventoryScreen extends AbstractContainerScreen<InventoryMenu> {
 
 	private List<Component> getStatusEffectTooltip(MobEffectInstance statusEffectInstance) {
 		List<Component> list = new ArrayList<>(List.of(getStatusEffectName(statusEffectInstance)));
-		if (!(statusEffectInstance.isInfiniteDuration()) && this.minecraft != null && this.minecraft.level != null) {
+		if (!statusEffectInstance.isInfiniteDuration() && this.minecraft.level != null) {
 			list.add(MobEffectUtil.formatDuration(statusEffectInstance, 1.0f, this.minecraft.level.tickRateManager().tickrate()));
 		}
 		Component description = getStatusEffectDescription(statusEffectInstance);
@@ -502,30 +507,37 @@ public class RPGInventoryScreen extends AbstractContainerScreen<InventoryMenu> {
 		this.positiveMouseClicked = false;
 		this.neutralMouseClicked = false;
 		int i = this.leftPos + this.imageWidth + this.sidesBackgroundWidth - 15;
-		int j;
+		int j = this.topPos + 34;
 		if (!RPGInventoryClient.CLIENT_CONFIG.rpgInventoryScreenSection.can_hide_status_effect_screen.get() || this.showEffectScreen) {
-			if (this.foodEffectsRowAmount > 1) {
-				j = this.topPos + 34;
-				if (event.x() >= (double) i && event.x() < (double) (i + 6) && event.y() >= (double) j && event.y() < (double) (j + 30)) {
-					this.foodMouseClicked = true;
+			if (!this.foodEffectsList.isEmpty()) {
+				if (this.foodEffectsRowAmount > 1) {
+					if (event.x() >= (double) i && event.x() < (double) (i + 6) && event.y() >= (double) j && event.y() < (double) (j + 30)) {
+						this.foodMouseClicked = true;
+					}
 				}
+				j += 50;
 			}
-			if (this.negativeEffectsRowAmount > 1) {
-				j = this.topPos + 84;
-				if (event.x() >= (double) i && event.x() < (double) (i + 6) && event.y() >= (double) j && event.y() < (double) (j + 30)) {
-					this.negativeMouseClicked = true;
+			if (!this.negativeEffectsList.isEmpty()) {
+				if (this.negativeEffectsRowAmount > 1) {
+					if (event.x() >= (double) i && event.x() < (double) (i + 6) && event.y() >= (double) j && event.y() < (double) (j + 30)) {
+						this.negativeMouseClicked = true;
+					}
 				}
+				j += 50;
 			}
-			if (this.positiveEffectsRowAmount > 1) {
-				j = this.topPos + 134;
-				if (event.x() >= (double) i && event.x() < (double) (i + 6) && event.y() >= (double) j && event.y() < (double) (j + 30)) {
-					this.positiveMouseClicked = true;
+			if (!this.positiveEffectsList.isEmpty()) {
+				if (this.positiveEffectsRowAmount > 1) {
+					if (event.x() >= (double) i && event.x() < (double) (i + 6) && event.y() >= (double) j && event.y() < (double) (j + 30)) {
+						this.positiveMouseClicked = true;
+					}
 				}
+				j += 50;
 			}
-			if (this.neutralEffectsRowAmount > 1) {
-				j = this.topPos + 184;
-				if (event.x() >= (double) i && event.x() < (double) (i + 6) && event.y() >= (double) j && event.y() < (double) (j + 30)) {
-					this.neutralMouseClicked = true;
+			if (!this.neutralEffectsList.isEmpty()) {
+				if (this.neutralEffectsRowAmount > 1) {
+					if (event.x() >= (double) i && event.x() < (double) (i + 6) && event.y() >= (double) j && event.y() < (double) (j + 30)) {
+						this.neutralMouseClicked = true;
+					}
 				}
 			}
 		}
@@ -584,32 +596,40 @@ public class RPGInventoryScreen extends AbstractContainerScreen<InventoryMenu> {
 		int scrollAreaStartY = this.topPos + 33;
 		int scrollAreaHeight = 32;
 		if (!RPGInventoryClient.CLIENT_CONFIG.rpgInventoryScreenSection.can_hide_status_effect_screen.get() || this.showEffectScreen) {
-			if (this.foodEffectsRowAmount > 1 && mouseX >= scrollAreaStartX && mouseX <= scrollAreaStartX + scrollAreaWidth && mouseY >= scrollAreaStartY && mouseY <= scrollAreaStartY + scrollAreaHeight) {
-				int i = this.foodEffectsRowAmount - 1;
-				float f = (float) scrollY / (float) i;
-				this.foodScrollAmount = Mth.clamp(this.foodScrollAmount - f, 0.0f, 1.0f);
-				this.foodScrollPosition = (int) ((double) (this.foodScrollAmount * (float) i));
+			if (!this.foodEffectsList.isEmpty()) {
+				if (this.foodEffectsRowAmount > 1 && mouseX >= scrollAreaStartX && mouseX <= scrollAreaStartX + scrollAreaWidth && mouseY >= scrollAreaStartY && mouseY <= scrollAreaStartY + scrollAreaHeight) {
+					int i = this.foodEffectsRowAmount - 1;
+					float f = (float) scrollY / (float) i;
+					this.foodScrollAmount = Mth.clamp(this.foodScrollAmount - f, 0.0f, 1.0f);
+					this.foodScrollPosition = (int) ((double) (this.foodScrollAmount * (float) i));
+				}
+				scrollAreaStartY += 50;
 			}
-			scrollAreaStartY = this.topPos + 83;
-			if (this.negativeEffectsRowAmount > 1 && mouseX >= scrollAreaStartX && mouseX <= scrollAreaStartX + scrollAreaWidth && mouseY >= scrollAreaStartY && mouseY <= scrollAreaStartY + scrollAreaHeight) {
-				int i = this.negativeEffectsRowAmount - 1;
-				float f = (float) scrollY / (float) i;
-				this.negativeScrollAmount = Mth.clamp(this.negativeScrollAmount - f, 0.0f, 1.0f);
-				this.negativeScrollPosition = (int) ((double) (this.negativeScrollAmount * (float) i));
+			if (!this.negativeEffectsList.isEmpty()) {
+				if (this.negativeEffectsRowAmount > 1 && mouseX >= scrollAreaStartX && mouseX <= scrollAreaStartX + scrollAreaWidth && mouseY >= scrollAreaStartY && mouseY <= scrollAreaStartY + scrollAreaHeight) {
+					int i = this.negativeEffectsRowAmount - 1;
+					float f = (float) scrollY / (float) i;
+					this.negativeScrollAmount = Mth.clamp(this.negativeScrollAmount - f, 0.0f, 1.0f);
+					this.negativeScrollPosition = (int) ((double) (this.negativeScrollAmount * (float) i));
+				}
+				scrollAreaStartY += 50;
 			}
-			scrollAreaStartY = this.topPos + 133;
-			if (this.positiveEffectsRowAmount > 1 && mouseX >= scrollAreaStartX && mouseX <= scrollAreaStartX + scrollAreaWidth && mouseY >= scrollAreaStartY && mouseY <= scrollAreaStartY + scrollAreaHeight) {
-				int i = this.positiveEffectsRowAmount - 1;
-				float f = (float) scrollY / (float) i;
-				this.positiveScrollAmount = Mth.clamp(this.positiveScrollAmount - f, 0.0f, 1.0f);
-				this.positiveScrollPosition = (int) ((double) (this.positiveScrollAmount * (float) i));
+			if (!this.positiveEffectsList.isEmpty()) {
+				if (this.positiveEffectsRowAmount > 1 && mouseX >= scrollAreaStartX && mouseX <= scrollAreaStartX + scrollAreaWidth && mouseY >= scrollAreaStartY && mouseY <= scrollAreaStartY + scrollAreaHeight) {
+					int i = this.positiveEffectsRowAmount - 1;
+					float f = (float) scrollY / (float) i;
+					this.positiveScrollAmount = Mth.clamp(this.positiveScrollAmount - f, 0.0f, 1.0f);
+					this.positiveScrollPosition = (int) ((double) (this.positiveScrollAmount * (float) i));
+				}
+				scrollAreaStartY += 50;
 			}
-			scrollAreaStartY = this.topPos + 183;
-			if (this.neutralEffectsRowAmount > 1 && mouseX >= scrollAreaStartX && mouseX <= scrollAreaStartX + scrollAreaWidth && mouseY >= scrollAreaStartY && mouseY <= scrollAreaStartY + scrollAreaHeight) {
-				int i = this.neutralEffectsRowAmount - 1;
-				float f = (float) scrollY / (float) i;
-				this.neutralScrollAmount = Mth.clamp(this.neutralScrollAmount - f, 0.0f, 1.0f);
-				this.neutralScrollPosition = (int) ((double) (this.neutralScrollAmount * (float) i));
+			if (!this.neutralEffectsList.isEmpty()) {
+				if (this.neutralEffectsRowAmount > 1 && mouseX >= scrollAreaStartX && mouseX <= scrollAreaStartX + scrollAreaWidth && mouseY >= scrollAreaStartY && mouseY <= scrollAreaStartY + scrollAreaHeight) {
+					int i = this.neutralEffectsRowAmount - 1;
+					float f = (float) scrollY / (float) i;
+					this.neutralScrollAmount = Mth.clamp(this.neutralScrollAmount - f, 0.0f, 1.0f);
+					this.neutralScrollPosition = (int) ((double) (this.neutralScrollAmount * (float) i));
+				}
 			}
 		}
 		scrollAreaStartX = this.leftPos - this.sidesBackgroundWidth + 7;
