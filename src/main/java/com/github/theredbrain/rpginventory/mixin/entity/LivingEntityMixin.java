@@ -13,7 +13,6 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.core.Holder;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -22,7 +21,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.player.Player;
@@ -53,9 +51,6 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
 	@Shadow
 	public abstract HumanoidArm getMainArm();
 
-	@Shadow
-	public abstract double getAttributeValue(Holder<Attribute> attribute);
-
 	public LivingEntityMixin(EntityType<?> type, Level world) {
 		super(type, world);
 	}
@@ -71,17 +66,6 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
 	protected void rpginventory$onEffectsRemoved(Collection<MobEffectInstance> effects, CallbackInfo ci, @Local(name = "effect") MobEffectInstance effect) {
 		if (effect.getEffect() == RPGInventory.PVP) {
 			this.level().getScoreboard().removePlayerFromTeam(this.getScoreboardName());
-		}
-	}
-
-	@Inject(method = "onEquipItem", at = @At("TAIL"))
-	public void rpginventory$onEquipItem(EquipmentSlot slot, ItemStack oldStack, ItemStack stack, CallbackInfo ci) {
-
-		if (!this.level().isClientSide()) {
-			if (stack.has(RPGInventory.EXCLUSIVE_EQUIPMENT)) {
-				// TODO
-//				this.rpginventory$setShouldEjectExclusiveEquipment(true);
-			}
 		}
 	}
 
@@ -157,28 +141,6 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
 			return Math.max(1.0F, damage / 4.0F);
 		}
 	}
-
-//	@Override
-//	public ItemStack rpginventory$getSheathedHandItemStack() {
-//		ItemStack itemStack = this.getItemBySlot(ExtendedEquipmentSlot.SHEATHED_HAND);
-//		return rpginventory$isHandStackSheathed() && !itemStack.is(Tags.EMPTY_HAND_WEAPONS) && ItemUtils.isUsable(itemStack) && ItemUtils.isUsableByPlayer(itemStack, ((Player) (Object) this)) ? itemStack : ItemStack.EMPTY;
-//	}
-//
-//	@Override
-//	public ItemStack rpginventory$getSheathedOffHandItemStack() {
-//		ItemStack itemStack = this.getItemBySlot(ExtendedEquipmentSlot.SHEATHED_OFF_HAND);
-//		return rpginventory$isOffhandStackSheathed() && !itemStack.is(Tags.EMPTY_HAND_WEAPONS) && ItemUtils.isUsable(itemStack) && ItemUtils.isUsableByPlayer(itemStack, ((Player) (Object) this)) ? itemStack : ItemStack.EMPTY;
-//	}
-
-//	@Override
-//	public float staminaattributes$getStamina() {
-//		return DataAttachmentHelper.getStamina((LivingEntity) (Object) this);
-//	}
-//
-//	@Override
-//	public void staminaattributes$setStamina(float stamina) {
-//		DataAttachmentHelper.setStamina((LivingEntity) (Object) this, (float) Mth.clamp(stamina, -100.0, this.staminaattributes$getUnreservedStamina()));
-//	}
 
 	@Override
 	public ItemStack rpginventory$getSheathedItemStackByArm(HumanoidArm arm) {

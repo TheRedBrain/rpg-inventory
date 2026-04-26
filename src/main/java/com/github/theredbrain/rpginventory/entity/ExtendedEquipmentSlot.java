@@ -40,6 +40,10 @@ public class ExtendedEquipmentSlot {
 		return slot.equals(EMPTY_HAND) || slot.equals(EMPTY_OFF_HAND);
 	}
 
+	public static boolean ignoredByExclusiveEquipmentCheck(EquipmentSlot slot) {
+		return slot.equals(EMPTY_HAND) || slot.equals(EMPTY_OFF_HAND) || slot.equals(CLASS_ITEM) || slot.equals(ALTERNATIVE_HAND) || slot.equals(ALTERNATIVE_OFF_HAND);
+	}
+
 	public static boolean rpginventory$isOfEquipmentTag(ItemStack itemStack, EquipmentSlot slot) {
 		if (slot == EquipmentSlot.MAINHAND || slot == SHEATHED_HAND || slot == ALTERNATIVE_HAND) {
 			return itemStack.is(Tags.HAND_ITEMS);

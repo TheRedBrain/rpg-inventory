@@ -5,6 +5,7 @@ import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
 import com.github.theredbrain.rpginventory.entity.player.DuckEntityEquipmentMixin;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.github.theredbrain.rpginventory.entity.player.DuckPlayerInventoryMixin;
+import com.github.theredbrain.rpginventory.entity.player.PlayerEntityHelper;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -116,27 +117,27 @@ public abstract class PlayerInventoryMixin implements DuckPlayerInventoryMixin {
 
 	static {
 		EQUIPMENT_SLOT_MAPPING.put(43, EquipmentSlot.MAINHAND);
-		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.BELT.getIndex(44), ExtendedEquipmentSlot.BELT);
-		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.GLOVES.getIndex(44), ExtendedEquipmentSlot.GLOVES);
-		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.NECKLACE.getIndex(44), ExtendedEquipmentSlot.NECKLACE);
-		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.RING_1.getIndex(44), ExtendedEquipmentSlot.RING_1);
-		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.RING_2.getIndex(44), ExtendedEquipmentSlot.RING_2);
-		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.SHOULDERS.getIndex(44), ExtendedEquipmentSlot.SHOULDERS);
-		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.SPELL_1.getIndex(44), ExtendedEquipmentSlot.SPELL_1);
-		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.SPELL_2.getIndex(44), ExtendedEquipmentSlot.SPELL_2);
-		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.SPELL_3.getIndex(44), ExtendedEquipmentSlot.SPELL_3);
-		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.SPELL_4.getIndex(44), ExtendedEquipmentSlot.SPELL_4);
-		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.SPELL_5.getIndex(44), ExtendedEquipmentSlot.SPELL_5);
-		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.SPELL_6.getIndex(44), ExtendedEquipmentSlot.SPELL_6);
-		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.SPELL_7.getIndex(44), ExtendedEquipmentSlot.SPELL_7);
-		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.SPELL_8.getIndex(44), ExtendedEquipmentSlot.SPELL_8);
-		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.RELIC.getIndex(44), ExtendedEquipmentSlot.RELIC);
-		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.CLASS_ITEM.getIndex(44), ExtendedEquipmentSlot.CLASS_ITEM);
-		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.EMPTY_HAND.getIndex(44), ExtendedEquipmentSlot.EMPTY_HAND);
-		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.EMPTY_OFF_HAND.getIndex(44), ExtendedEquipmentSlot.EMPTY_OFF_HAND);
-		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.SHEATHED_HAND.getIndex(44), ExtendedEquipmentSlot.SHEATHED_HAND);
-		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.SHEATHED_OFF_HAND.getIndex(44), ExtendedEquipmentSlot.SHEATHED_OFF_HAND);
-		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.ALTERNATIVE_HAND.getIndex(44), ExtendedEquipmentSlot.ALTERNATIVE_HAND);
-		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.ALTERNATIVE_OFF_HAND.getIndex(44), ExtendedEquipmentSlot.ALTERNATIVE_OFF_HAND);
+		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.BELT.getIndex(PlayerEntityHelper.EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), ExtendedEquipmentSlot.BELT);
+		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.GLOVES.getIndex(PlayerEntityHelper.EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), ExtendedEquipmentSlot.GLOVES);
+		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.NECKLACE.getIndex(PlayerEntityHelper.EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), ExtendedEquipmentSlot.NECKLACE);
+		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.RING_1.getIndex(PlayerEntityHelper.EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), ExtendedEquipmentSlot.RING_1);
+		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.RING_2.getIndex(PlayerEntityHelper.EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), ExtendedEquipmentSlot.RING_2);
+		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.SHOULDERS.getIndex(PlayerEntityHelper.EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), ExtendedEquipmentSlot.SHOULDERS);
+		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.SPELL_1.getIndex(PlayerEntityHelper.EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), ExtendedEquipmentSlot.SPELL_1);
+		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.SPELL_2.getIndex(PlayerEntityHelper.EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), ExtendedEquipmentSlot.SPELL_2);
+		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.SPELL_3.getIndex(PlayerEntityHelper.EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), ExtendedEquipmentSlot.SPELL_3);
+		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.SPELL_4.getIndex(PlayerEntityHelper.EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), ExtendedEquipmentSlot.SPELL_4);
+		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.SPELL_5.getIndex(PlayerEntityHelper.EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), ExtendedEquipmentSlot.SPELL_5);
+		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.SPELL_6.getIndex(PlayerEntityHelper.EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), ExtendedEquipmentSlot.SPELL_6);
+		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.SPELL_7.getIndex(PlayerEntityHelper.EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), ExtendedEquipmentSlot.SPELL_7);
+		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.SPELL_8.getIndex(PlayerEntityHelper.EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), ExtendedEquipmentSlot.SPELL_8);
+		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.RELIC.getIndex(PlayerEntityHelper.EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), ExtendedEquipmentSlot.RELIC);
+		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.CLASS_ITEM.getIndex(PlayerEntityHelper.EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), ExtendedEquipmentSlot.CLASS_ITEM);
+		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.EMPTY_HAND.getIndex(PlayerEntityHelper.EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), ExtendedEquipmentSlot.EMPTY_HAND);
+		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.EMPTY_OFF_HAND.getIndex(PlayerEntityHelper.EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), ExtendedEquipmentSlot.EMPTY_OFF_HAND);
+		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.SHEATHED_HAND.getIndex(PlayerEntityHelper.EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), ExtendedEquipmentSlot.SHEATHED_HAND);
+		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.SHEATHED_OFF_HAND.getIndex(PlayerEntityHelper.EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), ExtendedEquipmentSlot.SHEATHED_OFF_HAND);
+		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.ALTERNATIVE_HAND.getIndex(PlayerEntityHelper.EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), ExtendedEquipmentSlot.ALTERNATIVE_HAND);
+		EQUIPMENT_SLOT_MAPPING.put(ExtendedEquipmentSlot.ALTERNATIVE_OFF_HAND.getIndex(PlayerEntityHelper.EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET), ExtendedEquipmentSlot.ALTERNATIVE_OFF_HAND);
 	}
 }

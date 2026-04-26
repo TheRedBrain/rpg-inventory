@@ -11,7 +11,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -25,15 +24,10 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.storage.LevelData;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Team;
-import org.apache.commons.lang3.tuple.MutablePair;
-import org.spongepowered.asm.mixin.Unique;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +37,7 @@ import java.util.function.Predicate;
 
 public class PlayerEntityHelper {
 
-	private static final int EXCLUSIVE_EQUIPMENT_SLOT_AMOUNT = 20;
+	public static final int EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET = 44;
 
 	public static boolean rpginventory$onPVPDeath(DamageSource source, Player playerEntity, Holder<MobEffect> pvpStatusEffect) {
 
@@ -84,7 +78,7 @@ public class PlayerEntityHelper {
 	public static void sendPVPDeathMessage(Player playerEntity, boolean endOfBattle, boolean playerRemovedFromBattle) {
 		if (!playerRemovedFromBattle && playerEntity instanceof ServerPlayer serverPlayerEntity) {
 			ServerLevel serverLevel = serverPlayerEntity.level();
-			if(serverLevel.getGameRules().get(GameRules.SHOW_DEATH_MESSAGES)) {
+			if (serverLevel.getGameRules().get(GameRules.SHOW_DEATH_MESSAGES)) {
 				Component pvpSuffix = endOfBattle ? Component.translatable("death.pvp.suffix") : Component.empty();
 				Component text = Component.translatable("death.pvp.prefix", serverPlayerEntity.getCombatTracker().getDeathMessage(), pvpSuffix);
 				Team abstractTeam = serverPlayerEntity.getTeam();
@@ -108,31 +102,31 @@ public class PlayerEntityHelper {
 
 		if (playerEntity instanceof ServerPlayer serverPlayerEntity) {
 			MinecraftServer server = serverPlayerEntity.level().getServer();
-				ServerLevel targetWorld = null;
-				BlockPos targetPos = null;
-				double targetYaw = 0.0;
-				double targetPitch = 0.0;
+			ServerLevel targetWorld = null;
+			BlockPos targetPos = null;
+			double targetYaw = 0.0;
+			double targetPitch = 0.0;
 			LevelData.RespawnData pvp_respawn_position = RPGInventory.getPVPRespawnPosition(team, serverPlayerEntity, endOfBattle);
 
-				if (pvp_respawn_position != null) {
-					targetWorld = server.getLevel(pvp_respawn_position.globalPos().dimension());
-					targetPos = pvp_respawn_position.globalPos().pos();
-					targetYaw = pvp_respawn_position.yaw();
-					targetPitch = pvp_respawn_position.pitch();
-				}
+			if (pvp_respawn_position != null) {
+				targetWorld = server.getLevel(pvp_respawn_position.globalPos().dimension());
+				targetPos = pvp_respawn_position.globalPos().pos();
+				targetYaw = pvp_respawn_position.yaw();
+				targetPitch = pvp_respawn_position.pitch();
+			}
 
-				if (targetWorld == null) {
-					targetWorld = server.getLevel(server.getRespawnData().globalPos().dimension());
-					targetPos = server.getRespawnData().globalPos().pos();
-					targetYaw = server.getRespawnData().yaw();
-					targetPitch = server.getRespawnData().pitch();
-				}
+			if (targetWorld == null) {
+				targetWorld = server.getLevel(server.getRespawnData().globalPos().dimension());
+				targetPos = server.getRespawnData().globalPos().pos();
+				targetYaw = server.getRespawnData().yaw();
+				targetPitch = server.getRespawnData().pitch();
+			}
 
-				if (targetWorld != null) {
-					serverPlayerEntity.fallDistance = 0;
-					serverPlayerEntity.teleportTo(targetWorld, (targetPos.getX() + 0.5), (targetPos.getY() + 0.01), (targetPos.getZ() + 0.5), Set.of(), (float) targetYaw, (float) targetPitch, true);
-					serverPlayerEntity.closeContainer();
-				}
+			if (targetWorld != null) {
+				serverPlayerEntity.fallDistance = 0;
+				serverPlayerEntity.teleportTo(targetWorld, (targetPos.getX() + 0.5), (targetPos.getY() + 0.01), (targetPos.getZ() + 0.5), Set.of(), (float) targetYaw, (float) targetPitch, true);
+				serverPlayerEntity.closeContainer();
+			}
 		}
 	}
 
@@ -228,7 +222,7 @@ public class PlayerEntityHelper {
 				}
 
 				if (bl && playerEntity instanceof ServerPlayer serverPlayerEntity) {
-					serverPlayerEntity.sendSystemMessage(Component.translatable("hud.message.itemsRemovedFromInactiveHandSlots"), false);
+					serverPlayerEntity.sendSystemMessage(Component.translatable("hud.message.items_removed_from_inactive_hand_slots"), false);
 				}
 				((DuckLivingEntityMixin) playerEntity).rpginventory$setIsHandStackSheathed(true);
 				((DuckLivingEntityMixin) playerEntity).rpginventory$setIsOffhandStackSheathed(true);
@@ -262,7 +256,7 @@ public class PlayerEntityHelper {
 					}
 
 					if (bl && playerEntity instanceof ServerPlayer serverPlayerEntity) {
-						serverPlayerEntity.sendSystemMessage(Component.translatable("hud.message.itemsRemovedFromInactiveHandSlots"), false);
+						serverPlayerEntity.sendSystemMessage(Component.translatable("hud.message.items_removed_from_inactive_hand_slots"), false);
 					}
 				}
 				((DuckPlayerEntityMixin) playerEntity).rpginventory$setAreAlternativeHandSlotsActive(areAlternativeHandSlotsActive);
@@ -271,107 +265,84 @@ public class PlayerEntityHelper {
 	}
 
 	public static void rpginventory$ejectItemsFromInactiveSpellSlots(Player playerEntity) {
-//		int activeSpellSlotAmount = (int) ((DuckPlayerEntityMixin) playerEntity).rpginventory$getActiveSpellSlotAmount();
-//
-//		if (((DuckPlayerEntityMixin) playerEntity).rpginventory$oldActiveSpellSlotAmount() != activeSpellSlotAmount) {
-//			Inventory playerInventory = playerEntity.getInventory();
-//			for (int j = activeSpellSlotAmount; j < 8; j++) {
-//
-//				if (!((DuckPlayerInventoryMixin) playerInventory).rpginventory$getAdditionalEquipmentStack(6 + j).isEmpty()) {
-//					playerInventory.placeItemBackInInventory(((DuckPlayerInventoryMixin) playerInventory).rpginventory$setAdditionalEquipmentStack(6 + j, ItemStack.EMPTY));
-//					if (playerEntity instanceof ServerPlayer serverPlayerEntity) {
-//						serverPlayerEntity.sendSystemMessage(Component.translatable("hud.message.spellsRemovedFromInactiveSpellSlots"), false);
-//					}
-//				}
-//			}
-//
-//			((DuckPlayerEntityMixin) playerEntity).rpginventory$setOldActiveSpellSlotAmount(activeSpellSlotAmount);
-//		}
-	}
+		int activeSpellSlotAmount = (int) ((DuckPlayerEntityMixin) playerEntity).rpginventory$getActiveSpellSlotAmount();
 
-	public static void rpginventory$ejectExclusiveEquipment(Player playerEntity) {
-		if (((DuckPlayerEntityMixin) playerEntity).rpginventory$shouldEjectExclusiveEquipment()) {
+		if (((DuckPlayerEntityMixin) playerEntity).rpginventory$oldActiveSpellSlotAmount() != activeSpellSlotAmount) {
 			Inventory playerInventory = playerEntity.getInventory();
-			List<String> existingExclusiveEquipmentGroups = new ArrayList<>();
-			for (int i = 0; i < EXCLUSIVE_EQUIPMENT_SLOT_AMOUNT; i++) {
-				ItemStack itemStack = getEquipmentStack(playerEntity, i).copy();
+
+			EquipmentSlot equipmentSlot = ExtendedEquipmentSlot.SPELL_1;
+			int spellSlotIndex = equipmentSlot.getIndex(EXTENDED_EQUIPMENT_SLOT_INDEX_OFFSET);
+			ItemStack itemStack;
+			boolean removedStack = false;
+
+			for (int i = activeSpellSlotAmount; i < 8; i++) {
+
+				equipmentSlot = Inventory.EQUIPMENT_SLOT_MAPPING.get(spellSlotIndex + i);
+				itemStack = playerEntity.getItemBySlot(equipmentSlot).copy();
 				if (itemStack.isEmpty()) {
 					continue;
 				}
-				List<String> currentExclusiveEquipmentGroups = RPGInventory.getExclusiveEquipmentGroups(itemStack);
-				if (currentExclusiveEquipmentGroups.isEmpty()) {
-					continue;
+				if (!playerEntity.level().isClientSide()) {
+					playerInventory.placeItemBackInInventory(itemStack.copy());
 				}
-				boolean removedStack = false;
-				for (String string : currentExclusiveEquipmentGroups) {
-					if (existingExclusiveEquipmentGroups.contains(string)) {
-						if (!playerEntity.level().isClientSide()) {
-							playerInventory.placeItemBackInInventory(itemStack.copy());
-						}
-						setEquipmentStack(playerEntity, i, ItemStack.EMPTY);
-						removedStack = true;
-						break;
-					}
-				}
-				if (removedStack) {
-					continue;
-				}
-				existingExclusiveEquipmentGroups.addAll(currentExclusiveEquipmentGroups);
+				playerEntity.setItemSlot(equipmentSlot, ItemStack.EMPTY);
+				removedStack = true;
+				break;
 			}
+			if (removedStack) {
+				if (playerEntity instanceof ServerPlayer serverPlayerEntity) {
+					serverPlayerEntity.sendSystemMessage(Component.translatable("hud.message.items_removed_from_inactive_spell_slots"), false);
+				}
+			}
+
+			((DuckPlayerEntityMixin) playerEntity).rpginventory$setOldActiveSpellSlotAmount(activeSpellSlotAmount);
+		}
+	}
+
+	public static void rpginventory$ejectExclusiveEquipment(Player playerEntity) {
+		if (!((DuckPlayerEntityMixin) playerEntity).rpginventory$shouldEjectExclusiveEquipment()) {
+			return;
+		}
+		Inventory playerInventory = playerEntity.getInventory();
+		List<String> existingExclusiveEquipmentGroups = new ArrayList<>();
+
+		// check class item first to allow for class specific items
+		EquipmentSlot equipmentSlot = ExtendedEquipmentSlot.CLASS_ITEM;
+		ItemStack itemStack = playerEntity.getItemBySlot(equipmentSlot).copy();
+		if (!itemStack.isEmpty()) {
+			existingExclusiveEquipmentGroups.addAll(RPGInventory.getExclusiveEquipmentGroups(itemStack));
+		}
+
+		for (int i = playerInventory.getNonEquipmentItems().size(); i < playerInventory.getContainerSize(); i++) {
+			equipmentSlot = Inventory.EQUIPMENT_SLOT_MAPPING.get(i);
+			if (ExtendedEquipmentSlot.ignoredByExclusiveEquipmentCheck(equipmentSlot)) {
+				continue;
+			}
+			itemStack = playerEntity.getItemBySlot(equipmentSlot).copy();
+			if (itemStack.isEmpty()) {
+				continue;
+			}
+			List<String> currentExclusiveEquipmentGroups = RPGInventory.getExclusiveEquipmentGroups(itemStack);
+			if (currentExclusiveEquipmentGroups.isEmpty()) {
+				continue;
+			}
+			boolean removedStack = false;
+			for (String string : currentExclusiveEquipmentGroups) {
+				if (existingExclusiveEquipmentGroups.contains(string)) {
+					if (!playerEntity.level().isClientSide()) {
+						playerInventory.placeItemBackInInventory(itemStack.copy());
+					}
+					playerEntity.setItemSlot(equipmentSlot, ItemStack.EMPTY);
+					removedStack = true;
+					break;
+				}
+			}
+			if (removedStack) {
+				continue;
+			}
+			existingExclusiveEquipmentGroups.addAll(currentExclusiveEquipmentGroups);
 			((DuckPlayerEntityMixin) playerEntity).rpginventory$setShouldEjectExclusiveEquipment(false);
 		}
-	}
-
-	private static ItemStack getEquipmentStack(Player playerEntity, int index) {
-		return switch (index) {
-			case 0 -> playerEntity.getItemBySlot(ExtendedEquipmentSlot.CLASS_ITEM);
-			case 1 -> playerEntity.getItemBySlot(EquipmentSlot.HEAD);
-			case 2 -> playerEntity.getItemBySlot(EquipmentSlot.CHEST);
-			case 3 -> playerEntity.getItemBySlot(EquipmentSlot.LEGS);
-			case 4 -> playerEntity.getItemBySlot(EquipmentSlot.FEET);
-			case 5 -> playerEntity.getItemBySlot(ExtendedEquipmentSlot.SHOULDERS);
-			case 6 -> playerEntity.getItemBySlot(ExtendedEquipmentSlot.GLOVES);
-			case 7 -> playerEntity.getItemBySlot(ExtendedEquipmentSlot.BELT);
-			case 8 -> playerEntity.getItemBySlot(ExtendedEquipmentSlot.NECKLACE);
-			case 9 -> playerEntity.getItemBySlot(ExtendedEquipmentSlot.RING_1);
-			case 10 -> playerEntity.getItemBySlot(ExtendedEquipmentSlot.RING_2);
-			case 11 -> playerEntity.getItemBySlot(ExtendedEquipmentSlot.RELIC);
-			case 12 -> playerEntity.getItemBySlot(ExtendedEquipmentSlot.SPELL_1);
-			case 13 -> playerEntity.getItemBySlot(ExtendedEquipmentSlot.SPELL_2);
-			case 14 -> playerEntity.getItemBySlot(ExtendedEquipmentSlot.SPELL_3);
-			case 15 -> playerEntity.getItemBySlot(ExtendedEquipmentSlot.SPELL_4);
-			case 16 -> playerEntity.getItemBySlot(ExtendedEquipmentSlot.SPELL_5);
-			case 17 -> playerEntity.getItemBySlot(ExtendedEquipmentSlot.SPELL_6);
-			case 18 -> playerEntity.getItemBySlot(ExtendedEquipmentSlot.SPELL_7);
-			case 19 -> playerEntity.getItemBySlot(ExtendedEquipmentSlot.SPELL_8);
-			default -> ItemStack.EMPTY;
-		};
-	}
-
-	private static void setEquipmentStack(Player playerEntity, int index, ItemStack stack) {
-		switch (index) {
-			case 0 -> playerEntity.setItemSlot(ExtendedEquipmentSlot.CLASS_ITEM, stack);
-			case 1 -> playerEntity.setItemSlot(EquipmentSlot.HEAD, stack);
-			case 2 -> playerEntity.setItemSlot(EquipmentSlot.CHEST, stack);
-			case 3 -> playerEntity.setItemSlot(EquipmentSlot.LEGS, stack);
-			case 4 -> playerEntity.setItemSlot(EquipmentSlot.FEET, stack);
-			case 5 -> playerEntity.setItemSlot(ExtendedEquipmentSlot.SHOULDERS, stack);
-			case 6 -> playerEntity.setItemSlot(ExtendedEquipmentSlot.GLOVES, stack);
-			case 7 -> playerEntity.setItemSlot(ExtendedEquipmentSlot.BELT, stack);
-			case 8 -> playerEntity.setItemSlot(ExtendedEquipmentSlot.NECKLACE, stack);
-			case 9 -> playerEntity.setItemSlot(ExtendedEquipmentSlot.RING_1, stack);
-			case 10 -> playerEntity.setItemSlot(ExtendedEquipmentSlot.RING_2, stack);
-			case 11 -> playerEntity.setItemSlot(ExtendedEquipmentSlot.RELIC, stack);
-			case 12 -> playerEntity.setItemSlot(ExtendedEquipmentSlot.SPELL_1, stack);
-			case 13 -> playerEntity.setItemSlot(ExtendedEquipmentSlot.SPELL_2, stack);
-			case 14 -> playerEntity.setItemSlot(ExtendedEquipmentSlot.SPELL_3, stack);
-			case 15 -> playerEntity.setItemSlot(ExtendedEquipmentSlot.SPELL_4, stack);
-			case 16 -> playerEntity.setItemSlot(ExtendedEquipmentSlot.SPELL_5, stack);
-			case 17 -> playerEntity.setItemSlot(ExtendedEquipmentSlot.SPELL_6, stack);
-			case 18 -> playerEntity.setItemSlot(ExtendedEquipmentSlot.SPELL_7, stack);
-			case 19 -> playerEntity.setItemSlot(ExtendedEquipmentSlot.SPELL_8, stack);
-		}
-
 	}
 
 	public static void rpginventory$ejectNonHotbarItemsFromHotbar(Player playerEntity) { // FIXME is only called once?
