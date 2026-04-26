@@ -106,6 +106,7 @@ dependencies {
 
 	// Slot Customization API
 	implementation "maven.modrinth:slot-customization-api:${project.slot_customization_api_version}"
+//	implementation(files("libs/slot-customization-api-${project.slot_customization_api_version}.jar"))
 
 	// Mana Attributes
 	implementation "maven.modrinth:mana-attributes:${project.mana_attributes_version}"
