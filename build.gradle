@@ -98,8 +98,8 @@ dependencies {
 //	// Trinkets
 //	implementation "dev.emi:trinkets:${project.trinkets_version}"
 
-	// Mixin Squared
-	include(implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:0.1.2-beta.4")))
+//	// Mixin Squared
+//	include(implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:0.1.2-beta.4")))
 
 	// Stamina Attributes
 	implementation "maven.modrinth:stamina-attributes:${project.stamina_attributes_version}"

@@ -20,9 +20,6 @@
 		],
 		"client": [
 			"com.github.theredbrain.rpginventory.RPGInventoryClient"
-		],
-		"mixinsquared": [
-			"com.github.theredbrain.rpginventory.RPGInventoryMixinCanceller"
 		]
 	},
 	"mixins": [
