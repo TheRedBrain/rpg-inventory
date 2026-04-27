@@ -1,3 +1,7 @@
+# 3.0.1
+
+- fixed crash when rendering a humanoid non-player entity
+
 # 3.0.0
 
 > IMPORTANT!
