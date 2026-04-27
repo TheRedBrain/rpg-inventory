@@ -87,10 +87,10 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 		} else if (hand == InteractionHand.OFF_HAND) {
 
 			ItemStack offHandStack = this.getItemBySlot(EquipmentSlot.OFFHAND);
-			if (!this.rpginventory$isHandSlotOverhaulActive()) {
-				return offHandStack;
-			}
 			ItemStack emptyOffHandStack = this.rpginventory$isHandSlotOverhaulActive() ? this.getItemBySlot(ExtendedEquipmentSlot.EMPTY_OFF_HAND) : ItemStack.EMPTY;
+			if (!this.rpginventory$isHandSlotOverhaulActive()) {
+				return ItemUtils.isUsable(offHandStack) && ItemUtils.isUsableByPlayer(offHandStack, player) && !offHandStack.isEmpty() ? offHandStack : emptyOffHandStack;
+			}
 			if (((DuckLivingEntityMixin) this).rpginventory$isOffhandStackSheathed()) {
 				return emptyOffHandStack;
 			}
