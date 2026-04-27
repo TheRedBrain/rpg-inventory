@@ -1,3 +1,15 @@
+# 3.0.0
+
+- updated to 26.1.x
+- migrated to Mojang Mappings
+
+Many integrations with other mods are temporarily disabled. These features will be re-enabled when the corresponding mods have been updated to 26.1.x
+
+## Changes
+
+- relocated spell slots in the creative inventory to the left screen side, so they no longer overlap with displayed status effects
+- removed "generic." prefix from all entity attributes, following vanillas example
+
 # 2.11.0
 
 RPG Inventory's feature set has grown significantly and the mod is also used as a dependency for other projects. I made the decision to change the default state of the mod to be as close to vanilla as possible. Config values of existing installations should not be affected.
