@@ -161,7 +161,11 @@ public abstract class LivingEntityMixin extends Entity implements DuckLivingEnti
 				itemStack = rpginventory$isHandStackSheathed() ? this.getItemBySlot(ExtendedEquipmentSlot.SHEATHED_HAND) : ItemStack.EMPTY;
 			}
 		}
-		return !itemStack.is(Tags.EMPTY_HAND_WEAPONS) && ItemUtils.isUsable(itemStack) && ItemUtils.isUsableByPlayer(itemStack, ((Player) (Object) this)) ? itemStack : ItemStack.EMPTY;
+		boolean isUsable = true;
+		if (((LivingEntity) (Object) this) instanceof Player player) {
+			ItemUtils.isUsableByPlayer(itemStack, player);
+		}
+		return !itemStack.is(Tags.EMPTY_HAND_WEAPONS) && ItemUtils.isUsable(itemStack) && isUsable ? itemStack : ItemStack.EMPTY;
 	}
 
 	@Override
