@@ -1,5 +1,12 @@
 # 3.0.0
 
+> IMPORTANT!
+> If you update an existing world with RPG Inventory to 26.1.x, remove all equipped items from your character BEFORE updating!
+
+The way how the player equipment is saved was changed between 1.21.1 and 26.1 and there is a very high risk of losing all items still equipped on the player hen upgrading.
+
+With that being said, here are the changes:
+
 - updated to 26.1.x
 - migrated to Mojang Mappings
 
