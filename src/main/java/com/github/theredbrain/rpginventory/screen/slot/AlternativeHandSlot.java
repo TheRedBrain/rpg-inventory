@@ -76,6 +76,12 @@ public class AlternativeHandSlot extends Slot {
 	}
 
 	@Override
+	public void setByPlayer(final ItemStack itemStack, final ItemStack previous) {
+		owner.onEquipItem(this.equipmentSlot, previous, itemStack);
+		super.setByPlayer(itemStack, previous);
+	}
+
+	@Override
 	@Nullable
 	public Identifier getNoItemIcon() {
 		return this.backgroundSprite;

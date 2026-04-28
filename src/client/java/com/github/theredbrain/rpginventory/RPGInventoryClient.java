@@ -13,7 +13,6 @@ import com.github.theredbrain.rpginventory.gui.screen.ingame.RPGInventoryScreen;
 import com.github.theredbrain.rpginventory.gui.screen.ingame.RPGMannequinScreen;
 import com.github.theredbrain.rpginventory.gui.screen.ingame.VanillaMannequinScreen;
 import com.github.theredbrain.rpginventory.registry.ClientEventsRegistry;
-import com.github.theredbrain.rpginventory.registry.ClientPacketRegistry;
 import com.github.theredbrain.rpginventory.registry.KeyBindingsRegistry;
 import com.github.theredbrain.rpginventory.registry.ScreenHandlerTypesRegistry;
 import me.fzzyhmstrs.fzzy_config.api.ConfigApiJava;
@@ -99,9 +98,6 @@ public class RPGInventoryClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		CLIENT_CONFIG = ConfigApiJava.registerAndLoadConfig(ClientConfig::new, RegisterType.CLIENT);
-
-		// Packets
-		ClientPacketRegistry.init();
 
 		// Registry
 		ClientEventsRegistry.initializeClientEvents();
