@@ -83,7 +83,7 @@ public abstract class InventoryMenuMixin extends AbstractContainerMenu implement
 	 * @author TheRedBrain
 	 */
 	@Inject(method = "<init>", at = @At("TAIL"))
-	public void PlayerScreenHandler(Inventory inventory, boolean onServer, Player owner, CallbackInfo ci) {
+	public void PlayerScreenHandler(Inventory inventory, boolean active, Player owner, CallbackInfo ci) {
 
 		ServerConfig serverConfig = RPGInventory.SERVER_CONFIG;
 		boolean isRPGInventoryScreenActivated = serverConfig.activate_rpg_inventory_screen.get();

@@ -1,5 +1,6 @@
 package com.github.theredbrain.rpginventory.entity;
 
+import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.registry.DataAttachmentRegistry;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -7,7 +8,7 @@ import net.minecraft.world.entity.player.Player;
 public class DataAttachmentHelper {
 
 	public static boolean isHandStackSheathed(LivingEntity livingEntity) {
-		return livingEntity.getAttachedOrElse(DataAttachmentRegistry.IS_HAND_STACK_SHEATHED, true);
+		return livingEntity.getAttachedOrElse(DataAttachmentRegistry.IS_HAND_STACK_SHEATHED, !RPGInventory.isHandSlotOverhaulActive());
 	}
 
 	public static void setIsHandStackSheathed(LivingEntity livingEntity, boolean isHandStackSheathed) {
@@ -15,7 +16,7 @@ public class DataAttachmentHelper {
 	}
 
 	public static boolean isOffhandStackSheathed(LivingEntity livingEntity) {
-		return livingEntity.getAttachedOrElse(DataAttachmentRegistry.IS_OFFHAND_STACK_SHEATHED, true);
+		return livingEntity.getAttachedOrElse(DataAttachmentRegistry.IS_OFFHAND_STACK_SHEATHED, !RPGInventory.isHandSlotOverhaulActive());
 	}
 
 	public static void setIsOffhandStackSheathed(LivingEntity livingEntity, boolean isOffhandStackSheathed) {
@@ -39,7 +40,7 @@ public class DataAttachmentHelper {
 	}
 
 	public static boolean isHandSlotOverhaulActive(Player player) {
-		return player.getAttachedOrElse(DataAttachmentRegistry.IS_HAND_SLOT_OVERHAUL_ACTIVE, false);
+		return player.getAttachedOrElse(DataAttachmentRegistry.IS_HAND_SLOT_OVERHAUL_ACTIVE, RPGInventory.isHandSlotOverhaulActive());
 	}
 
 	public static void setIsHandSlotOverhaulActive(Player player, boolean isHandSlotOverhaulActive) {
@@ -47,7 +48,7 @@ public class DataAttachmentHelper {
 	}
 
 	public static boolean areAlternativeHandSlotsActive(Player player) {
-		return player.getAttachedOrElse(DataAttachmentRegistry.ARE_ALTERNATIVE_HAND_SLOTS_ACTIVE, false);
+		return player.getAttachedOrElse(DataAttachmentRegistry.ARE_ALTERNATIVE_HAND_SLOTS_ACTIVE, RPGInventory.SERVER_CONFIG.handSlotOverhaul.enable_alternative_hand_slots.get());
 	}
 
 	public static void setAreAlternativeHandSlotsActive(Player player, boolean areAlternativeHandSlotsActive) {

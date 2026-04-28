@@ -26,10 +26,11 @@ enum EquipmentSlotMixin {
 	RPG_INVENTORY_CLASS_ITEM(ExtendedEquipmentSlotType.RPG_INVENTORY_SLOT_TYPE, 15, 1, 23, "rpg_inventory_class_item"),
 	RPG_INVENTORY_EMPTY_HAND(ExtendedEquipmentSlotType.RPG_INVENTORY_SLOT_TYPE, 16, 1, 24, "rpg_inventory_empty_hand"),
 	RPG_INVENTORY_EMPTY_OFF_HAND(ExtendedEquipmentSlotType.RPG_INVENTORY_SLOT_TYPE, 17, 1, 25, "rpg_inventory_empty_off_hand"),
-	RPG_INVENTORY_SHEATHED_HAND(ExtendedEquipmentSlotType.RPG_INVENTORY_SLOT_TYPE, 18, 1, 26, "rpg_inventory_sheathed_hand"),
-	RPG_INVENTORY_SHEATHED_OFF_HAND(ExtendedEquipmentSlotType.RPG_INVENTORY_SLOT_TYPE, 19, 1, 27, "rpg_inventory_sheathed_off_hand"),
-	RPG_INVENTORY_ALTERNATIVE_HAND(ExtendedEquipmentSlotType.RPG_INVENTORY_SLOT_TYPE, 20, 1, 28, "rpg_inventory_alternative_hand"),
-	RPG_INVENTORY_ALTERNATIVE_OFF_HAND(ExtendedEquipmentSlotType.RPG_INVENTORY_SLOT_TYPE, 21, 1, 29, "rpg_inventory_alternative_off_hand");
+	RPG_INVENTORY_SHEATHED_HAND(ExtendedEquipmentSlotType.RPG_INVENTORY_SLOT_TYPE, 18, 0, 26, "rpg_inventory_sheathed_hand"),
+	RPG_INVENTORY_SHEATHED_OFF_HAND(ExtendedEquipmentSlotType.RPG_INVENTORY_SLOT_TYPE, 19, 0, 27, "rpg_inventory_sheathed_off_hand"),
+	RPG_INVENTORY_ALTERNATIVE_HAND(ExtendedEquipmentSlotType.RPG_INVENTORY_SLOT_TYPE, 20, 0, 28, "rpg_inventory_alternative_hand"),
+	RPG_INVENTORY_ALTERNATIVE_OFF_HAND(ExtendedEquipmentSlotType.RPG_INVENTORY_SLOT_TYPE, 21, 0, 29, "rpg_inventory_alternative_off_hand"),
+	RPG_INVENTORY_SELECTED_HOTBAR_SLOT(ExtendedEquipmentSlotType.RPG_INVENTORY_SLOT_TYPE, 22, 0, 30, "rpg_inventory_selected_hotbar_slot");
 
 	@Shadow
 	EquipmentSlotMixin(EquipmentSlot.Type type, int index, int countLimit, int id, String name) {
