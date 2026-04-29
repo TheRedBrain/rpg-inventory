@@ -4,7 +4,6 @@ import com.github.theredbrain.rpginventory.RPGInventory;
 import com.github.theredbrain.rpginventory.entity.DataAttachmentHelper;
 import com.github.theredbrain.rpginventory.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
-import com.github.theredbrain.rpginventory.entity.RendersSheathedWeapons;
 import com.github.theredbrain.rpginventory.entity.player.PlayerEntityHelper;
 import com.github.theredbrain.rpginventory.registry.Tags;
 import com.github.theredbrain.rpginventory.util.ItemUtils;
@@ -37,7 +36,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Collection;
 
 @Mixin(value = LivingEntity.class, priority = 1050)
-public abstract class LivingEntityMixin extends Entity implements DuckLivingEntityMixin, RendersSheathedWeapons {
+public abstract class LivingEntityMixin extends Entity implements DuckLivingEntityMixin {
 
 	@Shadow
 	public abstract AttributeMap getAttributes();

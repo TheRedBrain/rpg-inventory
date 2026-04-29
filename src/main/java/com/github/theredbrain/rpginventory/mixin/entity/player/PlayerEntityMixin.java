@@ -78,7 +78,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 
 			ItemStack handStack = this.getItemBySlot(EquipmentSlot.MAINHAND);
 			ItemStack emptyHandStack = this.rpginventory$isHandSlotOverhaulActive() ? this.getItemBySlot(ExtendedEquipmentSlot.EMPTY_HAND) : ItemStack.EMPTY;
-			}
 			return ItemUtils.isUsable(handStack) && ItemUtils.isUsableByPlayer(handStack, player) ? handStack : emptyHandStack;
 
 		} else if (hand == InteractionHand.OFF_HAND) {
@@ -100,21 +99,17 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 	@Override
 	public void setItemInHand(final InteractionHand hand, final ItemStack itemStack) {
 		if (hand == InteractionHand.MAIN_HAND) {
-			if (this.rpginventory$isHandSlotOverhaulActive() && !((DuckLivingEntityMixin) this).rpginventory$isHandStackSheathed()) {
-				this.setItemSlot(EquipmentSlot.MAINHAND, itemStack);
-				return;
-			}
-			this.setItemSlot(ExtendedEquipmentSlot.SELECTED_HOTBAR_SLOT, itemStack);
+			this.setItemSlot(EquipmentSlot.MAINHAND, itemStack);
 		} else {
 			if (hand != InteractionHand.OFF_HAND) {
 				throw new IllegalArgumentException("Invalid hand " + hand);
 			}
 
-			if (this.rpginventory$isHandSlotOverhaulActive() && ((DuckLivingEntityMixin) this).rpginventory$isOffhandStackSheathed()) {
-
-				this.setItemSlot(ExtendedEquipmentSlot.SHEATHED_OFF_HAND, itemStack);
-				return;
-			}
+//			if (this.rpginventory$isHandSlotOverhaulActive() && ((DuckLivingEntityMixin) this).rpginventory$isOffhandStackSheathed()) {
+//
+//				this.setItemSlot(ExtendedEquipmentSlot.SHEATHED_OFF_HAND, itemStack);
+//				return;
+//			}
 			this.setItemSlot(EquipmentSlot.OFFHAND, itemStack);
 		}
 	}
