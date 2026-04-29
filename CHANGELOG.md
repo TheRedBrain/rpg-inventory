@@ -1,3 +1,11 @@
+# 3.0.2
+
+- fixed an issue where items in the hotbar would not apply their attribute modifiers when selected
+
+## Technical
+
+- removed a lot of unnecessary synchronisation of custom equipment slots. Vanilla Minecraft does this automatically now. This should 
+
 # 3.0.1
 
 - fixed crash when rendering a humanoid non-player entity
