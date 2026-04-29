@@ -35,7 +35,7 @@ public abstract class HumanoidMobRendererMixin<T extends Mob, S extends Humanoid
 	}
 
 	@Inject(method = "extractHumanoidRenderState", at = @At("TAIL"))
-	private static void extractHumanoidRenderState(
+	private static void rpginventory$extractHumanoidRenderState(
 			LivingEntity entity, HumanoidRenderState state, float partialTicks, ItemModelResolver itemModelResolver, CallbackInfo ci
 	) {
 		itemModelResolver.updateForLiving(((DuckHumanoidRenderStateMixin) state).rpginventory$getLeftSheathedItemState(), ((DuckLivingEntityMixin) entity).rpginventory$getSheathedItemStackByArm(HumanoidArm.LEFT), ItemDisplayContext.THIRD_PERSON_LEFT_HAND, entity);

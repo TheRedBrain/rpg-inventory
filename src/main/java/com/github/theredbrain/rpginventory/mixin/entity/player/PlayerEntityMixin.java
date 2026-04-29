@@ -105,11 +105,12 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 				throw new IllegalArgumentException("Invalid hand " + hand);
 			}
 
-//			if (this.rpginventory$isHandSlotOverhaulActive() && ((DuckLivingEntityMixin) this).rpginventory$isOffhandStackSheathed()) {
-//
-//				this.setItemSlot(ExtendedEquipmentSlot.SHEATHED_OFF_HAND, itemStack);
-//				return;
-//			}
+			// TODO this might be unnecessary
+			if (this.rpginventory$isHandSlotOverhaulActive() && ((DuckLivingEntityMixin) this).rpginventory$isOffhandStackSheathed()) {
+
+				this.setItemSlot(ExtendedEquipmentSlot.SHEATHED_OFF_HAND, itemStack);
+				return;
+			}
 			this.setItemSlot(EquipmentSlot.OFFHAND, itemStack);
 		}
 	}
@@ -125,7 +126,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 	}
 
 	@WrapMethod(method = "dropEquipment")
-	protected void dropEquipment(ServerLevel level, Operation<Void> original) {
+	protected void rpginventory$dropEquipment(ServerLevel level, Operation<Void> original) {
 		if (this.hasEffect(RPGInventory.KEEP_INVENTORY)) {
 			PlayerEntityHelper.rpginventory$breakKeepInventoryItems((Player) (Object) this);
 		} else {

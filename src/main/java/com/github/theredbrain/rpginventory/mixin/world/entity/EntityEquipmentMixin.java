@@ -29,7 +29,7 @@ public abstract class EntityEquipmentMixin implements DuckEntityEquipmentMixin {
 	public abstract void clear();
 
 	@WrapMethod(method = "dropAll")
-	public void dropAll(LivingEntity dropper, Operation<Void> original) {
+	public void rpginventory$wrap_dropAll(LivingEntity dropper, Operation<Void> original) {
 		EnumMap<EquipmentSlot, ItemStack> newItems = new EnumMap<>(this.items);
 		newItems.clear();
 

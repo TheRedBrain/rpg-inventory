@@ -22,12 +22,12 @@ public class PlayerEquipmentMixin extends EntityEquipment {
 	private Player player;
 
 	@WrapMethod(method = "set")
-	public ItemStack set(EquipmentSlot slot, ItemStack itemStack, Operation<ItemStack> original) {
+	public ItemStack rpginventory$wrap_set(EquipmentSlot slot, ItemStack itemStack, Operation<ItemStack> original) {
 		return (((DuckLivingEntityMixin)this.player).rpginventory$isHandStackSheathed() && slot == EquipmentSlot.MAINHAND) ? this.player.getInventory().setSelectedItem(itemStack) : super.set(slot, itemStack);
 	}
 
 	@WrapMethod(method = "get")
-	public ItemStack get(EquipmentSlot slot, Operation<ItemStack> original) {
+	public ItemStack rpginventory$wrap_get(EquipmentSlot slot, Operation<ItemStack> original) {
 		return (((DuckLivingEntityMixin)this.player).rpginventory$isHandStackSheathed() && slot == EquipmentSlot.MAINHAND) ? this.player.getInventory().getSelectedItem() : super.get(slot);
 	}
 }
