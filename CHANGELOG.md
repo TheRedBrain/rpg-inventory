@@ -12,7 +12,7 @@
 
 ## Technical
 
-- removed a lot of unnecessary synchronisation of custom equipment slots. Vanilla Minecraft does this automatically now. This should 
+- removed a lot of unnecessary synchronisation of custom equipment slots. Vanilla Minecraft does this automatically now.
 
 # 3.0.1
 
