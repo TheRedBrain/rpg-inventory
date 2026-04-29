@@ -36,8 +36,8 @@ public class Tags {
 	public static final TagKey<Item> RELICS = TagKey.create(Registries.ITEM, RPGInventory.identifier("relics"));
 	public static final TagKey<Item> SACRIFICED_TO_KEEP_INVENTORY_ON_DEATH = TagKey.create(Registries.ITEM, RPGInventory.identifier("sacrificed_to_keep_inventory_on_death"));
 	public static final TagKey<Item> UNUSABLE_WHEN_LOW_DURABILITY = TagKey.create(Registries.ITEM, RPGInventory.identifier("unusable_when_low_durability"));
-	public static final TagKey<Item> NOT_SHOWN_WHEN_IN_SHEATHED_OFFHAND = TagKey.create(Registries.ITEM, RPGInventory.identifier("not_shown_when_in_sheathed_offhand"));
-	public static final TagKey<Item> NOT_SHOWN_WHEN_IN_SHEATHED_HAND = TagKey.create(Registries.ITEM, RPGInventory.identifier("not_shown_when_in_sheathed_hand"));
+	public static final TagKey<Item> NOT_SHOWN_WHEN_IN_SHEATHED_LEFT_HAND = TagKey.create(Registries.ITEM, RPGInventory.identifier("not_shown_when_in_sheathed_left_hand"));
+	public static final TagKey<Item> NOT_SHOWN_WHEN_IN_SHEATHED_RIGHT_HAND = TagKey.create(Registries.ITEM, RPGInventory.identifier("not_shown_when_in_sheathed_right_hand"));
 
 	public static final TagKey<MobEffect> PREVENTS_MANNEQUIN_INTERACTION = TagKey.create(Registries.MOB_EFFECT, RPGInventory.identifier("prevents_mannequin_interaction"));
 	public static final TagKey<MobEffect> PREVENTS_MANNEQUIN_SLOT_INTERACTION = TagKey.create(Registries.MOB_EFFECT, RPGInventory.identifier("prevents_mannequin_slot_interaction"));

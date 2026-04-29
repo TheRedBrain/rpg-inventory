@@ -1,4 +1,12 @@
-# 3.0.2
+# 3.1.0
+
+## Changes
+
+- renamed the following item tags to better reflect their function:
+  - "rpginventory:not_shown_when_in_sheathed_hand" to "rpginventory:not_shown_when_in_sheathed_right_hand"
+  - "rpginventory:not_shown_when_in_sheathed_offhand" to "rpginventory:not_shown_when_in_sheathed_left_hand"
+
+## Fixes
 
 - fixed an issue where items in the hotbar would not apply their attribute modifiers when selected
 

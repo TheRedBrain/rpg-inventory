@@ -48,7 +48,7 @@ This is an extension to the existing offhand slot. The new "hand slot" is "repla
 
 Items in both hand slots can be "sheathed" (by pressing a hotkey), which gives access to the hotbar slots again. When pressed again, teh items are unsheathed.
 
-Sheathed items are rendered on the player model. The exact position can be configured in the client config and items in the "rpginventory:not_shown_when_in_sheathed_hand" and "rpginventory:not_shown_when_in_sheathed_offhand" item tags are not rendered when in those slots.
+Sheathed items are rendered on the player model. The exact position can be configured in the client config and items in the "rpginventory:not_shown_when_in_sheathed_right_hand" and "rpginventory:not_shown_when_in_sheathed_left_hand" item tags are not rendered when in those slots.
 
 > The vanilla "Swap Hands" hotkey is disabled while the Hand Slot Overhaul is active. Swapping inventory items into the hotbar using the number keys still works.
 
