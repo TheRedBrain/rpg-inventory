@@ -76,13 +76,10 @@ public abstract class PlayerEntityMixin extends LivingEntity implements DuckPlay
 		Player player = (Player) (Object) this;
 		if (hand == InteractionHand.MAIN_HAND) {
 
-			ItemStack handStack = this.getItemBySlot(ExtendedEquipmentSlot.SELECTED_HOTBAR_SLOT);
+			ItemStack handStack = this.getItemBySlot(EquipmentSlot.MAINHAND);
 			ItemStack emptyHandStack = this.rpginventory$isHandSlotOverhaulActive() ? this.getItemBySlot(ExtendedEquipmentSlot.EMPTY_HAND) : ItemStack.EMPTY;
-			if (((DuckLivingEntityMixin) this).rpginventory$isHandStackSheathed()) {
-				return ItemUtils.isUsable(handStack) && ItemUtils.isUsableByPlayer(handStack, player) ? handStack : emptyHandStack;
 			}
-			handStack = this.getItemBySlot(EquipmentSlot.MAINHAND);
-			return ItemUtils.isUsable(handStack) && ItemUtils.isUsableByPlayer(handStack, player) && !handStack.isEmpty() ? handStack : emptyHandStack;
+			return ItemUtils.isUsable(handStack) && ItemUtils.isUsableByPlayer(handStack, player) ? handStack : emptyHandStack;
 
 		} else if (hand == InteractionHand.OFF_HAND) {
 

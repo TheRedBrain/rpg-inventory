@@ -1,6 +1,8 @@
 package com.github.theredbrain.rpginventory.mixin.entity.player;
 
+import com.github.theredbrain.rpginventory.entity.DuckLivingEntityMixin;
 import com.github.theredbrain.rpginventory.entity.ExtendedEquipmentSlot;
+import com.github.theredbrain.rpginventory.entity.player.DuckPlayerEntityMixin;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import net.minecraft.world.entity.EntityEquipment;
@@ -21,11 +23,11 @@ public class PlayerEquipmentMixin extends EntityEquipment {
 
 	@WrapMethod(method = "set")
 	public ItemStack set(EquipmentSlot slot, ItemStack itemStack, Operation<ItemStack> original) {
-		return slot == ExtendedEquipmentSlot.SELECTED_HOTBAR_SLOT ? this.player.getInventory().setSelectedItem(itemStack) : super.set(slot, itemStack);
+		return (((DuckLivingEntityMixin)this.player).rpginventory$isHandStackSheathed() && slot == EquipmentSlot.MAINHAND) ? this.player.getInventory().setSelectedItem(itemStack) : super.set(slot, itemStack);
 	}
 
 	@WrapMethod(method = "get")
 	public ItemStack get(EquipmentSlot slot, Operation<ItemStack> original) {
-		return slot == ExtendedEquipmentSlot.SELECTED_HOTBAR_SLOT ? this.player.getInventory().getSelectedItem() : super.get(slot);
+		return (((DuckLivingEntityMixin)this.player).rpginventory$isHandStackSheathed() && slot == EquipmentSlot.MAINHAND) ? this.player.getInventory().getSelectedItem() : super.get(slot);
 	}
 }

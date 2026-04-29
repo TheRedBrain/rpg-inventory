@@ -27,7 +27,6 @@ public class ExtendedEquipmentSlot {
 	public static EquipmentSlot SHEATHED_OFF_HAND = EquipmentSlot.valueOf("RPG_INVENTORY_SHEATHED_OFF_HAND");
 	public static EquipmentSlot ALTERNATIVE_HAND = EquipmentSlot.valueOf("RPG_INVENTORY_ALTERNATIVE_HAND");
 	public static EquipmentSlot ALTERNATIVE_OFF_HAND = EquipmentSlot.valueOf("RPG_INVENTORY_ALTERNATIVE_OFF_HAND");
-	public static EquipmentSlot SELECTED_HOTBAR_SLOT = EquipmentSlot.valueOf("RPG_INVENTORY_SELECTED_HOTBAR_SLOT");
 
 	public static boolean isRingsSlot(EquipmentSlot slot) {
 		return slot.equals(RING_1) || slot.equals(RING_2);

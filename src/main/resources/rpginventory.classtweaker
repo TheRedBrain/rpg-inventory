@@ -24,7 +24,6 @@ transitive-extend-enum  net/minecraft/world/entity/EquipmentSlot  RPG_INVENTORY_
 transitive-extend-enum  net/minecraft/world/entity/EquipmentSlot  RPG_INVENTORY_SHEATHED_OFF_HAND
 transitive-extend-enum  net/minecraft/world/entity/EquipmentSlot  RPG_INVENTORY_ALTERNATIVE_HAND
 transitive-extend-enum  net/minecraft/world/entity/EquipmentSlot  RPG_INVENTORY_ALTERNATIVE_OFF_HAND
-transitive-extend-enum  net/minecraft/world/entity/EquipmentSlot  RPG_INVENTORY_SELECTED_HOTBAR_SLOT
 
 transitive-extend-enum  net/minecraft/world/entity/EquipmentSlotGroup  RPG_INVENTORY_BELT
 transitive-extend-enum  net/minecraft/world/entity/EquipmentSlotGroup  RPG_INVENTORY_GLOVES
