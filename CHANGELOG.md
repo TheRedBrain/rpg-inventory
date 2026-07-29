@@ -1,3 +1,7 @@
+# 2.11.1
+
+- fixed shift-clicking to unequip items in custom slots
+
 # 2.11.0
 
 RPG Inventory's feature set has grown significantly and the mod is also used as a dependency for other projects. I made the decision to change the default state of the mod to be as close to vanilla as possible. Config values of existing installations should not be affected.
