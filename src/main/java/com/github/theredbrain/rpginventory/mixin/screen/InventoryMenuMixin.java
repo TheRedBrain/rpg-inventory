@@ -534,8 +534,6 @@ public abstract class InventoryMenuMixin extends AbstractContainerMenu implement
 				} else if (slotIndex >= 44 && slotIndex < 66) {
 					if (!this.moveItemStackTo(rpginventory$stack2, 9, 45, false)) {   // TODO adventure hotbar items
 						return ItemStack.EMPTY;
-					} else {
-						return rpginventory$stack2;
 					}
 				} else if (slotIndex >= 9 && slotIndex < 45) {
 
